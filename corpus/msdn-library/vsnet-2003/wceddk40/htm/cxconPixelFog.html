@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Pixel Fog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Pixel Fog"/>
+<MSHelp:RLTitle Title="Pixel Fog"/>
+<MSHelp:Keyword Index="A" Term="cxconPixelFog"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="fogging%2C Direct3D, pixel fogging"/>
+<MSHelp:Keyword Index="K" Term="hardware, Direct3D hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="lighting%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="pixel fogging%2C Direct3D"/>
+<MSHelp:Keyword Index="K" Term="transformation%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665087">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconpixelfog"></A>Pixel Fog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Pixel fog is similar to vertex fog, but the fog blending factor, <B>f</B>, is calculated at rasterization time rather than at lighting time. Pixel fog is more accurate than vertex fog. The fog blending factor specified in the <B>LVERTEX</B> or <B>D3DTLVERTEX</B> structures is ignored. Pixel fog is limited to the three fog profile types (linear fog, exponential fog, and exponential squared fog). For pixel fog, the hardware does a table look-up on the depth value interpolated at each pixel. There is no need for 256 table entries if they are being interpolated linearly in-between. Future releases of DirectX may provide compensation for nonlinear z-distribution. ZFront and ZBack have values in the interval [0.0, 1.0]. Pixel fog is used by setting the <B>PRIMCAPS.dwPRasterCaps</B> to D3DPRASTERCAPS_FOGTABLE. The <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__SetRenderState" TABINDEX="0">IDirect3DDevice8::SetRenderState</MSHelp:link> method sets the D3DRENDERSTATE_FOGENABLE render state to TRUE; the D3DRENDERSTATE_FOGCOLOR render state to 24-bit RGB; and the D3DRENDERSTATE_FOGTABLEMODE render state to one of D3DFOG_LINEAR, D3DFOG_EXP, or D3DFOG_EXP2. Here, the fog blending factor is calculated according to the three render states as follows:</P>
+
+<P><B>fStart</B> is determined by the render state D3DRENDERSTATE_FOGSTART and is in the interval [0.0, 1.0]. </P>
+
+<P><B>fEnd</B> is determined by the render state D3DRENDERSTATE_FOGEND and is in the interval [0.0, 1.0]. </P>
+
+<P><B>fDensity </B>is determined by the render state D3DRENDERSTATE_FOGDENSITY and is in the interval [0.0, 1.0]. </P>
+
+<P>The calculation of the fog blending factor <B>f</B> is based on z and the three fog render states just described. The actual calculation depends on the render state D3DRENDERSTATE_FOGTABLEMODE. Only D3DFOGMODE_LINEAR uses the fog start and end values. 
+
+<UL type="disc">
+	<LI>D3DFOGMODE_NONE 
+<P>No pixel fog is applied. 
+</li>
+
+	<LI>D3DFOGMODE_LINEAR 
+<P>Linear fog growth. 
+
+<P class="fig1"><IMG SRC="d3dfig10.gif" ALT="" BORDER=0>
+</li>
+
+	<LI>D3DFOGMODE_EXP 
+<P>Exponential fog growth. 
+
+<P class="fig1"><IMG SRC="d3dfig11.gif" ALT="" BORDER=0>
+</li>
+
+	<LI>D3DFOGMODE_EXP2 
+<P>Exponential squared fog growth. 
+
+<P class="fig1"><IMG SRC="d3dfig12.gif" ALT="" BORDER=0>
+</li>
+</UL>
+
+<P>Typically exponential and exponential squared fog are too expensive to do directly. Instead, look-up tables are precalculated for a number of z values in the interval [0.0, 1.0] using the current fog density. The nearest table entry can then be used for the current z value, or an interpolating value between the two surrounding z values can be used to get the appropriate fog factor. </P>
+
+<P>The final fogged color <B>C</B> is then calculated in the same manner as vertex fog as follows: </P>
+
+<P><B>C = (1-f) * fog_color + f * src_color </B></P>
+
+<P>In this formula, 
+
+<UL type="disc">
+	<LI><B>f</B> is the fog blending factor</li>
+
+	<LI><B>fog_color</B> is the current fog color (set by the render state D3DRENDERSTATE_FOGCOLOR)</li>
+
+	<LI><B>src_color</B> is the source, interpolated, textured color</li>
+</UL>
+
+<P>If <B>f</B>, the fog blending factor, is 0.0, the final fogged color will be identical to the fog color. If <B>f</B> is 1.0, there will be no fog effect.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconhardwaretransformlighting.htm">Hardware Transform and Lighting</A></P>
+
+<P><A HREF="cxconvertexpixelfogging.htm">Vertex and Pixel Fogging</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Pixel%20Fog&nbsp;(cxconpixelfog.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

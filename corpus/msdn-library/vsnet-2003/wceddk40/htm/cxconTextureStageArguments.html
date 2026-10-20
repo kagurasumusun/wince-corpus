@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Texture Stage Arguments</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Texture Stage Arguments"/>
+<MSHelp:RLTitle Title="Texture Stage Arguments"/>
+<MSHelp:Keyword Index="A" Term="cxconTextureStageArguments"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, texture management"/>
+<MSHelp:Keyword Index="K" Term="multitexturing, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="texture%2C Direct3D, texture stage arguments"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664956">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcontexturestagearguments"></A>Texture Stage Arguments</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Each of the multitexture blending operations combines two inputs. These can be selected by calling the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__SetTextureStageState" TABINDEX="0">IDirect3Ddevice8::SetTextureStageState</MSHelp:link> method (described in the Direct3D SDK documentation) and specifying one of the following members of the <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTURESTAGESTATETYPE" TABINDEX="0">D3DTEXTURESTAGESTATETYPE</MSHelp:link> enumerated type.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Enumerator</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>D3DTSS_ALPHAARG1</B></TD>
+<TD width=69%>Controls first input to alpha operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>D3DTSS_ALPHAARG2</B></TD>
+<TD width=69%>Controls second input to alpha operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>D3DTSS_COLORARG1</B></TD>
+<TD width=69%>Controls first input to color operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>D3DTSS_COLORARG2</B></TD>
+<TD width=69%>Controls second input to color operation.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Texture Argument Flags</B></P>
+
+<P>At each texture stage, any of the preceding four parameters can be set using the following texture argument flags. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Flag</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>D3DTA_CURRENT</TD>
+<TD width=69%>The texture argument is the result of the previous blending stage. In the first texture stage (stage zero), this argument is equivalent to D3DTA_DIFFUSE. This can be thought of as the current color of the polygon as each texture is composited onto it. If the previous blending stage uses a bump-map texture (the D3DTOP_BUMPENVMAP operation), the system chooses the texture from the stage before the bump-map texture. (If <I>s</I> represents the current texture stage, and <I>s - 1</I> contains a bump-map texture, this argument becomes the result output by texture stage <I>s - 2</I>.)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>D3DTA_DIFFUSE</TD>
+<TD width=69%>The iterated color data obtained from the Gouraud interpolators. This is often used as the ARG2 on the first texture, because there is no D3DTA_CURRENT texture color at that point.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>D3DTA_TEXTURE</TD>
+<TD width=69%>The texture bound to this texture stage using the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__SetTexture" TABINDEX="0">IDirect3DDevice8::SetTexture</MSHelp:link> (n, lpTex3) method (described in the Direct3D SDK documentation), where <I>n</I> is the stage number. <B>IDirect3DDevice8::SetTexture</B> defines which texture object to use for the texture in this stage when D3DTA_TEXTURE is one of the arguments. D3DTA_TEXTURE can only be present in D3DTSS_ALPHAARG1 and D3DTSS_COLORARG1, but not in D3DTSS_ALPHAARG1 and D3DTSS_COLORARG2.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>D3DTA_TFACTOR</TD>
+<TD width=69%>A value set in Direct3D with D3DRENDERSTATE_TEXTUREFACTOR.
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;Some implementations may not be able to simultaneously use both D3DTA_TFACTOR and a D3DTA_DIFFUSE color.</P>
+</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Modifier Flags</B></P>
+
+<P>These two values should be combined with one of the preceding flags using the bit-wise OR operator.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Value</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>D3DTA_ALPHAREPLICATE</TD>
+<TD width=69%>Indicates that this argument should have its alpha channel replicated to all color channels before use in this operation. If this is a texture with only one component, it is automatically replicated to all color channels for these operations. This flag need not be specified for the ALPHA_ARGs, but using it does not produce an error.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>D3DTA_COMPLEMENT</TD>
+<TD width=69%>Indicates that this argument should be inverted for the operation.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Defaults</B></P>
+
+<P>The following default values are used if a state is not filled in by the application. While these default values have been defined to make multitexture operations more convenient, robust code always fully specifies the desired state.</P>
+
+<P>D3DTSS_COLORARG1 and D3DTSS_ALPHAARG1 both default to D3DTA_TEXTURE, if the corresponding texture has been set. If no texture has been set for this stage, then these both default to D3DTA_DIFFUSE.</P>
+
+<P>D3DTSS_COLORARG2 and D3DTSS_ALPHAARG2 default to D3DTA_CURRENT. Note that D3DTA_CURRENT defaults to D3DTA_DIFFUSE on the first stage (except as noted in the description of D3DTA_CURRENT). </P>
+
+<P>ARG2 defaults to D3DTA_DIFFUSE, but is ignored because the operation defaults to D3DTOP_SELECTARG1.</P>
+
+<P>D3DTA_DIFFUSE defaults to 0xFFFFFFF if no diffuse color is specified in the flexible vertex format (FVF) data.</P>
+
+<P>D3DTA_SPECULAR defaults to 0x00000000 if no specular color is specified in the FVF data.</P>
+
+<P>D3DTA_CURRENT defaults to D3DTA_DIFFUSE if this is the first stage except when the previous blending stage is a D3DTOP_BUMPENVMAP or D3DTOP_BUMPENVMAPLUMINANCE color operation. In this case, the following occurs: 
+
+<UL type="disc">
+	<LI>If the previous stage is D3DTOP_BUMPENVMAP or D3DTOP_BUMPENVMAPLUMINANCE, then this argument is the result of the stage before the previous stage.</li>
+
+	<LI>In the second texture stage (stage one), this argument defaults to D3DTA_DIFFUSE.</li>
+</UL>
+
+<P>D3DTA_TEXTURE is a value for a D3DTSS_COLORARG1 or D3DTSS_ALPHAARG1 state of any stage, or defaults to 0x0 if no texture is bound to this stage.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dtexturemanagement.htm">Direct3D Texture Management</A></P>
+
+<P><A HREF="cxconmultitexturing.htm">Multitexturing</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Texture%20Stage%20Arguments&nbsp;(cxcontexturestagearguments.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpPhrase::GetText</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpPhrase::GetText"/>
+<MSHelp:RLTitle Title="ISpPhrase::GetText"/>
+<MSHelp:Keyword Index="A" Term="cerefISpPhraseGetText"/>
+<MSHelp:Keyword Index="K" Term="ISpPhrase, GetText"/>
+<MSHelp:Keyword Index="A" Term="cerefISpPhraseGetText"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822423">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefispphrasegettext"></A>ISpPhrase::GetText</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpPhrase::GetText</B> retrieves elements from a text phrase.</P>
+
+<PRE class="syntax"><B>HRESULT GetText(</B>
+<B>ULONG </B><I>ulStart</I><B>,</B>
+<B>ULONG </B><I>ulCount</I><B>,</B>
+<B>BOOL </B><I>fUseTextReplacements</I><B>,</B>
+<B>WCHAR **</B><I>ppszCoMemText</I><B>,</B>
+<B>BYTE *</B><I>pbDisplayAttributes</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ulStart</I> </DT>
+
+<DD>[in] Specifies the first element in the text phrase to retrieve. </dd>
+
+<DT><I>ulCount</I> </DT>
+
+<DD>[in] Specifies the number of elements to retrieve from the text phrase. </dd>
+
+<DT><I>fUseTextReplacements</I> </DT>
+
+<DD>[in] Boolean value that indicates if replacement text should be used. An example of a text replacement is saying "write new check for twenty dollars" and retrieving the replaced text as "write new check for $20". For more information on replacements, see the "SR Engine Whitepaper". </dd>
+
+<DT><I>ppszCoMemText</I> </DT>
+
+<DD>[out] Address of a pointer to the data structure that contains the display text information. It is the caller's responsibility to call ::CoTaskMemFree to free the memory. </dd>
+
+<DT><I>pbDisplayAttributes</I> </DT>
+
+<DD>[out] Address of the <A HREF="cerefspdisplayattributes.htm">SPDISPLAYATTRIBUTES</A> enumeration that contains the text display attribute information. Text display attribute information can be used by the application to display the text to the user in a reasonable manner. For example, speaking "hello comma world period" includes a trailing period, so the recognition may include <B>SPAF_TWO_TRAILING_SPACES</B> to inform the application without requiring extra text processing logic for the application. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>S_OK </TD>
+<TD width=53%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>S_FALSE </TD>
+<TD width=53%>A phrase that does not contain text or ppszCoMemText is NULL. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>E_INVALIDARG </TD>
+<TD width=53%>One or more arguments are invalid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>E_POINTER </TD>
+<TD width=53%>Invalid pointer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>E_OUTOFMEMORY </TD>
+<TD width=53%>Exceeded available memory. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use <B>ISpPhrase::GetText</B> to retrieve parts of the recognized phrase.</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+//... obtain a recognition result object from the recognizer...
+// get the recognized phrase object
+hr = cpRecoResult-&gt;GetPhrase(&amp;pPhrase);
+// Check hr
+// get the phrase's entire string, including replacements
+hr = pPhrase-&gt;GetText(SP_GETWHOLEPHRASE, SP_GETWHOLEPHRASE, TRUE, &amp;pwszText, NULL);
+// Check hr
+// get the phrase's first 2 words, excluding replacements
+hr = pPhrase-&gt;GetText(pPhrase-&gt;Rule.ulFirstElement, 2, FALSE, &amp;pwszText, NULL);</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpPhrase::GetText&nbsp;(cerefispphrasegettext.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

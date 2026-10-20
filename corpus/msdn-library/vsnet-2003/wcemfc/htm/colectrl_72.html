@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleControl::IsConvertingVBX</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_colecontrol_isconvertingvbx"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_colecontrol_isconvertingvbx"></A>COleControl::IsConvertingVBX</H1>
+
+<P>This method allows specialized loading of a Visual Basic control (VBX).</P>
+
+<PRE class=syntax><B>BOOL IsConvertingVBX( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the control is being converted; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>For example, if you are loading an instance of your OLE control, you might have a call to PX_Font in your <B>DoPropExchange</B>:</P>
+
+<PRE>PX_Font(pPx, "Font", m_MyFont, pDefaultFont);
+</PRE>
+
+<P>However, VBX controls did not have a Font object; each font property was saved individually. In this case, you would use <B>IsConvertingVBX</B> to distinguish between these two cases:</P>
+
+<PRE>if (IsConvertingVBX()==FALSE)
+    PX_Font(pPX, "Font", m_MyFont, pDefaultFont);
+else
+{
+    PX_String(pPX, "FontName", tempString, DefaultName);
+    m_MyFont-&gt;put_Name(tempString);
+    PX_Bool(pPX, "FontUnderline", tempBool, DefaultValue);
+    m_MyFont-&gt;put_Underline(tempBool);
+...
+}
+</PRE>
+
+<P>Another case would be if your VBX control saved proprietary binary data, in its VBM_SAVEPROPERTY message handler, and your OLE control saves its binary data in a different format. If you want your OLE control to be backward-compatible with the VBX control, you could read both the old and new formats using the <B>IsConvertingVBX</B> function by distinguishing whether the VBX control or the OLE control was being loaded.</P>
+
+<P>In the <B>DoPropExchange</B> function of your control, you can check for this condition and if true, execute load code specific to this conversion, such as the previous examples. If the control is not being converted, you can execute normal load code. This ability is only applicable to controls being converted from VBX counterparts.</P>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="colectrl_21.htm"><B>COleControl::DoPropExchange</B></A><B> </B></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

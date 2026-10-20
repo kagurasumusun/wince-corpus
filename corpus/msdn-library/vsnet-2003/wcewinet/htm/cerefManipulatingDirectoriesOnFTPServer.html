@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Manipulating Directories on an FTP Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Manipulating Directories on an FTP Server"/>
+<MSHelp:RLTitle Title="Manipulating Directories on an FTP Server"/>
+<MSHelp:Keyword Index="A" Term="cerefManipulatingDirectoriesOnFTPServer"/>
+<MSHelp:Keyword Index="K" Term="directories, manipulating on FTP servers"/>
+<MSHelp:Keyword Index="K" Term="FTP server, manipulating directories on"/>
+<MSHelp:Keyword Index="K" Term="WinInet, manipulating directories on FTP servers"/>
+<MSHelp:Keyword Index="A" Term="cerefManipulatingDirectoriesOnFTPServer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: wininet_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759177">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefmanipulatingdirectoriesonftpserver"></A>Manipulating Directories on an FTP Server</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <B>WinInet</B> functions provide the capability to create and remove directories on an ftp server to which the application has the necessary privileges. If the application must log on to a server with a specific user name and password, the values can be used in InternetConnect when creating the ftp session handle. </P>
+
+<P>The <B>FtpCreateDirectory</B> function takes a valid <B>ftp</B> session handle and a NULL-terminated string that contains either a fully qualified path or a name relative to the current directory and creates a directory on the <B>ftp</B> server.</P>
+
+<P>The following example shows two separate calls to <B>FtpCreateDirectory</B>. In both examples, <B>hFtpSession</B> is the session handle created by the <B>InternetConnect</B> function, and the root directory is the current directory.</P>
+
+<PRE class="code">FtpCreateDirectory(hFtpSession, "test");
+/* This will create the directory "test" in the current directory 
+    (which is the root directory). */
+
+FtpCreateDirectory(hFtpSession, "\test\example");
+/* This will create the directory "example" in the test directory. */</PRE>
+
+<P>The <B>FtpRemoveDirectory</B> function takes a valid <B>ftp</B> session handle and a NULL-terminated string that contains either a fully qualified path or a name relative to the current directory and removes that directory from the <B>ftp</B> server.</P>
+
+<P>The following example shows two sample calls to <B>FtpRemoveDirectory</B>. In both calls, <B>hFtpSession</B> is the session handle created by the <B>InternetConnect</B> function, and the root directory is the current directory. There is a directory called <I>"test"</I> in the root directory and a directory called <I>"example"</I> in the <I>"test"</I> directory.</P>
+
+<PRE class="code">FtpRemoveDirectory(hFtpSession,"\test\example");
+/* Removes the "example" directory and any files or directories contained
+in it from the "test" directory. */
+
+FtpRemoveDirectory(hFtpSession, "test");
+/* Removes the "test" directory and any files or directories contained
+in it from the root directory. */</PRE>
+
+<P>The following example shows how to create the directory indicated by the string stored in the <B>IDC_FTPEdit2</B> edit box. The <B>HINTERNET</B> handle <B>hSecondary</B> was created by <B>InternetConnect</B> after establishing an <B>ftp</B> session. <B>DisplayDir</B> is another function that is designed to enumerate the directory.</P>
+
+<PRE class="code">int WINAPI CreateDir(HWND hX)
+{
+    char strInFile[80];
+
+    GetDlgItemText(hX,IDC_FTPEdit2,strInFile,80);
+
+    if (strlen(strInFile)==0)
+    {
+        MessageBox(hX,"Directory Name Must Be Specified","Create Dir",MB_OK);
+        return 0;
+    }
+    else
+    {
+        if(!FtpCreateDirectory(hSecondary,strInFile))
+        {
+            ErrorOut(hX,GetLastError(),"Create Dir");
+            return 0;
+        }
+        else
+        {
+            return DisplayDir(hX,INTERNET_FLAG_RELOAD);
+        }
+    }
+}</PRE>
+
+<P>The following example shows how to delete the directory indicated by the <B>IDC_FTPEdit2</B> edit box. The <B>HINTERNET</B> handle <B>hSecondary</B> was created by <B>InternetConnect</B> after establishing an <B>ftp</B> session. <B>DisplayDir</B> is another function that is designed to enumerate the directory.</P>
+
+<PRE class="code">int WINAPI RemoveDir(HWND hX)
+{
+    char strInFile[80];
+
+    GetDlgItemText(hX,IDC_FTPEdit2,strInFile,80);
+
+    if (strlen(strInFile)==0)
+    {
+        MessageBox(hX,"Directory Name Must Be Specified!","Remove Dir",MB_OK);
+        return 0;
+    }
+    else
+    {
+        if(!FtpRemoveDirectory(hSecondary,strInFile))
+        {
+            ErrorOut(hX,GetLastError(),"Remove Dir");
+            return 0;
+        }
+        else
+        {
+            MessageBox(hX,"Directory Deleted","Remove Dir",MB_OK);
+            return DisplayDir(hX,INTERNET_FLAG_RELOAD);
+        }
+    }
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Manipulating%20Directories%20on%20an%20FTP%20Server&nbsp;(cerefmanipulatingdirectoriesonftpserver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

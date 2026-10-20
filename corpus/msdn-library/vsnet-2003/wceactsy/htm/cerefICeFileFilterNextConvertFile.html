@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ICeFileFilter::NextConvertFile</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ICeFileFilter::NextConvertFile"/>
+<MSHelp:RLTitle Title="ICeFileFilter::NextConvertFile"/>
+<MSHelp:Keyword Index="A" Term="cerefICeFileFilterNextConvertFile"/>
+<MSHelp:Keyword Index="K" Term="ICeFileFilter, NextConvertFile"/>
+<MSHelp:Keyword Index="A" Term="cerefICeFileFilterNextConvertFile"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: actsyncref.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_755233">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cereficefilefilternextconvertfile"></A>ICeFileFilter::NextConvertFile</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method is called by Windows CE Services when the user selects a conversion type from the Windows CE Services conversion selection dialog box.</P>
+
+<PRE class="syntax"><B>STDMETHODIMP ICeFileFilter::NextConvertFile(</B>
+<B>int</B> <I>nConversion</I><B>,</B>
+<B>PFF_CONVERTINFO</B> <B>*</B><I>pci</I><B>,</B>
+<B>PFF_SOURCEFILE</B> <B>*</B><I>psf</I><B>,</B>
+<B>PFF_DESTINATIONFILE</B> <B>*</B><I>pdf</I><B>,</B>
+<B>volatile BOOL</B> <B>*</B><I>pbCancel</I><B>,</B>
+<B>PR_ERROR</B> <B>*</B><I>perr</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nConversion</I></DT>
+
+<DD>Counter for converting a single source file into multiple destination files. This parameter is zero the first time <B>NextConvertFile</B> is called and is incremented for each successive call. A simple filter should return HRESULT_FROM_WIN32<B>(</B>ERROR_NO_MORE_ITEMS<B>)</B> if this parameter is not zero.</dd>
+
+<DT><I>pci</I></DT>
+
+<DD>Pointer to a <A HREF="cerefcff_convertinfo.htm">CFF_CONVERTINFO</A> structure that contains a pointer to an <B>ICeFileFilterSite</B> object. A file filter uses this interface to create an <MSHelp:link keywords="cerefIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link> or <MSHelp:link keywords="cerefIStorageIUnknown" TABINDEX="0">IStorage</MSHelp:link> object to read the contents of the source file or to write to the destination file. The type of interface object to create is determined by the <I>nHowToOpen</I> parameter in the <A HREF="cereficefilefiltersiteopensourcefile.htm">ICeFileFilterSite::OpenSourceFile</A> and <A HREF="cereficefilefiltersiteopendestinationfile.htm">ICeFileFilterSite::OpenDestinationFile</A> methods. Any files opened in this way should be closed using the corresponding <A HREF="cereficefilefiltersiteclosesourcefile.htm">ICeFileFilterSite::CloseSourceFile</A> or <A HREF="cereficefilefiltersiteclosedestinationfile.htm">ICeFileFilterSite::CloseDestinationFile</A> method.</dd>
+
+<DT><I>psf</I></DT>
+
+<DD>Pointer to a <MSHelp:link keywords="cerefCFF_SOURCEFILE" TABINDEX="0">CFF_SOURCEFILE</MSHelp:link> structure that contains information about the source file.</dd>
+
+<DT><I>pdf</I></DT>
+
+<DD>Pointer to a <MSHelp:link keywords="cerefcff_destinationfile" TABINDEX="0">CFF_DESTINATIONFILE</MSHelp:link> structure that contains information about the destination file.</dd>
+
+<DT><I>pbCancel</I></DT>
+
+<DD>Pointer to a Boolean that is set TRUE if the user cancels the file conversion before it is completed, or set FALSE otherwise. Because this variable is updated asynchronously by another thread, its contents can change at any time. A file filter must check this variable regularly during the conversion process, and return ERROR_CANCELLED, after cleaning up, if it is ever set TRUE.</dd>
+
+<DT><I>perr</I></DT>
+
+<DD>Pointer to a filter-defined error value that can be passed by the Windows CE Services application to the <A HREF="cereficefilefilterformatmessage.htm">ICeFileFilter::FormatMessage</A> method. This error value is ignored unless the return value from <B>NextConvertFile</B> is E_FAIL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NOERROR</TD>
+<TD width=66%>The subconversion was successful; proceed to the next subconversion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>HRESULT_FROM_WIN32 (ERROR_CANCELLED)</TD>
+<TD width=66%>The user canceled the conversion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>HRESULT_FROM_WIN32 (ERROR_NO_MORE_ITEMS)</TD>
+<TD width=66%>The conversion, or last subconversion, was successful. End calls to <A HREF="#cereficefilefilternextconvertfile">ICeFileFilter::NextConvertFile</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>E_FAIL</TD>
+<TD width=66%>The <I>perr</I> parameter contained an error value that should be passed to <B>ICeFileFilter::FormatMessage</B>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The Explorer window for the mobile device calls <B>NextConvertFile</B> repeatedly, incrementing the <I>nConversion</I> parameter, until the return value is ERROR_NO_MORE_ITEMS. A simple filter should return NOERROR the first time this method is called, and thereafter return HRESULT_FROM_WIN32<B>(</B>ERROR_NO_MORE_ITEMS<B>)</B>. Alternatively, a file filter can return E_FAIL and specify a filter-defined error value in the variable pointed to by <I>perr</I>.</P>
+
+<P>As a file conversion progresses, a file filter should periodically call <A HREF="cereficefilefiltersitereportprogress.htm">ICeFileFilterSite::ReportProgress</A> to report its progress. Windows CE Services uses the progress information to update a progress bar that shows the user how much of the conversion is complete.</P>
+
+<P>If any important data is intentionally discarded by a file filter during the conversion process, the filter should call <A HREF="cereficefilefiltersitereportloss.htm">ICeFileFilterSite::ReportLoss</A> to report the loss. When calling this <B>ReportLoss</B>, the filter specifies a message that explains the data loss, and Windows CE Services formats and displays the message in a message box when the file conversion has completed.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Replfilt.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cereficefilefilterformatmessage.htm">ICeFileFilter::FormatMessage</A>, <A HREF="#cereficefilefilternextconvertfile">ICeFileFilter::NextConvertFile</A>, <A HREF="cereficefilefiltersiteclosedestinationfile.htm">ICeFileFilterSite::CloseDestinationFile</A>, <A HREF="cereficefilefiltersiteclosesourcefile.htm">ICeFileFilterSite::CloseSourceFile</A>, <A HREF="cereficefilefiltersiteopendestinationfile.htm">ICeFileFilterSite::OpenDestinationFile</A>, <A HREF="cereficefilefiltersiteopensourcefile.htm">ICeFileFilterSite::OpenSourceFile</A>, <A HREF="cereficefilefiltersitereportloss.htm">ICeFileFilterSite::ReportLoss</A>, <A HREF="cereficefilefiltersitereportprogress.htm">ICeFileFilterSite::ReportProgress</A>, <MSHelp:link keywords="cerefIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link>, <MSHelp:link keywords="cerefIStorageIUnknown" TABINDEX="0">IStorage</MSHelp:link>, <MSHelp:link keywords="cerefcff_destinationfile" TABINDEX="0">CFF_DESTINATIONFILE</MSHelp:link>, <A HREF="cerefcff_convertinfo.htm">CFF_CONVERTINFO</A>, <MSHelp:link keywords="cerefcff_sourcefile" TABINDEX="0">CFF_SOURCEFILE</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ICeFileFilter::NextConvertFile&nbsp;(cereficefilefilternextconvertfile.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

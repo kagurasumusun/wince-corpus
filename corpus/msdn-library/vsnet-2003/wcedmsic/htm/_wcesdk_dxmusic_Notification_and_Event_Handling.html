@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Notification and Event Handling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Notification and Event Handling"/>
+<MSHelp:RLTitle Title="Notification and Event Handling"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Notification_and_Event_Handling"/>
+<MSHelp:Keyword Index="K" Term="bands%2C DirectMusic, notification and event handling"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, notifications and event handling"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Notification_and_Event_Handling"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680697">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_notification_and_event_handling"></A>Notification and Event Handling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>From time to time, your application might need to respond to a music event; for example, you might need to know when the end of a segment has been reached, or you might want to synchronize graphics with the beat of the music. Get the desired information by asking DirectMusic to notify you when a certain type of event has taken place.</P>
+
+<P>Specify what types of music events you want to be notified of by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__AddNotificationType" TABINDEX="0">IDirectMusicPerformance::AddNotificationType</MSHelp:link> method once for each desired type of event. The following code example tells DirectMusic to set segment-related events. The actual type of event (such as a segment start or a segment end) will be derived later from the notification message.</P>
+
+<PRE class="code">/* It is assumed that pPerformance is a valid 
+   IDirectMusicPerformance pointer. */
+ 
+GUID guid = GUID_NOTIFICATION_SEGMENT;
+// C syntax:
+pPerformance-&gt;AddNotificationType(&amp;guid);
+// C++ syntax:
+pPerformance-&gt;AddNotificationType(guid);</PRE>
+
+<P>You can also add notification types for a particular segment by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__AddNotificationType" TABINDEX="0">IDirectMusicSegment::AddNotificationType</MSHelp:link> method. You could do this, for example, to receive notification of when a particular segment stops playing. You cannot use this method to request GUID_NOTIFICATION_PERFORMANCE types because these must come from the performance object.</P>
+
+<P>Notifications are sent in the form of <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_NOTIFICATION_PMSG" TABINDEX="0">DMUS_NOTIFICATION_PMSG</MSHelp:link> message structures. You can poll for any pending notification messages within the Windows message loop by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__GetNotificationPMsg" TABINDEX="0">IDirectMusicPerformance::GetNotificationPMsg</MSHelp:link> method, or you can have DirectMusic signal an event object in a separate thread when a message is pending.</P>
+
+<P>If you want to be alerted of pending DirectMusic notification messages by a Windows event object, you must first obtain an event handle by calling the Windows CE <B>CreateEvent</B> function. Typically, you would create an autoreset event with a call such as the following.</P>
+
+<PRE class="code">HANDLE g_hNotify = CreateEvent(NULL, FALSE, FALSE, NULL);</PRE>
+
+<P>After creating the event, assign the handle to the performance by passing it to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SetNotificationHandle" TABINDEX="0">IDirectMusicPerformance::SetNotificationHandle</MSHelp:link> method. You can use the second parameter of this method to change the default time that DirectMusic holds onto the event if it is not retrieved; a value of 0 in this parameter indicates that the default time of 2 seconds is to be used. </P>
+
+<P>In the following example, <I>g_pPerf</I> is a valid pointer to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance" TABINDEX="0">IDirectMusicPerformance</MSHelp:link> interface.</P>
+
+<PRE class="code">g_pPerf-&gt;SetNotificationHandle(g_hNotify, 0);</PRE>
+
+<P>The following code example runs repeatedly in its own thread, checking for signaled events and retrieving notification messages.</P>
+
+<PRE class="code">void WaitForEvent( LPVOID lpv)
+{
+    DWORD dwResult;
+    DMUS_NOTIFICATION_PMSG* pPmsg;
+    char szCount[4];
+ 
+    while (TRUE)
+    {
+        dwResult = WaitForSingleObject(g_hNotify, 100);
+        while (S_OK == g_pPerf-&gt;GetNotificationPMsg(&amp;pPmsg))
+        {
+            // Check notification type, and do something in response.
+            .
+            .
+            .
+            g_pPerf-&gt;FreePMsg((DMUS_PMSG*)pPmsg); 
+        }
+    }
+}</PRE>
+
+<P>This thread is run as follows.</P>
+
+<PRE class="code">_beginthread(WaitForEvent, 0, NULL);</PRE>
+
+<P>When notifications are no longer needed, the following code example shuts down the thread, removes the notification handle from the performance, and destroys the event object.</P>
+
+<PRE class="code">_endthread();
+g_pPerf-&gt;SetNotificationHandle(0, 0);
+CloseHandle(g_hNotify);</PRE>
+
+<P>It is not necessary to create an event to retrieve notification messages in your application's message loop. As long as you have requested notifications by calling the <B>IDirectMusicPerformance::AddNotificationType</B> method, the performance sends messages that can be retrieved by calling <B>IDirectMusicPerformance::GetNotificationPMsg</B>. </P>
+
+<P>More than one message can be waiting when an event is signaled or when you call <B>GetNotificationPMsg</B> in the message loop. To be sure of catching all notifications, call <B>GetNotificationPMsg</B> repeatedly until it returns S_FALSE. </P>
+
+<P>Multiple messages with the same time stamp are not queued in any particular order. </P>
+
+<P>You must free any message that you retrieve, by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__FreePMsg" TABINDEX="0">IDirectMusicPerformance::FreePMsg</MSHelp:link> method.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Notification%20and%20Event%20Handling&nbsp;(_wcesdk_dxmusic_notification_and_event_handling.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

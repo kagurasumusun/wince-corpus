@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting Up a Projection Matrix</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Setting Up a Projection Matrix"/>
+<MSHelp:RLTitle Title="Setting Up a Projection Matrix"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Setting_Up_a_Projection_Matrix"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts2_understand.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680321">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_setting_up_a_projection_matrix"></A>Setting Up a Projection Matrix</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following <B>ProjectionMatrix</B> sample function, written in C++, takes four input parameters that set the front and back clipping planes, as well as the horizontal and vertical field of view angles. This code parallels the approach discussed in the <A HREF="_wcesdk_dx3d_what_is_the_projection_transformation_.htm">What Is the Projection Transformation?</A> topic. The fields of view should be less than pi radians.</P>
+
+<PRE class="code">D3DMATRIX 
+ProjectionMatrix(const float near_plane, // Distance to near clipping 
+                                         // plane
+                 const float far_plane,  // Distance to far clipping 
+                                         // plane
+                 const float fov_horiz,  // Horizontal field of view 
+                                         // angle, in radians
+                 const float fov_vert)   // Vertical field of view 
+                                         // angle, in radians
+{
+    float    h, w, Q;
+ 
+    w = (float)1/tan(fov_horiz*0.5);  // 1/tan(x) == cot(x)
+    h = (float)1/tan(fov_vert*0.5);   // 1/tan(x) == cot(x)
+    Q = far_plane/(far_plane - near_plane);
+ 
+    D3DMATRIX ret;
+    ZeroMemory(&amp;ret, sizeof(ret));
+
+    ret(0, 0) = w;
+    ret(1, 1) = h;
+    ret(2, 2) = Q;
+    ret(3, 2) = -Q*near_plane;
+    ret(2, 3) = 1;
+    return ret;
+}   // End of ProjectionMatrix</PRE>
+
+<P>After you create the matrix, you must set it in a call to the <A HREF="_wcesdk_dx3d_idirect3ddevice8__settransform.htm">IDirect3DDevice8::SetTransform</A> method, specifying D3DTRANSFORMSTATE_PROJECTION in the first parameter. For details, see <A HREF="_wcesdk_dx3d_setting_transformations.htm">Setting Transformations</A>.</P>
+
+<P>The Direct3DX utility library provides the following functions to help you set up your projections matrix:
+
+<UL type="disc">
+	<LI><A HREF="_wcesdk_dx3d_d3dxmatrixperspectivefovlh.htm">D3DXMatrixPerspectiveFovLH</A></li>
+
+	<LI><A HREF="_wcesdk_dx3d_d3dxmatrixperspectiveoffcenterlh.htm">D3DXMatrixPerspectiveOffCenterLH</A></li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Setting%20Up%20a%20Projection%20Matrix&nbsp;(_wcesdk_dx3d_setting_up_a_projection_matrix.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

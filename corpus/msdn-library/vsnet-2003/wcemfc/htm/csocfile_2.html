@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CSocketFile::CSocketFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_csocketfile_csocketfile"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_csocketfile_csocketfile"></A>CSocketFile::CSocketFile</H1>
+
+<P>This constructor constructs a socket file object.</P>
+
+<PRE class=syntax><B>CSocketFile(
+CSocket* </B><I>pSocket</I><B>,
+BOOL </B><I>bArchiveCompatible</I><B> = TRUE );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pSocket</I></DT>
+
+<DD>Specifies the socket to attach to the <B>CSocketFile</B> object. </DD>
+
+<DT><I>bArchiveCompatible</I></DT>
+
+<DD>Specifies whether the file object is for use with a <B>CArchive</B> object. Pass <B>FALSE</B> only if you want to use the <B>CSocketFile</B> object in a stand-alone manner as you would a stand-alone <B>CFile</B> object, with certain limitations. This flag changes how the <B>CArchive</B> object attached to the <B>CSocketFile</B> object manages its buffer for reading.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The destructor of the object disassociates itself from the socket object when the object goes out of scope or is deleted.</P>
+
+<P>A <B>CSocketFile</B> can also be used as a (limited) file without a <B>CArchive</B> object. By default, the <I>bArchiveCompatible</I> parameter of the <B>CSocketFile</B> constructor is <B>TRUE</B>. This specifies that the file object is for use with an archive. To use the file object without an archive, pass <B>FALSE</B> in the <I>bArchiveCompatible</I> parameter.</P>
+
+<P>In its archive compatible mode, a <B>CSocketFile</B> object provides better performance and reduces the danger of a deadlock. A deadlock occurs when both the sending and receiving sockets are waiting on each other, or for a common resource. This situation might occur if the <B>CArchive</B> object worked with the <B>CSocketFile</B> the way it does with a <B>CFile</B> object. With <B>CFile</B>, the archive can assume that if it receives fewer bytes than it requested, the end of file has been reached. </P>
+
+<P>With <B>CSocketFile</B>, however, data is message based; the buffer can contain multiple messages, so receiving fewer than the number of bytes requested does not imply end of file. The application does not block in this case as it might with <B>CFile</B>, and it can continue reading messages from the buffer until the buffer is empty. The <A HREF="carchi_8.htm"><B>CArchive::IsBufferEmpty</B></A> method is useful for monitoring the state of the buffer within the archive in such a case. </P>
+
+<H4>Requirements</H4>
+
+<P>&nbsp;&nbsp;<B>Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="carchi.htm"><B>CArchive</B></A>, <A HREF="casyncso.htm"><B>CAsyncSocket</B></A>, <A HREF="cfile_2.htm"><B>CFile::CFile</B></A>, <A HREF="cfile_13.htm"><B>CFile::Read</B></A>, <A HREF="csocket.htm"><B>CSocket</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

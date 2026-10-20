@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sending a Data Object to the OBEX Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sending a Data Object to the OBEX Server"/>
+<MSHelp:RLTitle Title="Sending a Data Object to the OBEX Server"/>
+<MSHelp:Keyword Index="A" Term="cmconPut"/>
+<MSHelp:Keyword Index="K" Term="data, OBEX data objects"/>
+<MSHelp:Keyword Index="K" Term="OBEX, sending data objects to servers"/>
+<MSHelp:Keyword Index="K" Term="sending, data objects to OBEX server"/>
+<MSHelp:Keyword Index="A" Term="cmconPut"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: obex_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_682339">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconput"></A>Sending a Data Object to the OBEX Server</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <B>Put</B> method is used to copy a file to the server. The request contains the Name and Length headers, however, if the target device is so simple that it accepts only one object, the headers may be omitted. If the server is a desktop computer, personal digital assistant (PDA), or any other general-purpose device, headers are highly recommended.</P>
+
+<P>The following illustration shows the logic associated with a <B>Put</B> command.</P>
+
+<P class="fig"><IMG SRC="obex_put.gif" ALT="" BORDER=0></P>
+
+<H4 class="dtH4">Request</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>Byte</TH>
+<TH width=38%>0</TH>
+<TH width=18%>1,2</TH>
+<TH width=22%>3 to n</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Data</TD>
+<TD width=38%>0x02 
+<P>(0x82 when final bit set)</P>
+</TD>
+<TD width=18%>Packet length</TD>
+<TD width=22%>Optional headers</TD>
+</TR>
+</table></div>
+
+<P>The following optional headers are included in the <B>Put</B> request packet:
+
+<UL type="disc">
+	<LI><B>Name</B> identifies the name of the object being returned, if applicable.</li>
+
+	<LI><B>Length</B> defines length of the object being returned.</li>
+
+	<LI><B>Time</B> includes the header timestamp information.</li>
+
+	<LI><B>Type</B> defines the object type. Types are of the MIME format, such as text/html, x-obex/object-profile, text/x-vCard, and others.</li>
+
+	<LI><B>Body</B> includes data.</li>
+
+	<LI><B>EndOfBody</B> marks the end of the body.</li>
+</UL>
+
+<P>The following header is always used:
+
+<UL type="disc">
+	<LI><B>Connection Id</B> identifies the connection identifier returned in the connect response. If a connect command was not issued, a default connection is assumed. </li>
+</UL>
+
+<H4 class="dtH4">Response</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=17%>Byte</TH>
+<TH width=47%>0</TH>
+<TH width=18%>1,2</TH>
+<TH width=18%>3 to n</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=17%>Data</TD>
+<TD width=47%>Typical values:
+<P>0x90 for continue (more data)</P>
+
+<P>0xA0 for success (completion)</P>
+</TD>
+<TD width=18%>Packet length</TD>
+<TD width=18%>Optional headers</TD>
+</TR>
+</table></div>
+
+<P>Headers are not included in the <B>Put</B> response packet. The response code can be one of the following:
+
+<UL type="disc">
+	<LI>Error in the case of failure</li>
+
+	<LI>Continue for intermediate packets</li>
+
+	<LI>Success for the final packet</li>
+</UL>
+
+<P>The response to any individual request packet must consist of one packet. Multipacket Put responses are not supported. </P>
+
+<P>If the length field of the response code is greater than three, the response includes headers. Unknown response codes indicate failure.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconclientsupport.htm">Client Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sending%20a%20Data%20Object%20to%20the%20OBEX%20Server&nbsp;(cmconput.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

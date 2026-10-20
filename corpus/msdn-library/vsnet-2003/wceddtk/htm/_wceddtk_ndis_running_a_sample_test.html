@@ -1,0 +1,4634 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running a Sample Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running a Sample Test"/>
+<MSHelp:RLTitle Title="Running a Sample Test"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_NDIS_Running_a_Sample_Test"/>
+<MSHelp:Keyword Index="K" Term="NDIS test, running sample test"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: ndis.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddtk_ndis_running_a_sample_test"></A>Running a Sample Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following command line shows the syntax for a sample test.</P>
+
+<PRE class="code">hapi -r\Ndistest\   Cescripts\Nd_cli.tst</PRE>
+
+<P>The following code example shows a sample Hapi.ini file for running 1c_openc.tst.</P>
+
+<PRE class="code">[DLLs]
+ndistst.dll
+
+[Variables]
+
+G_TestOptions=0x00010
+G_WorkCard="ne20001"
+G_TrustedCard="xircomce21"
+G_MessageCard="ne20001"
+G_Ndis30Flag=0
+G_ScriptName="cescripts\lan\1c_openc.tst" </PRE>
+
+<P>The following screen shot shows the output for a sample test.</P>
+
+<PRE class="code">-&gt; #########################################################
+-&gt; # 1c_openc.tst
+-&gt; #
+-&gt; # This script verifies the ability to repeatedly open and close an adapter.
+-&gt; # It is required for certification
+-&gt; # Expected duration:  1 minute
+-&gt; #########################################################
+-&gt; 
+-&gt; 
+-&gt; printf "TITLE: NdisOpenAdapter and NdisCloseAdapter tests\n\n"
+TITLE: NdisOpenAdapter and NdisCloseAdapter tests
+
+-&gt; 
+-&gt; friendly_script_name "OpenAdapter and CloseAdapter Tests"
+-&gt; debuglevel $G_DebugLevel
+
+debuglevel
+- NewLevel = 0x00
+-&gt; 
+-&gt; printf "***Repeatedly open and close the card***\n"
+***Repeatedly open and close the card***
+-&gt; 
+-&gt; # -------------------------------------------------------
+-&gt; # variation:  repeatedly open and close the card, 25 times.
+-&gt; #--------------------------------------------------------
+-&gt; 
+-&gt; $Count = 0
+LONG 0 / 0x00000000
+-&gt; while ($Count &lt; 25)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 1
+-&gt; 
+-&gt;    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082800
+-&gt;    if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+-&gt; 
+-&gt;    $result = getevents $OpenInstance
+
+getevents
+- OpenInstanceHandle = 00082800
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt;    if ($result == TEST_FAILED)
+if false -- skipping block
+-&gt;    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+-&gt;    close $OpenInstance
+
+close
+- OpenInstanceHandle = 00082800
+-&gt;    inc $Count
+incremented  1 / 0x00000001
+-&gt; }
+-&gt; while ($Count &lt; 25)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 2
+-&gt; 
+-&gt;    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082f28
+-&gt;    if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+-&gt; 
+-&gt;    $result = getevents $OpenInstance
+
+getevents
+- OpenInstanceHandle = 00082F28
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt;    if ($result == TEST_FAILED)
+if false -- skipping block
+-&gt;    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+-&gt;    close $OpenInstance
+
+close
+- OpenInstanceHandle = 00082F28
+-&gt;    inc $Count
+incremented  2 / 0x00000002
+-&gt; }
+-&gt; while ($Count &lt; 25)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 3
+-&gt; 
+-&gt;    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;    if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+-&gt; 
+-&gt;    $result = getevents $OpenInstance
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt;    if ($result == TEST_FAILED)
+if false -- skipping block
+-&gt;    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+-&gt;    close $OpenInstance
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;    inc $Count
+incremented  3 / 0x00000003
+-&gt; }
+-&gt; while ($Count &lt; 25)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 4
+-&gt; 
+-&gt;    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x000828e8
+-&gt;    if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+-&gt; 
+-&gt;    $result = getevents $OpenInstance
+
+getevents
+- OpenInstanceHandle = 000828E8
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt;    if ($result == TEST_FAILED)
+if false -- skipping block
+-&gt;    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+-&gt;    close $OpenInstance
+
+close
+
+
+///////////////////////////////////
+// Counts 4-22 skipped in sample //
+///////////////////////////////////
+
+
+- OpenInstanceHandle = 00082F28
+-&gt;    inc $Count
+incremented  23 / 0x00000017
+-&gt; }
+-&gt; while ($Count &lt; 25)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 24
+-&gt; 
+-&gt;    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;    if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+-&gt; 
+-&gt;    $result = getevents $OpenInstance
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt;    if ($result == TEST_FAILED)
+if false -- skipping block
+-&gt;    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+-&gt;    close $OpenInstance
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;    inc $Count
+incremented  24 / 0x00000018
+-&gt; }
+-&gt; while ($Count &lt; 25)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 25
+-&gt; 
+-&gt;    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x000828e8
+-&gt;    if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+-&gt; 
+-&gt;    $result = getevents $OpenInstance
+
+getevents
+- OpenInstanceHandle = 000828E8
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt;    if ($result == TEST_FAILED)
+if false -- skipping block
+-&gt;    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+-&gt;    close $OpenInstance
+
+close
+- OpenInstanceHandle = 000828E8
+-&gt;    inc $Count
+incremented  25 / 0x00000019
+-&gt; }
+-&gt; while ($Count &lt; 25)
+while false -- skipping block
+-&gt; {
+X-    printf "\n"
+X-    variation
+X- 
+X-    $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-    if ($OpenInstance == $G_NullHandle)
+X-    {
+X-       fail_variation
+X-       printf "FAILURE:  Unable to open test card\n"
+X-       goto endvar1
+X-    }
+X- 
+X-    $result = getevents $OpenInstance
+X-    if ($result == TEST_FAILED)
+X-    {
+X-       close $OpenInstance
+X-       goto endvar1
+X-    }
+X-    close $OpenInstance
+X-    inc $Count
+X- }
+-&gt; 
+-&gt; :endvar1
+-&gt; 
+-&gt; #--------------------------------------------------------
+-&gt; # variation:  Open the card n times representing n
+-&gt; #             different protocols opening the card at once.
+-&gt; #--------------------------------------------------------
+-&gt; 
+-&gt; if ($G_NdisVersion &gt;= NDIS_VERSION_5_0)
+if false -- skipping block
+-&gt; {
+X-    $MaxOpens = 128
+X- }
+-&gt; else
+-&gt; {
+-&gt;    $MaxOpens = 8
+LONG 8 / 0x00000008
+-&gt; }
+-&gt; 
+-&gt; $oi_array = array syshandle $MaxOpens
+Created 8 element array of syshandle type.
+-&gt; $index = 0
+LONG 0 / 0x00000000
+-&gt; 
+-&gt; printf "\n***Open card eight times, then close each open instance***\n"
+
+***Open card eight times, then close each open instance***
+-&gt; 
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 26
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 27
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  1 / 0x00000001
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 28
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 29
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  2 / 0x00000002
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 30
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 31
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  3 / 0x00000003
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 32
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 33
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  4 / 0x00000004
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 34
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 35
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  5 / 0x00000005
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 36
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 37
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  6 / 0x00000006
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 38
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00080668
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00080668
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x0006ff40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 0006FF40
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 39
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00080668
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00080668
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 0006FF40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 0006FF40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  7 / 0x00000007
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 40
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x0006ff40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 0006FF40
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 41
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 0006FF40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 0006FF40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  8 / 0x00000008
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 42
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x0006ff40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 0006FF40
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 43
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 0006FF40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 0006FF40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  9 / 0x00000009
+-&gt; }
+-&gt; while ($index &lt; 10)
+while true -- executing block
+-&gt; {
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 44
+-&gt; 
+-&gt;    $Count = 0
+LONG 0 / 0x00000000
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x0006ff40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 0006FF40
+-&gt;       inc $Count
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082a40
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082A40
+-&gt;       inc $Count
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082af0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082AF0
+-&gt;       inc $Count
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082ba0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082BA0
+-&gt;       inc $Count
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082c50
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082C50
+-&gt;       inc $Count
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082d00
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082D00
+-&gt;       inc $Count
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082db0
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082DB0
+-&gt;       inc $Count
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while true -- executing block
+-&gt;    {
+-&gt;       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+
+open
+- DriverName = NE20001
+- MediaType = Ethernet
+- ForceNdis30Flag = FALSE 
+OpenInstanceHandle = 0x00082e60
+-&gt;       if ($OpenInstance == $G_NullHandle)
+if false -- skipping block
+-&gt;       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+-&gt;       $oi_array[$Count] = $OpenInstance
+syshandle Syshandle type = OpenInstance, value = 00082E60
+-&gt;       inc $Count
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($Count &lt; $MaxOpens)
+while false -- skipping block
+-&gt;    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+-&gt; 
+-&gt;    printf "\n"
+
+-&gt;    variation
+variation 45
+-&gt; 
+-&gt;    $i = 0
+LONG 0 / 0x00000000
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 0006FF40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 0006FF40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  1 / 0x00000001
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082A40
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082A40
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  2 / 0x00000002
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082AF0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082AF0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  3 / 0x00000003
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082BA0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082BA0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  4 / 0x00000004
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082C50
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082C50
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  5 / 0x00000005
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082D00
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082D00
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  6 / 0x00000006
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082DB0
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082DB0
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  7 / 0x00000007
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while true -- executing block
+-&gt;    {
+-&gt;       getevents $oi_array[$i]
+
+getevents
+- OpenInstanceHandle = 00082E60
+--Minimum Number Of Cable Disconnect Events Expected : 0
+--Minimum Number Of Cable Connect Events Expected    : 0
+
+Event Queue empty
+-&gt; 
+-&gt;       $result = close $oi_array[$i]
+
+close
+- OpenInstanceHandle = 00082E60
+-&gt;       if ($result != TEST_SUCCESSFUL)
+if false -- skipping block
+-&gt;       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+-&gt;       inc $i
+incremented  8 / 0x00000008
+-&gt;    }
+-&gt;    while ($i &lt; $Count)
+while false -- skipping block
+-&gt;    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+-&gt; 
+-&gt;    inc $index
+incremented  10 / 0x0000000a
+-&gt; }
+-&gt; while ($index &lt; 10)
+while false -- skipping block
+-&gt; {
+X-    printf "\n"
+X-    variation
+X- 
+X-    $Count = 0
+X-    while ($Count &lt; $MaxOpens)
+X-    {
+X-       $OpenInstance = open $G_WorkCard $G_Media $G_Ndis30Flag
+X-       if ($OpenInstance == $G_NullHandle)
+X-       {
+X-          fail_variation
+X-          printf "FAILURE:  Unable to open test card.\n"
+X-          goto endvar2
+X-       }
+X-       $oi_array[$Count] = $OpenInstance
+X-       inc $Count
+X-    }
+X- 
+X-    printf "\n"
+X-    variation
+X- 
+X-    $i = 0
+X-    while ($i &lt; $Count)
+X-    {
+X-       getevents $oi_array[$i]
+X- 
+X-       $result = close $oi_array[$i]
+X-       if ($result != TEST_SUCCESSFUL)
+X-       {
+X-          printf "FAILURE:  Unable to close test card\n"
+X-       }
+X-       inc $i
+X-    }
+X- 
+X-    inc $index
+X- }
+-&gt; 
+-&gt; # branch to here if need to do cleanup after a failure
+-&gt; 
+-&gt; :endvar2
+-&gt; if ($index &lt; 10)
+if false -- skipping block
+-&gt; {
+X-    $i = 0
+X-    while ($i &lt; $Count)
+X-    {
+X-       getevents $oi_array[$i]
+X-       close $oi_array[$i]
+X-       inc $i
+X-    }
+X- }
+-&gt; 
+-&gt; end
+
+Variations:
+total    passed    failed    warned    blocked
+-----    ------    ------    ------    -------
+   45        45         0         0          0
+
+-&gt; 
+-&gt; ##################################################
+-&gt; # end of file 1c_openc.tst
+-&gt; ##################################################
+-&gt; 
+-&gt; </PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20a%20Sample%20Test&nbsp;(_wceddtk_ndis_running_a_sample_test.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

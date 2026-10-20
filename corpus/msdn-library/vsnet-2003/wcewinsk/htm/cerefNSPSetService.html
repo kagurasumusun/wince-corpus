@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NSPSetService</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NSPSetService"/>
+<MSHelp:RLTitle Title="NSPSetService"/>
+<MSHelp:Keyword Index="A" Term="cerefNSPSetService"/>
+<MSHelp:Keyword Index="K" Term="NSPSetService"/>
+<MSHelp:Keyword Index="A" Term="cerefNSPSetService"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715123">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefnspsetservice"></A>NSPSetService</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function registers or deregisters a service instance within a name space.</P>
+
+<PRE class="syntax"><B>int NSPSetService(</B>
+<B>LPGUID</B><I> lpProviderId</I><B>,</B>
+<B>LPWSASERVICECLASSINFOW</B><I> lpServiceClassInfo</I><B>,</B>
+<B>LPWSAQUERYSETW</B><I> lpqsRegInfo</I><B>,</B>
+<B>WSAESETSERVICEOP</B><I> essOperation</I><B>,</B>
+<B>DWORD</B><I> dwControlFlags</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpProviderId</I></DT>
+
+<DD>[in] Pointer to the GUID of the specific name-space provider in which the service is being registered.</dd>
+
+<DT><I>lpServiceClassInfo</I></DT>
+
+<DD>[in] Contains service class schema information.</dd>
+
+<DT><I>lpqsRegInfo</I></DT>
+
+<DD>[in] Specifies property information to be updated on registration.</dd>
+
+<DT><I>essOperation</I></DT>
+
+<DD>[in] Enumeration whose values include those shown in the following table.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>RNRSERVICE_REGISTER</TD>
+<TD width=66%>Register the service. For SAP, this means sending out a periodic broadcast. This is an NOP for the DNS name space. For persistent data stores this means updating the address information.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>RNRSERVICE_DEREGISTER</TD>
+<TD width=66%>Deregister the service. For SAP, this means stop sending out the periodic broadcast. This is an NOP for the DNS name space. For persistent data stores this means deleting address information.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>RNRSERVICE_DELETE</TD>
+<TD width=66%>Delete the service from dynamic name and persistent spaces. For services represented by multiple <A HREF="cerefcsaddr_info.htm">CSADDR_INFO</A> structures (using the SERVICE_MULTIPLE flag), only the supplied address will be deleted, and this must match exactly the corresponding <B>CSADD_INFO</B> structure that was supplied when the service was registered.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>dwControlFlags</I></DT>
+
+<DD>[in] Set of control flags whose values include those shown in the following table.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>SERVICE_MULTIPLE</TD>
+<TD width=66%>Controls scope of operation. A register or deregister invalidates all existing addresses before adding the given address set. When set, the action is only performed on the given address set. A register does not invalidate existing addresses and a deregister only invalidates the given set of addresses.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<P>The available values for <I>essOperation</I> and <I>dwControlFlags</I> combine to give meanings as shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Operation</TH>
+<TH width=21%>Flags</TH>
+<TH width=28%>Service already exists</TH>
+<TH width=26%>Service does not exist</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RNRSERVICE_<BR>
+REGISTER</TD>
+<TD width=21%>None</TD>
+<TD width=28%>Overwrites the object. Uses only addresses specified. Object is REGISTERED.</TD>
+<TD width=26%>Creates a new object. Uses only addresses specified. Object is REGISTERED.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RNRSERVICE_<BR>
+REGISTER</TD>
+<TD width=21%>SERVICE<BR>
+_MULTIPLE</TD>
+<TD width=28%>Updates object. Adds new addresses to existing set. Object is REGISTERED.</TD>
+<TD width=26%>Creates a new object. Uses all addresses specified. Object is REGISTERED.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RNRSERVICE_<BR>
+DEREGISTER</TD>
+<TD width=21%>None</TD>
+<TD width=28%>Removes all addresses, but does not remove object from name space. Object is DEREGISTERED.</TD>
+<TD width=26%>WSASERVICE_<BR>
+NOT_FOUND</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RNRSERVICE_<BR>
+DEREGISTER</TD>
+<TD width=21%>SERVICE<BR>
+_MULTIPLE</TD>
+<TD width=28%>Updates object. Removes only addresses that are specified. Only mark object as DEREGISTERED if no addresses are present. Does not remove from the name space.</TD>
+<TD width=26%>WSASERVICE_<BR>
+NOT_FOUND</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RNRSERVICE_<BR>
+DELETE</TD>
+<TD width=21%>None</TD>
+<TD width=28%>Removes object from the name space.</TD>
+<TD width=26%>WSASERVICE_<BR>
+NOT_FOUND</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>RNRSERVICE_<BR>
+DELETE</TD>
+<TD width=21%>SERVICE<BR>
+_MULTIPLE</TD>
+<TD width=28%>Removes only addresses that are specified. Only removes object from the name space if no addresses remain.</TD>
+<TD width=26%>WSASERVICE_<BR>
+NOT_FOUND</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function always returns WSAEOPNOTSUPP in Windows CE.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Error value</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEACCES</TD>
+<TD width=65%>Calling routine does not have sufficient privileges to install the service.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEINVAL</TD>
+<TD width=65%>One or more parameters were invalid or missing for this provider.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSA_NOT_ENOUGH_MEMORY </TD>
+<TD width=65%>Not enough free memory available to perform this operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSASERVICE_NOT_FOUND</TD>
+<TD width=65%>No such service is known. The service cannot be found in the specified name space.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The SERVICE_MULTIPLE parameter lets an application manage its addresses independently. This is useful when the application wants to manage its protocols individually or when the service resides on more than one machine. For instance, when a service uses more than one protocol, it may find that one listening socket aborts but the others remain operational. In this case, the service could deregister the aborted address without affecting the other addresses.</P>
+
+<P>When using SERVICE_MULTIPLE, an application must not let stale addresses remain in the object. This can happen if the application aborts without issuing a DEREGISTER request. When a service registers, it should store its addresses. On its next invocation, the service should explicitly deregister these old stale addresses before registering new addresses.</P>
+
+<P class="label"><B>Service Properties</B></P>
+
+<P>The following table describes how service property data is represented in a <A HREF="cerefwsa_queryset.htm">WSAQUERYSET</A> structure. Members labeled as <I>(Optional) </I>can be supplied with a NULL pointer.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>WSAQUERYSET member name</TH>
+<TH width=65%>Service property description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>dwSize</B></TD>
+<TD width=65%>Must be set to sizeof(<B>WSAQUERYSET</B>). This is a versioning mechanism.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>DwOuputFlags</B></TD>
+<TD width=65%>Not applicable and ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpszServiceInstanceName</B></TD>
+<TD width=65%>Referenced string contains the service instance name.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpServiceClassId</B></TD>
+<TD width=65%>GUID corresponding to this service class.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpVersion</B></TD>
+<TD width=65%><I>(Optional)</I> Supplies service instance version number.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpszComment</B></TD>
+<TD width=65%><I>(Optional) </I>An optional comment string.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>DwNameSpace</B></TD>
+<TD width=65%>Ignored for this operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpNSProviderId</B></TD>
+<TD width=65%>Ignored for this operation, provider identifier is contained in the <I>lpProviderId </I>parameter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpszContext</B></TD>
+<TD width=65%><I>(Optional) </I>Specifies the starting point of the query in a hierarchical name space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>DwNumberOfProtocols</B></TD>
+<TD width=65%>Ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpafpProtocols</B></TD>
+<TD width=65%>Ignored<I>.</I></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpszQueryString</B></TD>
+<TD width=65%>Ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>DwNumberOfCsAddrs</B></TD>
+<TD width=65%>Number of elements in the array of <B>CSADDRO_INFO</B> structures referenced by <I>lpcsaBuffer</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpcsaBuffer</B></TD>
+<TD width=65%>Pointer to an array of <B>CSADDRO_INFO</B> structures that contain the address or addresses that the service is listening on. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>LpBlob</B></TD>
+<TD width=65%><I>(Optional) </I>Pointer to a provider-specific entity.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>It is acceptable for the <B>iProtocol</B> member of the <B>CSADDR_INFO</B> structure to contain the manifest constant <B>IPROTOCOL_ANY</B>, signifying a wildcard value. The name-space provider should substitute a value that is reasonable for the given address family and socket type. </BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwsa_queryset.htm">WSAQUERYSET</A>, <A HREF="cerefcsaddr_info.htm">CSADDR_INFO</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NSPSetService&nbsp;(cerefnspsetservice.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

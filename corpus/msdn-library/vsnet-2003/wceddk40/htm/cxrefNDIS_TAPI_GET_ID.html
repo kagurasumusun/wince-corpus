@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_TAPI_GET_ID</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_TAPI_GET_ID"/>
+<MSHelp:RLTitle Title="NDIS_TAPI_GET_ID"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_TAPI_GET_ID"/>
+<MSHelp:Keyword Index="K" Term="NDIS_TAPI_GET_ID"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_TAPI_GET_ID"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756767">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndis_tapi_get_id"></A>NDIS_TAPI_GET_ID</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The<B> NDIS_TAPI_GET_ID</B> structure is used by <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A> when it requests the miniport driver to return a device identifier for the specified device class associated with the selected line, address, or call. </P>
+
+<P>Support for this request is mandatory. </P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_TAPI_GET_ID { </B>
+<B>  IN ULONG</B>  <I>ulRequestID</I><B>;</B> 
+  <B>IN HDRV_LINE</B>  <I>hdLine</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulAddressID</I><B>;</B> 
+  <B>IN HDRV_CALL</B>  <I>hdCall</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulSelect</I><B>;</B><I> </I>
+  <B>IN ULONG</B>  <I>ulDeviceClassSize</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulDeviceClassOffset</I><B>;</B> 
+  <B>OUT VAR_STRING</B>  <I>DeviceID</I><B>;</B> 
+} <B>NDIS_TAPI_GET_ID, *PNDIS_TAPI_GET_ID; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>ulRequestID </B></DT>
+
+<DD>Reserved. </dd>
+
+<DT><B>hdLine </B></DT>
+
+<DD>Specifies the miniport driver's handle to the line. </dd>
+
+<DT><B>ulAddressID </B></DT>
+
+<DD>Specifies an address on the given open line device. The value of this member is not validated by NDISTAPI when this request is made. </dd>
+
+<DT><B>hdCall </B></DT>
+
+<DD>Specifies the miniport driver's handle to the call. </dd>
+
+<DT><B>ulSelect </B></DT>
+
+<DD>Specifies whether the device identifier is associated with the line, address, or a single call as one of the following: </dd>
+
+<DT><B>LINECALLSELECT_LINE </B></DT>
+
+<DD>Selects the specified line device. The <B>hdLine</B> member must contain a valid line handle; <B>hdCall</B> and <B>ulAddressID</B> are unused. </dd>
+
+<DT><B>LINECALLSELECT_ADDRESS </B></DT>
+
+<DD>Selects the specified address on the line. Both <B>hdLine</B> and <B>ulAddressID</B> must be valid; <B>hdCall</B> is unused. </dd>
+
+<DT><B>LINECALLSELECT_CALL </B></DT>
+
+<DD>Selects the specified call. The <B>hdCall</B> member must be valid; <B>hdLine</B> and <B>ulAddressID</B> are unused. </dd>
+
+<DT><B>ulDeviceClassSize </B></DT>
+
+<DD>Specifies the size in bytes of the zero-terminated, variable-size string specifying the device class of the device for which the configuration should be returned. </dd>
+
+<DT><B>ulDeviceClassOffset </B></DT>
+
+<DD>Specifies the offset in bytes to the device-class string. </dd>
+
+<DT><B>DeviceID </B></DT>
+
+<DD>Specifies the virtual address of a data structure of type <A HREF="cxrefvar_string.htm">VAR_STRING</A> in which the device identifier should be returned. </dd>
+</DL>
+
+<P>The miniport driver fills this structure with the device identifier to complete this request successfully. </P>
+
+<P>Currently, there are two types of this request that must be supported by WAN NIC drivers:
+
+<UL type="disc">
+	<LI><code class="ce">IN DeviceClass = "ndis" // case insensitive</code><BR>
+<code class="ce">IN ulSelect = LINECALLSELECT_CALL</code><BR>
+<code class="ce">IN hdCall = ActiveCallHandle</code><BR>
+<code class="ce">OUT DeviceID = ConnectionWrapperID </code>
+<P><B>DeviceID</B> should be set to the <B>NdisLinkContext</B> handle returned by the WAN protocol driver in the <A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A> structure for the initial <B>NDIS_STATUS_WAN_LINE_UP</B> indication to establish the link.
+
+<P>The miniport driver must make the initial line-up indication to establish a link (or open a data channel on a line) before returning from this request in order to supply this <B>DeviceID</B> value. 
+</li>
+
+	<LI><code class="ce">IN DeviceClass = "tapi/line"</code><BR>
+<code class="ce">IN ulSelect = LINECALLSELECT_LINE</code><BR>
+<code class="ce">IN hdLine = OpenLineHandle</code><BR>
+<code class="ce">OUT DeviceID = ulDeviceID </code>
+<P><B>DeviceID</B> will be set to the miniport driver-determined <B>DeviceID</B> associated with the line handle.
+</li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A> function can return one of the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_SUCCESS</li>
+
+	<LI>NDIS_STATUS_PENDING</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALLINEHANDLE</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALADDRESSID</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALCALLHANDLE</li>
+
+	<LI>NDIS_STATUS_TAPI_NODEVICE</li>
+
+	<LI>NDIS_STATUS_TAPI_RESOURCEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_FAILURE</li>
+</UL>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndistapi.h</TD>
+<TD width=16%>Ntddndis.h and Ndistapi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A>, <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A>, <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A>, <A HREF="cxrefvar_string.htm">VAR_STRING</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_TAPI_GET_ID&nbsp;(cxrefndis_tapi_get_id.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

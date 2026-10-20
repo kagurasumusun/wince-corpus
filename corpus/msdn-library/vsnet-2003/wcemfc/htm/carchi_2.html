@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::CArchive</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_carchive_carchive"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_carchive_carchive"></A>CArchive::CArchive</H1>
+
+<P>This constructor creates an instance of a <B>CArchive</B> object and specifies whether it is used for loading or storing objects. Once the archive is created, this specification cannot be changed.</P>
+
+<PRE class=syntax><B>CArchive(</B>
+<B>CFile*</B> <I>pFile</I><B>,</B>
+<B>UINT</B> <I>nMode</I><B>,</B>
+<B>int</B> <I>nBufSize</I> <B>=</B> <B>4096,</B>
+<B>void*</B> <I>lpBuf</I> <B>=</B> <B>NULL);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pFile</I></DT>
+
+<DD>A pointer to the <B>CFile</B> object that is the ultimate source or destination of the persistent data.</DD>
+
+<DT><I>nMode</I></DT>
+
+<DD>A flag that specifies whether objects are loaded from or stored to the archive. The <I>nMode</I> parameter must have one of the following values:
+
+<UL type=disc>
+	<LI><B>CArchive::load</B>&nbsp;&nbsp;&nbsp;Loads data from the archive. Requires only <B>CFile</B> read permission.</LI>
+
+	<LI><B>CArchive::store</B>&nbsp;&nbsp;&nbsp;Saves data to the archive. Requires <B>CFile</B> write permission.</LI>
+
+	<LI><B>CArchive::bNoFlushOnDelete</B>&nbsp;&nbsp;&nbsp;Prevents the archive from automatically calling <B>Flush</B> when the archive destructor is called. If you set this flag, you must explicitly call <B>Close</B> before the destructor is called. If you do not, your data will be corrupted.</LI>
+</UL>
+</DD>
+
+<DT><I>nBufSize</I></DT>
+
+<DD>An integer that specifies the size of the internal file buffer, in bytes. The default buffer size is 4096 bytes. If you routinely archive large objects, you will improve performance if you use a larger buffer size that is a multiple of the file buffer size. </DD>
+
+<DT><I>lpBuf</I></DT>
+
+<DD>An optional pointer to a user-supplied buffer of size <I>nBufSize</I>. If you do not specify this parameter, the archive allocates a buffer from the local heap and frees it when the object is destroyed. The archive does not free a user-supplied buffer.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>You may not use <B>CFile</B> operations to alter the state of the file until you close the archive. Any such operation damages the integrity of the archive. You may access the position of the file pointer at any time during serialization by obtaining the file object of the archive from the <B>GetFile</B> method and using the <B>CFile::GetPosition</B> function. You should call <B>CArchive::Flush</B> before obtaining the position of the file pointer.</P>
+
+<H4>Example</H4>
+
+<PRE>extern char* pFileName;
+CFile f;
+char buf[512];
+if( !f.Open( pFileName, CFile::modeCreate | CFile::modeWrite ) ) {
+   #ifdef _DEBUG
+      afxDump &lt;&lt; "Unable to open file" &lt;&lt; "\n";
+      exit( 1 );
+   #endif
+}
+CArchive ar( &amp;f, CArchive::store, 512, buf );
+_</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="carchi_4.htm"><B>CArchive::Close</B></A>, <A HREF="carchi_5.htm"><B>CArchive::Flush</B></A>, <A HREF="cfile_4.htm"><B>CFile::Close</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

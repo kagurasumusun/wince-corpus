@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMoniker::BindToObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IMoniker::BindToObject"/>
+<MSHelp:RLTitle Title="IMoniker::BindToObject"/>
+<MSHelp:Keyword Index="A" Term="cerefIMonikerBindToObject"/>
+<MSHelp:Keyword Index="K" Term="IMoniker, BindToObject"/>
+<MSHelp:Keyword Index="A" Term="cerefIMonikerBindToObject"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747779">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefimonikerbindtoobject"></A>IMoniker::BindToObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method binds to the object named by the moniker.</P>
+
+<PRE class="syntax"><B>HRESULT BindToObject( </B>
+<B>IBindCtx *</B><I>pbc</I><B>, </B>
+<B>IMoniker *</B><I>pmkToLeft</I><B>, </B>
+<B>REFIID </B><I>riidResult</I><B>, </B>
+<B>void **</B><I>ppvResult</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pbc</I></DT>
+
+<DD>[in] Pointer to the <B>IBindCtx</B> interface on the bind context object, which is used in this binding operation. The bind context caches objects bound during the binding process, contains parameters that apply to all operations using the bind context, and provides the means by which the moniker implementation should retrieve information about its environment.</dd>
+
+<DT><I>pmkToLeft</I></DT>
+
+<DD>[in] If the moniker is part of a composite moniker, pointer to the moniker to the left of this moniker. This parameter is primarily used by moniker implementers to enable cooperation between the various components of a composite moniker. Moniker clients should pass NULL.</dd>
+
+<DT><I>riidResult</I></DT>
+
+<DD>[in] Reference to the identifier of the interface the client wants to use to communicate with the object that the moniker identifies.</dd>
+
+<DT><I>ppvResult</I></DT>
+
+<DD>[out] Address of pointer variable that receives the interface pointer requested in <I>riid</I>. Upon successful return, *<I>ppvResult</I> contains the requested interface pointer to the object the moniker identifies. When successful, the implementation must call <A HREF="cerefiunknownaddref.htm">IUnknown::AddRef</A> on the moniker. It is the caller's responsibility to release the object with a call to <A HREF="cerefiunknownrelease.htm">IUnknown::Release</A>. If an error occurs, *<I>ppvResult</I> should be NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The method supports the standard return values E_UNEXPECTED and E_OUTOFMEMORY, as well as the values described in the following table.
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The binding operation was successful.</dd>
+
+<DT>MK_E_NOOBJECT</DT>
+
+<DD>The object identified by this moniker, or some object identified by the composite moniker of which this moniker is a part, could not be found.</dd>
+
+<DT>MK_E_EXCEEDEDDEADLINE</DT>
+
+<DD>The binding operation could not be completed within the time limit specified by the bind context's <A HREF="cerefbind_opts.htm">BIND_OPTS</A> structure. </dd>
+
+<DT>MK_E_CONNECTMANUALLY</DT>
+
+<DD>The binding operation requires assistance from the end user. The most common reasons for returning this value are that a password is needed or that a floppy needs to be mounted. When this value is returned, retrieve the moniker that caused the error with a call to <B>IBindCtx::GetObjectParam</B> with the key "ConnectManually". You can then call <A HREF="cerefimonikergetdisplayname.htm">IMoniker::GetDisplayName</A> to get the display name, display a dialog box that communicates the desired information, such as instructions to mount a floppy or a request for a password, and then retry the binding operation.</dd>
+
+<DT>MK_E_INTERMEDIATEINTERFACENOTSUPPORTED</DT>
+
+<DD>An intermediate object was found but it did not support an interface required to complete the binding operation. For example, an item moniker returns this value if its container does not support the <A HREF="cerefioleitemcontainer.htm">IOleItemContainer</A> interface.</dd>
+
+<DT>STG_E_ACCESSDENIED</DT>
+
+<DD>Unable to access the storage object.</dd>
+
+<DT><A HREF="cerefioleitemcontainergetobject.htm">IOleItemContainer::GetObject</A> errors</DT>
+
+<DD>If the moniker used to bind to an object contains an item moniker, errors associated with this method can be returned.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>IMoniker::BindToObject</B> implements the primary function of a moniker, which is to locate the object identified by the moniker and return a pointer to one of its interfaces. </P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Notes to Callers</H4>
+
+<P>If you are using a moniker as a persistent connection between two objects, you activate the connection by calling <A HREF="#cerefimonikerbindtoobject">IMoniker::BindToObject</A>. </P>
+
+<P>You typically call <B>IMoniker::BindToObject</B> during the following process:
+
+<OL type="1">
+	<LI>Create a bind context object with a call to the <A HREF="cerefcreatebindctx.htm">CreateBindCtx</A> function.</li>
+
+	<LI>Call <B>IMoniker::BindToObject</B> using the moniker, retrieving a pointer to a desired interface on the identified object. </li>
+
+	<LI>Release the bind context.</li>
+
+	<LI>Through the acquired interface pointer, perform the desired operations on the object. </li>
+
+	<LI>When finished with the object, release the object's interface pointer. </li>
+</OL>
+
+<P>The following code fragment illustrates these steps.</P>
+
+<PRE class="code">// pMnk is an IMoniker * that points to a previously acquired moniker 
+// ICellRange is a custom interface designed for an object that is a 
+//            range of spreadsheet cells 
+ICellRange *pCellRange; 
+IBindCtx *pbc; 
+ 
+CreateBindCtx( 0, &amp;pbc ); 
+pMnk-&gt;BindToObject( pbc, NULL, IID_ICellRange, &amp;pCellRange ); 
+pbc-&gt;Release(); 
+// pCellRange now points to the object; safe to use pCellRange 
+pCellRange-&gt;Release(); </PRE>
+
+<P>You can also use the <A HREF="cerefbindmoniker.htm">BindMoniker</A> function when you only intend one binding operation and do not need to retain the bind context object. This helper function encapsulates the creation of the bind context, calling <B>IMoniker::BindToObject</B>, and releasing the bind context.</P>
+
+<P>COM containers that support links to objects use monikers to locate and get access to the linked object, but typically do not call <B>IMoniker::BindToObject</B> directly. Instead, when a user activates a link in a container, the link container usually calls <A HREF="cerefioleobjectdoverb.htm">IOleObject::DoVerb</A>, using the link handler's implementation, which calls <B>IMoniker::BindToObject</B> on the moniker stored in the linked object (if it cannot handle the verb). </P>
+
+<H4 class="dtH4">Notes to Implementers</H4>
+
+<P>What your implementation does depends on whether you expect your moniker to have a prefix, that is, whether you expect the <I>pmkToLeft</I> parameter to be NULL or not. For example, an item moniker, which identifies an object within a container, expects that <I>pmkToLeft</I> identifies the container. An item moniker consequently uses <I>pmkToLeft</I> to request services from that container. If you expect your moniker to have a prefix, you should use the <I>pmkToLeft</I> parameter (for instance, calling <B>IMoniker::BindToObject</B> on it) to request services from the object it identifies. </P>
+
+<P>If you expect your moniker to have no prefix, your <B>IMoniker::BindToObject</B> implementation should first check the Running Object Table (ROT) to see if the object is already running. To acquire a pointer to the ROT, your implementation should call <B>IBindCtx::GetRunningObjectTable</B> on the <I>pbc</I> parameter. You can then call the <A HREF="cerefirunningobjecttablegetobject.htm">IRunningObjectTable::GetObject</A> method to see if the current moniker has been registered in the ROT. If so, you can immediately call <A HREF="cerefiunknownqueryinterface.htm">IUnknown::QueryInterface</A> to get a pointer to the interface requested by the caller. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oaidl.h</TD>
+<TD width=15%>Oaidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefbindmoniker.htm">BindMoniker</A>, <A HREF="cerefcreatebindctx.htm">CreateBindCtx</A>, <A HREF="#cerefimonikerbindtoobject">IMoniker::BindToObject</A>, <A HREF="cerefimonikergetdisplayname.htm">IMoniker::GetDisplayName</A>, <A HREF="cerefioleobjectdoverb.htm">IOleObject::DoVerb</A>, <A HREF="cerefiunknownaddref.htm">IUnknown::AddRef</A>, <A HREF="cerefiunknownrelease.htm">IUnknown::Release</A>, <A HREF="cerefbind_opts.htm">BIND_OPTS</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IMoniker::BindToObject&nbsp;(cerefimonikerbindtoobject.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

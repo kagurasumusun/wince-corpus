@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring the Process Boot Phase</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring the Process Boot Phase"/>
+<MSHelp:RLTitle Title="Configuring the Process Boot Phase"/>
+<MSHelp:Keyword Index="A" Term="cgconConfiguringRegistry"/>
+<MSHelp:Keyword Index="K" Term="configuring, registries"/>
+<MSHelp:Keyword Index="K" Term="registries, configuring"/>
+<MSHelp:Keyword Index="A" Term="cgconConfiguringRegistry"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748568">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconconfiguringregistry"></A>Configuring the Process Boot Phase</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When you finish adapting your OAL, you can set the system registry for your platform. When Windows CE begins loading, the kernel starts the file system and examines the <B>HKEY_LOCAL_MACHINE\Init</B> registry key to identify what applications to run. Although you determine which applications the OS loads, most platforms include the following applications:
+
+<UL type="disc">
+	<LI>Debug shell (Shell.exe)
+<P>Shell.exe communicates with Cesh.exe application running on your development workstation. Include only Shell.exe in your OS image for debugging and development. Shell.exe displays the Windows CE prompt in the command prompt build window after you use Cesh.exe to transfer the Windows CE image.
+</li>
+
+	<LI>Device Manager (Device.exe) </li>
+
+	<LI>Graphics, Windowing, and Events Subsystem (Gwes.exe)
+<P>Gwes.exe also loads and initializes input device drivers such as the keyboard driver and the touch driver.
+</li>
+
+	<LI>Task Manager (Taskman.exe)</li>
+</UL>
+
+<P>To control which applications run at system startup, create launch registry values. Launch registry values do not need to be sorted in the registry, although you can specify dependencies. You can specify up to 32 applications. The following table shows the entries for the <B>HKEY_LOCAL_MACHINE\Init</B> registry key.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Entry</TH>
+<TH width=25%>Value</TH>
+<TH width=54%>Type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>Launch<I>nn</I></B></TD>
+<TD width=25%><I>program.exe</I></TD>
+<TD width=54%>REG_SZ</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>Depend<I>nn</I></B></TD>
+<TD width=25%>hex<I>:xx,yy</I>[,<I>xx</I>,<I>yy</I>]</TD>
+<TD width=54%>REG_BINARY (<I>yy</I> is the most significant bit)</TD>
+</TR>
+</table></div>
+
+<P>Launch registry values have optional dependencies as denoted by the <B>Depend<I>nn</I></B> registry value. <B>Depend<I>nn</I></B> registry values specify applications that Windows CE must be running before the <B>Launch<I>nn</I></B> applications run. <B>Depend<I>nn</I></B> registry values begin with the keyword <B>Depend</B>, followed by the same decimal number as the <B>Launch<I>nn</I></B> registry value. The <B>Depend<I>nn</I></B> registry values define an order in which Windows CE launches applications. One or more dependent applications can be specified per <B>Depend<I>nn</I></B> value. Dependent applications are specified as a series of Words in hexadecimal notation. The following code example shows a typical <B>Init</B> registry entry using dependencies.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Init]
+    "Launch10"="shell.exe"
+    "Launch20"="device.exe"
+    "Launch30"="gwes.exe"
+    "Depend30"=hex:14,00
+    "Launch50"="taskman.exe"
+    "Depend50"=hex:14,00, 1e,00</PRE>
+
+<P>In the preceding example, Gwes.exe is dependent on Device.exe starting and Taskman.exe is dependent on Device.exe and Gwes.exe starting. </P>
+
+<P>After Windows CE calls an application using the <B>Init</B> registry value, the application must call the <MSHelp:link keywords="cmrefSignalStarted" TABINDEX="0">SignalStarted</MSHelp:link> function. <B>SignalStarted</B> indicates that the application is ready for the rest of the OS to continue processing. The value that is passed as the parameter to <B>SignalStarted</B> is the value passed on the command line of the application started from the <B>Init</B> key. For more information about the format of the registry, see <MSHelp:link keywords="_wcepb_Registry_File" TABINDEX="0">Registry File</MSHelp:link>. For information about default registry settings, see <MSHelp:link keywords="_wcepb_Default_Registry_Settings" TABINDEX="0">Default Registry Settings</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcompletingoal.htm">Completing an OAL</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Configuring%20the%20Process%20Boot%20Phase&nbsp;(cgconconfiguringregistry.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

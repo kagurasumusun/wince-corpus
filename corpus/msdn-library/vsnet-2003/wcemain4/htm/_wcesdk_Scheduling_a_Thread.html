@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Scheduling a Thread</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Scheduling a Thread"/>
+<MSHelp:RLTitle Title="Scheduling a Thread"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Scheduling_a_Thread"/>
+<MSHelp:Keyword Index="K" Term="multitasking, scheduling threads"/>
+<MSHelp:Keyword Index="K" Term="preemptive multitasking, scheduling threads"/>
+<MSHelp:Keyword Index="K" Term="priority, scheduling threads"/>
+<MSHelp:Keyword Index="K" Term="scheduling, threads"/>
+<MSHelp:Keyword Index="K" Term="threads, scheduling"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Scheduling_a_Thread"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: kernel_scheduling.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_662574">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_scheduling_a_thread"></A>Scheduling a Thread</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE uses a priority-based time-slice algorithm to schedule the execution of threads. Because Windows CE does not have priority classes, the process in which the thread runs does not influence thread priorities. All the priorities can be used in the same process. A thread can have one of the 256 priorities. The top 249 (0 through 248) priorities are real-time priority levels. The following table describes the bottom eight (248 through 255) priorities.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>Priority</TH>
+<TH width=55%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_TIME_CRITICAL</TD>
+<TD width=55%>Indicates 3 points above normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_HIGHEST</TD>
+<TD width=55%>Indicates 2 points above normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_ABOVE_NORMAL</TD>
+<TD width=55%>Indicates 1 point above normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_NORMAL</TD>
+<TD width=55%>Indicates normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_BELOW_NORMAL</TD>
+<TD width=55%>Indicates 1 point below normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_LOWEST</TD>
+<TD width=55%>Indicates 2 points below normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_ABOVE_IDLE</TD>
+<TD width=55%>Indicates 3 points below normal priority.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>THREAD_PRIORITY_IDLE</TD>
+<TD width=55%>Indicates 4 points below normal priority.</TD>
+</TR>
+</table></div>
+
+<P>Threads with a higher priority run first. Threads with the same priority run in a round-robin fashion &#0151; when a thread has stopped running, all other threads of the same priority run before the original thread can continue. Threads at a lower priority do not run until all threads with a higher priority have either finished or have been blocked. If one thread is running and a thread of higher priority is unblocked, the lower-priority thread is immediately suspended and the higher-priority thread is scheduled.</P>
+
+<P>Threads run for a specific slice of time &#0151; called a quantum &#0151; that has a default value of 100 milliseconds. An OEM can specify a different quantum. If, after the quantum has elapsed, the thread has not relinquished its time slice and is not time-critical, it is suspended and another thread is scheduled to run. Threads that have a quantum set to 0 cannot be pre-empted except by a higher priority thread or an interrupt service routine (ISR).</P>
+
+<P>For the most part, thread priorities are fixed and do not change. However, there is one exception, called <I>priority inversion</I>. If a low-priority thread is using a resource that a high-priority thread is waiting to use, the kernel temporarily boosts the priority of the low-priority thread until it releases the resource that is required by the higher-priority thread.</P>
+
+<P>To query the priority level of a thread, call the <MSHelp:link keywords="_wcesdk_CeGetThreadPriority" TABINDEX="0">CeGetThreadPriority</MSHelp:link> function. To change the priority level of a thread, call the <MSHelp:link keywords="_wcesdk_CeSetThreadPriority" TABINDEX="0">CeSetThreadPriority</MSHelp:link> function.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_threads.htm">Threads</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Scheduling%20a%20Thread&nbsp;(_wcesdk_scheduling_a_thread.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

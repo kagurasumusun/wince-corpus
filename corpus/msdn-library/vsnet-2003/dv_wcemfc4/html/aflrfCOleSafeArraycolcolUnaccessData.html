@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleSafeArray::UnaccessData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COleSafeArray::UnaccessData"/>
+<MSHelp:RLTitle Title="COleSafeArray::UnaccessData"/>
+<MSHelp:Keyword Index="A" Term="aflrfCOleSafeArraycolcolUnaccessData"/>
+<MSHelp:Keyword Index="K" Term="UnaccessData method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCOleSafeArraycolcolUnaccessData"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="csafeary.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_696854">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcolesafearraycolcolunaccessdata"></A>COleSafeArray::UnaccessData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method decrements the lock count of an array and invalidates the pointer retrieved by <B>COleSafeArray::AccessData</B>.</P>
+
+<P>On error, this method throws a <A HREF="aflrfcoleexception.htm"><B>COleException</B></A>.</P>
+
+<PRE class="syntax"><B>void UnaccessData( );</B><I> </I></PRE>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Sort is an automation method by the CCmdTarget-derived class 
+// CSAProjDlgAutoProxy
+void CSAProjDlgAutoProxy::Sort(VARIANT FAR* vArray) 
+{
+&nbsp;&nbsp;COleSafeArray sa;
+&nbsp;&nbsp;BSTR *pbstr;
+&nbsp;&nbsp;TCHAR buf[1024];
+&nbsp;&nbsp;LONG cElements, lLBound, lUBound;
+  
+&nbsp;&nbsp;// Needed for OLE2T macro below, include afxpriv.h.
+&nbsp;&nbsp;USES_CONVERSION;
+
+&nbsp;&nbsp;// Type check VARIANT parameter. It should contain a BSTR array
+&nbsp;&nbsp;// passed by reference. The array must be passed by reference it is
+&nbsp;&nbsp;// an in-out-parameter.
+&nbsp;&nbsp;if (V_VT(vArray) != (VT_ARRAY | VT_BSTR))
+&nbsp;&nbsp;&nbsp;&nbsp;AfxThrowOleDispatchException(1001, 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Type Mismatch in Parameter. Pass a string array by reference");
+
+&nbsp;&nbsp;// Clears data in sa and copies the variant data into sa.
+&nbsp;&nbsp;sa.Attach(*vArray);
+
+&nbsp;&nbsp;// Check that array is 1 dimensional.
+&nbsp;&nbsp;if (sa.GetDim() != 1)
+&nbsp;&nbsp;&nbsp;&nbsp;AfxThrowOleDispatchException(1002, 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Type Mismatch in Parameter. Pass a one-dimensional array");
+
+&nbsp;&nbsp;try 
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get array bounds.
+&nbsp;&nbsp;&nbsp;&nbsp;sa.GetLBound(1, &amp;lLBound);
+&nbsp;&nbsp;&nbsp;&nbsp;sa.GetUBound(1, &amp;lUBound);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Get a pointer to the elements of the array
+&nbsp;&nbsp;&nbsp;&nbsp;// and increments the lock count on the array
+&nbsp;&nbsp;&nbsp;&nbsp;sa.AccessData((LPVOID*)&amp;pbstr);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Get no. of elements in array.
+&nbsp;&nbsp;&nbsp;&nbsp;cElements = lUBound-lLBound+1;
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; cElements-1; i++)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Output the elements of the array.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsprintf(buf, "%s", OLE2T(pbstr[i]));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OutputDebugString(buf);
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;// Decrement lock count.
+&nbsp;&nbsp;&nbsp;&nbsp;sa.UnaccessData();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;catch (COleException *pEx)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxThrowOleDispatchException(1003, 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Unexpected Failure in FastSort method");
+&nbsp;&nbsp;&nbsp;&nbsp;pEx-&gt;Delete();
+&nbsp;&nbsp;}
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcolesafearraycolcolaccessdata.htm"><B>COleSafeArray::AccessData</B></A>, <B>SafeArrayUnaccessData</B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_696854', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Direct3D Command Buffers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Direct3D Command Buffers"/>
+<MSHelp:RLTitle Title="Direct3D Command Buffers"/>
+<MSHelp:Keyword Index="A" Term="cxconDirect3DCommandBuffers"/>
+<MSHelp:Keyword Index="K" Term="buffers, Direct3D command buffers"/>
+<MSHelp:Keyword Index="K" Term="command buffers%2C Direct3D, overview"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, primitive drawing and state changes"/>
+<MSHelp:Keyword Index="K" Term="primitive drawing%2C Direct3D, command and vertex buffers"/>
+<MSHelp:Keyword Index="A" Term="cxconDirect3DCommandBuffers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664964">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondirect3dcommandbuffers"></A>Direct3D Command Buffers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following illustration shows portions of a sample logical command buffer. </P>
+
+<P class="fig"><IMG SRC="d3dcmbuf.gif" ALT="" BORDER=0></P>
+
+<P>The driver's <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback receives a pointer to a command buffer in the <B>lpDDCommands</B> member of the <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> structure. The command buffer is always processed sequentially.</P>
+
+<P class="label"><B>Sample Command Buffer</B></P>
+
+<P>As shown in the preceding figure, a command buffer contains an unspecified number of <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structures, where the <B>bCommand</B> member of each structure identifies one of the following commands:
+
+<UL type="disc">
+	<LI>D3DDP2OP_RENDERSTATE indicates that there are <B>wStateCount</B> <A HREF="cxrefd3dhal_dp2renderstate.htm">D3DHAL_DP2RENDERSTATE</A> structures that follow in the command buffer. The driver should parse the state from each of these structures and update its private driver state accordingly. The driver should also update the appropriate state in the array to which <B>lpdwRStates</B> points. If the driver does not support the state requested in the command buffer, the driver should override the requested value with one that it supports.</li>
+
+	<LI>D3DDP2OP_TEXTURESTAGESTATE indicates that there are <B>wStateCount</B> <A HREF="cxrefd3dhal_dp2texturestagestate.htm">D3DHAL_DP2TEXTURESTAGESTATE</A> structures that follow in the command buffer. The driver should parse the state from each of these structures and update the driver's texture state associated with the specified texture stage accordingly. The driver does not report texture stage state back to the Direct3D run time.
+<P>A driver is required to properly parse up to eight texture coordinate sets regardless of how many coordinate sets it actually uses.
+</li>
+
+	<LI>D3DDP2OP_VIEWPORTINFO indicates that there is one <A HREF="cxrefd3dhal_dp2viewportinfo.htm">D3DHAL_DP2VIEWPORTINFO</A> structure that follows in the command buffer. The driver should parse this structure and update the viewport information stored in the driver's internal rendering context.</li>
+
+	<LI>D3DDP2OP_WINFO indicates that there is one <A HREF="cxrefd3dhal_dp2winfo.htm">D3DHAL_DP2WINFO</A> structure that follows in the command buffer. The driver should parse this structure and update the w-buffer information stored in the driver's internal rendering context.</li>
+
+	<LI>Any of the remaining D3DDP2OP_<I>Xxx</I> commands indicate that there is enough data following in the command buffer to render <B>wPrimitiveCount</B> (a member of the <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure) primitives. Depending on the primitive command, the driver should parse D3DHAL_DP2<I>Xxx</I> structures from the command buffer and vertex-associated data from either or both the vertex buffer and command buffer. The driver must attempt to process all valid D3DDP2OP_<I>Xxx</I> commands; that is, the driver cannot choose to ignore certain defined primitive types. See the individual D3DHAL_DP2<I>Xxx</I> structure reference pages for details.</li>
+</UL>
+
+<P>Depending on the current command, the following additional information is stored in the command buffer:
+
+<UL type="disc">
+	<LI>Index information for all D3DDP2OP_INDEXED<I>Xxx</I> primitive commands. </li>
+
+	<LI>Vertex data for the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor20">D3DDP2OP_TRIANGLEFAN_IMM</A> and <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor16">D3DDP2OP_LINELIST_IMM</A> primitive commands.</li>
+
+	<LI>Additional operations are also defined as D3DDP2OP_<I>Xxx</I> operation codes in the <A HREF="cxcond3dhal_dp2operation.htm">D3DHAL_DP2OPERATION</A> structure. These are equivalent to D3DDP2OP_<I>Xxx</I> commands with the same names. </li>
+</UL>
+
+<P>The command buffer occasionally contains commands that are understood only by Direct3D. If the driver's <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback does not recognize the command, the driver should call Direct3D's <B>D3dParseUnknownCommand</B> callback to attempt to parse it. When <B>D3dParseUnknownCommand</B> returns successfully, the driver should continue parsing and processing the command buffer. If <B>D3dParseUnknownCommand</B> fails by returning D3DERR_COMMAND_UNPARSED, <B>D3dDrawPrimitives2</B> should set the following members of the <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> structure and return:
+
+<UL type="disc">
+	<LI>In <B>dwErrorOffset</B>, write the offset of the first unhandled <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure into the buffer to which <B>lpDDCommands</B> points.</li>
+
+	<LI>Set <B>ddrval</B> to D3DERR_COMMAND_UNPARSED.</li>
+</UL>
+
+<P>See <A HREF="cxcondirect3ddriverinitialization.htm">Direct3D Driver Initialization</A> for details on how to initialize the <B>D3dParseUnknownCommand</B> callback.</P>
+
+<P>To simplify implementation of <B>D3dDrawPrimitives2</B>, driver writers can copy the parsing code from the <I>perm3</I> sample code and write driver-specific rendering and state update code only.</P>
+
+<P>Direct3D is not always informed of the current render states. For example, execute buffers are not inspected by the run time before they reach the driver. The driver can keep track of the render state array with the <B>lpdwRStates</B> member in the <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> structure. This is a pointer to the internal render states array, which the driver keeps up to date as state changes occur.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconprimitivedrawingstatechanges.htm">Primitive Drawing and State Changes</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Direct3D%20Command%20Buffers&nbsp;(cxcondirect3dcommandbuffers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

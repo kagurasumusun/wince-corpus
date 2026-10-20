@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Japanese Pocket IME UI</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the Japanese Pocket IME UI"/>
+<MSHelp:RLTitle Title="Using the Japanese Pocket IME UI"/>
+<MSHelp:Keyword Index="A" Term="clrefUsingPocketIMEUI"/>
+<MSHelp:Keyword Index="K" Term="Japanese Pocket IME, UI implementation"/>
+<MSHelp:Keyword Index="A" Term="clrefUsingPocketIMEUI"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: pocketime.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758417">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="clrefusingpocketimeui"></A>Using the Japanese Pocket IME UI</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>By default, the Pocket IME UI displays the candidate list window under the composition window. If there is a software input panel under the composition window, the software input panel overlaps the candidate window. This is not a problem if you can move the software input panel. If the software input panel is docked, as on a small screen, problems occur when you attempt to select the candidate window. If you plan to make the software input panel docked, you can modify Pocket IME UI source code to move the IME candidate window and avoid overlapping the IM window. </P>
+
+<P>The following example modifies Cand100.cpp, the source code file that creates a candidate window. The example uses <MSHelp:link keywords="cerefSipGetInfo" TABINDEX="0">SipGetInfo</MSHelp:link> to retrieve the IM window position, and to check whether the IME candidate window overlaps with it. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The code modifications are noted by comment. If you want to implement this modification, insert the new code in Cand100.cpp.</BLOCKQUOTE>
+
+<PRE class="code">%_WINCEROOT%\public\common\oak\drivers\imejpp\imeui\cand100.cpp
+........
+//
+// First include the SIPAPI before AdjustCandPos
+//
+#include "sipapi.h"
+     
+ void     AdjustCandPos(POINT *pt, SIZE sizeCandWnd)
+     
+          int          nScreenSize;
+          int          nHideSize;
+     
+          if(pt-&gt;x &lt; 0)
+               pt-&gt;x = 0;
+     
+          if(pt-&gt;y &lt; 0)
+               pt-&gt;y = 0;
+     
+          nScreenSize = GetSystemMetrics(SM_CXSCREEN);
+          if(pt-&gt;x + sizeCandWnd.cy &gt; nScreenSize) {
+               nHideSize = pt-&gt;x + sizeCandWnd.cx - nScreenSize;
+               pt-&gt;x -= nHideSize;
+          }
+     
+          nScreenSize = GetSystemMetrics(SM_CYSCREEN);
+          if(pt-&gt;y + sizeCandWnd.cy &gt; nScreenSize) {
+               pt-&gt;y -= sizeCandWnd.cy + sizeT.cy + 2;
+          }
+//
+// Insert modification here
+//
+// The new code checks to see if the IM window position overlaps, and moves the IME candidate if necessary
+//
+          else {
+               SIPINFO     SipInfo;
+               SipInfo.cbSize = sizeof(SIPINFO);
+               SipInfo.dwImDataSize = 0;
+               if (SipGetInfo(&amp;SipInfo)) {
+                    if ((SipInfo.rcSipRect.top &lt; pt-&gt;y + sizeCandWnd.cy)
+                    &amp;&amp; (SipInfo.rcSipRect.bottom &gt;= pt-&gt;y)
+                    &amp;&amp; (SipInfo.rcSipRect.left &lt; pt-&gt;x + sizeCandWnd.cx)
+                    &amp;&amp; (SipInfo.rcSipRect.right &gt;= pt-&gt;x)
+                    &amp;&amp; (pt-&gt;y - (sizeCandWnd.cy + sizeT.cy + 2) &gt;= 0)) {
+                    pt-&gt;y -= sizeCandWnd.cy + sizeT.cy + 2;
+                    }
+               }
+          }
+     }
+</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcelocal_pocket_ime_ui_source_code_files.htm">Japanese Pocket IME UI Code</A></P>
+
+<P><MSHelp:link keywords="ceconProgrammingInputPanel" TABINDEX="0">Programming a Software-Based Input Panel</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cerefSipGetInfo" TABINDEX="0">SipGetInfo</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Using%20the%20Japanese%20Pocket%20IME%20UI&nbsp;(clrefusingpocketimeui.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

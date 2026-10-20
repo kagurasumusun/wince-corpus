@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IViewObjectEx::GetViewStatus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IViewObjectEx::GetViewStatus"/>
+<MSHelp:RLTitle Title="IViewObjectEx::GetViewStatus"/>
+<MSHelp:Keyword Index="A" Term="cerefIViewObjectExGetViewStatus"/>
+<MSHelp:Keyword Index="K" Term="IViewObjectEx, GetViewStatus"/>
+<MSHelp:Keyword Index="A" Term="cerefIViewObjectExGetViewStatus"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756317">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefiviewobjectexgetviewstatus"></A>IViewObjectEx::GetViewStatus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method returns information about the opacity of the object and what drawing aspects are supported.</P>
+
+<PRE class="syntax"><B>HRESULT GetViewStatus(</B>
+<B>DWORD *</B><I>pdwStatus</I>  
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pdwStatus </I></DT>
+
+<DD>[out] Pointer to the view status. This information is returned as a combination of the <A HREF="cerefviewstatus.htm">VIEWSTATUS</A> enumeration values. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The view status was successfully returned. This method should never fail or return an error code. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To optimize the drawing process, the container needs to be able to determine whether an object is opaque and has a solid background. It is not necessary to redraw objects that are entirely covered by a completely opaque object. Other operations, such as scrolling, can also be highly optimized if an object is opaque and has a solid background.</P>
+
+<P>The <B>IViewObjectEx::GetViewStatus</B> method returns whether the object is entirely opaque (VIEWSTATUS_OPAQUE bit) and whether its background is solid (VIEWSTATUS_SOLIDBKGND bit). This information can change in time. An object can be opaque at a given time and become totally or partially transparent later on, for example, because of a change of the BackStyle property. An object should notify its sites when it changes using <B>IAdviseSinkEx::OnViewStatusChange</B> so the sites can cache this information for high-speed access.</P>
+
+<P>Objects not supporting <A HREF="cerefiviewobjectex.htm">IViewObjectEx</A> are considered to be always transparent.</P>
+
+<P>The <B>IViewObjectEx::GetViewStatus</B> method also returns a combination of bits indicating which aspects are supported.</P>
+
+<P>If a given drawing aspect is not supported, all <B>IViewObjectEx</B> methods taking a drawing aspect as an input parameter should fail and return E_INVALIDARG. The <B>IViewObjectEx::GetViewStatus</B> method allows the container to get back information about all drawing aspects in one quick call. Usually, the set of supported drawing aspects should not change with time. However, if this was not the case, an object should notify its container using <B>IAdviseSinkEx::OnViewStatusChange</B>.</P>
+
+<P>Which drawing aspects are supported is independent of whether the object is opaque, partially transparent, or totally transparent. In particular, a transparent object that does not support DVASPECT_TRANSPARENT should be drawn correctly during the back-to-front pass using DVASPECT_CONTENT. However, this is likely to result in more flicker.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Ocidl.h</TD>
+<TD width=15%>Ocidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefiviewobjectex.htm">IViewObjectEx</A>, <A HREF="cerefviewstatus.htm">VIEWSTATUS</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IViewObjectEx::GetViewStatus&nbsp;(cerefiviewobjectexgetviewstatus.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

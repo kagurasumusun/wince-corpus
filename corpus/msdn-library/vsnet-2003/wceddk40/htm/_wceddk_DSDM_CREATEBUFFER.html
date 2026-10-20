@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DSDM_CREATEBUFFER</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DSDM_CREATEBUFFER"/>
+<MSHelp:RLTitle Title="DSDM_CREATEBUFFER"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_DSDM_CREATEBUFFER"/>
+<MSHelp:Keyword Index="K" Term="DSDM_CREATEBUFFER"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_DSDM_CREATEBUFFER"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dsound_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674086">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_dsdm_createbuffer"></A>DSDM_CREATEBUFFER</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This message requests that the driver create a hardware sound buffer with specific attributes. If the driver is able to create the sound buffer and allocate the required resources, it returns a pointer to the buffer instance data that DirectSound uses to control the sound buffer. Otherwise the driver fails the request by returning an error code.</P>
+
+<PRE class="syntax"><B>typedef struct {</B>
+<B>  DWORD    </B><I>dwMsg</I><B>;</B>
+<B>  PDWORD   </B><I>pdwInstance</I><B>;</B>
+<B>  DWORD    </B><I>dwDeviceIndex</I><B>;</B>
+<B>  LPCDSBUFFERDESC    </B><I>pDesc</I><B>;</B>
+<B>} DSDMP_CREATEBUFFER;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwMsg</B></DT>
+
+<DD>Equals DSDM_CREATEBUFFER.</dd>
+
+<DT><B>pdwInstance</B></DT>
+
+<DD>Pointer to instance data for new buffer.</dd>
+
+<DT><B>dwDeviceIndex</B></DT>
+
+<DD>Index of the device in which to create the buffer.</dd>
+
+<DT><B>pDesc</B></DT>
+
+<DD>Pointer to a <MSHelp:link keywords="_wcesdk_DSBUFFERDESC_dsound" TABINDEX="0">DSBUFFERDESC</MSHelp:link> structure that contains the description of the sound buffer to be created.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns DS_OK if successful, or one of the following error values otherwise.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Error value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DSERR_ALLOCATED</TD>
+<TD width=60%>The call failed because resources are already being used by another caller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DSERR_INVALIDPARAM</TD>
+<TD width=60%>An invalid parameter was passed to the returning function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DSERR_OUTOFMEMORY</TD>
+<TD width=60%>Not enough free memory is available to complete the operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DSERR_BADFORMAT</TD>
+<TD width=60%>The specified format is not supported.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The driver should always check the DSBCAPS_CTRL<I>XXX</I> flags passed in the <I>dwFlags</I> parameter. If the driver cannot create a buffer with the requested control attributes, it should fail the creation request. If the driver succeeds the creation request, it is required to succeed the control requests when called on this buffer.</P>
+
+<P>The <MSHelp:link keywords="_wcesdk_DSBUFFERDESC_dsound" TABINDEX="0">DSBUFFERDESC</MSHelp:link> structure pointed to by pDesc will not persist after the driver handles the DSDM_CREATEBUFFER message. If the driver must reference the <MSHelp:link keywords="_wcesdk_win32_WAVEFORMATEX_str" TABINDEX="0">WAVEFORMATEX</MSHelp:link> structure pointed to by pDesc-&gt;lpwfxFormat, it must make a private copy.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Dsdriver.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_DSBUFFERDESC_dsound" TABINDEX="0">DSBUFFERDESC</MSHelp:link>, <MSHelp:link keywords="_wcesdk_win32_WAVEFORMATEX_str" TABINDEX="0">WAVEFORMATEX</MSHelp:link>, <A HREF="cxrefdirectsounddrivermessages.htm">DirectSound Driver Messages</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DSDM_CREATEBUFFER&nbsp;(_wceddk_dsdm_createbuffer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

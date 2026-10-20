@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxOleUnregisterTypeLib</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afxoleunregistertypelib"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_afxoleunregistertypelib"></A>AfxOleUnregisterTypeLib</H1>
+
+<P>This function removes the type library entry from the Windows registration database.</P>
+
+<PRE class=syntax><B>BOOL</B> <B>AFXAPI</B> <B>AfxOleUnregisterTypeLib(</B>
+<B>REFGUID</B> <I>tlID</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>tlID</I></DT>
+
+<DD>Specifies the unique ID of the type library.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the type library was successfully unregistered; otherwise, it is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// Type library GUID, corresponds to the uuid attribute of the library
+// section in the .odl file.
+const GUID CDECL BASED_CODE _tlid =   { 0x9dbafcd2, 0x592f, 0x101b,
+ { 0x85, 0xce, 0x0, 0x60, 0x8c, 0xec, 0x29, 0x7b } };
+
+// Type library major version number, number on the left of decimal
+// point, in version attribute of the library section in .odl file.
+const WORD _wVerMajor = 1;
+
+// Type library minor version number, number on the right of decimal
+// point, in version attribute of the library section in .odl file.
+const WORD _wVerMinor = 0;
+
+STDAPI DllUnregisterServer(void)
+{
+&nbsp;&nbsp;AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
+&nbsp;&nbsp;// register typelib with locale neutral
+&nbsp;&nbsp;if (!AfxOleUnregisterTypeLib(_tlid, _wVerMajor, _wVerMinor, LOCALE_NEUTRAL))
+&nbsp;&nbsp;&nbsp;&nbsp;return ResultFromScode(SELFREG_E_TYPELIB);
+
+&nbsp;&nbsp;// register classes
+&nbsp;&nbsp;if (!COleObjectFactoryEx::UpdateRegistryAll(FALSE))
+&nbsp;&nbsp;&nbsp;&nbsp;return ResultFromScode(SELFREG_E_CLASS);
+
+&nbsp;&nbsp;return S_OK;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_50.htm"><B>AfxOleUnregisterClass</B></A>, <A HREF="funct_49.htm"><B>AfxOleRegisterTypeLib</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

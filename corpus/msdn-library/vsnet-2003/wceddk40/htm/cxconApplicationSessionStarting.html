@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Application Session Starting</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Application Session Starting"/>
+<MSHelp:RLTitle Title="Application Session Starting"/>
+<MSHelp:Keyword Index="A" Term="cxconApplicationSessionStarting"/>
+<MSHelp:Keyword Index="K" Term="application sessions%2C IEEE 1394 streaming filer driver, starting"/>
+<MSHelp:Keyword Index="A" Term="cxconApplicationSessionStarting"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_avcstream.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760563">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconapplicationsessionstarting"></A>Application Session Starting</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A particular stream is received or transmitted by establishing a session. An application may control any number of sessions, and is not limited to a single concurrent session to a particular device. A session is established by using the <A HREF="cxrefioctl_stream_start_recv_session.htm">IOCTL_STREAM_START_RECV_SESSION</A> and <A HREF="cxrefioctl_stream_start_xmit_session.htm">IOCTL_STREAM_START_XMIT_SESSION</A> commands. A receive session is where you receive a stream from an external device. A transmit session where you transmit a stream to an external device. When establishing a session, you need to define several types of parameters that define your stream. The following table shows these parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Parameter</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>LocalPlug</TD>
+<TD width=70%>This field permits the definition of a local plug that is the source of the connection attempt. It is optional, and should in most cases simply be NULL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>RemotePlug</TD>
+<TD width=70%>This is the <A HREF="cxconplugfinding.htm">serial bus plug</A> to connect to. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>MediaType</TD>
+<TD width=70%>The <A HREF="cxconieee1394streamingfilterdriverdifferencesinmediatypes.htm">type of data</A> that can be streamed is varied. A discussion of all types is out of scope for this document, but the current list of choices is:
+<UL type="disc">
+	<LI>STREAM_MediaType_MPEG</li>
+
+	<LI>STREAM_MediaType_MPEG_TimeShifted</li>
+
+	<LI>STREAM_MediaType_DSS</li>
+
+	<LI>STREAM_MediaType_DSS_TimeShifted</li>
+
+	<LI>STREAM_MediaType_Audio_AM824</li>
+
+	<LI>STREAM_MediaType_Audio_24x4Pack</li>
+
+	<LI>STREAM_MediaType_Audio_32fp</li>
+
+	<LI>STREAM_MediaType_DV_SD_625_50Hz</li>
+
+	<LI>STREAM_MediaType_DV_SD_525_60Hz</li>
+
+	<LI>STREAM_MediaType_DV_SDL_625_50Hz</li>
+
+	<LI>STREAM_MediaType_DV_SDL_525_60Hz</li>
+
+	<LI>STREAM_MediaType_DV_HD_1250_50Hz</li>
+
+	<LI>STREAM_MediaType_DV_HD_1125_60Hz</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Maximum Bitrate</TD>
+<TD width=70%>The maximum number of bits that will be transmitted in any given second. This field is applicable only to transmit sessions, and even then only to MPEG and DSS media types. For other scenarios, this field should be 0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Sample Frequency</TD>
+<TD width=70%>Applicable only to audio streams, the current options are:
+<UL type="disc">
+	<LI>AUDIO_SampleFrequency_32Khz</li>
+
+	<LI>AUDIO_SampleFrequency_44_1Khz</li>
+
+	<LI>AUDIO_SampleFrequency_48Khz</li>
+
+	<LI>AUDIO_SampleFrequency_88_2Khz</li>
+
+	<LI>AUDIO_SampleFrequency_96Khz</li>
+
+	<LI>AUDIO_SampleFrequency_176_4Khz</li>
+
+	<LI>AUDIO_SampleFrequency_192Khz</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>ClusterDimension</TD>
+<TD width=70%>Applicable only to audio streams. Unfortunately, this parameter is too involving to define in this document. Refer to <I>ISO/IEC-61883-6</I> for a precise definition.</TD>
+</TR>
+</table></div>
+
+<P>Once these details are provided, the application can issue the appropriate IOCTL, IOCTL_STREAM_START_RECV_SESSION or IOCTL_STREAM_START_XMIT_SESSION. If the attempt is successful, the application will receive an opaque handle referred to as a session identifier as a result. This identifier uniquely identifies the session, and must be provided as an argument in actions regarding the session.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394streamingfilterdriverusefromapplication.htm">IEEE 1394 Streaming Filter Driver Use From an Application</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Application%20Session%20Starting&nbsp;(cxconapplicationsessionstarting.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

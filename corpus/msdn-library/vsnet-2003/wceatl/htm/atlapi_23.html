@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AtlUnadvise</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_atlunadvise"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_atlunadvise"></A>AtlUnadvise</H1>
+
+<P>This global function terminates the connection established through <B>AtlAdvise</B>.</P>
+
+<PRE class=syntax><B>ATLAPI AtlUnadvise(
+IUnknown* </B><I>pUnkCP</I><B>,
+const IID&amp; </B><I>iid</I><B>,
+DWORD </B><I>dw</I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pUnkCP</I></DT>
+
+<DD>[in] A pointer to the <B>IUnknown</B> of the object that the client is connected with.</DD>
+
+<DT><I>iid</I></DT>
+
+<DD>[in] The GUID of the connection point. Typically, this is the same as the outgoing interface managed by the connection point.</DD>
+
+<DT><I>dw</I></DT>
+
+<DD>[in] The cookie that uniquely identifies the connection.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A standard <B>HRESULT</B> value. </P>
+
+<H4>Example</H4>
+
+<PRE>LPUNKNOWN m_pSourceUnk;
+LPUNKNOWN m_pSinkUnk;
+DWORD m_dwCustCookie;
+
+// create source object
+HRESULT hr = CoCreateInstance (CLSID_MyComponent, NULL, CLSCTX_ALL,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IID_IUnknown, (LPVOID*)&amp;m_pSourceUnk);
+_ASSERT (SUCCEEDED (hr));
+
+// Create sink object.  CMySink is a CComObjectRootEx-derived class
+// that implements the event interface methods.
+CComObject&lt;CMySink&gt; *pSinkClass;
+CComObject&lt;CMySink&gt;::CreateInstance (&amp;pSinkClass);
+hr = pSinkClass-&gt;QueryInterface (IID_IUnknown, (LPVOID*)&amp;m_pSinkUnk);
+_ASSERT (SUCCEEDED (hr));
+
+hr = AtlAdvise (m_pSourceUnk, m_pSinkUnk, IID__IMyEvent, &amp;m_dwCustCookie);
+_ASSERT (SUCCEEDED (hr));
+
+// Do something
+
+HRESULT hr = AtlUnadvise (m_pSourceUnk, IID__IMyEvent, m_dwCustCookie);
+_ASSERT (SUCCEEDED (hr));
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlbase.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="atlapi_3.htm"><B>AtlAdvise</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

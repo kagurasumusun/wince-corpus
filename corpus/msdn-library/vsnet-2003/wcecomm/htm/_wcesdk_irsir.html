@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IrSIR</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IrSIR"/>
+<MSHelp:RLTitle Title="IrSIR"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_IrSIR"/>
+<MSHelp:Keyword Index="K" Term="IrSIR"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: serial.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_irsir"></A>IrSIR</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>IrSIR is an NDIS miniport driver that binds to the IRDA stack and is only exposed via Winsock. The IrCOMM driver (which talks to IrSIR via Winsock) creates the second COM port.</P>
+
+<P>The IrSIR driver, included in the ETK, creates an additional COM port. </P>
+
+<PRE class="code">--------------------
+IRCOMM Driver (ircomm.dll) (COMy:)
+--------------------
+       ^
+       |
+[NDIS, IRDA, Winsock are in here, deleted for brevity]
+       |
+      \/
+-------------------
+Serial IR NDIS Miniport Driver (irsir.dll)
+-------------------
+       ^
+       |
+      \/
+------------------
+Serial Driver (COMx:)
+------------------
+       ^
+       |
+      \/
+-----------------
+Serial Port Hardware
+-----------------</PRE>
+
+<P>The device index that it registers is controlled by the "Index" registry setting in project.reg. For example, the following setting creates a virtual "COM3:" serial port.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\IrCOMM]
+    "Index"=dword:3</PRE>
+
+<P>The real COM port that will be opened by the Serial IR driver is controlled by the "Port" registry setting in platform.reg:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\Irsir1\Parms]
+    "BusNumber"=dword:0
+    "BusType"=dword:0
+    "Port"=dword:1
+    ; 0 = Use external dongle, 1 = Use internal IR
+    "IntIR"=dword:0
+    ; 0 = Internal transceiver, 1 = Extended Systems JetEye dongle
+    "TransceiverType"=dword:1</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, July 09, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IrSIR&nbsp;(_wcesdk_irsir.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Querying for Depth Buffer Support</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Querying for Depth Buffer Support"/>
+<MSHelp:RLTitle Title="Querying for Depth Buffer Support"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Querying_for_Depth_Buffer_Support"/>
+<MSHelp:Keyword Index="K" Term="depth buffers%2C Direct3D, querying for depth buffer support"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts3_using.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680551">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_querying_for_depth_buffer_support"></A>Querying for Depth Buffer Support</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>As with any feature, the driver that your application uses might not support all types of depth buffering. Always check the driver's capabilities. Although most drivers support z-based depth buffering, not all will support w-based depth buffering. Drivers do not fail if you attempt to enable an unsupported scheme. They fall back on another depth buffering method instead, or sometimes disable depth buffering altogether, which can result in scenes rendered with extreme depth-sorting artifacts.</P>
+
+<P>You can check for general support for depth buffers by querying Microsoft&reg; Direct3D&reg; for the display device that your application will use before you create a Direct3D device. If the Direct3D object reports that it supports depth buffering, any hardware devices you create from this Direct3D object will support z-buffering.</P>
+
+<P>To query for depth buffering support, you can use the <A HREF="_wcesdk_dx3d_idirect3d8__checkdeviceformat.htm">IDirect3D8::CheckDeviceFormat</A> method, as shown in the following code example.</P>
+
+<PRE class="code">// The following example assumes that pCaps is a valid pointer to an 
+// initialized D3DCAPS8 structure.
+    if( FAILED( m_pD3D-&gt;CheckDeviceFormat( pCaps-&gt;AdapterOrdinal, 
+                                           pCaps-&gt;DeviceType, Format, 
+                                           D3DUSAGE_DEPTHSTENCIL, 
+                                           D3DRTYPE_SURFACE,
+                                           D3DFMT_D16 ) ) )
+        return E_FAIL;</PRE>
+
+<P><B>CheckDeviceFormat</B> allows you to choose a device to create based on the capabilities of that device. In this case, devices that do not support 16-bit depth buffers are rejected.</P>
+
+<P>In addition, you can use <A HREF="_wcesdk_dx3d_idirect3d8__checkdepthstencilmatch.htm">IDirect3D8::CheckDepthStencilMatch</A> to determine whether a supported depth-stencil format is compatible with the render target format in the display mode, particularly if a depth format must be equal to the render target format.</P>
+
+<P>Using <B>CheckDepthStencilMatch</B> to determine depth-stencil compatibility with a render target is shown in the following code example.</P>
+
+<PRE class="code">// Reject devices that cannot create a render target of RTFormat while
+// the back buffer is of RTFormat and the depth-stencil buffer is
+// at least 8 bits of stencil.
+if( FAILED( m_pD3D-&gt;CheckDepthStencilMatch( pCaps-&gt;AdapterOrdinal,
+                                            pCaps-&gt;DeviceType, 
+                                            AdapterFormat, 
+                                            RTFormat, 
+                                            D3DFMT_D24S8 ) ) )
+        return E_FAIL;</PRE>
+
+<P>Once you know that the driver supports depth buffers, you can verify w-buffer support. Although depth buffers are supported for all software rasterizers, w-buffers are supported only by the reference rasterizer, which is not suited for use by real-world applications. Regardless of the type of device your application uses, verify support for w-buffers before you attempt to enable w-based depth buffering.</P>
+
+<P class="labelproc"><B>To determine support for w-buffers in a C++ application</B>
+
+<OL type="1">
+	<LI>After creating your device, call the <A HREF="_wcesdk_dx3d_idirect3ddevice8__getdevicecaps.htm">IDirect3DDevice8::GetDeviceCaps</A> method, passing an initialized <A HREF="_wcesdk_dx3d_d3dcaps8.htm">D3DCAPS8</A> structure.</li>
+
+	<LI>After the call, the <B>LineCaps</B> member contains information about the driver's support for rendering primitives.</li>
+
+	<LI>If the <B>RasterCaps</B> member of this structure contains the D3DPRASTERCAPS_WBUFFER flag, then the driver supports w-based depth buffering for that primitive type.</li>
+</OL>
+
+<P>For general information about depth buffering, see <A HREF="_wcesdk_dx3d_what_are_depth_buffers_.htm">What Are Depth Buffers?</A>. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Querying%20for%20Depth%20Buffer%20Support&nbsp;(_wcesdk_dx3d_querying_for_depth_buffer_support.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

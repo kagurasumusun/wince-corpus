@@ -1,0 +1,769 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building Native C++ Applications that Will Run on Microsoft Pocket PC and Windows CE .NET Platforms</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building Native C++ Applications that Will Run on Microsoft Pocket PC and Windows CE .NET Platforms"/>
+<MSHelp:RLTitle Title="Building Native C++ Applications that Will Run on Microsoft Pocket PC and Windows CE .NET Platforms"/>
+<MSHelp:Keyword Index="A" Term="buildnativeapps"/>
+<MSHelp:Keyword Index="K" Term="Pocket PC, building C++ applications"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, building C++ applications"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="kbPocketPC"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbPocketPC"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" CONTENT="How to write portable native C++ software applications that can run on Pocket PC and Windows CE .NET. A sample application and its sources are included to demonstrate the methodology."><meta name="keywords" content="Windows CE .NET, Pocket PC, C++"><META name="rtfFileName" content="buildnativeapps.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Kirk Radeck">
+<META NAME="Date" CONTENT="2002-07-01">
+<META NAME="msdnID" CONTENT="_830130">
+
+<SCRIPT SRC="MS-HELP:/../commoner/samp/smplmgr.js"></SCRIPT>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="buildnativeapps"></A>Building Native C++ Applications that Will Run on Microsoft Pocket PC and Windows CE .NET Platforms</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P><A HREF="http://www.microsoft.com/windows/Embedded/community/experto/bio/kradeck.asp">Kirk Radeck</A>, Windows Embedded MVP <BR>
+Senior Software Engineering Consultant</P>
+
+<P>July 2002</P>
+
+<P>Download the Tictactoezip_kirk radeck.exe in the <A href="http://msdn.microsoft.com/code/default.asp?url=/code/sample.asp?url=/MSDN-FILES/026/002/898/msdncompositedoc.xml">MSDN Online Code Center</A>.</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.0<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Pocket PC</P>
+
+<P><B>Summary:</B> Pocket PC developers currently face the following dilemma: they want to build applications that will run on Pocket PC devices, and benefit from expanded market opportunities by having these same applications run under Windows CE .NET. This paper will discuss an approach to developing retargetable applications to multiple Microsoft platforms. In addition, a sample application and its sources are included to demonstrate the methodology. (17 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#buildnativeapps_topic1">Introduction</A> <BR>
+<A HREF="#buildnativeapps_topic2">Initial Testing</A> <BR>
+<A HREF="#buildnativeapps_topic3">What's the Real Goal?</A> <BR>
+<A HREF="#buildnativeapps_topic4">Recommendation</A> <BR>
+<A HREF="#buildnativeapps_topic5">Sample Application</A> <BR>
+<A HREF="#buildnativeapps_topic6">Conclusion</A> <BR>
+<A HREF="#buildnativeapps_topic7">Appendix 1</A> <BR>
+<A HREF="#buildnativeapps_topic8">Appendix 2</A> <BR>
+<A HREF="#buildnativeapps_topic9">Appendix 3</A> <BR>
+<A HREF="#buildnativeapps_topic10">References</A></P>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic1"></A>Introduction</H2>
+
+<P>Microsoft&#174; Pocket PC development currently requires the use of Microsoft eMbedded Visual C++&#174; 3.0 (eVC3) with the Pocket PC SDK installed, while native Microsoft Windows&#174; CE .NET applications must be compiled using eMbedded Visual C++ 4.0 (eVC4) with the STANDARDSDK Emulator for debugging. Each of these tools must either be installed on two separate computers, or on the same computer with at least two hard drive partitions. The former approach is better for several reasons (you can use both tools simultaneously is one).</P>
+
+<P>However, C++ is generally C++. Even MFC is mostly MFC, regardless of the platform being targeted. If a developer uses some strategy, he should be able to build and compile most of his embedded code using nearly any one of his favorite Microsoft IDEs, such as Microsoft Visual Studio&#174; 6.0. This would require that the code being written is already fairly portable as it must at least compile and run for the desktop and one embedded device.</P>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic2"></A>Initial Testing</H2>
+
+<P>Approaching the challenge to discover if applications can run on both Pocket PC and Windows CE .NET devices, initial testing included sampling some current Pocket PC applications. If an application was created for the Pocket PC before the release of eVC4, where that application compiles and runs with no application code change in the new Emulator, then it surely can be done with at least some new applications. Developers now have knowledge about both tools.</P>
+
+<P>With eVC3 installed on one computer, it is possible to iterate the &lt;drive&gt;:\Windows CE Tools\wce 300\MS Pocket PC\samples\mfc subdirectories and do the following:
+
+<UL type="disc">
+	<LI>Create a new project with the same name and project type as the current subdirectory project on a machine with eVC4 installed</li>
+
+	<LI>Copy all Pocket PC files, minus the project files, to the new project directory and add to the new project</li>
+
+	<LI>Make any necessary project setting changes to the new project</li>
+
+	<LI>Compile and run the new project using the Emulator</li>
+</UL>
+
+<P>Most, if not all, of these projects compile and run in the Emulator (see <A HREF="#buildnativeapps_topic7">Appendix 1</A> and <A HREF="#buildnativeapps_topic8">Appendix 2</A>, which describe this process for both MFC and Win32 applications).</P>
+
+<P>This shows that it is possible to build some, if not all, applications that can run on both Pocket PC devices and the eVC4 Emulator by simply creating a Windows CE .NET project and recompiling.</P>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic3"></A>What's the Real Goal?</H2>
+
+<P>While it would be nice to build applications that can run on both the Pocket PC and Windows CE .NET, the real goal is to build applications that can be built and run on any Microsoft Windows platform with no code change. After all, with the release of good, portable object-oriented languages such as C# in Visual Studio.NET (Visual Studio .NET), developers can attain this goal.</P>
+
+<P>But asking eVC3-4 to have this level of portability may be asking too much, since these tools weren't originally designed to be this flexible. Also, there are differences in application behavior between the Pocket PC and Windows CE .NET devices. For example, the set of standard MenuItems for the Pocket PC are quite different that those for a desktop application. A single stylus click on a Pocket PC is equivalent to a left double-click on a CE device with mouse support. Screen sizes and shapes vary widely from platform to platform. There are many usability issues that a developer needs to address for any device and operating system being built against, and so forth.</P>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic4"></A>Recommendation</H2>
+
+<P>One possible solution is to make a slight compromise: build layered software where most of the code can be reused. Most of these layers could be completely portable across Microsoft platforms, only requiring at most a recompile for a specific device. Perhaps only parts of the user interface could be platform specific where the developer has knowledge of the device he is building against. This would allow a write-once, use-many scenario for the majority of the code in static or dynamic libraries, while allowing all versions of the application to use these libraries and the flexibility to override default library behavior if desired.</P>
+
+<H3 class="dtH1">Software Layers</H3>
+
+<P>Assuming that a user interface will be needed for the platform-specific application(s) then a simple set of layers could be defined and built.</P>
+
+<H3 class="dtH1">Back-end Processing</H3>
+
+<P>What does your application really do? If you removed the GUI, what functionality do you need to support? For example, a very simple CelsiusToFahrenheit program would have support to accept a temperature in Celsius degrees and return its value in Fahrenheit. One definition of this function, accepting a double Celsius value and returning its corresponding Fahrenheit conversion, is:</P>
+
+<PRE class="code">double CelsiusToFahrenheit(double celsius);
+</PRE>
+
+<P>This layer should be a library only as it will be imported into some application for use. If possible, making this layer ANSI C++ compliant is also a good idea.</P>
+
+<H3 class="dtH1">Graphics Layer</H3>
+
+<P>If you remove the main frame, menu items, and so forth from your application, what components would you need? For example, in your CelsiusToFahrenheit program, you would need to accept a Celsius value from the user and display its corresponding Fahrenheit value. You would probably need a CWnd childframe object, call it "CelsiusFrame"; a label and text field for the Celsius input; two labels for the Fahrenheit conversion (one displaying "Fahrenheit" and the other to display the converted value); and two buttons, one each for the user submission and to clear the form.</P>
+
+<P>You may create and implement default event handlers for the buttons, which would display values to the components on the CelsiusFrame. CelsiusFrame may define some operations that the calling application may need, for example&#151;Clear() for resetting all child components to default values. This operation set would usually include a combination of standard event handler functions, and user-defined virtual functions as needed.</P>
+
+<P>This layer will use the back-end processing header files, and it will be a library itself.</P>
+
+<H3 class="dtH1">Application Layer</H3>
+
+<P>This layer might be an MFC application, with at least a CWnd mainframe, and a CWnd childframe. It would import the Graphics layer above, and the childframe would subclass the CelsiusFrame. It would define and implement event handlers for the MenuItems that are necessary. The event handlers can then simply call into the Graphics layers to do the actual work.</P>
+
+<P>In this example, a possible MenuItem might be "File\Clear Form". The application layer would define and implement this item and its event handler. When the event handler is called, it would call the user-defined Clear() function in the Graphics layer and return.</P>
+
+<P>With this layered approach, it should be noted that no application-layer logic may be necessary for accepting user input from CelsiusFrame. If CelsiusFrame is responsible for its own event handling, the application doesn't even have to know that the logic exists. The application layer's childframe only needs to inherit from the CelsiusFrame and call into a set of simple user-defined functions that the graphics layer supports.</P>
+
+<H3 class="dtH1">Layer Pros</H3>
+
+<P>There are many advantages to using this recommendation.
+
+<OL type="1">
+	<LI>The back-end processing and graphics layers are very portable. At most the developer should only have to create library projects with the IDE project wizard, add the source files, modify some project settings, and compile.</li>
+
+	<LI>With a good design the application layer should be able to override behavior in the libraries if necessary. Reverting to the CelsiusToFahrenheit example above, maybe the Pocket PC version will display a MessageBox if the user enters illegal data (the temperature is below absolute zero?) while a desktop version may write additional information to the status window.</li>
+
+	<LI>The application code will remain manageable and readable. The MessageBox and the status window example can naturally be handled in one piece of code, but it may not be desirable. Real-world applications tend to become more complex over time, not less. Detecting a device at run-time or using preprocessor directives to remove code at compile time based upon device will certainly make code more difficult to understand.</li>
+
+	<LI>Application development can be broken into logical blocks. This will help companies building complex software by allowing them to have developers work in parallel. If you build one monolithic application, it is possible but more difficult to have several developers work on separate pieces of the project.</li>
+
+	<LI>Quality assurance will become a potential nightmare if only one application exists. With this recommendation, retesting for all device types will only be required if a back-end or graphics layer changes. Adding a new feature at the end of a release cycle may be possible in only one platform's application layer; it requires only a retest on that platform, provided a good design.</li>
+
+	<LI>Client-server applications are already built in this manner. While it doesn't prove that this is the best approach, it does show that this is not really a new problem and that others have chosen this approach to solve similar problems with success in the past.</li>
+
+	<LI>Fix one, fix all. If you find a bug in a non-application layer and fix it correctly, it will then update all applications with just a recompile for each device type.</li>
+</OL>
+
+<H3 class="dtH1">Layer Cons</H3>
+
+<P>Unfortunately, there are some cons to this recommendation, albeit not enough to completely abandon the layered approach.
+
+<OL type="1">
+	<LI>Building extremely simple applications tends to require more time, because there is setup time involved creating layered software. Projects need to be created; settings need to be adjusted and maintained, and so on.</li>
+
+	<LI>Debugging the application is a little trickier. You may have to build driver programs to test your libraries. In a single application, you can simply set a breakpoint and run the debugger. But this issue is only a minor inconvenience. Microsoft IDEs have very good support for debugging not only applications, but also library projects. For example, in Visual Studio 6.0: if you open the "Project\Settings.&nbsp;.&nbsp;." Dialog in a static library project, select the "Debug" tab, select "Settings for: Win32 Debug", you can set the "Executable for debug session:" to some console or MFC application driver that uses this library. Set the "Executable for debug session:" value to the absolute path on your local drive where the driver debug executable exists. You can then set break points in your library, then "run" your library, which executes the driver and stops at the first breakpoint set.</li>
+
+	<LI>The libraries that developers create will tend to be written to the least common denominator&#151;the platform that supports the smallest API set. There are ways around it&#151;callback interfaces to the client layer, extern functions, DLLs, and so on. But this is the biggest issue that must be addressed and negotiated.</li>
+
+	<LI>You may have to build code to perform some task, where the support already exists in some but not all platforms your code needs to run on. But this is not a huge problem, because you need the support on the platform that doesn't have it. This implies that it needs to be built or supplied anyway.</li>
+</OL>
+
+<H3 class="dtH1">Things to Remember</H3>
+
+<P>As you are building these layers there are some things you should keep in mind.
+
+<OL type="1">
+	<LI>In "good" client-server applications, the client generally knows much more about the server than vice-versa. While a layer is being built it is fine to have knowledge about some library that you are using (at least at the API level), but you shouldn't know much about the client who will be using this layer. Good use of callback functions such as using interfaces defined at the server layer is one way to get application-specific information from the client; using events and so forth are other ways. This may seem trivially obvious, but it is easy to forget during development.</li>
+
+	<LI>As the layers are being built bottom-up, the code written should become more and more platform specific. For example, at the application layer it is completely fine and maybe even desirable to have some knowledge about the platform being targeted. At the graphics layer, the code should not need to know that the platform is a Pocket PC device.</li>
+</OL>
+
+<H3 class="dtH1">Testing the Recommendation</H3>
+
+<P>It would be unfair to make a recommendation and then leave the developer on his own to test if it is reasonable. A sample application using the layered approach has been developed and included with this paper that will run on Pocket PC and the Windows CE .NET emulators, as well as the desktop.</P>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic5"></A>Sample Application</H2>
+
+<P>While a TicTacToe program is relatively simple, it is a reasonable candidate as a portable application sample. It requires back-end processing, which is just a virtual game board with current state, some square access functions and a FindBestMove method for the current player in case it is the computer's turn to play (in a complex game, you could even use this method to recommend a move to the human player while he is thinking). It needs a graphics layer that can display a graphical representation of a board and accept and process input from the user (even though the game of TicTacToe is not very interesting, it would be more uninteresting if no one played). And it needs an application layer that the user can start, where this application displays a frame with MenuItems and in turn drives the graphics layer. (See <A HREF="#buildnativeapps_topic9">Appendix 3</A> describing how to build an application using the included source files. TicTacToe.exe, which runs on Microsoft Windows 2000 Professional and Server and Windows XP, can be found in the included files' exe\WindowsDesktop folder.)</P>
+
+<H3 class="dtH1">Tools Used</H3>
+
+<P>Visual Studio 6.0 was used to create the majority of the TicTacToe code. Why was this tool chosen over eVC3 or 4?
+
+<UL type="disc">
+	<LI>Debugging using the eMbedded Visual C++ tools can be slow in some circumstances. One of eVC's greatest strengths creates an unfortunate weakness: the ability to run in emulation, which is great when developing real applications for devices, can be slow while debugging, at least compared to Visual Studio 6.0. It is most probable that there exists no way around this by Microsoft, or developers while using these tools.</li>
+
+	<LI>If something can be done in Visual Studio 6.0, it can usually be done also in eVC3, the latter being used for the creation of Pocket PC applications. Modifying project settings, adding new classes, and so forth are very similar in these tools. So back-porting to eVC3 simply requires copying files and building a project, assuming that no libraries are used which eVC3 does not support.</li>
+</UL>
+
+<P>Why not Visual Studio .NET?
+
+<UL type="disc">
+	<LI>The Visual Studio .NET wizard-generated class files may have to be modified slightly in case they are back ported. This is a minor issue, but it helped sway the decision to use Visual Studio 6.0.</li>
+
+	<LI>The Visual Studio .NET library projects are quite different than those in eVC3 or Visual Studio 6.0. This would have required a learning curve at the time, which isn't the point of this project.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Personal Note</b>&nbsp;&nbsp;&nbsp;I have written much more C# than C++ code with Visual Studio .NET. This had a large impact on the decision above. In the future, if I were to build an application for the desktop I would probably only use Visual Studio .NET because I believe that it is far superior to Visual Studio 6.0 in many ways, with little to no feature loss.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+When the .NET Compact Framework (CF) is released for Windows CE in the second half of 2002, both Visual Studio .NET and C# both are good candidates for future product development. I believe that companies that do not at least evaluate using C# for new products (and maybe even product ports) will be making a mistake, because C# has such a rich library already and it is highly portable by the nature of the language syntax.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The built-in Unicode String and internationalization support is excellent. There are many other benefits that go beyond the scope of this paper. Therefore, it would be great (ironically) if this recommendation actually becomes obsolete by the end of this year, because it may mean that more developers are using Visual Studio .NET and C#.</BLOCKQUOTE>
+</li>
+</UL>
+
+<H3 class="dtH1">TicTacToe Construction</H3>
+
+<P>The TicTacToe sample program currently runs on the desktop (tested on Windows 2000 Professional and Server, and Windows XP Professional), the Pocket PC eVC3 emulator, and the Windows CE .NET emulator. It was constructed in layers, which later drove the above recommendation.</P>
+
+<H3 class="dtH1">TicTacToe Engine</H3>
+
+<P>This back-end processing layer is nearly ANSI C++ compliant, minus a typdef'd String class, which is just an MFC CString that is used for debugging only.</P>
+
+<H4 class="dtH1">Main classes</H4>
+
+<P class="label"><B>Board</B></P>
+
+<P>This is a TicTacToe board, which holds a BitVector [Lippman] instance of default length 18 (two bits are needed per square, because a piece can be either an x, an o, or empty). One bit turned off implies the square is empty, while the other defines the piece type. This encoding, while not completely necessary, is good because it makes copying a board very fast&#151;only one int is required to hold the state of a board. Many board copies are done when the call is made to find the best move given current state. And other operations such as testing the emptiness of a square are generally fast operations with an encoding of this nature.</P>
+
+<P>A default board's square set is defined in the following manner:</P>
+
+<P>0 1 2</P>
+
+<P>3 4 5</P>
+
+<P>6 7 8</P>
+
+<P class="label"><B>Piece</B></P>
+
+<P>A piece is either an x, an o, or empty. This class hides the details of the board's encoding from callers. It has common methods like:</P>
+
+<PRE class="code">Bool IsX() const;
+Bool IsO() const;
+Bool IsEmpty() const;
+</PRE>
+
+<P class="label"><B>Square</B></P>
+
+<P>This is just an int wrapper, defining the square that a Piece maps to.</P>
+
+<P class="label"><B>Value</B></P>
+
+<P>This class defines the value of a Move (described below). It can either be undefined, negativeInfinity, tie, or positiveInfinity. It also holds the depth in the search function that the result was determined.</P>
+
+<P class="label"><B>Move</B></P>
+
+<P>This holds a Piece, a Square, and a Value. The Board's FindBestMove function returns a Move copy, describing the "best" current Move based upon state. More will be described about this below.</P>
+
+<H3 class="dtH1">TicTacToe Graphics</H3>
+
+<P>This graphics processing layer is Microsoft platform agnostic. It uses some MFC classes, and some hand-built classes, for drawing a board to a CWnd object and handling most user events. It uses the .h file function prototypes defined in the TicTacToe Engine layer only as it is a static library itself.</P>
+
+<P class="label"><B>Main Classes</B></P>
+
+<P class="label"><B>BoardThread</B></P>
+
+<P>This class holds a Board copy and some event handles. It handles long processing during the call to the FindBestMove function on its board. It calls back on an interface once FindBestMove returns on the Board instance, as long as the thread has been started and it hasn't been yet asked to stop.</P>
+
+<P class="label"><B>BoardGraphics</B></P>
+
+<P>This holds a CWnd object to draw to, as well as a pointer to the current BoardThread instance (or NULL). It also holds a Board instance so that it can convert the current board state to a graphical representation. It implements the interface for callbacks made in the BoardThread.</P>
+
+<P class="label"><B>CTicTacToeViewBase</B></P>
+
+<P>This class was constructed automatically during a project creation by Visual Studio 6.0, then modified to hold a BoardGraphics object and renamed. It has event handlers for mouse clicks by the user, and for standard paint events. This class can be used directly by applications that import this library, or subclassed by the applications childframe class, the latter being better.</P>
+
+<P>The BoardGraphics implementation could have been placed in this class. However, it is a good idea to separate the functionality into two classes, because the BoardGraphics can handle events and graphics on any CWnd class, not just the CTicTacToeViewBase.</P>
+
+<H3 class="dtH1">TicTacToe</H3>
+
+<P>This is the simplest MFC application, with a CWnd main frame and childframe instances. It imports the TicTacToeEngine and TicTacToeGraphics libraries, and uses the .h file prototypes of each.</P>
+
+<P>The childframe subclasses the CTicTacToeViewBase class (defined above). MenuItems were added using the resource wizards, and event handlers were created for both the mainframe and childframes, which only make simple one-line calls into the TicTacToeGraphics layer.</P>
+
+<H3 class="dtH1">Problems During Construction</H3>
+
+<P>One problem was encountered during the construction of the application. STL was not supported until eVC4. At least one platform application needed to be constructed using eVC3 (Pocket PC SDK). A list template and BitVector were needed in the TicTacToeEngine library. This required hand-building a list template with equivalent functionality as the STL version (only the methods needed were coded), and the construction of a BitVector class. The list class can be swapped out with Microsoft's implementation on some platforms if desired, as the template name, function names and parameters are identical. The BitVector is not STL-standard, so it cannot be replaced with Microsoft's STL version.</P>
+
+<H3 class="dtH1">Converting the Sample to Real Software</H3>
+
+<P>Assuming that a TicTacToe program is marketable, there are some changes that could be made to make it better. This is only a sample, and it is only version 1.0. Many changes would need to be made to make it "good" for purposes other than this paper.
+
+<OL type="1">
+	<LI>A MessageBox pops up in the graphics layer over the CTicTacToeViewBase instance when the user tries to do something illegal (select a square that's currently populated, select a square while the computer is thinking, and so forth). A much better implementation would be to use this as default behavior, but allow the application layer to override it by receiving some message event, and then doing whatever it wants with this event. An event is a good idea in this scenario, because time is not very critical; even a one to two second response time back to the player is fine.</li>
+
+	<LI>The FindBestMove implementation in the TicTacToeEngine layer doesn't really find the best move. If two moves are considered equal, then a random number generator chooses between the two, which seems reasonable so that the next game may be different. But the computer doesn't try to "cheapo" the human player; it assumes currently that the human will always make the right decision so it doesn't try to take advantage of him unless he makes a real mistake.</li>
+
+	<LI>The computer seems to never lose. It needs to sometimes make a bad decision and let the human take advantage of this. But it's not completely clear, from strictly a requirements point of view, how this should be accomplished (when do you make a bad move? How do you choose a bad move?). This would actually be fun to think about and work on, but beyond the scope of this sample.</li>
+
+	<LI>The GUI could be much more polished. While it scales correctly for any device, it simply draws the board using lines and ellipses and stock colors. It would be nice to load some bitmaps that would make it more appealing.</li>
+
+	<LI>More code could be pushed back to the graphics layer from the application. Two of the three application versions create a CTTTInfoDialog, which describes the basic rules of the game. If this were pushed back into the graphics layer and built generically, then it could be reused across all applications and save coding time.</li>
+
+	<LI>Assuming that a TicTacToeEngine actually has some real value, it would be nice to create one more project layer. If an ATL project were created that used the static engine library, with this ATL project having a very thin interface for board access functions, then this new DLL could be used by any application residing on the device.</li>
+
+	<LI>An overall redesign would help. For example, the engine layer should define a BoardBase object, which would be a pure virtual class. This would simply define standard accessor functions into the board and have no implementation. The Board class would subclass BoardBase, and provide the default library implementation. In the graphics layer, a BoardGraphics object would hold a pointer to a BoardBase instance and create a new Board instance by default. The application layer could then subclass Board (or BoardBase, if it wants a complete overhaul) in its project, and override any methods it wants, then put this new class object into the BoardGraphics instance for processing through some standard accessor function. Using an object-oriented approach like this would enhance the ability of any platform application to override any behavior that it chooses. Overrides in this sample seem to not be very important, but in some complex software it may be critical&#151;it may make the difference in meeting a critical deadline and not.</li>
+</OL>
+
+<H3 class="dtH1">Testing Portability During Development</H3>
+
+<P>If you build your project in eVC3 for the Pocket PC, for example, this Microsoft IDE will give you a lot of help. Not only can you run some emulator for the Pocket PC, but the compiler will also tell you at compile time if some library function is not supported for this particular device. This is one of the strengths of this tool. However, this recommendation tells you that you can build most of your code in Visual Studio 6.0 or even Visual Studio .NET, but this advice seems to eliminate some of the features the eVC3 already has given you, thus making the job more difficult.</P>
+
+<P>Your original goal is to build for the Pocket PC and Windows CE .NET platforms. You already need to use two tools, at least for now. If you really want to know if your Pocket PC code will run in the emulator in eVC4 for Windows CE .NET, you will have to test it on both eVC3 and 4 anyway. The idea is you can use any Microsoft tool that will do the job. Just choose the one that you have, you feel most comfortable with, or the one that makes the most sense.</P>
+
+<P>The real main issue is this: how do you test portability during development without having to constantly test your code on all platforms? It is best to be able to build code for as long as possible, and then test only occasionally. If you could make the assumption that "if it compiles it works" (usually just a funny joke, depending upon perspective) then it would make the job easier by allowing you to do the following:
+
+<OL type="1">
+	<LI>foreach problem <I>p</I> do
+<P>API <I>s</I> := null
+
+<P>While <I>s</I> = null do
+</li>
+
+	<LI>Select next candidate API <I>a</I> on <I>p</I>
+<P>If <I>a</I> = null
+
+<P>break
+</li>
+
+	<LI>foreach Microsoft IDE tool <I>t</I> necessary do
+<OL type="a">
+	<LI>Open "Help\Index" Dialog in <I>t</I></li>
+
+	<LI>Type <I>a</I> into index field and enter</li>
+
+	<LI>if <I>a</I> not found then
+<P>break
+</li>
+
+	<LI>Scroll to "Requirements Table" <I>rt</I> in right panel</li>
+
+	<LI>if any necessary platform not in <I>rt</I> or APIs not exactly equivalent then
+<P>break
+</li>
+
+	<LI>if <I>t</I> is last tool then
+<P><I>s</I> := <I>a</I>
+
+<P>break
+</li>
+</OL>
+</li>
+
+	<LI>if <I>s</I> = null
+<P><I>s</I> := portable hand-built solution
+</li>
+
+	<LI>Use <I>s</I> on <I>p</I> in your favorite Microsoft IDE</li>
+</OL>
+
+<P>Basically, what the above pseudo-code means: you will be required to hand-build a solution for any problem only if there exists no current Microsoft-provided API which solves the problem for all necessary platforms.</P>
+
+<P>Naturally, you will have to test your code on all platforms to verify that it is portable. "If it compiles it works" is certainly not true. But it is true that "if it doesn't compile it doesn't work." Taking this approach allows you to work for extended periods of time without testing code on different platforms. You can then just test on one platform, and if the code runs properly, there is a good chance that it will run on all of them. If you are wrapping MFC or Win32 calls with your own classes, then you should be safe from having to test on all platforms, as you should be able to make non-visible changes later if necessary. But if you are using these directly and a large part of your application depends upon it, you may want to first build test programs for the different platforms and verify they work as advertised. In any case, if there is any question, you can and should test to find problems early if any suspicions arise.</P>
+
+<P>While the MFC class support is not as extensive in embedded as the desktop, the classes that are supported in Windows CE-based devices have similar interfaces and behave the same. This also appears to be true for the Win32 API. This makes building portable applications much easier. Take advantage of MFC and Win32 in your programs, at least in the application and graphics layers. If there is a bug, Microsoft has many incentives to fix it, so you won't have to. And when Microsoft makes a behind-the-scenes improvement you may be the recipient of those improvements later without even realizing it.</P>
+
+<H3 class="dtH1">Workarounds</H3>
+
+<P>Not everything will go as planned. You may run into a situation where you need to write code that you don't want to. For example: it's the night before your code releases to the quality assurance team. A program manager has just given you a last-minute requirements change at 6PM. You inspect your current design and code, and realize that you don't have the time to both re-architect your library in the manner you want and also implement and (reasonably) test your new feature. What do you do after you update your resume on your favorite job search engine?
+
+<OL type="1">
+	<LI>extern functions. These are not a very good approach, but they are quick for implementing some platform-specific code. Define the extern function in some middle layer, and implement it in all of the platform-specific application layers. The TicTacToe application used this approach during testing when the random number generator continually returned the same value.</li>
+
+	<LI>GetVersionEx. If this function is used at run-time, some version information can be used so that a decision can be made. Microsoft's online documentation for eVC3 does not recommend this method, however. They recommend using the next two approaches, if possible.</li>
+
+	<LI>GetSystemMetrics. This will return information about the platform and device, in particular monitor or LCD dimensions.</li>
+
+	<LI>LoadLibrary. This can be called with a named DLL, followed by a GetProcAddress call on LoadLibrary's return value, if non-null. If this returns a valid address, then a function can be called dynamically. It should be noted that ERROR_CALL_NOT_IMPLEMENTED may be returned on the dynamic function call if the function is only a stub. If you have enough time to create DLLs for all of the platforms then you should be able to guarantee that this will not fail at run-time. This appears to be Microsoft's preferred approach when handling platform-specific problems.</li>
+</OL>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic6"></A>Conclusion</H2>
+
+<P>The TicTacToe application and sources included with this paper are just samples, while your code will probably be a real software product. It would be naïve to think being able to easily build a portable sample application implies that you can build your software using exactly the same methods with ease. For example, the TicTacToe code doesn't access a database, while much modern software does. How hard will it be to create a portable application that can access a SQL Server database? It would have to be tested to find out.</P>
+
+<P>But the general ideas are the same. Building software with a layered approach is a good idea. Even if you run into a case where you can't reuse code for some new platform, what's the worst that could happen? You might have to write a completely separate application for this one device, while the others share most of the same code. This scenario really should not occur if very portable, layered code is written, however.</P>
+
+<P>Don't think that it is a burden to write portable software applications that can run on any Microsoft platform, or at least Pocket PC and Windows CE .NET. It is actually a very entertaining exercise at the least, and it can be a very satisfying experience at most if the majority of the original design and code works out as planned.</P>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic7"></A>Appendix 1</H2>
+
+<P>General description for building existing Microsoft Pocket PC MFC samples, supplied with eVC3, using eVC4.
+
+<OL type="1">
+	<LI>Open eVC4</li>
+
+	<LI>Select "File/New.&nbsp;.&nbsp;."</li>
+
+	<LI>With "New" Dialog
+<OL type="a">
+	<LI>Select "Projects" tab</li>
+
+	<LI>Select "WCE MFC AppWizard (exe)"</li>
+
+	<LI>"Location:"
+<P>Set to absolute path where new project parent directory will reside
+</li>
+
+	<LI>"Project name:"
+<P>Insert exact same name of eVC3 project that is to be ported
+</li>
+
+	<LI>"CPUs:"
+<P>Select all processors that project will be built against
+
+<P>Recommendation:
+
+<P>Select "Win32 (WCE emulator)" and "Win32 (WCE x86)" at least for desktop emulation
+</li>
+
+	<LI>Click "OK" button</li>
+</OL>
+</li>
+
+	<LI>For each "WCE MFC AppWizard(exe)&#151;Step*" Dialog do
+<P>Accept defaults and click button that accepts input
+</li>
+
+	<LI>With "New Project Information" Dialog
+<P>Click "OK" button
+</li>
+
+	<LI>Open Windows File Explorer
+<OL type="a">
+	<LI>Go to directory containing eVC3 Pocket PC Application project to port</li>
+
+	<LI>Copy all files in Pocket PC project directory to new WinCE.NET project directory just created by eVC4</li>
+
+	<LI>Important: just say "no" to overwriting any project file, for example&#151;.vcp, .vcc or .vcw files</li>
+</OL>
+</li>
+
+	<LI>Go back to eVC4 new project
+<OL type="a">
+	<LI>Select "Project/Add to Project/Files.&nbsp;.&nbsp;."</li>
+
+	<LI>With "Insert Files into Project" Dialog</li>
+
+	<LI>Select all files in new project directory</li>
+
+	<LI>Click "OK" button</li>
+
+	<LI>With "Microsoft embedded Visual C++" Dialog (if it appears)</li>
+
+	<LI>Click "OK" button
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Some files may already be included in the project; this is OK. </BLOCKQUOTE>
+</li>
+</OL>
+</li>
+
+	<LI>Verify Settings
+<OL type="a">
+	<LI>"StandardSDK"</li>
+
+	<LI>"Win32 (WCE Emulator) Debug" (or "Release")</li>
+
+	<LI>"StandardSDK Emulator"</li>
+</OL>
+</li>
+
+	<LI>Run "Build/Rebuild All"</li>
+
+	<LI>If project builds without errors
+<P>In "STANDARDSDK&#151;STANDARDSDK Emulator" Window
+
+<P>Double-click "My Computer"
+
+<P>Double-click ICON for new WinCE.NET application (same name as project)
+</li>
+
+	<LI>Else
+<P>Make necessary changes until builds 
+</li>
+</OL>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic8"></A>Appendix 2</H2>
+
+<P>General description for building existing Microsoft Pocket PC Win32 samples, supplied with eVC3, using eVC4.
+
+<OL type="1">
+	<LI>Open eVC4</li>
+
+	<LI>Select "File/New.&nbsp;.&nbsp;."</li>
+
+	<LI>With "New" Dialog
+<OL type="a">
+	<LI>Select "Projects" Tab</li>
+
+	<LI>Select "WCE Application"</li>
+
+	<LI>"Location:"
+<P>Set to absolute path where new project parent directory will reside
+</li>
+
+	<LI>"Project name:"
+<P>Insert exact same name of project that is to be ported
+</li>
+
+	<LI>"CPUs:"
+<P>Select all CPU types you will build for
+
+<P>Recommendation
+
+<P>Add "Win32 (WCE x86)" and "Win32 (WCE Emulation)" for debugging and desktop emulation
+</li>
+
+	<LI>Click "OK" button</li>
+</OL>
+</li>
+
+	<LI>With "WCE Application Step 1 of 1" Dialog
+<OL type="a">
+	<LI>Select "An empty project"</li>
+
+	<LI>Click "Finish" button</li>
+</OL>
+</li>
+
+	<LI>With "New Project Information" Dialog
+<P>Click "OK" button
+</li>
+
+	<LI>(New Project space should be created)</li>
+
+	<LI>With Windows File Explorer
+<P>Select all files in Pocket PC application directory and copy to the new WinCE.NET mirrored application
+
+<P>Important: just say "no" to overwriting project directories, for example&#151;.vcp and .vcw!
+</li>
+
+	<LI>Back in eVC4 select "Project/Add to Project/Files.&nbsp;.&nbsp;."
+<P>With "Insert Files Into Project" Dialog
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Current directory must be the current new WinCE.NET project directory.</BLOCKQUOTE>
+
+<P>Select all files in Dialog
+
+<P>Click "OK" button
+</li>
+
+	<LI>Verify that the following settings are correct for emulation
+<OL type="a">
+	<LI>Standard SDK</li>
+
+	<LI>Win32 (WCE Emulation) Debug</li>
+
+	<LI>Standard SDK Emulation</li>
+</OL>
+</li>
+
+	<LI>Select the "File View" tab (left project window by default)
+<OL type="a">
+	<LI>Open "Header Files" virtual directory</li>
+
+	<LI>Double click "newres.h"</li>
+
+	<LI>In "newres.h"</li>
+
+	<LI>Comment out line
+<PRE class="code">#include "winver.h"
+</PRE>
+</li>
+
+	<LI>(if it exists and save the file)</li>
+</OL>
+</li>
+
+	<LI>Run "Build/Rebuild All"
+<OL type="a">
+	<LI>If it builds without error, in emulation window</li>
+
+	<LI>Double-click "My Computer"</li>
+
+	<LI>Double-click new application (same name as project) and run
+<P>Else
+
+<P>Fix any other errors in application
+</li>
+</OL>
+</li>
+</OL>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic9"></A>Appendix 3</H2>
+
+<P>Building the samples. eVC4 has been used as a sample. Instructions will be very similar for other Microsoft IDEs.</P>
+
+<P class="label"><B>Building TicTacToeEngine</B>
+
+<OL type="1">
+	<LI>Open eVC4</li>
+
+	<LI>Run "File\New"
+<P>With "New" Dialog
+</li>
+
+	<LI>Select "Projects" tab</li>
+
+	<LI>Select "WCE Static Library"</li>
+
+	<LI>Set Location (anywhere you want)</li>
+
+	<LI>Project name:</li>
+
+	<LI>TicTacToeEngine</li>
+
+	<LI>CPUs</li>
+
+	<LI>Select (at least):
+<P>Win32 (WCE Emulator)
+
+<P>Win32 (WCE x86)
+</li>
+
+	<LI>Click "OK" button
+<P>With "WCE Static Library&#151;Step 1 of 1" Dialog
+</li>
+
+	<LI>Select all checkboxes</li>
+
+	<LI>Click "Finish" button
+<P>With "New Project Information" Dialog
+</li>
+
+	<LI>Click "OK" button</li>
+
+	<LI>Open included source files</li>
+
+	<LI>Copy all TicTacToeEngine files to the new project directory just created</li>
+
+	<LI>Go back to eVC4</li>
+
+	<LI>Open "Project\Add to Project\Files
+<P>With "Insert Files into Project" Dialog
+</li>
+
+	<LI>Select all files</li>
+
+	<LI>Click "OK" button
+<P>With "Microsoft embedded Visual C++" Dialog
+</li>
+
+	<LI>Click "OK" button
+<P>(stdafx already in project)
+</li>
+
+	<LI>Select "STANDARDSDK" and "STANDARDSDK Emulator" from build menu
+<P>For (at least) each "Win32 (WCE emulator)*" build type
+</li>
+
+	<LI>Run "Build\Build TicTacToeEngine.lib"</li>
+
+	<LI>Run "File\Close Workspace"
+<P>With "Microsoft embedded Visual C++" Dialog
+</li>
+
+	<LI>Click "Yes" button</li>
+</OL>
+
+<P class="label"><B>TicTacToeGraphics</B>
+
+<OL type="1">
+	<LI>Follow instructions for TicTacToeEngine up to building the project</li>
+
+	<LI>Replace "TicTacToeEngine" with "TicTacToeGraphics"</li>
+
+	<LI>Before building the project</li>
+
+	<LI>Run "Project\Settings"
+<P>With "Project Settings" Dialog
+
+<P>Settings for:
+</li>
+
+	<LI>Select "All Configurations"</li>
+
+	<LI>Select "C\C++" Tab
+<P>Category:
+</li>
+
+	<LI>Select "Preprocessor"
+<P>Additional include directories:
+</li>
+
+	<LI>&lt;add absolute project directory for TicTacToeEngine, built above&gt;</li>
+
+	<LI>Click "OK" Button</li>
+
+	<LI>Run same builds as TicTacToeEngine</li>
+
+	<LI>Close the workspace and all files like TicTacToeEngine</li>
+</OL>
+
+<P class="label"><B>TicTacToe</B>
+
+<OL type="1">
+	<LI>Open eVC4</li>
+
+	<LI>Run "File\Open Workspace"
+<P>With "Open Workspace" Dialog
+</li>
+
+	<LI>Select and open the TicTacToe.vcw file from the included files' application\WindowsCE\TicTacToe directory</li>
+
+	<LI>Run "Project\Settings"
+<P>With "Project Settings" Dialog
+</li>
+
+	<LI>Select "Settings for:"</li>
+
+	<LI>All configurations</li>
+
+	<LI>Select "C\C++" tab
+<P>Category
+</li>
+
+	<LI>Select "Preprocessor"</li>
+
+	<LI>"Additional Include directories"</li>
+
+	<LI>&lt;modify these settings as appropriate to your machine configuration&gt;</li>
+
+	<LI>Select "Link" tab
+<P>Category
+</li>
+
+	<LI>Select "Input"</li>
+
+	<LI>Foreach "Win32 (WCE emulator)*" (at least) in "Settings For:" do</li>
+
+	<LI>&lt;modify these settings as appropriate to your machine configuration&gt;</li>
+
+	<LI>Click "Ok" button</li>
+
+	<LI>Build and test the application in the emulator</li>
+</OL>
+
+<H2 class="dtH1"><A NAME="buildnativeapps_topic10"></A>References</H2>
+
+<P>[Lippman] Stanley B. Lippman, <I>C++ Primer: Second Edition</I>, Addison-Wesley Publishing Co., 1991. pp. 326-34.</P>
+
+<P>To contact the author, e-mail <A HREF="mailto: kirkradeck@hotmail.com">Kirk Radeck</A>.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_830130', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+<script>addSample( "tictactoezip_kirk radeck", "tictactoezip_kirk radeck");</script>
+
+
+</BODY>
+</HTML>

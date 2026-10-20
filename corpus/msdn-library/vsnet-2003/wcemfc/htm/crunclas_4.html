@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CRuntimeClass::IsDerivedFrom</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cruntimeclass_isderivedfrom"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cruntimeclass_isderivedfrom"></A>CRuntimeClass::IsDerivedFrom</H1>
+
+<P>This method determines if the calling class is derived from the class specified in the <I>pBaseClass </I>parameter.</P>
+
+<P>The relationship is determined by walking from the member's class up the chain of derived classes all the way to the top. This method only returns <B>FALSE</B> if no match is found for the base class.</P>
+
+<P>To use the <B>CRuntimeClass</B> structure, you must include the <A HREF="funct_12.htm"><B>IMPLEMENT_DYNAMIC</B></A>, <A HREF="funct_13.htm"><B>IMPLEMENT_DYNCREATE</B></A>, or <A HREF="funct_14.htm"><B>IMPLEMENT_SERIAL</B></A> macro in the implementation of the class for which you want to retrieve run-time object information.</P>
+
+<PRE class=syntax><B>BOOL IsDerivedFrom(
+const CRuntimeClass* </B><I>pBaseClass </I><B>)
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pBaseClass</I></DT>
+
+<DD>Specifies the familiar name of a class derived from <B>CObject</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P><B>TRUE</B> if the class calling <B>IsDerivedFrom</B> is derived from the base class whose <B>CRuntimeClass</B> structure is given as a parameter; otherwise, it is <B>FALSE</B>.</P>
+
+<H4>Example</H4>
+
+<PRE>// This example creates an object from the run-time class. It only
+// creates objects derived from CWnd.
+
+// We only want to create an object derived from CWnd.
+if (!pClass-&gt;IsDerivedFrom(RUNTIME_CLASS(CWnd)))
+{
+&nbsp;&nbsp;TRACE(_T("Error; Object %s is not derived from CWnd\n"));
+&nbsp;&nbsp;return;
+}
+
+// Get a pointer to the base class CRuntimeClass.
+#ifdef _AFXDLL
+&nbsp;&nbsp;CRuntimeClass* pBaseClass = pClass-&gt;m_pfnGetBaseClass();
+#else
+&nbsp;&nbsp;CRuntimeClass* pBaseClass = pClass-&gt;m_pBaseClass;
+#endif
+ASSERT(pBaseClass != NULL);
+
+TRACE(_T("Creating object %s derived from %s, with object size %d
+&nbsp;&nbsp;and schema %d\n"), pClass-&gt;m_lpszClassName,
+&nbsp;&nbsp;pBaseClass-&gt;m_lpszClassName, pClass-&gt;m_nObjectSize,
+&nbsp;&nbsp;pClass-&gt;m_wSchema);
+
+// Create the object.
+CObject* pObject = pClass-&gt;CreateObject();
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

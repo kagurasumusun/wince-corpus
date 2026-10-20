@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertyPage::SetModified</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertypage_setmodified"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertypage_setmodified"></A>CPropertyPage::SetModified</H1>
+
+<P>Call this method to enable or disable the <B>Apply Now</B> button, based on whether the settings in the property page should be applied to the appropriate external object. </P>
+
+<P>The framework keeps track of which pages are dirty; that is, property pages for which you have called <B>SetModified( TRUE )</B>. The <B>Apply Now</B> button is always enabled if you call <B>SetModified( TRUE )</B> for one of the pages. The <B>Apply Now</B> button is disabled when you call <B>SetModified( FALSE )</B> for one of the pages, but only if none of the other pages is dirty.</P>
+
+<PRE class=syntax><B>void SetModified(
+BOOL </B><I>bChanged</I><B> = TRUE );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>bChanged</I></DT>
+
+<DD>Specifies<B> TRUE</B> to indicate that the property page settings have been modified since the last time they were applied; <B>FALSE</B> to indicate that the property page settings have been applied or should be ignored.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// OnColorClicked() is a method of CColorPage (a
+// CPropertyPage-derived class). It is called whenever a radio button
+// is selected on the page. Call SetModified() to enable the Apply
+// button whenever a new selection is made. m_Color is a member
+// variable of CColorPage and it is to store the selected RGB color.
+
+BEGIN_MESSAGE_MAP(CColorPage, CPropertyPage)
+&nbsp;&nbsp;ON_CONTROL_RANGE(BN_CLICKED, IDC_BLACK, IDC_BLUE, OnColorClicked)
+&nbsp;&nbsp;//{{AFX_MSG_MAP(CColorPage)
+&nbsp;&nbsp;//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+void CColorPage::OnColorClicked(UINT nCmdID)
+{
+&nbsp;&nbsp;COLORREF color;
+&nbsp;&nbsp;switch (nCmdID)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;case IDC_BLACK:
+&nbsp;&nbsp;&nbsp;&nbsp;color = RGB(0, 0, 0);
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case IDC_RED:
+&nbsp;&nbsp;&nbsp;&nbsp;color = RGB(255, 0, 0);
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case IDC_GREEN:
+&nbsp;&nbsp;&nbsp;&nbsp;color = RGB(0, 255, 0);
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case IDC_BLUE:
+&nbsp;&nbsp;&nbsp;&nbsp;color = RGB(0, 0, 255);
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;if (color != m_Color)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;m_Color = color;
+&nbsp;&nbsp;&nbsp;&nbsp;SetModified();    // Enable Apply Now button.
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cproppg_3.htm"><B>CPropertyPage::CancelToClose</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

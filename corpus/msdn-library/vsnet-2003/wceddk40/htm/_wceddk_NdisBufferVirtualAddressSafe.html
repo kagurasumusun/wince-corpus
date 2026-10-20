@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisBufferVirtualAddressSafe</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisBufferVirtualAddressSafe"/>
+<MSHelp:RLTitle Title="NdisBufferVirtualAddressSafe"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisBufferVirtualAddressSafe"/>
+<MSHelp:Keyword Index="K" Term="NdisBufferVirtualAddressSafe"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisBufferVirtualAddressSafe"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_746321">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndisbuffervirtualaddresssafe"></A>NdisBufferVirtualAddressSafe</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is the safe version of <A HREF="_wceddk_ndisbuffervirtualaddress.htm">NdisBufferVirtualAddress</A>. Unlike <B>NdisBufferVirtualAddress</B>, this function will not cause a bug check if system resources are low or exhausted. Drivers should call this function instead of <B>NdisBufferVirtualAddress</B>. NDIS 5.1 miniport drivers must call this function instead of <B>NdisBufferVirtualAddress</B>.</P>
+
+<PRE class="syntax"><B>PVOID NdisBufferVirtualAddressSafe(</B>
+<B>IN PNDIS_BUFFER</B> <I>Buffer</I><B>,</B>
+<B>IN MM_PAGE_PRIORITY</B> <I>Priority</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Buffer</I></DT>
+
+<DD>[in] Points to a buffer descriptor from which the base virtual address is to be returned.</dd>
+
+<DT><I>Priority</I></DT>
+
+<DD>[in] Indicates the priority of the request as one of the following:
+
+<UL type="disc">
+	<LI>LowPagePriority
+<P>Specifies a low priority. It is acceptable for <B>NdisBufferVirtualAddressSafe</B> to fail if system resources are low.
+</li>
+
+	<LI>NormalPagePriority
+<P>Specifies a normal priority. It is acceptable for <B>NdisBufferVirtualAddressSafe</B> to fail if system resources are low.
+</li>
+
+	<LI>HighPagePriority
+<P>Specifies a high priority. It is not acceptable for <B>NdisBufferVirtualAddressSafe</B> to fail unless system resources are exhausted.
+</li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the values returned from <B>NdisBufferVirtualAddressSafe</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>Value</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>NDISBUFFERVIRTUALADDRESSSAFE</TD>
+<TD width=57%>The base system-space virtual address that maps the physical pages described by the given buffer descriptor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>NULL</TD>
+<TD width=57%>The value returned if system resources are low (if <I>Priority</I> was set to LowPagePriority or NormalPagePriority) or exhausted (if <I>Priority</I> was set to HighPagePriority).</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>NdisBufferVirtualAddressSafe</B> returns the base virtual address for the buffer mapped by a given buffer descriptor. It maps the physical pages described by the given buffer descriptor onto system space if these pages are not already mapped to system space.</P>
+
+<P>Drivers of PIO devices call this routine to translate a virtual address range, described by the buffer, for a user buffer to a system-space address range.</P>
+
+<P>The returned base address has the same offset as the virtual address in the buffer.</P>
+
+<P>If <I>Priority</I> was set to LowPagePriority or NormalPagePriority, <B>NdisBufferVirtualAddressSafe</B> returns NULL if system resources are low or exhausted. If <I>Priority</I> was set to HighPagePriority, <B>NdisBufferVirtualAddressSafe</B> returns NULL if system resources are exhausted.</P>
+
+<P>Drivers should call <B>NdisBufferVirtualAddressSafe</B> instead of <B>NdisBufferVirtualAddress</B>. If system resources are low or exhausted, calling <B>NdisBufferVirtualAddress</B> causes a bug check. <I>NDIS 5.1</I> miniports must call <B>NdisBufferVirtualAddressSafe</B> instead of <B>NdisBufferVirtualAddress</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Ndis.h</TD>
+<TD width=20%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndisallocatebuffer.htm">NdisAllocateBuffer</A>, <A HREF="_wceddk_ndisallocatebufferpool.htm">NdisAllocateBufferPool</A>, <A HREF="_wceddk_ndisallocatememory.htm">NdisAllocateMemory</A>, <A HREF="_wceddk_ndisbuffervirtualaddress.htm">NdisBufferVirtualAddress</A>, <A HREF="_wceddk_ndisfreebuffer.htm">NdisFreeBuffer</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisBufferVirtualAddressSafe&nbsp;(_wceddk_ndisbuffervirtualaddresssafe.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

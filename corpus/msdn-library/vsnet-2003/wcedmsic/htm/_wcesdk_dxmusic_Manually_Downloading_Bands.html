@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Manually Downloading Bands</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Manually Downloading Bands"/>
+<MSHelp:RLTitle Title="Manually Downloading Bands"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Manually_Downloading_Bands"/>
+<MSHelp:Keyword Index="K" Term="bands%2C DirectMusic, downloading"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, downloading and unloading bands"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Manually_Downloading_Bands"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680687">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_manually_downloading_bands"></A>Manually Downloading Bands</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can manually download a band in one of the following ways:
+
+<UL type="disc">
+	<LI>Obtain an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicBand" TABINDEX="0">IDirectMusicBand</MSHelp:link> interface from a loaded object, and call the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicBand__Download" TABINDEX="0">IDirectMusicBand::Download</MSHelp:link> method. See the following example. This is the best way to download the band if you want to unload it after any segments using the band have been released.</li>
+
+	<LI>Call the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetParam" TABINDEX="0">IDirectMusicSegment::SetParam</MSHelp:link> method with the <A HREF="_wcesdk_dxmusic_guid_download.htm">GUID_Download</A> parameter to download the band in the segment's first band track. You can also use <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SetParam" TABINDEX="0">IDirectMusicPerformance::SetParam</MSHelp:link> to set this parameter on the primary segment, or <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack__SetParam" TABINDEX="0">IDirectMusicTrack::SetParam</MSHelp:link> to set it directly on a band track. For more information, see <A HREF="_wcesdk_dxmusic_setting_and_retrieving_track_parameters.htm">Setting and Retrieving Track Parameters</A>.</li>
+</UL>
+
+<P>There is no danger in downloading the same instrument multiple times. If an instrument appears in one band multiple times or if it appears in multiple bands that are all opened and downloaded at the same time, only one copy of the instrument is sent down to the synthesizer.</P>
+
+<P>The following function loads a band from disk and downloads it.</P>
+
+<PRE class="code">HRESULT myDownloadBand(
+    IDirectMusicLoader *pILoader,      // Loader interface
+    IDirectMusicBand **ppBand,         // To retrieve pointer
+    IDirectMusicPerformance *pPerf,    // Performance to use band
+    WCHAR *pwszFile)                   // File to load
+ 
+{
+    HRESULT hr;
+    DMUS_OBJECTDESC Desc;              // Descriptor
+ 
+    // Start by initializing Desc with the file name and GUID
+    // for the band object.
+ 
+    wcscpy(Desc.wszFileName,pwszFile);
+    Desc.dwSize = sizeof(Desc);
+    Desc.guidClass = CLSID_DirectMusicBand; 
+    Desc.dwValidData = DMUS_OBJ_CLASS | 
+            DMUS_OBJ_FILENAME | DMUS_OBJ_FULLPATH;
+ 
+    hr = pILoader-&gt;GetObject(&amp;Desc, IID_IDirectMusicBand,
+            (void **) ppBand);
+    if (SUCCEEDED(hr))
+    {
+ 
+        // Download the band by way of the performance.
+        hr = (*ppBand)-&gt;Download(pPerf);
+ 
+    }
+    return hr;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Manually%20Downloading%20Bands&nbsp;(_wcesdk_dxmusic_manually_downloading_bands.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

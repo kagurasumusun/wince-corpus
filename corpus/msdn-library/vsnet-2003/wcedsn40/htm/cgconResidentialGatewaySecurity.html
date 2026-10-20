@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Residential Gateway Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Residential Gateway Security"/>
+<MSHelp:RLTitle Title="Residential Gateway Security"/>
+<MSHelp:Keyword Index="A" Term="cgconResidentialGatewaySecurity"/>
+<MSHelp:Keyword Index="K" Term="Residential Gateway Security"/>
+<MSHelp:Keyword Index="A" Term="cgconResidentialGatewaySecurity"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configurations.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_823607">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconresidentialgatewaysecurity"></A>Residential Gateway Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This feature has the following potential security risks:</P>
+
+<P>With a Windows CE-based gateway device, a user can tunnel point-to-point from a public network into a private network, using PPTP. Point-to-point tunneling provides a user with the ability to connect to a home or small office network from a remote computer. The built-in firewall will prevent this connection by default for security reasons. However, you can configure the firewall to allow this connection by creating a static port mapping for TCP port 1723. For more information about PPTP server, see <MSHelp:link keywords="ceconRASServer" TABINDEX="0">RAS Server/PPTP Server Incoming</MSHelp:link></P>
+
+<P>IPv6 is not enabled by default when added to the image for security reasons. You can enable IPv6 with the sample network administrator ISAPI only if the device supports a persistent registry. Most sample CEPC images, for example, do not support a persistent registry.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Ensure you understand the security consequences of enabling IPv6 routing on the device.</BLOCKQUOTE>
+
+<P>The Common.reg file disables IPv6 routing if the IPv4 network address translator (NAT) is also included in the image. You can change or remove that restriction from the Common.reg file or you can add the following to your Project.reg file:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\ipv6hlp]
+   "Prefix"="V6H"
+   "Dll"="ipv6hlp.dll"
+   "Index"=dword:1
+   "Order"=dword:4</PRE>
+
+<H2 class="dtH2">IPv6</H2>
+
+<P>IPv6 is not enabled by default when added to the image for security reasons. You can enable IPv6 with the sample network admin ISAPI only if the device supports a persistent registry. </P>
+
+<P>If you would like to enable IPv6 during the build so it is enabled by default, complete the following steps: </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Microsoft recommends you review the IPv6 documentation and the security docs in particular to make sure you understand the security consequences of enabling IPv6 routing on the device.</BLOCKQUOTE>
+
+<OL type="1">
+	<LI>Currently Common.reg disables IPv6 routing if the v4 NAT is also included in the image. You can change or remove that restriction from Common.reg as follows. First, locate the following section of the file.
+<PRE class="code">; @CESYSGEN IF CE_MODULES_IPV6HLP &amp;&amp; !CE_MODULES_IPNAT
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\ipv6hlp]
+   "Prefix"="V6H"
+   "Dll"="ipv6hlp.dll"
+   "Index"=dword:1
+   "Order"=dword:4
+; @CESYSGEN ENDIF   
+
+; @CESYSGEN IF CE_MODULES_IPNAT
+[HKEY_LOCAL_MACHINE\Comm\AFD]
+   "Stacks"=multi_sz:"tcpstk","irdastk","btd"
+; @CESYSGEN ENDIF</PRE>
+
+<P>Recognize that the section is prefaced by the following comment.
+
+<PRE class="code">; Disable IPv6 by default if IPNAT selected.  This is to avoid compromising 
+; security for gateway devices, since the v6 firewall does not filter 
+; routed packets.  For OEMs where this is not a concern, the following 
+; setting may be removed.  Also, the user may enable IPv6 through the 
+; NatAdmin sample configuration web page.</PRE>
+</li>
+
+	<LI>Change the comments as follows.
+<PRE class="code">; removed the IF that excluded this
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\ipv6hlp]
+   "Prefix"="V6H"
+   "Dll"="ipv6hlp.dll"
+   "Index"=dword:1
+   "Order"=dword:4
+
+; and comment out (or remove) the following so that this key does not get set.
+; @CESYSGEN IF CE_MODULES_IPNAT
+;[HKEY_LOCAL_MACHINE\Comm\AFD]
+;   "Stacks"=multi_sz:"tcpstk","irdastk","btd"
+; @CESYSGEN ENDIF</PRE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="ceconAuthenticationServicesSecurity" TABINDEX="0">Authentication Services Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="ceconBluetoothSecurityIssues" TABINDEX="0">Bluetooth Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="coconICSSecurityIssues" TABINDEX="0">Internet Connection Sharing Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="coconFTPServerSecurityIssues" TABINDEX="0">FTP Server Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmconTCPIPConfigurationParameters" TABINDEX="0">TCP/IP Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="coconTelnetServerSecurityIssues" TABINDEX="0">Telnet Server Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="ceconRASServerSecurity" TABINDEX="0">RAS Server Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="ceconUPnPSecurity" TABINDEX="0">UPNP Security</MSHelp:link></P>
+
+<P><MSHelp:link keywords="coconVPNRegistryKeys" TABINDEX="0">VPN Registry Settings</MSHelp:link></P>
+
+<P><MSHelp:link keywords="ceconWebServerApplicationDevelopmentSecurity" TABINDEX="0">Web Server Security</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Residential%20Gateway%20Security&nbsp;(cgconresidentialgatewaysecurity.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Power Management Features of Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Power Management Features of Windows CE .NET"/>
+<MSHelp:RLTitle Title="Power Management Features of Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="power_management_features"/>
+<MSHelp:Keyword Index="K" Term="Power Manager, Windows CE .NET"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, Power Manager"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbcenet"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenet"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Save battery power for mobile platforms with this look at power management from the depths of the OEM Adaptation Layer (OAL), through the device drivers, and up into applications."><meta name="keywords" content="Power Manager, Windows CE .NET, basic power management, enhanced power management, power notifications"><META name="rtfFileName" content="power_management_features.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Date" CONTENT="2002-08-01">
+<META NAME="msdnID" CONTENT="_835372">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="power_management_features"></A>Power Management Features of Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Paul Yao, Windows Embedded MVP <BR>
+<A HREF="http://www.paulyao.com">The Paul Yao Company</A> </P>
+
+<P>August 2002</P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET with Microsoft Platform Builder 4.1<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Power Manager </P>
+
+<P><B>Abstract:</B> Microsoft Windows CE .NET provides elegant power management capabilities including instant-on support and sensible power-down to save precious battery power for mobile platforms. This white paper provides a bottom-up look at power management from the depths of the OEM Adaptation Layer (OAL), through the device drivers, and up into applications. (13 printed pages) </P>
+
+<H4 class="dtH1">Contents </H4>
+
+<P><A HREF="#power_management_features_intro">Introduction</A> <BR>
+<A HREF="#power_management_features_basicpowermgmnt">Basic Windows CE Power Management</A> <BR>
+<A HREF="#power_management_features_enhancedpowermgmnt">Enhanced Power Management with the Windows CE .NET Power Manager</A> <BR>
+<A HREF="#power_management_features_powernots">Power Notifications</A> </P>
+
+<H2 class="dtH1"><A NAME="power_management_features_intro"></A>Introduction </H2>
+
+<P>Power management involves being smart about using battery power. From its very first version, Windows CE has had built-in battery smarts. A battery-powered Windows CE platform can turn off when no user activity has been detected for a specified period of time. Windows CE .NET continues smart power support from previous versions, and adds a new, smarter component&#151;the Power Manager&#151;to fine-tune the power management job. Microsoft provides the power manager source code with the Microsoft Platform Builder version 4.1, which can be customized by a platform designer to meet platform-specific needs. The Power Manager allows devices to intelligently manage their own power in a way that cooperates both with the platform on which they are running and with the needs of applications that use the devices. For example, a platform might allow a device, perhaps a network card, to stay on even when the rest of the platform itself is powered down. Or an application might have a requirement for the screen to run at its highest power with the back light on, perhaps to run a demo animation sequence, while other devices run in a lower, power saving state.</P>
+
+<P>Power management is important for several reasons. One is that battery-operated devices will be able to provide service for longer periods of time when the battery is used wisely. In the market for cell phones, for example, every phone is advertised with both "standby" minutes and "talk" minutes. Longer battery life has immediate business consequences: it translates into a competitive advantage.</P>
+
+<P>A second reason that power management is important is that the primary file system for Windows CE, called the object store, resides in volatile RAM. When all battery power is drained, the contents of the file system are lost. Platform developers often provide a secondary battery to safeguard the object store and prevent catastrophic data loss. Other steps can be taken, such as storing critical data in less volatile places such as in flash memory or on magnetic media. An example of critical data, the Windows CE operating system image, is typically burned into ROM, or stored in flash memory to allow later updating. But the first line of defense against data loss is being smart about how battery power is used. This is why power management support has existed in Windows CE from the start.</P>
+
+<H2 class="dtH1"><A NAME="power_management_features_basicpowermgmnt"></A>Basic Windows CE Power Management</H2>
+
+<P>The Power Manager is an optional component in Microsoft&#174; Windows&#174; CE .NET. Without it, Windows CE .NET provides the same level of power management support as found in earlier versions of Windows CE. These basic features continue to operate when the Power Manager is present because the Power Manager is backward compatible with power management features of earlier versions of Windows CE.</P>
+
+<P>In all versions of Windows CE, the Graphics, Windowing, and Events Subsystem (GWES) plays a key role in power management. The reason is that power management has historically been driven by user activity, and the GWES owns all user input for keyboard, mouse, and touch screen. The GWES sets a timer to watch for user activity, and suspends the system when none is seen for a given period of time. There are several timeout values that can be set through registry entries, including one when a system is on battery power and another when the system is connected to external power. A platform can disable the GWES power management with a registry key entry. In Windows CE .NET, for example, the GWES power management is disabled by default. The benefit of doing this is to centralize all power management within the Power Manager.</P>
+
+<P>Basic power management support, which is always enabled, defines the following five (5) power states:
+
+<UL type="disc">
+	<LI>NO POWER<CODE>&nbsp;&nbsp;</CODE>No batteries, no external power.</li>
+
+	<LI>ON<CODE>&nbsp;&nbsp;</CODE>All devices on, regular operation.</li>
+
+	<LI>SUSPEND<CODE>&nbsp;&nbsp;</CODE>Most devices off, except RAM and external timer.</li>
+
+	<LI>IDLE<CODE>&nbsp;&nbsp;</CODE>CPU can be off.</li>
+
+	<LI>CRITICAL OFF<CODE>&nbsp;&nbsp;</CODE>Dangerously low battery levels detected.</li>
+</UL>
+
+<P>Details of each state are provided in the Platform Builder documentation. Basic power management support gives device drivers and applications a limited ability to detect a subset of these states.</P>
+
+<P>A key feature provided by Windows CE is support for "instant-on". This is accomplished through support for the SUSPEND state. When a device enters this state, all programs stay in memory and simply freeze. This allows the system to turn on very quickly when the user hits the power button, or when some other wake up event occurs. In the basic power management model, applications get no warning that the system is going to enter SUSPEND mode, although, as will be detailed shortly, some device drivers do get notified. The Windows CE .NET Power Manager changes that by allowing applications to receive notifications of changes in the status of system power.</P>
+
+<P>A platform enters SUSPEND when one of the following three events occurs: 
+
+<UL type="disc">
+	<LI>The user pushes the On/Off button.</li>
+
+	<LI>The user activity timer expires.</li>
+
+	<LI>An application program calls the <B>GwesPowerOffSystem</B> function or the <B>SetSystemPowerState</B> function with the appropriate parameters set. </li>
+</UL>
+
+<P>In spite of its name, the <B>GwesPowerOffSystem</B> function does not cause the system to enter the NO POWER state, but instead puts the system into a SUSPEND state.</P>
+
+<P>A platform leaves SUSPEND mode when one of the following events occur: 
+
+<UL type="disc">
+	<LI>The user pushes the On/Off button.</li>
+
+	<LI>An alarm event occurs, meaning a day/time timer goes off.</li>
+
+	<LI>A wake up event occurs. A device such as a serial port or a network card forces a wake up. </li>
+</UL>
+
+<P>The key point here is that a suspended system can be awakened by user action, under application control, or under hardware control.</P>
+
+<P>The following three sections of his article provide details on basic power management from three perspectives. The first perspective is that of the platform developer, the Original Equipment Manufacturer (OEM) that builds the system image. This is the primary support in the OEM Adaptation Layer (OAL). The second perspective is that of the device driver writer. The third perspective is that of the application program developer.</P>
+
+<H3 class="dtH1">Basic Power&#151;The Platform</H3>
+
+<P>With basic power support, a platform, the core OEM Adaptation Layer (OAL), gets called under the following conditions:
+
+<UL type="disc">
+	<LI><B>OEMInit&nbsp;&nbsp;</B>When power is first applied (first transition from NO POWER to ON).</li>
+
+	<LI><B>OEMIdle</B><CODE>&nbsp;&nbsp;</CODE>When the kernel determines that no threads are scheduled to run.</li>
+
+	<LI><B>OEMPowerOff</B><CODE>&nbsp;&nbsp;</CODE>Called to request that the system be put into the SUSPEND state. In spite of the name, this function does not actually turn the system power completely off.</li>
+
+	<LI>Interrupt Handlers&nbsp;&nbsp;Some interrupts are wake-enabled.</li>
+</UL>
+
+<P>The platform code, in the form of the OAL, gets notified and plays a role in some of the key power management state transitions. But basic power management, that is, decision making about when to change the system power state, is not actually done by the OAL. Instead, that job falls to the system's GWES module, which maintains a set of activity timers. This is the module that watches user activity, and which puts the system into a SUSPEND state when no user activity has been seen for a specified duration.</P>
+
+<P>The <B>OEMInit</B> function gets called during the "cold boot" of a system. This refers to the first time that power is applied to a platform. This function gets called pretty early in the system startup process, and handles important tasks like initializing system memory, setting up debugging support, and setting up system interrupts.</P>
+
+<P>The <B>OEMIdle</B> function gets called when the scheduler has no threads to schedule. This gives the OAL the chance to put the CPU in the lowest possible energy state from which it can quickly return to normal operation.</P>
+
+<P><B>OEMPowerOff</B> is an OAL function that is used to request that the OAL put the system into a SUSPEND state. As such, it is both the last function called before entering a suspend state, and the first function&#151;outside the interrupt handler&#151;to run when leaving a suspend state.</P>
+
+<P>When an interrupt occurs, the kernel first calls interrupt handlers in the OAL. Some of these interrupts can be wake-enabled. This means that they are the interrupts that cause the system to return from a suspend state. They obviously play a key role in power management, but because they are called at interrupt time there is a limited number of things that can be done. In particular, the vast majority of the Microsoft Win32&#174; API functions are not callable at interrupt time because the state of the system at interrupt time cannot be guaranteed.</P>
+
+<H3 class="dtH1">Basic Power&#151;Device Drivers</H3>
+
+<P>Device drivers have fewer notifications than are available to a platform. In particular, a device driver only knows when the system enters SUSPEND mode, and when it returns to ON from SUSPEND mode.</P>
+
+<P>Before describing this in more detail, it's important to point out that there are two basic families of device drivers: stream interface drivers and native drivers. This is an important distinction because power notifications are built-in for one of these, the stream interface drivers. The expression "native device drivers" refers to a pretty large number of drivers, and some of these have their own mechanisms for power management. The following list shows some of the native drivers and the power management mechanism each support:
+
+<UL type="disc">
+	<LI>Display screen Power management function is controlled by the SETPOWERMANAGEMENT escape code. For more information, see the <A href="http://msdn.microsoft.com//mobile/developer/default.asp">Microsoft Mobile Devices</A> Web site.</li>
+
+	<LI>Keyboard Power management function is <B>KeybdDriverPowerHandler</B>. </li>
+
+	<LI>Mouse/touch screen Power management function for touch screens defined as <B>TouchPanelPowerHandler</B>. </li>
+
+	<LI>Infrared miniport network adapter. </li>
+
+	<LI>Built-In Network NDIS Miniport drivers&#151;<B>MiniportReset </B>controls power management. </li>
+
+	<LI>Multimedia timer. </li>
+
+	<LI>PCMCIA drivers Power management functions come from the PCMCIA Services&#151;<B>PowerUp</B> and <B>PowerDown</B> functions. </li>
+
+	<LI>Printer. </li>
+</UL>
+
+<P>If a native driver does not have a built-in power management mechanism, one way to access power notifications is by creating a stream interface driver proxy to collect that information and forward it to the native driver.</P>
+
+<P>Stream Interface Drivers are marked by two basic qualities&#151;a three letter ID and a common set of entry points. Some of the three letter IDs will be familiar to users of other systems, including COM for serial drivers, CON for a character-based console, and LPT for a printer port. Others are specific to Windows CE, including ACM for the Audio Compression Manager, DSK for storage drivers, and WAV for sound drivers.</P>
+
+<P>The ID to a stream interface driver plays two roles. First, the ID is used to access the device driver from an application, or from another device driver. Stream interface drivers are accessed using the regular Win32 file I/O functions. To open a connection to a stream interface driver, the <B>PowerDown</B> function must be called using the ID and a number from 0 to 9 followed by a colon. For example, the following code opens port "COM1:". </P>
+
+<PRE class="code">HANDLE hCom1 = 
+CreateFile(L"COM1:", GENERIC_READ | GENERIC_WRITE, 0, NULL, 
+   OPEN_EXISTING, 0, NULL);
+</PRE>
+
+<P>The second way that the ID gets used is in a prefix to all of the functions made available from the driver. For example, the stream interface driver for the serial port exports the following set of functions:
+
+<UL type="disc">
+	<LI><B>COM_Init</B><CODE>&nbsp;&nbsp;</CODE>Driver loaded (<B>ActivateDevice</B> called). </li>
+
+	<LI><B>COM_Deinit</B><CODE>&nbsp;&nbsp;</CODE>Driver about to be unloaded (<B>DeactivateDevice</B> called). </li>
+
+	<LI><B>COM_Open</B><CODE>&nbsp;&nbsp;</CODE>CreateFile called.</li>
+
+	<LI><B>COM_Close</B><CODE>&nbsp;&nbsp;</CODE>CloseHandle called.</li>
+
+	<LI><B>COM_Read</B><CODE>&nbsp;&nbsp;</CODE>ReadFile called.</li>
+
+	<LI><B>COM_Write</B><CODE>&nbsp;&nbsp;</CODE>WriteFile called.</li>
+
+	<LI><B>COM_Seek</B><CODE>&nbsp;&nbsp;</CODE>SeekFile called.</li>
+
+	<LI><B>COM_PowerDown</B><CODE>&nbsp;&nbsp;</CODE>System entering SUSPEND mode.</li>
+
+	<LI><B>COM_PowerUp</B><CODE>&nbsp;&nbsp;</CODE>System leaving SUSPEND mode.</li>
+
+	<LI><B>COM_IOControl</B><CODE>&nbsp;&nbsp;</CODE>DeviceIoControl called.</li>
+</UL>
+
+<P>The <B>COM_PowerDown</B> function gets called just before the system enters SUSPEND mode, and the <B>COM_PowerUp</B> function gets called just when the system leaves SUSPEND mode. This pair of functions, as implemented on all stream interface drivers, provides the basic power management support in Windows CE .NET, and the only power management notification in previous versions of Windows CE.</P>
+
+<P>An important point about both functions is that they are called during interrupt time. This means that only a limited number of system function calls can safely be made. Otherwise, the system crashes. What you can safely do then, is to store values in memory or access your hardware, but really little else.</P>
+
+<P>For the rest of this article, I will follow the convention used in the Platform Builder documentation when referring to these function names. I will use the "xxx" placeholder for the ID, so that the two power management functions will be referred to as <B><I>xxx</I>_PowerUp</B> and <B><I>xxx</I>_PowerDown</B>.</P>
+
+<H3 class="dtH1">Basic Power&#151;Applications</H3>
+
+<P>With basic power management support, applications have some degree of influence over the power manager, but the support is by no means complete. The most obvious omission is that applications do not get any notification that the system power state is changing to SUSPEND. This is true for the general case; it is not true for specific platforms like Windows CE .NET for Automotive, which adds additional application notifications beyond those that the core operating system provides. Nor is there any standard way for an application to influence the specific power state of individual devices, for example turning a disk drive off or turning on the display screen, without having special knowledge of specific device drivers.</P>
+
+<P>This is not to say that applications have no say over system power management. In particular, applications have the ability to cause the system both to enter and to leave SUSPEND mode, even if they do not get a notification when the system leaves SUSPEND mode. An application can put the system into the SUSPEND state by calling <B>GwesPowerOffSystem</B> or the Windows CE .NET equivalent, <B>SetSystemPowerState</B>, with the appropriate parameters. An application can power down the system to save power, thereby extending battery life.</P>
+
+<P>Applications can also influence the GWES suspend timeout by calling <B>SystemIdleTimerReset</B>. This API has exactly the same effect on GWES as pressing a key or tapping the touchscreen. Some operating system (OS) components, such as protocol stacks, may invoke this API automatically. This feature is configurable through a variety of registry settings.</P>
+
+<P>A device can also be setup so that it does not suspend when there is network activity. What this means in particular is that even when there is no user activity, a system suspend will not occur when there is any activity of the following kinds:
+
+<UL type="disc">
+	<LI>Connected TCP sockets, including loop back</li>
+
+	<LI>Connected Infrared (IrDA) sockets</li>
+
+	<LI>Active network adapters</li>
+
+	<LI>Established PPP connection</li>
+</UL>
+
+<P>There are other things that applications can do to influence a platform's behavior insofar as the SUSPEND state is concerned. An application can wake the system from the SUSPEND state by setting a wake up alarm with the <B>CeRunAppAtTime</B> function. This function requires the following parameters: the path to an executable file, a date, and a time. At the appointed time, a system in SUSPEND state turns ON, and a specified program runs. The following code example causes a Windows CE system to wake up, if it had been in the SUSPEND state, at December 1, 2003 at 9:00 A.M., and run the program CLOCK.EXE:</P>
+
+<PRE class="code">SYSTEMTIME st;
+st.wYear = 2003;
+st.wMonth = 12;
+st.wDay = 1;
+st.wHour = 9;
+st.wMinute = 0;
+st.wSecond = 0;
+CeRunAppAtTime(L"CLOCK.EXE", &amp;st);
+</PRE>
+
+<P>While an application cannot detect the transition into SUSPEND mode, it is able to detect the transition from SUSPEND mode. It does this by calling the <B>CeRunAppAtEvent</B> function, which takes two parameters: a path and an event code. The event code for leaving the SUSPEND state is NOTIFICATION_EVENT_WAKEUP, and so the following code example runs the CLOCK.EXE program every time the system wakes up:</P>
+
+<PRE class="code">CeRunAppAtEvent(L"CLOCK.EXE", NOTIFICATION_EVENT_WAKEUP);
+</PRE>
+
+<H2 class="dtH1"><A NAME="power_management_features_enhancedpowermgmnt"></A>Enhanced Power Management with the Windows CE .NET Power Manager</H2>
+
+<P>The Windows CE .NET Power Manager adds a number of sophisticated features above and beyond the basic features described earlier. The Power Manager allows individual devices such as a display screen, a disk drive, or a Digital Signal Processor to have its own power state, known as a "device power state", separate from the general System Power State. Applications gain the ability to influence the power states of devices. A file-transfer program, for example, might keep a modem and its associated serial port running while the display screen is allowed to turn off. Or a wireless network card might still get power while the rest of a system is suspended. This fine level of control provides a greater level of device-specific and application-specific power management than in earlier versions of Windows CE.</P>
+
+<P>To gain the added level of control over power, a platform must include the Power Manager component named PM.DLL. Platform Builder 4.1 provides the complete source code for Power Manager. That code can be further refined to meet the needs of individual platforms.</P>
+
+<P>A central goal of the Power Manager is compatibility with device drivers and applications built for earlier versions of Windows CE. Each of the elements discussed earlier in this paper still applies when the Power Manager is present. That is, the OAL power management entry points listed earlier, <B>OEMInit</B>, <B>OEMPowerOff</B>, and others, are still called when the Power Manager is present. Stream interface drivers still have a pair of <B><I>xxx</I>_PowerDown</B> and <B><I>xxx</I>_PowerUp</B> entry points. And whether the Power Manager is present or not, applications can still force the system into SUSPEND mode, schedule a wake up call to exit SUSPEND mode, and receive the wakeup notifications described earlier.</P>
+
+<P>While the base power management supports five power management levels, the enhanced Power Manager adds two different types of power management states: System Power States and Device Power States. One type, System Power States, is platform specific, and gives a platform designer great freedom in picking platform appropriate states. The other type, the Device Power States, describes five predefined power levels for devices. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The term "device" in this context means a peripheral on a Windows CE-based system, like a display screen or a network adapter. The term "platform" refers to the whole Windows CE system: CPU, memory, and all peripherals. </BLOCKQUOTE>
+
+<P>An OEM platform designer can create an arbitrary set of System Power States and assign each a name in a set of registry entries. For example, the sample CE .NET Power Manager defines the following System Power States:
+
+<UL type="disc">
+	<LI>RunAC</li>
+
+	<LI>LowPowerAC</li>
+
+	<LI>RunDC</li>
+
+	<LI>LowPowerDC</li>
+
+	<LI>LowPowerAcDc</li>
+
+	<LI>Suspend</li>
+
+	<LI>Off</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>The sample Power Manager provided with Windows CE .NET version 4.1 supports a different set of System Power States: On, User Idle, System Idle, and Suspend.</BLOCKQUOTE>
+
+<P>Flexibility in creating System Power States lets a platform designer create a model that is appropriate for a specific platform. Simple platforms might have two: On and Off. Platforms with specialized requirements for wireless support might have several states just to describe whether the platform is in-range or out of range of an access point, in addition to other states that describe whether connected to a battery or to auxiliary power.</P>
+
+<P>While a platform designer gets to pick a set of System Power States, there is no such freedom with Device Power States. Instead, there are five (5) device states and each has a name like "Dn", where n = 0 to 4. The following list shows these states:
+
+<UL type="disc">
+	<LI>D0&#151;Full on</li>
+
+	<LI>D1&#151;Low on</li>
+
+	<LI>D2&#151;Standby</li>
+
+	<LI>D3&#151;Sleep</li>
+
+	<LI>D4&#151;Off</li>
+</UL>
+
+<P>When defining System Power States, an OEM assigns a power level for each of the devices in the system. This mapping is set up through registry settings. In some cases, a given System Power State maps all devices to the same Device Power State. When on AC power, for example, all devices might be mapped to D0. For other System Power States, there can be different device power states for different devices. For example, when a system is on battery power and the remaining battery has less than 50% power, the display screen and CPU might be on D1, and the network adapter could be set to D3. Different devices, in other words, can be running at different Device Power States at the same time. This level of flexibility means that each device on a platform can be tuned to minimize the drain on scarce battery resources. </P>
+
+<P>The following three sections of this article address enhanced power features from three perspectives. The first perspective is from the perspective of the platform developer often referred to as the OEM, which is responsible for building the original system image including the OEM Adaptation Layer (OAL). The second perspective is from that of the device driver writer. Just as in earlier versions of Windows CE, power management support is located in stream interface drivers. The third perspective is that of application programs, and the added power management support that is available to them.</P>
+
+<H3 class="dtH1">Enhanced Power Management&#151;Platforms</H3>
+
+<P>Several new power management-related features are provided in the OAL. One of these is the ability to let an interrupt associated with an installed device driver be defined as a system wake interrupt. This last feature was actually added in Windows CE .NET version 4.1. Earlier versions of Windows CE did not allow new interrupt handlers to be defined after an operating system image was built. Instead, the OAL owned all the interrupt handling. While various workarounds were possible, each was platform specific. Windows CE .NET introduces a standard mechanism for installing an interrupt handler when a new device is added to a system, for example through a PCMCIA or CF card. The mechanisms for installing and uninstalling interrupt handlers are the pair of functions <B>LoadIntChainHandler</B> (to install) and <B>FreeIntChainHandler</B> (to uninstall).</P>
+
+<P>In the context of power management, the ability to add and remove interrupt handlers is important because an installed interrupt handler can also be set up as a wake source. That is, any installed device driver can establish the interrupts associated with its device as the mechanism by which the SUSPEND-to-ON power transition can be accomplished. This is done by using a pair of new kernel IO control codes: IOCTL_HAL_ENABLE_WAKE establishes an installed interrupt handler as a wake source, and IOCTL_HAL_DISABLE_WAKE disconnects a previously established wake interrupt.</P>
+
+<P>The Power Manager component is a required component for all display-based systems. That is, the Power Manager component is required for all platforms that rely on IABASE. Starting with Windows CE .NET, platforms with very low memory budgets can use an alternative minimal power manager called PMSTUB, which ships with Platform Builder. For headless platforms, those built from HLBASE, the Power Manager is entirely optional. You can find the source code for the Power Manager at the following location: Wince400\Public\Common\Drivers\Pm or in the Windows CE .NET directory tree at Wince410\Public\Common\Drivers\Pm.</P>
+
+<P>The following list shows some new power management API functions that are available for a platform developer to use: 
+
+<UL type="disc">
+	<LI><B>SetDevicePower</B><CODE>&nbsp;&nbsp;</CODE>This function sets the device for a specified device, for example, "COM1:" to a specified power state, for example to D0. Because this function overrides the Power Manager, general application programs should not use it. These should instead use <B>SetPowerRequirement</B>. This function may be used by Control Panel applets, or other OEM supplied code should call this function.</li>
+
+	<LI><B>GetDevicePower</B><CODE>&nbsp;&nbsp;</CODE>This function queries the current power state of a particular device.</li>
+</UL>
+
+<H3 class="dtH1">Enhanced Power Management&#151;Device Drivers</H3>
+
+<P>As with earlier versions of Windows CE, stream interface drivers continue to get called with power management information. In addition to the <B><I>xxx</I>_PowerUp</B> and <B><I>xxx</I>_PowerDown</B> entry points, when a stream interface driver is declared to support the Power Manager, it gets called with IO control codes. IO control codes are integer values that are essentially command codes that are delivered to a stream interface driver at its <B><I>xxx</I>_IOControl</B> entry point. For example, with the serial driver described earlier, the name of its IO control entry point is <B>COM_IOControl</B>.</P>
+
+<P>Not all stream interface drivers will support these extra control codes. Older drivers certainly will not until they are rewritten. As I'll detail shortly, a stream interface driver must advertise its services to start getting noticed by the Power Manager. Once it does know about a driver, it can start receiving control codes. The following list shows the Power Manager control codes that have been defined:
+
+<UL type="disc">
+	<LI>IOCTL_POWER_CAPABILITIES&nbsp;&nbsp;The first control code that gets sent to a driver. This code requests details about what a device can do. There is a structure that contains, for example, details about the supported Dx power states, whether the device can waken from different device states, power used (in milliwatts) in each power state, and delay (in milliseconds) to get to D0 (full-on) power state from other device power states.</li>
+
+	<LI>IOCTL_POWER_GET&nbsp;&nbsp;This code fetches the current device power state value.</li>
+
+	<LI>IOCTL_POWER_QUERY&nbsp;&nbsp;This code queries whether a given power state transition is feasible. This code is not used in the sample Power Manager.</li>
+
+	<LI>IOCTL_POWER_SET&nbsp;&nbsp;This code sets the current device power state value.</li>
+
+	<LI>IOCTL_REGISTER_POWER_RELATIONSHIP&nbsp;&nbsp;This code allows a device driver to register itself as a proxy for another device driver. The NDIS driver uses this mechanism to tell the Power Manager about its miniport drivers by setting the POWER_CAP_PARENT bit in the POWER_CAPABILITIES structure.</li>
+</UL>
+
+<P>The Power Manager makes a set of functions available for the use of device drivers. It's important that applications do not use these functions, but rather use the set that has been created for applications. The set of device driver functions includes the following:
+
+<UL type="disc">
+	<LI><B>DevicePowerNotify</B><CODE>&nbsp;&nbsp;</CODE>This function requests a change to the current power state of a given device, for example, "COM1:". Making this function call does not guarantee that the Power Manager will change the device power to the requested state. For example, current device power usage might make the change not possible. But when a request can be honored, the Power Manager does so by sending the associated device an IOCTL_POWER_SET control code.</li>
+</UL>
+
+<P>In addition to this set of functions, there is another set of functions created for applications that device drivers may also call. This set is discussed in the next section. </P>
+
+<P>By default, stream interface drivers are only required to support the <B><I>xxx</I>_PowerUp</B> and <B><I>xxx</I>_PowerDown</B> entry points. When a driver supports the extra IOCTL codes, it must specifically advertise that support in the system. There are two ways to mark a driver as having this IOCTL support: one way is through a call to <B>AdvertiseInterface</B>; the second way is by including the power manageable GUID in the driver's <B>IClass</B> registry value when the driver is loaded in the call to <B>ActivateDeviceEx</B>.</P>
+
+<H3 class="dtH1">Enhanced Power Management&#151;Applications</H3>
+
+<P>Windows CE .NET provides the following three new features to applications: 
+
+<UL type="disc">
+	<LI>Power notifications</li>
+
+	<LI>Power requirements</li>
+
+	<LI>Control over system power state</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="power_management_features_powernots"></A>Power Notifications</H2>
+
+<P>Through the mechanism of power notifications, a Windows CE .NET application will get notified as changes occur in the power state. These notifications give applications a much broader view of changes in power states of the system and will start when an application calls the <B>RequestPowerNotifications</B> function. The following values are defined for possible system power states that can be reported as a result of calling this function:
+
+<UL type="disc">
+	<LI>POWER_STATE_ON&nbsp;&nbsp;System is on.</li>
+
+	<LI>POWER_STATE_OFF&nbsp;&nbsp;No power, full off.</li>
+
+	<LI>POWER_STATE_CRITICAL&nbsp;&nbsp;Battery power critical, system to be turned off.</li>
+
+	<LI>POWER_STATE_IDLE&nbsp;&nbsp;System Idle state. </li>
+
+	<LI>POWER_STATE_SUSPEND&nbsp;&nbsp;System entering Suspend state. </li>
+
+	<LI>POWER_STATE_RESET&nbsp;&nbsp;System Reset state. </li>
+</UL>
+
+<P>An application cancels requests for power notifications by calling the <B>StopPowerNotifications</B> function.</P>
+
+<P>In addition to getting notified about changes in the system, applications can play a more active role in defining power needs. This is done using a "power requirement." When an application defines a power requirement, it is saying that it wants to have a specific device, for example "COM1:", at a particular power level, for example at D0 or D1. Power requirements should be used sparingly and should be disabled when a device is not actually being used.</P>
+
+<H4 class="dtH1">Power requirements</H4>
+
+<P>When the Power Manager receives a power requirement request, it does its best to honor the request. That is, it tries to maintain a device at or above the selected power state. The SUSPEND state can override power requirements so that when the system goes into SUSPEND state, all devices get suspended including those with power requirements. An application can force a power requirement to be honored, even during a system SUSPEND, by using the POWER_FORCE flag when it defines the power requirement. This would allow, for example, a network card to stay running while the rest of the system was suspended. This should be used with caution, however, to avoid draining the system battery unnecessarily.</P>
+
+<P>The power requirement API is fairly simply, and consists of two functions. Power requirements are controlled by calling the following functions:
+
+<UL type="disc">
+	<LI><B>SetPowerRequirement</B><CODE>&nbsp;&nbsp;</CODE>Enable a required power level (D0, D1, and so on) for a specific device (COM1, APM1, and so on).</li>
+
+	<LI><B>ReleasePowerRequirement</B><CODE>&nbsp;&nbsp;</CODE>Disable a power requirement.</li>
+</UL>
+
+<P>Power requirements provide applications with a very powerful mechanism to control how the Power Manager adjusts power levels in devices. When a power requirement is in effect, it trumps all other power settings. Here's an example.</P>
+
+<P>Suppose there is a barcode reader that connects to the COM1 port, and suppose that COM1 must be at its highest power level to access the barcode reader. To make this happen, an application will call <B>SetPowerRequirement</B> and specify D0 for COM1. Suppose then that the serial driver itself decides it wants to drop to a lower power level, which it can do by calling <B>DevicePowerNotify</B>. Incidentally, this function name comes from the fact that it is the device driver that is notifying the Power Manager of a desired power state and not the other way around. Even if the serial driver asked to be put at a lower power state (D1 through D4), those requests would not be honored until the power requirement was disabled.</P>
+
+<P>Continuing with the previous example, suppose that the System Power State changed to "LowPowerDC", and that the associated device power state for COM1 was D3. Once again, the application's power requirement wins and the power state for COM1 stays at D0. Only when the power requirement is disabled&#151;through a call to <B>ReleasePowerRequirement</B>&#151;would the D3 power state be honored.</P>
+
+<P>When two applications have power requirement requests in place, the one with the highest power state wins (where D0 is the highest and D4 the lowest). In other words, if one application set a power requirement for COM1 at D0 and a second application set a power requirement for COM1 at D1, the Power Manager would set the state to D0. The assumption is that device capabilities are lost when at lower power levels, and gained at higher power levels. So when two applications both have a power requirement, the higher one always wins.</P>
+
+<P>The only time that power requirements are not honored is when the system becomes suspended. After all, if there is no user activity, or if the user turns off a device, then all devices should be suspended. Even this can be overridden, however, by including the POWER_FORCE flag in the call to <B>SetPowerRequirement</B>.</P>
+
+<H4 class="dtH1">System power state</H4>
+
+<P>A third set of power management features that applications gain access to involve the system power state. This is the set of named power configurations that an OEM defines. The named power states with the sample Power Manager include names like "RunAC" and "RunDC". The OEM that defined these power states sets a default device power state, for example, D0 or D1, for all devices, and can also define device-specific device states for a given system power state.</P>
+
+<P>The names of the power states, along with the associated device power states, are listed in the registry. The following list shows the functions that control the system power state:
+
+<UL type="disc">
+	<LI><B>GetSystemPowerState</B><CODE>&nbsp;&nbsp;</CODE>Returns the name of the current power state as a string, for example "RunDC".</li>
+
+	<LI><B>SetSystemPowerState</B><CODE>&nbsp;&nbsp;</CODE>Requests a change to a specific system power state, for example "Suspend".</li>
+</UL>
+
+<H4 class="dtH1">Other functions</H4>
+
+<P>There is one other power management function that can be useful to application developers, and it deserves a mention here. It is the function that queries the current device power state of a specific device:
+
+<UL type="disc">
+	<LI><B>GetDevicePower</B><CODE>&nbsp;&nbsp;</CODE>Queries the current power state of a given device. </li>
+</UL>
+
+<P>For more details on Microsoft Windows CE .NET Power Management, see <MSHelp:link keywords="cxconPowerManagerArchitecture" TABINDEX="0">Power Management Architecture</MSHelp:link>.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_835372', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

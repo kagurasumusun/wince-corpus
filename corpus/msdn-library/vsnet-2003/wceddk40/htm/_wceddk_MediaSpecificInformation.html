@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MediaSpecificInformation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MediaSpecificInformation"/>
+<MSHelp:RLTitle Title="MediaSpecificInformation"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_MediaSpecificInformation"/>
+<MSHelp:Keyword Index="K" Term="MediaSpecificInformation"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_MediaSpecificInformation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674060">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_mediaspecificinformation"></A>MediaSpecificInformation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure contains information about the characteristics of the network hardware bound to a protocol.</P>
+
+<PRE class="syntax"><B>typedef struct MediaSpecificInformation {</B>
+<B>UINT</B> <I>NextEntryOffset</I><B>;</B>
+<B>NDIS_CLASS_ID</B> <I>ClassId</I><B>;</B>
+<B>UINT</B> <I>Size</I><B>;</B>
+<B>UCHAR</B> <I>ClassInformation[1]</I><B>;</B>
+<B>} MEDIA_SPECIFIC_INFORMATION;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>NextEntryOffset</B></DT>
+
+<DD>Specifies the byte offset to this member in the next record, if any. Zero indicates that this is the last record in the buffer; the values of all remaining members in the last record are also 0. The value of this member must be quad-aligned.</dd>
+
+<DT><B>ClassId</B></DT>
+
+<DD>Specifies the type of the record. Possible values are one of the following:
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=42%>Value</TH>
+<TH width=58%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>NdisClass802_3Priority</TD>
+<TD width=58%>The underlying NIC medium requires that drivers specify per-packet priority, while its driver uses Ethernet emulation to communicate with bound protocols.
+<P>A bound protocol can determine whether the underlying NIC miniport's native medium requires prioritized packets with the <A HREF="cxtskoid_802_3_mac_options.htm">OID_802_3_MAC_OPTIONS</A> query. If so, the miniport sets the NDIS_802_3_OPTION_PRIORITY flag.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>NdisClassWirelessWanMbxMailbox</TD>
+<TD width=58%>The underlying NIC driver examines the <B>ULONG</B>-sized record at <B>ClassInformation</B> to determine whether the mailbox flag should be set for the associated packet. A value of 1 indicates that the mailbox flag should be set; 0 indicates that it should not.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>Size</B></DT>
+
+<DD>Specifies the number of bytes in the <B>ClassInformation</B> array, including any padding necessary to align the <B>NextEntryOffset</B> of the next record on a 4-byte boundary.</dd>
+
+<DT><B>ClassInformation [1]</B></DT>
+
+<DD>Specifies the out-of-band information for this record.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>NDIS_CLASS_ID</B> type is an NDIS-defined enumeration. Most common classifications for records will be specified as system-defined values. However, a range of values in this enumeration will be available for vendor-defined experimental classes.</P>
+
+<P class="label"><B>Setting Status Before Making Receive Indications</B></P>
+
+<P>Only lower-level NDIS drivers use the <B>Status</B> member of this structure for receive indications. Before such a driver calls <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, it sets the <B>Status</B> member with <A HREF="_wceddk_ndis_set_packet_status.htm">NDIS_SET_PACKET_STATUS</A> for one or more packet descriptors in the array. The following table shows the possible values for <B>Status</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>NDIS_STATUS_SUCCESS</TD>
+<TD width=67%>Tells NDIS that the driver is relinquishing ownership of the packet about to be indicated with <B>NdisMIndicateReceivePacket</B> until the packet descriptor is returned to its <A HREF="cxrefminiportreturnpacket.htm">MiniportReturnPacket</A> function.<BR>
+Protocols that receive the indication can use the packet descriptor, along with all buffers mapped by buffer descriptors chained to the packet descriptor and any OOB information supplied with the packet, to copy the indicated net packet data or, possibly, to forward the indicated data to interested clients.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>NDIS_STATUS_RESOURCES</TD>
+<TD width=67%>Tells NDIS that the driver is retaining ownership of the packet about to be indicated with <B>NdisMIndicateReceivePacket</B>. This packet will be indicated to the <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function of bound protocols.</TD>
+</TR>
+</table></div>
+
+<P>Setting this status forces bound protocols to return ownership of each such packet descriptor, of any medium-specific buffer in the OOB data block for each packet descriptor, and of the memory mapped by each packet descriptor's respective chained buffer descriptors to the indicating driver more quickly. The protocols must wait for a call to their <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> functions to begin post-processing the data they copied from indications and forwarding the data to clients.</P>
+
+<P class="label"><B>Getting Status on Return from NdisMIndicateReceivePacket</B></P>
+
+<P>After a serialized driver has set the <B>Status </B>for some number of packet descriptors and called <B>NdisMIndicateReceivePacket</B> with the array of pointers to the packet descriptors, it must use the <A HREF="_wceddk_ndis_get_packet_status.htm">NDIS_GET_PACKET_STATUS</A> macro when <B>NdisMIndicateReceivePacket</B> returns control to retrieve the <B>Status</B> set by NDIS.</P>
+
+<P>The returned <B>Status</B> in the <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A> block determines what the indicating driver does next. The NDIS_PACKET_OOB_DATA block is associated with each of the packet descriptors that the serialized driver indicated with <B>NDIS_STATUS_SUCCESS.</B></P>
+
+<P>The following table shows possible values for <B>Status</B>, and describes the resulting action to be taken by the driver.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Status</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NDIS_STATUS_SUCCESS</TD>
+<TD width=66%>If this value is set on return from a miniport's call to <B>NdisMIndicateReceivePacket</B>, the miniport regains ownership of the following:<BR>
+The packet descriptor<BR>
+The associated OOB data block associated with the packet descriptor and of any media-specific information buffer specified in this block<BR>
+All buffers mapped by buffer descriptors chained to the packet descriptor<BR>
+<BR>
+NDIS guarantees that any packet descriptors for which the indicating driver set NDIS_STATUS_RESOURCES, as already described, will be returned from its call to <B>NdisMIndicateReceivePacket</B> with NDIS_STATUS_SUCCESS.<BR>
+The driver can prepare these descriptors, the OOB block, and media-specific information buffer, if any, for reuse in subsequent receive indications immediately.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NDIS_STATUS_PENDING</TD>
+<TD width=66%>If this value is set on return from <B>NdisMIndicateReceivePacket</B>, protocols retain ownership of the packet descriptor, of its associated OOB data block and any buffer specified in this block, and of all buffers mapped by buffer descriptors chained to the packet descriptor until the packet descriptor is returned to the indicating driver's <B>MiniportReturnPacket</B> function.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Setting Status in MiniportSendPackets</B></P>
+
+<P>Only underlying serialized NDIS drivers with <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A> functions can use the <B>Status</B> member of this structure for packet descriptors specifying sends. Such a driver's <B>MiniportSendPackets</B> function sets the <B>Status</B> member in the OOB data blocks associated with the packet descriptors in the input array as follows:
+
+<UL type="disc">
+	<LI>If the driver will complete the send operation asynchronously, <B>MiniportSendPackets</B> sets NDIS_STATUS_PENDING in the <B>Status</B> member for the given packet descriptor.</li>
+
+	<LI>If the driver cannot process all sends in a given packet array due to current resource constraints, <B>MiniportSendPackets</B> sets NDIS_STATUS_RESOURCES in the <B>Status</B> member for one packet descriptor.</li>
+
+	<LI>NDIS queues these packet descriptors internally in the same order for resubmission to <B>MiniportSendPackets</B> when the driver calls <A HREF="_wceddk_ndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A> or <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A>, whichever occurs first. NDIS reflects this miniport-set status value to protocols as NDIS_STATUS_PENDING.</li>
+
+	<LI>If <B>MiniportSendPackets</B> will complete a given send request before it returns control, it must set the <B>Status</B> member for the given packet descriptor to a driver-determined status value so that NDIS can reflect this status back to the protocol that initiated the send.</li>
+</UL>
+
+<P>Otherwise, such a driver supplies the completion status for each packet when it calls <B>NdisMSendComplete</B> with the packet descriptor. Drivers that have <A HREF="cxrefminiportsend.htm">MiniportSend</A> instead of <B>MiniportSendPackets</B> functions return the status for each incoming send packet, so such a driver never sets the <B>Status</B> member of the OOB data block for a packet descriptor specifying a send.</P>
+
+<P>Protocols cannot determine the completion status for a protocol-allocated packet descriptor from the <B>Status</B> member of the associated OOB block on return from <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A> or <A HREF="_wceddk_ndissend.htm">NdisSend</A>. This value can change dynamically as NDIS submits, re-queues, and resubmits send packets to underlying drivers' <B>MiniportSendPackets</B> and/or <B>MiniportSend</B> functions.</P>
+
+<P>A protocol cannot use any <B>NDIS_GET_PACKET_<I>XXX</I></B> macro or the <A HREF="_wceddk_ndis_oob_data_from_packet.htm">NDIS_OOB_DATA_FROM_PACKET</A> macro to access the OOB data block for such a protocol-allocated packet descriptor until its <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A> function is called with the packet descriptor.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportreturnpacket.htm">MiniportReturnPacket</A>, <A HREF="cxrefminiportsend.htm">MiniportSend</A>, <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A>, <A HREF="_wceddk_ndis_get_packet_status.htm">NDIS_GET_PACKET_STATUS</A>, <A HREF="_wceddk_ndis_oob_data_from_packet.htm">NDIS_OOB_DATA_FROM_PACKET</A>, <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A>, <A HREF="_wceddk_ndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A>, <A HREF="cxtskoid_802_3_mac_options.htm">OID_802_3_MAC_OPTIONS</A>, <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A>, <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MediaSpecificInformation&nbsp;(_wceddk_mediaspecificinformation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

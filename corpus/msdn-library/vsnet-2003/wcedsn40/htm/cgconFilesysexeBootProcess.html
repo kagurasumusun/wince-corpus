@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Filesys.exe Boot Process</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Filesys.exe Boot Process"/>
+<MSHelp:RLTitle Title="Filesys.exe Boot Process"/>
+<MSHelp:Keyword Index="A" Term="cgconFilesysexeBootProcess"/>
+<MSHelp:Keyword Index="K" Term="booting, Filesys.exe boot process"/>
+<MSHelp:Keyword Index="K" Term="Filesys.exe"/>
+<MSHelp:Keyword Index="K" Term="kernel, Filesys.exe boot process"/>
+<MSHelp:Keyword Index="K" Term="OAL, Filesys.exe boot process"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, Filesys.exe boot process"/>
+<MSHelp:Keyword Index="A" Term="cgconFilesysexeBootProcess"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757257">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconfilesysexebootprocess"></A>Filesys.exe Boot Process</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>After the kernel starts the Filesys.exe process, Filesys.exe must initialize its state before triggering the kernel to finish its initialization. The reason the kernel must now wait is because of its dependency on the registry that is initialized by Filesys.exe.</P>
+
+<P>The following process shows the actions that occur during the Filesys.exe boot process:
+
+<OL type="1">
+	<LI>Detect if this is a cold or warm boot.
+<P>On a cold boot, all the object store memory is initialized and then mapped for Filesys.exe. Call <A HREF="cgrefpnotifyforcecleanboot.htm">pNotifyForceCleanboot</A> to let the OEM know that this is a cold boot.
+
+<P>On a warm boot, memory is not initialized before being mapped for Filesys.exe.
+</li>
+
+	<LI>On a cold boot call <A HREF="cmrefoemiocontrol.htm">OEMIoControl</A> with <A HREF="cmrefioctl_hal_init_rtc.htm">IOCTL_HAL_INIT_RTC</A>.</li>
+
+	<LI>Initialize the database subsystem and APIs.</li>
+
+	<LI>Initialize the file system APIs.</li>
+
+	<LI>Initialize the point-to-point message queue application programming interfaces (APIs).</li>
+
+	<LI>Read in the Initobj.date file to create a RAM file system if the RAM files system is part of the OS image.</li>
+
+	<LI>Initialize the registry.</li>
+
+	<LI>If Device.exe is not started, load the storage manager if <B>HKEY_LOCAL_MACHINE\System\StorageManager </B>points to a loadable DLL.</li>
+
+	<LI>If storage manager is loaded, create a thread to initialize it. The thread will exit when done.</li>
+
+	<LI>Initialize the national language support (NLS) data.</li>
+
+	<LI>Set the locale to use with the database engine by calling <MSHelp:link keywords="cmrefCeChangeDatabaseLCID" TABINDEX="0">CeChangeDatabaseLCID</MSHelp:link>.</li>
+
+	<LI>Populate the object store databases by loading data from Initdb.ini.</li>
+
+	<LI>Open event SYSTEM/FSReady and set the event.
+<P>This indicates to the kernel and other applications that Filesys.exe is ready.
+</li>
+
+	<LI>Filesys.exe now waits for the kernel to signal that it can boot the rest of the system.</li>
+
+	<LI>Create named events for all event names in the registry at location <B>HKEY_LOCAL_MACHINE\System\Events</B>. These events will be set by the process that owns them.</li>
+
+	<LI>Filesys.exe reads from <B>HKEY_LOCAL_MACHINE\Init</B> and launches the applications listed.</li>
+
+	<LI>If Device.exe is in the list and it has already started, open event SYSTEM/BOOTPHASE2 and signal it. This allows Device.exe to reread the registry and perform the final driver initialization. Any driver can also wait on the same event to be notified when the real registry comes online. This allows the driver to reread registry data if needed.</li>
+
+	<LI>Initialize the time zone and set daylight savings time (DST) if necessary.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconbootingnon-cpuspecificelements.htm">Booting Non-CPU Specific Elements</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Filesys.exe%20Boot%20Process&nbsp;(cgconfilesysexebootprocess.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

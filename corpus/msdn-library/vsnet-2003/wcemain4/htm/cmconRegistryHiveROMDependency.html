@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Hive ROM Dependency</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Hive ROM Dependency"/>
+<MSHelp:RLTitle Title="Registry Hive ROM Dependency"/>
+<MSHelp:Keyword Index="A" Term="cmconRegistryHiveROMDependency"/>
+<MSHelp:Keyword Index="A" Term="cmconRegistryHiveROMDependency"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: object_store.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_823769">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconregistryhiveromdependency"></A>Registry Hive ROM Dependency</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The hive-based registry stores collections of registry data in files called hives. The default contents of the registry are stored in hive files in ROM. Registry keys and values that have been added or modified are stored in hive files on a persistent file system. Those hive files contain only changed values and keys; unchanged data is still referenced from ROM. On the very first boot of the system, the system hive and user hive are empty. As changes are made to the registry, the changed data is added to the hives. This design not only minimizes the size of the hive files that must be persisted, but also minimizes the time required to load those files during the system boot. As a result, the system boots faster than it would if the entire registry is stored in the persistent hive files.</P>
+
+<P>However, the fact that data is split between the hive files in the persistent file system and the hive files in ROM means that the system hive and user hives work only in reference to the files in ROM. If the ROM is updated with new hive files, the references from the hives on the persistent file system to the files in ROM are broken. Therefore, if the ROM is updated, the hive files lose their meaning and must be erased. To prevent confusion between old hive files and new ROM contents, there is a mechanism that detects the conflict and erases the persistent hives. A ROM signature is stored in the persistent hive files, and it is compared against the ROM on each boot. If the ROM changes, the older hive files are erased during the system boot and re-created clean. This action is automatic and cannot be turned off.</P>
+
+<P>Carrying over existing registry settings when the ROM of a device is updated is not a simple process. OEMs must define which registry settings they wish to maintain and which they wish to overwrite, and then manually make a backup copy of the settings they wish to keep. After the device boots with the default settings in the new ROM, the OEM can manually import the backed up registry data. There is currently no OS tool for exporting and importing data in this manner, so OEMs must enumerate the data using the registry APIs and store it themselves.</P>
+
+<P>An OEM can induce a clean boot without updating the ROM by implementing <MSHelp:link keywords="cgrefIOCTL_HAL_GET_HIVE_CLEAN_FLAG" TABINDEX="0">IOCTL_HAL_GET_HIVE_CLEAN_FLAG</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcefiles_registry_startup_sequence.htm">Registry Startup Sequence</A></P>
+
+<P><MSHelp:link keywords="cgrefIOCTL_HAL_GET_HIVE_CLEAN_FLAG" TABINDEX="0">IOCTL_HAL_GET_HIVE_CLEAN_FLAG</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20Hive%20ROM%20Dependency&nbsp;(cmconregistryhiveromdependency.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

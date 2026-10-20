@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS Inline Assembly Language Examples</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS Inline Assembly Language Examples"/>
+<MSHelp:RLTitle Title="MIPS Inline Assembly Language Examples"/>
+<MSHelp:Keyword Index="A" Term="_clmips_cref_MIPS_Assembly_Language_Example"/>
+<MSHelp:Keyword Index="K" Term="assemblers, MIPS inline"/>
+<MSHelp:Keyword Index="A" Term="_clmips_cref_MIPS_Assembly_Language_Example"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: mipscom.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673619">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_clmips_cref_mips_assembly_language_example"></A>MIPS Inline Assembly Language Examples</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The MIPS instruction set is designed to be used with optimizing compilers. The MIPS compiler (CLMIPS.EXE) for Visual C++ generates high-quality MIPS assembly-language code. Therefore, use <B>__asm</B> statements only when necessary. While the examples shown here illustrate the use of <B>__asm</B> statements, they are not inherently any more efficient than the code typically produced directly by the Visual C++ compiler. </P>
+
+<P>The MIPS edition of the compiler allows you to use the <B>__asm</B> statement to write macros that you can call from within C or C++ source code. The syntax of the <B>__asm</B> statement makes such macros possible because of its flexible support for arguments. As illustrated in the following example, you do not need to fix argument values, but can specify them at the time of macro expansion. However, call a macro such as this only from within C or C++ functions. </P>
+
+<P>In the following example, a sample function named <B>my_mult</B> takes two unsigned 32-bit integer arguments, a and b, and multiplies them together. The product is stored at the location specified by the third argument, c, which is a pointer to a 32-bit argument. The function also determines what the overflow portion of the multiplication is, if any, and returns the overflow portion through its return value. </P>
+
+<PRE class="code">extern "C" { // Use extern "c" for C++ file only 
+void <B>__asm</B>(char*, ...); 
+}; 
+#pragma intrinsic(<B>__asm</B>) // this is actually optional 
+long my_mult(long a, long b, long* c) { 
+long overflow; 
+<B>__asm</B>("mult $4,$5"); 
+<B>__asm</B>("mflo $4"); 
+<B>__asm</B>("sw $4, 0($6)"); // store product 
+<B>__asm</B>("mfhi $11"); 
+<B>__asm</B>("sra $12,$4, 31"); 
+<B>__asm</B>("sne $12,$12,$11"); 
+<B>__asm</B>("sw $12, 0(%0)", &amp;overflow); // store overflow 
+return(overflow); 
+} </PRE>
+
+<P>Because the preceding example does not use conditional compilation, the code is not portable to all MIPS platforms. To make it portable, #ifdef blocks would have to be used. </P>
+
+<P>The preceding example function places its arguments <I>a</I>, <I>b</I>, and <I>c</I> in the registers <B>$4</B>, <B>$5</B>, and <B>$6</B>, respectively. These are the first three argument registers; they can also be referred to as a0, a1, and a2. </P>
+
+<P>The local variable <I>overflow</I> is defined in C or C++ code. Inline assembly code can easily recognize variables defined in C or C++ statements because of the <B>__asm</B> argument-handling feature. The expression &amp;overflow is referred to as the argument %0 in the string portion of the following statement: </P>
+
+<PRE class="code">asm("sw $12, 0(%0)",&amp;overflow); // store </PRE>
+
+<P>The following example shows how to us the <B>__asm</B> statement with multiple instructions separated by semicolons (;) and explicitly coded new-lines (\n). </P>
+
+<PRE class="code">extern "C" { // Use extern "c" for C++ file only 
+void <B>__asm</B>(char*, ...); 
+}; 
+long my_mult(long a, long b, long* c) { 
+long overflow; 
+<B>__asm</B>("mult $4,$5;" 
+"mflo $4;" 
+"sw $4, 0($6);" // store product 
+"mfhi $11;" 
+"sra $12,$4, 31;" 
+"sne $12,$12,$11;" 
+__asm("sw $12, 0(%0)", &amp;overflow); // store overflow 
+return(overflow); 
+} </PRE>
+
+<P>Notice that the use of "%0" has potential conflicts with the <B>my_mult</B> function argument. Both the value of argument variable "a" and argument of <B>__asm</B> statement, the address of variable overflow, are passed in register $4. To avoid corrupting the value of argument "a" by the argument of the <B>__asm </B>statement, finish using the argument in $4 first, before using an <B>__asm</B> statement that contains arguments following its assembly string.</P>
+
+<P>The inline assembler occasionally generates nop (no-operation) instructions to improve performance. Without the nop instructions, in some cases the processor would have to interlock the pipeline until all dependencies were satisfied. Insertion of the nop instructions changes the timing of instructions so that the pipeline hazard is avoided. The assembler automatically determines these situations for you. </P>
+
+<P>Some assembly-language instructions are actually macros that result in the generation of more than one instruction. The sne instruction, which is used here, is an example of such a macro. </P>
+
+<P>The last <B>__asm</B> statement, which takes the expression &amp;overflow as an argument, generates an additional instruction that loads this expression into an argument register. </P>
+
+<PRE class="code">.text
+.ent my_mult
+.globl my_mult
+# Begin code for function: my_mult
+my_mult:
+.set noreorder
+    00000  fff8 27bd  addiu       sp,sp,0xFFF8
+    00004                      .frame sp, 8, RA
+    00004                      .mask 0x00000000, 0x00000000
+    00004                      .fmask 0x00000000, 0x00000000
+    00004                      .prologue 0
+$M951:
+    00004     1025 00c0        or          v0,a2,zero
+    00008     0010 afa2        sw          v0,c$(sp)
+    0000c     1025 00a0        or          v0,a1,zero
+    00010     000c afa2        sw          v0,b$(sp)
+    00014     1025 0080        or          v0,a0,zero
+    00018     0008 afa2        sw          v0,a$(sp)
+    0001c     0018 0085        mult        a0,a1      // $4 * $5; these are argument registers
+    00020     2012 0000        mflo        a0         // $4 = lower 32 bits of result
+    00024     1025 0080        or          v0,a0,zero // Store $r4 into *c 
+    00028     0000 acc2        sw          v0,0(a2)   // Store $r4 into *c 
+    0002c     5810 0000        mfhi        t3         // $11 = upper 32 bits of result
+    00030     67c3 0004        sra         t4,a0,0x1F // Shift sign-bit into all lower bits
+    00034     1023 018b        subu        v0,t4,t3   // sne (Set if Not-Equal)
+    00038     0001 2c42        sltiu       v0,v0,1    // sne; overflow if the upper 32 bits
+    0003c     0001 2403        addiu       v1,zero,1  // sne; are not the same as bit-31.
+    00040     6023 0062        subu        t4,v1,v0   // sne 
+    00044     0000 27a4        addiu       a0,sp,overflow$  // overflow = t4
+    00048     0000 ac8c        sw          t4,0(a0)         // overflow = t4
+    0004c     0000 8fa2        lw          v0,overflow$(sp) // return overflow;
+    00050     0004 afa2        sw          v0,$T950(sp)     // return overflow;
+    00054     0004 8fa2        lw          v0,$T950(sp)     // return overflow;
+    00058     0008 27bd        addiu       sp,sp,8
+    0005c     0008 03e0        jr          ra
+    00060     0000 0000        nop
+$M952:
+.end
+# End code for function: my_mult</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_clmips_cref_inline_assembly_for_mips_target_devices.htm">MIPS Device Inline Assembly Language</A></P>
+
+<P><A HREF="ccconintrinsicfunctionsvsinlineassembly.htm">Intrinsic Functions and MIPS Inline Assembly</A></P>
+
+<P><A HREF="_clmips_cref_learning_mips_assembly_language.htm">MIPS Assembly Language Resources</A></P>
+
+<P><A HREF="ccrefthe_asmkeywordinmipsinlineassembly.htm">The _asm Keyword in MIPS Inline Assembly</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MIPS%20Inline%20Assembly%20Language%20Examples&nbsp;(_clmips_cref_mips_assembly_language_example.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

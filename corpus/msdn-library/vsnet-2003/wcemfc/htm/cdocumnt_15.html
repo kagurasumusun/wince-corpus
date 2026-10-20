@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDocument::OnNewDocument</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdocument_onnewdocument"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdocument_onnewdocument"></A><SUP></SUP>CDocument::OnNewDocument</H1>
+
+<P>This method is called by the framework as part of the <B>File New</B> command. The default implementation of this method calls the <B>DeleteContents</B> method to ensure that the document is empty and then marks the new document as clean. </P>
+
+<P>Override this method to initialize the data structure for a new document. You should call the base class implementation of this method from your override.</P>
+
+<P>If the user chooses the <B>File New</B> command in an SDI application, the framework uses this function to reinitialize the existing document, rather than creating a new one. If the user chooses <B>File New</B> in a multiple document interface (MDI) application, the framework creates a new document each time and then calls this function to initialize it. You must place your initialization code in this function instead of in the constructor for the <B>File New</B> command to be effective in SDI applications.</P>
+
+<PRE class=syntax><B>virtual BOOL OnNewDocument( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the document was successfully initialized; otherwise, it is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// The following examples illustrate alternative methods to
+// initialize a document object.
+
+// Method 1: In an MDI application, the simplest place to do
+// initialization is in the document constructor. The framework
+// always creates a new document object for File New or File Open.
+
+CMyDoc::CMyDoc()
+{
+   // Do initialization of MDI document here.
+   // ...
+}
+
+// Method 2: In an SDI or MDI application, do all initialization
+// in an override of OnNewDocument, if you are certain the initialization
+// is effectively saved upon File Save and fully restored upon File Open,
+// through serialization.
+
+BOOL CMyDoc::OnNewDocument()
+{
+   if (!CDocument::OnNewDocument())
+      return FALSE;
+
+   // Do initialization of new document here.
+
+   return TRUE;
+}
+
+// Method 3: If the initialization of your document is not
+// effectively saved and restored by serialization during File Save
+// and File Open, then implement the initialization in single
+// function, named InitMyDocument in this example. Call the
+// shared initialization function from overrides of both
+// OnNewDocument and OnOpenDocument.
+
+BOOL CMyDoc::OnNewDocument()
+{
+   if (!CDocument::OnNewDocument())
+      return FALSE;
+
+   InitMyDocument(); // Call your shared initialization function.
+
+   // If your new document object requires additional initialization
+   // not necessary when the document is deserialized through File Open,
+   // then perform the additional initialization here.
+
+   return TRUE;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdocumnt_2.htm"><B>CDocument::CDocument</B></A>, <A HREF="cdocumnt_5.htm"><B>CDocument::DeleteContents</B></A>, <A HREF="cdocumnt_14.htm"><B>CDocument::OnCloseDocument</B></A>, <A HREF="cdocumnt_16.htm"><B>CDocument::OnOpenDocument</B></A>, <A HREF="cdocumnt_17.htm"><B>CDocument::OnSaveDocument</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COMMAND_HANDLER</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_command_handler"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_command_handler"></A>COMMAND_HANDLER</H1>
+
+<P>This macro defines an entry in a message map. <B>COMMAND_HANDLER</B> maps a<B> WM_COMMAND</B> message to the specified handler function, based on the notification code and the control identifier.</P>
+
+<PRE class=syntax><B>COMMAND_HANDLER(
+</B><I>id</I><B>,
+</B><I>code</I><B>,
+</B><I>func</I><B>)</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>id</I></DT>
+
+<DD>[in] The identifier of the menu item, control, or accelerator.</DD>
+
+<DT><I>code</I></DT>
+
+<DD>[in] The notification code.</DD>
+
+<DT><I>func</I></DT>
+
+<DD>[in] The name of the message-handler function.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>For example:</P>
+
+<PRE>class CMyClass : ...
+{
+public:
+   ...
+
+   BEGIN_MSG_MAP(CMyClass)
+      COMMAND_HANDLER(IDC_MYCTL, EN_CHANGE, OnChange)
+      ...
+   END_MSG_MAP()
+
+   // When a CMyClass object receives a WM_COMMAND
+   // message identified by IDC_MYCTL and EN_CHANGE,
+   // the message is directed to CMyClass::OnChange
+   // for the actual processing.
+   LRESULT OnChange( ... )
+   { ... }
+
+};
+</PRE>
+
+<P>Any function specified in a <B>COMMAND_HANDLER</B> macro must be defined as follows:</P>
+
+<PRE>LRESULT CommandHandler(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL&amp; bHandled);
+</PRE>
+
+<P>The message map sets <I>bHandled</I> to <B>TRUE</B> before <B>CommandHandler</B> is called. If <B>CommandHandler</B> does not fully handle the message, it should set <I>bHandled</I> to <B>FALSE</B> to indicate the message needs further processing.</P>
+
+<P>Always begin a message map with <B>BEGIN_MSG_MAP</B>. You can then declare subsequent alternate message maps with <B>ALT_MSG_MAP</B>. The <B>END_MSG_MAP</B> macro marks the end of the message map. Every message map must have exactly one instance of <B>BEGIN_MSG_MAP</B> and <B>END_MSG_MAP</B>.</P>
+
+<P>In addition to <B>COMMAND_HANDLER</B>, you can use <B>MESSAGE_HANDLER</B> to map a WM_COMMAND message without regard to an identifier or code. In this case, <B>MESSAGE_HANDLER(</B>WM_COMMAND, <B>OnHandlerFunction)</B> will direct all WM_COMMAND messages to <B>OnHandlerFunction</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlwin.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="atlapi_53.htm"><B>COMMAND_ID_HANDLER</B></A>, <A HREF="atlapi_51.htm"><B>COMMAND_CODE_HANDLER</B></A>, <A HREF="atlapi_54.htm"><B>COMMAND_RANGE_HANDLER</B></A>, <A HREF="atlapi2_28.htm"><B>NOTIFY_HANDLER</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

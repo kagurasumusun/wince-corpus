@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sorting XML</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sorting XML"/>
+<MSHelp:RLTitle Title="Sorting XML"/>
+<MSHelp:Keyword Index="A" Term="ceconSortingXML"/>
+<MSHelp:Keyword Index="A" Term="ceconSortingXML"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xslpg01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801923">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconsortingxml"></A>Sorting XML</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Sorting is specified by adding &lt;xsl:sort&gt; elements as children to an &lt;xsl:apply-templates&gt; or an &lt;xsl:for-each&gt; element. The first &lt;xsl:sort&gt; child specifies the primary sort key, the second &lt;xsl:sort&gt; child specifies the secondary sort key, and so on. When an &lt;xsl:apply-templates&gt; or &lt;xsl:for-each&gt; element has one or more &lt;xsl:sort&gt; children, instead of processing the selected nodes in document order, it sorts the nodes according to the specified sort keys and then processes them in sorted order. When used in &lt;xsl:for-each&gt;, &lt;xsl:sort&gt; elements must occur first. When a template is instantiated by &lt;xsl:apply-templates&gt; and &lt;xsl:for-each&gt;, the current node list consists of the complete list of nodes being processed in sorted order.</P>
+
+<P>&lt;xsl:sort&gt; has a select attribute whose value is an expression. For each node to be processed, the expression is evaluated with that node as the current node and with the complete list of nodes being processed in unsorted order as the current node list. The resulting object is converted to a string; this string is used as the sort key for that node. The default value of the <B>select</B> attribute is ".", which will cause the string value of the current node to be used as the sort key.</P>
+
+<P>This string serves as a sort key for the node. The following optional attributes on &lt;xsl:sort&gt; control how the list of sort keys are sorted.
+
+<DL>
+<DT><B>order</B></DT>
+
+<DD>Specifies whether the strings should be sorted in ascending or descending order. <B>Ascending </B>specifies ascending order; <B>descending</B> specifies descending order. The default is ascending.</dd>
+
+<DT><B>data-type</B></DT>
+
+<DD>Specifies the data type of the strings. The following values are allowed:
+
+<UL type="disc">
+	<LI><B>Text</B>
+<P>Specifies that the sort keys should be sorted alphabetically. This is the default.
+</li>
+
+	<LI><B>Number</B>
+<P>Specifies that the sort keys should be converted to numbers and then sorted according to the numeric value. The sort key is converted to a number as if by a call to the function.
+
+<P>A qualified name with a prefix is expanded into an expanded name. The expanded name identifies the data type.
+</li>
+</UL>
+</dd>
+</DL>
+
+<P>The sort must be stable. In the sorted list of nodes, any sublist that has sort keys that all compare equal must be in document order.</P>
+
+<P>For example, suppose an employee database has the following form.</P>
+
+<PRE class="code">&lt;employees&gt;
+  &lt;employee&gt;
+    &lt;name&gt;
+      &lt;given&gt;James&lt;/given&gt;
+      &lt;family&gt;Clark&lt;/family&gt;
+    &lt;/name&gt;
+    ...
+  &lt;/employee&gt;
+&lt;/employees&gt;</PRE>
+
+<P>You can then generate a list of employees sorted by name using the following code example.</P>
+
+<PRE class="code">&lt;xsl:template match="employees"&gt;
+  &lt;ul&gt;
+    &lt;xsl:apply-templates select="employee"&gt;
+      &lt;xsl:sort select="name/family"/&gt;
+      &lt;xsl:sort select="name/given"/&gt;
+    &lt;/xsl:apply-templates&gt;
+  &lt;/ul&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match="employee"&gt;
+  &lt;li&gt;
+    &lt;xsl:value-of select="name/given"/&gt;
+    &lt;xsl:text&gt; &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="name/family"/&gt;
+  &lt;/li&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="ceconQualifiedNames" TABINDEX="0">Qualified Names</MSHelp:link></P>
+
+<P><MSHelp:link keywords="ceconExpressions" TABINDEX="0">Expressions</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sorting%20XML&nbsp;(ceconsortingxml.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

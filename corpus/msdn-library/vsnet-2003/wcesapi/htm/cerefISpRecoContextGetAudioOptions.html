@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpRecoContext::GetAudioOptions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpRecoContext::GetAudioOptions"/>
+<MSHelp:RLTitle Title="ISpRecoContext::GetAudioOptions"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextGetAudioOptions"/>
+<MSHelp:Keyword Index="K" Term="ISpRecoContext, GetAudioOptions"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextGetAudioOptions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822435">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisprecocontextgetaudiooptions"></A>ISpRecoContext::GetAudioOptions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpRecoContext::GetAudioOptions</B> retrieves the audio options for a given stream.</P>
+
+<P>The default audio options are none (such as SPAO_NONE). The default retained audio format is the speech recognition engine's recognition format (see <A HREF="cerefisprecognizergetformat.htm">ISpRecognizer::GetFormat</A> with SPWF_SRENGINE).</P>
+
+<P>See also <A HREF="cerefisprecocontextsetaudiooptions.htm">ISpRecoContext::SetAudioOptions</A>.</P>
+
+<PRE class="syntax"><B>HRESULT GetAudioOptions(</B>
+<B>SPAUDIOOPTIONS *</B><I>Options</I><B>,</B>
+<B>GUID *</B><I>pAudioFormatId</I><B>,</B>
+<B>WAVEFORMATEX **</B><I>ppCoMemWFE</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Options</I> </DT>
+
+<DD>[out] Address that will receive pointer to <A HREF="cerefspaudiooptions.htm">SPAUDIOOPTIONS</A> flag, indicating the options set for this context. If this value is not to be retrieved, specify NULL. The flag can be one of the following values: 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>SPAO_NONE </TD>
+<TD width=70%>Do not retain audio for results. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>SPAO_RETAIN_AUDIO </TD>
+<TD width=70%>Retain audio for all future results. </TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pAudioFormatId</I> </DT>
+
+<DD>[in] Address that will receive the audio stream format type (such as GUID). If the application is not interested in the retained audio format, NULL is specified (such as ignore both <I>pAudioFormatId</I> and <I>pWaveFormatEx</I> parameters). </dd>
+
+<DT><I>ppCoMemWFE</I> </DT>
+
+<DD>[in] Address that will receive a pointer to the audio stream wave format structure (such as <A HREF="cerefwaveformatex.htm">WAVEFORMATEX</A>). This can be NULL if the application is not interested in the retained audio format. If WAVEFORMATEX data is retrieved, then it must be freed using ::CoTaskMemFree().</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>S_OK </TD>
+<TD width=53%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>E_POINTER </TD>
+<TD width=53%>One of the pointers is invalid or bad. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>FAILED(hr) </TD>
+<TD width=53%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of <B>ISpRecoContext::GetAudioOptions</B> and querying the different retained audio settings.</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+// check if audio is being retained (default is NO)
+hr = cpRecoContext-&gt;GetAudioOptions(&amp;pAudioOptions, NULL, NULL);
+// Check hr
+// check what audio format would be retained 
+hr = cpRecoContext-&gt;GetAudioOptions(NULL, &amp;guidFormat, &amp;pWaveFormatEx);
+// Check hr
+// ... do other operations
+// free the wave format memory
+::CoTaskMemFree(pWaveFormatEx);
+// check if audio is being retained, and if so what the format is
+hr = cpRecoContext-&gt;GetAudioOptions(&amp;guid, &amp;guidFormat, &amp;pWaveFormatEx);
+// Check hr
+// ... do other operations
+// free the wave format memory
+::CoTaskMemFree(pWaveFormatEx);</PRE>
+
+<H4 class="dtH4">Development Helpers</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Helper Enumerations and Functions </TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="cerefspstreamformat.htm">SPSTREAMFORMAT</A></TD>
+<TD width=53%>SAPI supported stream formats. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CSpStreamFormat</TD>
+<TD width=53%>Class for managing SAPI supported stream formats and <B>WAVEFORMATEX</B> structures.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpRecoContext::GetAudioOptions&nbsp;(cerefisprecocontextgetaudiooptions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

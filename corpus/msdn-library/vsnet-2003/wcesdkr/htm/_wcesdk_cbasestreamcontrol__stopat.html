@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseStreamControl::StopAt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CBaseStreamControl::StopAt"/>
+<MSHelp:RLTitle Title="CBaseStreamControl::StopAt"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasestreamcontrol__stopat"/>
+<MSHelp:Keyword Index="K" Term="StopAt"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dshowclasses01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_cbasestreamcontrol__stopat"></A>CBaseStreamControl::StopAt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Informs the pin when to stop processing data and to discard any new samples. </P>
+
+<PRE class="syntax"><B>HRESULT StopAt(</B>
+<B>const REFERENCE_TIME *</B><I>ptStop</I> <B>= NULL,</B>
+<B>BOOL</B> <I>bSendExtra</I> <B>= FALSE,</B>
+<B>DWORD</B> <I>dwCookie</I> <B>= 0 );</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>ptStop </I></DT>
+
+<DD><B>REFERENCE_TIME</B> at which to stop streaming. If NULL, stop immediately (no notification). If MAX_TIME, cancels stop. </dd>
+
+<DT><I>bSendExtra </I></DT>
+
+<DD>Indicates whether to send an extra sample after scheduled <I>ptStop</I> time. </dd>
+
+<DT><I>dwCookie </I></DT>
+
+<DD>Specifies a particular value to be sent with the notification when the stop occurs. (Only used if <I>ptStart</I> if not NULL or MAX_TIME). </dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>Returns NOERROR. </P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>This member function implements the <A HREF="_wcesdk_iamstreamcontrol__stopat.htm"><B>IAMStreamControl::StopAt</B></A> method and is used by pins and filters that must support the stopping of streams. It sets the <A HREF="_wcesdk_dtypes__streamcontrolstate.htm"><B>StreamControlState</B></A> enumeration type to STREAM_DISCARDING. </P>
+
+<P>In a video capture scenario, specify <A HREF="_wcesdk_iamstreamcontrol__stopat.htm"><B>StopAt</B></A> on both the output pin of a capture filter and an input pin of a multiplexer and have the multiplexer send notification of completion. This ensures that the capture filter doesn't needlessly capture extra frames, while also guaranteeing that the multiplexer has written the last frame to disk. </P>
+
+<P>In addition, the capture output pin should specify TRUE for the <I>bSendExtra</I> variable while all other pins specify FALSE. If an extra frame is not sent the multiplexer will end up waiting for the stop time indefinitely and not realize it already has received all the capture information. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If a stop time is given in the middle of a packet, the filter will deliver the whole packet before going into a discarding state. Also, if start and stop are scheduled for a single point in time, the effect is as if the start occurred an infinitesimal time before the stop. You can use this effect to capture a single frame. </BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CBaseStreamControl::StopAt&nbsp;(_wcesdk_cbasestreamcontrol__stopat.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

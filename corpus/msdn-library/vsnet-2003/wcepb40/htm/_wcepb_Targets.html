@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Targets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Targets"/>
+<MSHelp:RLTitle Title="Targets"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Targets"/>
+<MSHelp:Keyword Index="K" Term="blocks, Nmake.exe targets"/>
+<MSHelp:Keyword Index="K" Term="dependency lines, Nmake.exe targets"/>
+<MSHelp:Keyword Index="K" Term="multiple targets, Nmake.exe dependency lines"/>
+<MSHelp:Keyword Index="K" Term="Nmake.exe, dependency line targets"/>
+<MSHelp:Keyword Index="K" Term="targets, Nmake.exe dependency lines"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Targets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: nmake.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_694846">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_targets"></A>Targets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In a dependency line, specify one or more targets, using any valid file name, directory name, or pseudotargets. Separate multiple targets with one or more spaces or tabs. Targets are not case-sensitive. Paths are permitted with file names. A target cannot exceed 256 characters. If the target preceding the colon is a single character, use a separating space; otherwise, Nmake.exe interprets the combined letter and colon as a drive specifier.</P>
+
+<P>A <I>pseudotarget</I> is a label that is used in place of a file name in a dependency line. It is interpreted as a file that does not exist, and so is out-of-date. Nmake.exe assumes that a pseudotarget's time stamp is the most recent of all its dependents. If it has no dependents, the current time is assumed. If a pseudotarget is used as a target, its commands are always executed. A pseudotarget that is used as a dependent must also appear as a target in another dependency. However, that dependency does not have to have a commands block.</P>
+
+<P>Pseudotarget names follow the file name syntax rules for targets. However, if the name does not have a file name extension, which includes a period, it can exceed the 8-character limit for file names and can be up to 256 characters long.</P>
+
+<P>The following table shows how Nmake.exe evaluates multiple targets in a single dependency as if each were specified in a separate description block.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Statement</TH>
+<TH width=71%>Evaluation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Bounce.exe Leap.exe : </TD>
+<TD width=71%>Bounce.exe : Jump.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Jump.obj</TD>
+<TD width=71%>echo Building…</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>echo Building… </TD>
+<TD width=71%>Leap.exe : Jump.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>&nbsp;</TD>
+<TD width=71%>echo Building…</TD>
+</TR>
+</table></div>
+
+<P>The following table shows that dependencies are cumulative in a description block, if a target is repeated.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Statement</TH>
+<TH width=71%>Evaluation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Bounce.exe : Jump.obj</TD>
+<TD width=71%>Bounce.exe : Jump.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Bounce.exe : Up.obj</TD>
+<TD width=71%>Up.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>echo Building</TD>
+<TD width=71%>echo Building</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Bounce.exe…</TD>
+<TD width=71%>Bounce.exe…</TD>
+</TR>
+</table></div>
+
+<P>Multiple targets in multiple dependency lines in a single description block are evaluated as if each were specified in a separate description block, but targets that are not in the last dependency line do not use the commands block. The following table shows how Nmake.exe handles multiple targets in multiple dependency lines in a single description block.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Statement</TH>
+<TH width=72%>Evaluation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>Bounce.exe Leap.exe :</TD>
+<TD width=72%>Bounce.exe : Jump.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>Jump.obj</TD>
+<TD width=72%>Up.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>Bounce.exe Climb.exe :</TD>
+<TD width=72%>echo Building</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>Up.obj</TD>
+<TD width=72%>Bounce.exe…</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>echo Building</TD>
+<TD width=72%>Climb.exe : Up.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>&nbsp;</TD>
+<TD width=72%>echo Building</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>&nbsp;</TD>
+<TD width=72%>Climb.exe…</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>&nbsp;</TD>
+<TD width=72%>Leap.exe : Jump.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>&nbsp;</TD>
+<TD width=72%># invoke an inference rule</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows how to update a target in more than one description block by using different commands and specifying a double colon (::) between targets and dependents.</P>
+
+<PRE class="code">Target.lib :: one.asm two.asm three.asm
+    ml one.asm two.asm three.asm
+    lib target one.obj two.obj three.obj
+target.lib :: four.c five.c
+    cl /c four.c five.c
+    lib target four.obj five.obj</PRE>
+
+<P>If a target is specified with a colon (:) in two dependency lines in different locations, and if commands appear after only one of the lines, Nmake.exe interprets the dependencies as if they are adjacent or combined. It does not invoke an inference rule for the dependency that has no commands, but instead assumes that the dependencies belong to one description block and executes the commands that are specified with the other dependency. </P>
+
+<P>The following table shows how Nmake.exe interprets dependencies.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Statement</TH>
+<TH width=73%>Evaluation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Bounce.exe : Jump.obj</TD>
+<TD width=73%>Bounce.exe : Jump.obj </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>echo Building </TD>
+<TD width=73%>Up.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Bounce.exe…</TD>
+<TD width=73%>echo Building </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Bounce.exe : Up.obj</TD>
+<TD width=73%>Bounce.exe… </TD>
+</TR>
+</table></div>
+
+<P>This effect does not occur if a double colon (::) is used.</P>
+
+<P>The following table shows how Nmake.exe interprets dependencies if a double colon is used. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Statement</TH>
+<TH width=73%>Evaluation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Bounce.exe :: Jump.obj</TD>
+<TD width=73%>Bounce.exe : Jump.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>echo Building </TD>
+<TD width=73%>echo Building</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Bounce.exe…</TD>
+<TD width=73%>Bounce.exe…</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Bounce.exe :: Up.obj</TD>
+<TD width=73%>Bounce.exe : Up.obj</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>&nbsp;</TD>
+<TD width=73%># invokes an inference rule</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_description_blocks.htm">Description Blocks</A></P>
+
+<P><A HREF="_wcepb_dependents.htm">Dependents</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Targets&nbsp;(_wcepb_targets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

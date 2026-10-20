@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Custom Loading</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Custom Loading"/>
+<MSHelp:RLTitle Title="Custom Loading"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Custom_Loading"/>
+<MSHelp:Keyword Index="K" Term="custom loading%2C DirectMusic"/>
+<MSHelp:Keyword Index="K" Term="loaders%2C DirectMusic, custom loading"/>
+<MSHelp:Keyword Index="K" Term="loading, DirectMusic objects"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Custom_Loading"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680652">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_custom_loading"></A>Custom Loading</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Specialized applications might create their own object types that encapsulate data from a file or resource. It can be convenient to have the DirectMusic loader handle the loading of such objects. This is especially true if the custom object is referred to by other objects or contains references to other objects. </P>
+
+<P>To implement a loading mechanism that takes advantage of the DirectMusic loader, take the following steps:
+
+<UL type="disc">
+	<LI>Register the object class so that it can be found by <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link>.</li>
+
+	<LI>Implement the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicObject" TABINDEX="0">IDirectMusicObject</MSHelp:link> interface on the object so that the loader can get the information that it needs to find and cache it.</li>
+
+	<LI>Implement the <B>IPersistStream</B> interface on the object, with full functionality in the <B>IPersistStream::Load</B> method. This allows you to parse the data that you obtain through calls on the <B>IStream</B> interface passed by the DirectMusicLoader.</li>
+
+	<LI>In the implementation of <B>Load</B>, ensure that references to other objects are dealt with by querying the <B>IStream</B> for the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicGetLoader" TABINDEX="0">IDirectMusicGetLoader</MSHelp:link> interface, then calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicGetLoader__GetLoader" TABINDEX="0">IDirectMusicGetLoader::GetLoader</MSHelp:link> to obtain a pointer to the DirectMusicLoader that created the stream. Once you have this pointer, call<B> IDirectMusicLoader::GetObject</B> to load the new object.</li>
+</UL>
+
+<P>An application might need to manage file input itself &#0151; for example, if all objects are stored in a special compressed resource file. The application can create its own loader by creating an object that supports the <B>IDirectMusicLoader</B> interface, with the <B>IDirectMusicLoader::GetObject</B> method implemented. All other methods are optional. This implementation of the loader must also create its own stream object that has both the <B>IStream</B> and the <B>IDirectMusicGetLoader</B> interfaces. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Custom%20Loading&nbsp;(_wcesdk_dxmusic_custom_loading.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

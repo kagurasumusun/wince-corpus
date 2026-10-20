@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Ports</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Ports"/>
+<MSHelp:RLTitle Title="Using Ports"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Using_Ports"/>
+<MSHelp:Keyword Index="K" Term="DirectMusic, using ports"/>
+<MSHelp:Keyword Index="K" Term="ports, DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Using_Ports"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680639">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_using_ports"></A>Using Ports</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A port is a device that sends or receives musical data. It can correspond to a hardware device, a software synthesizer, or a software filter. </P>
+
+<P>Each port in a DirectMusic application is represented by an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPort" TABINDEX="0">IDirectMusicPort</MSHelp:link> interface. Methods of this interface are used to retrieve information about the device, manage the memory on the device, download and unload DLS instruments, read incoming data, and cue playback buffers.</P>
+
+<P>Every performance must have at least one port. If you want to use a port other than the default port to set up special parameters for the default port, first set up a <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PORTPARAMS" TABINDEX="0">DMUS_PORTPARAMS</MSHelp:link> structure. You do not have to fill in all members, but you must let DirectMusic know which members have valid information by putting the appropriate flags in the <B>dwValidParams</B> member. Then, pass the structure to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusic__CreatePort" TABINDEX="0">IDirectMusic::CreatePort</MSHelp:link> method. </P>
+
+<P>The following C++ code example demonstrates how an object might be created for the default port, setting five channel groups on the port, assuming that <I>pDirectMusic</I> is a valid <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusic" TABINDEX="0">IDirectMusic</MSHelp:link> pointer.</P>
+
+<PRE class="code">IDirectMusicPort*  pPort;
+DMUS_PORTPARAMS    dmos;
+ 
+ZeroMemory( &amp;dmos, sizeof(DMUS_PORTPARAMS) );
+dmos.dwSize = sizeof(DMUS_PORTPARAMS);
+dmos.dwValidParams = DMUS_PORTPARAMS_CHANNELGROUPS;
+dmos.dwChannelGroups = 5;
+HRESULT hr = pDirectMusic-&gt;CreatePort( GUID_NULL, &amp;dmos, 
+        &amp;pPort, NULL )</PRE>
+
+<P>Once you have a port, activate it by calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusic__Activate" TABINDEX="0">IDirectMusic::Activate</MSHelp:link> or <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPort__Activate" TABINDEX="0">IDirectMusicPort::Activate</MSHelp:link> and attach it to the performance by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__AddPort" TABINDEX="0">IDirectMusicPerformance::AddPort</MSHelp:link> method. </P>
+
+<P>When you add a port to a performance, assign a block of PChannels to it by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__AssignPChannelBlock" TABINDEX="0">IDirectMusicPerformance::AssignPChannelBlock</MSHelp:link> method. The only time this is not necessary is when you add the default port by passing NULL to <B>IDirectMusicPerformance::AddPort</B>. In that case, PChannels 0 through 15 are assigned to the MIDI channels in the first group on the port. </P>
+
+<P>You can map PChannels differently, add more PChannels, or assign PChannels to a different port by using the <B>IDirectMusicPerformance::AssignPChannelBlock</B> and <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__AssignPChannel" TABINDEX="0">IDirectMusicPerformance::AssignPChannel</MSHelp:link> methods.</P>
+
+<P>More information about ports is contained in the following topics:
+
+<UL type="disc">
+	<LI><A HREF="_wcesdk_dxmusic_default_port.htm">Default Port</A> </li>
+
+	<LI><A HREF="_wcesdk_dxmusic_legacy_ports.htm">Legacy Ports</A> </li>
+
+	<LI><A HREF="_wcesdk_dxmusic_port_property_sets.htm">Port Property Sets</A> </li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Using%20Ports&nbsp;(_wcesdk_dxmusic_using_ports.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

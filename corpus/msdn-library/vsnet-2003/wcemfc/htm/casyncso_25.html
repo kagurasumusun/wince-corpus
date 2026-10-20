@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::SendTo</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_sendto"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_casyncsocket_sendto"></A>CAsyncSocket::SendTo</H1>
+
+<P>This method writes outgoing data to a connected stream or datagram socket, and sends it to a specific destination.</P>
+
+<PRE class=syntax><B>int SendTo(
+const void* </B><I>lpBuf</I><B>,
+int </B><I>nBufLen</I><B>,
+UINT </B><I>nHostPort</I><B>,
+LPCTSTR </B><I>lpszHostAddress</I><B> = NULL,
+int </B><I>nFlags</I><B> = 0 );
+</B>
+<B>int SendTo(
+const void* </B><I>lpBuf</I><B>,
+int </B><I>nBufLen</I><B>,
+const SOCKADDR* </B><I>lpSockAddr</I><B>,
+int </B><I>nSockAddrLen</I><B>,
+int </B><I>nFlags</I><B> = 0 );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpBuf</I></DT>
+
+<DD>A buffer containing the data to be transmitted.</DD>
+
+<DT><I>nBufLen</I></DT>
+
+<DD>The length of the data in <I>lpBuf</I> in bytes.</DD>
+
+<DT><I>nHostPort</I></DT>
+
+<DD>The port identifying the socket application.</DD>
+
+<DT><I>lpszHostAddress</I></DT>
+
+<DD>The network address of the socket to which this object is connected: a machine name such as ftp.microsoft.com, or a dotted number such as 128.56.22.8.</DD>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies the way that the call is made. The semantics of this function are determined by the socket options and the <I>nFlags</I> parameter. The latter is constructed by combining any of the following values with the C++ <B>OR</B> operator:
+
+<UL type=disc>
+	<LI>MSG_DONTROUTE&nbsp;&nbsp;&nbsp;Specifies that the data should not be subject to routing. A Windows CE Sockets supplier can choose to ignore this flag.</LI>
+
+	<LI>MSG_OOB&nbsp;&nbsp;&nbsp;Send out-of-band data (<B>SOCK_STREAM</B> only).</LI>
+</UL>
+</DD>
+
+<DT><I>lpSockAddr</I></DT>
+
+<DD>A pointer to a <B>SOCKADDR</B> structure that contains the address of the target socket.</DD>
+
+<DT><I>nSockAddrLen</I></DT>
+
+<DD>The length of the address in <I>lpSockAddr</I> in bytes.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>If no error occurs, <B>SendTo</B> returns the total number of characters sent. This can be less than the number indicated by <I>nBufLen</I>. Otherwise,, a value of <B>SOCKET_ERROR</B> is returned, and a specific error code can be retrieved by calling <B>GetLastError</B>. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</DD>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</DD>
+
+<DT>WSAEACCES</DT>
+
+<DD>The requested address is a broadcast address, but the appropriate flag was not set.</DD>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</DD>
+
+<DT>WSAEFAULT</DT>
+
+<DD>The <I>lpBuf</I> or <I>lpSockAddr</I> parameters are not part of the user address space, or the <I>lpSockAddr</I> argument is too small&#0151;less than the size of a <B>SOCKADDR</B> structure.</DD>
+
+<DT>WSAEINVAL</DT>
+
+<DD>The host name is invalid.</DD>
+
+<DT>WSAENETRESET</DT>
+
+<DD>The connection must be reset because the Windows CE Sockets implementation dropped it.</DD>
+
+<DT>WSAENOBUFS</DT>
+
+<DD>The Windows CE Sockets implementation reports a buffer deadlock.</DD>
+
+<DT>WSAENOTCONN</DT>
+
+<DD>The socket is not connected (<B>SOCK_STREAM</B> only).</DD>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</DD>
+
+<DT>WSAEOPNOTSUPP</DT>
+
+<DD><B>MSG_OOB</B> was specified, but the socket is not of type <B>SOCK_STREAM</B>.</DD>
+
+<DT>WSAESHUTDOWN</DT>
+
+<DD>The socket has been shut down. It is not possible to call <B>SendTo</B> on a socket after <B>ShutDown</B> is invoked with <I>nHow</I> set to one or two.</DD>
+
+<DT>WSAEWOULDBLOCK</DT>
+
+<DD>The socket is marked as nonblocking and the requested operation would block.</DD>
+
+<DT>WSAEMSGSIZE</DT>
+
+<DD>The socket is of type <B>SOCK_DGRAM</B>, and the datagram is larger than the maximum supported by the Windows CE Sockets implementation.</DD>
+
+<DT>WSAECONNABORTED</DT>
+
+<DD>The virtual circuit was aborted due to timeout or other failure.</DD>
+
+<DT>WSAECONNRESET</DT>
+
+<DD>The virtual circuit was reset by the remote side.</DD>
+
+<DT>WSAEADDRNOTAVAIL</DT>
+
+<DD>The specified address is not available from the local machine.</DD>
+
+<DT>WSAEAFNOSUPPORT</DT>
+
+<DD>Addresses in the specified family cannot be used with this socket.</DD>
+
+<DT>WSAEDESTADDRREQ</DT>
+
+<DD>A destination address is required.</DD>
+
+<DT>WSAENETUNREACH</DT>
+
+<DD>The network cannot be reached from this host at this time.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>For datagram sockets, be careful not to exceed the maximum IP packet size of the underlying subnets, which the <I>iMaxUdpDg</I> element gives in the <B>WSADATA</B> structure filled out by <B>AfxSocketInit</B>. If the data is too long to pass atomically through the underlying protocol, the error <B>WSAEMSGSIZE</B> is returned, and no data is transmitted.</P>
+
+<P>The successful completion of a <B>SendTo</B> does not indicate that the data has been successfully delivered.</P>
+
+<P><B>SendTo</B> is only used on a <B>SOCK_DGRAM</B> socket to send a datagram to a specific socket identified by the <I>lpSockAddr</I> parameter.</P>
+
+<P>To send a broadcast, on a <B>SOCK_DGRAM</B> only, the address in the <I>lpSockAddr</I> parameter should be constructed using the special IP address <B>INADDR_BROADCAST</B>&#0151;defined in the Windows CE Sockets header file Winsock.h&#0151;with the intended port number. Or, if the <I>lpszHostAddress</I> parameter is <B>NULL</B>, the socket is configured for broadcast. It is inadvisable for a broadcast datagram to exceed the size at which fragmentation can occur, which implies that the data portion of the datagram, excluding headers, should not exceed 512 bytes.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_8.htm"><B>CAsyncSocket::Create</B></A>, <A HREF="casyncso_22.htm"><B>CAsyncSocket::Receive</B></A>, <A HREF="casyncso_23.htm"><B>CAsyncSocket::ReceiveFrom</B></A>, <A HREF="casyncso_24.htm"><B>CAsyncSocket::Send</B></A>, <A HREF="funct_56.htm"><B>AFXSOCKETINIT</B></A>, <A HREF="struct_27.htm"><B>SOCKADDR</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

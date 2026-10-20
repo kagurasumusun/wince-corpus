@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirectMusicBand::Download</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDirectMusicBand::Download"/>
+<MSHelp:RLTitle Title="IDirectMusicBand::Download"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicBand__Download"/>
+<MSHelp:Keyword Index="K" Term="IDirectMusicBand, Download"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicBand__Download"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxmusic_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_687656">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_idirectmusicband__download"></A>IDirectMusicBand::Download</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method downloads the DLS data for instruments in the band to a performance object. The method downloads each instrument in the band by calling the <A HREF="_wcesdk_dxmusic_idirectmusicperformance__downloadinstrument.htm">IDirectMusicPerformance::DownloadInstrument</A> method. <B>DownloadInstrument</B>, in turn, uses the PChannel of the instrument to find the appropriate port, and then calls the <A HREF="_wcesdk_dxmusic_idirectmusicport__downloadinstrument.htm">IDirectMusicPort::DownloadInstrument</A> method on that port.</P>
+
+<P>Once a band has been downloaded, the instruments in the band can be selected, either individually with program-change MIDI messages, or all at once by playing a band segment created through a call to the <A HREF="_wcesdk_dxmusic_idirectmusicband__createsegment.htm">IDirectMusicBand::CreateSegment</A> method.</P>
+
+<PRE class="syntax"><B>HRESULT Download(</B>
+<B>IDirectMusicPerformance *</B><I>pPerformance</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pPerformance</I></DT>
+
+<DD>Performance to which instruments are to be downloaded. The performance manages the mapping of PChannels to DirectMusic ports.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method succeeds, the return value is S_OK, or <A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_dmus_s_partialdownload">DMUS_S_PARTIALDOWNLOAD</A>. (See Remarks.)</P>
+
+<P>If it fails, the method can return one of the following error values:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_dmus_e_not_init">DMUS_E_NOT_INIT</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_outofmemory">E_OUTOFMEMORY</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_pointer">E_POINTER</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Because a downloaded band uses synthesizer resources, it should be unloaded when no longer needed by using the <A HREF="_wcesdk_dxmusic_idirectmusicband__unload.htm">IDirectMusicBand::Unload</A> method. </P>
+
+<P>In the current version of DirectMusic, this method may return S_OK even though the port does not support DLS. </P>
+
+<P>If the download completely fails, DMUS_E_NOT_INIT is returned. This usually means that the performance was not properly connected up to an initialized port. Because this is a complete failure, there is no need to call <B>IDirectMusicBand::Unload</B> later.</P>
+
+<P>If the download partially succeeds, DMUS_S_PARTIALDOWNLOAD is returned. This means that some of the instruments successfully downloaded while others did not. This usually occurs because of programming error setting up the performance and port. The best way to find the problem is to set debug traces to 1 for Dmime.dll, Dmband.dll, and Dmsynth.dll. For more information, see <MSHelp:link keywords="_wcesdk_dxmusic_Debugging_DirectMusic_Projects" TABINDEX="0">Debugging DirectMusic Projects</MSHelp:link>.</P>
+
+<P>The following are some common causes of a partial download:
+
+<UL type="disc">
+	<LI>The band has instruments on PChannels that have not been set up on the performance (by using <A HREF="_wcesdk_dxmusic_idirectmusicperformance__assignpchannelblock.htm">IDirectMusicPerformance::AssignPChannelBlock</A>).</li>
+
+	<LI>The band has instruments on PChannels that are on channel groups not allocated on the port.</li>
+
+	<LI>The band has instruments in a DLS format incompatible with the synthesizer they are being downloaded to. </li>
+</UL>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=21%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=21%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Dmusici.h</TD>
+<TD width=20%>Dmusic.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_dxmusic_idirectmusicband__createsegment.htm">IDirectMusicBand::CreateSegment</A>, <A HREF="_wcesdk_dxmusic_idirectmusicband__unload.htm">IDirectMusicBand::Unload</A>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__assignpchannelblock.htm">IDirectMusicPerformance::AssignPChannelBlock</A>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__downloadinstrument.htm">IDirectMusicPerformance::DownloadInstrument</A>, <A HREF="_wcesdk_dxmusic_idirectmusicport__downloadinstrument.htm">IDirectMusicPort::DownloadInstrument</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDirectMusicBand::Download&nbsp;(_wcesdk_dxmusic_idirectmusicband__download.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

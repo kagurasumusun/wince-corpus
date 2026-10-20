@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing the Desktop StockPor Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing the Desktop StockPor Application"/>
+<MSHelp:RLTitle Title="Writing the Desktop StockPor Application"/>
+<MSHelp:Keyword Index="A" Term="ceconWritingDesktopStockPorApplication"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, StockPor sample application"/>
+<MSHelp:Keyword Index="K" Term="samples, ActiveSync StockPor"/>
+<MSHelp:Keyword Index="A" Term="ceconWritingDesktopStockPorApplication"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: activesync_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759342">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconwritingdesktopstockporapplication"></A>Writing the Desktop StockPor Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>StockPor stores multiple data for each stock: the symbol, company name, last quote price, purchase date, purchase price, gain/loss, and the last time the stock information was updated. The user interface is straightforward &#0151; the <B>Open</B> command opens a data file, <B>Add Stock </B>adds a new stock, <B>Change Stock</B> changes information about one stock, <B>Delete Stock</B> deletes the selected stock.</P>
+
+<P>The portfolio data is stored in a shared memory-mapped file, created by the following code in stocks.cpp.</P>
+
+<PRE class="code">m_hFile   = CreateFile (m_szFile, GENERIC_READ | GENERIC_WRITE,
+                       FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                       CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+m_hMapObj = CreateFileMapping (m_hFile, NULL, PAGE_READWRITE, 0,
+                              sizeof (PORTFILE), SZ_MAP_OBJ);
+m_pStocks = (PPORTFILE)MapViewOfFile (m_hMapObj, FILE_MAP_WRITE, 0, 0, 0);</PRE>
+
+<P>The data file has a fixed size. Up to 500 stocks can be stored in a structured name STOCK.</P>
+
+<PRE class="code">typedef struct tagStock
+{
+   UINT      uidStock;        // the stock ID
+   UINT      uFlags;          // see SF_* definitions
+   FILETIME  ftViewTime;      // time stamp of item shown in list view
+   FILETIME  ftUpdated;       // updated time of the stock
+   FILETIME  ftLastModified;  // last modification time of stock
+   char      szSym [10];
+   char      szCompany [80];
+   char      szLastPrice [20];
+   char      szPurDate [20];
+   char      szPurPrice [20];
+   char      szGain [20];
+} STOCK, *PSTOCK;</PRE>
+
+<P>The file is structured as follows.</P>
+
+<PRE class="code">typedef struct tagPortFile
+{
+   UINT  uVer1;         // must match FILE_VERSION
+   UINT  uidCurrStock;  // current stock ID
+
+   UINT  cChg, cDel;    // change/delete logs
+   UINT  rgidChg [MAX_STOCKS], rgidDel [MAX_STOCKS];
+
+   UINT  cStocks;       // # of stocks in portfolio
+   STOCK rgStocks [MAX_STOCKS];
+
+   UINT  uVer2;         // must be equal to FILE_VERSION
+} PORTFILE, *PPORTFILE;</PRE>
+
+<P><B>PORTFILE::uidCurrStock</B> is incremented each time a new stock is created and becomes the object ID of the new stock. <B>PORTFILE::rgidChg</B> is an array of object IDs for changed stocks.</P>
+
+<P><B>PORTFILE::rigidDel</B> is an array of object IDs for deleted stocks, so the ActiveSync provider knows how many objects must be synchronized. The ActiveSync provider deletes these entries once synchronization is completed.</P>
+
+<P>Each stock in the application list view can be marked with the SF_IN_VIEW flag. When ActiveSync informs the application about changes, the application checks this flag to identify new stocks to be added to the list view.</P>
+
+<P>The desktop application is coordinated with its ActiveSync provider in the following ways:
+
+<UL type="disc">
+	<LI>They share the same data file. File access is protected by the named mutex "StockPortMutex."</li>
+
+	<LI>For each data-file change, the application puts changed object IDs in <B>PORTFILE::rgidChg</B> and deleted object IDs in <B>PORTFILE::rgidDel</B>, then signals the named event "StockPorChange." The ActiveSync provider uses a thread to check for this named event; when notified it calls <B>IReplNotify::OnItemNotify</B> on the object IDs. The ActiveSync provider then removes the entries from the shared memory.</li>
+
+	<LI>The ActiveSync provider sends the application a WM_DATA_CHANGED message after any synchronization that changed the database.</li>
+
+	<LI>When the application receives this message, it compares the data in the list view with the data on the file. It uses SF_IN_VIEW flag and <B>STOCK::ftViewTime</B> to indicate what stocks need to be synchronized.</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Writing%20the%20Desktop%20StockPor%20Application&nbsp;(ceconwritingdesktopstockporapplication.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

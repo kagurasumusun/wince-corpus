@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CEditView::SetTabStops</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CEditView::SetTabStops"/>
+<MSHelp:RLTitle Title="CEditView::SetTabStops"/>
+<MSHelp:Keyword Index="A" Term="aflrfCEditViewcolcolSetTabStops"/>
+<MSHelp:Keyword Index="K" Term="SetTabStops method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCEditViewcolcolSetTabStops"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ceditvw.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710336">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfceditviewcolcolsettabstops"></A>CEditView::SetTabStops</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method sets the tab stops used for display and printing. Only a single tab-stop width is supported. <B>CEdit</B> objects support multiple tab widths. Widths are in dialog units, which equal one-fourth of the average character width, based on uppercase and lowercase alphabetic characters only, of the font used at the time of printing or displaying. You should not use <B>CEdit::SetTabStops</B> because <B>CEditView</B> must cache the tab-stop value.</P>
+
+<P>This method modifies only the tabs of the object for which it is called. To change the tab stops for each <B>CEditView</B> object in your application, call the <B>SetTabStops</B> function of each object.</P>
+
+<PRE class="syntax"><B>void SetTabStops( 
+int </B><I>nTabStops</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nTabStops</I></DT>
+
+<DD>Specifies the width of each tab stop, in dialog units.</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>This code fragment sets the tab stops in the control to every fourth character by carefully measuring the font the control uses.</P>
+
+<PRE class="code">// Gain a pointer to the control.
+CEdit* pCtrl = (CEdit*) GetDlgItem(IDC_EDIT1);
+ASSERT(pCtrl != NULL);
+
+// Get the specific font that the control is using.
+CFont* pFont = pCtrl-&gt;GetFont();
+TEXTMETRIC tm;
+
+// Get the DC for the control.
+CDC* pDC = pCtrl-&gt;GetDC();
+
+// Select the font that the control uses by default into the DC.
+// We must do this because the control may or may not be using
+// that font at this exact moment.
+CFont* pOldFont = pDC-&gt;SelectObject(pFont);
+
+// Retreive text metrics for that font and return the previously
+// selected font.
+pDC-&gt;GetTextMetrics(&amp;tm);
+pDC-&gt;SelectObject(pOldFont);
+
+// Get an identity rectangle and map it to dialog units.
+CRect rect(0, 0, 100, 1);
+MapDialogRect(rect);
+
+// We now know that 100 dialog units are rect.Width() screen units,
+// so we can multiply screen units by 100 and divide by rect.Width()
+// to find dialog units from screen units. The tm.tmAveCharWidth is
+// the width of _one_ character, so setting the tabs at every
+// four characters means we also multiply by four.
+
+pCtrl-&gt;SetTabStops((4 * tm.tmAveCharWidth * 100) / rect.Width());</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxext.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcwndcolcolsetfont.htm"><B>CWnd::SetFont</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710336', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

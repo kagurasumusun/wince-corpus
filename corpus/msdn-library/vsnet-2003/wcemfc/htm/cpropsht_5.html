@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertySheet::Create</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertysheet_create"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertysheet_create"></A>CPropertySheet::Create</H1>
+
+<P>This method displays a modeless property sheet. You can call <B>Create</B> from inside the constructor, or you can call it after the constructor is invoked. </P>
+
+<PRE class=syntax><B>BOOL Create(
+CWnd* </B><I>pParentWnd</I><B> = NULL,
+DWORD </B><I>dwStyle</I><B> = (DWORD)&#0150;1,
+DWORD </B><I>dwExStyle</I><B> = 0 );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pParentWnd</I></DT>
+
+<DD>Points to parent window. If <B>NULL</B>, parent is the desktop.</DD>
+
+<DT><I>dwStyle</I></DT>
+
+<DD>Specifies the Window styles for property sheet. For a complete list of available styles, see Window Styles.</DD>
+
+<DT><I>dwExStyle</I></DT>
+
+<DD>Specifies the Extended window styles for property sheet. For a complete list of available styles, see Extended Window Styles.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the property sheet is created successfully; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The default style, expressed by passing &#0150;1 as <I>dwStyle</I>, is actually WS_SYSMENU | WS_POPUP | WS_CAPTION | DS_MODALFRAME | DS_CONTEXT_HELP | WS_VISIBLE. The default extended window style, expressed by passing 0 as <I>dwExStyle</I>, is actually WS_EX_DLGMODALFRAME. </P>
+
+<P>The <B>Create</B> method returns immediately after creating the property sheet. To destroy the property sheet, call <A HREF="cwnd_22.htm"><B>CWnd::DestroyWindow</B></A>.</P>
+
+<P>Modeless property sheets displayed with a call to <B>Create</B> do not have OK, Cancel, Apply Now, and Help buttons as modal property sheets do. Desired buttons must be created by the user.</P>
+
+<P>To display a modal property sheet, call <B>CPropertySheet::DoModal</B> instead.</P>
+
+<H4>Example</H4>
+
+<PRE>// This code fragment shows how to create a modeless property sheet
+// dialog in a command message handler (OnModelessPropertySheet())
+// of a CView-derived class.
+
+void CMyView::OnModelessPropertySheet()
+{
+&nbsp;&nbsp;// Declare a CPropertySheet object. m_dlgPropertySheet is a data
+&nbsp;&nbsp;// member of type CPropertySheet in CView-derived class.
+&nbsp;&nbsp;m_dlgPropertySheet = new CPropertySheet("Simple PropertySheet");
+&nbsp;&nbsp;ASSERT(m_dlgPropertySheet);
+
+&nbsp;&nbsp;// Add two pages to the CPropertySheet object. Both m_stylePage and
+&nbsp;&nbsp;// m_colorPage are data members of type CPropertyPage-derived classes
+&nbsp;&nbsp;// in CView-derived class.
+&nbsp;&nbsp;m_stylePage = new CStylePage;
+&nbsp;&nbsp;m_colorPage = new CColorPage;
+&nbsp;&nbsp;m_dlgPropertySheet-&gt;AddPage(m_stylePage);
+&nbsp;&nbsp;m_dlgPropertySheet-&gt;AddPage(m_colorPage);
+
+&nbsp;&nbsp;// Create a modeless CPropertySheet dialog.
+&nbsp;&nbsp;m_dlgPropertySheet-&gt;Create();
+}
+
+// The code fragment below shows how to destroy the C++ objects for
+// propertysheet and propertypage in the destructor of CView-derived
+// class.
+// NOTE:  DestroyWindow() is called in CPropertySheet::OnClose() so
+// you do not need to call it here. Property pages are children
+// of the CPropertySheet, they will be destroyed by their parents.
+
+CMyView::~CMyView()
+{
+&nbsp;&nbsp;if (m_dlgPropertySheet)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;delete m_stylePage;
+&nbsp;&nbsp;&nbsp;&nbsp;delete m_colorPage;
+&nbsp;&nbsp;&nbsp;&nbsp;delete m_dlgPropertySheet;
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdialog_3.htm"><B>CDialog::Create</B></A>, <A HREF="cpropsht_6.htm"><B>CPropertySheet::DoModal</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

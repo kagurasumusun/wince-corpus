@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AddReg</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AddReg"/>
+<MSHelp:RLTitle Title="AddReg"/>
+<MSHelp:Keyword Index="A" Term="pbrefAddReg"/>
+<MSHelp:Keyword Index="K" Term=".inf file, AddReg"/>
+<MSHelp:Keyword Index="A" Term="pbrefAddReg"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: cabwiz.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821050">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="pbrefaddreg"></A>AddReg</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The AddReg key, under the [DefaultInstall] section, is required and describes the keys and values that the .cab file adds to the device registry.</P>
+
+<PRE class="syntax">[add_registry_section]
+<I>registry_root_string</I>, subkey,[<I>value_name</I>], <I>flags</I>, value[,value]
+[<I>registry_root_string</I>, subkey,[<I>value_name</I>], <I>flags</I>, value[,value]]</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>registry_root_string</I></DT>
+
+<DD>String that specifies the registry root location. The following table shows the values that are supported by Windows CE.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Root string</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>HKCR</TD>
+<TD width=82%>The same as HKEY_CLASSES_ROOT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>HKCU</TD>
+<TD width=82%>The same as HKEY_CURRENT_USER</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>HKLM</TD>
+<TD width=82%>The same as HKEY_LOCAL_MACHINE</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>value_name</I></DT>
+
+<DD>This is the registry value name. If empty, the "(default)" registry value name is used.</dd>
+
+<DT><I>flags</I></DT>
+
+<DD>This contains a numeric value that specifies information about the registry key. The following table shows the values that are supported by Windows CE. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Flag</TH>
+<TH width=18%>Value</TH>
+<TH width=43%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>FLG_ADDREG_NOCLOBBER</TD>
+<TD width=18%>0x00000002</TD>
+<TD width=43%>If the registry key exists, do not overwrite it. This flag can be used in combination with any of the other flags in this table.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>FLG_ADDREG_TYPE_SZ</TD>
+<TD width=18%>0x00000000</TD>
+<TD width=43%>The REG_SZ registry data type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>FLG_ADDREG_TYPE_MULTI_SZ</TD>
+<TD width=18%>0x00010000</TD>
+<TD width=43%>The REG_MULTI_SZ registry data type. The value field that follows can be a list of strings separated by commas.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>FLG_ADDREG_TYPE_BINARY</TD>
+<TD width=18%>0x00000001</TD>
+<TD width=43%>The REG_BINARY registry data type. The value field that follows must be a list of numeric values separated by commas, one byte per field, and must not use the 0x hexadecimal prefix.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>FLG_ADDREG_TYPE_DWORD</TD>
+<TD width=18%>0x00010001</TD>
+<TD width=43%>The REG_DWORD data type. Only the non-compatible format in the Win32 Setup .inf documentation is supported.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<P>The following code example sets a sample application version number, using "alpha" as the "(default)" registry value. It also sets <I>test</I> equal to 3, and <I>new</I> and <I>another</I> equal to 6.</P>
+
+<PRE class="code">[DefaultInstall]
+AddReg = RegSettings
+[Strings]
+reg_path = Software\Company\AppName
+
+[RegSettings]
+HKLM,%reg_path%,,0x00000000,alpha
+HKLM,%reg_path%,test,0x00010001,3
+HKLM,%reg_path%\new,another,0x00010001,6</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconcreatinginffile.htm">Creating an .inf File</A></P>
+
+<P><A HREF="cxconcabwizardoverview.htm">CAB Wizard Overview</A></P>
+
+<P><A HREF="cxconcabwizardsyntax.htm">Cab Wizard Syntax</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;AddReg&nbsp;(pbrefaddreg.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoInitializeEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CoInitializeEx"/>
+<MSHelp:RLTitle Title="CoInitializeEx"/>
+<MSHelp:Keyword Index="A" Term="cerefCoInitializeEx"/>
+<MSHelp:Keyword Index="K" Term="CoInitializeEx"/>
+<MSHelp:Keyword Index="A" Term="cerefCoInitializeEx"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_functions1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747763">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcoinitializeex"></A>CoInitializeEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function initializes the Component Object Model (COM) for use by the current thread. Applications are required to use <B>CoInitializeEx</B> before they make any other COM library calls except for memory allocation functions. </P>
+
+<PRE class="syntax"><B>HRESULT</B> <B>CoInitializeEx(</B>
+<B>LPVOID</B> <I>pvReserved</I><B>,</B> 
+<B>DWORD</B> <I>dwCoInit</I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pvReserved</I></DT>
+
+<DD>[in] Reserved; set to NULL.</dd>
+
+<DT><I>dwCoInit</I></DT>
+
+<DD>[in] Specifies the concurrency model and initialization options for the thread. This parameter can be set to COINIT_MULTITHREADED or COINIT_APARTMENTTHREADED.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>S_OK indicates that the COM library was initialized successfully. S_FALSE indicates that the COM library is already initialized. The standard return values E_INVALIDARG, E_OUTOFMEMORY, and E_UNEXPECTED are also supported.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A thread must call <B>CoInitializeEx</B> before calling any other COM library function except <A HREF="cerefcogetmalloc.htm">CoGetMalloc</A> function and other memory allocation calls, such as <A HREF="cerefcotaskmemalloc.htm">CoTaskMemAlloc</A>, <A HREF="cerefcotaskmemfree.htm">CoTaskMemFree</A>, <A HREF="cerefcotaskmemrealloc.htm">CoTaskMemReAlloc</A>, and the <A HREF="cerefimalloc.htm">IMalloc</A> methods on the task allocation supplied by <B>CoGetMalloc</B>. </P>
+
+<P>Once the concurrency model for a thread is set, it cannot be changed. A call to <B>CoInitializeEx</B> on a thread that was previously initialized with a different concurrency model will fail and return RPC_E_CHANGED_MODE. </P>
+
+<P><B>CoInitializeEx</B> must be called at least once, and is usually called only once, for each thread that uses the COM library. Multiple calls to <B>CoInitializeEx</B> by the same thread are allowed as long as they pass the same concurrency flag, but subsequent valid calls return S_FALSE. To close the COM library gracefully on a thread, each successful call to <B>CoInitializeEx</B>, including any call that returns S_FALSE, must be balanced by a corresponding call to <A HREF="cerefcouninitialize.htm">CoUninitialize</A>.</P>
+
+<P>If neither concurrency model is specified by the <I>dwCoInit</I> parameter, the default is COINIT_MULTITHREADED.</P>
+
+<P>Objects created in a single-threaded apartment (STA) receive method calls only from their apartment's thread, so calls are serialized and arrive only at message-queue boundaries when the Microsoft&reg; Win32&reg; function <B>PeekMessage</B> or <B>SendMessage</B> is called.</P>
+
+<P>Objects created on a COM thread in a multithread apartment (MTA) must be able to receive method calls from other threads at any time. You would typically implement some form of concurrency control in a multithreaded object's code using Win32 synchronization primitives such as critical sections, semaphores, or mutexes to protect the object's data. </P>
+
+<P><B>CoInitializeEx</B> provides the same functionality as <B>CoInitialize</B> and also provides a parameter to explicitly specify the thread's concurrency model. The current implementation of <B>CoInitialize</B> calls <B>CoInitializeEx</B> and specifies the concurrency model as single-thread apartment. Applications developed today should call <B>CoInitializeEx</B> rather than <B>CoInitialize</B>. </P>
+
+<P>Because OLE technologies are not thread-safe, the <B>OleInitialize</B> function calls <B>CoInitializeEx</B> with the COINIT_APARTMENTTHREADED flag. As a result, an apartment that is initialized for multithreaded object concurrency cannot use the features enabled by OleInitialize.</P>
+
+<P>Because there is no way to control the order in which in-process servers are loaded or unloaded, it is not safe to call <B>CoInitialize</B>, <B>CoInitializeEx</B>, or <B>CoUninitialize</B> from the <B>DllMain</B> function.</P>
+
+<P>To determine whether the platform supports this function, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>2.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>Objbase.h</TD>
+<TD width=20%>Ole32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefcogetmalloc.htm">CoGetMalloc</A>, <A HREF="cerefcotaskmemalloc.htm">CoTaskMemAlloc</A>, <A HREF="cerefcotaskmemfree.htm">CoTaskMemFree</A>, <A HREF="cerefcotaskmemrealloc.htm">CoTaskMemReAlloc</A>, <A HREF="cerefcouninitialize.htm">CoUninitialize</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CoInitializeEx&nbsp;(cerefcoinitializeex.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

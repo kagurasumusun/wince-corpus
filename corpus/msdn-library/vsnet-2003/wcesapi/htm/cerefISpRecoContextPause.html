@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpRecoContext::Pause</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpRecoContext::Pause"/>
+<MSHelp:RLTitle Title="ISpRecoContext::Pause"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextPause"/>
+<MSHelp:Keyword Index="K" Term="ISpRecoContext, Pause"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextPause"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822442">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisprecocontextpause"></A>ISpRecoContext::Pause</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpRecoContext::Pause</B> requests the engine object to pause and synchronize with the SR engine.</P>
+
+<P>The SR engine pauses at its synchronization point to allow grammars and rule states to be changed freely. The engine remains paused until the Resume method is called.</P>
+
+<P>The caller must call Resume once for every call that is made to Pause.</P>
+
+<PRE class="syntax"><B>HRESULT Pause(</B>
+<B>DWORD </B><I>dwFlags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] Reserved, must be zero. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks (when using ISpMMSysAudio as audio input)</H4>
+
+<P>Pausing the SR engine will stop recognition, but input audio will continue to be collected and stored by SAPI in an audio buffer. After the application is done with the state change, it should call <A HREF="cerefisprecocontextresume.htm">ISpRecoContext::Resume</A>. SAPI will automatically feed the buffered audio data into the SR engine, ensuring that no real-time audio data is lost and that the user experience is not interrupted.</P>
+
+<P>However, the SAPI audio buffer has a static limit (see <A HREF="cerefispmmsysaudioread.htm">ISpMMSysAudio::Read</A>) to prevent large amounts of system memory from being consumed by SAPI applications or SR Engines. Therefore, Pause should be used by the SR Engine for very short periods of time for state changes (for example, updating grammar, or rule states). Pausing the SR engine will affect all recognition contexts connected to that SR Engine including other running Speech applications.</P>
+
+<P>If the SR engine is paused too long, and the audio buffer is filled, a buffer overflow will occur. The application can detect this error by setting an event interest in SPEI_END_SR_STREAM (see <A HREF="cerefspeventenum.htm">SPEVENTENUM</A>), and checking the LPARAM of the <A HREF="cerefspevent.htm">SPEVENT</A> structure (see CSpEvent::EndStreamResult).</P>
+
+<P>SAPI will automatically attempt to restart the SR Engine's recognition thread once the final Resume has been called. Consequently, the audio data collected between the point when the buffer overflow occurred, and when the stream was reactivated, will be completely lost. This would result in a less than optimal user experience, and have a negative effect on all running speech applications, the SR Engine, and SAPI. </P>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>S_OK </TD>
+<TD width=52%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>E_INVALIDARG </TD>
+<TD width=52%><I>dwFlags</I> is not set to zero. </TD>
+</TR>
+</table></div>
+
+<P>The following code snippet illustrates the use of <B>ISpRecoContext::Pause</B></P>
+
+<PRE class="code">HRESULT hr = S_OK;
+// setup the recognition context
+// ...
+// pause the context so that event notifications are not received
+hr = cpRecoContext-&gt;Pause( NULL );
+// Check hr
+// [quickly] perform the processing - see ISpRecoContext::Pause Remarks section
+// ...
+hr = cpRecoContext-&gt;Resume( NULL );
+// Check hr
+// applications will start receiving event notifications again</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpRecoContext::Pause&nbsp;(cerefisprecocontextpause.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

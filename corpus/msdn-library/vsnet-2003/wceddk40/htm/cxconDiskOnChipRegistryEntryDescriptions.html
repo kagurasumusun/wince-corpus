@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DiskOnChip Registry Entry Descriptions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DiskOnChip Registry Entry Descriptions"/>
+<MSHelp:RLTitle Title="DiskOnChip Registry Entry Descriptions"/>
+<MSHelp:Keyword Index="A" Term="cxconDiskOnChipRegistryEntryDescriptions"/>
+<MSHelp:Keyword Index="K" Term="registry settings, DiskOnChip"/>
+<MSHelp:Keyword Index="A" Term="cxconDiskOnChipRegistryEntryDescriptions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: rfa_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_730992">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondiskonchipregistryentrydescriptions"></A>DiskOnChip Registry Entry Descriptions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS</B> registry entry key name indicates the device and the partition number the key refers to. See the examples in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Registry entry key name</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS</B></TD>
+<TD width=50%>Registry entry for Device 0 partition 0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS1</B></TD>
+<TD width=50%>Registry entry for Device 0 partition 1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS10</B></TD>
+<TD width=50%>Registry entry for Device 1 partition 0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS12</B></TD>
+<TD width=50%>Registry entry for Device 1 partition 2.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">WindowBase</H2>
+
+<P>The <B>WindowBase</B> parameter determines the physical address of the DiskOnChip in the system memory. The value should be within the 32-bit address range and is determined during hardware design or system integration. The value shown serves as an example only and is typical for x86 designs.</P>
+
+<H2 class="dtH2">ADDRESS_SHIFT</H2>
+
+<P>This entry can have only two values: 8 or 0. This field determines how the physical address will be shifted before it is passed to the Virtual Copy function. By default, most systems require that this field be set to a value of 8. In some systems, it needs to be set to a value of 0. Currently, there are no tools available to determine which value to use. The appropriate value should be determined empirically until a test tool is available.</P>
+
+<P>Further, the shift value depends on the MMU initialization value configured in the OAL. The physical address is the base address of the DiskOnChip. The physical address parameter must be passed in such a way that the MMU translation maps it into the correct physical location. Because the OAL can be customized by each implementation, this entry must be set up to either shift the address right 8 places or not to shift the address. </P>
+
+<H2 class="dtH2">DOC_ACCESS_TYPE</H2>
+
+<P>This entry determines the data bus width when accessing DiskOnChip. All the Registry Entries are hexadecimal values. The DiskOnChip Millennium Plus is a True 16-bit data access device, so the <B>DOC_ACCESS_TYPE</B> entry is not applicable in case of this device usage. Furthermore, the DiskOnChip Millennium Plus cannot address shifted as the other DiskOnChip family devices. The value of this entry can be any of values in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"DOC_ACCESS_TYPE"=dword:8</B></TD>
+<TD width=50%>8-bit access, the DiskOnChip is accessed on a byte boundary. 
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;In this case the address lines of the DiskOnChip are connected directly to the address lines of the host without shifting. A0 of the DiskOnChip is connected to A0 of the host.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"DOC_ACCESS_TYPE"=dword:10</B></TD>
+<TD width=50%>16-bit access, the DiskOnChip is accessed on a word boundary.
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;In this case the address lines of the DiskOnChip are not connected directly to the address lines of the host. Instead they are shifted one position: A0 of the DiskOnChip is connected to A1 of the host.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>"DOC_ACCESS_TYPE"=dword:20</B></TD>
+<TD width=50%>32-bit access, the DiskOnChip is accessed on a long boundary.
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;In this case the address lines of the DiskOnChip are not connected directly to the address lines of the host. Instead they are shifted two positions: A0 of the DiskOnChip is connected to A2 of the host.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The DiskOnChip Millennium Plus is a True 16-bit data access device, so the <B>DOC_ACCESS_TYPE</B> entry is not applicable in case of this device usage. Further more the DiskOnChip Millennium Plus cannot address shifted as the other DiskOnChip family devices. </P>
+
+<H2 class="dtH2">Folder</H2>
+
+<P>This parameter determines the folder name associated with the DiskOnChip. If this string is absent, the default name is, <B>"Storage Card"</B>.</P>
+
+<H2 class="dtH2">DOCBaseXX</H2>
+
+<P>The TrueFFS/CE now enables you to support more than one DiskOnChip device utilizing the one instance of the driver. For example, you can have a DiskOnChip on physical address 0xD0000 and another one on address 0xD8000, and so on. This allows you better flexibility in choosing the capacity and the form factor of the storage devices in your system. </P>
+
+<P>The <B>DocBaseXX</B> fields in every registry entry indicate the <B>WindowBases</B> of the rest of DiskOnChips in the system. In the following example the registry entry <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS</B> refers to the device 0 partition 0. <B>DocBase10</B> in the first registry entry indicates the <B>WindowBase</B> of device 1 is D8000h. <B>DocBase20</B> in the second registry entry <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS10</B> for device 1 indicates the <B>WindowBase</B> of device 2 is c8000h, for example <B>DOCBase10</B> specifies the base address of the second DiskOnChip device in the system, <B>DOCBase20</B> specifies the base address of the third DiskOnChip device in the system and so on. In the entry of the second device there is no need to indicate the base address of the first device. This is shown in the following registry entries.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS] 
+    "Dll" = "TrueFFS.dll" 
+    "Prefix" = "DSK" 
+    "Order" = dword:1 
+    "WindowBase" = dword:D0000 
+    "DocBase10" = dword:D8000 
+    "DeviceArrayIndex"=dword:0
+    "IClass" = "{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS10]<B> </B>
+    "Dll" = "TrueFFS.dll" 
+    "Prefix" = "DSK" 
+    "Order" = dword:1 
+    "WindowBase" = dword:D8000 
+    "DocBase20" = dword:c8000 
+    "DeviceArrayIndex"=dword:2
+    "IClass" = "{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS20]<B> </B>
+    "Dll" = "TrueFFS.dll" 
+    "Prefix" = "DSK" 
+    "Order" = dword:1 
+    "WindowBase" = dword:c8000 
+    "DeviceArrayIndex"=dword:3
+    "IClass" = "{A4E7EDDA-E575-4252-9D6B-4195D48BB865}"</PRE>
+
+<H2 class="dtH2">DeviceArrayIndex</H2>
+
+<P>The DiskOnChip Millennium Plus enables you to define up to 4 storage devices to be located on a single physical DiskOnChip device, two out of these partitions can be set to be a read-only or a write only drives. The <B>DeviceArrayIndex</B> parameter defines the order in which the different drives are loaded by the TrueFFS/CE driver. </P>
+
+<H2 class="dtH2">IClass</H2>
+
+<P>The <B>IClass</B> is a GUID that defines the interfaces that the driver exposes. A device driver should only claim to export an interface if it implements that interface in its entirety. Any code that attempts to interact with a driver will expect that the driver actually supports whatever interfaces it advertised. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondiskonchipregistrykeys.htm">DiskOnChip Registry Keys</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DiskOnChip%20Registry%20Entry%20Descriptions&nbsp;(cxcondiskonchipregistryentrydescriptions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

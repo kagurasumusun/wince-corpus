@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Media Manager</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Media Manager"/>
+<MSHelp:RLTitle Title="Media Manager"/>
+<MSHelp:Keyword Index="A" Term="cmconMediaManagementOverview"/>
+<MSHelp:Keyword Index="K" Term="Media Manager, overview"/>
+<MSHelp:Keyword Index="K" Term="Persistent Storage Manager, Media Manager"/>
+<MSHelp:Keyword Index="A" Term="cmconMediaManagementOverview"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: psm_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756352">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconmediamanagementoverview"></A>Media Manager</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Linear flash memory is organized into erase blocks that are too large to efficiently store most files. To compensate for this, PSM includes a Media Manager that can efficiently store multiple files in these erase blocks. The media manager also supports modifying blocks. It does this by logically dividing a large block into smaller allocation units, and then keeping track of what files are stored in which allocation units.</P>
+
+<P>This topic contains information on the architecture and operations relevant to the Media Manager.</P>
+
+<H2 class="dtH2">Allocation Units</H2>
+
+<P>An allocation unit is a logical subdivision of a block. These units contain the minimum amount of memory PSM can use to store a file. When an application creates and writes data into a file, PSM uses allocation units to store the data. PSM uses other areas of the file partition to create and maintain tables and data structures to keep track of the contents and status of all allocation units.</P>
+
+<P>All allocation units in the file partition are the same size, and that size is one of the parameters the OEM can specify. Allocation units should be just big enough to store the typical file in a system. If the system were a web appliance, and if the typical file were a cookie or a favorite with a size of approximately 100 bytes, the size of the allocation units should be 256 bytes, which is the smallest size PSM supports.</P>
+
+<P>Allocation units incur both processing and storage overhead, so selecting a small size divides the file partition up into more units. The control structures needed to keep track of all those units will be bigger, and the performance of the file system slower. Therefore, storing a 6 KB file in twenty-four 256-byte allocation units is less efficient than storing it in one 8192 byte unit. For example, if the device is an MP3 player, and the typical file size is 100 KB, the allocation units should be set to 8192 bytes, which is the largest supported size.</P>
+
+<H2 class="dtH2">Deleting a File</H2>
+
+<P>When an application deletes a file, PSM looks through the control structures to find all allocation units that are being used to store the file. It cannot erase those units, because they reside in blocks that most likely will have allocation units from other files. Instead, it sets a flag in the control structure that tells PSM not to use that allocation unit for any other data.</P>
+
+<H2 class="dtH2">Modifying a File</H2>
+
+<P>When an application modifies a file, parts of the old version are deleted and new sections written. As was the case with a deleted file, the deleted allocation units are flagged, and non-flagged ones are used to store the modified sections.</P>
+
+<H2 class="dtH2">Reclaim</H2>
+
+<P>Over time, as files are deleted and modified, blocks fill up with flagged allocation units. When a block is reclaimed, all allocation units that have valid data are copied into a spare block, the block is erased, and the control structures are updated to note the new location of the data.</P>
+
+<P>If an application tries to write a file, and PSM cannot find enough non-flagged allocation units to store the file, PSM reclaims enough blocks to create enough non-flagged allocation units to store the file. At some point, the only unused space in the file partition contains flagged allocation units. When an application tries to write a file, PSM will have to reclaim the space to store it. Reclaiming a block can take over a second, and it is not unlikely that multiple blocks would need to be reclaimed.</P>
+
+<P>There is no reason to wait until space is needed before a reclaim operation begins. The need for a reclaim begins when a file is deleted or modified; that is when allocation units are flagged. Whenever PSM flags an allocation unit, it decides if that block should be reclaimed. The criteria for that decision are set in the format parameters.</P>
+
+<H2 class="dtH2">Wear Leveling</H2>
+
+<P>Flash blocks can only be erased a limited number of times, typically 100,000 program and erase cycles per block. A typical file partition has many blocks, and it is possible that some of the blocks could be erased more often than others. The erased blocks approach the limited number of times they can be erased sooner than the rest of the blocks.</P>
+
+<P>PSM includes a wear-leveling algorithm that keeps track of how often each block has been erased and avoids erasing blocks that have been heavily erased.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconformattingfilepartition.htm">File Partition Formatting</A></P>
+
+<P><A HREF="cmconformatparameters.htm">Format Parameters</A></P>
+
+<P><A HREF="cmconpersistentstoragemanager.htm">Persistent Storage Manager</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Media%20Manager&nbsp;(cmconmediamanagementoverview.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

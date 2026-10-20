@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComTearOffObject</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomtearoffobject"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ccomtearoffobject"></A>CComTearOffObject</H1>
+
+<P>This class implements a tear-off interface as a separate object that is instantiated only when that interface is queried for. The tear-off is deleted when its reference count becomes zero. Typically, you build a tear-off interface for an interface that is rarely used, since using a tear-off saves a vtable pointer in all the instances of your main object. </P>
+
+<PRE class=syntax><B>template&lt; class</B> <I>Base</I> <B>&gt;</B>
+<B>class</B> <B>CComTearOffObject</B> <B>:</B> <B>public</B> <I>Base </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Base</I></DT>
+
+<DD>Your tear-off class, derived from <B>CComTearOffObjectBase</B> and the interfaces you want your tear-off object to support.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>ATL implements its tear-off interfaces in two phases&#0151;the <B>CComTearOffObjectBase</B> methods handle the reference count and <B>QueryInterface</B>, while <B>CComTearOffObject</B> implements <B>Iunknown</B>.</P>
+
+<P>You should derive the class implementing the tear-off from <B>CComTearOffObjectBase</B> and from whichever interfaces you want your tear-off object to support. <B>CComTearOffObjectBase</B> is templatized on the owner class and the thread model. The owner class is the class of the object for which a tear-off is being implemented. If you do not specify a thread model, the default thread model is used.</P>
+
+<P>You should create a COM map for your tear-off class. When ATL instantiates the tear-off, it will create <B>CComTearOffObject&lt;CYourTearOffClass&gt;</B> or <B>CComCachedTearOffObject&lt;CYourTearOffClass&gt;</B>.</P>
+
+<P>For example, in the BEEPER sample, the <CODE>CBeeper2</CODE> class is the tear-off class and the <CODE>CBeeper</CODE> class is the owner class:</P>
+
+<PRE>class CBeeper2 : public ISupportErrorInfo,
+                 public CComTearOffObjectBase&lt;CBeeper&gt;
+{
+public:
+   CBeeper2() {}
+   STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)
+   {
+      return (InlineIsEqualGUID(IID_IBeeper,riid)) ?
+              S_OK : S_FALSE;
+   }
+
+   BEGIN_COM_MAP(CBeeper2)
+      COM_INTERFACE_ENTRY(ISupportErrorInfo)
+   END_COM_MAP()
+};
+
+class CBeeper :
+   public IDispatchImpl&lt;IBeeper, &amp;IID_IBeeper,
+                        &amp;LIBID_BeeperLib&gt;,
+   public CComObjectRoot,
+   public CComCoClass&lt;CBeeper, &amp;CLSID_Beeper&gt;
+{
+public:
+   CBeeper();
+   BEGIN_COM_MAP(CBeeper)
+      COM_INTERFACE_ENTRY(IDispatch)
+      COM_INTERFACE_ENTRY(IBeeper)
+      COM_INTERFACE_ENTRY_TEAR_OFF(IID_ISupportErrorInfo,
+                             CBeeper2)
+   END_COM_MAP()
+...
+};
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccctoo.htm"><B>CComCachedTearOffObject</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

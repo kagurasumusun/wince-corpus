@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3dDrawPrimitives2</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3dDrawPrimitives2"/>
+<MSHelp:RLTitle Title="D3dDrawPrimitives2"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dDrawPrimitives2"/>
+<MSHelp:Keyword Index="K" Term="D3dDrawPrimitives2"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dDrawPrimitives2"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_663533">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcond3ddrawprimitives2"></A>D3dDrawPrimitives2</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function renders primitives and returns the updated render state.</P>
+
+<PRE class="syntax"><B>DWORD</B>
+  <B>(APIENTRY *LPD3DHAL_DRAWPRIMITIVES2CB)(</B>
+     <B>LPD3DHAL_DRAWPRIMITIVES2DATA</B>   <I>pdp</I>
+     <B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pdp</I></DT>
+
+<DD>Points to a <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> structure that contains the information required for the driver to render one or more primitives.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>D3dDrawPrimitives2</B> returns one of the following callback codes:
+
+<UL type="disc">
+	<LI><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor2">DDHAL_DRIVER_HANDLED</A></li>
+
+	<LI><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor3">DDHAL_DRIVER_NOTHANDLED</A></li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>D3dDrawPrimitives2</B> must be implemented in Direct3D drivers.</P>
+
+<P>The driver must do the following:
+
+<UL type="disc">
+	<LI>Ensure that the context handle specified by the <B>dwhContext</B> member of the <B>D3DHAL_DRAWPRIMITIVES2DATA</B> structure is valid.</li>
+
+	<LI>Check that a flip to the drawing surface associated with the context is not in progress. If the drawing surface is involved in a flip, the driver should set the <B>ddrval</B> member of the following structure to <A HREF="_dxce_ddhal_return_values.htm#_dxce_ddhal_return_valuesanchor9">DDERR_WASSTILLDRAWING</A> and return <B>DDHAL_DRIVER_HANDLED</B>.</li>
+
+	<LI>Determine the location where the first <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure is found by adding <B>dwCommandOffset</B> bytes to the command buffer that <B>lpDDCommands</B> points to. <B>dwCommandOffset</B> and <B>lpDDCommands </B>are members of the <B>D3DHAL_DRAWPRIMITIVES2DATA</B> structure.</li>
+
+	<LI>Determine the location in the vertex buffer where the first vertex is found. <I>This should only be done if there is data in the vertex buffer</I>; that is, when a D3DDP2OP_<I>XXX</I> command token is received (except when the token is <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor16">D3DDP2OP_LINELIST_IMM</A> or <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor20">D3DDP2OP_TRIANGLEFAN_IMM</A>). These two opcodes indicate that the vertex data is passed immediately in the command stream, rather than in a vertex buffer. So, assuming there is data in the vertex buffer, if the vertex buffer is in user memory, the first vertex is <B>dwVertexOffset</B> bytes into the buffer that <B>lpVertices</B> points to. Otherwise, the driver should apply <B>dwVertexOffset</B> to the memory associated with the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_lcl.htm">DDRAWI_DDRAWSURFACE_LCL</A> structure to which <B>lpDDVertex</B> points. <B>dwVertexOffset</B>, <B>lpVertices</B>, and <B>lpDDVertex</B> are members of the following structure.</li>
+
+	<LI>Check the <B>dwVertexType</B> member of the <B>D3DHAL_DRAWPRIMITIVES2DATA</B> structure to ensure that the driver supports the requested <A HREF="cxconfvfflexiblevertexformat.htm">FVF (Flexible Vertex Format)</A>. The driver should fail the call if any of the following conditions exist:
+<UL type="disc">
+	<LI>Vertex coordinates are not specified; that is, if D3DFVF_XYZRHW is not set.</li>
+
+	<LI>Normals are specified; that is, if D3DFVF_NORMAL is set.</li>
+
+	<LI>Any of the reserved D3DFVF_RESERVED<I>x</I> bits are set.</li>
+</UL>
+</li>
+
+	<LI>Process all of the commands in the command buffer sequentially. For each <B>D3DHAL_DP2COMMAND</B> structure, the driver should do the following:
+<UL type="disc">
+	<LI>If the command is <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor32">D3DDP2OP_RENDERSTATE</A>, process the <B>wStateCount</B> <A HREF="cxrefd3dhal_dp2renderstate.htm">D3DHAL_DP2RENDERSTATE</A> structures that follow in the command buffer, updating the driver state for each render state structure. When the D3DHALDP2_EXECUTEBUFFER flag is set, the driver should also reflect the state change in the array that <B>lpdwRStates</B> points to. <B>wStateCount</B> and <B>lpdwRStates</B> are members of the <B>D3DHAL_DRAWPRIMITIVES2DATA</B> structure.</li>
+
+	<LI>If the command is <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor50">D3DDP2OP_TEXTURESTAGESTATE</A>, process the <B>wStateCount</B> <A HREF="cxrefd3dhal_dp2texturestagestate.htm">D3DHAL_DP2TEXTURESTAGESTATE</A> structures that follow in the command buffer, updating the driver's texture state associated with the specified texture stage for each texture state structure.</li>
+
+	<LI>If the command is <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor52">D3DDP2OP_VIEWPORTINFO</A>, process the <A HREF="cxrefd3dhal_dp2viewportinfo.htm">D3DHAL_DP2VIEWPORTINFO</A> structure that follows in the command buffer, updating the viewport information stored in the driver's internal rendering context.</li>
+
+	<LI>If the command is <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor54">D3DDP2OP_WINFO</A>, process the <A HREF="cxrefd3dhal_dp2winfo.htm">D3DHAL_DP2WINFO</A> structure that follows in the command buffer, updating the w-buffering information stored in the driver's internal rendering context.</li>
+
+	<LI>Otherwise, process the <B>D3DHAL_DP2<I>XXX</I></B> primitive structures that follow the D3DDP2OP_<I>XXX</I> primitive rendering command in the command buffer.</li>
+
+	<LI>If the command is unknown, call the run time's <B>D3dParseUnknownCommand</B> callback. The run time provides this callback to the driver's <A HREF="_dxce_ddhal_getdriverinfo.htm">GetDriverInfo</A> callback with the GUID_D3DParseUnknownCommandCallback GUID. </li>
+</UL>
+</li>
+</UL>
+
+<P>The driver does not need to probe for readability the memory where the command and vertex buffers are stored. However, the driver must stay within the bounds specified by the <B>dwCommandLength</B> and <B>dwVertexLength</B> members of the <B>D3DHAL_DRAWPRIMITIVES2DATA</B> structure.</P>
+
+<P>If the driver must fail <B>D3dDrawPrimitives2</B>, it should fill in the <B>dwErrorOffset</B> member of the <B>D3DHAL_DRAWPRIMITIVES2DATA</B> structure with the offset into the command buffer where the first unhandled <B>D3DHAL_DP2COMMAND</B> can be found.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Proto.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A>, <A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor2">DDHAL_DRIVER_HANDLED</A>, <A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor3">DDHAL_DRIVER_NOTHANDLED</A>, <A HREF="_dxce_ddhal_return_values.htm#_dxce_ddhal_return_valuesanchor9">DDERR_WASSTILLDRAWING</A>, <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor16">D3DDP2OP_LINELIST_IMM</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor20">D3DDP2OP_TRIANGLEFAN_IMM</A>, <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_lcl.htm">DDRAWI_DDRAWSURFACE_LCL</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor32">D3DDP2OP_RENDERSTATE</A>, <A HREF="cxrefd3dhal_dp2renderstate.htm">D3DHAL_DP2RENDERSTATE</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor50">D3DDP2OP_TEXTURESTAGESTATE</A>, <A HREF="cxrefd3dhal_dp2texturestagestate.htm">D3DHAL_DP2TEXTURESTAGESTATE</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor52">D3DDP2OP_VIEWPORTINFO</A>, <A HREF="cxrefd3dhal_dp2viewportinfo.htm">D3DHAL_DP2VIEWPORTINFO</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor54">D3DDP2OP_WINFO</A>, <A HREF="cxrefd3dhal_dp2winfo.htm">D3DHAL_DP2WINFO</A>, <A HREF="_dxce_ddhal_getdriverinfo.htm">GetDriverInfo</A>, <A HREF="cxrefd3dhal_dp2indexedlinestrip.htm">D3DHAL_DP2INDEXEDLINESTRIP</A>, <A HREF="cxrefd3dhal_dp2indexedtrianglefan.htm">D3DHAL_DP2INDEXEDTRIANGLEFAN</A>, <A HREF="cxrefd3dhal_dp2indexedtrianglelist.htm">D3DHAL_DP2INDEXEDTRIANGLELIST</A>, <A HREF="cxrefd3dhal_dp2indexedtrianglestrip.htm">D3DHAL_DP2INDEXEDTRIANGLESTRIP</A>, <A HREF="cxconfvfflexiblevertexformat.htm">FVF (Flexible Vertex Format)</A>, <A HREF="cxcondirect3ddriverfunctions.htm">Direct3D Driver Functions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3dDrawPrimitives2&nbsp;(cxcond3ddrawprimitives2.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

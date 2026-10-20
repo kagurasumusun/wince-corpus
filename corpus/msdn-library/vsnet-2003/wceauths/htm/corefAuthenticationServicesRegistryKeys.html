@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Authentication Services Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Authentication Services Registry Settings"/>
+<MSHelp:RLTitle Title="Authentication Services Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="corefAuthenticationServicesRegistryKeys"/>
+<MSHelp:Keyword Index="K" Term="authentication services (SSPI), registry settings"/>
+<MSHelp:Keyword Index="K" Term="registry settings, authentication services (SSPI)"/>
+<MSHelp:Keyword Index="A" Term="corefAuthenticationServicesRegistryKeys"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: authservices_security.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690460">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="corefauthenticationservicesregistrykeys"></A>Authentication Services Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The registry stores information necessary to configure the system for applications and hardware devices. The registry also contains information that the operating system continually references during operation.</P>
+
+<H2 class="dtH2">SSPI Registry Settings</H2>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders</B> registry key specifies the available Security Support Providers (SSPs). The following table shows the named value.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Value : type</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><B>Providers</B> : REG_SZ</TD>
+<TD width=63%>Default setting is "schannel.dll, ntlmssp.dll, kerberos.dll, spnego.dll". 
+<BLOCKQUOTE class="dtBlock">
+<B>Security Note&nbsp;&nbsp;&nbsp;</B>Always specify the security provider by name to ensure that you are using the correct provider. Otherwise, you may end up using a provider that is not adequate for your application.</BLOCKQUOTE>
+
+<P>Specifies the SSP to use for authentication. One DLL can support more than one security package.</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">NTLM Registry Settings</H2>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders\NTLM</B> registry key allows you to select between Microsoft Windows NT LAN Manager (LM) challenge/response and NTLM version 2 authentication protocols to use for NTLM SSP. The LM protocol uses case insensitive passwords and limits the number of characters to 14. NTLM v2 uses case sensitive passwords. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>NTLM v2 is only supported starting with Windows CE .NET 4.1.</BLOCKQUOTE>
+
+<P>The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Value : type</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><B>LmCompatibilityLevelClient</B> : REG_DWORD</TD>
+<TD width=63%>Default setting is 1. 
+<P>Applies to clients using the NTLM SSP to authenticate to a remote server.
+
+<UL type="disc">
+	<LI>0 - specifies LM authentication protocol.</li>
+
+	<LI>1 - specifies LM and NTLM v2 authentication protocols. The application uses NTLM version 2 if the server supports it.</li>
+
+	<LI>2 - not supported. This value is reserved for future use.</li>
+
+	<LI>3 - specifies only NTLM v2 authentication protocol.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><B>LmCompatibilityLevelServer</B> : REG_DWORD</TD>
+<TD width=63%>Default setting is 2. 
+<P>Applies to servers using a local database of users and passwords. This value is ignored when applications use pass-through authentication that uses domain controllers.
+
+<UL type="disc">
+	<LI>0 - accepts LM and NTLM version 1 authentication protocols.</li>
+
+	<LI>1 - accepts LM and NTLM versions 1 and 2 authentication protocols. The application uses NTLM v2 if the server supports it.</li>
+
+	<LI>2 - accepts NTLM versions 1 and 2 authentication protocols.</li>
+
+	<LI>3 - accepts only NTLM v2 authentication protocol.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><B>NoLmHash</B> : REG_DWORD</TD>
+<TD width=63%>Default setting is 1.
+<P>Caches the LM hash. This applies only to client functionality.
+
+<UL type="disc">
+	<LI>0 - caches the LM hash when applicable.</li>
+
+	<LI>1 - does not cash the LM hash.</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Security Note&nbsp;&nbsp;&nbsp;</b>To prevent the NTLM SSP from caching the LM hash on the device for reuse, set <B>NoLMHash</B> to 1.<b class="le"> </b></BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Kerberos Registry Settings</H2>
+
+<P>To implement Kerberos, you must have a Kerberos domain controller (KDC). This is a central authority performing dual roles: authentication service to clients within its domain and ticket granting service to clients requesting connections to services or computers within its domain. </P>
+
+<P>To specify the KDC in your domain, add the name of your domain controller as a subkey to the <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders\Kerberos\NTDomains</B> registry key. For example, the <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders\Kerberos\NTDomains\<I>YOURDOMAIN</I></B> registry key specifies <I>YOURDOMAIN</I> as the name of your domain controller. The following table shows the named value in this subkey that specifies the name of the KDC.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Value : type</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><B>KdcNames</B> : REG_SZ</TD>
+<TD width=63%>No default is set in the registry. If the value is not set in the registry, the Kerberos uses Windows Network Redirector to discover the KDC for the domain.
+<P>Specifies the name of the KDC. You can use the URL or the IP address, such as "YOURKDCNAME" or "123.45.6.78".</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Schannel Registry Settings</H2>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders\SCHANNEL</B> registry key defines the behavior the Schannel SSP. The following table shows the named values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Value : type</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>MinimumCacheSize</B> : REG_DWORD</TD>
+<TD width=54%>No default is set in the registry. 
+<P>The minimum number of elements in a session cache.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>MaximumCachSize</B> : REG_DWORD</TD>
+<TD width=54%>No default is set in the registry. 
+<P>The maximum number of elements in a session cache.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>ClientCacheTime</B> : REG_DWORD</TD>
+<TD width=54%>Default setting is 05b8d80 in the registry, which is ten minutes.
+<P>Time, in milliseconds, before the client-side cache elements expires.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>ServerCacheTime</B> : REG_DWORD</TD>
+<TD width=54%>No default set in the registry. If the value is not set in the registry, it defaults to 100.
+<P>Time, in milliseconds, before the server-side cache elements expires.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>RegisteredCA</B> : REG_DWORD</TD>
+<TD width=54%>No default is set in the registry. Set to 1 after Schannel adds its built-in certificates to the Root store. If you do not want any built-in certificates to be added to the Root store, you must set <B>RegisteredCA</B> to 1.</TD>
+</TR>
+</table></div>
+
+<P>The following list shows subkeys under <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders\SCHANNEL</B> that contain Schannel SSP registry settings.
+
+<UL type="disc">
+	<LI><B>Protocols\</B></li>
+
+	<LI><B>Protocols\Unified Hello</B></li>
+
+	<LI><B>Protocols\SSL2</B></li>
+
+	<LI><B>Protocols\SSL3</B></li>
+
+	<LI><B>Protocols\TLS 1.0</B></li>
+
+	<LI><B>Ciphers\</B></li>
+
+	<LI><B>Ciphers\REC4 128</B></li>
+
+	<LI><B>Ciphers\DES 56/56</B></li>
+
+	<LI><B>Ciphers\RC2 56/128</B></li>
+
+	<LI><B>Ciphers\RC4 56/128</B></li>
+
+	<LI><B>Ciphers\RC4 64/128</B></li>
+
+	<LI><B>Ciphers\RC2 128/128</B></li>
+
+	<LI><B>Ciphers\Triple DES 168/168</B></li>
+
+	<LI><B>Ciphers\RC4 128/128</B></li>
+
+	<LI><B> Hashes \ </B></li>
+
+	<LI><B> Hashes \ SHA</B></li>
+
+	<LI><B> Hashes \ MD5</B></li>
+
+	<LI><B>KeyExchangeAlgorithms\PKCS</B></li>
+</UL>
+
+<P>For <B>Unified Hello</B>, <B>SSL2</B>, <B>SSL3</B>, <B>TLS 1.0</B> protocol registry keys, the subkeys <B>Client</B> and <B>Server</B> specify the device setting. For example, the <B>HKEY_LOCAL_MACHINE\Comm\SecurityProviders\SCHANNEL\Protocols\SSL2\Client</B> registry subkey specifies the client for SSL2 protocol.</P>
+
+<P>The following table shows the named value that enables or disables the specified protocol.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%>Value : type</TH>
+<TH width=55%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><B>Enabled</B> : REG_DWORD</TD>
+<TD width=55%>If a protocol registry key is not present, the protocol is enabled by default. You can set the <B>Enabled</B> value to 1 to disable the protocol for either the <B>Client</B> or <B>Server</B> subkeys.</TD>
+</TR>
+</table></div>
+
+<P>The following code example disables the SSL2 protocol for the client.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Client]
+    "Enabled"=dword:1</PRE>
+
+<P>For the <B>Ciphers</B>, <B>Hashes</B>, and <B>KeyExchangeAlgorithms</B> subkeys, the following table shows the named value.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Value : type</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>Enabled</B> : REG_DWORD</TD>
+<TD width=59%>Default setting is 0xf0. 
+<P>Disabled for all protocols.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>Enabled</B> : REG_DWORD </TD>
+<TD width=59%>Default setting is 0xffffffff.
+<P>Enabled for all protocols.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>Enabled</B> : REG_DWORD </TD>
+<TD width=59%>No default is set in the registry. 
+<P>The <I>bit mask</I> for each protocol is defined in the Schnlsp.h header file in the %_WINCEROOT%\Public\Common\SDK directory. The flag names are prefixed with SP_PROT and followed by the protocol name. The bit mask identifies the client and the server.</P>
+</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Credential Manager Registry Settings</H2>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Comm\Security</B> registry key allows applications using the Credential Manager to control password saving on the device. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Value : type</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><B>DisallowSavedNetworkPasswords</B> : REG_DWORD</TD>
+<TD width=59%>Default is not set in the registry. If the value is not present in the registry, applications can save passwords on the device.
+<P>If the value is set to 1, applications using the Credential Manager cannot save passwords on the device. The <B>Update Default Credentials</B> check box still appears, but it is disabled in the Network UI.</P>
+</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Authentication%20Services%20Registry%20Settings&nbsp;(corefauthenticationservicesregistrykeys.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

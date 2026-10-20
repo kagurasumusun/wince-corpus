@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::SetPointerShape</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPE::SetPointerShape"/>
+<MSHelp:RLTitle Title="GPE::SetPointerShape"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_GPE_SetPointerShape"/>
+<MSHelp:Keyword Index="K" Term="GPE, SetPointerShape"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_GPE_SetPointerShape"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: display_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673889">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_gpe_setpointershape"></A>GPE::SetPointerShape</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method sets the shape of the pointer, the hot spot of the pointer, and the colors to use for the cursor if the cursor is multicolored. The graphics device interface (GDI) calls <A HREF="_wceddk_gpe_movepointer.htm">GPE::MovePointer</A> separately to move or hide the cursor.</P>
+
+<PRE class="syntax"><B>SCODE GPE::SetPointerShape( </B>
+<B>GPESurf *</B><I>pMask</I><B>, </B>
+<B>GPESurf *</B><I>pColorSurf</I><B>, </B>
+<B>int </B><I>xHot</I><B>, </B>
+<B>int </B><I>yHot</I><B>, </B>
+<B>int </B><I>cx</I><B>, </B>
+<B>int </B><I>cy</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pMask</I></DT>
+
+<DD>[in] Pointer to a mask containing the cursor shape.</dd>
+
+<DT><I>pColorSurf</I></DT>
+
+<DD>[in] Pointer to a surface specifying the colors to use for the cursor.</dd>
+
+<DT><I>xHot</I></DT>
+
+<DD>[in] Horizontal location of the cursor's hot spot.</dd>
+
+<DT><I>yHot</I></DT>
+
+<DD>[in] Vertical location of the cursor's hot spot.</dd>
+
+<DT><I>cx</I></DT>
+
+<DD>[in] Width of the cursor.</dd>
+
+<DT><I>cy</I></DT>
+
+<DD>[in] Height of the cursor.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Cursor display is optional. The requirements of the Windows CE&#0150;based target platform determine whether cursors are necessary. If the platform uses a stylus or a shell without a pointer, no cursor is necessary, and the <B>GPE</B> pointer methods can return S_OK without doing any work. Furthermore, it may be acceptable, depending on the target platform display hardware, to display only monochrome cursors.</P>
+
+<P>The <I>pMask</I> parameter points to a 1-bpp surface with a width of <I>cx</I> and a height of (2<I>cy</I>). The top half defines the <B>AND</B> mask for the pointer, and the lower half defines the <B>XOR</B> mask. Taken together, these masks provide 2 bits of information for each pixel of the pointer image. The following truth table shows display results for different values in the <B>AND</B> and <B>XOR</B> masks.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>AND mask value</TH>
+<TH width=24%>XOR mask value</TH>
+<TH width=53%>Result displayed on screen</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>0</TD>
+<TD width=24%>0</TD>
+<TD width=53%>Black.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>0</TD>
+<TD width=24%>1</TD>
+<TD width=53%>White.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>1</TD>
+<TD width=24%>0</TD>
+<TD width=53%>Transparent; pixel is unchanged.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>1</TD>
+<TD width=24%>1</TD>
+<TD width=53%>Inverts the pixel color.</TD>
+</TR>
+</table></div>
+
+<P>These masks provide for a black-and-white image and enable transparency and inversion of pointer pixels.</P>
+
+<P>If <I>pColorSurf</I> is not NULL, use the colors for the corresponding pixels of the color surface instead of the <B>XOR</B> mask value for pixels where the <B>AND</B> mask value is 0.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>Gpe.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_gpe_movepointer.htm">GPE::MovePointer</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;GPE::SetPointerShape&nbsp;(_wceddk_gpe_setpointershape.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::OnSysKeyUp</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::OnSysKeyUp"/>
+<MSHelp:RLTitle Title="CWnd::OnSysKeyUp"/>
+<MSHelp:Keyword Index="A" Term="aflrfCWndcolcolOnSysKeyUp"/>
+<MSHelp:Keyword Index="K" Term="OnSysKeyUp method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCWndcolcolOnSysKeyUp"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cwnd.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697570">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcwndcolcolonsyskeyup"></A>CWnd::OnSysKeyUp</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework, if the <B>CWnd</B> object has the input focus, when the user releases a key that was pressed while the ALT key was held down. If no window currently has the input focus, the active window <B>OnSysKeyUp</B> method is called. The <B>CWnd</B> object that receives the call can distinguish between these two contexts by checking the context code in <I>nFlags</I>. </P>
+
+<PRE class="syntax"><B>afx_msg void OnSysKeyUp( 
+UINT </B><I>nChar</I><B>, 
+UINT </B><I>nRepCnt</I><B>, 
+UINT </B><I>nFlags</I> <B>);</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>nChar</I></DT>
+
+<DD>Specifies the virtual key code of the key being pressed. For a list of of standard virtual key codes, see Winuser.h</dd>
+
+<DT><I>nRepCnt</I></DT>
+
+<DD>Specifies the repeat count.</dd>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies the scan code, key-transition code, previous key state, and context code, as shown in the following list:
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=15%><B>Value</B></TD>
+<TD width=85%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>0&#0150;7</TD>
+<TD width=85%>Scan code (OEM-dependent value). Low byte of high-order word.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>8</TD>
+<TD width=85%>Extended key, such as a function key or a key on the numeric keypad (1 if it is an extended key; otherwise, it is 0).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>9&#0150;10</TD>
+<TD width=85%>Not used.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>11&#0150;12</TD>
+<TD width=85%>Used internally by Windows CE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>13</TD>
+<TD width=85%>Context code (1 if the ALT key is held down while the key is pressed, 0 otherwise).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>14</TD>
+<TD width=85%>Previous key state (1 if the key is down before the message is sent, 0 if the key is up).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>15</TD>
+<TD width=85%>Transition state (1 if the key is being released, 0 if the key is being pressed).</TD>
+</TR>
+</table></div>
+
+
+
+<P>For <B>OnSysKeyUp</B> calls, the key-transition bit (bit 15) is 1. The context-code bit (bit 13) is 1 if the ALT key is down while the key is pressed; it is 0 if the message is sent to the active window because no window has the input focus.
+</dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>When the context code is zero, the WM_SYSKEYUP message received by <B>OnSysKeyUp</B> can be passed to the <B>TranslateAccelerator</B> Windows CE function, which will handle it as though it were a normal key message instead of a system-key message. This allows accelerator (shortcut) keys to be used with the active window even if the active window does not have the input focus.</P>
+
+<P>For IBM Enhanced 101- and 102-key keyboards, enhanced keys are the right ALT and the right CTRL keys on the main section of the keyboard; the INS, DEL, HOME, END, PAGE UP, PAGE DOWN, and arrow keys in the clusters to the left of the numeric keypad; and the slash (/) and ENTER keys in the numeric keypad. Some other keyboards may support the extended-key bit in <I>nFlags</I>.</P>
+
+<P>For non-U.S. Enhanced 102-key keyboards, the right ALT key is handled as the CTRL+ALT key combination. The following shows the sequence of messages and calls that result when the user presses and releases this key:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=18%><B>Sequence</B></TD>
+<TD width=35%><B>Function Accessed</B></TD>
+<TD width=47%><B>Message Passed</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>1.</TD>
+<TD width=35%>WM_KEYDOWN</TD>
+<TD width=47%>VK_CONTROL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>2.</TD>
+<TD width=35%>WM_KEYDOWN</TD>
+<TD width=47%>VK_MENU</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>3.</TD>
+<TD width=35%>WM_KEYUP</TD>
+<TD width=47%>VK_CONTROL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>4.</TD>
+<TD width=35%>WM_SYSKEYUP</TD>
+<TD width=47%>VK_MENU</TD>
+</TR>
+</table></div>
+
+<P>This method is called by the framework to allow your application to handle a Windows CE message. The parameters passed to your method reflect the parameters received by the framework when the message was received. If you call the base-class implementation of this method, that implementation will use the parameters originally passed with the message and not the parameters you supply to the method.</P>
+
+<P class="label"><B>Requirements</B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><B>WM_SYSKEYDOWN</B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697570', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

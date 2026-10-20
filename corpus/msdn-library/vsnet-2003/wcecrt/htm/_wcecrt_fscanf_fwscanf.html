@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fscanf, fwscanf</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fscanf_fwscanf"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_fscanf_fwscanf.htm", "fscanf,%20fwscanf")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_fscanf_fwscanf"></A>fscanf, fwscanf</H1>
+
+<P>Read formatted data from a stream.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fscanf</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fwscanf</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>int fscanf( FILE</B> *<B>stream</B>, <B>const char</B> *<B>format</B> [, <B>argument</B> ]... <B>);</B>
+<B>int fwscanf( FILE</B> *<B>stream</B>, <B>const wchar_t</B> *<B>format</B> [, <B>argument</B> ]... <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Pointer to FILE structure</dd>
+
+<DT><I>format</I></DT>
+
+<DD>Format-control string</dd>
+
+<DT><I>argument</I></DT>
+
+<DD>Optional arguments</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>Each of these functions returns the number of fields successfully converted and assigned; the return value does not include fields that were read but not assigned. A return value of 0 indicates that no fields were assigned. If an error occurs, or if the end of the file stream is reached before the first conversion, the return value is EOF for <B>fscanf</B> and <B>fwscanf</B>.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>fscanf</B> function reads data from the current position of stream into the locations given by argument (if any). Each argument must be a pointer to a variable of a type that corresponds to a type specifier in format. format controls the interpretation of the input fields and has the same form and function as the format argument for <B>scanf</B>; see <B>scanf</B> for a description of format. If copying takes place between strings that overlap, the behavior is undefined.</P>
+
+<P><B>fwscanf</B> is a wide-character version of <B>fscanf</B>; the format argument to <B>fwscanf</B> is a wide-character string. These functions behave identically otherwise.</P>
+
+<P class="label"><B>Generic-Text Routine Mappings</B></P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>TCHAR.H Routine </TH>
+<TH width=70%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>_ftscanf</TD>
+<TD width=70%>fwscanf</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<P>For more information, see Format Specification Fields&#0151;<B>scanf</B> functions and <B>wscanf</B> Functions.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FSCANF.C: This program writes formatted
+ * data to a file. It then uses fscanf to
+ * read the various data back from the file.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream;
+
+void main( void )
+{
+   long l;
+   float fp;
+   char s[81];
+   char c;
+
+   stream = fopen( "fscanf.out", "w+" );
+   if( stream == NULL )
+      printf( "The file fscanf.out was not opened\n" );
+   else
+   {
+      fprintf( stream, "%s %ld %f%c", "a-string",
+               65000, 3.14159, 'x' );
+
+      /* Set pointer to beginning of file: */
+      fseek( stream, 0L, SEEK_SET );
+
+      /* Read data back from file: */
+      fscanf( stream, "%s", s );
+      fscanf( stream, "%ld", &amp;l );
+
+      fscanf( stream, "%f", &amp;fp );
+      fscanf( stream, "%c", &amp;c );
+
+      /* Output data read: */
+      printf( "%s\n", s );
+      printf( "%ld\n", l );
+      printf( "%f\n", fp );
+      printf( "%c\n", c );
+
+      fclose( stream );
+   }
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">a-string
+65000
+3.141590
+x</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fprintf_fwprintf.htm"><B>fprintf</B></A>, <A HREF="_wcecrt_scanf_wscanf.htm"><B>scanf</B></A>, <A HREF="_wcecrt_sscanf_swscanf.htm"><B>sscanf</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

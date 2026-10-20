@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_wfreopen</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_wfreopen"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_wfreopen.htm", "_wfreopen")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_wfreopen"></A>_wfreopen</H1>
+
+<P>Reassign a file pointer.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=67%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>_wfreopen</B></TD>
+<TD width=67%>&lt;stdio.h&gt; </TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>FILE *_wfreopen( const wchar_t</B> *<I>path</I>, <B>const</B> <B>wchar_t</B> *<I>mode</I>, <B>FILE</B> *<I>stream</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>path</I></DT>
+
+<DD>Path of new file</dd>
+
+<DT><I>mode</I></DT>
+
+<DD>Type of access permitted</dd>
+
+<DT><I>stream</I></DT>
+
+<DD>Pointer to <B>FILE</B> structure</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>This function returns a pointer to the newly opened file. If an error occurs, the original file is closed and the function returns a <B>NULL</B> pointer value.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The _<B>wfreopen</B> function closes the file currently associated with <I>stream</I> and reassigns <I>stream</I> to the file specified by <I>path</I>. The <I>path</I> and <I>mode</I> arguments to <B>_wfreopen</B> are wide-character strings.</P>
+
+<P class="label"><B>Generic-Text Routine Mappings</B></P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>TCHAR.H Routine </TH>
+<TH width=62%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>_tfreopen</TD>
+<TD width=62%>_wfreopen</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<P>_<B>wfreopen </B>is typically used to redirect the pre-opened files <B>stdin</B>, <B>stdout</B>, and <B>stderr</B> to files specified by the user. The new file associated with <I>stream</I> is opened with <I>mode</I>, which is a character string specifying the type of access requested for the file, as follows:
+
+<DL>
+<DT><B>"r"</B></DT>
+
+<DD>Opens for reading. If the file does not exist or cannot be found, the _<B>wfreopen </B>call fails.</dd>
+
+<DT><B>"w"</B></DT>
+
+<DD>Opens an empty file for writing. If the given file exists, its contents are destroyed.</dd>
+
+<DT><B>"a"</B></DT>
+
+<DD>Opens for writing at the end of the file (appending) without removing the EOF marker before writing new data to the file; creates the file first if it does not exist.</dd>
+
+<DT><B>"r+"</B></DT>
+
+<DD>Opens for both reading and writing. (The file must exist.)</dd>
+
+<DT><B>"w+"</B></DT>
+
+<DD>Opens an empty file for both reading and writing. If the given file exists, its contents are destroyed.</dd>
+
+<DT><B>"a+"</B></DT>
+
+<DD>Opens for reading and appending; the appending operation includes the removal of the EOF marker before new data is written to the file and the EOF marker is restored after writing is complete; creates the file first if it does not exist.</dd>
+</DL>
+
+<P>Use the <B>"w"</B> and <B>"w+"</B> types with care, as they can destroy existing files.</P>
+
+<P>When a file is opened with the <B>"a"</B> or <B>"a+"</B> access type, all write operations take place at the end of the file. Although the file pointer can be repositioned using <B>fseek</B>, the file pointer is always moved back to the end of the file before any write operation is carried out. Thus, existing data cannot be overwritten.</P>
+
+<P>The <B>"a"</B> mode does not remove the EOF marker before appending to the file. After appending has occurred, the MS-DOS TYPE command only shows data up to the original EOF marker and not any data appended to the file. The <B>"a+"</B> mode does remove the EOF marker before appending to the file. After appending, the MS&nbsp;DOS TYPE command shows all data in the file. The <B>"a+"</B> mode is required for appending to a stream file that is terminated with the CTRL+Z EOF marker.</P>
+
+<P>When the <B>"r+"</B>, <B>"w+"</B>, or <B>"a+"</B> access type is specified, both reading and writing are allowed (the file is said to be open for “update”). However, when you switch between reading and writing, there must be an intervening <B>fsetpos</B>, or <B>fseek</B> operation. The current position can be specified for the <B>fsetpos</B> or <B>fseek</B> operation, if desired. In addition to the above values, one of the following characters may be included in the <I>mode</I> string to specify the translation mode for new lines.
+
+<DL>
+<DT><B>t</B></DT>
+
+<DD>Open in text (translated) mode; carriage return&#0150;linefeed (CR-LF) combinations are translated into single linefeed (LF) characters on input; LF characters are translated to CR-LF combinations on output. Also, CTRL+Z is interpreted as an end-of-file character on input. In files opened for reading or for writing and reading with <B>"a+"</B>, the run-time library checks for a CTRL+Z at the end of the file and removes it, if possible. This is done because using <B>fseek</B> and <B>ftell</B> to move within a file may cause <B>fseek</B> to behave improperly near the end of the file. The <B>t</B> option is a Microsoft extension that should not be used where ANSI portability is desired.</dd>
+
+<DT><B>b</B></DT>
+
+<DD>Open in binary (untranslated) mode; the above translations are suppressed.</dd>
+</DL>
+
+<P>If <B>t</B> or <B>b</B> is not given in <I>mode</I>, the default translation mode is defined by the global variable <B>_fmode</B>. If <B>t </B>or <B>b</B> is prefixed to the argument, the function fails and returns <B>NULL</B>. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FREOPEN.C: This program reassigns stderr to the file
+ * named FREOPEN.OUT and writes a line to that file.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+FILE *stream;
+
+void main( void )
+{
+   /* Reassign "stderr" to "freopen.out": */
+   stream = freopen( "freopen.out", "w", stderr );
+
+   if( stream == NULL )
+      fprintf( stdout, "error on freopen\n" );
+   else
+   {
+      fprintf( stream, "This will go to the file 'freopen.out'\n" );
+      fprintf( stdout, "successfully reassigned\n" );
+      fclose( stream );
+   }
+   system( "type freopen.out" );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">successfully reassigned
+This will go to the file 'freopen.out'</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fclose_fcloseall.htm">fclose</A>, <A HREF="_wcecrt_fileno.htm">_fileno</A>, <A HREF="_wcecrt_fopen_wfopen.htm">fopen</A>, <A HREF="_wcecrt_setmode.htm">_setmode</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

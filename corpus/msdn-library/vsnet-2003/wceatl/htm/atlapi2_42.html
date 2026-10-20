@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>String Conversion Macros</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_string_conversion_macros"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_string_conversion_macros"></A>String Conversion Macros</H1>
+
+<P>The string conversion macros discussed here are valid for both ATL and MFC. In the macro names, the source string type is on the left (for example, <B>A</B>) and the destination string type is on the right (for example, <B>W</B>). <B>A</B> stands for <B>LPSTR</B>, <B>OLE</B> stands for <B>LPOLESTR</B>, <B>T</B> stands for <B>LPTSTR</B>, and <B>W</B> stands for <B>LPWSTR</B>.</P>
+
+<PRE class=syntax><B>MACRONAME( </B><I>string</I><B>_</B><I>address</I><B> )</B><I> </I></PRE>
+
+<P>For example:</P>
+
+<P><B>A2W(</B><I>lpa</I><B>)</B></P>
+
+<H4>Remarks</H4>
+
+<P>In the macro names, the source string type is on the left (for example, <B>A</B>) and the destination string type is on the right (for example, <B>W</B>). <B>A</B> stands for <B>LPSTR</B>, <B>OLE</B> stands for <B>LPOLESTR</B>, <B>T</B> stands for <B>LPTSTR</B>, and <B>W</B> stands for <B>LPWSTR</B>.</P>
+
+<P>Thus, <B>A2W</B> converts an <B>LPSTR</B> to an <B>LPWSTR</B>, <B>OLE2T</B> converts an <B>LPOLESTR</B> to an <B>LPTSTR</B>, and so on.</P>
+
+<P>The destination string is created using _<B>alloca</B>, except when the destination type is <B>BSTR</B>. Using _<B>alloca</B> allocates memory off the stack, so that when your function returns, it is automatically cleaned up.</P>
+
+<P>If there is a <B>C</B> in the macro name, the macro converts to a <B>const</B> string. For example, <B>W2CA</B> converts an <B>LPWSTR</B> to an <B>LPCSTR</B>.</P>
+
+<P>When using an ATL string conversion macro, specify the <B>USES_CONVERSION</B> macro at the beginning of your function in order to avoid compiler errors. For example:</P>
+
+<PRE>void func( LPSTR lpsz )
+{
+   USES_CONVERSION;
+   ...
+   LPWSTR x = A2W(lpsz)
+   // Do something with x
+   ...
+}
+</PRE>
+
+<P>The behavior of the ATL string conversion macros depends on the compiler directive in effect, if any. If the source and destination types are the same, no conversion takes place. Compiler directives change <B>T</B> and <B>OLE</B> as follows:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>Compiler directive in effect</TH>
+<TH width=33%>T becomes</TH>
+<TH width=23%>OLE becomes</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>none</TD>
+<TD width=33%><B>A</B></TD>
+<TD width=23%><B>W</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>_UNICODE</B></TD>
+<TD width=33%><B>W</B></TD>
+<TD width=23%><B>W</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>OLE2ANSI</B></TD>
+<TD width=33%><B>A</B></TD>
+<TD width=23%><B>A</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>_UNICODE</B> and <B>OLE2ANSI</B></TD>
+<TD width=33%><B>W</B></TD>
+<TD width=23%><B>A</B></TD>
+</TR>
+</TABLE><BR>
+
+<P>The following table lists the ATL string conversion macros.</P>
+
+<H4>ATL String Conversion Macros</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2BSTR</B></TD>
+<TD width=25%><B>OLE2A</B></TD>
+<TD width=25%><B>T2A</B></TD>
+<TD width=25%><B>W2A</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2COLE</B></TD>
+<TD width=25%><B>OLE2BSTR</B></TD>
+<TD width=25%><B>T2BSTR</B></TD>
+<TD width=25%><B>W2BSTR</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2CT</B></TD>
+<TD width=25%><B>OLE2CA</B></TD>
+<TD width=25%><B>T2CA</B></TD>
+<TD width=25%><B>W2CA</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2CW</B></TD>
+<TD width=25%><B>OLE2CT</B></TD>
+<TD width=25%><B>T2COLE</B></TD>
+<TD width=25%><B>W2COLE</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2OLE</B></TD>
+<TD width=25%><B>OLE2CW</B></TD>
+<TD width=25%><B>T2CW</B></TD>
+<TD width=25%><B>W2CT</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2T</B></TD>
+<TD width=25%><B>OLE2T</B></TD>
+<TD width=25%><B>T2OLE</B></TD>
+<TD width=25%><B>W2OLE</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2W</B></TD>
+<TD width=25%><B>OLE2W</B></TD>
+<TD width=25%><B>T2W</B></TD>
+<TD width=25%><B>W2T</B></TD>
+</TR>
+</TABLE><BR>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in atlconv.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

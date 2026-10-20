@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Fundamentals</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Fundamentals"/>
+<MSHelp:RLTitle Title="Registry Fundamentals"/>
+<MSHelp:Keyword Index="A" Term="cmconRegistryFundamentals"/>
+<MSHelp:Keyword Index="K" Term="HKEY, definition"/>
+<MSHelp:Keyword Index="K" Term="registries, basic concepts"/>
+<MSHelp:Keyword Index="A" Term="cmconRegistryFundamentals"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: object_store.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801487">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconregistryfundamentals"></A>Registry Fundamentals</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The registry is a system database, which stores configuration information for applications, drivers, and the operating system (OS). The registry is most commonly use for storing state information across invocations. For example, an application might have windows that a user can move and resize. Before exiting, the application could store its windows information in the registry. Then when the application starts again, it could retrieve the information and position its windows accordingly.</P>
+
+<P>The structure of the Microsoft&reg; Windows&reg; CE registry is similar to the registries in other versions of Windows. The registry contains a forest of data subtrees. Each <B>subtree</B> is composed of branches called <B>keys</B>, and each key can contain <B>subkeys</B> and/or <B>entries</B>. Entries are stored as name/value pairs. At the base of each subtree is the <B>root</B>, which is identified using a well-known constant value, or <B>HKEY</B>. The following table shows the root constants supported by Windows CE and gives a brief description of each.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Root key constant</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_CLASSES_ROOT</B></TD>
+<TD width=50%>Stores file type matching and OLE configuration data.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_CURRENT_USER</B></TD>
+<TD width=50%>Stores user-specific data for the user who is currently logged in. This root points to the relevant key of HKEY_USERS. Changes made are automatically made in the user's key under HKEY_USERS.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_LOCAL_MACHINE</B></TD>
+<TD width=50%>Stores machine-specific data for device drivers and applications.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>HKEY_USERS</B></TD>
+<TD width=50%>Stores data for all users including a default user.</TD>
+</TR>
+</table></div>
+
+<P class="labelproc"><B>To specify a key or entry within the registry</B>
+
+<UL type="disc">
+	<LI>Use a text string starting at a root with subkeys separated by a backslash (\). 
+<PRE class="code">[ROOT]\[Key]\[Subkey]\[Subkey or entry]</PRE>
+
+<P>Traditionally, applications store data using the following key structure.
+
+<PRE class="code">[ROOT]\Software\[Company name]\[Product name]</PRE>
+</li>
+</UL>
+
+<P>For example, Microsoft stores configuration information for the game FreeCell in the <B>HKEY_LOCAL_MACHINE\Software\Microsoft\FreeCell</B> registry key.</P>
+
+<P>Most APIs access keys under a predetermined root; therefore, text strings used as parameters should start at the key rather than the root.</P>
+
+<P class="labelproc"><B>To access or modify data within the registry</B>
+
+<OL type="1">
+	<LI>Open the key containing the entry using either the <MSHelp:link keywords="cerefRegOpenKeyEx" TABINDEX="0">RegOpenKeyEx</MSHelp:link> function or the <MSHelp:link keywords="cerefRegCreateKeyEx" TABINDEX="0">RegCreateKeyEx</MSHelp:link> function.</li>
+
+	<LI>Perform one of the following tasks:
+<UL type="disc">
+	<LI>Read or write entries using either the <MSHelp:link keywords="cerefRegQueryValueEx" TABINDEX="0">RegQueryValueEx</MSHelp:link> function or the <MSHelp:link keywords="cerefRegSetValueEx" TABINDEX="0">RegSetValueEx</MSHelp:link> function. </li>
+
+	<LI>Enumerate entries or subkeys using either the <MSHelp:link keywords="cerefRegEnumValue" TABINDEX="0">RegEnumValue</MSHelp:link> function or the <MSHelp:link keywords="cerefRegEnumKeyEx" TABINDEX="0">RegEnumKeyEx</MSHelp:link> function.</li>
+
+	<LI>Delete entries or subkeys using either the <MSHelp:link keywords="cerefRegDeleteValue" TABINDEX="0">RegDeleteValue</MSHelp:link> function or the <MSHelp:link keywords="cerefRegDeleteKey" TABINDEX="0">RegDeleteKey</MSHelp:link> function.</li>
+</UL>
+</li>
+
+	<LI>Close the key using <B>RegCloseKey</B>.</li>
+</OL>
+
+<P>Values in the registry can be stored in several different data types. The following table shows the data types that Windows CE supports.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value type constant</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_BINARY</TD>
+<TD width=50%>Binary data in any form.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_DWORD</TD>
+<TD width=50%>A 32-bit number.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_DWORD_LITTLE_ENDIAN</TD>
+<TD width=50%>A 32-bit number in little-endian format. This is equivalent to REG_DWORD.
+<P>In little-endian format, a multibyte value is stored in memory from the lowest byte (the little end) to the highest byte. For example, the value 0x12345678 is stored as (0x78 0x56 0x34 0x12) in little-endian format.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_DWORD_BIG_ENDIAN</TD>
+<TD width=50%>A 32-bit number in big-endian format.
+<P>In big-endian format, a multibyte value is stored in memory from the highest byte (the big end) to the lowest byte. For example, the value 0x12345678 is stored as (0x12 0x34 0x56 0x78) in big-endian format.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_EXPAND_SZ</TD>
+<TD width=50%>A null-terminated string that contains unexpanded references to environment variables, for example, %PATH%.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_LINK</TD>
+<TD width=50%>A Unicode symbolic link. Used internally; applications should not use this type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_MULTI_SZ</TD>
+<TD width=50%>An array of null-terminated strings, terminated by two null characters.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_NONE</TD>
+<TD width=50%>No defined value type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_RESOURCE_LIST</TD>
+<TD width=50%>A device driver resource list.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>REG_SZ</TD>
+<TD width=50%>A null-terminated string.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconprotectedregistrykeysvalues.htm">Protected Registry Keys and Values</A></P>
+
+<P><A HREF="cmconhintsforusingregistry.htm">Hints for Using the Registry</A></P>
+
+<P><A HREF="_wcefiles_using_the_registry.htm">Registry</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20Fundamentals&nbsp;(cmconregistryfundamentals.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

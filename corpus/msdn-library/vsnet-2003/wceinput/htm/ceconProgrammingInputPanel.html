@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Programming a Software-Based Input Panel</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Programming a Software-Based Input Panel"/>
+<MSHelp:RLTitle Title="Programming a Software-Based Input Panel"/>
+<MSHelp:Keyword Index="A" Term="ceconProgrammingInputPanel"/>
+<MSHelp:Keyword Index="K" Term="input methods, import panel"/>
+<MSHelp:Keyword Index="K" Term="SIP, programming"/>
+<MSHelp:Keyword Index="A" Term="ceconProgrammingInputPanel"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: input_panel_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748184">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconprogramminginputpanel"></A>Programming a Software-Based Input Panel</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When the user accesses the software-based input panel, Windows CE creates a dedicated software-based input panel thread. The thread creates a software-based input panel window and initializes the software-based input panel. Then, the thread enters a message loop. Within the message loop, the thread responds to messages and user interface (UI) requests from the software-based input panel window. The thread also calls into the IM object, enabling the IM to create child windows in the software-based input panel window. The content of the software-based input panel window is determined by the current IM.</P>
+
+<P>The software-based input panel thread has a special status with the OS. Any window that the software-based input panel thread creates will not be obscured by other windows. Because some UI elements save and clear themselves when they lose focus, the software-based input panel and its child windows do not receive the focus, even if the user currently is using the software-based input panel.</P>
+
+<P>The software-based input panel queries the IM for data through the <MSHelp:link keywords="cerefIInputMethod" TABINDEX="0">IInputMethod</MSHelp:link> and <MSHelp:link keywords="cerefIInputMethod2" TABINDEX="0">IInputMethod2</MSHelp:link> interfaces. The software-based input panel can remove the current IM and replace it with a new IM. The following table shows the methods of the <B>IInputMethod</B> and <B>IInputMethod2</B> interfaces.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Method</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodDeselect" TABINDEX="0">IInputMethod::Deselect</MSHelp:link></TD>
+<TD width=53%>Destroys its window and performs IM-specific cleanup procedures.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodGetImData" TABINDEX="0">IInputMethod::GetImData</MSHelp:link></TD>
+<TD width=53%>Sends data from the current input method (IM) to the current application.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodGetInfo" TABINDEX="0">IInputMethod::GetInfo</MSHelp:link></TD>
+<TD width=53%>Requests data regarding the new IM, including property flags and the preferred IM size.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodHiding" TABINDEX="0">IInputMethod::Hiding</MSHelp:link></TD>
+<TD width=53%>Performs any saving routines before the software-based input panel is hidden.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodReceiveSipInfo" TABINDEX="0">IInputMethod::ReceiveSipInfo</MSHelp:link></TD>
+<TD width=53%>Sends the IM data about the size, placement, and docked status that the IM should use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodRegisterCallback" TABINDEX="0">IInputMethod::RegisterCallback</MSHelp:link></TD>
+<TD width=53%>Provides the IM with a pointer to the <A HREF="cerefiimcallback.htm">IIMCallback</A> interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodSelect" TABINDEX="0">IInputMethod::Select</MSHelp:link></TD>
+<TD width=53%>Creates the IM window and image list.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodSetImData" TABINDEX="0">IInputMethod::SetImData</MSHelp:link></TD>
+<TD width=53%>Responds to a request from an application to set IM-specific data within the IM.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodShowing" TABINDEX="0">IInputMethod::Showing</MSHelp:link></TD>
+<TD width=53%>Performs any initialization before the software-based input panel window is displayed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethodUserOptionsDlg" TABINDEX="0">IInputMethod::UserOptionsDlg</MSHelp:link></TD>
+<TD width=53%>Presents an IM-specific options dialog box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2Deselect" TABINDEX="0">IInputMethod2::Deselect</MSHelp:link></TD>
+<TD width=53%>Destroys its window and performs IM-specific cleanup procedures.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2GetImData" TABINDEX="0">IInputMethod2::GetImData</MSHelp:link></TD>
+<TD width=53%>Sends data from the current IM to the current application.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2GetInfo" TABINDEX="0">IInputMethod2::GetInfo</MSHelp:link></TD>
+<TD width=53%>Requests data regarding the new IM, including property flags and the preferred IM size.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2Hiding" TABINDEX="0">IInputMethod2::Hiding</MSHelp:link></TD>
+<TD width=53%>Performs any saving routines before the software-based input panel is hidden.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2ReceiveSipInfo" TABINDEX="0">IInputMethod2::ReceiveSipInfo</MSHelp:link></TD>
+<TD width=53%>Sends the IM data about the size, placement, and docked status that the IM should use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2RegisterCallback" TABINDEX="0">IInputMethod2::RegisterCallback</MSHelp:link></TD>
+<TD width=53%>Provides the IM with a pointer to the <A HREF="cerefiimcallback.htm">IIMCallback</A> interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2RegisterCallback2" TABINDEX="0">IInputMethod2::RegisterCallback2</MSHelp:link></TD>
+<TD width=53%>Provides the IM with a pointer to the <A HREF="cerefiimcallback2.htm">IIMCallback2</A> interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2Select" TABINDEX="0">IInputMethod2::Select</MSHelp:link></TD>
+<TD width=53%>Creates the IM window and image list.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2SetImData" TABINDEX="0">IInputMethod2::SetImData</MSHelp:link></TD>
+<TD width=53%>Responds to a request from an application to set IM-specific data within the IM.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2SetIMMActiveContext" TABINDEX="0">IInputMethod2::SetIMMActiveContext</MSHelp:link></TD>
+<TD width=53%>Receives the current state of the IME.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2Showing" TABINDEX="0">IInputMethod2::Showing</MSHelp:link></TD>
+<TD width=53%>Performs any initialization before the software-based input panel window is displayed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><MSHelp:link keywords="cerefIInputMethod2UserOptionsDlg" TABINDEX="0">IInputMethod2::UserOptionsDlg</MSHelp:link></TD>
+<TD width=53%>Presents an IM-specific options dialog box.</TD>
+</TR>
+</table></div>
+
+<P>After the software-based input panel calls these methods, the IM should render the software-based input panel window space and respond to user actions. For more information about programming the IM, see <A HREF="ceconprogramminginputmethods.htm">Programming Input Methods</A>.</P>
+
+<P>An application that uses the software-based input panel should know the state of the software-based input panel &#0151; whether the panel is visible, whether it is docked, or floating, and its size and position. All of this data is stored in the <A HREF="cerefsipinfo.htm">SIPINFO</A> structure, which is accessed through the <A HREF="cerefsipgetinfo.htm">SipGetInfo</A> and <A HREF="cerefsipsetinfo.htm">SipSetInfo</A> functions. The following code example shows how to use the <B>SipGetInfo</B> and <B>SipSetInfo</B> functions to access and modify the <B>SIPINFO</B> structure.</P>
+
+<PRE class="code">BOOL LowerSip( void )
+{
+  BOOL fRes = FALSE;
+  SIPINFO si;
+
+  memset (&amp;si, 0, sizeof (si));
+  si.cbSize = sizeof (si);
+
+  if (SipGetInfo(&amp;si)) 
+  {
+    si.fdwFlags &amp;= ~SIPF_ON;
+    fRes = SipSetInfo(&amp;si);
+  }
+
+  return fRes;
+}</PRE>
+
+<P>When the user changes the state of the software-based input panel, the OS sends out a <MSHelp:link keywords="cerefWM_SETTINGCHANGE" TABINDEX="0">WM_SETTINGCHANGE</MSHelp:link> message to all of the active applications. This wParam parameter of this message is the value SPI_SETSIPINFO in its <I>wParam</I> parameter. The following code example shows how you can use the <B>SipGetInfo</B> function to move the software-based input panel on the screen in response to a WM_SETTINGCHANGE message.</P>
+
+<PRE class="code">WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+   SIPINFO si;
+
+   switch (msg) 
+   {
+      case WM_SETTINGCHANGE:
+         switch (wParam) 
+          {
+            case SPI_SETSIPINFO:
+               memset (&amp;si, 0, sizeof (si));
+               si.cbSize = sizeof (si);
+
+               if (SipGetInfo(&amp;si)) 
+               {
+                  MoveWindow (
+                  hwnd,
+                  si.rcVisibleDesktop.left,
+                  si.rcVisibleDesktop.top,
+                  si.rcVisibleDesktop.right - si.rcVisibleDesktop.left,
+                  si.rcVisibleDesktop.bottom - si.rcVisibleDesktop.top,
+                  TRUE);
+               }
+               break;
+         }
+         break;
+   }
+  return 0;
+}</PRE>
+
+<P>A change in the active IM sends messages to all of the top-level applications that are registered to receive IM notifications. Typically, the messages go to an application that controls a display, such as a taskbar. The following table shows the messages.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Event</TH>
+<TH width=31%>Windows CE message</TH>
+<TH width=44%>Application action</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Size or position of IM changes</TD>
+<TD width=31%><MSHelp:link keywords="cerefWM_IM_INFO" TABINDEX="0">WM_IM_INFO</MSHelp:link></TD>
+<TD width=44%>Return 0 if the application processes the message.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>IM has a new icon to associate with its current state</TD>
+<TD width=31%>WM_IM_INFO</TD>
+<TD width=44%>Return 0 if the application processes the message.</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Programming%20a%20Software-Based%20Input%20Panel&nbsp;(ceconprogramminginputpanel.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertyPage::QuerySiblings</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertypage_querysiblings"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertypage_querysiblings"></A>CPropertyPage::QuerySiblings</H1>
+
+<P>Call this method to forward a message to each page in the property sheet. If a page returns a nonzero value, the property sheet does not send the message to subsequent pages. </P>
+
+<PRE class=syntax><B>LRESULT QuerySiblings(
+WPARAM </B><I>wParam</I><B>,
+LPARAM </B><I>lParam</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>wParam</I></DT>
+
+<DD>Specifies additional message-dependent information.</DD>
+
+<DT><I>lParam</I></DT>
+
+<DD>Specifies additional message-dependent information</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The nonzero value from a page in the property sheet, or zero if all pages return a value of zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// Validate the value entered in the Number edit control. If its
+// value is not a natural number, request CPropertySheet (i.e. parent
+// window of the page) to send a PSM_QUERYSIBLINGS message to each
+// LOADED page (a page won't be loaded in memory until it is shown).
+// If one of the pages returns a nonzero value in response to the
+// PSM_QUERYSIBLINGS message, then inform the user and change the OK
+// to Close and disable the Cancel button. CStylePage is a
+// CPropertyPage-derived class.
+BOOL CStylePage::OnKillActive()
+{
+&nbsp;&nbsp;int num = GetDlgItemInt(IDC_NUMOBJECTS);
+&nbsp;&nbsp;if (num &lt;= 0)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;if (QuerySiblings(num, 0L))
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("An invalid data is entered. Choose Close
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;button to close the dialog.");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CancelToClose();
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+&nbsp;&nbsp;
+&nbsp;&nbsp;return CPropertyPage::OnKillActive();
+}
+
+// This is an example of trapping the PSM_QUERYSIBLINGS in one of
+// the pages. CColorPage is a CPropertyPage-derived class.  Upon
+// receiving this message, wParam contains the value passed to
+// QuerySiblings() call. CColorPage will check this value and return
+// FALSE only if the value is greater than 1.
+BEGIN_MESSAGE_MAP(CColorPage, CPropertyPage)
+&nbsp;&nbsp;// ...
+&nbsp;&nbsp;ON_MESSAGE(PSM_QUERYSIBLINGS, OnQuerySiblings)
+END_MESSAGE_MAP()
+
+LRESULT CColorPage::OnQuerySiblings( WPARAM wParam, LPARAM lParam )
+{
+&nbsp;&nbsp;return (wParam &lt;= 0);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

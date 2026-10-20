@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting the Loader's Search Directory</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Setting the Loader's Search Directory"/>
+<MSHelp:RLTitle Title="Setting the Loader's Search Directory"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Setting_the_Loader_s_Search_Directory"/>
+<MSHelp:Keyword Index="K" Term="loaders%2C DirectMusic, setting search directory"/>
+<MSHelp:Keyword Index="K" Term="search directories, DirectMusic loader"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Setting_the_Loader_s_Search_Directory"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680644">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_setting_the_loader_s_search_directory"></A>Setting the Loader's Search Directory</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>By default, the loader looks for objects in the current directory unless a full path is specified in the <B>wszFileName</B> member of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_OBJECTDESC" TABINDEX="0">DMUS_OBJECTDESC</MSHelp:link> structure describing the object being sought. Using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__SetSearchDirectory" TABINDEX="0">IDirectMusicLoader::SetSearchDirectory</MSHelp:link> method, you can set a different default path for the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link> and <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__EnumObject" TABINDEX="0">IDirectMusicLoader::EnumObject</MSHelp:link> methods. This default path can apply to all objects, or only to objects of a certain class.</P>
+
+<P>The following code example sets the search path for style files.</P>
+
+<PRE class="code">HRESULT mySetLoaderPath (
+    IDirectMusicLoader *pILoader)    // Previously created
+{
+    return pILoader-&gt;SetSearchDirectory(
+            CLSID_DirectMusicStyle,
+            L"c:\\mymusic\\funky",
+            FALSE);
+}</PRE>
+
+<P>Having called this function, the application can now load a style by file name, without including the full path, as in the following code example.</P>
+
+<PRE class="code">HRESULT myLoadStyleFromPath (
+    IDirectMusicStyle **ppIStyle,    // Receives a pointer to a style
+    IDirectMusicLoader *pILoader)    // Loader already created
+{
+    HRESULT hr;
+    DMUS_OBJECTDESC Desc; 
+ 
+    ZeroMemory(&amp;Desc, sizeof(DMUS_OBJECTDESC);
+    Desc.dwSize = sizeof(DMUS_OBJECTDESC);
+    wcscpy(Desc.wszFileName, L"polka.sty");   // Short file name
+    Desc.guidClass = CLSID_DirectMusicStyle;  // Object class
+    Desc.dwValidData = DMUS_OBJ_CLASS | DMUS_OBJ_FILENAME;
+ 
+    hr = pILoader-&gt;GetObject(&amp;Desc,
+            IID_IDirectMusicStyle, (void **) ppIStyle);
+    return hr;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Setting%20the%20Loader's%20Search%20Directory&nbsp;(_wcesdk_dxmusic_setting_the_loader_s_search_directory.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Preparing the BSP Files for Building the Kernel</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Preparing the BSP Files for Building the Kernel"/>
+<MSHelp:RLTitle Title="Preparing the BSP Files for Building the Kernel"/>
+<MSHelp:Keyword Index="A" Term="cgconInitializingKernel"/>
+<MSHelp:Keyword Index="K" Term="Config.bib files, sample"/>
+<MSHelp:Keyword Index="K" Term="kernel, building"/>
+<MSHelp:Keyword Index="K" Term="OAL, preparing BSP files"/>
+<MSHelp:Keyword Index="K" Term="OAL, sample Config.bib file"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, preparing BSP files"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, sample Config.bib file"/>
+<MSHelp:Keyword Index="K" Term="preparation, BSP files"/>
+<MSHelp:Keyword Index="K" Term="samples, Config.bib files"/>
+<MSHelp:Keyword Index="A" Term="cgconInitializingKernel"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748519">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconinitializingkernel"></A>Preparing the BSP Files for Building the Kernel</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The OAL is physically a part of the kernel image, and as such, is tightly coupled to the kernel build process. In this initial step, the requisite build and configuration directories and files are put in place to create a kernel image from the OAL as it is progressively developed. Microsoft provides the kernel code for the microprocessor of the target device. </P>
+
+<P>The following table shows the optional and requisite libraries that make up the kernel image.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Component</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Nk.lib</TD>
+<TD width=68%>Base code supplied by Microsoft for a specified microprocessor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Hal.lib</TD>
+<TD width=68%>OAL that you implement for a target device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>SchedLog.lib</TD>
+<TD width=68%>Hardware-assisted profiling, including support for notifications when the OS creates and deletes processes and threads. (Optional).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>NkProf.lib</TD>
+<TD width=68%>Profile version of the microprocessor-specific kernel code that Microsoft supplies with the Microsoft Platform Builder 4.0 and later integrated development environment (IDE). (Optional).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>KITL.lib</TD>
+<TD width=68%>Kernel Independent Transport Layer (KITL) debugging services. (Optional if KITL is not required).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>SMC9000.lib</TD>
+<TD width=68%>Sample Ethernet debugging adapter driver. (Optional if KITL is not required).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>FullLibc.lib</TD>
+<TD width=68%>Microsoft C Run-Time Library for Windows CE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>LoadAuth.lib</TD>
+<TD width=68%>Sample library for digital signature verification of executable files.</TD>
+</TR>
+</table></div>
+
+<P>Platform Builder ships platform code that builds three different kernel libraries. Each is customized for a particular task and is described in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Kernel type</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Kern.exe</TD>
+<TD width=68%>Kernel that does not include the debugging subsystem.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Kernkitl.exe</TD>
+<TD width=68%>Kernel that includes the debugging subsystem.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>Kernkitlprof.exe</TD>
+<TD width=68%>Kernel that includes profiling.</TD>
+</TR>
+</table></div>
+
+<P>The kernel debugger is in the form of a dynamic-link library (DLL), Kd.dll. To enable the kernel debugger, simply include it in the <MSHelp:link keywords="_wcepb_MODULES_Section" TABINDEX="0">MODULES Section</MSHelp:link> with the K flag.</P>
+
+<P>The following table shows the components necessary to build these versions of the kernel.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Component</TH>
+<TH width=25%>Included in Kern.exe</TH>
+<TH width=25%>Included in Kernkitl.exe</TH>
+<TH width=25%>Included in Kernkitlprof.exe</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Nk.lib</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+<TD width=25%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>NkProf.lib</TD>
+<TD width=25%>&nbsp;</TD>
+<TD width=25%>&nbsp;</TD>
+<TD width=25%>X</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Hal.lib</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>FullLibc.lib</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>KITL.lib</TD>
+<TD width=25%>&nbsp;</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>SMC9000.lib</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>LoadAuth.lib</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+<TD width=25%>X</TD>
+</TR>
+</table></div>
+
+<P>For more information about debugging and profiling, see <MSHelp:link keywords="_wcepb_Debugging_a_Platform" TABINDEX="0">Platform Debugging</MSHelp:link> and <MSHelp:link keywords="_wcepb_Profiling_a_Platform" TABINDEX="0">Platform Profiling</MSHelp:link>.</P>
+
+<P>Correctly implementing the OAL code is one of the most difficult tasks in the development of a board support package (BSP). The kernel, combined with the OAL, is the first service to run, and through the bring-up stages, it runs without the benefit of any sophisticated debug services. Bring the kernel up in stages and verify each stage before proceeding.</P>
+
+<P>The following processes are minimal requirements for building the kernel image:
+
+<UL type="disc">
+	<LI>To build the kernel image, create the Kernel\Buildexe and Kernel\Hal directories. The contents of the Buildexe directory can be copied from a shipping BSP. Make sure dirs files are added throughout the directories to support build recursion into the tree. As a starting point, it may help to comment out the Kern and Kernkitlprof directories in the Kernel\Buildexe\Dirs file and focus only on one kernel image during initial startup. The Kernel\Hal directory is where the OAL code will be added.</li>
+
+	<LI>Copy and configure Config.bib from a similar shipping BSP into the platform Files directory; for example %_WINCEROOT%\Platform\Cepc\Files. Config.bib should minimally specify the Nk and RAM section address information. Romimage.exe uses this address information to know how to organize the OS to fit the hardware resources available on your SDB.
+<P>For more information about Config.bib, see <MSHelp:link keywords="_wcepb_Binary_Image_Builder_File" TABINDEX="0">Binary Image Builder File</MSHelp:link>.
+</li>
+
+	<LI>Once the kernel build infrastructure is in place, begin to develop the OAL startup code. The easiest thing to do is to copy a similar BSP's OAL and modify it. During the development process, focus on the OAL startup code that initializes the CPU in preparation for calling the kernel initialization routine.
+<P>For more information, see <A HREF="cgconcreatingstartupfunction.htm">Creating the StartUp Function</A>.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcreatingoemadaptationlayer.htm">Creating an OEM Adaptation Layer</A></P>
+
+<P><A HREF="cgconcreatingstartupfunction.htm">Creating the StartUp Function</A></P>
+
+<P><A HREF="cgconbootingnon-cpuspecificelements.htm">Booting Non-CPU Specific Elements</A></P>
+
+<P><A HREF="cgconhaltingsystem.htm">Halting the System</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Preparing%20the%20BSP%20Files%20for%20Building%20the%20Kernel&nbsp;(cgconinitializingkernel.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

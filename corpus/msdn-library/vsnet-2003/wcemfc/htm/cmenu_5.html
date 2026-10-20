@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::CheckMenuItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_checkmenuitem"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cmenu_checkmenuitem"></A>CMenu::CheckMenuItem</H1>
+
+<P>This method adds check marks to or removes check marks from menu items in a pop-up menu. The <I>nIDCheckItem</I> parameter specifies the item to be modified. </P>
+
+<P>The <I>nIDCheckItem</I> parameter may identify a pop-up menu item as well as a menu item. No special steps are required to check a pop-up menu item. Top-level menu items cannot be checked. A pop-up menu item must be checked by position since it does not have a menu-item identifier associated with it.</P>
+
+<PRE class=syntax><B>UINT CheckMenuItem(
+UINT </B><I>nIDCheckItem</I><B>,
+UINT </B><I>nCheck</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nIDCheckItem</I></DT>
+
+<DD>Specifies the menu item to be checked, as determined by <I>nCheck</I>.</DD>
+
+<DT><I>nCheck</I></DT>
+
+<DD>Specifies how to check the menu item and how to determine the position of the item in the menu. The <I>nCheck</I> parameter can be a combination of MF_CHECKED or MF_UNCHECKED with MF_BYPOSITION or MF_BYCOMMAND flags. These flags can be combined by using the bitwise OR operator. They have the following meanings:
+
+<UL type=disc>
+	<LI>MF_BYCOMMAND&nbsp;&nbsp;&nbsp;Specifies that the parameter gives the command ID of the existing menu item. This is the default.</LI>
+
+	<LI>MF_BYPOSITION&nbsp;&nbsp;&nbsp;Specifies that the parameter gives the position of the existing menu item. The first item is at position zero.</LI>
+
+	<LI>MF_CHECKED&nbsp;&nbsp;&nbsp;Acts as a toggle with MF_UNCHECKED to place the default check mark next to the item.</LI>
+
+	<LI>MF_UNCHECKED&nbsp;&nbsp;&nbsp;Acts as a toggle with MF_CHECKED to remove a check mark next to the item.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The previous state of the item: MF_CHECKED or MF_UNCHECKED, or 0xFFFFFFFF if the menu item did not exist.</P>
+
+<H4>Example</H4>
+
+<PRE>// CMainFrame::OnToggleTestMenuItem() is a menu command handler for
+// "Test" menu item (whose resource id is ID_HELP_TEST). It toggles
+// the checked or unchecked state of the "Test" menu item.
+// CMainFrame is a CFrameWnd-derived class.
+
+void CMainFrame::OnToggleTestMenuItem()
+{
+   // Get the popup menu which contains the "Test" menu item.
+   CMenu* mmenu = GetMenu();
+   CMenu* submenu = mmenu-&gt;GetSubMenu(3);
+
+   // Check the state of the "Test" menu item. Check the menu item
+   // if it is currently unchecked. Otherwise, uncheck the menu item
+   // if it is not currently checked.
+   UINT state = submenu-&gt;GetMenuState(ID_HELP_TEST, MF_BYCOMMAND);
+   ASSERT(state != 0xFFFFFFFF);
+
+   if (state &amp; MF_CHECKED)
+      submenu-&gt;CheckMenuItem(ID_HELP_TEST, MF_UNCHECKED | MF_BYCOMMAND);
+   else
+      submenu-&gt;CheckMenuItem(ID_HELP_TEST, MF_CHECKED | MF_BYCOMMAND);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmenu_19.htm"><B>CMenu::GetMenuState</B></A>, <A HREF="cmenu_6.htm"><B>CMenu::CheckMenuRadioItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

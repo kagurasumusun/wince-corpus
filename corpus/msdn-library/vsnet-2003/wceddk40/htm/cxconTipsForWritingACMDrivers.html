@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Tips for Writing ACM Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Tips for Writing ACM Drivers"/>
+<MSHelp:RLTitle Title="Tips for Writing ACM Drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconTipsForWritingACMDrivers"/>
+<MSHelp:Keyword Index="K" Term="ACM drivers, tips for writing"/>
+<MSHelp:Keyword Index="K" Term="Audio Compression Manager drivers, tips for writing"/>
+<MSHelp:Keyword Index="A" Term="cxconTipsForWritingACMDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: audio_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750158">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcontipsforwritingacmdrivers"></A>Tips for Writing ACM Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following list contains guidelines for writing ACM drivers:
+
+<UL type="disc">
+	<LI>Allocate driver-instance data in response to the DRV_OPEN message. You will usually need some data throughout the life of the driver; for example, you need the module-instance handle in order to load resource strings. Define a structure containing this data, and allocate it in response to DRV_OPEN. Do not save this structure as a global variable. Instead, return a pointer to the structure as the return value for the DRV_OPEN message. This pointer will be passed back to the driver in every subsequent message, as the first parameter of the <B>DriverProc</B> function. Remember to free this driver-instance data in response to the DRV_CLOSE message. </li>
+
+	<LI>Allocate stream-instance data in response to the ACMDM_STREAM_OPEN message. You will usually need some instance data for each open stream. Because there could be several streams open at the same time, you should not store this data as a global variable. Instead, define a structure containing the required data, and allocate it in response to ACMDM_STREAM_OPEN. In that message, the driver is passed a pointer to an <B>ACMDRVSTREAMINSTANCE</B> structure. Store a pointer to the stream-instance data in the <B>dwDriver</B> member, and it will be available on every call involving that stream. Remember to free the stream-instance data in response to the ACMDM_STREAM_CLOSE message. </li>
+
+	<LI>Avoid using global variables. Defining a single <B>DWORD</B> of global data will use up 4K of memory in every process that uses the ACM, because your driver is loaded into each process. There is no need to use global data; instead, use the instance data, as described earlier. </li>
+
+	<LI>Be sure that your driver processes the ACMDM_STREAM_CONVERT message as quickly as possible. Perform as much processing as possible in the ACMDM_STREAM_OPEN message. </li>
+
+	<LI>Do not link to Crtdll.dll. This DLL cannot be loaded into all contexts, and therefore your codec will not function correctly. In particular, your codec may not work correctly for system sounds produced using the <B>MessageBeep</B> function. Use Microsoft&reg; Win32&reg; functions or link to a static C run-time library such as LibC.lib or Libcmt.lib.</li>
+
+	<LI>Handle error conditions correctly. You cannot always depend on the success of calls to the USER module (such as <B>LoadString</B> and <B>LoadIcon</B>). In particular, when your codec is used to play system sounds, it may be loaded into a context in which these calls are unable to succeed. Although there will be no opportunity for your codec to display icons or strings in this context, your code must be prepared handle this situation. </li>
+
+	<LI>Store configuration data on a per-user basis. Each user should be able to configure an ACM driver according to personal preferences. Therefore, configuration information should be stored in the <B>HKEY_CURRENT_USER</B> section of the registry. </li>
+
+	<LI>Provide a valid default configuration. Configuration data will usually be stored on a per-user basis; however, in some contexts (such as when playing system sounds) there will be no defined current user. In these situations, calls to the registry will fail. You must provide a reasonable default configuration to handle this failure.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconwritingacmdrivers.htm">ACM Driver Development</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Tips%20for%20Writing%20ACM%20Drivers&nbsp;(cxcontipsforwritingacmdrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

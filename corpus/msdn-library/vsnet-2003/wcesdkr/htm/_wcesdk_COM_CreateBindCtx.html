@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateBindCtx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CreateBindCtx"/>
+<MSHelp:RLTitle Title="CreateBindCtx"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_COM_CreateBindCtx"/>
+<MSHelp:Keyword Index="K" Term="CreateBindCtx"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: comobj.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_com_createbindctx"></A>CreateBindCtx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function supplies a pointer to an implementation of <B>IBindCtx</B>, an object that stores information about a particular moniker-binding operation. </P>
+
+<PRE class="syntax"><B>WINOLEAPI CreateBindCtx ( </B>
+<B>DWORD</B> <I>reserved</I>, 
+<B>LPBC FAR *</B><I>ppbc </I><B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>reserved</I></DT>
+
+<DD>[in] Reserved for future use; set to zero.</dd>
+
+<DT><I>ppbc</I></DT>
+
+<DD>[out] Address of <B>IBindCtx</B>* pointer variable that receives the interface pointer to the new bind context object. When the function is successful, the caller is responsible for calling <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A> on the bind context. A NULL value for the bind context indicates that an error occurred.</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>S_OK indicates that the bind context was allocated and initialized successfully. The standard return value E_OUTOFMEMORY is also supported.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P><B>CreateBindCtx</B> is most commonly used in the process of binding a moniker (locating and getting a pointer to an interface by identifying it through a moniker), as in the following steps:
+
+<OL type="1">
+	<LI>Get a pointer to a bind context by calling the <B>CreateBindCtx</B> function.</li>
+
+	<LI>Call the <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A> method on the moniker, retrieving an interface pointer to the object to which the moniker refers. </li>
+
+	<LI>Release the bind context.</li>
+
+	<LI>Use the interface pointer. </li>
+
+	<LI>Release the interface pointer. </li>
+</OL>
+
+<P>The following code example shows these steps.</P>
+
+<PRE class="code">// pMnk is an IMoniker * that points to a previously acquired moniker 
+IFoo *pFoo; 
+IBindCtx *pbc; 
+ 
+CreateBindCtx( 0, &amp;pbc ); 
+pMnk-&gt;BindToObject( pbc, NULL, IID_IFoo, &amp;pFoo ); 
+pbc-&gt;Release(); 
+// pFoo now points to the object; safe to use pFoo 
+pFoo-&gt;Release(); 
+ </PRE>
+
+<P>Bind contexts are also used in other methods of the <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A> interface besides <B>IMoniker::BindToObject</B>. </P>
+
+<P>A bind context retains references to the objects that are bound during the binding operation, causing the bound objects to remain active (keeping the object's server running) until the bind context is released. Reusing a bind context when subsequent operations bind to the same object can improve performance. You should, however, release the bind context as soon as possible, because you could be keeping the objects activated unnecessarily. </P>
+
+<P>A bind context contains a <A HREF="_wcesdk_com_bind_opts.htm"><B>BIND_OPTS</B></A> structure, which contains parameters that apply to all steps in a binding operation. When you create a bind context using <B>CreateBindCtx</B>, the fields of the <B>BIND_OPTS</B> structure are initialized to the following values:</P>
+
+<PRE class="code">cbStruct = sizeof(BIND_OPTS) 
+grfFlags = 0 
+grfMode = STGM_READWRITE 
+dwTickCountDeadline = 0. </PRE>
+
+<P>You can call the <B>IBindCtx::SetBindOptions</B> method to modify these default values.</P>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=19%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=19%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A>, <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A>, <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>, <A HREF="_wcesdk_com_bind_opts.htm"><B>BIND_OPTS</B></A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CreateBindCtx&nbsp;(_wcesdk_com_createbindctx.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

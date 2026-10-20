@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStorageImpl::Save</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IPersistStorageImpl::Save"/>
+<MSHelp:RLTitle Title="IPersistStorageImpl::Save"/>
+<MSHelp:Keyword Index="A" Term="ealrfIPersistStorageImplcolcolSave"/>
+<MSHelp:Keyword Index="K" Term="Save method, saving object properties"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_IPersistStorageImpl_Save"/>
+<MSHelp:Keyword Index="A" Term="ealrfIPersistStorageImplcolcolSave"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="iperstor.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_706944">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfipersiststorageimplcolcolsave"></A>IPersistStorageImpl::Save</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method saves the properties of an object. The ATL implementation delegates to the <B>IPersistStreamInit</B> interface. When <B>Save</B> is first called, it creates a stream named Contents on the specified storage. This stream is then used in later calls to <B>Save</B> and in calls to <B>Load</B>.</P>
+
+<P>This method saves an object, and any nested objects it contains, into the specified storage. It also places the object into NoScribble mode. Thus the object cannot write to its storage until a subsequent call to the <B>IPersistStorageImpl::SaveCompleted</B> method returns the object to Normal mode.</P>
+
+<P>If the storage object is the same as the one it was loaded or created from, the save operation may be able to write incremental changes to the storage object. Otherwise, a full save must be done.</P>
+
+<P>This method recursively calls the <B>IPersistStorageImpl::Save</B> method, the <B>OleSave</B> function, or the <B>IStorage::CopyTo</B> method to save its nested objects.</P>
+
+<P>This method does not call the <B>IStorage::Commit</B> method. Nor does it write the <B>CLSID</B> to the storage object. Both of these tasks are the responsibilities of the caller.</P>
+
+<PRE class="syntax"><B>STDMETHOD ( Save )( 
+IStorage* </B><I>pStorage</I><B>, 
+BOOL </B><I>fSameAsLoad</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pStorage</I></DT>
+
+<DD>[in] IStorage pointer to the storage into which the object is to be saved.</dd>
+
+<DT><I>fSameAsLoad</I></DT>
+
+<DD>[in]Indicates whether the specified storage is the current one, which was passed to the object by one of the following calls
+
+<UL type="disc">
+	<LI><B>IPersistStorageImpl::InitNew</B> when it was created. </li>
+
+	<LI><B>IPersistStorageImpl::Load</B> when it was loaded. </li>
+
+	<LI><B>IPersistStorageImpl::SaveCompleted</B> when it was saved to a storage different from its current storage. </li>
+</UL>
+
+
+<P>This parameter is set to <B>FALSE</B> when performing a <B>Save As</B> or <B>Save A Copy To</B> operation or when performing a full save. In the latter case, this method saves to a temporary file, deletes the original file, and renames the temporary file. 
+
+
+<P>This parameter is set to <B>TRUE</B> to perform a full save in a low-memory situation or to perform a fast incremental save in which only the dirty components are saved. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The object was successfully saved. </dd>
+
+<DT>STG_E_MEDIUMFULL </DT>
+
+<DD>The object was not saved because of a lack of space on the disk. </dd>
+
+<DT>E_FAIL </DT>
+
+<DD>The object could not be saved due to errors other than a lack of disk space. </dd>
+</DL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlcom.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfipersiststorageimplcolcolsavecompleted.htm"><B>IPersistStorageImpl::SaveCompleted</B></A>, <B>IStorage</B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_706944', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

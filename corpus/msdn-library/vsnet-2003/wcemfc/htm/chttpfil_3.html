@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CHttpFile::AddRequestHeaders</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_chttpfile_addrequestheaders"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_chttpfile_addrequestheaders"></A><SUP></SUP>CHttpFile::AddRequestHeaders</H1>
+
+<P>This method adds one or more HTTP request headers to the HTTP request handle.</P>
+
+<PRE class=syntax><B>BOOL</B> <B>AddRequestHeaders</B>(
+<B>LPCTSTR</B> <I>pstrHeaders</I>,
+<B>DWORD</B> <I>dwFlags</I> = <B>HTTP_ADDREQ_FLAG_ADD_IF_NEW</B>,
+<B>int</B> <I>dwHeadersLen</I> = &#0150;<B>1</B> <B>);</B>
+
+<B>BOOL</B> <B>AddRequestHeaders(</B>
+<B>CString</B>&amp;<I> str</I>,
+<B>DWORD</B> <I>dwFlags</I> = <B>HTTP_ADDREQ_FLAG_ADD_IF_NEW );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pstrHeaders</I></DT>
+
+<DD>Specifies a pointer to a string containing the header or headers to append to the request. Each header must be terminated by a CR/LF pair.</DD>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Modifies the semantics of the new headers. It can be one of the following:
+
+<UL type=disc>
+	<LI>HTTP_ADDREQ_FLAG_COALESCE&nbsp;&nbsp;&nbsp;Merges headers of the same name, using the flag to add the first header found to the subsequent header. For example, <CODE>Accept: text/*</CODE> followed by <CODE>Accept: audio/*</CODE> results in the formation of the single header <CODE>Accept: text/*, audio/*</CODE>. It is up to the calling application to ensure a cohesive scheme with respect to data received by requests sent with coalesced or separate headers. </LI>
+
+	<LI>HTTP_ADDREQ_FLAG_REPLACE&nbsp;&nbsp;&nbsp;Performs a remove and add to replace the current header. The header name will be used to remove the current header, and the full value will be used to add the new header. If the header-value is empty and the header is found, it is removed. If not empty, the header-value is replaced.</LI>
+
+	<LI>HTTP_ADDREQ_FLAG_ADD_IF_NEW&nbsp;&nbsp;&nbsp;Only adds the header if it does not already exist. If one exists, an error is returned.</LI>
+
+	<LI>HTTP_ADDREQ_FLAG_ADD&nbsp;&nbsp;&nbsp;Used with REPLACE. Adds the header if it does not exist.</LI>
+</UL>
+</DD>
+
+<DT><I>dwHeadersLen</I></DT>
+
+<DD>Specifies the length, in characters, of <I>pstrHeaders</I>. If this is -1L, then <I>pstrHeaders</I> is assumed to be zero-terminated and the length is computed.</DD>
+
+<DT><I>str</I></DT>
+
+<DD>Specifies a reference to a <A HREF="cstring.htm"><B>CString</B></A> object containing the request header or headers to be added.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if successful; otherwise, it is zero. If the call fails, the Windows CE function <B>GetLastError</B> may be called to determine the cause of the error.</P>
+
+<H4>Remarks</H4>
+
+<P><B>AddRequestHeaders</B> appends additional, free-format headers to the HTTP request handle. It is intended for use by clients who need detailed control over the exact request to be sent to the HTTP server. </P>
+
+<P>The application can pass multiple headers in <I>pstrHeaders</I> or <I>str</I> for an <B>AddRequestHeaders</B> call using HTTP_ADDREQ_FLAG_ADD or HTTP_ADDREQ_FLAG_ADD_IF_NEW. If the application tries to remove or replace a header using HTTP_ADDREQ_FLAG_REMOVE or HTTP_ADDREQ_FLAG_REPLACE, only one header can be supplied in <I>lpszHeaders</I>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxinet.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

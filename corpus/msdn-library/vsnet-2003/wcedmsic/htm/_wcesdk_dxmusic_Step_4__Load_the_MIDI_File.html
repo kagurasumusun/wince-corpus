@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 4: Load the MIDI File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 4: Load the MIDI File"/>
+<MSHelp:RLTitle Title="Step 4: Load the MIDI File"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_4__Load_the_MIDI_File"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_4__Load_the_MIDI_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690683">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_4__load_the_midi_file"></A>Step 4: Load the MIDI File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In this step you will implement a function, <B>LoadMIDISegment</B>, that takes a pointer to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader" TABINDEX="0">IDirectMusicLoader</MSHelp:link> created in the last step and uses it to create a segment object encapsulating the data from a MIDI file.</P>
+
+<PRE class="code">IDirectMusicSegment* LoadMIDISegment(IDirectMusicLoader* pLoader, 
+        WCHAR wszMidiFileName )
+{
+    DMUS_OBJECTDESC ObjDesc; 
+    IDirectMusicSegment* pSegment = NULL;
+ </PRE>
+
+<P>Let us assume that all the MIDI files you want to play are in the current working directory. You need to let the loader know this, by setting the search directory. (If the search directory is not being changed elsewhere, in order to load objects from other directories, this actually has to be done only once, not each time you load a file.)</P>
+
+<PRE class="code">    char szDir[_MAX_PATH];
+    WCHAR wszDir[_MAX_PATH];
+ 
+    if(_getcwd( szDir, _MAX_PATH ) == NULL)
+    {
+        return NULL;
+    }
+
+/* 
+Convert from multibyte format to Unicode using the following macro:
+#define MULTI_TO_WIDE( x,y )  MultiByteToWideChar( CP_ACP, \
+        MB_PRECOMPOSED, y, -1, x, _MAX_PATH );
+*/
+
+    MULTI_TO_WIDE(wszDir, szDir);
+    HRESULT hr = pLoader-&gt;SetSearchDirectory(GUID_DirectMusicAllTypes,
+        wszDir, FALSE);
+    if (FAILED(hr)) 
+    {
+        return NULL;
+    }</PRE>
+
+<P>You then describe the object to be loaded, in a <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_OBJECTDESC" TABINDEX="0">DMUS_OBJECTDESC</MSHelp:link> structure.</P>
+
+<PRE class="code">    ObjDesc.guidClass = CLSID_DirectMusicSegment;
+    ObjDesc.dwSize = sizeof(DMUS_OBJECTDESC);
+    wcscpy( ObjDesc.wszFileName, wszMidiFileName );
+    ObjDesc.dwValidData = DMUS_OBJ_CLASS | DMUS_OBJ_FILENAME;</PRE>
+
+<P>Now load the object and query it for the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment" TABINDEX="0">IDirectMusicSegment</MSHelp:link> interface. This is done in a single call to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link>. Note that loading the object also initializes the tracks and does everything else necessary to get the MIDI data ready for playback.</P>
+
+<PRE class="code">    pLoader-&gt;GetObject(&amp;ObjDesc,
+            IID_IDirectMusicSegment2, (void**) &amp;pSegment);</PRE>
+
+<P>To ensure that the segment plays as a standard MIDI file, you now need to set a parameter on the band track. Use the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetParam" TABINDEX="0">IDirectMusicSegment::SetParam</MSHelp:link> method and let DirectMusic find the track, by passing -1 (or 0xFFFFFFFF) in the <I>dwGroupBits</I> method parameter.</P>
+
+<PRE class="code">    g_pMIDISeg-&gt;SetParam(GUID_StandardMIDIFile,
+            -1, 0, 0, (void*)g_pPerf);</PRE>
+
+<P>This step is necessary because DirectMusic handles program changes and bank selects differently for standard MIDI files than it does for MIDI content authored specifically for DirectMusic. The <A HREF="_wcesdk_dxmusic_guid_standardmidifile.htm">GUID_StandardMIDIFile</A> parameter must be set before the instruments are downloaded. </P>
+
+<P>The next step is to download the instruments. This is necessary even for playing a simple MIDI file, because the default software synthesizer needs the DLS data for the General MIDI instrument set. If you skip this step, the MIDI file will play silently. Again, you call <B>SetParam</B> on the segment, this time specifying the <A HREF="_wcesdk_dxmusic_guid_download.htm">GUID_Download</A> parameter.</P>
+
+<PRE class="code">    g_pMIDISeg-&gt;SetParam(GUID_Download, -1, 0, 0, (void*)g_pPerf);</PRE>
+
+<P>Note that there is no harm in requesting the download even though this might already have been done in a previous call to the <B>LoadMIDISegment</B> function. A redundant request is simply ignored. Eventually you have to unload the instruments, but that can wait until you are ready to shut down DirectMusic.</P>
+
+<P>The function now returns a pointer to the segment, which is ready to be played.</P>
+
+<PRE class="code">    return pSegment;
+} // End of LoadSegment()</PRE>
+
+<P>Before loading a new segment, clean up any existing one. Then pass a file name to the <B>LoadMIDISegment</B> function.</P>
+
+<PRE class="code">if (g_pMIDIseg)
+{
+    g_pMIDIseg-&gt;Release();
+    g_pMIDIseg = NULL;
+}
+
+if (g_pLoader)
+{
+    IDirectMusicSegment* g_pMIDIseg = LoadMIDISegment(g_pLoader,
+            L"tune.mid");
+}</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_5__play_the_midi_file.htm">Step 5: Play the MIDI File</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%204:%20Load%20the%20MIDI%20File&nbsp;(_wcesdk_dxmusic_step_4__load_the_midi_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

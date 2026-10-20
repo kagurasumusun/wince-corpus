@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CObList::RemoveAt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_coblist_removeat"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_coblist_removeat"></A>CObList::RemoveAt</H1>
+
+<P>This method removes the specified element from this list. </P>
+
+<PRE class=syntax><B>void RemoveAt(
+POSITION </B><I>position</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>position</I></DT>
+
+<DD>Specifies the position of the element to be removed from the list.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>When you remove an element from a <B>CObList</B>, you remove the object pointer from the list. It is your responsibility to delete the objects themselves. </P>
+
+<P>You must ensure that your <B>POSITION</B> value represents a valid position in the list. If it is invalid, then the Debug version of the Microsoft Foundation Class Library for Windows CE asserts.</P>
+
+<H4>Example</H4>
+
+<P>Be careful when removing an element during a list iteration. The following example shows a removal technique that guarantees a valid <B>POSITION</B> value for <A HREF="coblist_11.htm"><B>GetNext</B></A>.</P>
+
+<P>See <A HREF="coblist_2.htm"><B>CObList::CObList</B></A> for a listing of the <B>CAge</B> class.</P>
+
+<PRE>&nbsp;&nbsp;CObList list;
+&nbsp;&nbsp;POSITION pos1, pos2;
+&nbsp;&nbsp;CObject* pa;
+&nbsp;&nbsp;
+&nbsp;&nbsp;list.AddHead( new CAge( 21 ) );
+&nbsp;&nbsp;list.AddHead( new CAge( 40 ) );
+&nbsp;&nbsp;list.AddHead( new CAge( 65 ) ); // List now contains (65 40, 21).
+&nbsp;&nbsp;for( pos1 = list.GetHeadPosition(); ( pos2 = pos1 ) != NULL; )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;    if( *(CAge*) list.GetNext( pos1 ) == CAge( 40 ) )
+&nbsp;&nbsp;    {
+&nbsp;&nbsp;        pa = list.GetAt( pos2 ); // Save the old pointer for
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                         //deletion.
+&nbsp;&nbsp;        list.RemoveAt( pos2 );
+&nbsp;&nbsp;        delete pa; // Deletion avoids memory leak.
+&nbsp;&nbsp;    }
+&nbsp;&nbsp;}
+#ifdef _DEBUG
+&nbsp;&nbsp;afxDump.SetDepth( 1 );
+&nbsp;&nbsp;afxDump &lt;&lt; "RemoveAt example: " &lt;&lt; &amp;list &lt;&lt; "\n";
+#endif
+</PRE>
+
+<P>The results from this program are as follows:</P>
+
+<PRE>RemoveAt example: A CObList with 2 elements
+    a CAge at $4C1E 65
+    a CAge at $4B22 21
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcoll.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

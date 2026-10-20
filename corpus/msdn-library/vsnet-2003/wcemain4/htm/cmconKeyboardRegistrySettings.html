@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Terminal Server Client Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Terminal Server Client Registry Settings"/>
+<MSHelp:RLTitle Title="Terminal Server Client Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="cmconKeyboardRegistrySettings"/>
+<MSHelp:Keyword Index="K" Term="keyboard, Thin Client registry settings"/>
+<MSHelp:Keyword Index="K" Term="registry settings, Thin Client"/>
+<MSHelp:Keyword Index="K" Term="Thin Client, registry settings"/>
+<MSHelp:Keyword Index="A" Term="cmconKeyboardRegistrySettings"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: thinclient.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_761090">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconkeyboardregistrysettings"></A>Terminal Server Client Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The registry subkey that controls the configuration of the Terminal Server Client is <B>HKEY_LOCAL_MACHINE\Software\Microsoft\Terminal Server Client</B>. The following table shows the named values for this subkey.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Value</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>CEConfig</B></TD>
+<TD width=54%>Default setting is "WBT". This value identifies whether the Terminal Service Client is being used within a Windows Thin Client shell. The following list shows the available settings.
+<UL type="disc">
+	<LI>"WBT" -- Used when the Terminal Server Client is running in a Windows Thin Client Shell. This is when SYSGEN_WBTSHELL = 1</li>
+
+	<LI>"Maxall" -- Used in all other configurations.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>CEUseScanCodes</B>: DWORD</TD>
+<TD width=54%>Default setting is 0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>Keyboard Type</B>: DWORD</TD>
+<TD width=54%>Default setting is 4.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>Keyboard SubType</B>: DWORD</TD>
+<TD width=54%>Default setting is 0. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>Keyboard FunctionKeys</B>: DWORD</TD>
+<TD width=54%>Default setting is C.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>Keyboard Layout</B></TD>
+<TD width=54%>No default setting. This value specifies the LOCALE of the keyboard in hexadecimal as a string.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Configuration Settings</H4>
+
+<P>You should set <B>CEConfig</B> to "WBT" for any platform configuration that uses the Windows Thin Client Shell. The following list identifies the behavioral changes to your platform caused by this setting:
+
+<UL type="disc">
+	<LI>File change notifications through protected server library (PSL) calls will be disabled.</li>
+
+	<LI>The Windows Thin Client Shell will not bring up the Microsoft Terminal Server Client (MSTSC) user interface.</li>
+
+	<LI>Keyboard hooks will be disabled for the Windows Thin Client Shell</li>
+
+	<LI>Additional registry migration will occur for Windows Thin Client platforms because the connections are started through registry settings and not through .RDP files.</li>
+</UL>
+
+<P>The following list describes issues that a CE device running the Windows Thin Client might encounter if it has CEConfig set to "Maxall":
+
+<UL type="disc">
+	<LI>Crashes in Filesys.exe when drive redirection is enabled and a file copying through the clipboard is attempted.</li>
+
+	<LI>Choosing <B>Cancel</B> from a dialog box asking if you want to enable drive redirection will cause the MSTSC user interface to appear in the Windows Thin Client.</li>
+
+	<LI>Hoy key messages, such as CTRL+ALT+LEFT, might be sent to remote sessions.</li>
+</UL>
+
+<P>The following code example shows the registry settings in Rdp.reg associate .rdp files with MSTSC.</P>
+
+<PRE class="code">[HKEY_CLASSES_ROOT\.rdp]
+    @="rdpfile"
+[HKEY_CLASSES_ROOT\rdpfile]
+    @=LOC_RDPCONNECTION
+[HKEY_CLASSES_ROOT\rdpfile\DefaultIcon]
+    @="\\Windows\\mstsc.exe,-101"
+[HKEY_CLASSES_ROOT\rdpfile\Shell\Open\Command]
+    @="\\Windows\\mstsc.exe %1"</PRE>
+
+<H4 class="dtH4">Keyboard Settings</H4>
+
+<P>You can use the keyboard subkeys to allow non-English keyboards to connect to the Windows Thin Client. The following code example shows the registry settings for a Japanese keyboard.</P>
+
+<PRE class="code">IF LOCALE=0411
+IF BSP_KEYD_JPN1!    //BSP_KEYBD_JPN1=1 is for 101 keyboard layout for Japanese
+[HKEY_LOCAL_MACHINE\Software\Microsoft\Terminal Server Client]
+    "Keyboard type"=dword:7
+    "Keyboard SubType"=dword:2
+    "Keyboard FunctionKeys"=dword:c
+    "Keyboard Layout"="0x00000411"
+ENDIF
+ENDIF</PRE>
+
+<P>These settings also apply to any non-RDP application that transmits scan codes to a server.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconthinclientregistrykeys.htm">Thin Client Registry Keys</A></P>
+
+<P><A HREF="cmconkeyboardhardware.htm">Keyboard Hardware</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Terminal%20Server%20Client%20Registry%20Settings&nbsp;(cmconkeyboardregistrysettings.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

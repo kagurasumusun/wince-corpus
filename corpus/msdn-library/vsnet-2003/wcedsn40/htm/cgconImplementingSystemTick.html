@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the System Tick</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the System Tick"/>
+<MSHelp:RLTitle Title="Implementing the System Tick"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingSystemTick"/>
+<MSHelp:Keyword Index="K" Term="OAL, system tick implementation"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, system tick implementation"/>
+<MSHelp:Keyword Index="K" Term="system tick, implementing"/>
+<MSHelp:Keyword Index="K" Term="tick, implementing system tick"/>
+<MSHelp:Keyword Index="K" Term="timers, implementing system tick"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingSystemTick"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757212">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconimplementingsystemtick"></A>Implementing the System Tick</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The system tick is the only interrupt required by the kernel and you must hook the interrupt with <MSHelp:link keywords="cmrefHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> and then provide a system tick ISR to handle the tick.</P>
+
+<P>When threads are active in the system the thread timer goes off every millisecond. The thread timer ISR updates <A HREF="cmrefcurmsec.htm">CurMSec</A> every millisecond so blocking operations and <MSHelp:link keywords="_wcesdk_Win32_GetTickCount" TABINDEX="0">GetTickCount</MSHelp:link> calls are as accurate as possible. The timer ISR only returns SYSINTR_RESCHED to the kernel's interrupt dispatcher if a thread scheduling event is ready to occur, if <A HREF="cmrefdwreschedtime.htm">dwReschedTime</A> is less than or equal to <B>CurMSec</B>. If no scheduling event is ready, the ISR returns SYSINTR_NOP. SYSINTR_NOP indicates that running threads will be interrupted by the timer ISR but will not have to wait for the kernel to run its scheduling algorithm before they resume execution. </P>
+
+<P>The thread timer ISR does not schedule an IST. It tells the kernel when it is time to run a thread scheduling algorithm and when to update <B>CurMSec</B>.</P>
+
+<P>You must implement the thread scheduling timer as part of the OAL.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>ARM processors only have one interrupt so they do not call <B>HookInterrupt</B>.</BLOCKQUOTE>
+
+<H2 class="dtH2">Testing Tick Support</H2>
+
+<P>To test that the system tick has been initialized and functional, you can write to an LED when a system tick occurs.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconimplementingoeminit.htm">Implementing OEMInit</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20the%20System%20Tick&nbsp;(cgconimplementingsystemtick.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

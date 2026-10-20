@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Connection Shutdown</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Connection Shutdown"/>
+<MSHelp:RLTitle Title="Connection Shutdown"/>
+<MSHelp:Keyword Index="A" Term="ceconConnectionShutdown"/>
+<MSHelp:Keyword Index="K" Term="connections, Winsock 2.2 shutting down of"/>
+<MSHelp:Keyword Index="K" Term="shutting down, Winsock 2.2 connection"/>
+<MSHelp:Keyword Index="A" Term="ceconConnectionShutdown"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: winsock2spi_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715686">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconconnectionshutdown"></A>Connection Shutdown</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following paragraphs describe operations incident to shutting down an established socket connection.</P>
+
+<P class="label"><B>Initiating Shutdown Sequence</B></P>
+
+<P>A socket connection can be taken down in one of several ways. <A HREF="cerefwspshutdown.htm">WSPShutdown</A> (with <I>how</I> equal to SD_SEND or SD_BOTH), and <A HREF="cerefwspsenddisconnect.htm">WSPSendDisconnect</A> may be used to initiate a graceful connection shutdown. <B>WSPCloseSocket</B> can be used to initiate either a graceful or abortive shutdown, depending on the linger options invoked by the closing a socket. See the following sections for more information about graceful and abortive shutdowns, and linger options.</P>
+
+<P class="label"><B>Indicating Remote Shutdown</B></P>
+
+<P>Service providers indicate connection teardown that is initiated by the remote party through the FD_CLOSE network event. Graceful shutdown is also indicated through <A HREF="cerefwsprecv.htm">WSPRecv</A> when the number of bytes read is 0 for byte-stream protocols, or through a return error code of WSAEDISCON for message-oriented protocols. In any case, a <B>WSPRecv</B> return error code of WSAECONNRESET indicates an abortive shutdown.</P>
+
+<P class="label"><B>Graceful Shutdown, Linger Options, and Socket Closure in the SPI</B></P>
+
+<P>It is important to distinguish between shutting down a socket connection and closing a socket. Shutting down a socket connection involves an exchange of protocol messages between the two endpoints, which is hereafter referred to as a shutdown sequence. Two general classes of shutdown sequences are defined: graceful and abortive. In a graceful shutdown sequence, any data that has been queued but not yet transmitted can be sent prior to the connection being closed. In an abortive shutdown, any unsent data is lost. The occurrence of a shutdown sequence (graceful or abortive) can also be used to provide an FD_CLOSE indication to the associated applications signifying that a shutdown is in progress. Closing a socket, on the other hand, causes the socket handle to become de-allocated so that the application can no longer reference or use the socket in any manner. </P>
+
+<P>In Windows Sockets, both the <A HREF="cerefwspshutdown.htm">WSPShutdown</A> function, and the <A HREF="cerefwspsenddisconnect.htm">WSPSendDisconnect</A> function can be used to initiate a shutdown sequence, while the <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A> function is used to de-allocate socket handles and free up any associated resources. Some amount of confusion arises, however, from the fact that the <B>WSPCloseSocket</B> function will implicitly cause a shutdown sequence to occur if it has not already happened. In fact, it has become a rather common programming practice to rely on this feature and use <B>WSPCloseSocket</B> to both initiate the shutdown sequence and de-allocate the socket handle. </P>
+
+<P>To facilitate this usage, the sockets interface provides for controls through the socket option mechanism that allows the programmer to indicate whether the implicit shutdown sequence should be graceful or abortive, and also whether the <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A> function should linger that is, not complete immediately) to allow time for a graceful shutdown sequence to complete. </P>
+
+<P>By establishing appropriate values for the socket options SO_LINGER and SO_DONTLINGER, the following types of behavior can be obtained with the <B>WSPCloseSocket</B> function.
+
+<UL type="disc">
+	<LI>Abortive shutdown sequence, immediate return from <B>WSPCloseSocket</B>.</li>
+
+	<LI>Graceful shutdown, delay return until either shutdown sequence completes or a specified time interval elapses. If the time interval expires before the graceful shutdown sequence completes, an abortive shutdown sequence occurs and <B>WSPCloseSocket</B> returns.</li>
+
+	<LI>Graceful shutdown, return immediately, and allow the shutdown sequence to complete in the background. This is the default behavior. Note, however, that the application has no way of knowing when (or whether) the graceful shutdown sequence completes.</li>
+</UL>
+
+<P>One technique that can be used to minimize the chance of problems occurring during connection teardown is not to rely on an implicit shutdown being initiated by <B>WSPCloseSocket</B>. Instead, one of the two explicit shutdown functions (<A HREF="cerefwspshutdown.htm">WSPShutdown</A> or <A HREF="cerefwspsenddisconnect.htm">WSPSendDisconnect</A>) are used. This in turn will cause an FD_CLOSE indication to be received by the peer application indicating that all pending data has been received. To illustrate this, the following table shows the functions that would be invoked by the client and server components of an application, where the client is responsible for initiating a graceful shutdown. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>Client side</TH>
+<TH width=52%>Server side</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>(1) Invokes <B>WSPShutdown</B> (<I>s, SD_SEND)</I> to signal end of session and that client has no more data to send.</TD>
+<TD width=52%> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%> </TD>
+<TD width=52%>(2) Receives FD_CLOSE, indicating graceful shutdown in progress and that all data has been received.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%> </TD>
+<TD width=52%>(3) Sends any remaining response data.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>(5') Gets FD_READ and invoke recv to get any response data sent by server.</TD>
+<TD width=52%>(4) Invokes <B>WSPShutdown</B>(<I>s, SD_SEND</I>) to indicate server has no more data to send.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>(5) Receives FD_CLOSE indication.</TD>
+<TD width=52%>(4') Invokes <B>WSPCloseSocket</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>(6) Invokes <B>WSPCloseSocket</B></TD>
+<TD width=52%> </TD>
+</TR>
+</table></div>
+
+<P>The timing sequence is maintained from step (1) to step (6) between the client and the server, except for steps (4') and (5') which only have local timing significance in the sense that step (5) follows step (5') on the client side while step (4') follows step (4) on the server side, with no timing relationship with the remote party.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconsocketconnectionsonconnection-orientedprotocols.htm">Socket Connections on Connection-Oriented Protocols</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Connection%20Shutdown&nbsp;(ceconconnectionshutdown.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

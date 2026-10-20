@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>x86 BIOS Boot Loader</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="x86 BIOS Boot Loader"/>
+<MSHelp:RLTitle Title="x86 BIOS Boot Loader"/>
+<MSHelp:Keyword Index="A" Term="cgconX86BIOSBootLoader"/>
+<MSHelp:Keyword Index="A" Term="cgconX86BIOSBootLoader"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: x86romboot.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821430">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconx86biosbootloader"></A>x86 BIOS Boot Loader</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The x86 BIOS boot loader (biosloader) is an alternative to romboot. Unlike romboot, biosloader does not replace the system BIOS. Rather, it uses the BIOS services like the VESA BIOS for video display control and INT 13h services for disk I/O to load an image from a local storage device. It will load a BIN image from any device that the BIOS exposes INT 13h support for and views as a storage device. This currently includes floppy, hard disk, Compact Flash (CF), and Disk-On-Chip. The boot loader resides on a bootable storage device and is found and loaded by a boot sector image.</P>
+
+<P>The following list summarizes the BIOS boot loader boot process:
+
+<UL type="disc">
+	<LI>At power-on or reset, the x86 CPU jumps to the reset vector address and starts to execute BIOS code. The BIOS will typically configure the hardware, which includes configuring the DRAM controller, configuring the host bridge, and enumerating PCI devices, and then locate a boot drive.</li>
+
+	<LI>If the boot drive is a fixed disk, for example, hard disk, Compact Flash card, or Disk-On-Chip, the first disk sector will be the master boot sector (MBR). If the boot drive is a floppy disk, then it does not contain an MBR, instead, the first sector on the disk is a boot sector. The MBR neatly fits in one disk sector and is made up of code, 16-bit real mode code, and data. The MBR is written to the disk by a partitioning tool like the DOS fdisk program. The MBR is loaded from the disk into RAM by the BIOS, and then the BIOS will begin to execute the MBR code. If the BIOS cannot locate the MBR on the boot drive, which looks for a two byte signature at the end of the sector, it displays an error message and halts.</li>
+
+	<LI>The MBR code primarily searches through the partition table looking for the active partition on the boot disk. The partition table is data that resides in the MBR. If the MBR code is unable to locate an active partition, it displays an error message and halts. If it does find an active partition, it determines the disk address of that partition. The first sector in the partition is called the boot sector. However, on a floppy disk, this is the first sector on the disk because there is no MBR on a floppy disk. The MBR code loads the boot sector into RAM and jumps to it.</li>
+
+	<LI>The boot sector, like the MBR, contains both code and data and fits neatly within a single disk sector. The boot sector is the first piece of OS-specific code. The boot sector's task is to find and load the BIOS boot loader. It does this by using the disk-resident properties of the native file system, along with BIOS services, to find and load the boot loader into RAM and then jump to it.</li>
+
+	<LI>Once running, the BIOS loader proceeds.</li>
+</UL>
+
+<P>In order to prepare a storage device for use with the BIOS boot loader, you must partition and format it.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconbootsector.htm">Boot Sector</A></P>
+
+<P><A HREF="cgconspecializedbootloaders.htm">Specialized Boot Loaders</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;x86%20BIOS%20Boot%20Loader&nbsp;(cgconx86biosbootloader.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

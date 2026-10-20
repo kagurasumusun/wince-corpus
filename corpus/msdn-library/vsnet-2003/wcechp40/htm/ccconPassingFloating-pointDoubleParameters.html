@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Floating-point and Double Parameters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Floating-point and Double Parameters"/>
+<MSHelp:RLTitle Title="Floating-point and Double Parameters"/>
+<MSHelp:Keyword Index="A" Term="ccconPassingFloating-pointDoubleParameters"/>
+<MSHelp:Keyword Index="A" Term="ccconPassingFloating-pointDoubleParameters"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: shx_inline_assembly.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_810229">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccconpassingfloating-pointdoubleparameters"></A>Floating-point and Double Parameters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To pass a floating-point argument into an <B>__asm</B> block, pass the address of the argument, and then load the argument to a register within the <B>__asm</B> block.</P>
+
+<P>Because the <B>__asm</B> prototype specifies a variable argument list, passing parameters of type floating-point and double is governed by the SH-3 and SH-4 calling standard for variable argument lists. </P>
+
+<P>The following list shows the SHx requirements for variable argument lists.
+
+<UL type="disc">
+	<LI><B>SH-3 and SH3-DSP</B>
+<P>If a function is declared to use variable argument lists<B>,</B> floating-point arguments are passed using integer argument registers and the stacks. SH-3 does not support floating-point operations and does not have any instructions to perform floating-point operations. The compiler for SH-3 uses emulation routines to perform floating-point operations. 
+</li>
+
+	<LI><B>SH-4</B>
+<P>If a function is declared to use variable argument lists<B>,</B> floating-point registers are unused and floating-point arguments are passed using only the integer argument registers and the stack. 
+</li>
+</UL>
+
+<P>In addition, the C and C++ ANSI standards require that float arguments in a variable argument list be promoted to type <B>double</B>. Consequently, floating point arguments are promoted to type <B>double</B>, and passed as word pairs in the integer registers and or on the stack.</P>
+
+<P>The following SH-3 example shows how to first pass the address of float arguments to <B>__asm</B> call and then load the argument to a register within the <B>__asm</B> statement.</P>
+
+<PRE class="code">//
+// Compute x+y+z --&gt; result
+//
+float add_trig(float x, float y, float z)
+{
+  float result;
+  void * temp_stk_space = _alloca(8);  // Reserve temp space in stack
+  __asm(
+    "mov.l  @(20,sp), r0  ; get pointer to temp stack space \n"
+    "mov.l  r6,  @r0      ; save pointer to z on stack \n"
+    "mov.l  r7,  @(4,r0)  ; save pointer to result on stack \n"
+    "mov.l  @r4,  r4      ; get x  \n"
+    "mov.l  @(16, sp),r0  ; get address of add routine \n"
+    "jsr    @r0           ; compute x+y \n"
+    "mov.l  @r5,  r5     ; get y  \n"
+    "mov    r0, r4       ; get x + y \n" 
+    "mov.l  @(20,sp), r1 ;\n"
+    "mov.l  @(16, sp),r0 ; get address of add routine \n"
+    "mov.l  @r1, r5      ; get pointer to z  \n"
+    "jsr    @r0          ; compute x+y+z \n"
+    "mov.l  @r5,  r5     ; get z \n"
+    "mov.l  @(20,sp), r1 ; get pointer to temp stack space \n"
+    "mov.l  @(4,r1),  r1 ; get pointer to result \n"
+    "mov.l  r0, @r1      ; store r0 into result addr \n",
+    &amp;x,      // pointer to x passed in r4
+    &amp;y,      // pointer to y passed in r5
+    &amp;z,      // pointer to z passed in r6
+    &amp;result, // pointer to result passed in r7 
+     _adds,  // pointer to _adds routine passed in @(16,sp)
+    temp_stk_space);  // pointer to temp stack space passed in // @(20,sp)
+
+  return result;
+}
+void main()
+{
+  float  retval = add_trig(1.0f, 2.0f,3.0f);
+  printf("%f\n", retval);
+}
+</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_sh3call_sh_3_calling_standard.htm">SH-3 Calling Sequence Specification</A></P>
+
+<P><A HREF="ccrefsh3dspseriesassemblermanual.htm">SH3-DSP Calling Sequence Specifications</A></P>
+
+<P><A HREF="_callsh4_sh_4_calling_standard.htm">SH-4 Calling Sequence Specification</A></P>
+
+<P><A HREF="ccrefshxinlineassemblyparameters.htm">SHx Inline Assembly Parameters</A></P>
+
+<P><A HREF="ccconpassingintegernon-scalarparameters.htm">Integer and Non-scalar Parameters</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Floating-point%20and%20Double%20Parameters&nbsp;(ccconpassingfloating-pointdoubleparameters.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

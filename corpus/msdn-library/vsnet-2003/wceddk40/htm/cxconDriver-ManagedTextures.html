@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Driver-Managed Textures</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Driver-Managed Textures"/>
+<MSHelp:RLTitle Title="Driver-Managed Textures"/>
+<MSHelp:Keyword Index="A" Term="cxconDriver-ManagedTextures"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, texture management"/>
+<MSHelp:Keyword Index="K" Term="texture%2C Direct3D, driver-managed textures"/>
+<MSHelp:Keyword Index="A" Term="cxconDriver-ManagedTextures"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664960">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondriver-managedtextures"></A>Driver-Managed Textures</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The driver can optionally manage textures that have been marked as manageable. These DirectDrawSurface objects are marked as manageable with the DDSCAPS2_TEXTUREMANAGE flag in the <B>dwCaps2</B> member of the structure referred to by <B>lpSurfMore-&gt;ddCapsEx</B>. (<B>lpSurfMore</B> and <B>ddCapsEx</B> are members of the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_lcl.htm">DDRAWI_DDRAWSURFACE_LCL</A> and <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_more.htm">DDRAWI_DDRAWSURFACE_MORE</A> structures, respectively.)</P>
+
+<P>The driver makes explicit its support for driver-managed textures by setting the <B>dwCaps2</B> member of the <A HREF="_dxce_ddhal_ddhalinfo.htm">DDHALINFO</A> structure to DDCAPS2_CANMANAGETEXTURE. <B>DDHALINFO</B> is returned by <A HREF="_dxce_halinit_ddhal.htm">HALInit</A> in response to the initialization of the DirectDraw component of the driver.</P>
+
+<P>The driver can then create the necessary surfaces in video or nonlocal memory in a lazy fashion. That is, the driver leaves the textures in backing surfaces until it requires them, which is just before rasterizing a primitive that makes use of the texture.</P>
+
+<P>Surfaces should be evicted primarily by their priority assignment. The driver should respond to the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor40">D3DDP2OP_SETPRIORITY</A> operation code in the <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> command stream. This operation code sets the priority for a given surface. As a secondary measure, it is expected that the driver will use a least-recently-used (LRU) scheme. This scheme should be used as a tiebreaker, whenever the priority of two or more textures is identical in a particular scenario. Logically, any surface that is in use should not be evicted at all.</P>
+
+<P>If a driver supports managed surfaces, then the driver may receive a special <A HREF="_dxce_ddhal_destroysurface.htm">DestroySurface</A> call for a managed surface in the case where video memory is lost, such as when a mode switch occurs. In this case the DRAWISURF_INVALID flag is set and the driver should simply evict the video memory copy of this managed surface and keep other structures intact. Otherwise, the driver should perform a regular destroy surface call.</P>
+
+<P>The driver must be cautious of honoring <A HREF="_dxce_ddhal_blt.htm">Blt</A> and <A HREF="_dxce_ddhal_lock.htm">Lock</A> calls when managing textures. This is because any change to the backing surface image must be propagated into the video memory copy of the surface before the texture is used again. The driver should determine if it is better to update just a portion of the surface or all of it.</P>
+
+<P>The driver is allowed to perform texture management in order to perform optimization transformations on the textures or to decide for itself where and when to transfer textures in memory.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dtexturemanagement.htm">Direct3D Texture Management</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Driver-Managed%20Textures&nbsp;(cxcondriver-managedtextures.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

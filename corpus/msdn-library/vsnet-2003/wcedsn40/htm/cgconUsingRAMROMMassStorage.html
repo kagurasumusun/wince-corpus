@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using RAM, ROM, and Mass Storage</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using RAM, ROM, and Mass Storage"/>
+<MSHelp:RLTitle Title="Using RAM, ROM, and Mass Storage"/>
+<MSHelp:Keyword Index="A" Term="cgconUsingRAMROMMassStorage"/>
+<MSHelp:Keyword Index="A" Term="cgconUsingRAMROMMassStorage"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: platform_optimization.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_802048">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconusingramrommassstorage"></A>Using RAM, ROM, and Mass Storage</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table shows how the various memory types are used.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Memory type</TH>
+<TH width=54%>Description</TH>
+<TH width=28%>How used</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>RAM</TD>
+<TD width=54%>RAM is divided into two areas as shown in the following list: 
+<UL type="disc">
+	<LI>The object store, which resembles a permanent, virtual RAM disk. Data is retained when the system is suspended, and devices typically have a backup power supply for the RAM to preserve data if the main power supply is interrupted. When operation is resumed, the system looks for a previously created object store in RAM. </li>
+
+	<LI>Program memory, which works like the RAM in personal computers. Program memory stores the heaps and stacks for the applications that are running.</li>
+</UL>
+</TD>
+<TD width=28%>The program is paged to RAM and then executed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>ROM</TD>
+<TD width=54%>ROM stores the entire operating system and applications that come with it. </TD>
+<TD width=28%>If uncompressed, the program is executed in-place.
+<P>If compressed, the program is decompressed, paged to RAM, and then executed. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Flash</TD>
+<TD width=54%>Flash is typically used for data storage and can be used for program storage.</TD>
+<TD width=28%>The data is paged to RAM and then executed.
+<P>Programs stored in Flash are handled in the same manner as programs stored in ROM.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>Executing programs directly from ROM saves program RAM and reduces the time required to start an application. This is because the program does not have to be copied into RAM before it is launched.</P>
+
+<P>It is important to consider the speed of the flash and RAM when optimizing your system. The following table shows how a program that is stored in flash memory can be executed.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Program execution in flash</TH>
+<TH width=50%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>A program stored in flash memory is copied to RAM and then executed.</TD>
+<TD width=50%>You do this by selecting the Compressed attribute or moving a dynamic-link library (DLL) or executable file to the MODULES section.
+<P>Although this introduces a small load-time overhead, with the faster access times of RAM, it still results in notably faster execution speeds.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>A program is executed in-place (XIP) from flash memory.</TD>
+<TD width=50%>Flash XIP reduces the amount of system RAM used, but it sacrifices performance in doing so.</TD>
+</TR>
+</table></div>
+
+<P>For example, you might have a SoftModem driver in your system where speed is of utmost importance. If that DLL is stored in the MODULES section, as is standard, the code segment will be executed in-place from flash memory. However, if you mark this DLL as compressed, it will be copied to RAM at load time and executed from there. The tradeoff is higher RAM consumption, but a slightly better flash footprint because the DLL was stored compressed. Also, because this is a driver, it is pinned in RAM rather than being paged in and out.</P>
+
+<P>You can use a similar approach for executables. For example, on a network appliance where the primary user activity is browsing, you can mark the browser and its associated components as compressed, resulting in measurably faster execution.</P>
+
+<P>Because the majority of components in a CE device are in Microsoft-supplied binary image builder (.bib) files, it is not recommended that you modify these attributes directly in the source .bib file. Instead, use the Preromimage.bat capability, which is called by Makeimg.exe, to launch a script immediately before RomImage.exe is invoked. This script can modify the file attributes within the generated Ce.bib file. In this manner, you can easily create different scripts that optimize the .bib file differently for different usage scenarios.</P>
+
+<P class="label"><B>Boot Loaders</B></P>
+
+<P>When using flash memory, you should add a separate boot ROM to your retail device. By doing this, if the flash memory is corrupted, the device can still boot to perform a simple recovery or remote update. </P>
+
+<P>For x86 processors, replace the BIOS with Romboot or some other boot loader program that sets up the peripherals and then loads the OS image. DOS is not required to run Windows CE. </P>
+
+<P class="label"><B>Mass Storage</B></P>
+
+<P>Enable the FAT-based cache to allocate an appropriate amount of cache RAM for the size of your storage device: the larger the mass storage device, the larger the cache should be. Use the following table to determine the appropriate size of cache to allocate.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Registry entry</TH>
+<TH width=34%>Number of sectors</TH>
+<TH width=37%>Cache (KB)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>2</TD>
+<TD width=34%>2</TD>
+<TD width=37%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>4</TD>
+<TD width=34%>4</TD>
+<TD width=37%>2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>8</TD>
+<TD width=34%>8</TD>
+<TD width=37%>4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>10</TD>
+<TD width=34%>16</TD>
+<TD width=37%>8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>20</TD>
+<TD width=34%>16</TD>
+<TD width=37%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>40</TD>
+<TD width=34%>64</TD>
+<TD width=37%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>80&nbsp;</TD>
+<TD width=34%>128</TD>
+<TD width=37%>64</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>100</TD>
+<TD width=34%>256</TD>
+<TD width=37%>128</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>200</TD>
+<TD width=34%>512</TD>
+<TD width=37%>256</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>400</TD>
+<TD width=34%>1024</TD>
+<TD width=37%>512</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>800</TD>
+<TD width=34%>2048</TD>
+<TD width=37%>1024</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>1000</TD>
+<TD width=34%>4096</TD>
+<TD width=37%>2048</TD>
+</TR>
+</table></div>
+
+<P>The settings are stored in the following registry key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\FATFS]
+    "CacheSize" = dword:400</PRE>
+
+<P>CacheSize is a hexadecimal number of sectors to be cached. This needs to be a power of 2.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Using%20RAM,%20ROM,%20and%20Mass%20Storage&nbsp;(cgconusingramrommassstorage.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

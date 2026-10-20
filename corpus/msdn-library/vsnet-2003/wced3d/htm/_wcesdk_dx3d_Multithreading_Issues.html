@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Multithreading Issues</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Multithreading Issues"/>
+<MSHelp:RLTitle Title="Multithreading Issues"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Multithreading_Issues"/>
+<MSHelp:Keyword Index="K" Term="multithreading, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="threads, Direct3D multithreading issues"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts5_tips.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680272">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_multithreading_issues"></A>Multithreading Issues</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Full-screen Microsoft&reg; Direct3D&reg; applications provide a window handle to the Direct3D run time. The window is hooked by the run time. This means that all messages passed to the application's window message procedure have first been examined by the Direct3D run time's own message-handling procedure. </P>
+
+<P>Display mode changes are affected by support routines built into the underlying operating system. When mode changes occur, the system broadcasts several messages to all applications. In Direct3D applications, the messages are received on the window procedure thread, which is not necessarily the same thread that called <A HREF="_wcesdk_dx3d_idirect3ddevice8__reset.htm">IDirect3DDevice8::Reset</A> or <A HREF="_wcesdk_dx3d_idirect3d8__createdevice.htm">IDirect3D8::CreateDevice</A> (or the final <MSHelp:link keywords="cerefIUnknownRelease" TABINDEX="0">IUnknown::Release</MSHelp:link> of <A HREF="_wcesdk_dx3d_idirect3ddevice8.htm">IDirect3DDevice8</A>, which can cause a display mode change). The Direct3D run-time maintains several critical sections internally. Because at least one of these critical sections is held across the mode switch caused by <B>Reset</B> or <B>CreateDevice</B>, these critical sections are still held when the application receives the mode-change related window messages. </P>
+
+<P>This design has some implications for multithreaded applications. In particular, an application must be sure to strongly segregate its window message handling threads from its Direct3D threads. An application that causes a mode change on one thread but makes Direct3D calls on a different thread in its window procedure is in danger of deadlock.</P>
+
+<P>For these reasons, Direct3D is designed so that the methods <B>Reset</B>, <B>CreateDevice</B>, <B>TestCoorperativeLevel</B>, or the final <B>Release</B> of <B>IDirect3DDevice8</B> can only be called from the same thread that handles window messages.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Multithreading%20Issues&nbsp;(_wcesdk_dx3d_multithreading_issues.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

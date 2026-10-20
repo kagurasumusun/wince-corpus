@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpRecoContext::GetStatus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpRecoContext::GetStatus"/>
+<MSHelp:RLTitle Title="ISpRecoContext::GetStatus"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextGetStatus"/>
+<MSHelp:Keyword Index="K" Term="ISpRecoContext, GetStatus"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextGetStatus"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822439">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisprecocontextgetstatus"></A>ISpRecoContext::GetStatus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpRecoContext::GetStatus</B> retrieves current state information associated with a context (for example, last SR Engine requested UI, audio signal status, and so on).</P>
+
+<PRE class="syntax"><B>HRESULT GetStatus(</B>
+<B>SPRECOCONTEXTSTATUS *</B><I>pStatus</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pStatus</I> </DT>
+
+<DD>[out] Address of the <A HREF="cerefsprecocontextstatus.htm">SPRECOCONTEXTSTATUS</A> structure that receives the context state information. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A graphical application that is interested in SPEI_REQUEST_UI events from the SR Engine can call ISpRecoContext::GetStatus, and check the szRequestTypeOfUI field to check the last requested UI-type. After the application has called <A HREF="cerefisprecognizerdisplayui.htm">ISpRecognizer::DisplayUI</A>, the SR Engine can clear the szRequestTypeOfUI field by calling <A HREF="cerefispsrenginesiteaddevent.htm">ISpSREngineSite::AddEvent</A> with a NULL UI-type.</P>
+
+<P>An application can also periodically query the recognition context status to check the audio signal quality (see also <A HREF="cerefspinterference.htm">SPINTERFERENCE</A>) and respond appropriately. An application can help the user improve the audio signal quality by using the SR Engine's microphone training UI (see SPDUI_MicTraining), or by prompting the user to modify their audio settings using the Speech Control Panel (see SPDUI_AudioProperties and SPDUI_AudioVolume).</P>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>S_OK </TD>
+<TD width=56%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>E_POINTER </TD>
+<TD width=56%><I>pStatus</I> is invalid or bad. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>FAILED (hr) </TD>
+<TD width=56%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of <B>ISpRecoContext::GetStatus</B> for responding to SR Engine UI requests.</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+// assume UI request [SPEI_REQUEST_UI] has been received
+// check what kind of UI the SR Engine wants
+hr = cpRecoContext-&gt;GetStatus(&amp;contextStatus);
+// Check hr
+// get a reference to the SR Engine
+hr = cpRecoContext-&gt;GetRecognizer(&amp;cpRecognizer);
+// Check hr
+// sanity check that the UI type is supported
+hr = cpRecognizer-&gt;IsUISupported(contextStatus.szRequestTypeOfUI, NULL, NULL, &amp;fSupported);
+// Check hr
+// ask the SR engine to display the UI, and use the default window title
+hr = cpRecognizer-&gt;DisplayUI(MY_HWND, NULL, contextStatus.szRequestTypeOfUI, NULL, NULL);
+// Check hr</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpRecoContext::GetStatus&nbsp;(cerefisprecocontextgetstatus.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

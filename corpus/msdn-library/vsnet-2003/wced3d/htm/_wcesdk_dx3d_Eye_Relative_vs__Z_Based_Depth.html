@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Eye-Relative vs. Z-Based Depth</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Eye-Relative vs. Z-Based Depth"/>
+<MSHelp:RLTitle Title="Eye-Relative vs. Z-Based Depth"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Eye_Relative_vs__Z_Based_Depth"/>
+<MSHelp:Keyword Index="K" Term="eye-relative depth, Direct3D pixel fog"/>
+<MSHelp:Keyword Index="K" Term="fogging%2C Direct3D, eye-relative vs. Z-based depth"/>
+<MSHelp:Keyword Index="K" Term="Z-based depth, Direct3D pixel fog"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts3_using.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680597">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_eye_relative_vs__z_based_depth"></A>Eye-Relative vs. Z-Based Depth</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To alleviate fog-related graphic artifacts caused by uneven distribution of z-values in a depth buffer, most hardware devices use eye-relative depth instead of z-based depth values for pixel fog. Eye-relative depth is essentially the w element from a homogeneous coordinate set. Microsoft&reg; Direct3D&reg; takes the reciprocal of the RHW element from a device space coordinate set to reproduce true w. If a device supports eye-relative fog, it sets the D3DPRASTERCAPS_WFOG flag in the <B>RasterCaps</B> member of the <A HREF="_wcesdk_dx3d_d3dcaps8.htm">D3DCAPS8</A> structure when you call the <A HREF="_wcesdk_dx3d_idirect3ddevice8__getdevicecaps.htm">IDirect3DDevice8::GetDeviceCaps</A> method. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;With the exception of the reference rasterizer, software devices always use z to calculate pixel fog effects.</BLOCKQUOTE>
+
+<P>When eye-relative fog is supported, the system automatically uses eye-relative depth rather than z-based depth if the provided projection matrix produces z-values in world space that are equivalent to w-values in device space. You set the projection matrix by calling the <A HREF="_wcesdk_dx3d_idirect3ddevice8__settransform.htm">IDirect3DDevice8::SetTransform</A> method, using the D3DTS_PROJECTION value and passing a <A HREF="_wcesdk_dx3d_d3dmatrix.htm">D3DMATRIX</A> structure that represents the desired matrix. If the projection matrix is not compliant with this requirement, fog effects are not applied properly. For more information about producing a compliant matrix, see <A HREF="_wcesdk_dx3d_a_w_friendly_projection_matrix.htm">W-Friendly Projection Matrix</A>. The perspective projection matrix provided in <A HREF="_wcesdk_dx3d_what_is_the_projection_transformation_.htm">What Is the Projection Transformation?</A> produces a compliant projection matrix.</P>
+
+<P>Direct3D uses the currently set projection matrix in its w-based depth calculations. As a result, an application must set a compliant projection matrix to receive the desired w-based features, even if it does not use the Direct3D transformation pipeline.</P>
+
+<P>Direct3D checks the fourth column of the projection matrix. If the coefficients are [0,0,0,1] (for an affine projection) the system will use z-based depth values for fog. In this case, you must also specify the start and end distances for linear fog effects in device space, which ranges from 0.0 at the nearest point to the user, and 1.0 at the farthest point.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Eye-Relative%20vs.%20Z-Based%20Depth&nbsp;(_wcesdk_dx3d_eye_relative_vs__z_based_depth.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

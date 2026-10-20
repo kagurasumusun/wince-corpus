@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bump Mapping</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bump Mapping"/>
+<MSHelp:RLTitle Title="Bump Mapping"/>
+<MSHelp:Keyword Index="A" Term="cxconBumpMapping"/>
+<MSHelp:Keyword Index="K" Term="bump mapping"/>
+<MSHelp:Keyword Index="A" Term="cxconBumpMapping"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664979">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconbumpmapping"></A>Bump Mapping</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Bump mapping is an elegant technique that enables a surface to appear wrinkled or dimpled without the need to model these depressions geometrically. </P>
+
+<P>Bump mapping in the usual sense involves perturbing the angles of the surface normals according to information given in a two-dimensional bump map. This tricks the local reflection model, where intensity is mainly a function of the surface normal, into producing local variations on a smooth surface. This deception is evident only when silhouetted, because in that case the perturbations will no longer be visible at the edges. That is, the silhouette follows the line of the model and is therefore not perturbed. This is an important technique because it appears to add texture to a surface, rather than modulating the color of a flat surface.</P>
+
+<P>Because bump mapping for Direct3D is done by texturing a surface in the rendering phase without perturbing the geometry, it bypasses serious modeling problems that would otherwise occur. If the object is polygonal, the mesh has to be fine enough to receive the perturbations from the texture map. This is a serious drawback, if the texture is to be an option.</P>
+
+<P>Bump mapping is perturbed environment mapping that allows an arbitrary number, shape, and color of lights to be specified. DirectDraw specifies new pixel formats for bumps: DDPF_DU and DDPF_UV. These are integrated with multitexture blending through the <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTURESTAGESTATETYPE" TABINDEX="0">D3DTEXTURESTAGESTATETYPE</MSHelp:link> enumerated type, described in the DirectX SDK documentation. Environment mapping can be done by the application.</P>
+
+<P>Bump mapping in this case is more accurately described as per-pixel texture coordinate perturbation by rasterizers for diffuse and specular environment maps. This capability is integrated with Direct3D multitexture support. Bump mapping is performed in the local surface coordinate system (texture coordinates (<I>u</I>, <I>v</I>)).</P>
+
+<P>This technique allows the lighting environment of the scene to be represented in an image environment map (either for diffuse or specular effects). It permits the lights to be of any number, shape, color, or intensity distribution that can be represented in such a map. These maps can be created in advance for static cases, or easily updated on the fly for changing light sources, using blits.</P>
+
+<P>Conventional bump mapping schemes derived from Phong shading are limited to spherical light sources of constant color and fixed fall-off curve. These do not require the additional texture addressing capabilities of per-pixel environment mapping and can work well for diffuse lighting effects, but cannot produce the visually structured specular highlights required for photo realism. In the future, use of such techniques will be facilitated by the integration of environment mapping calculations directly into the Direct3D geometry pipeline.</P>
+
+<P>Bump mapping is commonly provided in photo realistic renderers. It can be used to drastically increase surface detail effects, without tessellating the surface into large numbers of small triangles. When used with specular effects, bump maps can simulate reflective yet rough surfaces, such as wet stone or pavement. When supported by 3D accelerators, such effects can be performed in real time, allowing dynamic light source changes. Direct3D's support of bump mapping eliminates one of the few remaining barriers to representing surfaces and environments with photo realistic quality.</P>
+
+<P>When a <B>DirectDrawSurface</B> object is created with a bump-map format, that texture is considered to be a <I>bump map</I>. This object can be bound into the Direct3D device using any of the textures bound to the texture stages. A programmed texture blending stage can be set to perform the bump map operation by setting D3DTOP_BUMPENVMAP. The texture defined for this stage is a <B>DirectDrawSurface</B> object with a bump-map format. It will use the texture coordinates of the flexible vertex format specified by this stage's texture coordinate identifier to position itself on the rendered objects. It will also respect the specified texture stage's controlling filtering, wrapping, and so on.</P>
+
+<P>The bump values in this texture will perturb the texture coordinates used by the immediately following texture, which should be considered a specular or diffuse environment map.</P>
+
+<P class="label"><B>Emulation</B></P>
+
+<P>This methodology can be emulated on any hardware that supports an 8-bit paletted texture mode. The restriction is that the environment map used (the texture immediately following the bump texture map) must have a resolution of exactly 16X16 texels, and no filtering. This is indicated by the D3DTEXOPCAPS_MAXBUMPENVMAP16X16 flag. Other parts will have no limits on the size of the environment map that the bump map can perturb.</P>
+
+<P>More general methods for bump-mapped environment mapping will be supported in future versions of DirectX, when additional information, such as normal vector data, is provided in the DDI.</P>
+
+<P>Bump mapping is enabled with the multitexture blending operations D3DTOP_BUMPENVMAP and D3DTOP_BUMPENVMAPPREMODULATE. The latter operation is a combination of bump mapping and gloss mapping that allows the specular reflection intensity to be encoded in the same surface as the bump map data.</P>
+
+<P>There are now four additional texture states provided at each stage:
+
+<UL type="disc">
+	<LI>D3DTS_BUMPENVMAT00</li>
+
+	<LI>D3DTS_BUMPENVMAT01</li>
+
+	<LI>D3DTS_BUMPENVMAT10</li>
+
+	<LI>D3DTS_BUMPENVMAT11</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconadvanceddirect3ddrivertopics.htm">Advanced Direct3D Driver Topics</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Bump%20Mapping&nbsp;(cxconbumpmapping.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

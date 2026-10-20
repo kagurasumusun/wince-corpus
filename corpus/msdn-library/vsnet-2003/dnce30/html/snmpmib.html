@@ -1,0 +1,1523 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing Your Own SNMP Management Information Base for Microsoft Windows CE 3.0</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing Your Own SNMP Management Information Base for Microsoft Windows CE 3.0"/>
+<MSHelp:RLTitle Title="Writing Your Own SNMP Management Information Base for Microsoft Windows CE 3.0"/>
+<MSHelp:Keyword Index="A" Term="snmpmib"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 3.0, and SNMP"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 3.0, creating custom management information bases"/>
+<MSHelp:Keyword Index="A" Term="snmpmib"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Media" Value="kbText"/>
+<MSHelp:Attr Name="Source" Value="Article"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="Technology" Value="SNMP"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbSNMP"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Status" Value="New"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="This white paper describes the implementation of the Simple Network Management Protocol (SNMP) in Microsoft Windows CE 3.0, and provides instructions on how to write a customized Management Information Base (MIB)."><meta name="keyword" content="Microsoft Windows CE 3.0, creating custom management information bases for Windows CE 3.0, SNMP terms, SNMP library files and programs, SNMP operations, SNMP structures"><META name="rtfFileName" content="snmpmib.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="This article describes the implementation of the Simple Network Management Protocol (SNMP) in Microsoft Windows CE 3.0, and provides instructions on how to write a customized Management Information Base (MIB). (32 printed pages)">
+<META NAME="msdnID" CONTENT="_643239">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;3.0&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="snmpmib"></A>Writing Your Own SNMP Management Information Base for Microsoft Windows CE 3.0</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation </P>
+
+<P>July 2000</P>
+
+<P><b class="le">Summary: </b>This white paper describes the implementation of the Simple Network Management Protocol (SNMP) in Microsoft Windows CE 3.0, and provides instructions on how to write a customized Management Information Base (MIB). (32 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#snmpmib_intro">Introduction</A><CODE><BR>
+</CODE><A HREF="#snmpmib_format">Format</A><CODE><BR>
+</CODE><A HREF="#snmpmib_terms">SNMP Terms</A><CODE><BR>
+</CODE><A HREF="#snmpmib_library">SNMP Library Files and Programs</A><CODE><BR>
+</CODE><A HREF="#snmpmib_structures">SNMP Structures</A><CODE><BR>
+</CODE><A HREF="#snmpmib_operations">SNMP Operations</A><CODE><BR>
+</CODE><A HREF="#snmpmib_registry">Registry Keys</A><CODE><BR>
+</CODE><A HREF="#snmpmib_mib">MIB</A><CODE><BR>
+</CODE><A HREF="#snmpmib_objects">MIB Objects</A><CODE><BR>
+</CODE><A HREF="#snmpmib_develop">Developing an MIB</A><CODE><BR>
+</CODE></P>
+
+<H2 class="dtH1"><A NAME="snmpmib_intro"></A>Introduction</H2>
+
+<P>This white paper describes the implementation of the Simple Network Management Protocol (SNMP) in Microsoft® Windows® CE version 3.0, and provides instructions on how to write a customized Management Information Base (MIB). SNMP was developed by the Internet community to monitor and manage networks, and refers to an Internet standard protocol for network management that is part of the protocol suite known as the Transmission Control Protocol/Internet Protocol (TCP/IP).</P>
+
+<P>SNMP uses a distributed architecture that consists of <I>agents</I> and <I>managers</I>:
+
+<UL type="disc">
+	<LI>The SNMP agent is an SNMP application that monitors network traffic and responds to queries from SNMP manager applications. The agent also notifies the manager by sending a trap when significant events occur. </li>
+
+	<LI>An SNMP manager is an SNMP application that generates queries to SNMP-agent applications and receives traps from SNMP-agent applications. </li>
+</UL>
+
+<P>Windows CE supports the SNMP-agent application. The SNMP-agent application resides in the Windows CE-based device.</P>
+
+<P>The following diagram shows the SNMP architecture that is supported in Windows CE 3.0:</P>
+
+<P class="fig"><CODE><IMG SRC="snmpmib1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. The SNMP architecture supported in Windows CE 3.0</B></P>
+
+<P>The SNMP-agent support that is provided by Windows CE consists of a <I>master agent</I> or SNMP service, and one or more <I>extension agents</I>. The master agent receives requests from the manager, decodes them, and delivers them to an extension agent by invoking the appropriate extension-agent dynamic-link library (DLL). To retrieve the information that is requested, the extension agent implements the appropriate MIB that contains the definitions of a set of managed objects that are supported by the extension agent.</P>
+
+<P>Windows CE supports SNMP extension-agent and utility application programming interfaces (APIs). The SNMP extension-agent API functions define the interface between the SNMP service and SNMP extension-agent DLLs. The SNMP utility API functions facilitate memory management and simplify manipulation of SNMP data structures.</P>
+
+<P>When you implement SNMP in a network environment, you must install an SNMP agent on each computer on the network. You should install the SNMP manager on the computers that monitor the network. After you install the nodes, you must configure the SNMP manager and agent.</P>
+
+<P>Windows CE 3.0 supports two versions of the SNMP protocol: SNMPv1 and SNMPv2C. SNMPv1 is the first version of the protocol and is defined by RFC 1157, RFC 115, and RFC 1212. SNMPv2C is a version of the protocol that is known as community string-based SNMPv2; it is defined by RFC 1901, RFC 1905, and RFC 1906.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>SNMP can be implemented in a Windows CE-based platform only if the Point-to-Point Protocol (PPP) module is included in the same platform.</BLOCKQUOTE>
+
+<H2 class="dtH1"><A NAME="snmpmib_format"></A>Format</H2>
+
+<P>SNMP uses three separate formats to convey management information:
+
+<UL type="disc">
+	<LI><I>Structure of Management Information (SMI)</I>. SMI contains a set of rules that outline how to create a MIB and how to define managed objects that can be accessed via the SNMP protocol. SMI is defined in RFC 1155, RFC 1212, and RFC 1215. </li>
+
+	<LI><I>Abstract Syntax Notation One (ASN.1)</I>. ASN.1 defines the format of SNMP messages and managed objects (MIB modules) by using an unambiguous data description format that is both human-readable and computer-readable. </li>
+
+	<LI><I>Basic Encoding Rules (BER)</I>. BER is used to encode SNMP into a format that is suitable for transmission across a network. </li>
+</UL>
+
+<H2 class="dtH1"><A NAME="snmpmib_terms"></A>SNMP Terms</H2>
+
+<P>The following list outlines a set of key terms that are used in context with SNMP.
+
+<DL>
+<DT>Instance</DT>
+
+<DD>An instance specifies the row in which an object that is part of a table is located. The instance is appended to the object identifier and has a format that is similar to the latter. For objects that are not part of a table, the instance is zero.</dd>
+
+<DT>Managed Node</DT>
+
+<DD>A managed node is a network device that is being monitored actively by an agent. Each managed node is a member of one or more management communities. Each community, in turn, is identified by a community name or community string, which is encapsulated in the SNMP message.</dd>
+
+<DT>Messages</DT>
+
+<DD>In an SNMP operation, network information is exchanged through messages or Protocol Data Units (PDUs). Each SNMP operation has its own type of message. Management systems use messages to request that an operation be performed on the managed variable that is maintained by an SNMP agent. SNMPv1 defines three types of request messages: <B>GetRequest</B>, <B>GetNextRequest</B>, and <B>SetRequest</B>. SNMPv2 defines an additional type of request message: <B>GetBulk</B>. The SNMP agent responds to a received request by sending a <B>GetResponse</B> message. If a predefined condition or an extraordinary event occurs, the SNMP agent sends a <B>Trap</B> message to the network management system.</dd>
+
+<DT>MIB</DT>
+
+<DD>A Management Information Base (MIB) is a schema or blueprint that contains the hierarchical order of all of the managed objects. Each managed object in an MIB has a unique identifier. The identifier includes the type (such as counter, string, gauge, or address), access level (such as read/write), size restrictions, and range information of the object.</dd>
+
+<DT>MIB Compiler</DT>
+
+<DD>An MIB compiler is a program that translates MIB modules that are written in ASN.1 into another data format, such as C (which later is compiled as part of the agent) or a relational database. Most management systems and agents cannot read ASN.1 MIB modules, and they first must compile them into a more readable format.</dd>
+
+<DT>MIB Module</DT>
+
+<DD>An MIB module is a readable, ASN.1 description of SNMP MIB objects, data definitions, conventions, subtypes, and events. Because MIB modules usually are compiled into another format before they are used, they can be considered to be the source code of the MIB.</dd>
+
+<DT>NMS</DT>
+
+<DD>A Network Management Station (NMS) is a console that monitors and controls network elements by executing management applications. To perform NMS functions, high-performance workstation computers that have fast CPUs and extensive disk space are used. A managed network requires at least one NMS workstation to perform SNMP operations.</dd>
+
+<DT>Object Identifier</DT>
+
+<DD>An Object Identifier is the identification value of an object that is defined in a MIB. Object identifiers are arranged in a hierarchical tree structure that is compliant with Internet standard and that consists of roots and branches. An object identifier is written as a sequence of subidentifiers, starting with the tree root, in dotted decimal notation. For example, the Microsoft branch of the MIB naming tree is expressed as 1.3.6.1.4.1.311.</dd>
+
+<DT>SNMP Agent</DT>
+
+<DD>An SNMP Agent is an application that performs the operational role of receiving and processing requests, sending responses to the manager, and sending traps when an event occurs.</dd>
+
+<DT>SNMP Manager</DT>
+
+<DD>An SNMP Manager or SNMP Service is an application that performs the operational roles of generating requests to modify and retrieve management information, and receiving the requested information and trap-event reports that are generated by the SNMP agent.</dd>
+</DL>
+
+<H2 class="dtH1"><A NAME="snmpmib_library"></A>SNMP Library Files and Programs</H2>
+
+<P>The following table shows the SNMP library files and programs that are supported by Windows CE 3.0.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>File name</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Hostmib.mib</TD>
+<TD width=50%>Template for the host MIB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Mib_ii.mib</TD>
+<TD width=50%>Template for MIB-II</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Smi.mib</TD>
+<TD width=50%>Template for the Structure of Management Information-MIB, as specified in RFC 1155; this file contains the global definitions that are used to define objects in other MIBs</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmp_hostmib.dll</TD>
+<TD width=50%>Extension-agent DLL that implements the Host Resources-MIB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmp_mibii.dll</TD>
+<TD width=50%>Extension-agent DLL that implements MIB-II</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmp.dll</TD>
+<TD width=50%>SNMP service; this is the master agent that receives SNMP requests and delivers them to the appropriate extension-agent DLL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmpapi.dll</TD>
+<TD width=50%>SNMP utilities DLL that is set by SNMP extension-agent DLLs and manager applications; this DLL contains a framework for developing extension-agent DLLs</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmptest.mib</TD>
+<TD width=50%>Template for the test MIB</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the files and programs that are supported by SNMP management stations that are based on Microsoft Windows NT®. These files and programs can be used to monitor and manage applications on a Windows CE-based device.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>File name</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Ilmmib2.dll</TD>
+<TD width=50%>Extension-agent DLL that implements LAN Manager MIB-II</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Mgmtapi.dll</TD>
+<TD width=50%>Microsoft SNMP management API library</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Mib.bin</TD>
+<TD width=50%>Compiled MIB information that is used by the Mgmtapi.dll file</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Mib.cc</TD>
+<TD width=50%>SNMP MIB compiler that is used to produce a new Mib.bin file that includes additional MIBs</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Perf2Mib.exe</TD>
+<TD width=50%>MIB builder tool</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmpffg.exe</TD>
+<TD width=50%>SNMP configuration utility</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmpmon.exe</TD>
+<TD width=50%>SNMP utility that can monitor MIB objects on any number of remote hosts, and that optionally can log the results in an ODBC database; this program uses an initialization (.ini) file</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmptrap.exe</TD>
+<TD width=50%>SNMP trap service; this program receives SNMP traps and forwards them to the SNMP manager application by using the Mgmtapi.dll and Winsnmp.dll files</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Snmputil.exe</TD>
+<TD width=50%>SNMP management utility for testing the functionality of the SNMP service</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Winsnmp32.dll</TD>
+<TD width=50%>Windows SNMP manager API version 1.1a library</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="snmpmib_structures"></A>SNMP Structures</H2>
+
+<P>The following table shows the SNMP structures that are supported by Windows CE 3.0.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Structure</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>AsnAny</TD>
+<TD width=50%>Contains an SNMP variable type and value; this structure is a member of the <B>SnmpVarBind</B> structure that is used as a parameter in many of the SNMP functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>AsnCounter64</TD>
+<TD width=50%>Contains a 64-bit unsigned integer value, and represents a 64-bit counter; this structure is used by multiple SNMP functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>AsnObjectIdentifier</TD>
+<TD width=50%>Represents object identifiers; this structure is used by multiple SNMP functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>AsnOctetString</TD>
+<TD width=50%>Contains octet quantities, usually bytes; this structure is used by multiple SNMP functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SnmpVarBind</TD>
+<TD width=50%>Represents an SNMP variable binding</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SnmpVarBindList</TD>
+<TD width=50%>Represents a list of SNMP variable bindings</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="snmpmib_operations"></A>SNMP Operations</H2>
+
+<P>SNMP operations focus on retrieving or modifying the value of management information, and on reporting an event; they occur through message exchange over a message transport service. Each SNMP operation has its own type of message. An SNMP message consists of a header and a PDU that identifies the message type and contains additional data that is necessary to complete the message request.</P>
+
+<P>The following table shows the message types that are supported by Windows CE 3.0.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=33%><B>Message type</B></TD>
+<TD width=33%><B>Description</B></TD>
+<TD width=34%><B>From/to</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>GetBulk</TD>
+<TD width=33%>Accesses multiple values at one time (SNMPv2C only)</TD>
+<TD width=34%>Manager/agent</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>GetNextRequest</TD>
+<TD width=33%>Accesses and retrieves the value of the next instance of management information in lexicographical order</TD>
+<TD width=34%>Manager/agent</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>GetRequest</TD>
+<TD width=33%>Accesses and retrieves the value of one or more instances of management information</TD>
+<TD width=34%>Manager/agent</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>GetResponse</TD>
+<TD width=33%>Replies to a <B>GetRequest</B>, <B>GetNextRequest</B>, or <B>SetRequest</B> operation</TD>
+<TD width=34%>Agent/manager</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SetRequest</TD>
+<TD width=33%>Stores and sets a value in a variable</TD>
+<TD width=34%>Manager/agent</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Trap</TD>
+<TD width=33%>An unsolicited message that is sent by an SNMP agent to an SNMP manager and indicates that some event has occurred</TD>
+<TD width=34%>Agent/manager</TD>
+</TR>
+</table></div>
+
+<DL>
+<DT>GetBulk</DT>
+
+<DD>This message is a new feature for SNMPv2; it allows the SNMP manager to retrieve large amounts of information from the agent without initiating a <B>GetNextRequest</B> message.</dd>
+
+<DT>GetNextRequest</DT>
+
+<DD>The <B>GetNextRequest</B> message, like the <B>GetRequest</B> message, is used by the SNMP service to retrieve data from a managed object that is maintained by an SNMP agent. <B>GetNextRequest</B> and <B>GetRequest</B> have the same format, but they use different operations. Unlike <B>GetRequest</B>, <B>GetNextRequest</B> does not require that the instance identifier of each variable be specified in its object identifier.</dd>
+
+<DT>GetRequest</DT>
+
+<DD>The SNMP manager uses the <B>GetRequest</B> message to retrieve data from the managed objects that are maintained by an SNMP agent. By using <B>GetRequest</B>, the manager can request the value of one or more MIB variables, provided that the MIBs that specify the variables are supported by the agent that receives the <B>GetRequest</B> message.</dd>
+
+<DT>GetResponse</DT>
+
+<DD>The SNMP agent uses the <B>GetResponse</B> message to reply to a <B>GetRequest</B>, <B>GetNextRequest</B>, or <B>SetRequest</B> message that was sent by the SNMP manager.</dd>
+
+<DT>SetRequest</DT>
+
+<DD>The SNMP manager uses the <B>SetRequest</B> message to request that management data that is maintained by an agent be modified. <B>SetRequest</B> has the same format as the <B>GetRequest</B> message, but the former is used to write an object value, not to read one.</dd>
+
+<DT>Trap</DT>
+
+<DD>The SNMP service can handle requests and report network management information to one or more hosts in discrete blocks of data that are known as <I>traps</I>. Traps notify a network management device that an extraordinary event has occurred at an agent. When a trap condition occurs, the SNMP agent sends an SNMP-agent trap message to each of the network management stations, as specified in the trap receiver table.</dd>
+</DL>
+
+<P>The following diagram shows how messages are exchanged between the SNMP agent and the SNMP manager.</P>
+
+<P class="fig"><CODE><IMG SRC="snmpmib2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. Message exchange between SNMP agent and SNMP manager</B></P>
+
+<H2 class="dtH1"><A NAME="snmpmib_registry"></A>Registry Keys</H2>
+
+<P>The following section outlines all of the registry keys that are required for the SNMP implementation in Windows CE 3.0.</P>
+
+<P>The <B>ValidCommunities</B> registry key describes the communities that are accepted by the agent and the types of permission that they have:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\ValidCommunities</B></P>
+
+<P>The following table shows the registry settings for the key:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services|SNMP\</B></P>
+
+<P><B>Parameters\Valid Communities</B> </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=20%><B>Registry key</B></TD>
+<TD width=20%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=20%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Community1</B></TD>
+<TD width=20%><B>DWORD</B></TD>
+<TD width=20%>Permission setting for Community 1: <B>8</B> = read/write, <B>4</B> = read only, and <B>1</B> = no access</TD>
+<TD width=20%>None</TD>
+<TD width=20%>Sets the permission for a community</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Community2</B></TD>
+<TD width=20%><B>DWORD</B></TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P>The following table shows an example of how to define the registry settings for the key: </P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services|SNMP\</B></P>
+
+<P><B>Parameters\Valid Communities</B> </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><B>Sample name</B></TD>
+<TD width=50%><B>Example</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Public</B></TD>
+<TD width=50%><B>DWORD: 8</B><CODE><BR>
+</CODE>Assign the read/write value to <B>public</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Community1</B></TD>
+<TD width=50%><B>DWORD: 4</B><CODE><BR>
+</CODE>Assign the read-only value to <B>Community1</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Community2</B></TD>
+<TD width=50%><B>DWORD: 1</B><CODE><BR>
+</CODE>Disable accesses to <B>Community2</B></TD>
+</TR>
+</table></div>
+
+<P>The <B>RFC1156Agent</B> registry key contains values that are used by the MIB-II extension agent to specify the value of some of its objects:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\RFC11</B></P>
+
+<P><B>56Agent</B></P>
+
+<P>The following table shows the registry settings for the key: </P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\RFC11</B></P>
+
+<P><B>56Agent</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=20%><B>Registry key</B></TD>
+<TD width=20%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=20%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>sysContact</B></TD>
+<TD width=20%><B>String</B></TD>
+<TD width=20%>The name of your system contact<BR>
+<BR>
+<B>Example:</B><CODE><BR>
+<BR>
+</CODE>John Doe</TD>
+<TD width=20%>N/A</TD>
+<TD width=20%>Contains the system contact for the SNMP agent</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>sysLocation</B></TD>
+<TD width=20%><B>String</B></TD>
+<TD width=20%>The location of the computer on which the agent is running<BR>
+<BR>
+<B>Example:</B><CODE><BR>
+<BR>
+</CODE>7/1234 - One Microsoft Way, Redmond, WA/td&gt;</TD>
+<TD width=20%>N/A/td&gt;</TD>
+<TD width=20%>Contains a string that describes the location of the computer on which the agent is running</TD>
+</TR>
+</table></div>
+
+<P>The <B>ExtensionAgents</B> registry key describes the extension agents to load:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\ExtensionAgents</B></P>
+
+<P>The following table shows the registry settings for the key: <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\ExtensionAgents</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=20%><B>Registry key</B></TD>
+<TD width=20%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=20%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B><I>Unique_#</I></B></TD>
+<TD width=20%><B>String</B></TD>
+<TD width=20%>Registry subkey; backslashes must be used in pairs (\\)</TD>
+<TD width=20%>N/A</TD>
+<TD width=20%>Contains the registry subkey from which the parameters for the extension agent can be read</TD>
+</TR>
+</table></div>
+
+<P>The following table shows an example of the registry settings for the key: <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\ExtensionAgents</B> </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=31%><B>Example</B></TD>
+<TD width=69%><B>Registry key</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>1</B></TD>
+<TD width=69%><B>SOFTWARE\\Microsoft\\MIBII\\CurrentVersion</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>2</B></TD>
+<TD width=69%><B>SOFTWARE\\Microsoft\\HostMIB\\CurrentVersion</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>3</B></TD>
+<TD width=69%><B>SOFTWARE\\MyCompany\\MyMIB\\CurrentVersion</B></TD>
+</TR>
+</table></div>
+
+<P><B><I>HKEY_LOCAL_MACHINE\Subkey value from the preceding table</I></B></P>
+
+<P>The following table shows the registry settings for your extension agent key, as listed in the preceding key.<B> </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=20%><B>Registry key</B></TD>
+<TD width=20%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=20%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Pathname</B></TD>
+<TD width=20%><B>String</B></TD>
+<TD width=20%>The name of your extension-agent DLL; <B>Pathname</B> is not required under Windows CE.<BR>
+<BR>
+<B>Example:</B><CODE><BR>
+<BR>
+</CODE>Mymib.dll</TD>
+<TD width=20%>N/A</TD>
+<TD width=20%>Contains the name of the extension-agent DLL that the master agent should load</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Other parameters</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>N/A</TD>
+<TD width=20%>Place any other parameters here that your extension agent might want to read from the registry</TD>
+</TR>
+</table></div>
+
+<P>The <B>EnableAuthenticationTraps</B> registry key determines whether authentication traps will be generated when a request is received from a manager or community that is not valid:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\EnableAuthenticationTraps</B></P>
+
+<P>The following table shows the registry settings for the key:<B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\EnableAuthenticationTraps</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=20%><B>Registry key</B></TD>
+<TD width=20%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=20%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B><I>Switch</I></B></TD>
+<TD width=20%><B>DWORD</B></TD>
+<TD width=20%><B>1</B> enables authentication traps<BR>
+<BR>
+<B>0</B> disables authentication traps</TD>
+<TD width=20%>Enabled</TD>
+<TD width=20%>This key switches on or switches off the sending of authentication traps</TD>
+</TR>
+</table></div>
+
+<P>The <B>TrapConfiguration</B> registry key specifies the managers to which traps will be sent, and the community that will be specified in the trap:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapConfiguration</B></P>
+
+<P>The following table shows the registry settings for the key:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapConfiguration</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=20%><B>Registry key</B></TD>
+<TD width=20%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=20%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B><I>Unique_#</I></B></TD>
+<TD width=20%><B>String</B></TD>
+<TD width=20%>A resolvable manager name or an IP address</TD>
+<TD width=20%>None</TD>
+<TD width=20%>Name of the manager within this community to which you want to send traps</TD>
+</TR>
+</table></div>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapConfiguration\public]</B></P>
+
+<P>The following table shows an example of the registry settings for the key for a community specified as "public":</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapConfiguration\</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=43%><B>Example</B></TD>
+<TD width=57%><B>Value</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>1</B></TD>
+<TD width=57%><B>machine1</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>2</B></TD>
+<TD width=57%><B>123.12.23.111</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>3</B></TD>
+<TD width=57%><B>machine2</B></TD>
+</TR>
+</table></div>
+
+<P><B>[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapConfiguration\mycommunity]</B></P>
+
+<P>The following table shows the registry settings for the key for a community that is specified as "mycommunity":<B> KEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapConfiguration\</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD class="normal" width=37%><B>Example</B></TD>
+<TD class="normal" width=63%><B>Value</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=37%><B>1</B></TD>
+<TD class="normal" width=63%><B>machine3</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=37%><B>2</B></TD>
+<TD class="normal" width=63%><B>machine4</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=37%><B>3</B></TD>
+<TD class="normal" width=63%><B>122.222.111.1</B></TD>
+</TR>
+</table></div>
+
+<P>The <B>PermittedManagers</B> key specifies the managers that are allowed to send requests to the agent. Note that, if no managers are specified, requests will be accepted from any manager.</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\PermittedManagers</B></P>
+
+<P>The following table shows the registry settings for the key: <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\PermittedManagers</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=19%><B>Registry key</B></TD>
+<TD width=19%><B>Type</B></TD>
+<TD width=23%><B>Value</B></TD>
+<TD width=19%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%><B><I>Unique_#</I></B></TD>
+<TD width=19%><B>String</B></TD>
+<TD width=23%>Resolvable manager name or IP address<BR>
+<BR>
+<B>Example:</B><CODE><BR>
+<BR>
+</CODE>machine<BR>
+<BR>
+1111.222.123.231<BR>
+<BR>
+mymachine</TD>
+<TD width=19%>None</TD>
+<TD width=20%>Name of a manager that you want to be able to manage this entity</TD>
+</TR>
+</table></div>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters</B></P>
+
+<P>The following table shows the registry settings for the key: <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=23%><B>Registry key</B></TD>
+<TD width=19%><B>Type</B></TD>
+<TD width=19%><B>Value</B></TD>
+<TD width=19%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>PDUBufferLength</B></TD>
+<TD width=19%><B>DWORD</B></TD>
+<TD width=19%>Size of the PDU buffer</TD>
+<TD width=19%><B>1024</B></TD>
+<TD width=20%>Buffer size for data transfers through the SNMP agent</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>When you set the value for this registry key, make sure not to set the size of the PDU buffer at a value that is too small. If the length of the PDU buffer is too small, the extension agent might not be able to fit responses into the minimum size.</BLOCKQUOTE>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapVersion</B></P>
+
+<P>The following table shows the registry settings for the key:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\</B></P>
+
+<P><B>Parameters\TrapVersion</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=22%><B>Registry key</B></TD>
+<TD width=19%><B>Type</B></TD>
+<TD width=20%><B>Value</B></TD>
+<TD width=19%><B>Default</B></TD>
+<TD width=20%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%><B>DefaultVersion</B></TD>
+<TD width=19%><B>DWORD</B></TD>
+<TD width=20%>Version of SNMP to be used for traps, by default</TD>
+<TD width=19%><B>0</B></TD>
+<TD width=20%>Values that are supported are <B>0</B> for SNMPv1 and <B>1</B> for SNMPv2C</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%><B><I>trap_destination</I></B></TD>
+<TD width=19%><B>DWORD</B></TD>
+<TD width=20%>Trap version to be used for this trap destination</TD>
+<TD width=19%><B>0</B></TD>
+<TD width=20%>Computer name that must be in the list of trap destinations</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="snmpmib_mib"></A>MIB</H2>
+
+<P>An MIB is a map of the hierarchical order of all of the managed objects or MIB variables. Each system in a network (workstation, server, router, bridge, and so on) maintains an MIB that reflects the status of the managed resources on that system. An MIB allows the SNMP manager to retrieve and modify data that is maintained by an agent. When it receives a request for a value from the manager, the SNMP master agent passes the request to the extension-agent DLL, which implements the appropriate MIB to retrieve the value that was requested.</P>
+
+<P>An MIB consists of a collection of MIB variables that are managed by the SNMP manager. Each variable within an MIB is referenced with a unique <I>object identifier</I>. An object identifier refers to the location of a managed object within the MIB name space. Object identifiers are arranged in a tree-like structure that begins with a root and expands downward into branches. Each point in an MIB tree is known as a node. In a network that is managed by SNMP, access is provided only to the leaf nodes. The value of each object identifier consists of a sequence of integers. The dotted numeric string representation of an object identifier separates its subidentifiers with periods; for example, 1.2.3.4.5.6. An MIB variable is referenced by its object identifier, as well as by its instance identifier, such as <B>INTEGER</B>, <B>STRING</B>, <B>COUNTER</B>, or <B>GAUGE</B>.</P>
+
+<P>The following code example shows an MIB object for the Toaster MIB.</P>
+
+<PRE class="code">toasterModelNumber OBJECT-TYPE
+    SYNTAX  DisplayString
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION 
+            "The name of the model of the toaster. For instance,
+            Radiant Automatic."
+    ::= {toaster 2}</PRE>
+
+<H2 class="dtH1"><A NAME="snmpmib_objects"></A>MIB Objects</H2>
+
+<P>MIB-II and Host Resources MIB each supports a set of objects, or variables, that fall under different groups. For a detailed list of each group and its objects, consult the Microsoft Windows CE 3.0 Software Development Kit (SDK).
+
+<DL>
+<DT>MIB-II</DT>
+
+<DD>MIB-II is defined in RFC 1213, which supersedes RFC 1156. The objects that MIB-II supports fall under the following groups:
+
+<UL type="disc">
+	<LI>System Group Interfaces Group </li>
+
+	<LI>Address Translation Group </li>
+
+	<LI>IP Group </li>
+
+	<LI>ICMP Group </li>
+
+	<LI>TCP Group </li>
+
+	<LI>UDP Group </li>
+
+	<LI>SNMP Group 
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>Windows CE 3.0 does not support the EGP Group.</BLOCKQUOTE>
+</li>
+</UL>
+</dd>
+
+<DT>Host Resources MIB</DT>
+
+<DD>Host Resources MIB is defined in RFC 1215. Host Resources MIB supports the following object groups:
+
+<UL type="disc">
+	<LI>Host Resources System Group </li>
+
+	<LI>Host Resources Storage Group </li>
+
+	<LI>Host Resources Device Group </li>
+
+	<LI>Host Resources Running Software Group </li>
+
+	<LI>Host Resources Installed Software Group 
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>Windows CE 3.0 does not support the Host Resources Running Software Performance Group.</BLOCKQUOTE>
+</li>
+</UL>
+</dd>
+</DL>
+
+<H2 class="dtH1"><A NAME="snmpmib_develop"></A>Developing an MIB</H2>
+
+<P>Windows CE 3.0 ships with two MIBs: MIB-II and Host Resources MIB; however, you also can create your own customized MIB by adhering to the following instructions.</P>
+
+<P><B>To develop an MIB</B>
+
+<OL type="1">
+	<LI>Research and analyze the requirements for your managed system, and create a document that contains a list of manageable objects to be included in the MIB. </li>
+
+	<LI>Design the object identifier infrastructure for your information framework. Lay out the information framework, and organize object definitions into an MIB module. </li>
+
+	<LI>Register your private MIB branch by obtaining an MIB registration point from the Internet Assigned Numbers Authority (IANA). After you register your private MIB branch, arrange each manageable object in a tree-like structure, and assign an object identifier to each variable, creating subtrees for each manageable object group. </li>
+
+	<LI>Design the MIB module. After you outline the basic MIB components, you must define the events that must be communicated to the SNMP management station. Then, you must arrange the managed-object definitions for each MIB variable in an .mib file, by using an .mib template. </li>
+
+	<LI>Organize the MIB objects into groups, and assemble the MIB module into a coherent piece of code. </li>
+</OL>
+
+<P>The following code samples show how to create an MIB structure that consists of an .mib file, an MIB header file, and an MIB source file.</P>
+
+<H3 class="dtH1">Sample .mib File</H3>
+
+<P>The .mib file contains a set of definitions for each managed object; it defines the data type of the object, as well as the current validity of the object. The .mib file also provides a brief description of the purpose of each MIB object. The role of the .mib file can be compared to the role of a .def file in a DLL.</P>
+
+<PRE class="code">TOASTER-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+        enterprises
+                FROM RFC1155-SMI
+        OBJECT-TYPE
+                FROM RFC-1212
+        DisplayString
+                FROM RFC-1213;
+
+epilogue        OBJECT IDENTIFIER ::= {enterprises 12}
+toaster         OBJECT IDENTIFIER ::= {epilogue 2}
+
+
+toasterManufacturer OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The name of the toaster’s manufacturer. For instance, 
+          Microsoft Toaster."
+  ::= {toaster 1}
+
+toasterModelNumber OBJECT-TYPE
+  SYNTAX  DisplayString
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "The name of the toaster’s model. For instance,
+          Radiant Automatic."
+  ::= {toaster 2}
+
+toasterControl OBJECT-TYPE
+  SYNTAX  INTEGER  {up (1), down (2)}
+  ACCESS  read-write
+  STATUS  mandatory
+  DESCRIPTION
+          "This variable controls the current state of the toaster. To 
+          begin toasting, set it to down (2). To abort toasting 
+          (perhaps in the event of an emergency), set it to up (2)."
+  ::= {toaster 3}
+
+toasterDoneness OBJECT-TYPE
+  SYNTAX  INTEGER (1..10)
+  ACCESS  read-write
+  STATUS  mandatory
+  DESCRIPTION
+          "This variable controls how well-done the ensuing toast is. 
+          It should be on a scale of 1 to 10. Toast made at 10 
+          generally is considered unfit for human consumption; 
+          toast made at 1 is warmed lightly."
+  ::= {toaster 4}
+
+toasterToastType OBJECT-TYPE
+  SYNTAX  INTEGER {
+                    white-bread (1),
+                    wheat-bread (2),
+                    wonder-bread (3),
+                    frozen-waffle (4),
+                    frozen-bagel (5),
+                    hash-brown (6),
+                    other (7)
+                  }
+  ACCESS  read-write
+  STATUS  mandatory
+  DESCRIPTION
+          "This variable informs the toaster of the type of material 
+          that is being toasted. The toaster uses this information, 
+          combined with toasterToastDoneness, to compute for how long 
+          the material must be toasted to achieve the required 
+          doneness."
+  ::= {toaster 5}
+
+END</PRE>
+
+<H3 class="dtH1">MIB Header-File Sample</H3>
+
+<P>The MIB header file provides additional definitions for MIB variables, such as ranges, access rights and MIB entry definitions. It also contains macros and function prototypes for the MIB functions that are called in the MIB source file.</P>
+
+<PRE class="code">/**********************************************************************
+Module Name:
+  Testmib.h
+
+Abstract:
+  Sample MIB Header File.
+**********************************************************************/
+
+#ifndef testmib_h
+#define testmib_h
+
+#include 
+
+// MIB Specifics.
+#define MIB_PREFIX_LEN            MIB_OidPrefix.idLength
+#define MAX_STRING_LEN            255
+
+// Ranges and limits for specific MIB variables.
+#define MIB_TOASTER_UP            1
+#define MIB_TOASTER_DOWN          2
+
+#define MIB_TOASTER_LIGHTLYWARM   1
+#define MIB_TOASTER_BURNT         10
+
+#define MIB_TOASTER_WHITEBREAD    1
+#define MIB_TOASTER_OTHERBREAD    7
+
+// MIB function actions.
+#define MIB_ACTION_GET            ASN_RFC1157_GETREQUEST
+#define MIB_ACTION_SET            ASN_RFC1157_SETREQUEST
+#define MIB_ACTION_GETNEXT        ASN_RFC1157_GETNEXTREQUEST
+
+// MIB Variable access privileges.
+#define MIB_ACCESS_READ           0
+#define MIB_ACCESS_WRITE          1
+#define MIB_ACCESS_READWRITE      2
+
+// Macro to determine number of sub-object identifiers in array.
+#define OID_SIZEOF(Oid)           (sizeof (Oid) / sizeof (UINT))
+
+// MIB variable ENTRY definition. This structure defines the format for
+// each entry in the MIB.
+typedef struct mib_entry
+{
+  AsnObjectIdentifier Oid;
+  void *              Storage;
+  BYTE                Type;
+  UINT                Access;
+  UINT                (*MibFunc) (UINT, struct mib_entry *,
+                      RFC1157VarBind *);
+  struct mib_entry *  MibNext;
+} MIB_ENTRY;
+
+// Internal MIB structure.
+extern MIB_ENTRY Mib[];
+extern UINT      MIB_num_variables;
+
+// Prefix to every variable in the MIB.
+extern AsnObjectIdentifier MIB_OidPrefix;
+
+// Function Prototypes.
+UINT ResolveVarBind (
+  IN OUT RFC1157VarBind *VarBind,    // Variable Binding to resolve
+  IN UINT PduAction                  // Action that is specified in PDU
+);
+
+UINT MIB_leaf_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+UINT MIB_control_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+UINT MIB_doneness_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+UINT MIB_toasttype_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+#endif // testmib_h</PRE>
+
+<H3 class="dtH1">Sample MIB Source File</H3>
+
+<P>The MIB source file performs the actual resolving of MIB variables. It contains the following header files: Windows.h, Snmp.h, and Testmib.h.</P>
+
+<PRE class="code">/*********************************************************************/
+#include 
+#include 
+#include "Testmib.h"    // Contains definitions for the table structure 
+                        // that describe the MIB. 
+// If an addition or deletion to the MIB is necessary, there are 
+// several places in the code that must be checked and, possibly, 
+// changed. The last field in each MIB entry is used to point to the 
+// NEXT leaf variable. If an addition or deletion is made, these 
+// pointers might need to be updated to reflect the modification.
+
+UINT OID_Prefix[] = {1, 3, 6, 1, 4, 1, 12};
+                      // The prefix to all of these MIB variables is 
+                      // 1.3.6.1.4.1.12
+AsnObjectIdentifier MIB_OidPrefix = 
+                                {OID_SIZEOF(OID_Prefix), OID_Prefix};
+UINT MIB_toaster[] = {2};
+                        
+// Definition of leaf variables under the toaster group. All leaf 
+// variables have a zero appended to their OID to indicate that it is 
+// the only instance of this variable, and that it exists.
+UINT MIB_toasterManufacturer[] = {2, 1, 0};
+UINT MIB_toasterModelNumber[]  = {2, 2, 0};
+UINT MIB_toasterControl[]      = {2, 3, 0};
+UINT MIB_toasterDoneness[]     = {2, 4, 0};
+UINT MIB_toasterToastType[]    = {2, 5, 0};
+
+// Storage definitions for MIB 
+char MIB_toasterManStor[]      = "Microsoft Corporation";
+char MIB_toasterModelStor[]    = 
+          "Example SNMP Extension Agent for Windows CE 3.0 
+           (TOASTER-MIB).";
+AsnInteger MIB_toasterControlStor   = 1;
+AsnInteger MIB_toasterDonenessStor  = 2;
+AsnInteger MIB_toasterToastTypeStor = 3;
+
+// MIB definiton
+MIB_ENTRY Mib[] = {
+      {{OID_SIZEOF(MIB_toasterManufacturer), MIB_toasterManufacturer},
+        &amp;MIB_toasterManStor, ASN_RFC1213_DISPSTRING,
+        MIB_ACCESS_READ, MIB_leaf_func, &amp;Mib[1]},
+
+      {{OID_SIZEOF(MIB_toasterModelNumber), MIB_toasterModelNumber},
+        &amp;MIB_toasterModelStor, ASN_RFC1213_DISPSTRING,
+        MIB_ACCESS_READ, MIB_leaf_func, &amp;Mib[2]},
+
+      {{OID_SIZEOF(MIB_toasterControl), MIB_toasterControl},
+        &amp;MIB_toasterControlStor, ASN_INTEGER,
+        MIB_ACCESS_READWRITE, MIB_control_func, &amp;Mib[3]},
+
+      {{OID_SIZEOF(MIB_toasterDoneness), MIB_toasterDoneness},
+        &amp;MIB_toasterDonenessStor, ASN_INTEGER,
+        MIB_ACCESS_READWRITE, MIB_doneness_func, &amp;Mib[4]},
+
+      {{OID_SIZEOF(MIB_toasterToastType), MIB_toasterToastType},
+        &amp;MIB_toasterToastTypeStor, ASN_INTEGER,
+        MIB_ACCESS_READWRITE, MIB_toasttype_func, NULL}};
+
+UINT MIB_num_variables = sizeof Mib / sizeof (MIB_ENTRY);
+
+/**********************************************************************
+ResolveVarBind
+  Resolves a single variable binding. Modifies the variable on a GET
+  or a GET-NEXT.
+**********************************************************************/
+UINT ResolveVarBind (
+    IN OUT RFC1157VarBind *VarBind, // Variable Binding to resolve
+    IN UINT PduAction)              // Action that is specified in PDU
+{
+  MIB_ENTRY            *MibPtr;
+  AsnObjectIdentifier  TempOid;
+  int                  CompResult;
+  UINT                 I;
+  UINT                 nResult;
+
+  // Search for var bind name in the MIB
+  I      = 0;
+  MibPtr = NULL;
+  while (MibPtr == NULL &amp;&amp; I name, &amp;TempOid);
+    if (0 &gt; CompResult)
+    {
+      // Because there is not an exact match, the only valid action is 
+      // GET-NEXT
+      if (MIB_ACTION_GETNEXT != PduAction)
+      {
+        nResult = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      
+// Because the match was not exact, but varbind name is within MIB,
+      // we are at the NEXT MIB variable down from the one that was specified.
+      PduAction = MIB_ACTION_GET;
+      MibPtr = &amp;Mib[I];
+
+      // Replace var bind name with new name.
+      SnmpUtilOidFree (&amp;VarBind-&gt;name);
+      SnmpUtilOidCpy (&amp;VarBind-&gt;name, &amp;MIB_OidPrefix);
+      SnmpUtilOidAppend (&amp;VarBind-&gt;name, &amp;MibPtr-&gt;Oid);
+    }
+    else
+    {
+      // An exact match was found.
+      if (0 == CompResult)
+        MibPtr = &amp;Mib[I];
+    }
+
+    // Free OID memory before checking another variable.
+    SnmpUtilOidFree (&amp;TempOid);
+
+    I++;
+  } // while
+
+  // If OID is not within scope of MIB, then no such name.
+  if (MibPtr == NULL)
+  {
+    nResult = SNMP_ERRORSTATUS_NOSUCHNAME;
+    goto Exit;
+  }
+
+  // Call function to process request. Each MIB entry has a function 
+  // pointer that knows how to process its MIB variable.
+  nResult = (*MibPtr-&gt;MibFunc) (PduAction, MibPtr, VarBind);
+
+  // Free temp memory.
+  SnmpUtilOidFree (&amp;TempOid);
+
+Exit:
+   return nResult;
+} // ResolveVarBind
+
+
+/**********************************************************************
+MIB_leaf_func
+  Performs generic actions on LEAF variables in the MIB.
+**********************************************************************/
+UINT MIB_leaf_func (
+    IN UINT Action,
+    IN MIB_ENTRY *MibPtr,
+    IN RFC1157VarBind *VarBind)
+{
+  UINT   ErrStat;
+
+  switch (Action)
+  {
+    case MIB_ACTION_GETNEXT:
+      // If there is no GET-NEXT pointer, then this is the end of this 
+      // MIB.
+      if (MibPtr-&gt;MibNext == NULL)
+      {
+        ErrStat = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      // Set up varbind name of NEXT MIB variable.
+      SnmpUtilOidFree (&amp;VarBind-&gt;name);
+      SnmpUtilOidCpy (&amp;VarBind-&gt;name, &amp;MIB_OidPrefix);
+      SnmpUtilOidAppend (&amp;VarBind-&gt;name, &amp;MibPtr-&gt;MibNext-&gt;Oid);
+
+      // Call function to process request. Each MIB entry has a 
+      // function pointer that knows how to process its MIB variable.
+      ErrStat = (*MibPtr-&gt;MibNext-&gt;MibFunc) (MIB_ACTION_GET,
+                  MibPtr-&gt;MibNext, VarBind);
+      break;
+
+    case MIB_ACTION_GET:
+      // Ensure that this variable’s ACCESS is GET-able.
+      if (MibPtr-&gt;Access != MIB_ACCESS_READ &amp;&amp;
+          MibPtr-&gt;Access != MIB_ACCESS_READWRITE)    
+      {
+        ErrStat = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      // Set up varbind’s return value.
+      VarBind-&gt;value.asnType = MibPtr-&gt;Type;
+      switch (VarBind-&gt;value.asnType)
+      {
+        case ASN_RFC1155_COUNTER:
+        case ASN_RFC1155_GAUGE:
+        case ASN_INTEGER:
+          VarBind-&gt;value.asnValue.number = 
+                                * (AsnInteger *) (MibPtr-&gt;Storage);
+          break;
+
+        case ASN_OCTETSTRING: // Entails ASN_RFC1213_DISPSTRING also.
+          VarBind-&gt;value.asnValue.string.length =
+                                strlen ((LPSTR)MibPtr-&gt;Storage);
+
+          if (NULL == (VarBind-&gt;value.asnValue.string.stream =
+               SnmpUtilMemAlloc (VarBind-&gt;value.asnValue.string.length*
+               sizeof (char))))
+          {
+            ErrStat = SNMP_ERRORSTATUS_GENERR;
+            goto Exit;
+          }
+
+          memcpy (VarBind-&gt;value.asnValue.string.stream,
+                  (LPSTR)MibPtr-&gt;Storage,
+                  VarBind-&gt;value.asnValue.string.length);
+          VarBind-&gt;value.asnValue.string.dynamic = TRUE;
+          break;
+
+        default:
+          ErrStat = SNMP_ERRORSTATUS_GENERR;
+          goto Exit;
+      }
+      break;
+
+    case MIB_ACTION_SET:
+      // Ensure that this variable’s ACCESS is SET-able.
+      if (MibPtr-&gt;Access != MIB_ACCESS_READWRITE &amp;&amp;
+      MibPtr-&gt;Access != MIB_ACCESS_WRITE)
+      {
+        ErrStat = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      // Check for proper type before setting.
+      if (MibPtr-&gt;Type != VarBind-&gt;value.asnType)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+
+      // Save value in MIB.
+      switch (VarBind-&gt;value.asnType)
+      {
+        case ASN_RFC1155_COUNTER:
+        case ASN_RFC1155_GAUGE:
+        case ASN_INTEGER:
+          * (AsnInteger *) (MibPtr-&gt;Storage) = 
+                                VarBind-&gt;value.asnValue.number;
+          break;
+
+        case ASN_OCTETSTRING: // Entails ASN_RFC1213_DISPSTRING also.
+          // The storage must be adequate to contain the new string,
+          // including a NULL terminator.
+          memcpy ((LPSTR)MibPtr-&gt;Storage,
+                  VarBind-&gt;value.asnValue.string.stream,
+                  VarBind-&gt;value.asnValue.string.length);
+          ((LPSTR)MibPtr-&gt;Storage) 
+                  [VarBind-&gt;value.asnValue.string.length] = ‘\0’;
+          break;
+
+        default:
+          ErrStat = SNMP_ERRORSTATUS_GENERR;       
+          goto Exit;
+      }
+      break;
+
+    default:
+      ErrStat = SNMP_ERRORSTATUS_GENERR;
+      goto Exit;
+  } // switch
+
+  // Signal that no error occurred.
+  ErrStat = SNMP_ERRORSTATUS_NOERROR;
+
+Exit:
+  return ErrStat;
+} // MIB_leaf_func
+
+
+/**********************************************************************
+MIB_control_func
+  Performs specific actions on the toasterControl MIB variable
+**********************************************************************/
+UINT MIB_control_func (
+    IN UINT Action,
+    IN MIB_ENTRY *MibPtr,
+    IN RFC1157VarBind *VarBind)
+{
+  UINT   ErrStat;
+
+  switch (Action)
+  {
+    case MIB_ACTION_SET:
+      // Ensure that this variable’s ACCESS is SET-able.
+      if (MibPtr-&gt;Access != MIB_ACCESS_READWRITE &amp;&amp;
+      MibPtr-&gt;Access != MIB_ACCESS_WRITE)
+      {
+        ErrStat = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      // Check for proper type before setting.
+      if (MibPtr-&gt;Type != VarBind-&gt;value.asnType)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+
+      // Ensure that the value is valid.
+      if (MIB_TOASTER_UP &gt; VarBind-&gt;value.asnValue.number ||
+          MIB_TOASTER_DOWN value.asnValue.number)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+      
+    // Let fall through purposefully for further processing by
+    // generic leaf function.
+    case MIB_ACTION_GETNEXT:
+    case MIB_ACTION_GET:
+      // Call the more generic function to perform the action.
+      ErrStat = MIB_leaf_func (Action, MibPtr, VarBind);
+      break;
+
+    default:
+      ErrStat = SNMP_ERRORSTATUS_GENERR;
+      goto Exit;
+  } // switch
+
+Exit:
+  return ErrStat;
+} // MIB_control_func
+
+
+/**********************************************************************
+MIB_doneness_func
+  Performs specific actions on the toasterDoneness MIB variable
+**********************************************************************/
+UINT MIB_doneness_func (
+    IN UINT Action,
+    IN MIB_ENTRY *MibPtr,
+    IN RFC1157VarBind *VarBind)
+{
+  UINT   ErrStat;
+
+  switch (Action)
+  {
+    case MIB_ACTION_SET:
+      // Ensure that this variable’s ACCESS is SET-able.
+      if (MibPtr-&gt;Access != MIB_ACCESS_READWRITE &amp;&amp;
+      MibPtr-&gt;Access != MIB_ACCESS_WRITE)
+      {
+        ErrStat = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      // Check for proper type before setting.
+      if (MibPtr-&gt;Type != VarBind-&gt;value.asnType)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+
+      // Ensure the value is valid.
+      if (MIB_TOASTER_LIGHTLYWARM &gt; VarBind-&gt;value.asnValue.number ||
+          MIB_TOASTER_BURNT value.asnValue.number)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+
+    // Let fall through purposefully for further processing by
+    // generic leaf function.
+    case MIB_ACTION_GETNEXT:
+    case MIB_ACTION_GET:
+      // Call the more generic function to perform the action.
+      ErrStat = MIB_leaf_func (Action, MibPtr, VarBind);
+      break;
+
+    default:
+      ErrStat = SNMP_ERRORSTATUS_GENERR;
+      goto Exit;
+  } // switch
+
+Exit:
+  return ErrStat;
+} // MIB_doneness_func
+
+
+/**********************************************************************
+MIB_toasttype_func
+  Performs specific actions on the toasterToastType MIB variable
+**********************************************************************/
+UINT MIB_toasttype_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind)
+{
+  UINT   ErrStat;
+
+  switch (Action)
+  {
+    case MIB_ACTION_SET:
+      // Ensure that this variable’s ACCESS is SET-able.
+      if (MibPtr-&gt;Access != MIB_ACCESS_READWRITE &amp;&amp;
+      MibPtr-&gt;Access != MIB_ACCESS_WRITE)
+      {
+        ErrStat = SNMP_ERRORSTATUS_NOSUCHNAME;
+        goto Exit;
+      }
+
+      // Check for proper type before setting.
+      if (MibPtr-&gt;Type != VarBind-&gt;value.asnType)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+
+      // Ensure that the value is valid.
+      if (MIB_TOASTER_WHITEBREAD &gt; VarBind-&gt;value.asnValue.number ||
+          MIB_TOASTER_OTHERBREAD value.asnValue.number)
+      {
+        ErrStat = SNMP_ERRORSTATUS_BADVALUE;
+        goto Exit;
+      }
+
+    // Let fall through purposefully for further processing by
+    // generic leaf function.
+    case MIB_ACTION_GETNEXT:
+    case MIB_ACTION_GET:
+      // Call the more generic function to perform the action.
+      ErrStat = MIB_leaf_func (Action, MibPtr, VarBind);
+      break;
+
+    default:
+      ErrStat = SNMP_ERRORSTATUS_GENERR;
+      goto Exit;
+  } // switch
+
+Exit:
+  return ErrStat;
+} // MIB_toasttype_func</PRE>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_643239', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

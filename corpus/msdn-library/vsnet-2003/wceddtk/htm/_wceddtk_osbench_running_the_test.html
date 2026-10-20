@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_OSBench_Running_the_Test"/>
+<MSHelp:Keyword Index="K" Term="OSBench test (DDTK), running"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: osbench.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddtk_osbench_running_the_test"></A>Running the Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following command line shows the syntax for running the test.</P>
+
+<PRE class="syntax"><B>osbench </B>[<B>-all</B>] [<B>-t</B> <I>test_case</I>] [<B>-list</B>] [<B>-v</B>] [<B>-n</B> <I>number</I>] 
+[<B>-m</B> <I>address</I>] [<B>-o</B> <I>file_name</I>] [<B>-h</B>]</PRE>
+
+<P>The following table shows the test cases.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Test Case</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>0</TD>
+<TD width=73%>Critical sections test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>1</TD>
+<TD width=73%>Event set-wakeup test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>2</TD>
+<TD width=73%>Semaphore release/acquire test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>3</TD>
+<TD width=73%>Mutex test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>4</TD>
+<TD width=73%>Voluntary yield test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>5</TD>
+<TD width=73%>PSL API call test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>6</TD>
+<TD width=73%>Interlocked APIs (decrement, increment, testexchange, exchange) test.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the test case parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Parameter</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-all</B></TD>
+<TD width=73%>Run all tests. Default: run only those specified by -t parameter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-t</B> <I>test_case</I></TD>
+<TD width=73%>ID of test case to run (separate <B>&#0150;t</B> parameter required for each test case).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-list</B></TD>
+<TD width=73%>List test IDs with descriptions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-v</B></TD>
+<TD width=73%>Output all samples. Default: output summary only.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-n</B> <I>number</I></TD>
+<TD width=73%>Number of samples per test. Default: 100.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>-<B>m</B> <I>address</I></TD>
+<TD width=73%>Virtual address to write marker values. Default: none.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-o</B> <I>file_name</I></TD>
+<TD width=73%>Output to comma-separated file. Default: output to debugger message window.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-h</B></TD>
+<TD width=73%>Print help screen.</TD>
+</TR>
+</table></div>
+
+<P class="labelproc"><B>Test Case 0</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI><B>EnterCriticalSection</B> traditional (blocking) with priority inversion
+<P>Time from a lower priority thread calling <B>LeaveCS</B> to a higher priority thread unblocking from the <B>EnterCS</B> call.
+</li>
+
+	<LI><B>EnterCriticalSection</B> traditional (blocking) without priority inversion
+<P>Time from a higher priority thread calling <B>EnterCS</B> (blocked) to a lower priority running thread.
+</li>
+
+	<LI><B>EnterCriticalSection</B> fastpath (uncontested)</li>
+
+	<LI><B>LeaveCriticalSection</B> fastpath (uncontested)</li>
+
+	<LI><B>EnterCriticalSection</B> traditional (blocking) with priority inversion
+<P>Time from a lower priority thread calling <B>LeaveCS</B> to a higher priority thread unblocking from the <B>EnterCS</B> call.
+</li>
+
+	<LI><B>EnterCriticalSection</B> traditional (blocking) without priority inversion
+<P>Time from a higher priority thread calling <B>EnterCS</B> (blocked) to a lower priority unblocked thread running.
+</li>
+</UL>
+
+<P class="labelproc"><B>Test Case 1</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Event intra-process
+<P>Time from <B>SetEvent</B> in one thread to a blocked <B>WaitForSingleObject</B> waking in another thread in the same process.
+</li>
+
+	<LI>Event inter-process
+<P>Time from <B>SetEvent</B> in one thread to a blocked <B>WaitForSingleObject</B> waking in another thread in a different process.
+</li>
+</UL>
+
+<P class="labelproc"><B>Test Case 2</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Semaphore signaling intra-process
+<P>Time from a lower priority thread calling <B>ReleaseSemaphore</B> to a higher priority thread in the same process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+
+	<LI>Semaphore signaling inter-process
+<P>Time from a lower priority thread calling <B>ReleaseSemaphore</B> to a higher priority thread in a different process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+</UL>
+
+<P class="labelproc"><B>Test Case 3</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Mutex inter-process
+<P>Time from a lower priority thread calling <B>ReleaseMutex</B> to a higher priority thread in a different process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+
+	<LI>Mutex intra-process
+<P>Time from a lower priority thread calling <B>ReleaseMutex</B> to a higher priority thread in the same process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+</UL>
+
+<P class="labelproc"><B>Test Case 4</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Yield to thread timing intra-process
+<P>Time from a thread calling <B>Sleep(0)</B> to a thread in the same process of the same priority which previously called <B>Sleep(0)</B>.
+</li>
+
+	<LI>Yield to thread timing inter-process
+<P>Time from a thread calling <B>Sleep(0)</B> to a thread in a different process of the same priority that previously called <B>Sleep(0)</B>.
+</li>
+</UL>
+
+<P class="labelproc"><B>Test Case 5</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>PSL API call (roundtrip) intra-process
+<P>Calls an API function with no parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) intra-process
+<P>Calls an API function with 7 DWORD parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) intra-process
+<P>Calls an API function with 7 PVOID parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) inter-process
+<P>Calls an API function with no parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) inter-process
+<P>Calls an API function with 7 DWORD parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) inter-process
+<P>Calls an API function with 7 PVOID parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) to NK.EXE
+<P>Calls the <B>GetOwnerProcess</B> API function in NK.EXE, which returns immediately.
+</li>
+</UL>
+
+<P class="labelproc"><B>Test Case 6</B></P>
+
+<P>This test case tests the following interlocked APIs:
+
+<UL type="disc">
+	<LI><B>InterlockedIncrement</B></li>
+
+	<LI><B>InterlockedDecrement</B></li>
+
+	<LI><B>InterlockedExchange</B></li>
+
+	<LI><B>InterlockedTestExchange</B></li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20the%20Test&nbsp;(_wceddtk_osbench_running_the_test.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

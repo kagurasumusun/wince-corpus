@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Management Operation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Management Operation"/>
+<MSHelp:RLTitle Title="Device Management Operation"/>
+<MSHelp:Keyword Index="A" Term="ceconDeviceManagementOperation"/>
+<MSHelp:Keyword Index="K" Term="Device Management, operation"/>
+<MSHelp:Keyword Index="A" Term="ceconDeviceManagementOperation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: device_management_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822094">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cecondevicemanagementoperation"></A>Device Management Operation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A typical device management operation involves the following steps:
+
+<OL type="1">
+	<LI>Poll the server.
+<P>The Device Management engine sends an HTTP POST to the server containing its current hardware and software configuration, and a list of packages that it currently has. The <A HREF="cerefpackageelement.htm">package</A> list is then retrieved from the device management client database. For more information about the client database, see <A HREF="cecondevicemanagementclientdatabase.htm">Device Management Client Database</A>.
+
+<P>For more information about polling the server, see <A HREF="ceconpollrequesttoserver.htm">Poll Request to the Server</A>.
+</li>
+
+	<LI>The server responds to the device Poll.
+<P>The server determines if there were any changes since the last poll through the X-Last-Poll: header. If there are changes, the server builds a list, the ServerList, of what the client should have and what needs to be removed. This is then sent to the client as the Poll response.
+
+<P>For more information, see <A HREF="ceconserverresponsetodevicepoll.htm">Server Response to the Device Poll</A>.
+</li>
+
+	<LI>Send a package request to the server.
+<P>The client receives and parses the server response. If both the <A HREF="cerefaddelement.htm">add</A> and <A HREF="cerefremoveelement.htm">remove</A> elements on the <A HREF="cerefpackageselement.htm">packages Element</A> are empty, the operation is complete, because there are no changes from the server or because no packages apply. If the <B>add</B> and <B>remove</B> elements are non-empty, the client immediately removes all the package entries from the database that are in the <B>remove</B> list. If there are items in the <B>add</B> list, the client adds them to the client database. If there are items in the <B>add</B> list with Required="YES", the client adds these to a Server Request List. These are mandatory packages and are downloaded without any user interaction. Items not marked YES are optional and may be selected for a later download if provision for a UI is made. If the Server Request List is not empty, the client POSTs a <A HREF="cerefpackageelement.htm">package</A> request to the server with the package identifiers of the packages it is requesting.
+
+<P>For more information, see <A HREF="ceconpackagerequesttoserver.htm">Package Request to the Server</A>.
+</li>
+
+	<LI>Download instructions from the server.
+<P>The server responds with an XML document containing one or more download instructions for the packages that the client has sent.
+
+<P>For more information, see <A HREF="cecondownloadinstructionsfromserver.htm">Download Instructions from the Server</A>.
+</li>
+
+	<LI>Schedule download tasks.
+<P>The client parses the download XML and schedules a separate download task for each item. The status of the item is set to downloading in the client database.
+</li>
+
+	<LI>Receive packages from the server.
+<P>The client then receives the packages from the server specified in the download instruction.
+</li>
+
+	<LI>Send reports to the server.
+<P>When the download task completes, the device updates the client database with the status. This can be one of two states:
+
+<UL type="disc">
+	<LI>The download failed (after the appropriate retries).</li>
+
+	<LI>The download succeeded.</li>
+</UL>
+
+<P>If the download failed, depending on the failure scenario, the download task is scheduled again after the retry interval. If the failure is due to a network condition, then the task is restarted after the required network condition is met.
+
+<P>Once the download is complete, the client sends a status report to the management server.
+
+<P>For more information, see <A HREF="ceconreportstoserver.htm">Reports to the Server</A>.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cecondevicemanagement.htm">Device Management</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Device%20Management%20Operation&nbsp;(cecondevicemanagementoperation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

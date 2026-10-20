@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisWriteConfiguration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisWriteConfiguration"/>
+<MSHelp:RLTitle Title="NdisWriteConfiguration"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisWriteConfiguration"/>
+<MSHelp:Keyword Index="K" Term="NdisWriteConfiguration"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673354">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndiswriteconfiguration"></A>NdisWriteConfiguration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function writes a caller-supplied value for a specified entry into the registry.</P>
+
+<PRE class="syntax"><B>VOID NdisWriteConfiguration(</B>
+<B>PNDIS_STATUS </B><I>Status</I><B>,</B>
+<B>NDIS_HANDLE </B><I>ConfigurationHandle</I><B>,</B>
+<B>PNDIS_STRING </B><I>Keyword</I><B>,</B>
+<B>PNDIS_CONFIGURATION_PARAMETER </B><I>ParameterValue</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable that indicates the status of the call.</dd>
+
+<DT><I>ConfigurationHandle</I></DT>
+
+<DD>[in] Specifies the handle returned by the <A HREF="cxrefndisopenconfiguration.htm">NdisOpenConfiguration</A> or the <A HREF="_wceddk_ndisopenprotocolconfiguration.htm">NdisOpenProtocolConfiguration</A> function.</dd>
+
+<DT><I>Keyword</I></DT>
+
+<DD>[in] Pointer to a caller-supplied counted string, in the system-default character set, specifying the name of an entry for which to write the value.</dd>
+
+<DT><I>ParameterValue</I></DT>
+
+<DD>[in] Points to a caller-supplied variable set to the address of a filled-in <A HREF="cxconndis_configuration_parameter.htm">NDIS_CONFIGURATION_PARAMETER</A> structure.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NDIS_STATUS_SUCCESS</TD>
+<TD width=60%>The supplied value at <I>ParameterValue</I> was written into the registry. If this is a new entry, the name at <I>Keyword</I> was also written into the registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NDIS_STATUS_NOT_SUPPORTED</TD>
+<TD width=60%>The supplied <I>ParameterType</I> is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NDIS_STATUS_RESOURCES</TD>
+<TD width=60%>NDIS could not allocate resources, usually enough memory, to transfer the requested information to the registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NDIS_STATUS_FAILURE</TD>
+<TD width=60%>The requested information could not be written.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If an entry of the same name as at <I>Keyword</I> already exists under the opened registry key, this function replaces its current value with the caller-supplied value. Otherwise, this function adds a new value entry with the specified name and supplied value to the registry.</P>
+
+<P>This function buffers and copies the caller-supplied string at <I>Keyword</I> and the caller-supplied data specified at <I>ParameterValue</I>. This memory is freed when the driver releases the <I>ConfigurationHandle</I> with the <A HREF="_wceddk_ndiscloseconfiguration.htm">NdisCloseConfiguration</A> function. The caller of this function is responsible for releasing the buffered string at <I>Keyword</I> and the memory allocated for the <B>NDIS_CONFIGURATION_PARAMETER</B> structure.</P>
+
+<P>As an alternative to calling this function, every NDIS driver can set up configuration information in the registry for itself under the driver's <B>Parameters</B> key, using an installation script.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndisansistringtounicodestring.htm">NdisAnsiStringToUnicodeString</A>, <A HREF="_wceddk_ndiscloseconfiguration.htm">NdisCloseConfiguration</A>, <A HREF="_wceddk_ndisfreememory.htm">NdisFreeMemory</A>, <A HREF="_wceddk_ndisfreestring.htm">NdisFreeString</A>, <A HREF="_wceddk_ndisinitansistring.htm">NdisInitAnsiString</A>, <A HREF="_wceddk_ndisinitializestring.htm">NdisInitializeString</A>, <A HREF="_wceddk_ndisinitunicodestring.htm">NdisInitUnicodeString</A>, <A HREF="cxrefndisopenconfiguration.htm">NdisOpenConfiguration</A>, <A HREF="_wceddk_ndisopenprotocolconfiguration.htm">NdisOpenProtocolConfiguration</A>, <A HREF="_wceddk_ndisreadconfiguration.htm">NdisReadConfiguration</A>, <A HREF="_wceddk_ndisunicodestringtoansistring.htm">NdisUnicodeStringToAnsiString</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisWriteConfiguration&nbsp;(_wceddk_ndiswriteconfiguration.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

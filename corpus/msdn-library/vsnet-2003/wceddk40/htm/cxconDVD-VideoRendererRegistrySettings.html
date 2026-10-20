@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DVD-Video Renderer Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DVD-Video Renderer Registry Settings"/>
+<MSHelp:RLTitle Title="DVD-Video Renderer Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="cxconDVD-VideoRendererRegistrySettings"/>
+<MSHelp:Keyword Index="K" Term="DVD-Video renderer, registry settings"/>
+<MSHelp:Keyword Index="K" Term="registry settings, DVD-Video renderer"/>
+<MSHelp:Keyword Index="A" Term="cxconDVD-VideoRendererRegistrySettings"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dvd_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757235">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondvd-videorendererregistrysettings"></A>DVD-Video Renderer Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The registry stores information necessary to configure the system for applications and hardware devices. The registry also contains information that the operating system continually references during operation.</P>
+
+<P>The metadriver for the DVD-Video API maps the <MSHelp:link keywords="_wceddk_IDVDRenderer_IUnknown" TABINDEX="0">IDVDRenderer</MSHelp:link> interface to COM objects that allow you to interact with renderers on your system. The design of the metadriver allows for any type of implementation, as long as it is contained within a valid COM object. Typically, these COM objects will be device drivers for physical pieces of hardware. The registry identifies the classes for the various objects used by the metadriver.</P>
+
+<P>The subkey used to register the DLL for your renderer is <B>HKEY_CLASSES_ROOT\CLSID\<I>{Your renderer CLSID}</I>\InprocServer32</B>.</P>
+
+<P>The classes for the metadriver and the renderer all tied together with the subkey <B>HKEY_CLASSES_ROOT\CLSID\{99C99C72-43E8-11d4-84C8-00C04F68EB0F}\{99C99C73-43E8-11d4-84C8-00C04F68EB0F}\<I>Your renderer name</I></B>. In this subkey, the first GUID is the CLSID for the metadriver and the second GUID is the interface identifier for the <B>IDVDRenderer</B> interface. Both of these GUIDs are inherent to the DVD-Video API. The final part of the subkey is a unique name of your choosing used to identify the renderer. The following table shows the named values for this subkey.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Value : type</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Renderer</B></TD>
+<TD width=68%>The CLSID of the DVD-Video renderer.
+<P>This value is required. It does not have a default setting.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>BitstreamType</B>: REG_DWORD</TD>
+<TD width=68%>An integer identifying the media type that the renderer can process. A setting of 0 indicates that the renderer can process DVD-Video data. All other values are reserved for future use.
+<P>This value is optional. It has a default setting of 0.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following code sample shows a complete set of metadriver registry entries for a fictitious renderer named "SouthridgeVideo".</P>
+
+<PRE class="code">[HKEY_CLASSES_ROOT\CLSID\{99C99C72-43E8-11d4-84C8-00C04F68EB0F}\InprocServer32]
+    @="metadrvr.dll"
+[HKEY_CLASSES_ROOT\CLSID\{12345678-43E8-11d4-84C8
+00C04F68EB0F}\InprocServer32]
+    @="southridgevideo.dll"
+[HKEY_CLASSES_ROOT\CLSID\{99C99C72-43E8-11d4-84C8-00C04F68EB0F}\{99C99C73
+43E8-11d4-84C8-00C04F68EB0F}\SouthridgeVideo]
+    "Renderer"="{12345678-43E8-11d4-84C8-00C04F68EB0F}"
+    "BitstreamType"=dword:0</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wceddk_IDVDRenderer_IUnknown" TABINDEX="0">IDVDRenderer</MSHelp:link></P>
+
+<P><MSHelp:link keywords="_cxconDirectDVD" TABINDEX="0">DVD-Video API</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DVD-Video%20Renderer%20Registry%20Settings&nbsp;(cxcondvd-videorendererregistrysettings.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

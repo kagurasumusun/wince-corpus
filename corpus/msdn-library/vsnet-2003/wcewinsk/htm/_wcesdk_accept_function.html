@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>accept</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="accept"/>
+<MSHelp:RLTitle Title="accept"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_accept_function"/>
+<MSHelp:Keyword Index="K" Term="accept"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_accept_function"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720479">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_accept_function"></A>accept</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function permits an incoming connection attempt on a socket.</P>
+
+<PRE class="syntax"><B>SOCKET accept(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>struct SOCK_ADDR *</B><I>addr</I><B>,</B>
+<B>int FAR *</B><I>addrlen</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s </I></DT>
+
+<DD>[in] Descriptor identifying a socket that has been placed in a listening state with the <A HREF="_wcesdk_listen_function.htm">listen</A> function. The connection is actually made with the socket that is returned by <B>accept</B>.</dd>
+
+<DT><I>addr</I> </DT>
+
+<DD>[out] Optional pointer to a buffer that receives the address of the connecting entity, as known to the communications layer. The exact format of the <I>addr</I> parameter is determined by the address family established when the socket was created.</dd>
+
+<DT><I>addrlen</I> </DT>
+
+<DD>[out] Optional pointer to an integer that contains the length of <I>addr</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>accept</B> returns a value of type <B>SOCKET</B> that is a descriptor for the new socket. This returned value is a handle for the socket on which the actual connection is made.</P>
+
+<P>The integer referred to by <I>addrlen</I> initially contains the amount of space pointed to by <I>addr</I>. On return, it will contain the actual length in bytes of the address returned.</P>
+
+<P>Otherwise, a value of INVALID_SOCKET is returned, and a specific error code can be retrieved by calling <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>. The following table shows the possible error code return values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Error value </TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSANOTINITIALISED </TD>
+<TD width=74%>A successful <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> call must occur before using the <B>accept</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAENETDOWN </TD>
+<TD width=74%>The network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEFAULT </TD>
+<TD width=74%>The <I>addrlen</I> parameter is too small or <I>addr</I> is not a valid part of the user address space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEINTR. </TD>
+<TD width=74%>A blocking Winsock call was canceled, or the socket was closed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEINPROGRESS </TD>
+<TD width=74%>A blocking Winsock call is in progress, or the service provider is still processing a callback function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEINVAL </TD>
+<TD width=74%>The <B>listen</B> function was not invoked prior to <B>accept</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEMFILE </TD>
+<TD width=74%>The queue is nonempty on entry to <B>accept</B> and there are no descriptors available.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAENOBUFS </TD>
+<TD width=74%>No buffer space is available.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAENOTSOCK </TD>
+<TD width=74%>The descriptor is not a socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEOPNOTSUPP </TD>
+<TD width=74%>The referenced socket is not a type that supports connection-oriented service.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>WSAEWOULDBLOCK </TD>
+<TD width=74%>The socket is marked as nonblocking and no connections are present to be accepted.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>accept</B> function extracts the first connection on the queue of pending connections on socket <I>s</I>. It then creates a new socket and returns a handle to the new socket. The newly created socket is the socket that will handle the actual connection and has the same properties as socket <I>s</I>, including the asynchronous events registered with the <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A> function.</P>
+
+<P>The <B>accept</B> function can block the caller until a connection is present if no pending connections are present on the queue and the socket is marked as blocking. If the socket is marked as nonblocking and no pending connections are present on the queue, <B>accept</B> returns an error as described in the following table. After the successful completion of <B>accept</B> returns a new socket handle, the accepted socket cannot be used to accept more connections. The original socket remains open and listens for new connection requests.</P>
+
+<P>The <I>addr </I>parameter is a result parameter that is completed with the address of the connecting entity, as known to the communications layer. The exact format of the <I>addr</I> parameter is determined by the address family in which the communication is occurring. The <I>addrlen</I> parameter is a value-result parameter. It should initially contain the amount of space pointed to by <I>addr</I>; on return it will contain the actual length (in bytes) of the address returned.</P>
+
+<P>The <B>accept</B> function is used with connection-oriented socket types such as <B>SOCK_STREAM</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Asynchronous transfer mode (ATM) is not supported in Microsoft&reg; Windows&reg; CE .NET.</BLOCKQUOTE>
+
+<H4 class="dtH4">Notes for Bluetooth</H4>
+
+<P>The <B>accept</B> function works the same for RFCOMM as for any standard sockets implementation.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_bind.htm">bind</A>, <A HREF="_wcesdk_connect_function.htm">connect</A>, <A HREF="_wcesdk_listen_function.htm">listen</A>, <A HREF="_wcesdk_select.htm">select</A>, <A HREF="_wcesdk_socket.htm">socket</A>, <A HREF="_wcesdk_wsaaccept.htm">WSAAccept</A>, <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A>, <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;accept&nbsp;(_wcesdk_accept_function.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

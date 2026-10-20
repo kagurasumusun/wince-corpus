@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DHAL_DP2INDEXEDTRIANGLEFAN</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DHAL_DP2INDEXEDTRIANGLEFAN"/>
+<MSHelp:RLTitle Title="D3DHAL_DP2INDEXEDTRIANGLEFAN"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2INDEXEDTRIANGLEFAN"/>
+<MSHelp:Keyword Index="K" Term="D3DHAL_DP2INDEXEDTRIANGLEFAN"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2INDEXEDTRIANGLEFAN"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665251">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefd3dhal_dp2indexedtrianglefan"></A>D3DHAL_DP2INDEXEDTRIANGLEFAN</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure is parsed from the command buffer by the <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback when the <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure's <B>bCommand</B> member is set to <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor11">D3DDP2OP_INDEXEDTRIANGLEFAN</A>, and is used to render a sequence of connected triangles using vertex indices. All of the triangles share a common vertex.</P>
+
+<PRE class="syntax"><B>typedef struct _D3DHAL_DP2INDEXEDTRIANGLEFAN {</B>
+<B>  WORD</B>   <I>wV[3]</I><B>;</B>
+<B>} D3DHAL_DP2INDEXEDTRIANGLEFAN;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>wV</B></DT>
+
+<DD>Specifies the indexes into the vertex buffer from which the driver obtains coordinate data for the vertices making up the triangle fan. 
+
+<P>Although this member has only enough space to contain three indexes, this array of indexes should be treated as a variable-sized array with (<B>wPrimitiveCount </B>+ 2) elements. (<B>wPrimitiveCount</B> is a member of the <B>D3DHAL_DP2COMMAND</B> structure.)
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>D3dDrawPrimitives2</B> should process (<B>wPrimitiveCount</B>+2) indexes from the command buffer, in effect, processing <B>wPrimitiveCount</B> <B>D3DHAL_DP2INDEXEDTRIANGLEFAN</B> structures. The value of <B>wPrimitiveCount</B> is specified in the <B>D3DHAL_DP2COMMAND</B> structure.</P>
+
+<P>The driver should process a total of (<B>wPrimitiveCount</B>+2) vertices from the vertex buffer, three vertices per triangle. The sequence of triangles rendered is: (<B>wV[</B>1<B>]</B>, <B>wV[</B>2<B>]</B>, <B>wV[</B>0<B>]</B>), (<B>wV[</B>2<B>]</B>, <B>wV[</B>3<B>]</B>, <B>wV[</B>0<B>]</B>), (<B>wV[</B>3<B>]</B>, <B>wV[</B>4<B>]</B>, <B>wV[</B>0<B>]</B>), …, (<B>wV[wPrimitiveCount]</B>, <B>wV[wPrimitiveCount</B>+1<B>]</B>, <B>wV[</B>0<B>]</B>). Notice that all of the triangles have the vertex specified in <B>wV[</B>0<B>] </B>in common.</P>
+
+<P>A <A HREF="cxrefd3dhal_dp2startvertex.htm">D3DHAL_DP2STARTVERTEX</A> structure immediately follows the command in the command buffer. The vertex buffer indexes are relative to the vertex buffer offset specified by the <B>dwVertexOffset</B> member of the <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> structure plus the base offset obtained from the <B>wVStart</B> member of the <B>D3DHAL_DP2STARTVERTEX</B> structure.</P>
+
+<P>The following figure shows a portion of a sample command buffer containing a <B>D3DDP2OP_INDEXEDTRIANGLEFAN</B> command, a <B>D3DHAL_DP2STARTVERTEX</B> offset, and a logical list of <B>D3DHAL_DP2INDEXEDTRIANGLEFAN</B> structures. The driver should process five vertices from the vertex buffer, rendering a fan with three triangles defined by (v[4], v[5], v[7]), (v[5], v[6], v[7]), (v[6], v[9], v[7]).</P>
+
+<P class="fig"><IMG SRC="dp2tfani.gif" ALT="" BORDER=0></P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>D3dhal.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor11">D3DDP2OP_INDEXEDTRIANGLEFAN</A>, <A HREF="cxrefd3dhal_dp2startvertex.htm">D3DHAL_DP2STARTVERTEX</A>, <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A>, <A HREF="cxrefd3dhal_xxxstructures.htm">D3DHAL_XXX Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DHAL_DP2INDEXEDTRIANGLEFAN&nbsp;(cxrefd3dhal_dp2indexedtrianglefan.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

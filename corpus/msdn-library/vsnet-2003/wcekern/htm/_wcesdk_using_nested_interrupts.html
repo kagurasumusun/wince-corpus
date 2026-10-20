@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Nested Interrupts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Nested Interrupts"/>
+<MSHelp:RLTitle Title="Using Nested Interrupts"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Using_Nested_Interrupts"/>
+<MSHelp:Keyword Index="K" Term="Using Nested Interrupts"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: procs.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_using_nested_interrupts"></A>Using Nested Interrupts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Real-time applications use interrupts to respond to external events in a timely manner. Using interrupts requires that an OS balance performance against ease of use. Windows CE balances these two factors by splitting interrupt processing into two steps: an interrupt service routine (ISR) and an interrupt service thread (IST). </P>
+
+<P>Windows CE associates each interrupt request (IRQ) with one ISR. In Windows CE 2.x when interrupts are enabled and an interrupt occurs, the kernel calls the registered ISR for that interrupt. While the ISR is running, the kernel disables all other IRQs. Therefore, no other interrupt, regardless of the priority, can interrupt another ISR. Once finished, the ISR returns an interrupt identifier. The kernel examines the returned interrupt identifier and sets the associated event. When the kernel sets the event, the IST starts processing.</P>
+
+<P>To prevent the loss and delay of high priority interrupts, the Windows CE 3.0 introduces nested interrupts. The following list shows how Windows CE handles nested ISR calls: 
+
+<OL type="1">
+	<LI>The kernel disables all other IRQs for the same and lower priority as the IRQ that invoked the current ISR call. 
+<P>If a higher-priority IRQ arrives before the current ISR completes processing, the kernel saves the current ISR state. 
+</li>
+
+	<LI>The kernel calls the higher-priority ISR to handle the new request. </li>
+
+	<LI>Once complete, the kernel loads the original ISR and continues processing. </li>
+</OL>
+
+<P>Windows CE can nest as many ISRs as supported by the hardware. An ISR is affected by the delay if they are performing some action that must be completed in a specific amount of time or there are other timing related issues. In these situations, the ISR would need to disable interrupts while performing the require actions.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, March 26, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Using%20Nested%20Interrupts&nbsp;(_wcesdk_using_nested_interrupts.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

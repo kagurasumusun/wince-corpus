@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CTransformFilter Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CTransformFilter Class"/>
+<MSHelp:RLTitle Title="CTransformFilter Class"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ctransformfilter_class"/>
+<MSHelp:Keyword Index="K" Term="CTransformFilter"/>
+<MSHelp:Keyword Index="K" Term="CTransformFilter, class description"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ctransformfilter_class"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxshow_classes2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_670177">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_ctransformfilter_class"></A>CTransformFilter Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P class="fig"><IMG SRC="tfrm03.gif" ALT="" BORDER=0></P>
+
+<P>This is an abstract base class that supports a simple transform filter with a single input and a single output. It is derived from the <A HREF="_wcesdk_cunknown_class.htm">CUnknown</A> class, and it supports the <A HREF="_wcesdk_ibasefilter_interface.htm">IBaseFilter</A> interface. Each pin, declared as Friends in this class, supports the <A HREF="_wcesdk_ipin_interface.htm">IPin</A> interface and uses the shared memory transport based on the <A HREF="_wcesdk_imeminputpin_interface.htm">IMemInputPin</A> interface. The filter uses classes derived from the <A HREF="_wcesdk_cbasefilter_class.htm">CBaseFilter</A> class to support <B>IBaseFilter</B>; the <A HREF="_wcesdk_ctransforminputpin_class.htm">CTransformInputPin</A> input pin class is derived from the <A HREF="_wcesdk_cbaseinputpin_class.htm">CBaseInputPin</A> class, and the <A HREF="_wcesdk_ctransformoutputpin_class.htm">CTransformOutputPin</A> output pin class is derived from the <A HREF="_wcesdk_cbaseoutputpin_class.htm">CBaseOutputPin</A> class. </P>
+
+<P>Note that, while most member functions in this class are designed to be overridden, the following pure virtual member functions must be overridden:
+
+<UL type="disc">
+	<LI><A HREF="_wcesdk_ctransformfilter__checkinputtype.htm">CheckInputType</A></li>
+
+	<LI><A HREF="_wcesdk_ctransformfilter__checktransform.htm">CheckTransform</A></li>
+
+	<LI><A HREF="_wcesdk_ctransformfilter__decidebuffersize.htm">DecideBufferSize</A></li>
+
+	<LI><A HREF="_wcesdk_ctransformfilter__getmediatype.htm">GetMediaType</A></li>
+
+	<LI><A HREF="_wcesdk_ctransformfilter__transform.htm">Transform</A></li>
+</UL>
+
+<H4 class="dtH4">Protected Data Members</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Member</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_bEOSDelivered </B></TD>
+<TD width=66%>End-of-stream delivery status flag. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_bQualityChanged</B></TD>
+<TD width=66%>Status flag that indicates if the stream has degraded. This is set to TRUE in <A HREF="_wcesdk_ctransformfilter__receive.htm">CTransformFilter::Receive</A> if the call to the derived class's <B>Transform</B> member function fails (<B>CTransformFilter::Receive</B> returns NOERROR in this case because returning S_FALSE indicates that the end-of-stream has arrived). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_bSampleSkipped </B></TD>
+<TD width=66%>Status flag that indicates if a frame was skipped. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_csFilter</B></TD>
+<TD width=66%>Critical section that protects the filter state. This critical section is held whenever the state is currently changing or might change. It is passed to the <A HREF="_wcesdk_cbasemediafilter_class.htm">CBaseMediaFilter</A> constructor so that the base class uses it too. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_csReceive</B></TD>
+<TD width=66%>Critical section that is held when processing events that occur on the receiving thread (<A HREF="_wcesdk_ctransforminputpin__receive.htm">CTransformInputPin::Receive</A> and <A HREF="_wcesdk_ctransforminputpin__endofstream.htm">CTransformInputPin::EndOfStream</A>). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_idTransform </B></TD>
+<TD width=66%>Identifier used for performance measurement. Available only when <B>PERF</B> is defined. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_pInput</B></TD>
+<TD width=66%>Pointer to the input pin class object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>m_pOutput </B></TD>
+<TD width=66%>Pointer to the output pin class object. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Member function</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__ctransformfilter.htm">CTransformFilter</A></TD>
+<TD width=66%>Constructs a <B>CTransformFilter</B> object. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Overrideable Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Member function</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__alterquality.htm">AlterQuality</A></TD>
+<TD width=66%>Receives a quality-control notification from the output pin and provides an opportunity to alter the media stream's quality. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__beginflush.htm">BeginFlush</A></TD>
+<TD width=66%>Receives notification of entering the flushing state and passes it downstream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__breakconnect.htm">BreakConnect</A></TD>
+<TD width=66%>Informs the derived class when the connection is broken. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__checkconnect.htm">CheckConnect</A></TD>
+<TD width=66%>Informs the derived class when the connection process is starting. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__checkinputtype.htm">CheckInputType</A></TD>
+<TD width=66%>Verifies that the input pin supports the media type and proposes the media type of the output pin (pure virtual). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__checktransform.htm">CheckTransform</A></TD>
+<TD width=66%>Verifies that the input and output pins support the media type (pure virtual). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__completeconnect.htm">CompleteConnect</A></TD>
+<TD width=66%>Informs the derived class when the connection process has completed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__decidebuffersize.htm">DecideBufferSize</A></TD>
+<TD width=66%>Sets the number and size of buffers required for the transfer (pure virtual). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__endflush.htm">EndFlush</A></TD>
+<TD width=66%>Receives notification of leaving the flushing state and passes it downstream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__endofstream.htm">EndOfStream</A></TD>
+<TD width=66%>Receives an end-of-stream notification and passes it downstream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__getmediatype.htm">GetMediaType</A></TD>
+<TD width=66%>Returns one of the media types that the output pin supports (pure virtual). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__getpin.htm">GetPin</A></TD>
+<TD width=66%>Returns the pin for the index specified. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__getpincount.htm">GetPinCount</A></TD>
+<TD width=66%>Returns the number of pins on the filter. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__newsegment.htm">NewSegment</A></TD>
+<TD width=66%>Informs the derived class that a new segment has started and delivers it downstream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__receive.htm">Receive</A></TD>
+<TD width=66%>Receives the media sample, calls the <A HREF="_wcesdk_ctransformfilter__transform.htm">CTransformFilter::Transform</A> member function, and then delivers the media sample. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__registerperfid.htm">RegisterPerfId</A></TD>
+<TD width=66%>Registers a performance measurement identifier. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__setmediatype.htm">SetMediaType</A></TD>
+<TD width=66%>Informs the derived class when the media type is established for the connection. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__startstreaming.htm">StartStreaming</A></TD>
+<TD width=66%>Informs the derived class that streaming is starting. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__stopstreaming.htm">StopStreaming</A></TD>
+<TD width=66%>Informs the derived class that streaming is ending. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__transform.htm">Transform</A></TD>
+<TD width=66%>Performs transform operations, reading from the input <A HREF="_wcesdk_imediasample_interface.htm">IMediaSample</A> interface and writing the data to the output <B>IMediaSample</B> interface (pure virtual). </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Implemented IBaseFilter Methods</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Method</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__findpin.htm">FindPin</A></TD>
+<TD width=66%>Retrieves the pin with the specified identifier. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__pause.htm">Pause</A></TD>
+<TD width=66%>Transitions the filter to <B>State_Paused</B> state if it is not in this state already, and informs the derived class. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_ctransformfilter__stop.htm">Stop</A></TD>
+<TD width=66%>Transitions the filter to <B>State_Stopped</B> state if it is not in this state already, and informs the derived class. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P>DirectShow applications and DirectShow filters have different include file and link library requirements. See <A HREF="_cxconsettingupbuildenvironment.htm">Setting Up the Build Environment</A> for more information. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CTransformFilter%20Class&nbsp;(_wcesdk_ctransformfilter_class.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

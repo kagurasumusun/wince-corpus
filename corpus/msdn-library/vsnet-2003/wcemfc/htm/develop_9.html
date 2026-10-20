@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bypassing the Serialization Mechanism</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_bypassing_the_serialization_mechanism"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_bypassing_the_serialization_mechanism"></A><SUP></SUP>Bypassing the Serialization Mechanism</H1>
+
+<P>The framework provides a default way to read and write data to and from files. Serializing through an archive object suits the needs of a great many applications. Such an application reads a file entirely into memory, lets the user update the file, and then writes the updated version to disk again. </P>
+
+<P>However, some applications operate on data very differently, and for these applications serialization through an archive is not suitable. Examples include database programs, programs that edit only parts of large files, programs that write text-only files, and programs that share data files.</P>
+
+<P>In these cases, you can override the <B>Serialize</B> function in a different way to mediate file actions through a <B>CFile</B> object rather than a <B>CArchive</B> object. </P>
+
+<P>You can use the <B>Open</B>, <B>Read</B>, <B>Write</B>, <B>Close</B>, and <B>Seek</B> member functions of class <B>CFile</B> to open a file, move the file pointer (seek) to a specific point in the file, read a record (a specified number of bytes) at that point, let the user update the record, then seek to the same point again and write the record back to the file. The framework will open the file for you, and you can use the <B>GetFile</B> member function of class <B>CArchive</B> to obtain a pointer to the <B>CFile</B> object. For even more sophisticated and flexible use, you can override the <B>OnOpenDocument</B> and <B>OnSaveDocument</B> member functions of class <B>CWinApp</B>.</P>
+
+<P>In this scenario, your <B>Serialize</B> override does nothing, unless, for example, you want to have it read and write a file header to keep it up to date when the document closes.</P>
+
+<P>For an example of such nonarchived processing, see the MFC sample project <B>CHKBOOK</B>.</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

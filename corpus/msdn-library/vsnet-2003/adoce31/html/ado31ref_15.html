@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Append (Columns)</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="Append (Columns)"/>
+<MSHelp:RLTitle Title="Append (Columns)"/>
+<MSHelp:Keyword Index="A" Term="ado31ref_15"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce31_append_columns_"></A><SUP></SUP>Append (Columns)</H1>
+
+<P>This method adds a new <B>Column</B> object to the <B>Columns</B> collection.</P>
+
+<H4>Syntax</H4>
+
+<PRE class=syntax>Col.App Column [, Type] [, DefinedSize]</PRE>
+
+<H4>Parameters </H4>
+
+<P>The following table shows the Parameters for the <B>Append</B> method for a <B>Columns</B> collection.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Parameter</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Column</TD>
+<TD width=50%>Required. The <B>Column</B> object to append or the name of the column to create and append.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Type</TD>
+<TD width=50%>Optional. A <B>Long</B> value specifying the data type of the column. The Type parameter corresponds to the Type property of a <B>Column</B> object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DefinedSize</TD>
+<TD width=50%>Optional. A <B>Long</B> value specifying the size of the column. The DefinedSize parameter corresponds to the DefinedSize property of a <B>Column</B> object.</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Return Values </H4>
+
+<P>None</P>
+
+<H4>Remarks</H4>
+
+<P class=indent><span class=blue><B>Note</B></span>&nbsp;&nbsp;&nbsp;An error will occur when appending a <B>Column</B> to the <B>Columns</B> collection of an Index if the Column does not already exist in a Table that is already appended to the Tables collection.</P>
+
+<H4>Example</H4>
+
+<P>The following example shows how to append a <B>Column</B> to a collection.</P>
+
+<PRE>Private Sub cmdSSCE_Click()
+
+&nbsp;&nbsp;&nbsp;&nbsp;Dim m_cat, m_col, tbl, col, strConn, stTableName, stColumnName, stExp, stAct
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_cat = CreateObject("adoxce.catalog.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_col = CreateObject("adoxce.column.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set tbl = CreateObject("adoxce.table.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set col = CreateObject("adoxce.column.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;'strConn = "provider=microsoft.sqlserver.oledb.ce.1.0;data &nbsp;&nbsp;&nbsp;&nbsp;source=pubs.db;"
+&nbsp;&nbsp;&nbsp;&nbsp;strConn = "provider=microsoft.jet.oledb.4.0;data source=temp.mdb;"
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.ActiveConnection = strConn
+
+&nbsp;&nbsp;&nbsp;&nbsp;stTableName = "ColAppScen18"
+&nbsp;&nbsp;&nbsp;&nbsp;If adox_ExistsTable(m_cat, stTableName) m_cat.Tables.Delete &nbsp;&nbsp;&nbsp;&nbsp;stTableName
+&nbsp;&nbsp;&nbsp;&nbsp;End If
+
+&nbsp;&nbsp;&nbsp;&nbsp;tbl.Name = stTableName
+
+&nbsp;&nbsp;&nbsp;&nbsp;stColumnName = "Column1"
+&nbsp;&nbsp;&nbsp;&nbsp;m_col.Name = stColumnName
+&nbsp;&nbsp;&nbsp;&nbsp;m_col.Type = adSmallInt
+
+&nbsp;&nbsp;&nbsp;&nbsp;tbl.Columns.Append m_col
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables.Append tbl
+
+&nbsp;&nbsp;&nbsp;&nbsp;'create a new column
+&nbsp;&nbsp;&nbsp;&nbsp;col.Name = "Column2"
+&nbsp;&nbsp;&nbsp;&nbsp;col.Type = adSmallInt
+
+&nbsp;&nbsp;&nbsp;&nbsp;'Set parentcatalog
+&nbsp;&nbsp;&nbsp;&nbsp;col.ParentCatalog = m_cat
+
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables(stTableName).Columns.Append col
+
+&nbsp;&nbsp;&nbsp;&nbsp;stExp = "Column2"
+&nbsp;&nbsp;&nbsp;&nbsp;stAct = m_cat.Tables(stTableName).Columns(1).Name
+
+&nbsp;&nbsp;&nbsp;&nbsp;Debug.Print stExp, stAct
+
+&nbsp;&nbsp;&nbsp;&nbsp;'cleanup
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables.Delete stTableName
+&nbsp;&nbsp;&nbsp;&nbsp;Set tbl = Nothing
+&nbsp;&nbsp;&nbsp;&nbsp;Set col = Nothing
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_cat = Nothing
+
+End Sub
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

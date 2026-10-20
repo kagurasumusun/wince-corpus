@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPAddressToString</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPAddressToString"/>
+<MSHelp:RLTitle Title="WSPAddressToString"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPAddressToString"/>
+<MSHelp:Keyword Index="K" Term="WSPAddressToString"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPAddressToString"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715148">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwspaddresstostring"></A>WSPAddressToString</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function converts all components of a <A HREF="cerefsockaddr.htm">sockaddr</A> structure into a human readable&#0150;numeric string representation of the address. This is used mainly for display purposes. </P>
+
+<PRE class="syntax"><B>int WSPAddressToString(</B>
+<B>LPSOCKADDR </B><I>lpsaAddress</I><B>,</B>
+<B>DWORD </B><I>dwAddressLength</I><B>,</B>
+<B>LPWSAPROTOCOL_INFOW </B><I>lpProtocolInfo</I><B>,</B>
+<B>LPWSTR </B><I>lpszAddressString</I><B>,</B>
+<B>LPDWORD </B><I>lpdwAddressStringLength</I><B>,</B>
+<B>LPINT </B><I>lpErrno</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpsaAddress</I></DT>
+
+<DD>[in] Points to a <B>sockaddr</B> structure to translate into a string.</dd>
+
+<DT><I>dwAddressLength</I></DT>
+
+<DD>[in] Length of the address <B>sockaddr</B>.</dd>
+
+<DT><I>lpProtocolInfo</I></DT>
+
+<DD>[in] (required) <A HREF="cerefwsaprotocol_info.htm">WSAPROTOCOL_INFO</A> structure associated with the provider that will do the translation.</dd>
+
+<DT><I>lpszAddressString</I></DT>
+
+<DD>[out] Buffer that receives the human readable&#0150;address string.</dd>
+
+<DT><I>lpdwAddressStringLength</I></DT>
+
+<DD>[in, out] Length of the <I>AddressString</I> buffer. Returns the length of the string actually copied into the buffer. If the supplied buffer is not large enough, the function fails with a specific error of WSAEFAULT and this parameter is updated with the required size in bytes.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>WSPAddressToString</B> returns zero. Otherwise, it returns SOCKET_ERROR, and a specific error code is available in <I>lpErrno</I>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Error value</TH>
+<TH width=80%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>WSAEFAULT</TD>
+<TD width=80%>Specified AddressString buffer is too small. Pass in a larger buffer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>WSA_EINVAL</TD>
+<TD width=80%>Specified Address is not a valid socket address, or its address family is not supported by the provider, or the specified <I>lpProtocolInfo</I> did not refer to a <B>WSAPROTOCOL_INFO</B> structure supported by the provider.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Layered Service Provider Considerations</B></P>
+
+<P>A layered service provider supplies an implementation of this function, but it is also a client of this function if and when it calls <B>WSPAddressToString</B> of the next layer in the protocol chain. Some special considerations apply to the <I>lpProtocolInfo</I> parameter as it is propagated down through the layers of the protocol chain.</P>
+
+<P>When a layer follows another layer in a protocol chain the first layer must pass to the next a lpProtocolInfo parameter when the second layer's WSPAddressToString function is called. The lpProtocolInfo parameter should reference a WSAPROTOCOL_INFO structure with unmodified chain information. However, if the next layer is the base protocol (that is, the last element in the chain), this layer performs a substitution when calling the base provider's <B>WSPAddressToString</B>. In this case, the base provider's <B>WSAPROTOCOL_INFO</B> structure should be referenced by the <I>lpProtocolInfo</I> parameter. One vital benefit of this policy is that base service providers do not have to be aware of protocol chains.</P>
+
+<P>This same propagation policy applies when propagating a <B>WSAPROTOCOL_INFO</B> structure through a layered sequence of other functions such as <A HREF="cerefwspduplicatesocket.htm">WSPDuplicateSocket</A>, <A HREF="cerefwspstartup.htm">WSPStartup</A>, <A HREF="cerefwspsocket.htm">WSPSocket</A>, or <A HREF="cerefwspstringtoaddress.htm">WSPStringToAddress</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefsockaddr.htm">Sockaddr</A>, <A HREF="cerefwspsocket.htm">WSPSocket</A>, <A HREF="cerefwspstartup.htm">WSPStartup</A>, <A HREF="cerefwsaprotocol_info.htm">WSAPROTOCOL_INFO</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSPAddressToString&nbsp;(cerefwspaddresstostring.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

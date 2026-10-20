@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>File System File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="File System File"/>
+<MSHelp:RLTitle Title="File System File"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_File_System_File"/>
+<MSHelp:Keyword Index="K" Term=".dat file, file system file"/>
+<MSHelp:Keyword Index="K" Term="configuration files, file system file"/>
+<MSHelp:Keyword Index="K" Term="dat file, file system file"/>
+<MSHelp:Keyword Index="K" Term="Makeimg.exe, file system file"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_File_System_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679752">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_file_system_file"></A>File System File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A file system (.dat) file defines the directory and file locations for the initial settings on a target device. When you cold boot your platform on the target device, Filesys.exe uses these .dat files to create the directories, links, and files in the RAM file system on the target device.</P>
+
+<P>When updating the Project.dat file to define directory and file locations, you can specify any root directory name other than the Windows directory and its subdirectories. In addition, you can copy or link to a file in the ROM Windows directory. The file or link is created in the RAM file system that is part of the object store in the directory specified by the .dat file.</P>
+
+<P>The following code example shows typical entries in a Project.dat file.</P>
+
+<PRE class="code">root:-Directory("My Documents")
+root:-Directory("Program Files")
+Directory("\Program Files"):-Directory("My Projects")
+Directory("\Program Files"):-Directory("Accessories")
+Directory("\Program Files"):-Directory("Communication")
+Directory("\Program Files\My Projects"):-File("My Project Program", "\Windows\Myproj.exe")
+root:-File("\control.lnk", "\Windows\control.lnk")</PRE>
+
+<P>The <B>root:</B> statement defines the root directories for the OS image. The <B>root:</B> statement is used to create any subdirectories that must be the first entry in the file. Two directories, My Documents and Program Files, are located below the root directory. In addition, three subdirectories &#0151; My Projects, Accessories, and Communication &#0151; are located in the Program Files directory. The <B>-File</B> parameter copies the file Myproj.exe from ROM, as defined by the Windows directory, into the My Projects directory with the My Project Program file name.</P>
+
+<P>When updating the .dat files, you can use <B>IF</B> and <B>ENDIF</B> conditional blocks and, optionally, the <B>NOT</B> (!) operator. Use the semicolon (;) to start a line of comments. The following code example shows how the subdirectory locations for the Program Files directory could be rewritten. </P>
+
+<PRE class="code">IF IMGINCLUDEAPPS
+  Directory("\Program Files"):-Directory("My Projects")
+ENDIF
+IF IMGNOACC !
+  Directory("\Program Files"):-Directory("Accessories")
+ENDIF
+Directory("\Program Files"):-Directory("Communication")</PRE>
+
+<P>In this example, Makeimg.exe includes the My Projects directory if the user-defined environment variable IMGINCLUDEAPPS has been set before running Makeimg.exe. If<I> </I>the environment variable IMGNOACC was not set, the Accessories directory is included. Regardless of environment variable settings, the Communication directory is included in the OS image.</P>
+
+<P>Items placed in the ROM image appear in the \Windows directory automatically. At boot time, the OS parses the information that was in the .dat file and creates a more robust file system by creating other directories and copying files to their appropriate locations. This uses RAM to store the files that were copied. Items listed in the .dat file are then copied, not moved. .lnk files make up the majority of the items in the .dat file because .lnk files are very small, as they are shortcut files, not symbolic links. The .dat file is the only way to make a file appear in outside the \Windows directory.</P>
+
+<P class="labelproc"><B>To add a desktop shortcut using a link to MyApp.exe </B>
+
+<OL type="1">
+	<LI>Create the .lnk file. 
+<P>A .lnk file is a text file that contains the command line for the linked target, which may be enclosed in double quotation marks, along with the length of that command line. Optionally, you can also pass parameters into the linked target. This is behavior that may be changed if the shortcut module is replaced in Coredll, however.
+
+<P>By default, a .lnk file uses the following format. 
+
+<PRE class="code">[number of ASCII characters after pound sign]#[command line] [optional parameters]</PRE>
+
+<P>For example, to start MyApp.exe and pass two optional parameters into the application, a sample MyApp.lnk file contains the following. 
+
+<PRE class="code">40#\Windows\MyApp.exe parameter1 parameter2</PRE>
+
+<P>The .lnk file should be placed in the \Public\&lt;project&gt;\WinCE410\Oak\Files folder. 
+</li>
+
+	<LI>Create an entry in the .dat file to move the link. 
+<P>Because the Windows CE-based ROM image places all ROM files into the \Windows folder by default, these files must be moved to other locations at system boot. The .dat file controls how the files are copied. 
+</li>
+
+	<LI>Place the following line in the Project.dat file (located in \Public\&lt;project&gt;\WinCE410\Oak\Files) to copy MyApp.lnk to the desktop.
+<PRE class="code">Directory("\Windows\ &lt;LOC_DESKTOP_DIR&gt; "):-File("MyApp.lnk", "\Windows\MyApp.lnk") </PRE>
+</li>
+
+	<LI>Add the .lnk file to the ROM image. The .lnk file must be included in the files stored in the ROM image. Edit the Project.bib file and add the following line in the section for FILES.
+<PRE class="code">MyApp.LNK $(_FLATRELEASEDIR)\MyApp.LNK NK S</PRE>
+</li>
+</OL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;File%20System%20File&nbsp;(_wcepb_file_system_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

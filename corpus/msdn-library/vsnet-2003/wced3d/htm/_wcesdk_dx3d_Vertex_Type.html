@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Vertex Type</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Vertex Type"/>
+<MSHelp:RLTitle Title="Vertex Type"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Vertex_Type"/>
+<MSHelp:Keyword Index="K" Term="FVF, vertex type format"/>
+<MSHelp:Keyword Index="K" Term="vertices%2C Direct3D, vertex type FVF format"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts2_understand.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680348">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_vertex_type"></A>Vertex Type</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic shows the steps necessary to initialize and use vertices that have a position, a normal, and texture coordinates.</P>
+
+<P>The first step is to define the custom vertex type and FVF as shown in the following code example.</P>
+
+<PRE class="code">struct Vertex
+{
+    FLOAT x, y, z;
+    FLOAT nx, ny, nz;
+    FLOAT tu, tv;
+};
+
+const DWORD VertexFVF = ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 );</PRE>
+
+<P>The next step is to create a vertex buffer with enough room for four vertices by using the <A HREF="_wcesdk_dx3d_idirect3ddevice8__createvertexbuffer.htm">IDirect3DDevice8::CreateVertexBuffer</A> method as shown in the following code example.</P>
+
+<PRE class="code">g_d3dDevice-&gt;CreateVertexBuffer(
+                 4*sizeof(Vertex), VertexFVF, 
+                 D3DUSAGE_WRITEONLY,
+                 D3DPOOL_DEFAULT, &amp;pBigSquareVB);</PRE>
+
+<P>The next step is to manipulate the values for each vertex as shown in the following code example.</P>
+
+<PRE class="code">Vertex * v;
+pBigSquareVB-&gt;Lock( 0, 0, (BYTE**)&amp;v, 0 );
+
+v[0].x  = 0.0f;  v[0].y  = 10.0;  v[0].z  = 10.0f;
+v[0].nx = 0.0f;  v[0].ny = 1.0f;  v[0].nz = 0.0f;
+v[0].tu = 0.0f;  v[0].tv = 0.0f;
+
+v[1].x  = 0.0f;  v[1].y  = 0.0f;  v[1].z  = 10.0f;
+v[1].nx = 0.0f;  v[1].ny = 1.0f;  v[1].nz = 0.0f;
+v[1].tu = 0.0f;  v[1].tv = 0.0f;
+
+v[2].x  = 10.0f; v[2].y  = 10.0f; v[2].z  = 10.0f;
+v[2].nx = 0.0f;  v[2].ny = 1.0f;  v[2].nz = 0.0f;
+v[2].tu = 0.0f;  v[2].tv = 0.0f;
+
+v[3].x  = 0.0f; v[3].y  = 10.0f;  v[3].z = 10.0f;
+v[3].nx = 0.0f; v[3].ny = 1.0f;   v[3].nz = 0.0f;
+v[3].tu = 0.0f; v[3].tv = 0.0f;
+
+pBigSquareVB-&gt;Unlock();</PRE>
+
+<P>The vertex buffer has been initialized and is ready to render. The following code example shows how to use the FVF to draw a square.</P>
+
+<PRE class="code">g_d3dDevice-&gt;SetVertexShader( VertexFVF );
+g_d3dDevice-&gt;SetStreamSource( 0, pBigSquareVB, 4*sizeof(Vertex) );
+g_d3dDevice-&gt;DrawPrimitive( D3DPT_TRIANGLESTRIP, 0 ,2);</PRE>
+
+<P>Passing an FVF to the <A HREF="_wcesdk_dx3d_idirect3ddevice8__setvertexshader.htm">IDirect3DDevice8::SetVertexShader</A> method tells Direct3D that stream 0 is the only valid stream.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Vertex%20Type&nbsp;(_wcesdk_dx3d_vertex_type.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

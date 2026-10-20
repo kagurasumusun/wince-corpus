@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Vertex Fog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Vertex Fog"/>
+<MSHelp:RLTitle Title="Using Vertex Fog"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Using_Vertex_Fog"/>
+<MSHelp:Keyword Index="K" Term="fogging%2C Direct3D, using vertex fog"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts3_using.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680602">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_using_vertex_fog"></A>Using Vertex Fog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Use the following steps to enable vertex fog in your application.</P>
+
+<P class="labelproc"><B>To enable vertex fog in a C++ application</B>
+
+<OL type="1">
+	<LI>Enable fog blending by setting <A HREF="_wcesdk_dx3d_d3drenderstatetype.htm#_wcesdk_dx3d_d3drs_fogenable">D3DRS_FOGENABLE</A> to TRUE.</li>
+
+	<LI>Set the fog color in the <A HREF="_wcesdk_dx3d_d3drenderstatetype.htm#_wcesdk_dx3d_d3drs_fogcolor">D3DRS_FOGCOLOR</A> render state.</li>
+
+	<LI>Choose the desired fog formula by setting the <A HREF="_wcesdk_dx3d_d3drenderstatetype.htm#_wcesdk_dx3d_d3drs_fogvertexmode">D3DRS_FOGVERTEXMODE</A> render state to a member of the <A HREF="_wcesdk_dx3d_d3dfogmode.htm">D3DFOGMODE</A> enumerated type. </li>
+
+	<LI>Set the fog parameters as desired for the selected fog formula in the render states. </li>
+</OL>
+
+<P>The following code example, written in C++, shows what these steps might look like in code.</P>
+
+<PRE class="code">// For brevity, error values in this example are not checked 
+// after each call. A real-world application should check 
+// these values appropriately.
+//
+// For the purposes of this example, g_pDevice is a valid
+// pointer to an IDirect3DDevice8 interface.
+void SetupVertexFog(DWORD Color, DWORD Mode, BOOL UseRange, FLOAT Density)
+{
+    float Start = 0.5f,    // Linear fog distances
+          End   = 0.8f;
+ 
+    // Enable fog blending.
+    g_pDevice-&gt;SetRenderState(D3DRS_FOGENABLE, TRUE);
+ 
+    // Set the fog color.
+    g_pDevice-&gt;SetRenderState(D3DRS_FOGCOLOR, Color);
+    
+    // Set fog parameters.
+    if(D3DFOG_LINEAR == Mode)
+    {
+        g_pDevice-&gt;SetRenderState(D3DRS_FOGVERTEXMODE, Mode);
+        g_pDevice-&gt;SetRenderState(D3DRS_FOGSTART, *(DWORD *)(&amp;Start));
+        g_pDevice-&gt;SetRenderState(D3DRS_FOGEND,   *(DWORD *)(&amp;End));
+    }
+    else
+    {
+        g_pDevice-&gt;SetRenderState(D3DRS_FOGVERTEXMODE, Mode);
+        g_pDevice-&gt;SetRenderState(D3DRS_FOGDENSITY, *(DWORD *)(&amp;Density));
+    }
+
+    // Enable range-based fog if desired (only supported for
+    // vertex fog). For this example, it is assumed that UseRange
+    // is set to a nonzero value only if the driver exposes the 
+    // D3DPRASTERCAPS_FOGRANGE capability.
+    // Note: This is slightly more performance intensive
+    //       than non-range-based fog.
+    if(UseRange)
+        g_pDevice-&gt;SetRenderState(
+                       D3DRS_RANGEFOGENABLE,
+                       TRUE);
+}</PRE>
+
+<P>Some fog parameters are required as floating-point values, even though the<A HREF="_wcesdk_dx3d_idirect3ddevice8__setrenderstate.htm"> IDirect3DDevice8::SetRenderState</A> method only accepts <B>DWORD</B> values in the second parameter. This example successfully provides the floating-point values to these methods without data translation by casting the addresses of the floating-point variables as <B>DWORD</B> pointers, and then dereferencing them.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Using%20Vertex%20Fog&nbsp;(_wcesdk_dx3d_using_vertex_fog.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Event Tracking Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Event Tracking Implementation"/>
+<MSHelp:RLTitle Title="Event Tracking Implementation"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingEventTracking"/>
+<MSHelp:Keyword Index="K" Term="event tracking, implementing in OAL"/>
+<MSHelp:Keyword Index="K" Term="kernel, implementing event tracking"/>
+<MSHelp:Keyword Index="K" Term="OAL, event tracking"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, event tracking"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingEventTracking"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748558">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconimplementingeventtracking"></A>Event Tracking Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The event tracking subsystem is implemented as a library that can be loaded dynamically into the kernel. While no particular kernel settings are required to use it, the profiling kernel provides more event tracking data than the kernel would without profiling. Events that are omitted on the non-profiling kernel are interrupts, kernel calls, and translation look-aside buffer (TLB) misses. To enable event tracking on any kernel, call <A HREF="cgrefloadkernellibrary.htm">LoadKernelLibrary</A> with the name of the event tracking library, usually Celog.dll.</P>
+
+<P>The Windows CE build environment provides a single build option to enable event tracking in the profiling kernel. To enable event tracking for the build, choose <B>Settings</B> from the <B>Platform</B> menu and then the <B>Build Options</B> tab and set <B>Enable Profiling</B>. This is equivalent to setting the environment variables IMGCELOGENABLE and IMGPROFILER to 1.</P>
+
+<P>When the Windows CE&#0150;based device begins running an image with event tracking enabled, a file named Celog.clg is created in the %_FLATRELEASEDIR% directory. This is a file of raw data, which is updated periodically as your device runs. To look at the data that has been collected, you may use Readlog.exe, which can be found in the %_WINCEROOT%\Public\Common\Oak\Bin\i386 directory. Additionally, a graphical viewer, the Remote Kernel Tracker, is available in Platform Builder for viewing the log file.</P>
+
+<P>As an OEM, you can create your own events to log by creating your own structures and calling <MSHelp:link keywords="cerefCeLogData" TABINDEX="0">CeLogData</MSHelp:link> with the appropriate parameters. However, there is a limit on the number of user-defined events that can be active at any one time. The limit sets a starting point and a max. You can starting assigning identifier values from CELID_USER forward and must restrict identifier assignments to less than or equal to CELID_MAX. Identifier values located below CELID_USER are reserved for OS events. </P>
+
+<P>The event-tracking engine supports the functions in the following table for use by the kernel.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Function</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><MSHelp:link keywords="cerefCeLogData" TABINDEX="0">CeLogData</MSHelp:link></TD>
+<TD width=66%>Called by the kernel whenever an event occurs that can be tracked.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><MSHelp:link keywords="cmrefCeLogInterrupt" TABINDEX="0">CeLogInterrupt</MSHelp:link></TD>
+<TD width=66%>Called by the kernel when an interrupt occurs and before the interrupt service routine (ISR) is called, and again when the ISR returns to the kernel.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><MSHelp:link keywords="cerefCeLogSetZones" TABINDEX="0">CeLogSetZones</MSHelp:link></TD>
+<TD width=66%>Called to change the current tracking zones.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="cgrefcelogqueryzones.htm">CeLogQueryZones</A></TD>
+<TD width=66%>Called by the kernel during a call to <B>CeLogGetZones</B> to query the current zone settings.</TD>
+</TR>
+</table></div>
+
+<P>If you replace the event-tracking engine (Celog.lib), your OAL must implement these functions.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconenhancingoalfunctionality.htm">Enhancing OAL Functionality</A></P>
+
+<P><A HREF="cgconenablingeventszonesduringboot.htm">Enabling Events and Zones During Boot</A></P>
+
+<P><A HREF="cgconeventtrackingoptions.htm">Event Tracking Options</A></P>
+
+<P><A HREF="cgconreplacingprovidedcelogdll.htm">Replacing the Default Celog.dll</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Event%20Tracking%20Implementation&nbsp;(cgconimplementingeventtracking.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

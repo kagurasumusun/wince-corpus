@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Installable ISRs with Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Installable ISRs with Drivers"/>
+<MSHelp:RLTitle Title="Installable ISRs with Drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconInstallableISRs"/>
+<MSHelp:Keyword Index="K" Term="installable ISRs, with drivers"/>
+<MSHelp:Keyword Index="K" Term="ISRs, installable ISRs with drivers"/>
+<MSHelp:Keyword Index="K" Term="ISRs, samples"/>
+<MSHelp:Keyword Index="A" Term="cxconInstallableISRs"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751330">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconinstallableisrs"></A>Installable ISRs with Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Installable ISRs provide the ability to share a single IRQ on a platform for use with multiple PCI devices. A sample installable ISR is included. See <MSHelp:link keywords="cmconInstallableISRs" TABINDEX="0">Installable ISRs</MSHelp:link> for more information.</P>
+
+<P>A driver may choose to install an interrupt service routine (ISR) to handle interrupts for the device. This is required if the interrupt is shared between two or more devices, which is a common occurrence with PCI devices. The installed ISR can be a generic routine that simply checks to see if the device is the one requesting service, or it can be custom-designed by the driver writer. Giisr.dll is the generic installable ISR. If the <B>IsrHandler</B> and <B>IsrDll</B> values are provided in the device's registry key, then the driver should load the ISR DLL through the <MSHelp:link keywords="cmrefLoadIntChainHandler" TABINDEX="0">LoadIntChainHandler</MSHelp:link> call.</P>
+
+<P>After the ISR is loaded with <B>LoadIntChainHandler</B>, <MSHelp:link keywords="cmrefGIISR_INFO" TABINDEX="0">GIISR_INFO</MSHelp:link>, defined in Giisr.h, is filled in and passed to the ISR through <MSHelp:link keywords="cmrefKernelLibIoControl" TABINDEX="0">KernelLibIoControl</MSHelp:link> with IOCTL_GIISR_INFO.</P>
+
+<P>The following code example shows how to load the ISR DLL with <B>LoadIntChainHandler</B>.</P>
+
+<PRE class="code">    #include &lt;mkfuncs.h&gt;
+    #include &lt;giisr.h&gt;
+    // Notes: InstallIsr is a flag that indicates that there is an ISR to be installed
+    //        IsrDll is the ISR DLL name, obtained from the registry
+    //        IsrHandler is the ISR function name, obtained from the registry
+    //        IfcType is the bus interface type, obtained from the registry
+    //        BusNumber is the PCI bus number, obtained from the registry
+
+    // Install ISR handler if there is one
+    if (InstallIsr) {
+        // Install ISR handler
+        g_IsrHandle = LoadIntChainHandler(IsrDll, IsrHandler, (BYTE)Irq);
+
+        if (!g_IsrHandle) {
+            DEBUGMSG(ZONE_ERROR, (L"WAVEDEV: Couldn't install ISR handler\r\n"));
+        } else {
+            GIISR_INFO Info;
+            PVOID PhysAddr;
+            DWORD inIoSpace = 1;    // io space
+            PHYSICAL_ADDRESS PortAddress = {ulIoBase, 0}; 
+                
+            if (!TransBusAddrToStatic(PCIBus, 0, PortAddress, ulIoLen, &amp;inIoSpace, &amp;PhysAddr)) {
+                DEBUGMSG(ZONE_ERROR, (L"WAVEDEV: Failed TransBusAddrToStatic\r\n"));
+                return FALSE;
+            }
+                
+            DEBUGMSG(ZONE_PDD, (L"WAVEDEV: Installed ISR handler, Dll = '%s', Handler = '%s', Irq = %d, PhysAddr = 0x%x\r\n", IsrDll, IsrHandler, Irq, PhysAddr));
+                
+            // Set up ISR handler
+            Info.SysIntr = ulSysIntr;
+            Info.CheckPort = TRUE;
+            Info.PortIsIO = TRUE;
+            Info.UseMaskReg = FALSE;
+            Info.PortAddr = (DWORD)PhysAddr + ES1371_dSTATUS_OFF;
+            Info.PortSize = sizeof(DWORD);
+            Info.Mask = ES1371_INTSTAT_PENDING;
+                
+            if (!KernelLibIoControl(g_IsrHandle, IOCTL_GIISR_INFO, &amp;Info, sizeof(Info), NULL, 0, NULL)) {
+                DEBUGMSG(ZONE_ERROR, (L"WAVEDEV: KernelLibIoControl call failed.\r\n"));
+            }
+        }
+    }</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconenablingdrivertobeloadedbypcibusdriver.htm">Driver Loading with the PCI Bus Driver</A> </P>
+
+<P><A HREF="cxconenablingdrivertobeloadedbypcibusdriverexample.htm">Driver Loading with the PCI Bus Driver Example</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Installable%20ISRs%20with%20Drivers&nbsp;(cxconinstallableisrs.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

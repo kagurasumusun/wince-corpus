@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_TAPI_GET_DEV_CAPS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:RLTitle Title="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Keyword Index="K" Term="NDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_TAPI_GET_DEV_CAPS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756768">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndis_tapi_get_dev_caps"></A>NDIS_TAPI_GET_DEV_CAPS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <B>NDIS_TAPI_GET_DEV_CAPS</B> structure is used by <A HREF="cxrefoid_tapi_get_dev_caps.htm">OID_TAPI_GET_DEV_CAPS</A> when it requests the miniport driver to return the telephony capabilities of a specified line device. The returned information is valid for all addresses on the given line device. </P>
+
+<P>Support for this request is mandatory. </P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_TAPI_GET_DEV_CAPS { </B>
+<B>  IN ULONG  </B><I>ulRequestID</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulDeviceID</I><B>;</B> 
+<B>  IN ULONG</B>  <I>ulExtVersion</I><B>;</B> 
+<B>  OUT LINE_DEV_CAPS</B>  <I>LineDevCaps</I><B>;</B> 
+<B>} NDIS_TAPI_GET_DEV_CAPS, *PNDIS_TAPI_GET_DEV_CAPS; </B></PRE>
+
+<H4 class="dtH4">Members </H4>
+
+<DL>
+<DT><B>ulRequestID </B></DT>
+
+<DD>Reserved. </dd>
+
+<DT><B>ulDeviceID </B></DT>
+
+<DD>Specifies the link or data channel to be queried. This was set up in a preceding <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A> request. </dd>
+
+<DT><B>ulExtVersion </B></DT>
+
+<DD>Specifies the negotiated extension version number, if any. 
+
+<P>The value has already been negotiated for this device through the <A HREF="cxrefoid_tapi_negotiate_ext_version.htm">OID_TAPI_NEGOTIATE_EXT_VERSION</A> request. The value of this member is not validated when this request is made. 
+</dd>
+
+<DT><B>LineDevCaps </B></DT>
+
+<DD>Specifies the virtual address of a variable-size structure of type LINE_DEV_CAPS. 
+
+<P>The NIC driver fills this structure with line device capabilities information to complete this request successfully. 
+
+
+<P>The structure at <B>LineDevCaps</B> has at least sizeof(<B>LINE_DEV_CAPS</B>) bytes reserved. 
+
+
+<P>The supplied provider information in the <B>dwProviderInfoOffset</B> member of <B>LINE_DEV_CAPS</B> must have the following format: 
+
+
+<UL type="disc">
+	<LI><code class="ce">MediaName\0ProviderName\0</code> <BR>
+where <BR>
+MediaName is ISDN, SW56, FrameRelay, and so forth, as appropriate. MediaName can also specify the type of device, such as RASDT_Direct (L"direct"), RASDT_Modem (L"modem"), or RASDT_Vpn (L"vpn")<BR>
+and <BR>
+ProviderName is the name of the manufacturer of the device and the unique name of the device, if any. </li>
+
+	<LI>For example, the driver of an ISDN device from SomeIHV Inc. would set the <B>dwProviderInfoOffset</B> member with a pointer to the string "ISDN\0SomeIHV\0"</li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A> function can return one of the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_SUCCESS</li>
+
+	<LI>NDIS_STATUS_PENDING</li>
+
+	<LI>NDIS_STATUS_TAPI_NODRIVER</li>
+
+	<LI>NDIS_STATUS_TAPI_RESOURCEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_FAILURE</li>
+</UL>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndistapi.h</TD>
+<TD width=16%>Ntddndis.h and Ndistapi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefoid_tapi_get_dev_caps.htm">OID_TAPI_GET_DEV_CAPS</A>, <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A>, <A HREF="cxrefoid_tapi_negotiate_ext_version.htm">OID_TAPI_NEGOTIATE_EXT_VERSION</A>, <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_TAPI_GET_DEV_CAPS&nbsp;(cxrefndis_tapi_get_dev_caps.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

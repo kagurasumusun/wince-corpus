@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 5: Define the Class Methods</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 5: Define the Class Methods"/>
+<MSHelp:RLTitle Title="Step 5: Define the Class Methods"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_5__Define_the_Class_Methods"/>
+<MSHelp:Keyword Index="K" Term="class methods, DirectMusic (Tutorial 2)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_5__Define_the_Class_Methods"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690671">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_5__define_the_class_methods"></A>Step 5: Define the Class Methods</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Besides its inherited <B>IUnknown</B> and <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool" TABINDEX="0">IDirectMusicTool</MSHelp:link> methods, the sample CEchoTool class has a constructor and destructor as well as two public methods for setting the parameters of the echo. The definition of these methods is somewhat peripheral to this tutorial, but is included here for completeness.</P>
+
+<PRE class="code">CEchoTool::CEchoTool()
+{
+  m_cRef = 1;               // So one Release() will free this
+  m_dwEchoNum = 3;          // Default to 3 echoes per note
+  m_mtDelay = DMUSPPQ / 2;  // Default to 8th-note echoes
+  InitializeCriticalSection(&amp;m_CrSec);
+}
+ 
+CEchoTool::~CEchoTool()
+{
+  DeleteCriticalSection(&amp;m_CrSec);
+}
+ 
+void CEchoTool::SetEchoNum(DWORD dwEchoNum)
+{
+  // ProcessPMsg() uses m_dwEchoNum, so use a critical
+  // section to make it thread-safe.
+  if( dwEchoNum &lt;= MAX_ECHOES )
+  {
+    EnterCriticalSection(&amp;m_CrSec);
+    m_dwEchoNum = dwEchoNum;
+    LeaveCriticalSection(&amp;m_CrSec);
+  }
+}
+ 
+void CEchoTool::SetDelay(MUSIC_TIME mtDelay)
+{
+  // ProcessPMsg() uses m_mtDelay, so use a critical
+  // section to make it thread-safe.
+  EnterCriticalSection(&amp;m_CrSec);
+  m_mtDelay = mtDelay;
+  LeaveCriticalSection(&amp;m_CrSec);
+}</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_6__add_the_tool_to_the_performance.htm">Step 6: Add the Tool to the Performance</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%205:%20Define%20the%20Class%20Methods&nbsp;(_wcesdk_dxmusic_step_5__define_the_class_methods.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

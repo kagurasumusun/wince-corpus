@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::GetMenuState</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_getmenustate"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cmenu_getmenustate"></A>CMenu::GetMenuState</H1>
+
+<P>This method retrieves the status of the specified menu item or the number of items in a pop-up menu.</P>
+
+<PRE class=syntax><B>UINT GetMenuState(
+UINT </B><I>nID</I><B>,
+UINT </B><I>nFlags</I><B> )
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nID</I></DT>
+
+<DD>Specifies the menu item ID, as determined by <I>nFlags</I>.</DD>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies the nature of <I>nID</I>. It can be one of the following values:
+
+<UL type=disc>
+	<LI>MF_BYCOMMAND&nbsp;&nbsp;&nbsp;Specifies that the parameter gives the command ID of the existing menu item. This is the default.</LI>
+
+	<LI>MF_BYPOSITION&nbsp;&nbsp;&nbsp;Specifies that the parameter gives the position of the existing menu item. The first item is at position zero.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The value 0xFFFFFFFF if the specified item does not exist. If <I>nId</I> identifies a pop-up menu, the high-order byte contains the number of items in the pop-up menu and the low-order byte contains the menu flags associated with the pop-up menu. Otherwise, the return value is a mask (Boolean OR) of the values from the following list (this mask describes the status of the menu item that <I>nId</I> identifies):
+
+<UL type=disc>
+	<LI>MF_CHECKED&nbsp;&nbsp;&nbsp;Acts as a toggle with MF_UNCHECKED to place the default check mark next to the item. When the application supplies check-mark bitmaps (see the <B>SetMenuItemBitmaps</B> method), the check mark on bitmap is displayed.</LI>
+
+	<LI>MF_DISABLED&nbsp;&nbsp;&nbsp;Disables the menu item so that it cannot be selected but does not dim it.</LI>
+
+	<LI>MF_ENABLED&nbsp;&nbsp;&nbsp;Enables the menu item so that it can be selected and restores it from its dimmed state. Note that the value of this constant is zero; an application should not test against zero for failure when using this value.</LI>
+
+	<LI>MF_GRAYED&nbsp;&nbsp;&nbsp;Disables the menu item so that it cannot be selected and dims it.</LI>
+
+	<LI>MF_MENUBARBREAK&nbsp;&nbsp;&nbsp;Places the item on a new line in static menus or in a new column in pop-up menus. The new pop-up menu column will be separated from the old column by a vertical dividing line.</LI>
+
+	<LI>MF_MENUBREAK&nbsp;&nbsp;&nbsp;Places the item on a new line in static menus or in a new column in pop-up menus. No dividing line is placed between the columns.</LI>
+
+	<LI>MF_SEPARATOR&nbsp;&nbsp;&nbsp;Draws a horizontal dividing line. Can only be used in a pop-up menu. This line cannot be dimmed, disabled, or highlighted. Other parameters are ignored.</LI>
+
+	<LI>MF_UNCHECKED&nbsp;&nbsp;&nbsp;Acts as a toggle with MF_CHECKED to remove a check mark next to the item. When the application supplies check-mark bitmaps the check mark off bitmap is displayed. Note that the value of this constant is zero; an application should not test against zero for failure when using this value.</LI>
+</UL>
+
+<H4>Example</H4>
+
+<PRE>// CMainFrame::OnToggleTestMenuItem() is a menu command handler for
+// "Test" menu item (whose resource id is ID_HELP_TEST). It toggles
+// the checked or unchecked state of the "Test" menu item.
+// CMainFrame is a CFrameWnd-derived class.
+
+void CMainFrame::OnToggleTestMenuItem()
+{
+   // Get the popup menu which contains the "Test" menu item.
+   CMenu* mmenu = GetMenu();
+   CMenu* submenu = mmenu-&gt;GetSubMenu(3);
+
+   // Check the state of the "Test" menu item. Check the menu item
+   // if it is currently unchecked. Otherwise, uncheck the menu item
+   // if it is not currently checked.
+   UINT state = submenu-&gt;GetMenuState(ID_HELP_TEST, MF_BYCOMMAND);
+   ASSERT(state != 0xFFFFFFFF);
+
+   if (state &amp; MF_CHECKED)
+      submenu-&gt;CheckMenuItem(ID_HELP_TEST, MF_UNCHECKED | MF_BYCOMMAND);
+   else
+      submenu-&gt;CheckMenuItem(ID_HELP_TEST, MF_CHECKED | MF_BYCOMMAND);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmenu_5.htm"><B>CMenu::CheckMenuItem</B></A>, <A HREF="cmenu_14.htm"><B>CMenu::EnableMenuItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

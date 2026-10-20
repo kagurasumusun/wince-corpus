@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Making Band Changes Programmatically</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Making Band Changes Programmatically"/>
+<MSHelp:RLTitle Title="Making Band Changes Programmatically"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Making_Band_Changes_Programmatically"/>
+<MSHelp:Keyword Index="K" Term="bands%2C DirectMusic, making programmatic changes"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, changing bands"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Making_Band_Changes_Programmatically"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680689">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_making_band_changes_programmatically"></A>Making Band Changes Programmatically</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Usually, the band track in a loaded segment performs program changes. However, you can also do so manually. </P>
+
+<P>First, create a secondary segment with a call to the<B> </B><MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicBand__CreateSegment" TABINDEX="0">IDirectMusicBand::CreateSegment</MSHelp:link> method, and then play that segment by calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__PlaySegment" TABINDEX="0">IDirectMusicPerformance::PlaySegment</MSHelp:link>. Typically, you would use DMUS_SEGF_MEASURE or DMUS_SEGF_GRID (see <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_SEGF_FLAGS" TABINDEX="0">DMUS_SEGF_FLAGS</MSHelp:link>) in the <I>dwFlags</I> parameter to ensure that the band change takes effect on an appropriate boundary.</P>
+
+<P>The following code example creates a segment from a band and plays it.</P>
+
+<PRE class="code">/ * It is presumed that automatic downloading is turned on or that the application has called pBand-&gt;Download. */
+ 
+HRESULT myPlayBand(
+    IDirectMusicBand *pBand,         // Pointer to a band object
+    IDirectMusicPerformance *pPerf,  // Performance to use the band
+    REFERENCE_TIME rfTime,           // Time to play at
+    DWORD dwFlags)                   // Performance flags
+ 
+{
+    IDirectMusicSegment *pSegment;
+    HRESULT hr = pBand-&gt;CreateSegment(&amp;pSegment);
+    if (SUCCEEDED(hr))
+    {
+        hr = pPerf-&gt;PlaySegment(pSegment,
+                dwFlags | DMUS_SEGF_SECONDARY,
+                rfTime,
+                NULL);
+        pSegment-&gt;Release();
+    }
+    return hr;
+}</PRE>
+
+<P>A performance can be playing instruments from more than one band at a time. For example, suppose your application is playing a primary segment using one band, and then plays a motif from a style that has a different band. As long as the instruments in the first band are mapped to different PChannels than the instruments in the second, no conflict arises. However, motif segments do not normally have their own band tracks, so you might get silence from the motif's PChannels unless you first create a band segment and play it. (It is possible to add a band track to a motif segment, but creating a separate band segment is easier.)</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Making%20Band%20Changes%20Programmatically&nbsp;(_wcesdk_dxmusic_making_band_changes_programmatically.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

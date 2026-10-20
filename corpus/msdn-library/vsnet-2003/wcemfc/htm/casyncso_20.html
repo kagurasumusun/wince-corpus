@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::OnReceive</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_onreceive"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_casyncsocket_onreceive"></A>CAsyncSocket::OnReceive</H1>
+
+<P>This method is called by the framework to notify the socket that there is data in the buffer that can be retrieved by calling the <B>Receive</B> method. </P>
+
+<PRE class=syntax><B>virtual void OnReceive(
+int </B><I>nErrorCode </I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nErrorCode</I></DT>
+
+<DD>The most recent error on a socket. The following error codes apply to the <B>OnReceive</B> method:
+
+<UL type=disc>
+	<LI>0&nbsp;&nbsp;&nbsp;The function executed successfully.</LI>
+
+	<LI>WSAENETDOWN&nbsp;&nbsp;&nbsp;The Windows CE Sockets implementation detected that the network subsystem failed.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>void CMyAsyncSocket::OnReceive(int nErrorCode)&nbsp;&nbsp;// CMyAsyncSocket is
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// derived from CAsyncSocket
+{
+&nbsp;&nbsp;static int i=0;
+
+&nbsp;&nbsp;i++;
+
+&nbsp;&nbsp;TCHAR buff[4096];
+&nbsp;&nbsp;int nRead;
+&nbsp;&nbsp;nRead = Receive(buff, 4096);
+&nbsp;&nbsp;
+&nbsp;&nbsp;switch (nRead)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;case 0:
+&nbsp;&nbsp;&nbsp;&nbsp;Close();
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;case SOCKET_ERROR:
+&nbsp;&nbsp;&nbsp;&nbsp;if (GetLastError() != WSAEWOULDBLOCK)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox ("Error occurred");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close();
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;default:
+&nbsp;&nbsp;&nbsp;&nbsp;buff[nRead] = 0; //terminate the string
+&nbsp;&nbsp;&nbsp;&nbsp;CString szTemp(buff);
+&nbsp;&nbsp;&nbsp;&nbsp;m_strRecv += szTemp;&nbsp;&nbsp;// m_strRecv is a CString declared
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// in CMyAsyncSocket
+&nbsp;&nbsp;&nbsp;&nbsp;if (szTemp.CompareNoCase("bye") == 0 ) &nbsp;&nbsp;ShutDown();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;CAsyncSocket::OnReceive(nErrorCode);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_16.htm"><B>CAsyncSocket::OnAccept</B></A>, <A HREF="casyncso_17.htm"><B>CAsyncSocket::OnClose</B></A>, <A HREF="casyncso_18.htm"><B>CAsyncSocket::OnConnect</B></A>, <A HREF="casyncso_19.htm"><B>CAsyncSocket::OnOutOfBandData</B></A>, <A HREF="casyncso_21.htm"><B>CAsyncSocket::OnSend</B></A>, <A HREF="casyncso_22.htm"><B>CAsyncSocket::Receive</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

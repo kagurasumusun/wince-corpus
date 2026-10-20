@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Client Information Key</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Client Information Key"/>
+<MSHelp:RLTitle Title="Client Information Key"/>
+<MSHelp:Keyword Index="A" Term="cmconClientInformationKey"/>
+<MSHelp:Keyword Index="K" Term="clients, Thin Client client information registry key"/>
+<MSHelp:Keyword Index="A" Term="cmconClientInformationKey"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: thinclient.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760380">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconclientinformationkey"></A>Client Information Key</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following subkey is the root subkey for storing client information in the registry.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration]</PRE>
+
+<P>From this root, each client must have its own subkey to inform the shell about the client and each connection that has been defined for it.</P>
+
+<P>The following are examples of client information keys.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration\RDP]
+[HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration\VT100]
+[HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration\3270]</PRE>
+
+<P>A client information key can have any name, as long as it is unique. The shell enumerates the keys in the <B>Registration</B> key to determine the registered clients.</P>
+
+<P>The following table shows the named values for <B>HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Value</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>DefaultClient</B>: REG_SZ</TD>
+<TD width=54%>No default setting. The <B>DefaultClient</B> value specifies the registered client key to designate as the default client when an end user creates a new connection. This key name must not be confused with the <B>Type</B> entry of a registered client.</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows how to set the default client to RDP.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration]
+    "DefaultClient"="RDP"</PRE>
+
+<P>Client information entries must be contained in named values placed at the root of each client information key.</P>
+
+<P><B>HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration\<I>Your client name</I></B></P>
+
+<P>If the entry of a client is incomplete or not valid, then the shell ignores the client, and a user is not able to create connections that are based on the client. It is important to enter appropriate values, because an error message is not posted to a user if the shell encounters a client that is not properly configured.</P>
+
+<P>The following table shows the named values for a client.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Value</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>Description</B>: REG_SZ</TD>
+<TD width=54%>No default setting. This value specifies the display name for the client. For example, the display name for the Microsoft Remote Desktop Protocol (RDP) might be "Microsoft Remote Desktop Client." When creating connections, a user is presented with the list of emulators and their descriptions.
+<P>This value is required. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>Type</B>: REG_SZ</TD>
+<TD width=54%>No default setting. The <B>Type</B> value specifies the short eight-character description for the client. A user sees the specified string in the Type column of the Windows Thin Client Shell user interface (UI). The value that is specified for <B>Type</B> does not need to be the same as the name of the client key. In other words, it is acceptable for two clients that have two different client information keys to have the same <B>Type</B> value. For example, two VT100 clients might have different client key names &#0151; "VT100a" and "VT100b" &#0151; but the <B>Type</B> value can remain "VT100" for both clients.
+<P>This value is required. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>NewExe</B>: REG_SZ</TD>
+<TD width=54%>No default setting. The <B>NewExe</B> value specifies the helper application to call when creating a new connection. Each client must have a helper application for creating new connections. The helper application for creating new connections must be a wizard.
+<P>This value is required</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>NewCmdLineArgs</B>: REG_SZ</TD>
+<TD width=54%>No default setting. The <B>NewCmdLineArgs</B> value specifies the command-line arguments to pass to the helper application that is specified by the <B>NewExe</B> value. This is useful if you want to provide one combined helper application to create, edit, and delete connections. The command-line arguments can be used to specify the required function.
+<P>This value is optional. </P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows the client information key that is required for RDP, as specified in the registry.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\WBT\Clients\Registration\RDP]
+    "Description"="Microsoft Remote Desktop Client"
+    "Type"="RDP"
+    "NewExe"="Tsconwiz.exe"
+    "NewCmdLineArgs"=""</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconthinclientregistrykeys.htm">Thin Client Registry Keys</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Client%20Information%20Key&nbsp;(cmconclientinformationkey.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

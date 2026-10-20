@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Memory Addressing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Memory Addressing"/>
+<MSHelp:RLTitle Title="Memory Addressing"/>
+<MSHelp:Keyword Index="A" Term="cgconMemoryAddressing"/>
+<MSHelp:Keyword Index="K" Term="addresses, memory addressing"/>
+<MSHelp:Keyword Index="K" Term="memory, addressing"/>
+<MSHelp:Keyword Index="A" Term="cgconMemoryAddressing"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tm4custommemory.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758665">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconmemoryaddressing"></A>Memory Addressing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>There are two kinds of memory in Microsoft&reg; Windows&reg; CE .NET: physical addresses and mapped virtual addresses.</P>
+
+<P>Physical addresses can be actual RAM or device memory that needs to be accessed by the OS. It is defined by the physical address space from a CPU perspective. The CPU cannot access this directly once the MMU is enabled. The kernel can only manage 512 MB of physical memory. On some CPUs, like MIPS and SHx, the kernel can only directly manipulate the first 1 GB of memory defined by the processors, 512 MB cached and 512 MB uncached but aliased to the same 512 MB of physical memory. On x86 and ARM processors, you can divide this physical range by using <A HREF="cgconoemaddresstable.htm">OEMAddressTable</A>. </P>
+
+<P>Mapped virtual addresses define a mapping between the virtual and physical that can be used by user-mode and kernel applications. There are two types of mapped virtual addresses: static and dynamic. Static virtual addresses provide a mapping table for the kernel that covers what virtual address range maps to a physical address range. This mapping does not change over time and is created at boot time. <B>OEMAddressTable</B> defines this static virtual to physical mapping on the x86 and ARM processors. On MIPS and SHx, this mapping is defined by the CPU and kernel. The static mapping can also be changed after boot time by calling <MSHelp:link keywords="cmrefCreateStaticMapping" TABINDEX="0">CreateStaticMapping</MSHelp:link> or <A HREF="cgrefnkcreatestaticmapping.htm">NKCreateStaticMapping</A>. Mappings created with <B>CreateStaticMapping</B> and <B>NKCreateStaticMapping</B> are accessible only by the kernel.</P>
+
+<P>A dynamically mapped virtual address is one that creates a virtual-to-physical mapping that can be defined and then released when not in use. This type of mapping is accessible to user-mode applications and is created by calling <MSHelp:link keywords="cmrefVirtualCopy" TABINDEX="0">VirtualCopy</MSHelp:link>.</P>
+
+<P>Using <B>VirtualCopy</B> with the PAGE_PHYSICAL flag, an application can map a physical address to a process-specific static virtual address. The process starts by calling <MSHelp:link keywords="_wcesdk_Win32_VirtualAlloc" TABINDEX="0">VirtualAlloc</MSHelp:link><B> </B>to allocate a virtual address range in your process to map the physical address. This is followed by a call to <B>VirtualCopy</B> to complete the mapping process and make the physical memory available in the process. <B>VirtualCopy</B> is typically used by a driver to map device-specific memory into its user-mode process space. The same region can be mapped by more than one process.</P>
+
+<P><B>CreateStaticMapping</B> is like <B>VirtualCopy</B> in that it creates a mapping between physical memory and static virtual memory. The main difference is that the static virtual address is mapped in the kernel address space. This makes the static address accessible only by the kernel. <B>CreateStaticMapping</B> is typically used to map some device-specific memory into the kernel so that an ISR can access it. The same physical address can also be mapped by using <B>VirtualCopy</B>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Memory%20Addressing&nbsp;(cgconmemoryaddressing.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

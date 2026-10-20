@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Activity Timers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Activity Timers"/>
+<MSHelp:RLTitle Title="Activity Timers"/>
+<MSHelp:Keyword Index="A" Term="cmoriActivityTimers"/>
+<MSHelp:Keyword Index="A" Term="cmoriActivityTimers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: powermgrdrv_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821341">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmoriactivitytimers"></A>Activity Timers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Upon initialization, the Power Manager reads the registry to acquire a list of activity timer names. For each timer, it checks for a time-out, in seconds, and an optional list of wake sources. It then creates the following named events:
+
+<UL type="disc">
+	<LI>A timer reset event.</li>
+
+	<LI>An active status manual-reset event.</li>
+
+	<LI>An manual-reset event.</li>
+</UL>
+
+<P>If the time-out associated with the timer expires without a reset event being signaled, the Power Manager resets the active event and sets the inactive event. If the reset event is signaled, the Power Manager resets the inactive event and sets the active event.</P>
+
+<P>The following code sample is a registry setting for configuring an activity timer.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\ActivityTimers\SystemActivity]
+    "Timeout"=dword:A
+    "WakeSources"=multi_sz:"0x20"</PRE>
+
+<P>This set of registry values causes the Power Manager to create three events with the following names: PowerManager/ActivityTimer/SystemActivity, PowerManager/SystemActivity_Active, and PowerManager/SystemActivity_Inactive. The first of these events is an auto-reset event that any driver may signal to indicate the system activity. Drivers that support resetting activity timers should read the name of the reset event of the timer from the registry. The other events are manual reset events, of which only one is signaled at a time. Drivers, applications, or the Power Manager itself may open handles to these events to determine if the timer has expired. These events indicate the status of the activity timer. The reset event is an input to the activity timer system and the status events are the corresponding outputs.</P>
+
+<P>In addition to creating events, this set of registry entries associates a wake source identifier with the activity timer. If the OS resumes and the power manager determines that the wake source corresponding to this ID caused the system to resume, it will set the associated activity timer to<I> </I>active. This allows the finite state development workstation managing OS power state transitions to use the activity timer as input. It then uses that input to make a decision as to which system power state is the most appropriate to enter during the resume process. For example, the Power Manager might enter an OS power state in which the display and backlight are off. The Power Manager enters this state so that network synchronization can occur without disturbing the user.</P>
+
+<P>Any number of drivers may open handles to the reset event of the activity timer. Drivers can reset the activity timer when appropriate. A driver should read the name of the event from the registry. This allows OEMs to customize the registry. By customizing the registry, the OEMs decide how a driver's activity should be interpreted by the Power Manager. Potential sources of activity include all drivers that open handles to the reset event of the activity timer.</P>
+
+<P>Any number of threads may open handles to the manual-reset activity/inactivity events and wait on them to determine the status of the OS. For example, a backlight driver may use the pair of manual-reset events created for an activity timer to decide how to control backlight power and intensity.</P>
+
+<P>When the system suspends, the Power Manager resets the active manual-reset events associated with activity timers. On a resume event, it scans the timers to see if any are associated with the wake source that caused the system to resume. If it finds a match, that activity event is signaled. This allows the Power Manager to resume into the system power state associated with that activity timer.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmoriactivitytimertimeoutspowercontrolpanelapplet.htm">Activity Timer Time-outs and the Power Control Panel Utility</A></P>
+
+<P><A HREF="cmoriactivitytimerresets.htm">Activity Timer Resets</A></P>
+
+<P><A HREF="cmoriactivitytimerevents.htm">Activity Timer Events</A></P>
+
+<P><A HREF="cxconpowermanagerarchitecture.htm">Power Management Architecture</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Activity%20Timers&nbsp;(cmoriactivitytimers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

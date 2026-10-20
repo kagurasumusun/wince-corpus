@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OEMAddressTable</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OEMAddressTable"/>
+<MSHelp:RLTitle Title="OEMAddressTable"/>
+<MSHelp:Keyword Index="A" Term="cgconOEMAddressTable"/>
+<MSHelp:Keyword Index="K" Term="addresses, OEMAddressTable"/>
+<MSHelp:Keyword Index="K" Term="OAL, OEMAddressTable"/>
+<MSHelp:Keyword Index="K" Term="OEMAddressTable"/>
+<MSHelp:Keyword Index="A" Term="cgconOEMAddressTable"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758689">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconoemaddresstable"></A>OEMAddressTable</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>OEMAddressTable</B> defines a table that maps a 4 -GB physical address space to the kernel's 512-MB unmapped space for a device. Each entry in the table consists of the virtual base address to map to, the physical base address to map from, and the number of MB to map.</P>
+
+<P>The data must be declared in a READONLY section, there must be at least one non-zero entry for the structure to be valid, the first entry must identify RAM, and it must start at 0x80000000. Each entry is of the following format.</P>
+
+<PRE class="code">Virtual Address, Physical Address, Size.</PRE>
+
+<P>The Size must be a multiple of 4MB and the last entry of the table must be zeroed., as shown in the following code sample.</P>
+
+<PRE class="code">(0, 0, 0)</PRE>
+
+<P>You can leave holes between ranges but you cannot have overlapping ranges.</P>
+
+<P>The only valid virtual memory mapping range is from 0x80000000 to 0x9fffffff. For every entry created in the table, the kernel creates two virtual address ranges. One exists in the virtual address range from 0x80000000 to 0x9FFFFFFF and is memory that has caching and buffering enabled. The second exists in the virtual address range from 0xA0000000 to 0xBFFFFFFF and has caching and buffering disabled.</P>
+
+<P>Any memory that is not mapped at boot time cannot be directly accessed by an ISR without first calling <MSHelp:link keywords="cmrefCreateStaticMapping" TABINDEX="0">CreateStaticMapping</MSHelp:link> to map the address.</P>
+
+<P>The following code sample shows an implementation of <B>OEMAddressTable</B>.</P>
+
+<PRE class="code">public      _OEMAddressTable
+
+   _OEMAddressTable:
+   ; 
+   ; OEMAddressTable defines the mapping between Physical and Virtual Address
+   ;   o MUST be in a READONLY Section
+   ;   o First Entry MUST be RAM, mapping from 0x80000000 -&gt; 0x00000000
+   ;   o each entry is of the format ( VA, PA, cbSize )
+   ;   o cbSize must be multiple of 4M
+   ;   o last entry must be (0, 0, 0)
+   ;   o must have at least one non-zero entry
+   ; RAM 0x80000000 -&gt; 0x00000000, size 64M
+   dd  80000000h,    0   04000000h
+   ; FLASH and other memory, if any
+   ; dd  FlashVA,      FlashPA,    FlashSize
+   ; Last entry, all zeros
+   dd  0   0   0</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcreatingbaseoal.htm">Creating a Base OAL</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;OEMAddressTable&nbsp;(cgconoemaddresstable.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

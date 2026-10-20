@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing a Hosted Device</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing a Hosted Device"/>
+<MSHelp:RLTitle Title="Implementing a Hosted Device"/>
+<MSHelp:Keyword Index="A" Term="_wcecomm_Implementing_a_Hosted_Device"/>
+<MSHelp:Keyword Index="K" Term="UPnP, implementing hosted devices"/>
+<MSHelp:Keyword Index="A" Term="_wcecomm_Implementing_a_Hosted_Device"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="UPnP"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: upnpdevhost.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_663332">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcecomm_implementing_a_hosted_device"></A>Implementing a Hosted Device</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To implement a hosted device, you must provide the following elements:
+
+<UL type="disc">
+	<LI>A description of the device and its services.</li>
+
+	<LI>An implementation of the device's behavior.</li>
+</UL>
+
+<P>The service description is an XML document that lists the actions and state variables that apply to a specific service offered by the device. Device and service descriptions both use UTL as a schema. In Microsoft&reg; Windows&reg; CE .NET, the SCPD files and any other resources that need to be published on the network must be located under the Windows\Upnp root directory, which is the default resource directory.</P>
+
+<P>The behavior of a device is defined by the services it offers. Each service requires a service description that lists the service's actions and state variables. The service and its corresponding service description describe the service interface that defines the ways in which control points can interact with a specific service.</P>
+
+<P>To implement a service, a hosted device must provide a COM object that exposes the service's interface. To be used as a COM object, the service interface, which is composed in UTL, needs to be translated into a COM interface.</P>
+
+<P>The objects that implement the service disp interfaces are called <I>service objects</I>. To manage a device's service objects, the hosted device must implement a <I>device control object</I>, which serves as the central control point for all service objects. While the device is being registered with the UPnP network, the application passes the device control object to the device host API. When a control request arrives for one of the device's services, the API calls into the device control object to request the relevant service object. The device control object can create an instance of the service object or return an interface on an already existing instance.</P>
+
+<P>To serve as a control point for a device's service objects, each device control object must implement the <A HREF="_wcesdk_iupnpdevicecontrol_iunknown.htm">IUPnPDeviceControl</A> interface. To initialize a device, the device host API must call the <A HREF="_wcesdk_iupnpdevicecontrol__initialize.htm">IUPnPDeviceControl::Initialize</A> method and pass in the full text of the UPnP device description as well as an initialization string that was specified at registration time.</P>
+
+<P>When a control request arrives for one of the device's services, the device host API calls the <A HREF="_wcesdk_iupnpdevicecontrol__getserviceobject.htm">IUPnPDeviceControl::GetServiceObject</A> method on the device control object to obtain a pointer to a service object that implements the requested service. The device host API passes in the UDN and the service identifier of the requested service, as well as the address of a pointer to an <B>IDispatch</B> interface, at which the method is expected to return the service object. </P>
+
+<P>To implement a device-hosting service on a Windows CE&#0150;based platform, you must complete the following steps:
+
+<OL type="1">
+	<LI>Create an XML device description template.
+<P>The format of the XML device description follows the UPnP Device Archtitecture specifications with a few differences:
+
+<UL type="disc">
+	<LI>The UDN field does not hold the actual globally unique ID, but a descriptive placeholder.</li>
+
+	<LI>Any file URLs, such as icons, presentation pages and SCPD-elements, should contain the local file path as shown in the following example.
+<PRE class="code">&lt;SCPDURL&gt;SampleSCPD.xml&lt;/SCPDURL&gt;</PRE>
+</li>
+
+	<LI>The <B>eventSubURL</B> and <B>controlURL</B> elements should be empty XML elements.</li>
+</UL>
+</li>
+
+	<LI>Create a Service Control Protocol Definition (SCPD) XML file for each service offered by the device.</li>
+
+	<LI>Implement a COM object exposing the <B>IUPnPDeviceControl</B> interface.</li>
+
+	<LI>Implement an <B>IDispatch</B> interface for each device service.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcecomm_using_the_upnp_device_host_api.htm">Using the UPnP Device Host API</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20a%20Hosted%20Device&nbsp;(_wcecomm_implementing_a_hosted_device.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

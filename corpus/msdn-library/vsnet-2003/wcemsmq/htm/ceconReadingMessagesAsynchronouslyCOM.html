@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Reading Messages Asynchronously (COM)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Reading Messages Asynchronously (COM)"/>
+<MSHelp:RLTitle Title="Reading Messages Asynchronously (COM)"/>
+<MSHelp:Keyword Index="A" Term="ceconReadingMessagesAsynchronouslyCOM"/>
+<MSHelp:Keyword Index="A" Term="ceconReadingMessagesAsynchronouslyCOM"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: msmq_com_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751920">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconreadingmessagesasynchronouslycom"></A>Reading Messages Asynchronously (COM)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <A HREF="cerefmsmqevent.htm">MSMQEvent</A> object used to read messages asynchronously, is implemented in terms of callbacks, and is limited to 64 callbacks per process. Internally, Message Queuing uses the <MSHelp:link keywords="cerefWaitForMultipleObjects" TABINDEX="0">WaitForMultipleObjects</MSHelp:link> API which is limited to 64 objects per process.</P>
+
+<P>When reading messages asynchronously, <A HREF="cerefmsmqqueueenablenotification.htm">MSMQQueue.EnableNotification</A> must be called for each message that is read from the queue. Typically, <B>EnableNotification</B> is called for the first message to be read and then again in the arrived event handler to read another message. Notification returns a single Arrived event for each message found in the queue.</P>
+
+<P>The following illustration shows the basic programming model used for reading messages asynchronously. It includes two calls to <B>MSMQQueue.EnableNotification</B>, plus a call to read the message from the queue.</P>
+
+<P class="fig"><IMG SRC="activex1.gif" ALT="" BORDER=0></P>
+
+<P>The model in the diagram shows that there are many ways to combine the two calls to <B>MSMQQueue.EnableNotification</B> and the call to read the message in the queue. For example, to purge all the messages in a queue, you could call <B>MSMQQueue.EnableNotification</B> with its <I>Cursor</I> parameter set to MQMSG_CURRENT, call <A HREF="cerefmsmqqueuereceivecurrent.htm">MSMQQueue.ReceiveCurrent</A> to retrieve the message from the queue, and call MSMQQueue.EnableNotification with <I>Cursor</I> set to MQMSG_CURRENT.</P>
+
+<P>However, not all combinations necessarily make good programming sense. For example, it is possible to write an event handler that would only read every other message in the queue.</P>
+
+<P>The initial call to <B>MSMQQueue.EnableNotification</B> and the subsequent call from the event handler can tell Message Queuing to check if a message is in the queue at all (Cursor = MQMSG_FIRST), if a message is at the current cursor location (Cursor = MQMSG_CURRENT), or if a message is at the next position after the cursor (Cursor = MQMSG_NEXT). The default is to trigger the Arrived event when Message Queuing finds any message in the queue (Cursor = MQMSG_FIRST).</P>
+
+<P>The calls to read the message in the queue include: <B>MSMQQueue.Receive</B>, <B>MSMQQueue.ReceiveCurrent</B>, <B>MSMQQueue.Peek</B>, <B>MSMQQueue.PeekCurrent</B>, or <B>MSMQQueue.PeekNext</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;Each call to <B>MSMQQueue.EnableNotification</B>, plus the calls to <B>MSMQQueue.ReceiveCurrent</B>, <B>MSMQQueue.PeekCurrent</B>, or <B>MSMQQueue.PeekNext</B>, provides numerous ways to navigate through the queue. Each call can affect how the cursor is moved through the queue.</BLOCKQUOTE>
+
+<P class="labelproc"><B>To find a specific message asynchronously </B>
+
+<OL type="1">
+	<LI>Obtain a valid <A HREF="cerefmsmqqueueinfo.htm">MSMQQueueInfo</A> object. </li>
+
+	<LI>Call <A HREF="cerefmsmqqueueinfoopen.htm">MSMQQueueInfo.Open</A> to open queue with receive access and call <B>MSMQQueue.EnableNotification</B> to start notification. </li>
+
+	<LI>Write <B>Arrived</B> event handler. </li>
+
+	<LI>Write <B>Arrived Error</B> event handler. </li>
+</OL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Reading%20Messages%20Asynchronously%20(COM)&nbsp;(ceconreadingmessagesasynchronouslycom.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

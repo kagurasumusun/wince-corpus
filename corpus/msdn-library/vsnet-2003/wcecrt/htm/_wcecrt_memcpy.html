@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>memcpy</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_memcpy"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_memcpy.htm", "memcpy")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_memcpy"></A>memcpy</H1>
+
+<P>Copies characters between buffers.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Routine</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>memcpy</B></TD>
+<TD width=73%>&lt;memory.h&gt; or &lt;string.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>void</B> *<B>memcpy( void</B> *<I>dest</I><B>, const void</B> *<I>src</I><B>, size_t</B> <I>count</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>dest</I></DT>
+
+<DD>New buffer</dd>
+
+<DT><I>src</I></DT>
+
+<DD>Buffer to copy from</dd>
+
+<DT><I>count</I></DT>
+
+<DD>Number of characters to copy</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P><B>memcpy</B> returns the value of <I>dest</I>.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>memcpy</B> function copies <I>count</I> bytes of <I>src</I> to <I>dest</I>. If the source and destination overlap, this function does not ensure that the original source bytes in the overlapping region are copied before being overwritten. Use <B>memmove</B> to handle overlapping regions.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* MEMCPY.C: Illustrate overlapping copy: memmove
+ * handles it correctly; memcpy does not.
+ */
+
+#include &lt;memory.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+
+char string1[60] = "The quick brown dog jumps over the lazy fox";
+char string2[60] = "The quick brown fox jumps over the lazy dog";
+/*                           1         2         3         4         5
+ *                  12345678901234567890123456789012345678901234567890
+ */
+
+void main( void )
+{
+   printf( "Function:\tmemcpy without overlap\n" );
+   printf( "Source:\t\t%s\n", string1 + 40 );
+   printf( "Destination:\t%s\n", string1 + 16 );
+   memcpy( string1 + 16, string1 + 40, 3 );
+   printf( "Result:\t\t%s\n", string1 );
+   printf( "Length:\t\t%d characters\n\n", strlen( string1 ) );
+
+   /* Restore string1 to original contents */
+   memcpy( string1 + 16, string2 + 40, 3 );
+
+   printf( "Function:\tmemmove with overlap\n" );
+   printf( "Source:\t\t%s\n", string2 + 4 );
+   printf( "Destination:\t%s\n", string2 + 10 );
+   memmove( string2 + 10, string2 + 4, 40 );
+   printf( "Result:\t\t%s\n", string2 );
+   printf( "Length:\t\t%d characters\n\n", strlen( string2 ) );
+
+   printf( "Function:\tmemcpy with overlap\n" );
+   printf( "Source:\t\t%s\n", string1 + 4 );
+   printf( "Destination:\t%s\n", string1 + 10 );
+   memcpy( string1 + 10, string1 + 4, 40 );
+   printf( "Result:\t\t%s\n", string1 );
+   printf( "Length:\t\t%d characters\n\n", strlen( string1 ) );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Function:   memcpy without overlap
+Source:      fox
+Destination:   dog jumps over the lazy fox
+Result:      The quick brown fox jumps over the lazy fox
+Length:      43 characters
+
+Function:   memmove with overlap
+Source:      quick brown fox jumps over the lazy dog
+Destination:   brown fox jumps over the lazy dog
+Result:      The quick quick brown fox jumps over the lazy dog
+Length:      49 characters
+
+Function:   memcpy with overlap
+Source:      quick brown dog jumps over the lazy fox
+Destination:   brown dog jumps over the lazy fox
+Result:      The quick quick brown dog jumps over the lazy fox
+Length:      49 characters</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_memccpy.htm"><B>_memccpy</B></A>, <A HREF="_wcecrt_memchr.htm"><B>memchr</B></A>, <A HREF="_wcecrt_memcmp.htm"><B>memcmp</B></A>, <A HREF="_wcecrt_memmove.htm"><B>memmove</B></A>, <A HREF="_wcecrt_memset.htm"><B>memset</B></A>, <A HREF="_wcecrt_strcpy_wcscpy.htm"><B>strcpy</B></A>, <A HREF="_wcecrt_strncpy_wcsncpy.htm"><B>strncpy</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

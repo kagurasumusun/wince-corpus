@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Driver Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Driver Interface"/>
+<MSHelp:RLTitle Title="Device Driver Interface"/>
+<MSHelp:Keyword Index="A" Term="cxconDeviceDriverInterface"/>
+<MSHelp:Keyword Index="K" Term="device drivers, Power Manager interfaces"/>
+<MSHelp:Keyword Index="A" Term="cxconDeviceDriverInterface"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: powermgrdrv_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760645">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondevicedriverinterface"></A>Device Driver Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Power Manager uses two mechanisms to communicate with power-managed drivers. The Power Manager calls down to a device driver to determine the device's capabilities and update its device power state. Devices may call up to the Power Manager to request device power state changes. Down calls are implemented as IOCTLs. Devices call up to the Power Manager with the <A HREF="cxrefdevicepowernotify.htm">DevicePowerNotify</A> API.</P>
+
+<P>Because the Power Manager uses <B>DeviceIoControl</B> to communicate with power-managed devices, such devices must expose a stream interface. In some situations, a power management proxy may expose the interface. For example, display power management is provided by Pmddi.dll, a streams-based driver that translates Power Manager IOCTLs into the <B>ExtEscape(SETPOWERMANAGEMENT)</B> calls that GWES defines. Similarly, Network Driver Interface Specification (NDIS) exposes a streams interface that enables proxy management of NDIS miniport drivers using the <A HREF="cxrefregisterpowerrelationship.htm">RegisterPowerRelationship</A> API.</P>
+
+<P>Opening standard device names of the format COM1:, and so on, allows access to drivers that expose a stream interface. However, the Power Manager does not require that power-manageable devices use this naming format; a device name can be any unique string. So, for example, an NDIS miniport might be named VMINI1.</P>
+
+<P>Although the Power Manager provided with Platform Builder only understands stream drivers, OEMs are free to implement additional device interfaces for their platform. You can accomplish this by defining a new class globally unique identifier (GUID) for devices that require the new API. Drivers using the new interface must adhere to the standard power-managed driver guidelines.</P>
+
+<P>The default implementation of the Power Manager can detect the following GUIDs:
+
+<UL type="disc">
+	<LI><B>{A32942B7-920C-486b-B0E6-92A702A99B35}</B> GUID for generic power-managed devices.</li>
+
+	<LI><B>{8DD679CE-8AB4-43c8-A14A-EA4963FAA715}</B> GUID for power-managed block devices.</li>
+
+	<LI><B>{98C5250D-C29A-4985-AE5F-AFE5367E5006}</B> GUID for power-managed NDIS miniports.</li>
+</UL>
+
+<P>Applications can get a list of power-managed classes by enumerating the <B>HKLM\System\CurrentControlSet\Control\Power\Interfaces</B> registry key.</P>
+
+<P>When applications call a Power Manager API that refers to a specific device, they should qualify the name of the device with the class associated with it. If the device name is not qualified with a class, the Power Manager assumes that the device belongs to the generic power-managed device class.</P>
+
+<P>Class-qualified device names are prefixed with the class GUID rendered as a string, followed by a backslash. For example, the GUID <B>{8DD679CE-8AB4-43c8-A14A-EA4963FAA715}\DSK1:</B> refers to a power-managed block device named <B>DSK1</B>.</P>
+
+<P>The Power Manager reads a list of device classes from the registry and uses <A HREF="cxrefrequestpowernotifications.htm">RequestPowerNotifications</A> to determine when devices of that class are loaded. The following code example shows a device class list.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\Interfaces]
+    "{A3292B7-920C-486b-B0E6-92A702A99B35}"="Generic power-manageable devices"
+    "{8DD679CE-8AB4-43c8-A14A-EA4963FAA715}"="Power-manageable block devices"
+    "{98C5250D-C29A-4985-AE5F-AFE5367E5006}"="Power-manageable NDIS miniports"</PRE>
+
+<P>The sample Power Manager implementation assumes these settings. You do not need to include them in the registry unless you want to add additional keys. The following steps show you the process for implementing a class representing display drivers that can be managed using <B>ExtEscape</B> codes directly.
+
+<OL type="1">
+	<LI>Create a new class GUID with Guidgen.exe and add it to the registry.</li>
+
+	<LI>To recognize the GUID, modify the Power Manager, and use <B>ExtEscape</B> for devices associated with it.</li>
+
+	<LI>To call <MSHelp:link keywords="cerefAdvertiseInterface" TABINDEX="0">AdvertiseInterface</MSHelp:link> modify your display drivers using the new GUID.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicecontrolioctls.htm">Device Control IOCTLs</A></P>
+
+<P><A HREF="cxcondriver-to-powermanagerapis.htm">Driver-to-Power Manager APIs</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Device%20Driver%20Interface&nbsp;(cxcondevicedriverinterface.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

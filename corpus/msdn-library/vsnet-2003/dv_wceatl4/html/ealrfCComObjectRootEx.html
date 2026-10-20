@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComObjectRootEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CComObjectRootEx"/>
+<MSHelp:RLTitle Title="CComObjectRootEx"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComObjectRootEx"/>
+<MSHelp:Keyword Index="K" Term="CComObjectRootEx class"/>
+<MSHelp:Keyword Index="K" Term="CComObjectRootEx class, overview"/>
+<MSHelp:Keyword Index="K" Term="object reference count management"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComObjectRootEx"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ccomrtex.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_706466">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfccomobjectrootex"></A>CComObjectRootEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This class handles object reference count management for both aggregated and non-aggregated objects. It holds the object reference count if your object is not being aggregated, and holds the pointer to the outer unknown if your object is being aggregated. For aggregated objects, <B>CComObjectRootEx</B> methods can be used to handle the failure of the inner object to construct, and to protect the outer object from deletion when inner interfaces are released or the inner object is deleted. </P>
+
+<PRE class="syntax"><B>template&lt; class </B><I>ThreadModel</I><B> &gt;
+class CComObjectRootEx : public CComObjectRootBase</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ThreadModel</I></DT>
+
+<DD>The class whose methods implement the desired threading model. You can explicitly choose the threading model by setting <I>ThreadModel</I> to <A HREF="ealrfccomsinglethreadmodel.htm"><B>CComSingleThreadModel</B></A>, <A HREF="ealrfccommultithreadmodel.htm"><B>CComMultiThreadModel</B></A>, or <A HREF="ealrfccommultithreadmodelnocs.htm"><B>CComMultiThreadModelNoCS</B></A>. You can accept the default thread model of the server by setting <I>ThreadModel</I> to <A HREF="ealrfccomobjectthreadmodel.htm"><B>CComObjectThreadModel</B></A> or <A HREF="ealrfccomglobalsthreadmodel.htm"><B>CComGlobalsThreadModel</B></A>.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A class that implements a COM server must inherit from <B>CComObjectRootEx</B> or <A HREF="ealrfccomobjectroot.htm"><B>CComObjectRoot</B></A>. </P>
+
+<P>If your class definition specifies the <B>DECLARE_POLY_AGGREGATABLE</B> macro, ATL creates an instance of <B>CComPolyObject&lt;CYourClass&gt;</B> when <B>IClassFactory::CreateInstance</B> is called. During creation, the value of the outer unknown is checked. If it is <B>NULL</B>, <B>IUnknown</B> is implemented for a nonaggregated object. If the outer unknown is not <B>NULL</B>, <B>IUnknown</B> is implemented for an aggregated object.</P>
+
+<P>If your class does not specify the <B>DECLARE_POLY_AGGREGATABLE</B> macro, ATL creates an instance of <B>CComObject&lt;CYourClass&gt;</B> for aggregated objects or an instance of <B>CComAggObject&lt;CYourClass&gt;</B> for nonaggregated objects. </P>
+
+<P>The advantage of using <B>CComPolyObject</B> is that you avoid having both <B>CComAggObject</B> and <B>CComObject</B> in your module to handle the aggregated and nonaggregated cases. A single <B>CComPolyObject</B> object handles both cases. Therefore, only one copy of the vtable and one copy of the functions exist in your module. If your vtable is large, this can substantially decrease your module size. However, if your vtable is small, using <B>CComPolyObject</B> can result in a slightly larger module size because it is not optimized for an aggregated or nonaggregated object, as are <B>CComAggObject</B> and <B>CComObject</B>.</P>
+
+<P>The <B>DECLARE_POLY_AGGREGATABLE</B> macro is automatically added to your class definition by the ATL Object Wizard when you create a full control or Internet Explorer control. </P>
+
+<P>If your object is aggregated, <B>Iunknown<U> </U></B>is implemented by <B>CComAggObject</B> or <B>CComPolyObject</B>. These classes delegate <B>QueryInterface</B>, <B>AddRef</B>, and <B>Release</B> calls to <B>OuterQueryInterface</B>, <B>OuterAddRef</B>, and <B>OuterRelease</B> of <B>CComObjectRootEx</B> to forward to the outer unknown. Typically, you override <B>CComObjectRootEx::FinalConstruct</B> in your class to create any aggregated objects, and override <B>CComObjectRootEx::FinalRelease</B> to free any aggregated objects. </P>
+
+<P>If your object is not aggregated, <B>IUnknown</B> is implemented by <B>CComObject</B> or <B>CComPolyObject</B>. In this case, calls to <B>QueryInterface</B>, <B>AddRef</B>, and <B>Release</B> are delegated to <B>InternalQueryInterface</B>, <B>InternalAddRef</B>, and <B>InternalRelease</B> of <B>CComObjectRootEx</B> to perform the actual operations.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlcom.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfccomaggobject.htm"><B>CComAggObject</B></A>, <A HREF="ealrfccomobject.htm"><B>CComObject</B></A>, <A HREF="ealrfccompolyobject.htm"><B>CComPolyObject</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_706466', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

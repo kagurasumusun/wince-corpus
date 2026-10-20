@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SH-3 Examples</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SH-3 Examples"/>
+<MSHelp:RLTitle Title="SH-3 Examples"/>
+<MSHelp:Keyword Index="A" Term="ccsamSH-3Examples"/>
+<MSHelp:Keyword Index="A" Term="ccsamSH-3Examples"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+</xml>
+<!--Filename: shx_inline_assembly.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_813372">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccsamsh-3examples"></A>SH-3 Examples</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<UL type="disc">
+	<LI>Specify a naked function
+<P>The compiler does not generate any prolog or epilog code for naked functions. If you need to work with a function such as this, specify the prolog and epilog code within <B>__asm</B> statements. 
+
+<P>For each such inline prolog, use the <B>.prolog</B> directive to mark the end of the prolog code. In this way, you can support stack trace-back walks through a routine during debugging and exception processing.
+
+<P>The following example shows how to use the inline assembly language to specify code for a <B>naked</B> function. 
+
+<PRE class="code">#include &lt;stdio.h&gt;
+
+void __asm(const char *, ...);
+_muls();
+_adds();
+
+// Compute (a * (X * X)) + (b * X) + c in single precision
+// floating point and return the result
+__declspec(naked) float quadratic(float X, float a, float b, float c) {
+
+__asm(
+  "sts.l  PR,@-SP    ; save return address on stack\n"
+  "mov.l  R4,@(4,SP)  ; save X on stack\n"
+  "mov.l  R5,@(8,SP)  ; save a on stack\n"
+  "mov.l  R6,@(12,SP)  ; save b on stack\n"
+  "mov.l  R7,@(16,SP)  ; save c on stack\n"
+  "add  #-12,SP    ; allocate local stack frame\n"
+  ".prolog       ; add a prolog marker\n"
+  );
+__asm(
+  "mov.l  R4,@(4,SP)  ; save address of multiply routine\n"
+  "mov.l  R5,@(8,SP)  ; save address of add routine\n"
+  "mov  R4,R5      ; set up call to multiply routine\n"
+  "mov.l  @(16,SP),R4  ; get X\n"
+  "jsr    @R5      ; compute a * X\n"
+  "mov.l  @(20,SP),R5  ; delay slot - get a\n"
+  "mov  R0,R4      ; get a * X\n"
+  "mov.l  @(8,SP),R0   ; get address of add routine\n"
+  "jsr  @R0        ; compute a * X + b\n"
+  "mov.l  @(24,SP),R5  ; delay slot - get b\n"
+  "mov  R0,R4      ; get a * X + b\n"
+  "mov.l  @(4,SP),R0   ; get address of mult routine\n"
+  "jsr  @R0        ; compute (a * X + b) * X\n"
+  "mov.l  @(16,SP),R5  ; delay slot - get X\n"
+  "mov  R0,R4      ; get (a * X + b) * X\n"
+  "mov.l  @(8,SP),R0   ; get address of add routine\n"
+  "jsr  @R0        ; compute ((a * X + b) * X) + c\n"
+  "mov.l  @(28,SP),R5  ; delay slot - get c\n"
+  "mov.l  R0,@(0,SP)   ; save result on stack\n"
+  ,_muls
+  ,_adds
+  );
+ 
+__asm(
+  "mov.l  @(0,SP),R0   ; recover result\n"
+  "mov  SP,  R2      ; save SP\n"
+  "add  #12,  R2      ; R2 points to RSA base\n"
+  "lds.l  @R2+,PR     ; pop return address from stack\n"
+  "rts          ; return\n"
+  "mov  R2,  SP      ; delay slot - restore stack pointer"
+  );
+}
+
+void main ()
+{
+  float f, x, a, b, c;
+  x = 1.0f;
+  a = 2.0f;
+  b = 3.0f;
+  c = 4.0f;
+  f = quadratic(x, a, b, c);
+
+  printf ("f = %f\n", f);
+}</PRE>
+</li>
+
+	<LI>Access double parameters from integer registers
+<P>The following example shows how to access double parameters from integer registers and local argument stack space using inline assembly.
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+void __asm(const char *, ...);
+_addd ();
+// Compute x+y+z --&gt; result
+double add_trig(double x, double y, double z)
+{
+  double result;
+  void * temp_stk_space = _alloca(32)  ; // Reserve temp space in stack
+  __asm("mov.l    @(32,sp), r0  ; get pointer to temp stack space \n"
+    "mov.l  r4,  @(16,r0)  ; save lw-part of x on stack \n"
+    "mov.l  r5,  @(20,r0)  ; save hi-part of x on stack \n"
+    "mov.l  r6,  @(24,r0)  ; save lw-part of y on stack \n"
+    "mov.l  r7,  @(28,r0)  ; save hi-part of y on stack \n"
+    "mov.l  @(32,sp), r5  ; get pointer to temp stack space \n"
+    "mov    r5,  r6    ; get pointer to temp stack space in r6 \n"
+    "add    #24,  r6    ; pass pointer to y in r6 \n"
+    "mov    r5,  r4    ; get pointer to temp stack space in r4 \n"
+    "add    #8,  r4    ; pass pointer to temp stack space for a+b               ; \n" 
+    "mov.l  @(28, sp),r0  ; get address of add routine\n"
+    "jsr    @r0      ; compute x+y\n"
+    "add    #16, r5    ; pass pointer to x in r5 \n" 
+    "mov.l  @(32,sp), r5  ; get pointer to temp stack space \n"
+    "mov    #16, r6    ; load offset of z on stack \n"
+    "add    sp, r6    ; pass pointer to z in r6 \n"
+    "mov    r5, r4    ; pass pointer to tmp stack space for                 ; a+b+z\n"
+    "mov.l  @(28, sp),r0  ; get address of add routine \n"
+    "jsr    @r0      ; compute x+y+z \n"
+    "add    #8,  r5    ; pass pointer to a+b in r5 \n"
+    "mov.l  @(32,sp), r5  ; get pointer to a+b+z \n"
+    "mov.l  @r5+,r1    ; get hi-part of result \n"
+    "mov.l  @r5,  r2    ; get lw-part of result \n"
+    "mov.l  @(24,sp), r0  ; load result address \n"
+    "add    #4, r0    ; increment result addr by 4 \n"
+    "mov.l  r2, @r0    ; store hi-part into result addr\n"
+    "mov.l  r1, @-r0    ; store lw-part into result addr\n",
+    x,          // passed in r4 and r5 
+    y,          // passed in r6 and r7
+    z,          // passed in @(16,sp) and @(20,sp)
+    &amp;result,        // passed in @(24,sp) 
+    _addd,        // passed in @(28,sp)
+    temp_stk_space);    // passed in @(32,sp)
+  return result;
+}
+
+void main()
+{
+  double  retval = add_trig(1.0, 2.0,3.0);
+  printf("%g\n", retval);
+}</PRE>
+</li>
+
+	<LI>Access floating-point parameters from integer registers
+<P>The following example shows how to access float parameters from integer registers and local argument stack space using inline assembly:
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+
+void __asm(const char *, ...);
+
+_adds ();
+_dtos ();
+
+//
+// Compute x+y+z --&gt; result
+//
+double add_trig(float x, float y, float z)
+{
+  float result;
+
+  void * temp_stk_space = _alloca(20); // Reserve temp space in stack
+
+  __asm("mov.l    @(36,sp), r0 ; get pointer to temp stack space \n"
+    "mov.l  r12,   @r0   ; save permanent register r12 on stack \n" 
+    "mov.l  r4,  @(4,r0)    ; save lw-part of x on stack \n" 
+    "mov.l  r5,  @(8,r0)    ; save hi-part of x on stack \n"
+    "mov.l  r6,  @(12,r0)    ;save lw-part of y on stack \n"
+    "mov.l  r7,  @(16,r0)    ;save hi-part of y on stack \n"
+    "mov.l  @(36, sp), r4  ; get pointer to temp stack space \n"
+    "mov.l  @(32, sp), r0  ; get address of dtos routine \n"
+    "jsr    @r0      ; convert x double to single precision \n"
+    "add    #4,  r4      ; pass pointer to x in r4 \n"
+    "mov    r0,  r12      ; save single precision x in r12 \n"
+    "mov.l  @(36,sp), r4  ; get pointer to temp stack space \n"
+    "mov.l  @(32, sp), r0  ; get address of dtos routine \n"
+    "jsr    @r0      ; convert y double to single precision \n"
+    "add    #12,  r4      ; pass pointer to y in r4 \n"
+    "mov    r0,  r4      ; get single precision y \n"
+    "mov.l  @(28, sp), r0  ; get address of add routine \n"
+    "jsr    @r0        ; compute x + y \n"
+    "mov    r12,  r5      ; get single precision x \n"
+    "mov    r0,  r12      ; save x+y in r12 \n"
+    "mov    #16,  r4      ; load offset of z on stack \n"
+    "mov.l  @(32, sp), r0  ; get address of dtos routine \n"     
+    "jsr    @r0      ; convert z double to single precision \n"
+    "add    sp,  r4      ; pass pointer to z in r4 \n"
+    "mov    r0,  r4      ; get single precision z \n"
+    "mov.l  @(28, sp), r0  ; get address of add routine \n"
+    "jsr    @r0        ; compute x + y + z \n"
+    "mov    r12,  r5      ; get x+y \n"
+    "mov.l  @(24,sp), r1   ; load result address \n"
+    "mov.l  r0,  @r1      ; store r0 into result addr \n" 
+    "mov.l  @(36,sp), r0   ; get pointer to temp stack space\n"
+    "mov.l  @r0, r12; restore permanent register r12 from stack \n",
+    x,            // passed in r4 and r5 
+    y,            // passed in r6 and r7
+    z,            // passed in @(16,sp) and @(20,sp)
+    &amp;result,          // passed in @(24,sp) 
+    _adds,          // passed in @(28,sp)
+    _dtos,          // passed in @(32,sp)
+    temp_stk_space);      // passed in @(36,sp)
+
+  return result;
+}
+
+void main()
+{
+  float  retval = add_trig(1.0f, 2.0f,3.0f);
+  printf("%f\n", retval);
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_shcom_inline_example.htm">SHx Inline Assembly Samples</A></P>
+
+<P><A HREF="ccsamsh-4examples.htm">SH-4 Examples</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SH-3%20Examples&nbsp;(ccsamsh-3examples.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

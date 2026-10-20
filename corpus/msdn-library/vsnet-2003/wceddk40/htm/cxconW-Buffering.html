@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>W-Buffering</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="W-Buffering"/>
+<MSHelp:RLTitle Title="W-Buffering"/>
+<MSHelp:Keyword Index="A" Term="cxconW-Buffering"/>
+<MSHelp:Keyword Index="K" Term="buffers, Direct3D w-buffering"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, w-buffering"/>
+<MSHelp:Keyword Index="K" Term="w-buffering%2CDirect3D, overview"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664976">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconw-buffering"></A>W-Buffering</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Normally, z-buffering uses perspective-correct <I>z</I> for depth comparison and storage in the z-buffer, as this is the <I>z</I> that the rasterizer iterators must generate in order to maintain planar polygons. Some implementations can perform hidden surface elimination by filling the z-buffer with depth information expressed as <I>w</I>, or <I>z</I> relative to the eye. This is what is referred to as w-buffering in this documentation. This can be achieved by linearly interpolating the vertex 1/w term specified in the classic transformed and lit vertex structure (<B>TLVERTEX</B>), computing its reciprocal per pixel, and then using this <I>w</I> value for the depth comparison and conditionally storing it into the depth buffer. </P>
+
+<P>Typically, the hardware stores a floating point value in the buffer. The following precision formats are common.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Size</TH>
+<TH width=80%>Format</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>16 bits</TD>
+<TD width=80%>12.4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>24 bits</TD>
+<TD width=80%>IEEE single-precision float with no low byte of mantissa.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>32 bits</TD>
+<TD width=80%>Standard IEEE single-precision float.</TD>
+</TR>
+</table></div>
+
+<P>Conventional z-buffering was developed for the technical markets that use CAD or authoring tools, in which the viewing volume/workspace is of known and limited extent. The range of depth values stored can therefore be of limited extent, allowing the ratio of far/near (the distances to the far and near clip planes) to be on the order of two to ten.</P>
+
+<P>Typical hardware designed for such applications iterates perspective-correct z and stores it directly into the z-buffer. Due to the mathematics involved, this perspective-correct z is not distributed evenly within the z-buffer range. Using a far/near ratio of 100 results in 90 percent of the depth buffer range being used on the first 10 percent of the scene depth range. While this may be sufficient for tools, typical applications for entertainment or visual simulations with exterior scenes require far/near ratios of 1000 to 1 or 10000 to 1. At a ration of 1000 to 1, 98 percent of the range is used on the first two percent of the depth. This can cause hidden surface artifacts in distant objects, especially when using 16-bit depth buffers. </P>
+
+<P>By contrast, when <I>w</I> (or eye-relative <I>z</I>) is used, the buffer bits can be more evenly allocated between the near and far clip planes in world space. The key benefit is that the ratio of far to near is no longer an issue, allowing applications to support a maximum range of miles, yet still get reasonably accurate depth buffering within inches of the eye point.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconadvanceddirect3ddrivertopics.htm">Advanced Direct3D Driver Topics</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;W-Buffering&nbsp;(cxconw-buffering.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

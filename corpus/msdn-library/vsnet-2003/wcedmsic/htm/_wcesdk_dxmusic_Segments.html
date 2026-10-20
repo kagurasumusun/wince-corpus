@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Segments</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Segments"/>
+<MSHelp:RLTitle Title="Segments"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Segments"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, segments"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Segments"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680682">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_segments"></A>Segments</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The basic chunk of data in DirectMusic is called a segment. A segment is represented by an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment" TABINDEX="0">IDirectMusicSegment</MSHelp:link> interface. You can create a segment in any of the following ways:
+
+<UL type="disc">
+	<LI>Load a file or resource object that supports the <B>IDirectMusicSegment</B> interface. For more information, see <A HREF="_wcesdk_dxmusic_directmusic_loader.htm">DirectMusic Loader</A>.</li>
+
+	<LI>Get a motif from a style by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicStyle__GetMotif" TABINDEX="0">IDirectMusicStyle::GetMotif</MSHelp:link> method.</li>
+
+	<LI>Use methods of the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicComposer" TABINDEX="0">IDirectMusicComposer</MSHelp:link> interface to create a composition or transition at run time. For more information, see <A HREF="_wcesdk_dxmusic_overview_of_programming_for_composition.htm">Overview of Programming for Composition</A> and <A HREF="_wcesdk_dxmusic_using_transitions.htm">Using Transitions</A>.</li>
+
+	<LI>Make a copy of an existing segment by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__Clone" TABINDEX="0">IDirectMusicSegment::Clone</MSHelp:link> method.</li>
+
+	<LI>Construct a segment from existing tracks. Create a segment object by calling <B>CoCreateInstance</B>, and then add tracks by calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__InsertTrack" TABINDEX="0">IDirectMusicSegment::InsertTrack</MSHelp:link>.</li>
+
+	<LI>Use the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicBand__CreateSegment" TABINDEX="0">IDirectMusicBand::CreateSegment</MSHelp:link> method. This creates a special type of secondary segment that is used only for making band changes. For more information, see <A HREF="_wcesdk_dxmusic_making_band_changes_programmatically.htm">Making Band Changes Programmatically</A>. </li>
+</UL>
+
+<P>Each segment consists of one or more <I>tracks</I>, each represented by an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack" TABINDEX="0">IDirectMusicTrack</MSHelp:link> interface. Tracks contain most of the data for the segment, whether that data consists of note events, band changes, tempo changes, or other timed events. Applications generally do not need to use this interface because the tracks are managed through the segment object. For more information, see <A HREF="_wcesdk_dxmusic_tracks.htm">Tracks</A>.</P>
+
+<P>Segments can serve different purposes. The following are the kinds of segments that you are most likely to use:
+
+<UL type="disc">
+	<LI>Primary segment. A piece of music such as a MIDI file, a segment authored in DirectMusic Producer, or a segment formed at run time by the composer object.</li>
+
+	<LI>Motif segment. A short piece of music to be played over the primary segment. Motifs are part of a style object, but you can also create short secondary segments from other sources and play them over the primary segment like motifs.</li>
+
+	<LI>Band segment. A set of instruments and instrument settings for the various channels in the performance. The application can play a band segment to execute changes in the band performing the music.</li>
+
+	<LI>Template segment. A guide to chord progressions, <I>groove levels</I>, and embellishments, used in conjunction with a style and chord map to compose music at run time. Unlike other segments, a template segment is never played directly by an application; instead, it is passed to the composer object to be used in creating a musical segment.</li>
+</UL>
+
+<P>The playback of segments is controlled by the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance" TABINDEX="0">IDirectMusicPerformance</MSHelp:link> interface and begins with a call to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__PlaySegment" TABINDEX="0">IDirectMusicPerformance::PlaySegment</MSHelp:link>. An instance of a playing segment is represented by an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegmentState" TABINDEX="0">IDirectMusicSegmentState</MSHelp:link> interface, which can be used to retrieve information about the current state of the segment. </P>
+
+<P>Only one primary segment can play inside a performance. When you cue a primary segment for playback, you can specify that it is to be played after the currently playing segment is finished, or you can use it to replace the current primary segment. </P>
+
+<P>Secondary segments, on the other hand, play over the current primary segment, and any number of secondary segments can be playing simultaneously. </P>
+
+<P>Secondary segments do not normally alter the performance of the primary segment. For example, a secondary segment can be based on a different style without affecting the style of the primary segment. </P>
+
+<P>However, a secondary segment can be designated as a <I>control segment</I>, in which case it takes over the task of responding to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SetParam" TABINDEX="0">IDirectMusicPerformance::SetParam</MSHelp:link> and <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__GetParam" TABINDEX="0">IDirectMusicPerformance::GetParam</MSHelp:link> calls, which normally go to tracks in the primary segment. Thus a control segment might control the current chord or groove level. For more information, see <A HREF="_wcesdk_dxmusic_tracks.htm">Tracks</A>.</P>
+
+<P>For more information about playing secondary segments as control segments, see <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_SEGF_FLAGS" TABINDEX="0">DMUS_SEGF_FLAGS</MSHelp:link>.</P>
+
+<P>For more information about segment playback, see <A HREF="_wcesdk_dxmusic_segment_timing.htm">Segment Timing</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Segments&nbsp;(_wcesdk_dxmusic_segments.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

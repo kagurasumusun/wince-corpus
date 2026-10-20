@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Modulo Addressing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Modulo Addressing"/>
+<MSHelp:RLTitle Title="Modulo Addressing"/>
+<MSHelp:Keyword Index="A" Term="ccconModuloAddressing"/>
+<MSHelp:Keyword Index="A" Term="ccconModuloAddressing"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dspshasm.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_809033">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccconmoduloaddressing"></A>Modulo Addressing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Like other digital signal microprocessors, the SH3-DSP has a modulo-addressing mode. The SH3-DSP also uses modulo-addressing mode to update address registers. When a modulo-end address in which the address pointer value is already set is reached, the address pointer becomes the modulo start address. Modulo addressing is only effective for X and Y data transfer instructions, <B>MOVX.W</B> and <B>MOVY.W</B>. When the <B>DMX</B> bit of the <B>SR</B> register is set, the X address register enters modulo addressing mode; when the <B>DMY</B> bit is set, the Y address register enters modulo addressing mode. Modulo addressing cannot be used on both X and Y address registers at once. Accordingly, do not set <B>DMX</B> and <B>DMY</B> at the same time. Should they both be set at once, only <B>DMY</B> will be valid. The <B>MOD</B> register is provided for specifying the start and end addresses for the modulo address area. The <B>MOD</B> register stores the modulo-start (<B>MS</B>) and modulo-end (<B>ME</B>). </P>
+
+<P>The following example shows how to use modulo registers <B>MS</B> and <B>ME</B>.</P>
+
+<PRE class="code">                    MOV.L ModAddr,Rn;        Rn=ModEnd, ModStart
+                LDC Rn,MOD;                ME=ModEnd, MS=ModStart
+ModAddr:        .DATA.WmEnd;        Lower 8bit of ModEnd
+                .DATA.W mStart;    Lower 8bit of ModStart
+
+ModStart:    .DATA    
+                    :        
+ModEnd:    .DATA    </PRE>
+
+<P>Set the start- and end-addresses in <B>MS</B> and <B>ME</B>, and then set the DMX or DMY bit to one. The SH3-DSP compares address register contents to <B>ME</B>. If the contents match <B>ME</B>, the start address <B>MS</B> is stored in the address register. It then compares the bottom 16 bits of the address register to <B>ME</B>. The maximum modulo size is 64 KB. This is ample for accessing the X and Y data memory.</P>
+
+<P>The following is an example of modulo addressing.</P>
+
+<PRE class="code">MS=H'08; ME=H'0C; <code class="ce">R4</code>=H'C008;
+DMX=1; DMY=0; (Sets modulo addressing for address register Ax (<code class="ce">R4</code>, <code class="ce">R5</code>))</PRE>
+
+<P>The previous setting changes the <code class="ce">R4</code> register as shown in the following list:</P>
+
+<PRE class="code"><code class="ce">R4</code>: H'C008
+Inc. <code class="ce">R4</code>: H'C00A
+Inc. <code class="ce">R4</code>: H'C00C
+Inc. <code class="ce">R4</code>: H'C008 (Becomes the modulo start address after R4 reaches the modulo end address).</PRE>
+
+<P>Place data so the top 16 bits of the modulo-start and modulo-end addresses are the same, because the modulo-start address only swaps the bottom 16 bits of the address register.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;When using addition index as the DSP data addressing, the address pointer may exceed this value without matching ME. Should this occur, the address pointer will not return to the modulo start address.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccrefdoublesingledatatransferinstructions.htm">DSP Data Transfer Instructions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Modulo%20Addressing&nbsp;(ccconmoduloaddressing.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

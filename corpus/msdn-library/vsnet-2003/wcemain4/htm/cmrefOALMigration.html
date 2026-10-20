@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OAL Migration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OAL Migration"/>
+<MSHelp:RLTitle Title="OAL Migration"/>
+<MSHelp:Keyword Index="A" Term="cmrefOALMigration"/>
+<MSHelp:Keyword Index="K" Term="device drivers, migration issues"/>
+<MSHelp:Keyword Index="K" Term="kernel, migration issues"/>
+<MSHelp:Keyword Index="K" Term="OAL Migration"/>
+<MSHelp:Keyword Index="K" Term="OAL, migration issues"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, migration issues"/>
+<MSHelp:Keyword Index="K" Term="SDKs, migration issues"/>
+<MSHelp:Keyword Index="A" Term="cmrefOALMigration"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: migration_issues.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759423">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmrefoalmigration"></A>OAL Migration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An OEM adaptation layer (OAL) is the layer between the Windows CE kernel and the hardware of your target device.</P>
+
+<P>The following table describes migration issues for the OAL.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Issue</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Unsupported variables</TD>
+<TD width=69%>The following variables are no longer required in the OAL by the kernel:
+<UL type="disc">
+	<LI><I>dwSleepMin</I></li>
+
+	<LI><I>dwPartialDiffMSec</I></li>
+
+	<LI><I>ticksleft</I></li>
+
+	<LI><I>DiffMSec</I></li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>New scheduling variables</TD>
+<TD width=69%><I>dwReschedTime</I> has been added to the OAL to determine if the kernel should schedule a thread to run. This affects both <MSHelp:link keywords="cmrefOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link> and the handling of the system tick. </TD>
+</TR>
+</table></div>
+
+<P>The following table describes OAL migration issues related to the kernel and device drivers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Issue</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Kernel name change</TD>
+<TD width=69%>A version of the kernel executable that is built as part of the build process has changed names to allow better tools integration.
+<P>The kernel executable known as Nk.exe is now called Nkkd.exe.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>ActivateDeviceEx</B> replaces <B>ActivateDevice</B> and <B>RegisterDevice</B></TD>
+<TD width=69%><MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> reads the registry key specified in its <I>lpszDevKey</I> parameter to get the DLL name, device prefix, index, and other values. Next, it adds the device to the active device list and stores the relevant values there. If no device index was specified in the key named in <I>lpszDevKey</I>, it assigns a free index. Then, it loads the device driver DLL in the process space of the <MSHelp:link keywords="cxconDeviceManager" TABINDEX="0">Device Manager</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>GetThreadPriority</B> and <B>CeGetThreadPriority</B></TD>
+<TD width=69%>The current priority is no longer returned.
+<P>In Windows CE 3.0 and earlier, a call to <MSHelp:link keywords="_wcesdk_Win32_GetThreadPriority" TABINDEX="0">GetThreadPriority</MSHelp:link> or <MSHelp:link keywords="_wcesdk_CeGetThreadPriority" TABINDEX="0">CeGetThreadPriority</MSHelp:link> would return the current thread priority. This might incorrectly return the priority of a thread that had its priority boosted because of priority inversion.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>x86 page tables</TD>
+<TD width=69%>The x86 page tables are now setup in the same way as ARM, requiring the x86 platform to provide a valid <MSHelp:link keywords="cgconOEMAddressTable" TABINDEX="0">OEMAddressTable</MSHelp:link> structure back to the kernel, defining the virtual to physical mapping.</TD>
+</TR>
+</table></div>
+
+<P>The following table describes OAL migration issues related to the SDK.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Issue</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>HeapCreate</B></TD>
+<TD width=69%>The <I>dwMaximumSize</I> parameter of <MSHelp:link keywords="_wcesdk_Win32_HeapCreate" TABINDEX="0">HeapCreate</MSHelp:link> is now honored and allocates only as much memory as requested. If you had previously passed in 0, you will still get an unlimited heap as specified by Microsoft Win32&reg;.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>System Halt</TD>
+<TD width=69%>Should the system halt, the OEM will now get called in through the OAL function <MSHelp:link keywords="cgrefLpNKHaltSystem" TABINDEX="0">lpNKHaltSystem</MSHelp:link>, giving the OEM the opportunity to reset the device.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconboardsupportpackages.htm">Board Support Packages</A></P>
+
+<P><MSHelp:link keywords="cmrefOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link></P>
+
+<P><MSHelp:link keywords="_wcesdk_Win32_GetThreadPriority" TABINDEX="0">GetThreadPriority</MSHelp:link></P>
+
+<P><MSHelp:link keywords="_wcesdk_CeGetThreadPriority" TABINDEX="0">CeGetThreadPriority</MSHelp:link></P>
+
+<P><MSHelp:link keywords="_wcesdk_Win32_HeapCreate" TABINDEX="0">HeapCreate</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cgrefLpNKHaltSystem" TABINDEX="0">lpNKHaltSystem</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;OAL%20Migration&nbsp;(cmrefoalmigration.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

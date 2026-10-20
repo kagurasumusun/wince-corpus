@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BthNsLookupServiceNext</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BthNsLookupServiceNext"/>
+<MSHelp:RLTitle Title="BthNsLookupServiceNext"/>
+<MSHelp:Keyword Index="A" Term="cerefBthNsLookupServiceNext"/>
+<MSHelp:Keyword Index="K" Term="BthNsLookupServiceNext"/>
+<MSHelp:Keyword Index="A" Term="cerefBthNsLookupServiceNext"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: bluetooth_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679010">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefbthnslookupservicenext"></A>BthNsLookupServiceNext</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is used to retrieve the results of an SDP search. </P>
+
+<PRE class="syntax"><B>INT BthNsLookupServiceNext(</B>
+<B>HANDLE  </B><I>hLookup</I><B>,</B>
+<B>DWORD  </B><I>dwFlags</I><B>,</B>
+<B>LPDWORD  </B><I>lpdwBufferLength</I><B>,</B>
+<B>LPWSAQUERYSET  </B><I>pResults</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hLookup</I></DT>
+
+<DD>[in] Handle obtained from <B>BthNsLookupServiceBegin</B>.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Control flags for the next operation. The following flags are supported for device inquiries.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Flag </TH>
+<TH width=62%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>LUP_RETURN_NAME </TD>
+<TD width=62%>Performs a name inquiry and sets the results in the pResults <I>lpszServiceInstanceName</I> element.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>LUP_RETURN_ADDR</TD>
+<TD width=62%>Returns the address of the enumerated remote device in pResults-&gt;lpcsaBuffer-&gt;RemoteAddr.lpSockaddr.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>LUP_RETURN_BLOB</TD>
+<TD width=62%>Returns a <A HREF="cerefbthinquiryresult.htm">BTHINQUIRYRESULT</A> structure in pResults-&gt;lpBlob-&gt;pBlobData.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>BTHNS_LUP_RESET_ITERATOR</TD>
+<TD width=62%>Causes the list enumeration to be reset. No data is returned during this call. The next call to this function retrieves information on the first device in the enumeration list.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>BTHNS_LUP_NO_ADVANCE</TD>
+<TD width=62%>If this flag is not set, the next item in the list is enumerated on the next call to this function. If this flag is set, the next call to this function returns information on the same remote device.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>lpdwBufferLength</I></DT>
+
+<DD>[in] The number of bytes contained in the buffer that <I>pResults</I> points to.
+
+<P>[out] Contains the minimum number of bytes the <I>pResults</I> parameter uses to retrieve the record, providing the function fails and the error is BthNsEFAULT.
+</dd>
+
+<DT><I>pResults</I></DT>
+
+<DD>[out] Points to a block of memory where the result set is stored as a <A HREF="cerefwsaqueryset.htm">WSAQUERYSET</A> structure on return.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation was successful, the return value is 0. Otherwise, the value SOCKET_ERROR is returned. The specific error number can be retrieved by calling the <MSHelp:link keywords="_wcesdk_WSAGetLastError" TABINDEX="0">WSAGetLastError</MSHelp:link> function.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The data returned when the LUP_RETURN_ADDR and LUP_RETURN_BLOB flags are set is determined during the initial inquiry in <B>BthNsLookupServiceBegin</B> and can be retrieved quickly by the <B>BthNsLookupServiceNext</B> function, because it is stored in memory. <B>BthNsLookupServiceBegin </B>does not perform name inquiries, because they take considerably more time than simple device discovery. Name inquiry is only done on a given device when the LUP_RETURN_NAME flag is set when the device is enumerated.</P>
+
+<P>Reset the enumeration iteration list by setting the BTHNS_LUP_RESET_ITERATOR flag. If you want to enumerate the same item multiple times with different flags, you can do so by setting the BTHNS_LUP_NO_ADVANCE flag. </P>
+
+<P>An application can walk through the list of devices once, with repeated calls to <B>BthNsLookupServiceNext</B>. The application determines the remote addresses, resets the iteration list, and queries for a subset of device names by calling this function with the LUP_RETURN_NAME flag set. This can be used to display a list of queried devices in a user interface. The addresses can be displayed while the application queries for the device names in the background. Each time a new name is determined, the display can be updated. An example of this scenario is demonstrated in the <A HREF="cmconphonemanagementsample.htm">Phone Management Sample</A>.</P>
+
+<P class="label"><B>Service Searching</B></P>
+
+<P>Results from a service search are returned in the <I>lpBlob</I> element of <I>lpqsResults</I> in raw format binary form. Unlike some service providers for other protocols, the entire results are returned in the <I>lpBlob</I> all at once, instead of requiring enumeration for multiple service records.</P>
+
+<P>Because the raw SDP format is difficult to parse and requires knowledge of the SDP specification, a COM interface is provided to transform the octal data into a tree that can be easily manipulated.</P>
+
+<P class="label"><B>Querying for Devices</B></P>
+
+<P>After calling this function, each device that was matched in the call to <A HREF="cerefbthnslookupservicebegin.htm">BthNsLookupServiceBegin</A> is enumerated one at a time. After the last device in the list is enumerated, the next call to this function returns SOCKET_ERROR and the last error is set to WSA_E_NO_MORE, unless <I>dwFlags</I> is set to BTHNS_LUP_RESET_ITERATOR.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Bt_api.h</TD>
+<TD width=15%>Bt_api.h</TD>
+<TD width=21%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefbthinquiryresult.htm">BTHINQUIRYRESULT</A>, <A HREF="cerefwsaqueryset.htm">WSAQUERYSET</A>, <A HREF="cerefbthnslookupservicebegin.htm">BthNsLookupServiceBegin</A>, <A HREF="cerefbthnslookupserviceend.htm">BthNsLookupServiceEnd</A>, <A HREF="cmconphonemanagementsample.htm">Phone Management Sample</A>, <MSHelp:link keywords="_wcesdk_WSAGetLastError" TABINDEX="0">WSAGetLastError</MSHelp:link> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;BthNsLookupServiceNext&nbsp;(cerefbthnslookupservicenext.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::RemoveMenu</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CMenu::RemoveMenu"/>
+<MSHelp:RLTitle Title="CMenu::RemoveMenu"/>
+<MSHelp:Keyword Index="A" Term="aflrfCMenucolcolRemoveMenu"/>
+<MSHelp:Keyword Index="K" Term="RemoveMenu method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCMenucolcolRemoveMenu"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cmenu.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710839">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcmenucolcolremovemenu"></A>CMenu::RemoveMenu</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method deletes a menu item that has an associated pop-up menu from the menu. It does not destroy the handle for a pop-up menu, so the menu can be reused. Before calling this function, the application may call the <B>GetSubMenu</B> method to retrieve the pop-up <B>CMenu</B> object for reuse. </P>
+
+<P>Whenever a menu that resides in a window is changed, whether or not the window is displayed, the application must call <B>CWnd::DrawMenuBar</B>.</P>
+
+<PRE class="syntax"><B>BOOL RemoveMenu( 
+UINT </B><I>nPosition</I><B>, 
+UINT </B><I>nFlags</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nPosition</I></DT>
+
+<DD>Specifies the menu item to be removed. The <I>nFlags</I> parameter can be used to interpret <I>nPosition</I> in the following ways:
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>nFlags</TH>
+<TH width=66%>Interpretation of nPosition</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_BYCOMMAND</TD>
+<TD width=66%>Specifies that the parameter gives the command ID of the existing menu item. This is the default if neither MF_BYCOMMAND nor MF_BYPOSITION is set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_BYPOSITION</TD>
+<TD width=66%>Specifies that the parameter gives the position of the existing menu item. The first item is at position zero.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies how <I>nPosition</I> is interpreted.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// CMainFrame::OnChangeFileMenu() is a menu command handler for 
+// CMainFrame class, which in turn is a CFrameWnd-derived class. 
+// It modifies the File menu by inserting, removing and renaming 
+// some menu items. Other operations include associating a context 
+// help id and setting default menu item to the File menu. 
+// CMainFrame is a CFrameWnd-derived class.
+void CMainFrame::OnChangeFileMenu() 
+{
+   // Get the menu from the application window.
+   CMenu* mmenu = GetMenu();
+
+   // Look for "File" menu.
+   int pos = FindMenuItem(mmenu, "&amp;File");
+   if (pos == -1)
+      return;
+
+   // Remove "New" menu item from the File menu.
+   CMenu* submenu = mmenu-&gt;GetSubMenu(pos);
+   pos = FindMenuItem(submenu, "&amp;New\tCtrl+N");
+   if (pos &gt; -1)
+      submenu-&gt;RemoveMenu(pos, MF_BYPOSITION);
+
+   // Look for "Open" menu item from the File menu. Insert a new
+   // menu item called "Close" right after the "Open" menu item.
+   // ID_CLOSEFILE is the command id for the "Close" menu item.
+   pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+   if (pos &gt; -1)
+      submenu-&gt;InsertMenu(pos + 1, MF_BYPOSITION, ID_CLOSEFILE, "&amp;Close");
+
+   // Rename menu item "Save" to "Save Selection".
+   pos = FindMenuItem(submenu, "&amp;Save\tCtrl+S");
+   if (pos &gt; -1)
+   {
+      UINT id = submenu-&gt;GetMenuItemID(pos);
+      submenu-&gt;ModifyMenu(id, MF_BYCOMMAND, id, "&amp;Save Selection");
+   }
+
+   // Associate a context help ID with File menu, if one is not found.
+   // ID_FILE_CONTEXT_HELPID is the context help ID for the File menu
+   // that is defined in resource file. 
+   if (submenu-&gt;GetMenuContextHelpId() == 0)
+      submenu-&gt;SetMenuContextHelpId(ID_FILE_CONTEXT_HELPID);
+
+   // Set "Open" menu item as the default menu item for the File menu, 
+   // if one is not found. So, when a user double-clicks the File
+   // menu, the system sends a command message to the menu's owner 
+   // window and closes the menu as if the File\Open command item had 
+   // been chosen. 
+   if (submenu-&gt;GetDefaultItem(GMDI_GOINTOPOPUPS, TRUE) == -1)
+   {
+      pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+      submenu-&gt;SetDefaultItem(pos, TRUE);
+   }
+}
+
+// FindMenuItem() will find a menu item string from the specified
+// popup menu and returns its position (0-based) in the specified 
+// popup menu. It returns -1 if no such menu item string is found.
+int FindMenuItem(CMenu* Menu, LPCTSTR MenuString)
+{
+   ASSERT(Menu);
+   ASSERT(::IsMenu(Menu-&gt;GetSafeHmenu()));
+
+   int count = Menu-&gt;GetMenuItemCount();
+   for (int i = 0; i &lt; count; i++)
+   {
+      CString str;
+      if (Menu-&gt;GetMenuString(i, str, MF_BYPOSITION) &amp;&amp;
+         (strcmp(str, MenuString) == 0))
+         return i;
+   }
+
+   return -1;
+}</PRE>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcmenucolcolgetsubmenu.htm"><B>CMenu::GetSubMenu</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710839', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

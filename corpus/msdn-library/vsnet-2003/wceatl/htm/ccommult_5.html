@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComMultiThreadModel::AutoCriticalSection</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccommultithreadmodel_autocriticalsection"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ccommultithreadmodel_autocriticalsection"></A>CComMultiThreadModel::AutoCriticalSection</H1>
+
+<P>This <B>typdef</B> references the <B>CComAutoCriticalSection</B> class.</P>
+
+<PRE class=syntax><B>typedef CComAutoCriticalSection AutoCriticalSection;</B><I> </I></PRE>
+
+<H4>Remarks</H4>
+
+<P>When using <B>CComMultiThreadModel</B>, the <B>typedef</B> name <B>AutoCriticalSection</B> references class <B>CComAutoCriticalSection</B>, which provides methods for obtaining and releasing ownership of a critical section object.</P>
+
+<P><B>CComSingleThreadModel</B> and <B>CComMultiThreadModelNoCS</B> also contain definitions for <B>AutoCriticalSection</B>. The following table shows the relationship between the threading model class and the critical section class reference by <B>AutoCriticalSection</B>:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Class defined in</TH>
+<TH width=53%>Class referenced</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><B>CComMultiThreadModel</B></TD>
+<TD width=53%><B>CComCriticalSection</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><B>CComSingleThreadModel</B></TD>
+<TD width=53%><B>CComFakeCriticalSection</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><B>CComMultiThreadModelNoCS</B></TD>
+<TD width=53%><B>CComFakeCriticalSection</B></TD>
+</TR>
+</TABLE><BR>
+
+<P>In addition to <B>AutoCriticalSection</B>, you can use the <B>typedef</B> name <B>CriticalSection</B>. You should not specify <B>AutoCriticalSection</B> in global objects or static class members if you want to eliminate the CRT startup code.</P>
+
+<H4>Example</H4>
+
+<P>The following code uses the <B>CComObjectRootEx</B> class to illustrate the <B>CComMultiThreadModel::AutoCriticalSecion</B> typdef in action.</P>
+
+<PRE>template&lt; class ThreadModel &gt;
+class CComObjectRootEx : public CComObjectRootBase
+{
+public:
+   typedef ThreadModel _ThreadModel;
+   typedef _ThreadModel::AutoCriticalSection _CritSec;
+
+   ULONG InternalAddRef( )
+   {
+      ...
+      return _ThreadModel::Increment(&amp;m_dwRef);
+   }
+   ...
+   void Lock( ) { m_critsec.Lock( ); }
+   ...
+
+private:
+   _CritSec m_critsec;
+
+};
+</PRE>
+
+<P>The following tables show the results of the <B>InternalAddRef</B> and <B>Lock</B> methods, depending on the <B>ThreadModel</B> template parameter and the threading model used by the application:</P>
+
+<H4>ThreadModel = CComObjectThreadModel</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=24%>&nbsp;</TH>
+<TH width=41%>Single or Apartment</TH>
+<TH width=35%>Free</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>InternalAddRef</B></TD>
+<TD width=41%>The increment is not thread-safe. </TD>
+<TD width=35%>The increment is thread-safe. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>Lock</B></TD>
+<TD width=41%>Does nothing; there is no critical section to lock.</TD>
+<TD width=35%>The critical section is locked.</TD>
+</TR>
+</TABLE><BR>
+
+<H4>ThreadModel = CComObjectThreadModel::ThreadModelNoCS</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=24%>&nbsp;</TH>
+<TH width=41%>Single or Apartment</TH>
+<TH width=35%>Free</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>InternalAddRef</B></TD>
+<TD width=41%>The increment is not thread-safe.</TD>
+<TD width=35%>The increment is thread-safe.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>Lock</B></TD>
+<TD width=41%>Does nothing; there is no critical section to lock.</TD>
+<TD width=35%>Does nothing; there is no critical section to lock.</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlbase.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccomtmod.htm"><B>CComObjectThreadModel</B></A>, <A HREF="ccglobtm.htm"><B>CComGlobalsThreadModel</B></A>, <A HREF="ccommult_7.htm"><B>CComMultiThreadModel::ThreadModelNoCS</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

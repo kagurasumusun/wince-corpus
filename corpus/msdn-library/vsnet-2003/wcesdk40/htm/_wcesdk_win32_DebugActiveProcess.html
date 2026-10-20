@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DebugActiveProcess</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DebugActiveProcess"/>
+<MSHelp:RLTitle Title="DebugActiveProcess"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_DebugActiveProcess"/>
+<MSHelp:Keyword Index="K" Term="DebugActiveProcess"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_DebugActiveProcess"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: debug.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_669189">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_win32_debugactiveprocess"></A>DebugActiveProcess</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function allows a debugger to attach to an active process and then debug it.</P>
+
+<PRE class="syntax"><B>BOOL DebugActiveProcess( </B>
+<B>DWORD</B> <I>dwProcessId </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwProcessId</I></DT>
+
+<DD>[in] Specifies the identifier for the process to be debugged. The debugger gets debugging access to the process as if it created the process with the DEBUG_ONLY_THIS_PROCESS flag. See the Remarks section for more details.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="cerefgetlasterror.htm">GetLastError</A>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>After a successful return from <B>DebugActiveProcess</B>, when the debugger is waiting for debug events using the <A HREF="_wcesdk_win32_waitfordebugevent.htm">WaitForDebugEvent</A> function, the system sends a CREATE_PROCESS_DEBUG_EVENT debugging event that identifies the primary thread handle that is currently part of the process. The system sends an individual CREATE_THREAD_DEBUG_EVENT debugging event for each of the secondary thread handles that are currently part of the process. All of these handles have permission (that is, access rights) for getting and setting thread contexts using the <A HREF="_wcesdk_win32_getthreadcontext.htm">GetThreadContext</A> and <A HREF="_wcesdk_win32_setthreadcontext.htm">SetThreadContext</A> functions.</P>
+
+<P>For both the CREATE_PROCESS_DEBUG_EVENT and CREATE_THREAD_DEBUG_EVENT debugging events, the <B>lpStartAddress</B> member of the <A HREF="_wcesdk_win32_create_process_debug_info_str.htm">CREATE_PROCESS_DEBUG_INFO</A> structure is NULL.</P>
+
+<P>Close each of these thread handles using the <MSHelp:link keywords="cerefCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> function.</P>
+
+<P>No initial debug breakpoint is set when <B>DebugActiveProcess</B> successfully attaches.</P>
+
+<P>Microsoft&reg; Windows&reg; CE versions 2.0 and later provide built in support for Just-In-Time (JIT) debugging. A JIT debugger is registered by placing the name of your debugger in the string registry value <B>JITDebugger</B> located at <B>HKEY_LOCAL_MACHINE\Debug</B>. To enable JIT, you must perform a warm reset on the Windows CE target platform after the above value is added to the registry. When your debugger is invoked by JIT, the process identifier of the debugee is passed on the command line. The Windows CE JIT is a Second-Chance exception handler.</P>
+
+<P>The debugger must have appropriate access to the target process; it must be able to open the process for PROCESS_ALL_ACCESS access. On Windows CE, the debugger has appropriate access if the process identifier is valid. </P>
+
+<P>After the system checks the process identifier and determines that a valid debugging attachment is being made, the function returns TRUE. The debugger is then expected to wait for debugging events by using the <A HREF="_wcesdk_win32_waitfordebugevent.htm">WaitForDebugEvent</A> function. The system suspends all threads in the process and sends the debugger events representing the current state of the process. </P>
+
+<P>For each dynamic-link library (DLL) currently loaded into the address space of the target process, the system sends a LOAD_DLL_DEBUG_EVENT debugging event. The system arranges for the first thread in the process to execute a breakpoint instruction after it resumes. Continuing this thread causes it to return to whatever it was doing before the debugger was attached. </P>
+
+<P>After all of this has been done, the system resumes all threads in the process. When the first thread in the process resumes, it executes a breakpoint instruction that causes an EXCEPTION_DEBUG_EVENT debugging event to be sent to the debugger. All future debugging events are sent to the debugger by using the normal mechanism and rules. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>To make use of just-in-time (JIT) debugging, you must set the following registry value.</BLOCKQUOTE>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Debug]
+    "JITDebugger": REG_SZ</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Nk.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>, <MSHelp:link keywords="_wcesdk_Win32_CreateProcess" TABINDEX="0">CreateProcess</MSHelp:link>, <A HREF="cerefgetlasterror.htm">GetLastError</A>, <A HREF="_wcesdk_win32_getthreadcontext.htm">GetThreadContext</A>, <A HREF="_wcesdk_win32_setthreadcontext.htm">SetThreadContext</A>, <A HREF="_wcesdk_win32_waitfordebugevent.htm">WaitForDebugEvent</A>, <A HREF="_wcesdk_win32_create_process_debug_info_str.htm">CREATE_PROCESS_DEBUG_INFO</A>, <A HREF="_wcesdk_create_thread_debug_info.htm">CREATE_THREAD_DEBUG_INFO</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DebugActiveProcess&nbsp;(_wcesdk_win32_debugactiveprocess.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

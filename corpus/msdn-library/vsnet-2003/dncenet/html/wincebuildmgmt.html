@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Build Management Basics Using Microsoft Windows CE .NET with Microsoft Platform Builder 4.0</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Build Management Basics Using Microsoft Windows CE .NET with Microsoft Platform Builder 4.0"/>
+<MSHelp:RLTitle Title="Build Management Basics Using Microsoft Windows CE .NET with Microsoft Platform Builder 4.0"/>
+<MSHelp:Keyword Index="A" Term="wincebuildmgmt"/>
+<MSHelp:Keyword Index="K" Term="Platform Builder 4.0, nightly build management"/>
+<MSHelp:Keyword Index="K" Term="Platform Builder 4.0, with Windows CE .NET"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, build management"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, with Platform Builder 4.0"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwinembed"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Use Windows CE .NET and Visual SourceSafe to create centralized nightly builds to coordinate the work of developers and testers, avoiding many of the pitfalls involved in synchronizing teams' input. Learn the ten steps in the build process that will take your platform from a development/testing phase to a Release Candidate/acceptance phase and, finally, to production."><meta name="keywords" content="nightly builds, build management, Windows CE .NET, Platform Builder 4.0, BSQUARE, Visual SourceSafe, build process"><META name="rtfFileName" content="wincebuildmgmt.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Jay Loney">
+<META NAME="Date" CONTENT="2002-06-01">
+<META NAME="msdnID" CONTENT="_828625">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wincebuildmgmt"></A>Build Management Basics Using Microsoft Windows CE .NET with Microsoft Platform Builder 4.0</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Jay Loney, Windows Embedded MVP <BR>
+BSQUARE Corporation</P>
+
+<P>Andy Jackson and the Build Team <BR>
+BSQUARE Corporation</P>
+
+<P>June 2002</P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Platform Builder version 4.0</P>
+
+<P><B>Summary:</B> Windows Embedded MVP, Jay Loney, and others from BSQUARE provide an overview of Microsoft Windows CE .NET build management for the <A HREF="http://go.microsoft.com/fwlink/?linkid=7496">Windows Embedded Developer Community</A>. (7 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#wincebuildmgmt_basics">The Basics of Build Management</A> <BR>
+<A HREF="#wincebuildmgmt_overview">Build Process Overview</A> <BR>
+<A HREF="#wincebuildmgmt_moreinfo">For More Information</A> </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Author's note&nbsp;&nbsp;&nbsp;</b>This content is for informational purposes and is provided only as a convenience. The entire risk of use or results in connection with the use of this article remains with the user.</BLOCKQUOTE>
+
+<H2 class="dtH1"><A NAME="wincebuildmgmt_basics"></A>The Basics of Build Management</H2>
+
+<P>One thing every company should implement is some scheme for verifying a team's image build regularly in a clean environment. This document provides overviews of Microsoft&#174; Windows&#174; CE .NET build management. It begins with the purpose of a nightly build. The nightly build procedure is then described. This document also talks about the requirements that the build system places on the Microsoft Visual SourceSafe&#174; (VSS) tree structure of a platform.</P>
+
+<P>Throughout this document we will make some assumptions. First, that you will be using VSS as your source code store. Next, the build is occurring at the command prompt. In Windows CE .NET terminology, the term platform refers to the image (nk.bin) being built. This document also assumes that the product is a board support package (BSP) provided in source code form. The word kit refers to the final product. Kitting refers to the packaging of the source code or binaries into an installable form.</P>
+
+<H3 class="dtH1">The Purpose of a Nightly Build</H3>
+
+<P>The main intent of the nightly build is to create a centralized point from which to coordinate the efforts of developers and testers. The development of software is heavily team oriented, and as a company grows and expands, it becomes more important that the company be able to effectively coordinate and leverage its engineering assets. Having a centralized build which can be dropped to test to verify results can bypass many of the pitfalls involved in synchronizing teams of individuals and groups of teams.</P>
+
+<P>Common problems, such as multiple code bases, version conflicts, missing check-ins, and inconsistent build environments, are avoided or exposed by using a common nightly build. With all platforms being built on clean machines, the nightly build can quickly bring to light most problems. For example, there may be an environment variable that a developer may have forgotten to explicitly set or had set erroneously. The nightly build synchronizes the work of multiple developers, reveals breaks that recent check-ins have introduced, and acts as a sanity check for missing/unchecked-in files. Coupled with a backup scheme, the nightly build also provides an easy way to reproduce drops from the past, and to examine the build environments/tools that were used to build them.</P>
+
+<P>In the grander view of things, the nightly build can be viewed simply as one component of the overall production cycle. Since it can be owned by the same group that is responsible for production, platforms can transition from a development/testing phase to a Release Candidate/acceptance phase and, finally, to production, smoothly and seamlessly.</P>
+
+<H3 class="dtH1">Build System Capabilities</H3>
+
+<P>A build system should be fully automated, and standardize many common tasks. 
+
+<OL type="1">
+	<LI>Automated nightly build, seven nights a week</li>
+
+	<LI>The ability to pull source from VSS, UNC Shares, Local Drives</li>
+
+	<LI>Can build platforms using a variety of tools
+<OL type="a">
+	<LI>Platform Builder (any version) 
+<P>Clean tree for every build 
+
+<P>Can build with any number of QFE's installed together or individually 
+
+<P>Ability to change and modify the tree for custom platforms
+</li>
+
+	<LI>Microsoft eMbedded Visual C++&#174; (eVC++)</li>
+
+	<LI>Run custom scripts via windows scripting host</li>
+</OL>
+</li>
+
+	<LI>Daily drop for each platform</li>
+
+	<LI>Automated setup creation
+<OL type="a">
+	<LI>Install Shield</li>
+
+	<LI>MSI</li>
+
+	<LI>Standard or custom setups</li>
+</OL>
+</li>
+
+	<LI>Notifications
+<OL type="a">
+	<LI>Daily build email
+<P>Filtering of errors in the log
+
+<P>Notification of drop locations
+</li>
+
+	<LI>Notification of build expiration</li>
+
+	<LI>Notification of platform specific errors</li>
+</OL>
+</li>
+
+	<LI>Backed up nightly (the past seven days worth of drops are readily available)</li>
+
+	<LI>The ability to re-release existing platforms with new documentation and/or a new setup</li>
+
+	<LI>Production/Release Management
+<OL type="a">
+	<LI>RC promotion cycle</li>
+
+	<LI>RTM promotion</li>
+
+	<LI>Archival of released platforms</li>
+</OL>
+</li>
+</OL>
+
+<H2 class="dtH1"><A NAME="wincebuildmgmt_overview"></A>Build Process Overview</H2>
+
+<P>A nightly build process is separated into several stages, with many of them being maintenance related. Since the maintenance of the system lies outside of the scope of this document, details on these stages will not be included. The stages involved in the building of an individual platform are as follows:
+
+<OL type="1">
+	<LI>Start clean</li>
+
+	<LI>Get the source code</li>
+
+	<LI>Get pre-built third party components (optional)</li>
+
+	<LI>Place the source code</li>
+
+	<LI>Get the documentation (optional)</li>
+
+	<LI>Create the source kit setup (optional)</li>
+
+	<LI>Build the platform</li>
+
+	<LI>Assemble the binary kit (optional)</li>
+
+	<LI>Create the binary kit setup (optional)</li>
+
+	<LI>Copy the results to the drop server</li>
+</OL>
+
+<H4 class="dtH1">Start clean</H4>
+
+<P>The first thing that must be done in any build environment is to guarantee that the tree is clean and does not contain any unknown modifications. This might represent QFEs, environment variables stored in batch files, or other source or binary file modifications. One way to guarantee this is to copy over a clean tree before every build. This is a brute force approach and is recommended. Another is to windiff trees for differences and revert to clean. A final mechanism is to simply know and revert every branch your particular build touches. This last approach is the fastest, but is also the most dangerous as it does not take into account unforeseen changes.</P>
+
+<H4 class="dtH1">Get the source code</H4>
+
+<P>During this initial stage, everything that will be used to build the platform is pulled into a working repository. These components may be source code, 3<SUP>rd</SUP> party applications, prebuilt binaries, and so on. The main purpose at this point is to gather everything in one place, and create a position to work from. Source can be pulled from any location: multiple VSS servers, network shares, or local drives. However, the locations that all these bits are pulled from must be official repositories such as VSS servers. Knowing where the bits come from and being able to control the sources is crucial to being able to reproduce any build.</P>
+
+<H4 class="dtH1">Get pre-built third party components (optional)</H4>
+
+<P>The first build stage of the nightly build is to build all third party binaries (if any) that will be used by the platform. The source for these bits are copied into the Platform Builder tree, built, and then saved off. The tree is then cleaned up for the primary build. Having third party source built separately from the actual build helps prevent those sources from accidentally making it into any released product, thus violating any source agreements. It also allows them to be built in their own build environment. A text file called a BOM file, or Bill of Materials, is used by the build system to determine which sources within the repository need to be built by the pre-build process. See the section <A HREF="#wincebuildmgmt_bomfiles">BOM files</A> for more information about the Bill of Materials files.</P>
+
+<H4 class="dtH1">Place the source code</H4>
+
+<P>After the pre-build stage, the source code is inserted into the Platform Builder build tree from the files in the source repository and any pre-built binaries. The source code is basically the tree structure that contains all of the components necessary to build a particular platform. This structure is arranged in the exact way that it needs to be in _WINCEROOT. In the case of a BSP, these files are normally all stored under %_WINCEROOT%\Platform\%_TGTPlat%. A BOM file describes all the components that need to be placed into the Platform Builder tree, and where each component is to be placed. This BOM file can then be used in creating the installation routine for any BSPs or drivers you are distributing. As a rule, no builds should be done on source code that is shared out from a developer's workstation. All code should be checked into some type of shared source server.</P>
+
+<H4 class="dtH1">Get the documentation (optional)</H4>
+
+<P>After the main source is pulled and arranged, documentation is pulled in from a documentation database. Documentation is kept separate from the source in order to allow for easier re-packaging of new documents with an existing product. This is the key feature that allows for parallel development of code and documentation.</P>
+
+<H4 class="dtH1">Create the source kit setup (optional)</H4>
+
+<P>If you are creating a source code product for release, you should create the installation before running the build. This is because of the files that are created and inserted into the tree by the build during image creation. After the source kit is assembled, and the documentation grabbed, the source kit setup is generated. The setup includes shortcuts to documentation files, shortcuts to build windows or Platform Builder workspace files, and uninstall options, in addition to the contents of the kit. This is an optional step, in that it only occurs if a drop of the source kit is desired. </P>
+
+<P>There is a new alternative to this phase of build management. Platform Builder includes two tools that are used to export a BSP from the IDE. They are the BSP Wizard and the Export Wizard. The BSP Wizard is used to create BSP structure and import the BSPs CEC file definitions into the IDE. The Export Wizard can then be used to package an individual driver or an entire BSP into MSI file format. A precursor to this step involves populating the catalog with the appropriate CEC files to build all the drivers from the IDE. In Windows CE .NET, however, no clean method for build management exists. Build Managers are still relegated to the command prompt for now. This can cause problems if your engineers are creating their platforms using the integrated development environment (IDE) methodology of CEC files vs. the command prompt methodology of DIRS, SOURCES, and batch files.</P>
+
+<H4 class="dtH1">Build the platform</H4>
+
+<P>Once the source kit tree is constructed, it is then overlaid (copied) into the wince tree and built. For most platform builds, wince.bat is run along with any setenv.bat files in order to setup the environment. Afterwards, blddemo.bat is called, which will build the platform. The final step of blddemo is to call makeimg, which creates the image assuming there are no errors. If there are errors, it is your responsibility to capture those errors and email them to the engineering team for analysis. Depending on the specific requirements of a platform, wince.bat and/or blddemo.bat may be replaced by custom build batch files. If any images are needed, they are created during this stage. For eVC++ type builds, the main workspace file is passed to the respective tool and built.</P>
+
+<P>In order to give developers more flexibility in their build environments, the build system makes use of a developer owned setenv.bat (as mentioned above) to initialize the build environment. This setenv.bat file is also automatically included in the setup via build window shortcuts. This is to allow customers to easily recreate the environments that a platform was built in and quickly launch builds. The setenv.bat file needs to be checked into VSS in order to be automatically pulled from VSS and utilized by the build system.</P>
+
+<H4 class="dtH1">Assemble the binary kit (optional)</H4>
+
+<P>If you are assembling a binary kit, it is very similar to assembling the source kit. It too uses a BOM file, but instead of pulling pieces from the source repository, they are pulled straight from the WINCE tree. They can be pulled either from the %_FLATRELEASEDIR% or the Target directory of your BSP. This way, the resulting binaries from a build may be included in the kit along with any source that will be delivered.</P>
+
+<H4 class="dtH1">Create the binary kit setup (optional)</H4>
+
+<P>Once the build is completed, if you are creating a binary release of your product, you can create the install. Just as in creating the source kit setup, the binary kit setup is also optional. This process is exactly the same as the process for creating a source kit setup, except that it packages the binary kit tree instead of the source kit tree.</P>
+
+<H4 class="dtH1">Copy the results to the drop server</H4>
+
+<P>The final step is to copy the drop, the source repository, the source kit tree, and binary kit tree to the drop server. The drop is the only item that will be accessible by everyone, with the source files and kits being secured for archival and rekitting purposes. </P>
+
+<H4 class="dtH1"><A NAME="wincebuildmgmt_bomfiles"></A>BOM files</H4>
+
+<P>In order to create a source kit or a binary kit, BOM files are used. BOM stands for Bill of Materials. A BOM file specifies what sources/binaries need to be included in a kit. This file is used by the automated build system to pick and choose the different files/directories that will go into a kit. In comparison, BOM files are to kitting as BIB files are to the build of NK.bin. They specify which files are to actually be included in the product installation.</P>
+
+<P>The build system begins each build by first pulling all the relevant sources for a platform into a repository (VSS, static bits, third party source, binaries, and so forth). The BOM file then specifies which files/directories out of this repository are to be used in the nightly build, and also the tree structure in which these files/directories are to be arranged. Blddem.bat is used to build the platform. If the kit to be delivered is to be a source kit, the tree structure described by the BOM file is then packaged and copied to the drop site.</P>
+
+<P>If built binaries are needed as well as source, this needs to be included in the BOM as well. Also, there may be prebuilt binary files that are included in the same fashion.</P>
+
+<P>Ideally, the BOM file should be owned/managed by development, since the developers are the ones who should know best what needs to be included in a kit in order for it to work. However, program managers need to also be involved in the creation of the BOM files, since these files do describe what will eventually be delivered to customers. In this respect, the program managers need to verify that restricted materials (3<SUP>rd</SUP> party source, internal IP, and so on) are not being included in the deliverables.</P>
+
+<H2 class="dtH1"><A NAME="wincebuildmgmt_moreinfo"></A>For More Information</H2>
+
+<P class="label"><B>For the latest Windows CE .NET Developer information: </B>
+
+<OL type="1">
+	<LI>Developer information, visit <A HREF="http://go.microsoft.com/fwlink/?linkid=5671">http://msdn.microsoft.com/embedded</A></li>
+
+	<LI>Product information visit: <A HREF="http://go.microsoft.com/fwlink/?linkid=5220">http://www.microsoft.com/windows/embedded</A></li>
+
+	<LI>Community Tips and Tricks, visit: <A HREF="http://go.microsoft.com/fwlink/?linkid=7496">http://www.microsoft.com/windows/embedded/community</A></li>
+</OL>
+
+<P>The online documentation and context-sensitive Help included with Windows CE .NET also provide comprehensive background information and instructions for using Windows CE .NET.</P>
+
+<P class="label"><B>To access the online documentation</B>
+
+<OL type="1">
+	<LI>Open Platform Builder 4.0.</li>
+
+	<LI>Select <B>Contents</B> on the <B>Help</B> menu to view the documentation.</li>
+</OL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Install the latest Windows CE .NET Help File updates from the <A HREF="http://go.microsoft.com/fwlink/?linkid=5452">Windows Embedded Download Center</A> on MSDN.</BLOCKQUOTE>
+
+<H3 class="dtH1">Microsoft Windows Embedded Developer Center</H3>
+
+<P>You can always find the latest developer information including news, product documentation, technical articles, columns, How To's, Downloads, Code Samples, Fixes, and Updates for Windows CE .NET on the <A HREF="http://go.microsoft.com/fwlink/?linkid=5671">Windows Embedded Developer Center</A> on MSDN.</P>
+
+<H3 class="dtH1">Join, Share, and Develop in the Windows Embedded Community</H3>
+
+<P>Visit the <A HREF="http://go.microsoft.com/fwlink/?linkid=7496">Windows Embedded Community</A> for resources that help you stay current on platform technologies including Tips and Tricks, chats, newsgroups, featured downloads, and more. You can also share your development expertise, gain from valuable peer-to-peer support relationships, and find answers to many Windows CE .NET related questions.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_828625', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

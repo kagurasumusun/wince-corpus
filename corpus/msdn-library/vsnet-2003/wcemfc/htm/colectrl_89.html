@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleControl::OnFontChanged</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_colecontrol_onfontchanged"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_colecontrol_onfontchanged"></A>COleControl::OnFontChanged</H1>
+
+<P>This method is called by the framework when the stock <B>Font</B> property is changed. The default implementation calls <B>COleControl::InvalidateControl</B>. If the control is subclassing a Windows control, the default implementation also sends a WM_SETFONT message to the control window.</P>
+
+<P>Override this function if you want notification after this property changes.</P>
+
+<PRE class=syntax><B>virtual void OnFontChanged( );</B><I> </I></PRE>
+
+<H4>Example</H4>
+
+<PRE>// Sample for the ActCtrl.cpp.
+
+void CSampleActCtrl::OnFontChanged()
+{
+&nbsp;&nbsp;//////////////////////////////////////////////////////////
+&nbsp;&nbsp;// Always set it to the container's font
+&nbsp;&nbsp;if (m_MyEdit.m_hWnd != NULL)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;IFontDisp* pFontDisp = NULL;
+&nbsp;&nbsp;&nbsp;&nbsp;IFont *pFont = NULL;
+&nbsp;&nbsp;&nbsp;&nbsp;HRESULT hr;
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the container's FontDisp interface.
+&nbsp;&nbsp;&nbsp;&nbsp;pFontDisp = AmbientFont();
+&nbsp;&nbsp;&nbsp;&nbsp;if (pFontDisp)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hr = pFontDisp-&gt;QueryInterface(IID_IFont, (LPVOID *) &amp;pFont);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (FAILED(hr))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pFontDisp-&gt;Release();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;HFONT hFont = NULL;
+&nbsp;&nbsp;&nbsp;&nbsp;if (pFont)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pFont-&gt;get_hFont(&amp;hFont);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_MyEdit.SendMessage(WM_SETFONT, (WPARAM)hFont, 0L);
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;pFontDisp-&gt;Release();
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Invalidate the control.
+&nbsp;&nbsp;m_MyEdit.Invalidate();
+&nbsp;&nbsp;m_MyEdit.UpdateWindow();
+&nbsp;&nbsp;///////////////////////////////////////////////////////////
+&nbsp;&nbsp;
+&nbsp;&nbsp;COleControl::OnFontChanged();
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="colectrl_55.htm"><B>COleControl::GetFont</B></A><B>, <A HREF="colectrl_67.htm">COleControl::InternalGetFont</A>, <A HREF="colectrl_70.htm">COleControl::InvalidateControl</A> </B></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

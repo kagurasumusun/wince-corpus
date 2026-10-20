@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DWebBrowserEvents2::NavigateError</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DWebBrowserEvents2::NavigateError"/>
+<MSHelp:RLTitle Title="DWebBrowserEvents2::NavigateError"/>
+<MSHelp:Keyword Index="A" Term="cerefNavigateError"/>
+<MSHelp:Keyword Index="K" Term="DWebBrowserEvents2, NavigateError"/>
+<MSHelp:Keyword Index="A" Term="cerefNavigateError"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: wbc_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756177">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefnavigateerror"></A>DWebBrowserEvents2::NavigateError</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method fires when an error occurs during navigation.</P>
+
+<PRE class="syntax"><B>void NavigateError(</B> 
+<B>Idispatch *</B><I>pDisp</I><B>,</B>
+<B>VARIANT *</B><I>URL</I><B>,</B>
+<B>VARIANT *</B><I>TargetFrameName</I><B>,</B>
+<B>VARIANT *</B><I>StatusCode</I><B>,</B>
+<B>VARIANT_BOOL *</B><I>Cancel</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pDisp </I></DT>
+
+<DD>[in]&nbsp;Pointer to an <B>IDispatch</B> interface for the WebBrowser object that represents the window or frame in which the navigation error occurred. This interface can be queried for the <B>IWebBrowser2</B> interface. </dd>
+
+<DT><I>URL </I></DT>
+
+<DD>[in]&nbsp;Pointer to a <B>VARIANT</B> structure of type VT_BSTR that contains the URL for which navigation failed. </dd>
+
+<DT><I>TargetFrameName </I></DT>
+
+<DD>[in]&nbsp;Pointer to a <B>VARIANT</B> structure of type VT_BSTR that contains the name of the frame in which the resource is to be displayed, or NULL if no named frame was targeted for the resource. </dd>
+
+<DT><I>StatusCode </I></DT>
+
+<DD>[in]&nbsp;Pointer to a VT_I4 containing an error status code, if available. For a list of the possible HRESULT and HTTP status codes, see NavigateError Event Status Codes. </dd>
+
+<DT><I>Cancel </I></DT>
+
+<DD>[in, out]&nbsp;Pointer to a <B>VARIANT</B> structure of type VARIANT_BOOL that specifies whether to cancel the navigation to an error page and/or any further autosearch. </dd>
+
+<DT>VARIANT_FALSE </DT>
+
+<DD>Default. Continue with navigation to an error page and/or autosearch. </dd>
+
+<DT>VARIANT_TRUE </DT>
+
+<DD>Cancel navigation to an error page and/or autosearch.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None. </P>
+
+<H4 class="dtH4">Event DISPID</H4>
+
+<P>DISPID_NAVIGATEERROR</P>
+
+<P>The DISPID for this event is defined in Exdispid.h. Use this value to identify the event handler when implementing IDispatch::Invoke.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This event fires before Internet Explorer displays an error page due to an error in navigation. An application has a chance to stop the display of the error page by setting the <I>Cancel</I> parameter to VARIANT_TRUE. However, if the server contacted in the original navigation supplies its own substitute page navigation, setting Cancel to VARIANT_TRUE will have no effect and the navigation to the server's alternate page will proceed. For example, assume that a navigation to http://www.wingtiptoys.com/BigSale.htm causes this event to fire because the page does not exist. However, the server is set to redirect you to http://www.wingtiptoys.com/home.htm instead. In this case, setting Cancel to VARIANT_TRUE has no effect and navigation will proceed to http://www.wingtiptoys.com/home.htm. </P>
+
+<P>The <I>pDisp</I> parameter should be used to match this event with its corresponding IWebBrowser2::Navigate or IWebBrowser2::Navigate2 request. For example, multiple DWebBrowserEvents2::NavigateError events can fire for a single IWebBrowser2::Navigate or IWebBrowser2::Navigate2 request. Reasons for this include navigation to a URL with multiple frames or multiple attempts by an autosearch engine to resolve an invalid URL. In each of these cases, the URL passed into these events might not match the URL that was originally requested. However, each of these events will have the same <I>pDisp</I>. </P>
+
+<P>As with other events, you can trap the DWebBrowserEvents2::NavigateError event by implementing IDispatch::Invoke as your event sink, and connecting it to the WebBrowser control's DIID_DWebBrowserEvents2 connection point. You can then extract information such as the status code from the method's <I>pDispParams</I> parameter. </P>
+
+<P>The following code fragment has been adapted from the from the SimpleATLBrowser sample application's event sink. It shows how to trap the DWebBrowserEvents2::NavigateError event and extract the status code and IDispatch pointer. See the sample for further details. </P>
+
+<PRE class="code">HRESULT CAtlWbHost::Invoke(DISPID dispIdMember,
+                           REFIID riid,
+                           LCID lcid,
+                           WORD wFlags,
+                           DISPPARAMS *pDispParams,
+                           VARIANT *pvarResult,
+                           EXCEPINFO *pexcepinfo,
+                           UINT *puArgErr)
+{
+    switch(dispIdMember)
+    {
+    ...
+    case DISPID_NAVIGATEERROR : 
+        //Extract the status code from the DISPPARAMS structure
+        VARIANT * vt_statuscode = pDispParams-&gt;rgvarg[1].pvarVal;
+        DWORD  dwStatusCode =  vt_statuscode-&gt;lVal;
+...
+        //Extract the event's IDispatch pointer
+        IDispatch *pdispFiredEvent = pDispParams-&gt;rgvarg[4].pdispVal;
+...
+        break;
+    ...
+}
+</PRE>
+
+<P>A URL passed into IWebBrowser2::Navigate or IWebBrowser2::Navigate2 might not match the URL passed into this event because the URL goes through a normalization process. For example, the URL string "www.wingtiptoys.co" could be passed into IWebBrowser2::Navigate2, but because of the normalization process, the <I>URL</I> parameter is set to "http://www.wingtiptoys.co/". </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=19%>Include</TH>
+<TH width=17%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>.NET 4.0 and later</TD>
+<TD width=18%>Exdisp.h</TD>
+<TD width=19%>Exdisp.h</TD>
+<TD width=17%>Shdocvw.lib</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DWebBrowserEvents2::NavigateError&nbsp;(cerefnavigateerror.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

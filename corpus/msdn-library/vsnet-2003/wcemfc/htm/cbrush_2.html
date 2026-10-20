@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBrush::CBrush</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cbrush_cbrush"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cbrush_cbrush"></A>CBrush::CBrush</H1>
+
+<P>Either of these constructors create instances of a <B>CBrush</B> object. The default constructor constructs an uninitialized <B>CBrush</B> object that must be initialized before it can be used. </P>
+
+<PRE class=syntax><B>CBrush()</B><I>
+</I>
+<B>CBrush(
+COLORREF </B><I>crColor</I> <B>)
+</B>
+<B>CBrush(
+CBitmap*</B> <I>pBitmap</I> <B>)</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>crColor</I></DT>
+
+<DD>Specifies the foreground color of the brush as an RGB color. </DD>
+
+<DT><I>pBitmap</I></DT>
+
+<DD>Points to a <B>CBitmap</B> object that specifies a bitmap with which the brush paints.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>If you use the constructor with no arguments, you must initialize the resulting <B>CBrush</B> object with <B>CreateSolidBrush</B>, <B>CreateBrushIndirect</B>, <B>CreatePatternBrush</B>, or <B>CreateDIBPatternBrush</B>. If you use a constructor that takes arguments, no further initialization is necessary. Constructors with arguments can throw an exception if errors are encountered; the constructor with no arguments always succeeds.</P>
+
+<P>The constructor with a single <B>COLORREF</B> parameter constructs a solid brush with the specified color. The color specifies an RGB value and can be constructed with the <B>RGB</B> macro in Windows.h.</P>
+
+<P>The constructor with a <B>CBitmap</B> parameter constructs a patterned brush. The parameter identifies a bitmap. The bitmap is assumed to have been created by using <B>CBitmap::CreateBitmap</B>, <B>CBitmap::CreateBitmapIndirect</B>, <B>CBitmap::LoadBitmap</B>, or <B>CBitmap::CreateCompatibleBitmap</B>. The minimum size for a bitmap to be used in a fill pattern is 8 pixels by 8 pixels.</P>
+
+<P>Windows CE does not support the following overloaded implementation of the constructor:</P>
+
+<PRE><B>CBrush::CBrush(
+int </B><I>nIndex</I><B>,
+COLORREF </B><I>crColor</I> <B>) </B>
+</PRE>
+
+<H4>Example</H4>
+
+<PRE>void CBrushView::OnDraw(CDC* pDC)
+{
+&nbsp;&nbsp;CBrushDoc* pDoc = GetDocument();
+&nbsp;&nbsp;ASSERT_VALID(pDoc);
+
+&nbsp;&nbsp;// CBrush::CBrush.
+&nbsp;&nbsp;CBrush brush1;&nbsp;&nbsp;// Must initialize!
+&nbsp;&nbsp;brush1.CreateSolidBrush(RGB(0,0,255));&nbsp;&nbsp;// Blue brush.
+
+&nbsp;&nbsp;CBrush* pTempBrush = NULL;
+&nbsp;&nbsp;CBrush OrigBrush;
+
+&nbsp;&nbsp;CRect rc;
+&nbsp;&nbsp;GetClientRect(&amp;rc);
+&nbsp;&nbsp;ScreenToClient(&amp;rc);
+
+&nbsp;&nbsp;pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush1);
+&nbsp;&nbsp;// Save original brush.
+&nbsp;&nbsp;OrigBrush.FromHandle((HBRUSH)pTempBrush);
+
+&nbsp;&nbsp;// Paint upper left corner with blue brush.
+&nbsp;&nbsp;pDC-&gt;Rectangle(0, 0, rc.Width() / 2, rc.Height() / 2);
+
+&nbsp;&nbsp;// These constructors throw resource exceptions.
+&nbsp;&nbsp;try
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// CBrush::CBrush(COLORREF crColor)
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush brush2(RGB(255,0,0));&nbsp;&nbsp;// Solid red brush.
+
+&nbsp;&nbsp;&nbsp;&nbsp;// CBrush::CBrush(int nIndex, COLORREF crColor)
+&nbsp;&nbsp;&nbsp;&nbsp;// Hatched green brush.
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush brush3(HS_DIAGCROSS, RGB(0,255,0));
+
+&nbsp;&nbsp;&nbsp;&nbsp;// CBrush::CBrush(CBitmap* pBitmap)
+&nbsp;&nbsp;&nbsp;&nbsp;CBitmap bmp;
+&nbsp;&nbsp;&nbsp;&nbsp;// Load a resource bitmap.
+&nbsp;&nbsp;&nbsp;&nbsp;bmp.LoadBitmap(IDB_BRUSH);
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush brush4(&amp;bmp);
+
+&nbsp;&nbsp;&nbsp;&nbsp;pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush2);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Paint upper right corner with red brush.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;Rectangle(rc.Width() / 2, 0, rc.Width(),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rc.Height() / 2);
+
+&nbsp;&nbsp;&nbsp;&nbsp;pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush3);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Paint lower left corner with green hatched brush.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;Rectangle(0, rc.Height() / 2, rc.Width() / 2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rc.Height());
+
+&nbsp;&nbsp;&nbsp;&nbsp;pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush4);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Paint lower right corner with resource brush.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;Rectangle(rc.Width() / 2, rc.Height() / 2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rc.Width(), rc.Height());
+&nbsp;&nbsp;}
+&nbsp;&nbsp;catch(CResourceException* e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;ReportError();
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Reselect original brush into device context.
+&nbsp;&nbsp;pDC-&gt;SelectObject(&amp;OrigBrush);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cbrush_6.htm"><B>CBrush::CreateSolidBrush</B></A>, <A HREF="cbrush_3.htm"><B>CBrush::CreateBrushIndirect</B></A>, <A HREF="cbrush_4.htm"><B>CBrush::CreateDIBPatternBrush</B></A>, <A HREF="cgdiob_4.htm"><B>CGdiObject::CreateStockObject</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Flash Memory Operations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Flash Memory Operations"/>
+<MSHelp:RLTitle Title="Flash Memory Operations"/>
+<MSHelp:Keyword Index="A" Term="cmconPersistentStorageManagerArchitecture"/>
+<MSHelp:Keyword Index="K" Term="flash memory, operation valid with Persistent Storage Manager"/>
+<MSHelp:Keyword Index="K" Term="linear flash memory, operation valid with Persistent Storage Manager"/>
+<MSHelp:Keyword Index="K" Term="Persistent Storage Manager, flash memory operations"/>
+<MSHelp:Keyword Index="A" Term="cmconPersistentStorageManagerArchitecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: psm_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756330">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconpersistentstoragemanagerarchitecture"></A>Flash Memory Operations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic explains the flash memory operations that are valid with the PSM.</P>
+
+<H2 class="dtH2">Reading</H2>
+
+<P>Because each linear flash memory location can be randomly read within approximately 100 nanoseconds, a linear flash device is ideal for storing executable code. Advanced interfaces for flash memory exist that allow read transfer rates up to 100 megabytes (MB) per second. Moreover, because flash memory powers-up in read mode, it can be used to store boot code.</P>
+
+<H2 class="dtH2">Erasing</H2>
+
+<P>Erasing is the process of converting zeros to ones. Individual memory locations cannot be erased; they must be erased in blocks. The size of a block varies from device to device and ranges from 8 KB to 128 KB.</P>
+
+<P>For example, if a bit in a flash memory is a zero, to erase that bit, or to write a one to that bit requires that the entire block be erased. This erase process will convert all zeros in the specified block into ones.</P>
+
+<P>The typical erase time for a block is 1 second. One of the biggest jobs of a flash file driver is to efficiently store and modify files of different sizes in a flash device that has a block-erase requirement.</P>
+
+<H2 class="dtH2">Programming</H2>
+
+<P>Programming a location is the process of converting a one to a zero. Programming 0xFF into an erased byte has no effect on the contents, because no ones are converted to zeros; programming 0xEB into an erased byte converts bits two and four to zero.</P>
+
+<P>To program a location, the microprocessor must send a few simple commands to the device along with the address and data to be programmed. Upon receiving this command, the flash device performs the requested program operations. When the program operation is finished, a status register within the flash component will indicate that the program operation was completed and whether or not an error occurred.</P>
+
+<P>A single byte or word can be programmed in a flash memory device; it can take from 5 to 200 or more microseconds to program a location, depending on the particular flash memory device used.</P>
+
+<H2 class="dtH2">Special Voltages</H2>
+
+<P>A flash memory cell requires that specific voltages be available in order to perform the erase and program functions. The current flash devices generate these voltages internally, so the designer need only apply a single voltage, to the device. On devices with a programming voltage pin, that pin can usually be tied to the single voltage.</P>
+
+<H2 class="dtH2">Reading While Programming or Erasing</H2>
+
+<P>Once the command to program a flash memory location or to erase a flash memory block has been received, the flash may become unavailable for execution. This is necessary because the read, program, and erase operations all share circuitry in the flash device, and each operation requires that different voltages be applied internally to the array. You need not worry about supplying these special voltages; the flash device generates these voltages internally.</P>
+
+<H2 class="dtH2">Suspending Operations</H2>
+
+<P>Most flash devices support suspending an erase operation, program operation, or both. This capability allows a system to gain access to time critical code or data while the flash is busy programming or erasing. When the flash receives a suspend command, it waits for an appropriate time to stop the current operation. This time period is called the suspend latency. It saves the exact state of the operation and makes the array available for reading. The suspended operation can be resumed where it left off. The suspend and resume cycle can be performed repeatedly during longer operations such as a block erase.</P>
+
+<H2 class="dtH2">Event Management</H2>
+
+<P>Event management is a technique used to coordinate executing code from the same component that stores files. When a high priority event occurs during a program or erase operation, the event manager suspends the flash programming or erase operation and makes the flash available for execution. When the high priority task is finished, the event manager resumes the flash operation.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconpersistentstoragemanager.htm">Persistent Storage Manager</A></P>
+
+<P><A HREF="cmconpartitions.htm">Flash Memory Partitions</A></P>
+
+<P><A HREF="cmconinstallablefilesystem.htm">Installable File System</A> </P>
+
+<P><A HREF="cmconformattingfilepartition.htm">File Partition Formatting</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Flash%20Memory%20Operations&nbsp;(cmconpersistentstoragemanagerarchitecture.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Winsock Overlapped I/O and Event Objects</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Winsock Overlapped I/O and Event Objects"/>
+<MSHelp:RLTitle Title="Winsock Overlapped I/O and Event Objects"/>
+<MSHelp:Keyword Index="A" Term="ceconOverlappedIOEventObjects"/>
+<MSHelp:Keyword Index="K" Term="I/O, Winsock 2.2 overlapped"/>
+<MSHelp:Keyword Index="K" Term="Winsock 2.2, overlapped I/O and event objects"/>
+<MSHelp:Keyword Index="A" Term="ceconOverlappedIOEventObjects"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: winsock.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715592">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconoverlappedioeventobjects"></A>Winsock Overlapped I/O and Event Objects</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Winsock supports overlapped I/O and requires that all transport providers support this capability. Overlapped I/O follows the model established in Win32 and can be performed only on sockets created through the <A HREF="_wcesdk_wsasocket.htm">WSASocket</A> function with the WSA_FLAG_OVERLAPPED flag set or with sockets created through the <A HREF="_wcesdk_socket.htm">socket</A> function.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Creating a socket with the overlapped attribute has no impact on whether a socket is currently in blocking or nonblocking mode. Sockets created with the overlapped attribute can be used to perform overlapped I/O. Doing so does not change the blocking mode of a socket. Because overlapped I/O operations do not block, the blocking mode of a socket is irrelevant for these operations.</BLOCKQUOTE>
+
+<P>For receiving, applications use the <A HREF="_wcesdk_wsarecv.htm">WSARecv</A> or <A HREF="_wcesdk_wsarecvfrom.htm">WSARecvFrom</A> functions to supply buffers into which data is to be received. If one or more buffers are posted prior to the time that data has been received by the network, that data could be placed in the user's buffers immediately as the data arrives. By immediately placing the data in the user's buffers and application can avoid the copy operation that would otherwise occur at the time the <A HREF="_wcesdk_recv.htm">recv</A> or <A HREF="_wcesdk_recvfrom.htm">recvfrom</A> function is invoked. If data is already present when receive buffers are posted, it is copied immediately into the user's buffers.</P>
+
+<P>If data arrives when no receive buffers have been posted by the application, the network resorts to the familiar synchronous style of operation. That is, the incoming data is buffered internally until the application issues a receive call and thereby supplies a buffer into which the data can be copied.</P>
+
+<P>On the sending side, applications use <A HREF="_wcesdk_wsasend.htm">WSASend</A> or <A HREF="_wcesdk_wsasendto.htm">WSASendTo</A> to supply pointers to filled buffers and then agree not to disturb the buffers in any way until the network has consumed the buffer's contents. </P>
+
+<P>Overlapped send and receive calls return immediately. A return value of zero indicates that the I/O operation was completed immediately and that the corresponding completion indication already occurred. That is, the associated event object has been signaled, or a completion routine has been queued and will be executed when the calling thread gets into the alertable wait state.</P>
+
+<P>A return value of SOCKET_ERROR coupled with an error code of WSA_IO_PENDING indicates that the overlapped operation has been successfully initiated and that a subsequent indication will be provided when send buffers have been consumed or when a receive operation has been completed. Any other error code indicates that the overlapped operation was not successfully initiated and that no completion indication will be forthcoming.</P>
+
+<P>Both send and receive operations can be overlapped. The receive functions can be invoked several times to post receive buffers in preparation for incoming data, and the send functions can be invoked several times to queue multiple buffers to send. Although the application can rely on a series of overlapped send buffers being sent in the order supplied, the corresponding completion indications might occur in a different order. Likewise, on the receiving side, buffers can be completed in the order they are supplied, but the completion indications might occur in a different order.</P>
+
+<P>Canceling individual overlapped operations pending on a given socket is impossible. However, the <A HREF="_wcesdk_closesocket.htm">closesocket</A> function can be called to close the socket and eventually discontinue all pending operations.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconeventobjects.htm">Winsock Event Objects</A></P>
+
+<P><A HREF="ceconreceivingcompletionindications.htm">Winsock Completion Indications</A></P>
+
+<P><A HREF="ceconsummaryofoverlappedcompletionindicationmechanisms.htm">Overlapped Completion Indication Mechanisms</A></P>
+
+<P><A HREF="ceconextendedbyte-orderconversionroutines.htm">Extended Byte-Order Conversion Routines</A></P>
+
+<P><A HREF="ceconsupportforscattergatherioinapi.htm">Scatter/Gather I/O Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Winsock%20Overlapped%20I%2FO%20and%20Event%20Objects&nbsp;(ceconoverlappedioeventobjects.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

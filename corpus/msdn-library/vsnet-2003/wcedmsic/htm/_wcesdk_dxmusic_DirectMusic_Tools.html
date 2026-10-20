@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DirectMusic Tools</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DirectMusic Tools"/>
+<MSHelp:RLTitle Title="DirectMusic Tools"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_DirectMusic_Tools"/>
+<MSHelp:Keyword Index="K" Term="DirectMusic, tools"/>
+<MSHelp:Keyword Index="K" Term="tools, DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_DirectMusic_Tools"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680727">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_directmusic_tools"></A>DirectMusic Tools</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In DirectMusic, a tool is an object that intercepts messages and handles them in some way. The tool might alter the message, and then pass it on to the next tool, free the message, or send a new message based on information in the old one.</P>
+
+<P>DirectMusic has an output tool that is normally the last to receive messages. It is this tool that converts performance messages to standard MIDI messages and streams them to the synthesizer. Other tools are implemented by the application or obtained from libraries.</P>
+
+<P>To implement a tool, you must first create an object that supports the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool" TABINDEX="0">IDirectMusicTool</MSHelp:link> interface. The object's implementation of the <B>IDirectMusicTool</B> methods determines what messages are processed by the tool and what work is performed on these messages.</P>
+
+<P>All tools other than the output tool are normally collected in graphs; even if your application is using only one other tool, you should create a DirectMusicGraph to contain it. Then add this graph to a segment or the performance. Graphs provide a convenient mechanism for directing messages from one tool to another.</P>
+
+<P>When the performance engine is playing a segment, it allows each tool in the segment graph, and then each tool in the performance graph to process each message. After a tool processes a message, it should call the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicGraph__StampPMsg" TABINDEX="0">IDirectMusicGraph::StampPMsg</MSHelp:link> method (obtaining the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicGraph" TABINDEX="0">IDirectMusicGraph</MSHelp:link> pointer from the <B>pGraph</B> member of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PMSG" TABINDEX="0">DMUS_PMSG</MSHelp:link> structure) to stamp the message with a pointer to the next tool, if any, that is to receive it. Then, the tool puts the message back in the pipeline.</P>
+
+<P>Tools process messages in a high-priority thread. Do not call time-consuming functions, such as those involving graphics or file input/output, from within a tool's <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool__ProcessPMsg" TABINDEX="0">IDirectMusicTool::ProcessPMsg</MSHelp:link> method. If a tool needs to trigger an action, it should do so by signaling a different thread, perhaps the application's main thread.</P>
+
+<P>When implementing the methods of <B>IDirectMusicTool</B>, be sure not to create circular references to parent objects. Circular references come about when one object creates another and the child keeps an additional reference to the parent. For example, suppose a tool creates a new reference to the graph passed into its <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool__Init" TABINDEX="0">IDirectMusicTool::Init</MSHelp:link> method. If the tool fails to release this reference, there is a problem when the segment attempts to release the graph. Because the tool still has a reference to the graph, the graph is not fully released; and because the graph has a reference to the tool, the tool cannot be released either.</P>
+
+<P>For more information about how to set up a tool, see <A HREF="_wcesdk_dxmusic_tutorial_2__using_tools.htm">Tutorial 2: Using Tools</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DirectMusic%20Tools&nbsp;(_wcesdk_dxmusic_directmusic_tools.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

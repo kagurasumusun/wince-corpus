@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Interface Classes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Interface Classes"/>
+<MSHelp:RLTitle Title="Device Interface Classes"/>
+<MSHelp:Keyword Index="A" Term="cxconInterfaceClasses"/>
+<MSHelp:Keyword Index="K" Term="device driver loading model, device interface classes"/>
+<MSHelp:Keyword Index="K" Term="driver loading model, device interface classes"/>
+<MSHelp:Keyword Index="A" Term="cxconInterfaceClasses"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731161">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconinterfaceclasses"></A>Device Interface Classes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Device interface classes refer to the methods available to applications for accessing the features exposed by a device driver. They indicate that a certain interface is present to whatever receives notifications. A device driver can have multiple interfaces at the same time, or it can have no interface. <B>IClass</B> registry subkeys reference device interface and their associated GUIDs. The header (.h) file that declares the interface typically defines the GUID and associates the GUID with the interface. The header file associates the interface with the GUID by defining the GUID. You must expose the interface classes through the <B>IClass</B> registry values or by calling <MSHelp:link keywords="cerefAdvertiseInterface" TABINDEX="0">AdvertiseInterface</MSHelp:link>. You may also define your own interface classes.</P>
+
+<P>There are no restrictions on the device interface, and the mechanism for accessing the device interface is dependent on the interface. </P>
+
+<P>The following code example uses an imaginary GUID to show a header file typically defines device interface GUIDs.</P>
+
+<PRE class="code">#define DEVCLASS_<I>IFCNAME</I>_STRING TEXT("{12345678-1234-1234-1122334455667788}")
+#define DEVCLASS_<I>IFCNAME</I>_GUID { 0x12345678, 0x1234, 0x1234, { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 } }</PRE>
+
+<P>A driver in the Device Manager that exposes an interface publicizes this by setting the <B>IClass</B> value set appropriately in the registry key passed into <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> with <B>AdvertiseInterface</B>. A device driver announces what device interfaces it exposes in the registry. This announcement is available to applications and drivers that are interested by using <MSHelp:link keywords="cerefRequestDeviceNotifications" TABINDEX="0">RequestDeviceNotifications</MSHelp:link>. Stop device notifications by calling <MSHelp:link keywords="cerefStopDeviceNotifications" TABINDEX="0">StopDeviceNotifications</MSHelp:link>. These functions allow you to access the device interface's GUID and name. The GUID describes the device interface and the name disambiguates multiple instances of that device interface. For example, there is a GUID for the generic stream interface, and the names "COM1:" and "DSK1:" refer to two distinct instances of the generic stream interface.</P>
+
+<P>It is possible for two different device interface classes, GUIDs, to have instances with the same name. The name has meaning only in the context of the access methods of the device interface named by the GUID.</P>
+
+<P>A device driver should only claim to export a device interface if it implements that device interface entirely. Any interaction with a driver will expect full support of the device interface it advertises.</P>
+
+<P>By calling <B>AdvertiseInterface</B>, device drivers can explicitly send notifications; this is primarily for removable-media storage devices and other drivers that do not know at load-time exactly which interfaces they will expose. </P>
+
+<P>The following table shows the interfaces, the header files that define them, and descriptions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Interface</TH>
+<TH width=33%>Header file</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVCLASS_CARDSERV_GUID </TD>
+<TD width=33%>%_WINCEROOT%\Public\Common\DDK\Inc\Cardserv.h</TD>
+<TD width=34%>Card and socket services drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVCLASS_STREAM_GUID </TD>
+<TD width=33%>%_WINCEROOT%\Public\Common\SDK\Inc\Pnp.h</TD>
+<TD width=34%>Generic stream interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DEVCLASS_POWER_MANAGER_GUID </TD>
+<TD width=33%>%_WINCEROOT%\Public\Common\SDK\Inc\Pm.h</TD>
+<TD width=34%>This is an alias for PM_CLASS_GENERIC_DEVICE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>PMCLASS_GENERIC_DEVICE </TD>
+<TD width=33%>%_WINCEROOT%\Public\Common\SDK\Inc\Pm.h</TD>
+<TD width=34%>Generic power manageable stream interface device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>PMCLASS_NDIS_MINIPORT </TD>
+<TD width=33%>%_WINCEROOT%\Public\Common\SDK\Inc\Pm.h</TD>
+<TD width=34%>NDIS miniport managed through NDS0:.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>PMCLASS_BLOCK_DEVICE </TD>
+<TD width=33%>%_WINCEROOT%\Public\Common\SDK\Inc\Pm.h</TD>
+<TD width=34%>Power manageable block device driver.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicedriverloadingmodel.htm">Device Driver Loading Model</A></P>
+
+<P><A HREF="cxconregistryenumerator.htm">Registry Enumerator</A></P>
+
+<P><A HREF="cxcondevicenotifications.htm">Device Interface Notifications</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Device%20Interface%20Classes&nbsp;(cxconinterfaceclasses.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

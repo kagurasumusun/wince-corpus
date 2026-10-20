@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDsCaptureDriverBuffer::Lock</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDsCaptureDriverBuffer::Lock"/>
+<MSHelp:RLTitle Title="IDsCaptureDriverBuffer::Lock"/>
+<MSHelp:Keyword Index="A" Term="_dxce_IDsCaptureDriverbuffer__lock"/>
+<MSHelp:Keyword Index="K" Term="IDsCaptureDriverBuffer, Lock"/>
+<MSHelp:Keyword Index="K" Term="Lock, IDsCaptureDriverBuffer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dshal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_idscapturedriverbuffer__lock"></A>IDsCaptureDriverBuffer::Lock</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <B>IDsCaptureDriverBuffer::Lock</B> method is called to obtain a valid read pointer to the sound buffer's audio data. </P>
+
+<PRE class="syntax"><B>HRESULT Lock( </B>
+<B>LPLPVOID </B><I>ppvAudio1</I><B>,</B>
+<B>LPDWORD </B><I>pdwLen1</I><B>,</B>
+<B>LPLPVOID </B><I>ppvAudio2</I><B>,</B>
+<B>LPDWORD </B><I>pdwLen2</I><B>,</B>
+<B>DWORD </B><I>dwWritePosition</I><B>,</B>
+<B>DWORD </B><I>dwWriteLen</I><B>,</B>
+<B>DWORD </B><I>dwFlags</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>ppvAudio1 </I></DT>
+
+<DD>Pointer to a value that the driver must fill in with a pointer to the first block of sound data. </dd>
+
+<DT><I>pdwLen1 </I></DT>
+
+<DD>Pointer to a doubleword that the driver must fill in with the number of bytes pointed to by <I>*ppvAudio1</I>. </dd>
+
+<DT><I>ppvAudio2 </I></DT>
+
+<DD>Pointer to a value that the driver must fill in with a pointer to the second block of sound data. If the first block (pointed to by <I>*ppvAudio1</I>) points to the entire block of requested data, this value should be set to NULL. </dd>
+
+<DT><I>pdwLen2 </I></DT>
+
+<DD>Pointer to a doubleword that the driver must fill in with the number of bytes pointed to by <I>*ppvAudio2</I>. If <I>*ppvAudio2</I> is NULL, this value must be set to zero. </dd>
+
+<DT><I>dwWritePosition </I></DT>
+
+<DD>The position relative to the start of the buffer that should be locked, and therefore subject to change by the locking application. </dd>
+
+<DT><I>dwWriteLen </I></DT>
+
+<DD>The number of bytes relative to the write position that will be locked, and therefore subject to change by the locking application. </dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>No flags are currently defined. This value will always be 0. </dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>Returns DS_OK if successful, or one of the following error values otherwise:
+
+<UL type="disc">
+	<LI>DSERR_INVALIDCALL</li>
+
+	<LI>DSERR_INVALIDPARAM </li>
+
+	<LI>DSERR_BUFFERLOST </li>
+</UL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>This method accepts an offset and a count of bytes, and the driver returns two write pointers and their associated sizes. Two pointers are required because sound buffers are circular. If the locked bytes do not wrap around the end of the buffer, the second pointer (<I>*ppvAudio2</I>) should be NULL. However, if the bytes do wrap around, the second pointer should point to the beginning of the buffer. </P>
+
+<P>For some devices (such as DMA-based cards that do not support hardware secondary buffers), repeated calls to <B>IDsCaptureDriverBuffer::Lock</B> and <A HREF="_dxce_idscapturedriverbuffer__unlock.htm"><B>IDsCaptureDriverBuffer::Unlock</B></A> are unnecessary. In this case, the driver should specify the DSDCAPS_DONTNEEDLOCK flag in the <B>DSDRIVERDESC</B> structure returned by <A HREF="_dxce_idscapturedriver__getdriverdesc.htm"><B>IDsCaptureDriver::GetDriverDesc</B></A> method. If this flag is specified, then the <B>IDsCaptureDriverBuffer::Lock</B> method is never called by DirectSound. In that case, the <B>IDsCaptureDriverBuffer::Lock</B> method should simply return DSERR_UNSUPPORTED. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDsCaptureDriverBuffer::Lock&nbsp;(_dxce_idscapturedriverbuffer__lock.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XXX_Init</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XXX_Init"/>
+<MSHelp:RLTitle Title="XXX_Init"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_XXX_Init"/>
+<MSHelp:Keyword Index="K" Term="XXX_Init"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: stream_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673473">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_xxx_init"></A><I>XXX</I>_Init</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is called by the Device Manager to initialize a device.</P>
+
+<PRE class="syntax"><B>DWORD</B> <B><I>XXX</I>_Init(</B>
+<B>LPCTSTR </B><I>pContext</I><B>,</B>
+<B>LPCVOID </B><I>lpvBusContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pContext</I></DT>
+
+<DD>[in] Specifies a pointer to a string containing the registry path to the active key for the stream interface driver.</dd>
+
+<DT><I>lpvBusContext</I></DT>
+
+<DD>[in] The potentially process-mapped pointer passed as the fourth parameter to <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>. If this driver was loaded through legacy mechanisms, then <I>lpvBusContext</I> is zero. This pointer, if used, has only been remapped as it passes through the PSL. All sanity and protection checking is the responsibility of the <B>XXX_Init</B> function. Also, any pointers referenced through <I>lpvBusContext</I> must be remapped with <B>MapCallerPtr</B> before they can be dereferenced.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns a handle to the device context created, or 0 if unsuccessful. This handle is passed to the <A HREF="_wceddk_xxx_open.htm">XXX_Open</A>, <A HREF="_wceddk_xxx_powerdown.htm">XXX_PowerDown</A>, <A HREF="_wceddk_xxx_powerup.htm">XXX_PowerUp</A>, and <A HREF="_wceddk_xxx_deinit.htm">XXX_Deinit</A> functions.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The Device Manager calls this function as a result of a call to the <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> function. When the user starts using a device, such as when a PC Card is inserted, the Device Manager calls this function to initialize the device. This function is not called by applications. Stream interface drivers that support multiple instances of the same type of special device file name, such as the Microsoft sample serial port driver, which supports multiple COM<I>x</I>: device file names, should expect their <B><I>XXX</I>_Init</B> function to be called once for each instance. For such drivers, this function should return separate handles each time it is called. Stream interface drivers that only support a single special device file name can return any non-zero value.</P>
+
+<P>The Device Manager specifies a pointer to a string containing the registry path to the active key of the specific PC Card device in the <I>pContext </I>parameter. Usually, the string contains the registry path to a numbered subkey of the <B>HKEY_LOCAL_MACHINE\Drivers\Active</B> key. Your initialization function uses this information to access data stored in the registry.</P>
+
+<P>This function might perform the following tasks:
+
+<UL type="disc">
+	<LI>Initialize the installed device to a default state.</li>
+
+	<LI>Allocate resources used globally by the device driver.</li>
+
+	<LI>Register a status callback function with Card Services. When the status of the device changes, the operating system calls this status callback function. For example, the status of a PC Card changes when you insert it or remove it.</li>
+
+	<LI>Map system memory and I/O space to a PC Card device memory and I/O space.</li>
+
+	<LI>Request notification on specific callback events.</li>
+
+	<LI>For an interrupt-driven device, register an interrupt callback function. When the device generates an interrupt, the operating system calls this interrupt callback function.</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>1.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>, <A HREF="_wceddk_xxx_deinit.htm">XXX_Deinit</A>, <A HREF="_wceddk_xxx_iocontrol.htm">XXX_IOControl</A>, <A HREF="_wceddk_xxx_open.htm">XXX_Open</A>, <A HREF="_wceddk_xxx_powerdown.htm">XXX_PowerDown</A>, <A HREF="_wceddk_xxx_powerup.htm">XXX_PowerUp</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;XXX_Init&nbsp;(_wceddk_xxx_init.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

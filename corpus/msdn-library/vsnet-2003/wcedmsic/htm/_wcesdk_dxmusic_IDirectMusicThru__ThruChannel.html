@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirectMusicThru::ThruChannel</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDirectMusicThru::ThruChannel"/>
+<MSHelp:RLTitle Title="IDirectMusicThru::ThruChannel"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicThru__ThruChannel"/>
+<MSHelp:Keyword Index="K" Term="IDirectMusicThru, ThruChannel"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicThru__ThruChannel"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxmusic_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_687897">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_idirectmusicthru__thruchannel"></A>IDirectMusicThru::ThruChannel</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method establishes or breaks a thruing connection between a channel on a capture port and a channel on another port.</P>
+
+<PRE class="syntax"><B>HRESULT ThruChannel(</B>
+<B>DWORD </B><I>dwSourceChannelGroup</I><B>,</B>
+<B>DWORD </B><I>dwSourceChannel</I><B>,</B>
+<B>DWORD </B><I>dwDestinationChannelGroup</I><B>,</B>
+<B>DWORD </B><I>dwDestinationChannel</I><B>,</B>
+<B>LPDIRECTMUSICPORT </B><I>pDestinationPort</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwSourceChannelGroup</I></DT>
+
+<DD>Channel group on the capture port. In the current version of DirectMusic, this value is always 1. </dd>
+
+<DT><I>dwSourceChannel</I></DT>
+
+<DD>Source channel.</dd>
+
+<DT><I>dwDestinationChannelGroup</I></DT>
+
+<DD>Channel group on the destination port.</dd>
+
+<DT><I>dwDestinationChannel</I></DT>
+
+<DD>Destination channel.</dd>
+
+<DT><I>pDestinationPort</I></DT>
+
+<DD>Address of the <A HREF="_wcesdk_dxmusic_idirectmusicport.htm">IDirectMusicPort</A> interface for the destination channel. Set this value to NULL to break an existing thruing connection.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method succeeds, the return value is S_OK.</P>
+
+<P>If it fails, the method can return one of the following error values:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_notimpl">E_NOTIMPL</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_invalidarg">E_INVALIDARG</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_dmus_e_port_not_render">DMUS_E_PORT_NOT_RENDER</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>System-exclusive messages are not transmitted to the destination port.</P>
+
+<P>Thruing to the Microsoft Software Synthesizer or other synthesizers that do not have a constant latency is not recommended. Thruing is done as soon as possible on reception of the incoming MIDI events. Because of the comparatively high latency of the software synthesizer (compared with a hardware port) and the fact that it renders blocks of audio data at the same time, each event is delayed by a small, essentially random amount of time before it plays. This random offset shows up as jitter in the playback of the data. Latency of other devices (such as a MIDI card) is small enough that jitter does not occur.</P>
+
+<P>If an application needs to thru to the software synthesizer, it should add a small offset to the incoming note event time stamps to compensate for the rendering latency of the synthesizer.</P>
+
+<P>The following code example obtains the <B>IDirectMusicThru</B> interface and establishes a thru connection between all channels on group 1 of the capture port and the equivalent channels on a destination port.</P>
+
+<PRE class="code">HRESULT SetupOneToOneThru(
+    IDirectMusicPort *pCapturePort,
+    IDirectMusicPort *pRenderPort)
+ {
+    HRESULT hr;
+    IDirectMusicThru *pThru;
+ 
+    hr = pCapturePort-&gt;QueryInterface(IID_IDirectMusicThru,
+            (void**)&amp;pThru);
+    if (FAILED(hr))
+        return hr;
+ 
+    for (DWORD dwChannel = 0; dwChannel &lt; 16; dwChannel++)
+    {
+        hr = pThru-&gt;ThruChannel(1, dwChannel,
+            1, dwChannel, pRenderPort);
+        if (FAILED(hr))
+            break;    
+    }
+ 
+    pThru-&gt;Release();
+    return hr;
+ }</PRE>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=21%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=19%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=21%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>Dmusicc.h</TD>
+<TD width=19%>Dmusic.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_dxmusic_idirectmusicport.htm">IDirectMusicPort</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDirectMusicThru::ThruChannel&nbsp;(_wcesdk_dxmusic_idirectmusicthru__thruchannel.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

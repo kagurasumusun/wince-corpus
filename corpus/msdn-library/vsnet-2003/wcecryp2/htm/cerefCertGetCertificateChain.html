@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CertGetCertificateChain</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CertGetCertificateChain"/>
+<MSHelp:RLTitle Title="CertGetCertificateChain"/>
+<MSHelp:Keyword Index="A" Term="cerefCertGetCertificateChain"/>
+<MSHelp:Keyword Index="K" Term="CertGetCertificateChain"/>
+<MSHelp:Keyword Index="A" Term="cerefCertGetCertificateChain"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: crypto2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751349">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcertgetcertificatechain"></A>CertGetCertificateChain</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function builds a certificate chain context starting from an end certificate and going back, if possible, to a trusted root certificate. This is the primary API used to verify a certificate against a root store.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CertGetCertificateChain(</B>
+<B>HCERTCHAINENGINE </B><I>hChainEngine</I><B>, </B>
+<B>PCCERT_CONTEXT </B><I>pCertContext</I><B>, </B>
+<B>LPFILETIME </B><I>pTime</I><B>,</B>
+<B>HCERTSTORE </B><I>hAdditionalStore</I><B>,</B>
+<B>PCERT_CHAIN_PARA </B><I>pChainPara</I><B>,</B>
+<B>DWORD </B><I>dwFlags</I><B>,</B>
+<B>LPVOID </B><I>pvReserved</I><B>,</B>
+<B>PCCERT_CHAIN_CONTEXT *</B><I>ppChainContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hChainEngine </I></DT>
+
+<DD>[in/optional] Handle of the chain engine (name space and cache) to be used. If the <I>hChainEngine</I> value is NULL, the default chain engine, HHCE_CURRENT_USER, is used. This parameter can be set to HCCE_LOCAL_MACHINE.</dd>
+
+<DT><I>pCertContext </I></DT>
+
+<DD>[in] Pointer to the <MSHelp:link keywords="cerefCERT_CONTEXT" TABINDEX="0">CERT_CONTEXT</MSHelp:link> structure of the end certificate, the certificate for which a chain is being built. This certificate context will be the zero index element in the first simple chain.</dd>
+
+<DT><I>pTime </I></DT>
+
+<DD>[in/optional] Pointer to a FILETIME variable indicating the time for which the chain is to be validated. Note that the time does not affect root store checking. The current system time is used if NULL is passed to this parameter. Trust in a particular certificate being a trusted root is based on the current state of the root store and not the state of the root store at a time passed in by this parameter.</dd>
+
+<DT><I>hAdditionalStore </I></DT>
+
+<DD>[in] Handle of any additional store to search for supporting certificates. This parameter can be NULL if no additional store is to be searched.</dd>
+
+<DT><I>pChainPara </I></DT>
+
+<DD>[in] Pointer to a <MSHelp:link keywords="cerefCERT_CHAIN_PARA" TABINDEX="0">CERT_CHAIN_PARA</MSHelp:link> structure that includes chain-building parameters.</dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>[in] Flag values indicating special processing. The following table shows the flag that can be used.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Flag</TH>
+<TH width=56%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>CERT_CHAIN_CACHE_END_CERT</TD>
+<TD width=56%>When this flag is set, the end certificate is cached, which might speed up the chain-building process. By default, the end certificate is not cached and it would need to be verified each time a chain is built for it. </TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pvReserved </I></DT>
+
+<DD>[in] A reserved parameter that must be NULL.</dd>
+
+<DT><I>ppChainContext</I> </DT>
+
+<DD>[in] Pointer to a pointer to the chain context created.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE). For extended error information, call the <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When an application requests a certificate chain, the structure returned is in the form of a <MSHelp:link keywords="cerefCERT_CHAIN_CONTEXT" TABINDEX="0">CERT_CHAIN_CONTEXT</MSHelp:link> structure. This context contains an array of <MSHelp:link keywords="cerefCERT_SIMPLE_CHAIN" TABINDEX="0">CERT_SIMPLE_CHAIN</MSHelp:link> where each simple chain goes from an end certificate to a self-signed certificate. Because Windows CE does not support certificate trust lists, there is only one CERT_SIMPLE_CHAIN in the array. Each simple chain contains the chain of certificates, summary trust information about the chain, and trust information about each certificate element in the chain.</P>
+
+<P>The desktop platform supports the following <I>dwFlags </I>flags, but Windows CE does not:</P>
+
+<P>CERT_CHAIN_REVOCATION_CHECK_END_CERT</P>
+
+<P>CERT_CHAIN_REVOCATION_CHECK_CHAIN</P>
+
+<P>CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT</P>
+
+<P>CERT_CHAIN_REVOCATION_CHECK_CACHE_ONLY.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefcertfreecertificatechain.htm">CertFreeCertificateChain</A>, <A HREF="cerefcertduplicatecertificatechain.htm">CertDuplicateCertificateChain</A>, <MSHelp:link keywords="cerefCERT_CHAIN_CONTEXT" TABINDEX="0">CERT_CHAIN_CONTEXT</MSHelp:link>, <MSHelp:link keywords="cerefCERT_CHAIN_PARA" TABINDEX="0">CERT_CHAIN_PARA</MSHelp:link>, <MSHelp:link keywords="cerefCERT_CONTEXT" TABINDEX="0">CERT_CONTEXT</MSHelp:link>, <MSHelp:link keywords="cerefCERT_SIMPLE_CHAIN" TABINDEX="0">CERT_SIMPLE_CHAIN</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CertGetCertificateChain&nbsp;(cerefcertgetcertificatechain.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

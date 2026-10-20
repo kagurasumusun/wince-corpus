@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::ScrollWindowEx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_scrollwindowex"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_deferwindowpos" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_cwnd_scrollwindowex"></A>CWnd::ScrollWindowEx</H1>
+
+<P>This method scrolls the contents of a window client area. This method is similar to the <B>ScrollWindow</B> method, with some additional features. </P>
+
+<PRE class=syntax><B>int ScrollWindowEx (
+int</B> <I>dx</I>,
+<B>int</B> <I>dy</I>,
+<B>LPCRECT</B> <I>lpRectScroll</I>,
+<B>LPCRECT</B> <I>lpRectClip</I>,<B>
+CRgn* </B><I>prgnUpdate</I>,
+<B>LPRECT</B> <I>lpRectUpdate</I>,
+<B>UINT</B> <I>flags</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dx</I></DT>
+
+<DD>Specifies the amount, in device units, of horizontal scrolling. This parameter must have a negative value to scroll to the left.</DD>
+
+<DT><I>dy</I></DT>
+
+<DD>Specifies the amount, in device units, of vertical scrolling. This parameter must have a negative value to scroll up.</DD>
+
+<DT><I>lpRectScroll</I></DT>
+
+<DD>Points to a <A HREF="struct_23.htm"><B>RECT</B></A> structure that specifies the portion of the client area to be scrolled. If this parameter is <B>NULL</B>, the entire client area is scrolled.</DD>
+
+<DT><I>lpRectClip</I></DT>
+
+<DD>Points to a <B>RECT</B> structure that specifies the clipping rectangle to scroll. This structure takes precedence over the rectangle pointed to by <I>lpRectScroll</I>. Only bits inside this rectangle are scrolled. Bits outside this rectangle are not affected even if they are in the <I>lpRectScroll</I> rectangle. If this parameter is <B>NULL</B>, no clipping is performed on the scroll rectangle.</DD>
+
+<DT><I>prgnUpdate</I></DT>
+
+<DD>Identifies the region that is modified to hold the region invalidated by scrolling. This parameter may be <B>NULL</B>.</DD>
+
+<DT><I>lpRectUpdate</I></DT>
+
+<DD>Points to a <B>RECT</B> structure that will receive the boundaries of the rectangle invalidated by scrolling. This parameter may be <B>NULL</B>.</DD>
+
+<DT><I>flags</I></DT>
+
+<DD>Can have one of the following values:
+
+<UL type=disc>
+	<LI>SW_ERASE&nbsp;&nbsp;&nbsp;When specified with SW_INVALIDATE, erases the newly invalidated region by sending a WM_ERASEBKGND message to the window.</LI>
+
+	<LI>SW_INVALIDATE&nbsp;&nbsp;&nbsp;Invalidates the region identified by <I>prgnUpdate</I> after scrolling.</LI>
+
+	<LI>SW_SCROLLCHILDREN&nbsp;&nbsp;&nbsp;Scrolls all child windows that intersect the rectangle pointed to by <I>lpRectScroll</I> by the number of pixels specified in <I>dx</I> and <I>dy</I>. Windows sends a WM_MOVE message to all child windows that intersect <I>lpRectScroll</I>, even if they do not move. The caret is repositioned when a child window is scrolled and the cursor rectangle intersects the scroll rectangle.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The return value is SIMPLEREGION, a rectangular invalidated region, COMPLEXREGION, nonrectangular invalidated region; overlapping rectangles, or NULLREGION, no invalidated region, if the function is successful; otherwise, the return value is ERROR.</P>
+
+<H4>Remarks</H4>
+
+<P>If SW_INVALIDATE and SW_ERASE are not specified, the <B>ScrollWindowEx</B> method does not invalidate the area that is scrolled away from. If either of these flags is set, <B>ScrollWindowEx</B> invalidates this area. The area is not updated until the application calls the <B>UpdateWindow</B> function, calls the <B>RedrawWindow</B> function, specifying RDW_UPDATENOW or RDW_ERASENOW, or retrieves the WM_PAINT message from the application queue.</P>
+
+<P>If the window has the WS_CLIPCHILDREN style, the returned areas specified by <I>prgnUpdate</I> and <I>lpRectUpdate</I> represent the total area of the scrolled window that must be updated, including any areas in child windows that need updating. </P>
+
+<P>If the SW_SCROLLCHILDREN flag is specified, Windows will not properly update the screen if part of a child window is scrolled. The part of the scrolled child window that lies outside the source rectangle will not be erased and will not be redrawn properly in its new destination. Use the <A HREF="JavaScript:hhobj_1.Click()"><B>DeferWindowPos</B></A> Windows CE function to move child windows that do not lie completely within the <I>lpRectScroll</I> rectangle. The cursor is repositioned if the SW_SCROLLCHILDREN flag is set and the caret rectangle intersects the scroll rectangle.</P>
+
+<P>All input and output coordinates, for <I>lpRectScroll</I>, <I>lpRectClip</I>, <I>lpRectUpdate</I>, and <I>prgnUpdate</I>, are assumed to be in client coordinates, regardless of whether the window has the CS_OWNDC or CS_CLASSDC class style. Use the <B>LPtoDP</B> and <B>DPtoLP</B> Windows CE functions to convert to and from logical coordinates, if necessary.</P>
+
+<P>MFC for Windows CE does not support the SW_SCROLLCHILDREN flag in the <I>flags</I> parameter.</P>
+
+<P>Either the <I>dx </I>or <I>dy</I> parameter must be set to zero.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_160.htm"><B>CWnd::RedrawWindow</B></A>, <A HREF="cdc_75.htm"><B>CDC::ScrollDC</B></A>, <A HREF="cwnd_167.htm"><B>CWnd::ScrollWindow</B></A>, <A HREF="cwnd_203.htm"><B>CWnd::UpdateWindow</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

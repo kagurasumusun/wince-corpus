@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registering a CheckForHang Handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registering a CheckForHang Handler"/>
+<MSHelp:RLTitle Title="Registering a CheckForHang Handler"/>
+<MSHelp:Keyword Index="A" Term="cxrefRegisteringCheckForHangHandler"/>
+<MSHelp:Keyword Index="K" Term="miniport drivers, registering CheckForHang handler"/>
+<MSHelp:Keyword Index="K" Term="NDIS, registering CheckForHang handler"/>
+<MSHelp:Keyword Index="A" Term="cxrefRegisteringCheckForHangHandler"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758610">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefregisteringcheckforhanghandler"></A>Registering a CheckForHang Handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A miniport can optionally supply a <A HREF="cxrefminiportcheckforhang.htm">MiniportCheckForHang</A> function when it calls <A HREF="_wceddk_ndismregisterminiport.htm">NdisMRegisterMiniport</A>. If a miniport does not register such a handler, it relies on NDIS to detect whether its NIC has stopped responding.</P>
+
+<P>If a miniport supplies a <B>MiniportCheckForHang</B> function, NDIS calls this function every two seconds or at a driver-requested timeout interval. The <B>MiniportCheckForHang</B> function determines whether the NIC has stopped responding. <B>MiniportCheckForHang</B> returns TRUE if it detects that the NIC has stopped responding; otherwise, it returns FALSE.</P>
+
+<P>If a miniport does not register a <B>MiniportCheckForHang</B> function, NDIS concludes that a miniport has stopped responding if: 
+
+<UL type="disc">
+	<LI>A send packet has been pending longer than twice the timeout period. For example, the miniport was passed a packet to send, it returned NDIS_STATUS_PENDING, and did not call <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A> for the pending packet in a period equal to twice the timeout period. This applies only to serialized miniports. </li>
+
+	<LI>A request sent to <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A> or <A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A> has not completed in a period equal to twice the timeout period. </li>
+</UL>
+
+<P>A miniport can change timeout parameters by calling <A HREF="_wceddk_ndismsetattributesex.htm">NdisMSetAttributesEx</A> rather than <A HREF="_wceddk_ndismsetattributes.htm">NdisMSetAttributes</A> in its <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> function. With <B>NdisMSetAttributesEx</B>, the miniport can: 
+
+<UL type="disc">
+	<LI>Change the default two-second timeout interval to a driver-specified interval. NDIS will call the miniport's <B>MiniportCheckForHang</B> function at this new interval. Miniports for slow NICs can specify a timeout interval that is appropriate for the NIC. </li>
+
+	<LI>Specify that NDIS ignore packet timeout. </li>
+
+	<LI>Specify that NDIS ignore request timeout. </li>
+</UL>
+
+<P>If the miniport specifies that NDIS should ignore packet timeout and request timeout, the miniport is responsible for detecting when a NIC is suspended.</P>
+
+<P>If <B>MiniportCheckForHang</B> returns TRUE, or if a send or a request has been pending for more than twice the timeout period, NDIS calls <A HREF="cxrefminiportreset.htm">MiniportReset</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtskminiportxxxfunctions.htm">Registering MiniportXXX Functions</A></P>
+
+<P><A HREF="cxrefminiportcheckforhang.htm">MiniportCheckForHang</A></P>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A></P>
+
+<P><A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A></P>
+
+<P><A HREF="cxrefminiportreset.htm">MiniportReset</A></P>
+
+<P><A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A></P>
+
+<P><A HREF="_wceddk_ndismregisterminiport.htm">NdisMRegisterMiniport</A></P>
+
+<P><A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A> </P>
+
+<P><A HREF="_wceddk_ndismsetattributes.htm">NdisMSetAttributes</A></P>
+
+<P><A HREF="_wceddk_ndismsetattributesex.htm">NdisMSetAttributesEx</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registering%20a%20CheckForHang%20Handler&nbsp;(cxrefregisteringcheckforhanghandler.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

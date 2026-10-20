@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 9: Handle Notifications</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 9: Handle Notifications"/>
+<MSHelp:RLTitle Title="Step 9: Handle Notifications"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_9__Handle_Notifications"/>
+<MSHelp:Keyword Index="K" Term="notifications, DirectMusic (Tutorial 3)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_9__Handle_Notifications"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690681">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_9__handle_notifications"></A>Step 9: Handle Notifications</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Back in <A HREF="_wcesdk_dxmusic_step_4__set_up_notifications.htm">Step 4: Set Up Notifications</A> you saw how DMDonuts requests notification whenever a segment ends and whenever a beat or measure boundary is reached. The purpose of this notification is to help limit the number of blowup motifs playing at any one time.</P>
+
+<P>Notifications are retrieved in the <B>WinMain</B> function. After dealing with any messages in the queue, the application checks to see if there are any pending notifications. It does this by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__GetNotificationPMsg" TABINDEX="0">IDirectMusicPerformance::GetNotificationPMsg</MSHelp:link> method. If no notification message is pending, the method returns S_FALSE and no further action is needed. A return of S_OK indicates that a notification message has been placed in <I>*pEvent</I>. Because it has only requested notifications relevant to the beat, the application does not actually need to examine the message, which is immediately discarded. It then resets <I>snMaxBlowUps</I>, which tracks how many more blowup motifs can be played till the next beat.</P>
+
+<PRE class="code">if (gpPerformance)
+{
+    DMUS_NOTIFICATION_PMSG* pEvent;
+    while ( S_OK == gpPerformance-&gt;GetNotificationPMsg(&amp;pEvent))
+    {
+        gpPerformance-&gt;FreePMsg((DMUS_PMSG*)pEvent);
+        snMaxBlowUps = BLOWUPS_PER_BEAT;
+    }
+}</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_10__shut_down_directmusic.htm">Step 10: Shut Down DirectMusic</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%209:%20Handle%20Notifications&nbsp;(_wcesdk_dxmusic_step_9__handle_notifications.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

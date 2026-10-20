@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>UUID Retrieval</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="UUID Retrieval"/>
+<MSHelp:RLTitle Title="UUID Retrieval"/>
+<MSHelp:Keyword Index="A" Term="cmconUUIDRetrieval"/>
+<MSHelp:Keyword Index="K" Term="retrieving, Thin Client UUIDs"/>
+<MSHelp:Keyword Index="K" Term="UUIDs, retrieving"/>
+<MSHelp:Keyword Index="A" Term="cmconUUIDRetrieval"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: thinclient.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760391">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconuuidretrieval"></A>UUID Retrieval</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Each Windows Thin Client must have a UUID assignment as part of the licensing agreement. A UUID is a 16-byte integer that virtually is guaranteed to be unique; it usually is represented as a string.</P>
+
+<P>The following string shows a UUID that is generated on the computer of the author.</P>
+
+<PRE class="code">4208fb66-e22a-11d1-a7d7-00a0c982c00d</PRE>
+
+<P>Microsoft has defined the following structure as a container for the 16 bytes that are required by a UUID.</P>
+
+<PRE class="code">typedef struct  _GUID
+    {
+    DWORD Data1;
+    WORD Data2;
+    WORD Data3;
+    BYTE Data4[8];
+    }    GUID;</PRE>
+
+<P>The format specification and algorithms to generate these UUIDs, including C code implementation, are detailed in <I>Network PC Design Guide, Version 1.0b</I> or later. For more information, see this <A HREF="http://go.microsoft.com/fwlink/?LinkId=5658">Microsoft Web site</A>.</P>
+
+<P>You are required to store the UUID in a region of nonvolatile memory on the Windows Thin Client. You must ensure that the UUID cannot be erased or overwritten after the device has been shipped. This is especially true of Windows Thin Clients that can have their software upgraded in the field.</P>
+
+<P>You also are required to implement a <B>KernelIoControl</B> function that reads the UUID from the nonvolatile memory. %_WINCEROOT%\Public\Rdp\Oak\Uit\Wbttscmn\Ioctl.cpp contains the <B>GetUUID(GUID* myUUID)</B> function, which in turn calls the <B>KernelIoControl</B> function for the IOCTL_HAL_GET_UUID. The control code that is specified for reading a UUID is IOCTL_HAL_GET_UUID.</P>
+
+<P>An example of the recommended implementation for any Windows Thin Client device that uses the Remote Desktop (RDP) client can be found at %_WINCEROOT%\Platform\Cepc\Kernel\Hal\Oemoictl.c.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconreadinguuids.htm">Reading UUIDs</A></P>
+
+<P><A HREF="cmconimplementinguuid.htm">Working with UUIDs</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;UUID%20Retrieval&nbsp;(cmconuuidretrieval.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

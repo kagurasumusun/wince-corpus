@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::SerializeClass</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CArchive::SerializeClass"/>
+<MSHelp:RLTitle Title="CArchive::SerializeClass"/>
+<MSHelp:Keyword Index="A" Term="aflrfCArchivecolcolSerializeClass"/>
+<MSHelp:Keyword Index="K" Term="SerializeClass method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCArchivecolcolSerializeClass"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="carchi.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709695">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcarchivecolcolserializeclass"></A>CArchive::SerializeClass</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method stores and loads the version information of a base class.</P>
+
+<PRE class="syntax"><B>void SerializeClass(</B> 
+<B>const CRuntimeClass*</B> <I>pClassRef</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pClassRef</I></DT>
+
+<DD>A pointer to the <B>CRuntimeClass</B> structure that corresponds to the class reference requested.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>SerializeClass</B> reads or writes the reference to a class to the <B>CArchive</B> object, depending on the direction of the <B>CArchive</B>. Use <B>SerializeClass</B> in place of <B>ReadClass</B> and <B>WriteClass</B> as a convenient way to serialize base-class objects; <B>SerializeClass</B> requires less code and fewer parameters.</P>
+
+<P>Like <B>ReadClass</B>, <B>SerializeClass</B> verifies that the archived class information is compatible with your run-time class. If it is not compatible, <B>SerializeClass</B> throws a <B>CArchiveException</B>. </P>
+
+<P>Your run-time class must use <B>DECLARE_SERIAL</B> and <B>IMPLEMENT_SERIAL</B>; otherwise, <B>SerializeClass</B> throws a <B>CNotSupportedException</B>.</P>
+
+<P>Use the <B>RUNTIME_CLASS</B> macro to retrieve the value for the <I>pRuntimeClass</I> parameter. The base class must have used the <B>IMPLEMENT_SERIAL</B> macro.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">class CBaseClass : public CObject { ... };
+class CDerivedClass : public CBaseClass { ... };
+void CDerivedClass::Serialize(CArchive&amp; ar)
+{
+  if (ar.IsStoring())
+  {
+    //Normal code for storing contents 
+    //of this object
+  }
+  else
+  {
+    //Normal code for reading contents 
+    //of this object
+  }
+
+  //Allow the base class to serialize along 
+  //with its version information
+  ar.SerializeClass(RUNTIME_CLASS(CBaseClass));
+  CBaseClass::Serialize(ar);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afx.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcarchivecolcolreadclass.htm"><B>CArchive::ReadClass</B></A>, <A HREF="aflrfcarchivecolcolwriteclass.htm"><B>CArchive::WriteClass</B></A>, <A HREF="aflrfcarchivecolcolgetobjectschema.htm"><B>CArchive::GetObjectSchema</B></A>, <A HREF="aflrfcarchivecolcolsetobjectschema.htm"><B>CArchive::SetObjectSchema</B></A>, <A HREF="aflrfcarchiveexception.htm"><B>CArchiveException</B></A>, <A HREF="aflrfcnotsupportedexception.htm"><B>CNotSupportedException</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709695', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

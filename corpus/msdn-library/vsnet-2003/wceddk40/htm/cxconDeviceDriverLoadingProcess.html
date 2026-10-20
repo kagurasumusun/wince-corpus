@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Driver Loading Process</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Driver Loading Process"/>
+<MSHelp:RLTitle Title="Device Driver Loading Process"/>
+<MSHelp:Keyword Index="A" Term="cxconDeviceDriverLoadingProcess"/>
+<MSHelp:Keyword Index="K" Term="device drivers, loading process"/>
+<MSHelp:Keyword Index="K" Term="drivers, device driver loading process"/>
+<MSHelp:Keyword Index="K" Term="loading, device driver loading process"/>
+<MSHelp:Keyword Index="A" Term="cxconDeviceDriverLoadingProcess"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverloadingmodel.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753216">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondevicedriverloadingprocess"></A>Device Driver Loading Process</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>At <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> time, debugging services such as Ethernet debugging and serial debugging need to be started. You can retrieve the resource information for these devices in the following ways:
+
+<UL type="disc">
+	<LI>Boot arguments from the boot loader provide resource information to set up the hardware in a particular way. For example, the interrupt request (IRQ) for the Ethernet debugging adapter can be passed as a boot argument.</li>
+
+	<LI>Hard-coded resource information in the OAL.</li>
+
+	<LI>Resources necessary for debugging services discovered by the OAL.</li>
+</UL>
+
+<P>The OAL may need to configure and enumerate a bus, such as the PCI bus, to operate a device used for debugging services. For example, an Ethernet adapter on the PCI bus that is for Ethernet debugging services needs its resources and intermediary bridges to be configured to be functional. You can ignore other devices because the PCI bus driver performs the configuration and enumeration. </P>
+
+<P>The resource information configures the debugging devices and initializes their associated services. The OAL is responsible for putting this resource information in a registry key and making it accessible to the driver. The OAL can use the <A HREF="cxconceddkhelperroutines.htm">Registry Helper Routines</A> to fill out the device's information in a <B>PCI_REG_INFO</B> structure, defined in PCIReg.h, and then the OS will call <MSHelp:link keywords="cmrefKernelIoControl" TABINDEX="0">KernelIoControl</MSHelp:link> with <MSHelp:link keywords="cgrefIOCTL_HAL_INITREGISTRY" TABINDEX="0">IOCTL_HAL_INITREGISTRY</MSHelp:link> to allow the helper function <MSHelp:link keywords="cgrefPCIReg" TABINDEX="0">PCIReg</MSHelp:link> be called to populate the registry. This method is preferred if the debugging resources are selectable at boot time, discovered through bus enumeration, or both.</P>
+
+<P>Optionally, the resource information can be duplicated in the system registry. This method is easier if the debugging resources are fixed and known in advance.</P>
+
+<P>Then, Device.exe is loaded and executed. It starts the <A HREF="cxconresourcemanager.htm">I/O Resource Manager</A> to read a list of available resources from the registry.</P>
+
+<P>Device.exe loads the registry enumerator from <B>HKEY_LOCAL_MACHINE\<I>RootKey</I></B> where <B><I>RootKey</I></B> is a value defined under the <B>HKEY_LOCAL_MACHINE\Drivers key</B>. If the <B><I>RootKey</I></B> value is not defined, it defaults to <B>Drivers</B>. Currently, Common.reg sets <B><I>RootKey</I></B> equal to <B>Drivers\BuiltIn</B>. This means that Device.exe will look for the <B>Dll</B> value to load the registry enumerator under <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B>. The Registry Enumerator (RegEnum.dll) initializes the process of scanning the registry for additional buses and devices to be loaded for subkeys of the <B><I>RootKey</I></B>.</P>
+
+<P>Some of the <B><I>RootKey</I></B> subkeys describe built-in or possibly fixed ISA buses. The DLL loaded may be RegEnum.dll, or any other bus driver that you choose.</P>
+
+<P>One of the <B><I>RootKey</I></B> subkeys may be <B>PCI</B>. Typically, the DLL listed under the <B>PCI</B> key is the PCI bus driver, which is loaded by RegEnum.dll. Registry entries for the PCI bus driver include resources available to the PCI bus. The <B>HKEY_LOCAL_MACHINE\<I>RootKey</I>\PCI\Order</B> value is set so that the PCI bus driver is typically loaded last. This is so all of the fixed resources are allocated before the flexible resources of the PCI devices are configured. Driver registry entries are listed under the <B>PCI</B> key, which represent devices that reside on the PCI bus.</P>
+
+<P>Drivers with associated physical devices use or generate with a bus driver the values in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Subkey</TH>
+<TH width=33%>Type</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>MemBase</B></TD>
+<TD width=33%><B>DWORD or MULTI_SZ</B></TD>
+<TD width=34%>Base addresses of memory-mapped I/O.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>MemLen</B></TD>
+<TD width=33%><B>DWORD or MULTI_SZ</B></TD>
+<TD width=34%>Length of memory-mapped ranges corresponding to <B>Membase</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>IoBase</B></TD>
+<TD width=33%><B>DWORD or MULTI_SZ</B></TD>
+<TD width=34%>Base address of port-mapped I/O.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>IoLen</B></TD>
+<TD width=33%><B>DWORD or MULTI_SZ</B></TD>
+<TD width=34%>Length of port-mapped ranges corresponding to <B>IoBase</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Irq</B></TD>
+<TD width=33%><B>DWORD or MULTI_SZ</B></TD>
+<TD width=34%>Optional. Logical IRQ numbers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>SysIntr</B></TD>
+<TD width=33%><B>DWORD or MULTI_SZ</B></TD>
+<TD width=34%>System interrupt numbers corresponding to the IRQs.</TD>
+</TR>
+</table></div>
+
+<P>The <B>SysIntr</B> value is a mapping of the <B>Irq</B> as specified by the OAL. Some bus drivers, such as the PCI bus driver, generate both the <B>Irq</B> and <B>SysIntr</B> values and write them to the registry. If RegEnum.dll enumerates the registry key, you are required to set the <B>SysIntr</B> value in the appropriate registry file.</P>
+
+<P>Some bus drivers, such as the PCI bus driver, may require additional values. For example, the PCI bus driver has to distinguish between instances of the same device. The following table describes these additional identification values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Subkey</TH>
+<TH width=33%>Type</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>BusNumber</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>PCI bus number of the device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>DeviceNumber</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>Number of the device on the bus.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>FunctionNumber</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>Identifies one of the eight possible functions implemented on the device.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconpcibusconfigurationenumeration.htm">PCI Bus Configuration and Enumeration</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Device%20Driver%20Loading%20Process&nbsp;(cxcondevicedriverloadingprocess.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

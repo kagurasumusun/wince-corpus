@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIP Map Surface Creation Update</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIP Map Surface Creation Update"/>
+<MSHelp:RLTitle Title="MIP Map Surface Creation Update"/>
+<MSHelp:Keyword Index="A" Term="cxconMIPMapSurfaceCreationUpdate"/>
+<MSHelp:Keyword Index="K" Term="MIP maps, Direct3D surface creation update"/>
+<MSHelp:Keyword Index="K" Term="surfaces%2C Direct3D, MIP map surface creation update"/>
+<MSHelp:Keyword Index="A" Term="cxconMIPMapSurfaceCreationUpdate"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715337">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconmipmapsurfacecreationupdate"></A>MIP Map Surface Creation Update</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Prior to DirectX 7.0, it was a safe assumption that the attachment chain for a MIP map consisted only of the sub-levels of that MIP map. With the advent of cubic environment maps, this is no longer the case. Each face of a cubic environment may itself be a MIP map and, as such, the attachment chain of a surface forming one face of a cubic environment map can consist of links to the other faces of the cube map as well as links to sub-levels of the MIP map. Care must therefore be taken when creating MIP map and cubic environment map surfaces.</P>
+
+<P>As the attachment chain of a MIP map surface can now contain links to surfaces other than simply a lower level MIP map, a new capability bit has been introduced, DDSCAPS2_MIPMAPSUBLEVEL (see the <MSHelp:link keywords="_wcesdk_DDSCAPS2_ddraw" TABINDEX="0">DDSCAPS2</MSHelp:link> structure for this and the following flags). This bit is set for all but the top-level surface of a MIP map chain. Thus, given the top-level surface of a MIP map chain you can find the surface representing the next lowest level of the MIP map chain by traversing the attachment list of the top-level surface looking for a surface with the DDSCAPS2_MIPMAPSUBLEVEL capability bit set.</P>
+
+<P>To determine if a surface is a face of a cubic environment map, check for the surface capability bit DDSCAPS2_CUBEMAP. If the DDSCAPS_MIPMAP capability bit is not set, the attachment list of this surface consists of the other faces of the cube map that are being created (check for the capability bits DDSCAPS2_CUBEMAP_POSITIVEX, DDSCAPS2_CUBEMAP_NEGATIVEX, DDSCAPS2_CUBEMAP_POSITIVEY, DDSCAPS2_CUBEMAP_NEGATIVEY, DDSCAPS2_CUBEMAP_POSITIVEZ, DDSCAPS2_CUBEMAP_NEGATIVEZ). If the DDSCAPS_MIPMAP capability bit is set then the attached surface list of the cube map surface consists of links to the other faces of the cube map as above but also to the next level of the MIP map for this face. The sub-level of the MIP map can be identified through the DDSCAPS2_MIPMAPSUBLEVEL bit described above.</P>
+
+<P class="label"><B>D3DRENDERSTATE_MIPMAPLODBIAS</B></P>
+
+<P>Although this render state is obsolete, its functionality has simply been moved into the texture stage states, that is, D3DRENDERSTATE_MIPMAPLODBIAS is exactly equivalent to the D3DTSS_MIPMAPLODBIAS enumerator in the <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTURESTAGESTATETYPE" TABINDEX="0">D3DTEXTURESTAGESTATETYPE</MSHelp:link> enumerated type for texture stage zero. On receiving the D3DRENDERSTATE_MIPMAPLODBIAS render state through a legacy interface, your driver should simply map this to the same code that handles D3DTSS_MIPMAPLODBIAS for texture stage zero.</P>
+
+<P>The MIP map LOD bias is a floating-point value used to change the level of detail (LOD) bias. This value offsets the value of the MIP map level that is computed by trilinear texturing. It is usually in the range -1.0 to 1.0; the default value is 0.0. Current WHQL/DCT tests require the MIP map LOD bias to operate in the range -3.0 to 3.0.</P>
+
+<P>Each unit bias (+/-1.0) biases the selection by exactly one MIP map level. A negative bias will cause the use of larger MIP map levels, resulting in a sharper but more aliased image. A positive bias will cause the use of smaller MIP map levels, resulting in a blurrier image. Applying a negative bias also results in the referencing of a smaller amount of texture data, which can boost performance on some systems.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectx80ddisupport.htm">DirectX 8.0 DDI Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MIP%20Map%20Surface%20Creation%20Update&nbsp;(cxconmipmapsurfacecreationupdate.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

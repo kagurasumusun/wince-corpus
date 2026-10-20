@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Interface Notifications</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Interface Notifications"/>
+<MSHelp:RLTitle Title="Device Interface Notifications"/>
+<MSHelp:Keyword Index="A" Term="cxconDeviceNotifications"/>
+<MSHelp:Keyword Index="K" Term="device driver loading model, device interface notifications"/>
+<MSHelp:Keyword Index="K" Term="device notifications"/>
+<MSHelp:Keyword Index="K" Term="driver loading model, device interface notifications"/>
+<MSHelp:Keyword Index="A" Term="cxconDeviceNotifications"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731162">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondevicenotifications"></A>Device Interface Notifications</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Device interface notification is the mechanism used to alert applications, services, and device drivers to the appearance and disappearance of device interfaces. It is the Microsoft&reg; Windows&reg; CE equivalent to the Plug and Play event system on Windows-based desktop platforms.</P>
+
+<P><MSHelp:link keywords="cerefAdvertiseInterface" TABINDEX="0">AdvertiseInterface</MSHelp:link> tells the device manager to notify all interested parties of the availability or the removal of a device interface. It does not load or unload any drivers. Drivers that use <B>AdvertiseInterface</B> should also advertise when the interface goes away.</P>
+
+<P>There are different ways that you can advertise a device interface to interested applications or drivers. The following list shows the ways you can advertise a device interface:
+
+<UL type="disc">
+	<LI>You can define the interface in the <B>IClass</B> value of the registry key used to activate the device.</li>
+
+	<LI>You can define the <B>IClass</B> value in the <B>Active</B> key by a device driver's <B>Init</B> function.</li>
+
+	<LI>You can define the <B>IClass</B> value in the <MSHelp:link keywords="cerefREGINI" TABINDEX="0">REGINI</MSHelp:link> parameter to <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>. This amounts to something other than the driver in question making statements concerning that driver's ability to conform to some interface; it also requires knowing in advance the instance information for the driver that is about to be loaded.</li>
+
+	<LI>Your device can explicitly call <B>AdvertiseInterface</B> for the interfaces that it supports.</li>
+</UL>
+
+<P>All of the above variants cause the Device Manager APIs to send notifications for all of the driver's defined interfaces after the driver is loaded and initialized, and then again after the driver is unloaded.</P>
+
+<P>Use <MSHelp:link keywords="cerefRequestDeviceNotifications" TABINDEX="0">RequestDeviceNotifications</MSHelp:link> and <MSHelp:link keywords="cerefStopDeviceNotifications" TABINDEX="0">StopDeviceNotifications</MSHelp:link> to register and deregister for device interface notifications. When you are not interested in receiving notifications, call <B>StopDeviceNotifications</B>, and then close the message queue with <MSHelp:link keywords="cerefCloseMsgQueue" TABINDEX="0">CloseMsgQueue</MSHelp:link>.</P>
+
+<P>Message queues are operating system (OS) objects that are useful for device notifications. They implement FIFO queues in shared memory space. An open handle to a message queue can be waited on with <MSHelp:link keywords="cerefWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link> or <MSHelp:link keywords="cerefWaitForMultipleObjects" TABINDEX="0">WaitForMultipleObjects</MSHelp:link>. Aside from the <B>WaitForSingleObject</B> and <B>WaitForMultipleObject</B> calls, you must manipulate message queues only by the message queue functions. For example, you cannot call <MSHelp:link keywords="cerefCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link> on a message queue handle. The following table shows the message queue functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Function</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><MSHelp:link keywords="cerefCloseMsgQueue" TABINDEX="0">CloseMsgQueue</MSHelp:link></TD>
+<TD width=75%>Closes a currently open message queue.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><MSHelp:link keywords="cerefCreateMsgQueue" TABINDEX="0">CreateMsgQueue</MSHelp:link></TD>
+<TD width=75%>Creates or opens a user-defined message queue.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><MSHelp:link keywords="cerefGetMsgQueueInfo" TABINDEX="0">GetMsgQueueInfo</MSHelp:link></TD>
+<TD width=75%>Returns information about a message queue.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><MSHelp:link keywords="cerefOpenMsgQueue" TABINDEX="0">OpenMsgQueue</MSHelp:link></TD>
+<TD width=75%>Opens a handle to an existing message queue based on a message queue handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><MSHelp:link keywords="cerefReadMsgQueue" TABINDEX="0">ReadMsgQueue</MSHelp:link></TD>
+<TD width=75%>Reads a single message from a message queue.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><MSHelp:link keywords="cerefWriteMsgQueue" TABINDEX="0">WriteMsgQueue</MSHelp:link></TD>
+<TD width=75%>Writes a single message to a message queue.</TD>
+</TR>
+</table></div>
+
+<P>The following code example shows a simple use of <B>CreateMsgQueue</B>, <B>RequestDeviceNotifications</B>, <MSHelp:link keywords="cerefWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link>, and <B>StopDeviceNotifications</B>.</P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;msgqueue.h&gt;
+
+#include &lt;pnp.h&gt;
+
+typedef union {
+    DEVDETAIL d;
+    char pad[sizeof(DEVDETAIL)+MAX_DEVCLASS_NAMELEN];
+} MYDEV;
+
+void EnumerateDevices (HANDLE h)
+{
+    MYDEV detail;
+    DWORD flags;
+    DWORD size;
+
+    SetLastError(0);
+
+    while (ReadMsgQueue(h, &amp;detail, sizeof(detail), &amp;size, 1, &amp;flags) == TRUE)
+    printf("Device notification: %S %s, f=0x%x\n", detail.d.szName, detail.d.fAttached ? "appeared" : "was removed", flags);
+
+    printf("Leaving Enumerate, error = %d\n", GetLastError());
+}
+
+main ()
+{
+    GUID guid = {0};    // or any known and relevant device interface GUID
+    HANDLE hq, hn;
+    MSGQUEUEOPTIONS msgopts;
+
+    msgopts.dwFlags = MSGQUEUE_VARIABLESIZE | MSGQUEUE_MSGSIZE;
+    msgopts.dwMaxMessages = 0; //?
+    msgopts.cbMaxMessage = sizeof(MYDEV);
+    msgopts.cbMaxMsgQueue = 0; //?
+    msgopts.dwDesiredAccess = GENERIC_READ;
+    msgopts.dwShareMode = 0;
+    msgopts.dwCreationDisposition = CREATE_NEW;
+    hq = CreateMsgQueue(NULL, &amp;msgopts);
+
+    printf("Created message queue, h = %08X\n", hq);
+    if (hq == 0) return 0;
+
+    hn = RequestDeviceNotifications(&amp;guid, hq, TRUE);
+
+    printf("Registered for notifications, h = %08X\n", hn);
+
+    EnumerateDevices(hq);
+
+    printf("Completed initial notification pass.\n");
+
+    // do whatever
+    while (WaitForSingleObject(hq, 80000) == WAIT_OBJECT_0)
+    EnumerateDevices(hq);
+
+    printf("Commencing final enumeration\n");
+    EnumerateDevices(hq);
+    printf("Done.\n");
+
+    StopDeviceNotifications(hn);
+    CloseMsgQueue(hq);
+
+    return 0;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicedriverloadingmodel.htm">Device Driver Loading Model</A></P>
+
+<P><A HREF="cxconregistryenumerator.htm">Registry Enumerator</A></P>
+
+<P><A HREF="cxconinterfaceclasses.htm">Device Interface Classes</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Device%20Interface%20Notifications&nbsp;(cxcondevicenotifications.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

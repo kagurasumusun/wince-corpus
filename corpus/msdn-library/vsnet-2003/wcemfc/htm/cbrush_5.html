@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBrush::CreatePatternBrush</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cbrush_createpatternbrush"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cbrush_createpatternbrush"></A>CBrush::CreatePatternBrush</H1>
+
+<P>This method initializes a brush with a pattern specified by a bitmap. You can select the brush for any device context that supports raster operations.</P>
+
+<PRE class=syntax><B>BOOL CreatePatternBrush(
+CBitmap* </B><I>pBitmap</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pBitmap</I></DT>
+
+<DD>Identifies a bitmap.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The bitmap identified by <I>pBitmap</I> is typically initialized by using the <B>CBitmap::CreateBitmap</B>, <B>CBitmap::CreateBitmapIndirect</B>, <B>CBitmap::LoadBitmap</B>, or <B>CBitmap::CreateCompatibleBitmap</B> function.</P>
+
+<P>Bitmaps used as fill patterns should be 8 pixels by 8 pixels. If the bitmap is larger, Windows CE only uses the bits corresponding to the first 8 rows and columns of pixels in the upper-left corner of the bitmap.</P>
+
+<P>A pattern brush can be deleted without affecting the associated bitmap. This means the bitmap can be used to create any number of pattern brushes.</P>
+
+<P>A brush created using a monochrome bitmap (one color plane, one bit per pixel) is drawn using the current text and background colors. Pixels represented by a bit set to zero are drawn with the current text color. Pixels represented by a bit set to one are drawn with the current background color.</P>
+
+<H4>Example</H4>
+
+<PRE>// Create a hatched bit pattern.
+WORD HatchBits[8] = { 0x11, 0x22, 0x44, 0x88, 0x11,
+&nbsp;&nbsp; 0x22, 0x44, 0x88 };
+
+// Use the bit pattern to create a bitmap.
+CBitmap bm;
+bm.CreateBitmap(8,8,1,1, HatchBits);
+
+// Create a pattern brush from the bitmap.
+CBrush brush;
+brush.CreatePatternBrush(&amp;bm);
+
+// Select the brush into a device context, and draw.
+CBrush* pOldBrush = (CBrush*)pDC-&gt;SelectObject(&amp;brush);
+pDC-&gt;RoundRect(CRect(50, 50, 200, 200), CPoint(10,10));
+
+// Restore the original brush.
+pDC-&gt;SelectObject(pOldBrush);
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cbrush_3.htm"><B>CBrush::CreateBrushIndirect</B></A>, <A HREF="cbrush_4.htm"><B>CBrush::CreateDIBPatternBrush</B></A>, <A HREF="cgdiob_5.htm"><B>CGdiObject::DeleteObject</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

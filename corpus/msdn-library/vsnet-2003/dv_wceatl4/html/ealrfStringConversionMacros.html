@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>String Conversion Macros</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="String Conversion Macros"/>
+<MSHelp:RLTitle Title="String Conversion Macros"/>
+<MSHelp:Keyword Index="A" Term="ealrfStringConversionMacros"/>
+<MSHelp:Keyword Index="K" Term="string conversion macros (ATL)"/>
+<MSHelp:Keyword Index="A" Term="ealrfStringConversionMacros"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="atlapi2.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_705913">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfstringconversionmacros"></A>String Conversion Macros</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>The string conversion macros discussed here are valid for both ATL and MFC. In the macro names, the source string type is on the left (for example, <B>A</B>) and the destination string type is on the right (for example, <B>W</B>). <B>A</B> stands for <B>LPSTR</B>, <B>OLE</B> stands for <B>LPOLESTR</B>, <B>T</B> stands for <B>LPTSTR</B>, and <B>W</B> stands for <B>LPWSTR</B>.</P>
+
+<PRE class="syntax"><B>MACRONAME( </B><I>string</I><B>_</B><I>address</I><B> )</B><I> </I></PRE>
+
+<P>For example:</P>
+
+<P><B>A2W(</B><I>lpa</I><B>)</B></P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>In the macro names, the source string type is on the left (for example, <B>A</B>) and the destination string type is on the right (for example, <B>W</B>). <B>A</B> stands for <B>LPSTR</B>, <B>OLE</B> stands for <B>LPOLESTR</B>, <B>T</B> stands for <B>LPTSTR</B>, and <B>W</B> stands for <B>LPWSTR</B>.</P>
+
+<P>Thus, <B>A2W</B> converts an <B>LPSTR</B> to an <B>LPWSTR</B>, <B>OLE2T</B> converts an <B>LPOLESTR</B> to an <B>LPTSTR</B>, and so on.</P>
+
+<P>The destination string is created using _<B>alloca</B>, except when the destination type is <B>BSTR</B>. Using _<B>alloca</B> allocates memory off the stack, so that when your function returns, it is automatically cleaned up.</P>
+
+<P>If there is a <B>C</B> in the macro name, the macro converts to a <B>const</B> string. For example, <B>W2CA</B> converts an <B>LPWSTR</B> to an <B>LPCSTR</B>.</P>
+
+<P>When using an ATL string conversion macro, specify the <B>USES_CONVERSION</B> macro at the beginning of your function in order to avoid compiler errors. For example:</P>
+
+<PRE class="code">void func( LPSTR lpsz )
+{
+   USES_CONVERSION;
+   ...
+   LPWSTR x = A2W(lpsz)
+   // Do something with x
+   ...
+}</PRE>
+
+<P>The behavior of the ATL string conversion macros depends on the compiler directive in effect, if any. If the source and destination types are the same, no conversion takes place. Compiler directives change <B>T</B> and <B>OLE</B> as follows:</P>
+
+<P class="label"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Compiler directive in effect</TH>
+<TH width=33%>T becomes</TH>
+<TH width=23%>OLE becomes</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>none</TD>
+<TD width=33%><B>A</B></TD>
+<TD width=23%><B>W</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>_UNICODE</B></TD>
+<TD width=33%><B>W</B></TD>
+<TD width=23%><B>W</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>OLE2ANSI</B></TD>
+<TD width=33%><B>A</B></TD>
+<TD width=23%><B>A</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>_UNICODE</B> and <B>OLE2ANSI</B></TD>
+<TD width=33%><B>W</B></TD>
+<TD width=23%><B>A</B></TD>
+</TR>
+</table></div>
+
+<P>The following table lists the ATL string conversion macros.</P>
+
+<P class="label"><B>ATL String Conversion Macros</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=25%><B>A2BSTR</B></TD>
+<TD width=25%><B>OLE2A</B></TD>
+<TD width=25%><B>T2A</B></TD>
+<TD width=25%><B>W2A</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2COLE</B></TD>
+<TD width=25%><B>OLE2BSTR</B></TD>
+<TD width=25%><B>T2BSTR</B></TD>
+<TD width=25%><B>W2BSTR</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2CT</B></TD>
+<TD width=25%><B>OLE2CA</B></TD>
+<TD width=25%><B>T2CA</B></TD>
+<TD width=25%><B>W2CA</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2CW</B></TD>
+<TD width=25%><B>OLE2CT</B></TD>
+<TD width=25%><B>T2COLE</B></TD>
+<TD width=25%><B>W2COLE</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2OLE</B></TD>
+<TD width=25%><B>OLE2CW</B></TD>
+<TD width=25%><B>T2CW</B></TD>
+<TD width=25%><B>W2CT</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2T</B></TD>
+<TD width=25%><B>OLE2T</B></TD>
+<TD width=25%><B>T2OLE</B></TD>
+<TD width=25%><B>W2OLE</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><B>A2W</B></TD>
+<TD width=25%><B>OLE2W</B></TD>
+<TD width=25%><B>T2W</B></TD>
+<TD width=25%><B>W2T</B></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in atlconv.h</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_705913', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

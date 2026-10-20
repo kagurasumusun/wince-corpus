@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_SET_ORIGINAL_PACKET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_SET_ORIGINAL_PACKET"/>
+<MSHelp:RLTitle Title="NDIS_SET_ORIGINAL_PACKET"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_SET_ORIGINAL_PACKET"/>
+<MSHelp:Keyword Index="K" Term="NDIS_SET_ORIGINAL_PACKET"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_SET_ORIGINAL_PACKET"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_macros.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_689070">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndis_set_original_packet"></A>NDIS_SET_ORIGINAL_PACKET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This macro sets the information in a given packet descriptor to the information from a packet descriptor that was originally indicated up by a lower-level driver.</P>
+
+<PRE class="syntax"><B>PNDIS_PACKET NDIS_SET_ORIGINAL_PACKET(</B>
+<B>PNDIS_PACKET</B> <I>_P</I><B>,</B>
+<B>PNDIS_PACKET</B> <I>_OP</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>_P</I></DT>
+
+<DD>Points to a packet descriptor that <B>NDIS_SET_ORIGINAL_PACKET</B> sets from the original packet descriptor in <I>_OP</I> or points to the current packet descriptor if <I>OriginalPacket</I> is NULL.</dd>
+
+<DT><I>_OP</I></DT>
+
+<DD>Points to a packet descriptor that was originally indicated up by a lower-level driver.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is the <I>_OP</I> pointer.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If intermediate drivers are present in a layered stack of NDIS drivers, those intermediate drivers must repackage packets that they receive before indicating the packets up to the next layer. In this situation, intermediate drivers should call <B>NDIS_SET_ORIGINAL_PACKET</B> to set the contents of a new packet from a packet that was indicated up by a lower-level driver. To retrieve a packet that was received from a lower-level driver, drivers call the <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> function. To obtain a pointer to the original packet that was indicated up by the lowest-level driver in the layered stack, drivers call the <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A> macro and pass the pointer to the received packet. Using this method of retrieving and repackaging, each driver in the layered stack can access the OOB data block that is associated with packets that are received from the network without requiring that packets be copied to each layer.</P>
+
+<P>Before calling <B>NDIS_SET_ORIGINAL_PACKET</B>, intermediate drivers must allocate a packet descriptor and map this packet descriptor's chain of buffer descriptors to the original packet descriptor's chain of buffer descriptors. Intermediate drivers should always allocate their packet descriptors from packet pools that the drivers set up during initialization.</P>
+
+<P>The <B>NDIS_SET_ORIGINAL_PACKET</B> macro is defined as followed.</P>
+
+<PRE class="code">#define NDIS_SET_ORIGINAL_PACKET(_P, _OP)  NDIS_PER_PACKET_INFO_FROM_PACKET(_P, OriginalPacketInfo) = _OP</PRE>
+
+<P>The following example code retrieves a packet that was received from the driver below, obtains the original packet from <I>OldPkt</I>, and then sets <I>MyPkt</I> with the original-packet contents.</P>
+
+<PRE class="code">// Get the original packet, which could be the received packet
+// or the packet originating from the lowest-level driver.
+// This result is based on the number of layered drivers in the stack.
+// Then, set the result on the packet that will be indicated to the
+// next level so the OOB data block is accessible.
+//
+OldPkt = NdisGetReceivedPacket(BindingHandle, MacReceiveContext);
+NdisDprAllocatePacket(&amp;Status, &amp;MyPkt, RecvPacketPoolHandle);
+MyPkt-&gt;Private.Head = OldPkt-&gt;Private.Head;
+MyPkt-&gt;Private.Tail = OldPkt-&gt;Private.Tail;
+NDIS_SET_ORIGINAL_PACKET(MyPkt, NDIS_GET_ORIGINAL_PACKET(OldPkt));
+<B>‹</B> <B>›</B></PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Ndis.h</TD>
+<TD width=20%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconndis_packet.htm">NDIS_PACKET</A>, <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndis_per_packet_info_from_packet.htm">NDIS_PER_PACKET_INFO_FROM_PACKET</A>, <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A>, <A HREF="_wceddk_ndis_get_packet_time_received.htm">NDIS_GET_PACKET_TIME_RECEIVED</A>, <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A>, <A HREF="_wceddk_ndis_get_packet_media_specific_info.htm">NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_SET_ORIGINAL_PACKET&nbsp;(_wceddk_ndis_set_original_packet.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

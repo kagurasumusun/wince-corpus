@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Socket Server Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Socket Server Application"/>
+<MSHelp:RLTitle Title="Creating a Socket Server Application"/>
+<MSHelp:Keyword Index="A" Term="_wcecomm_Creating_a_TCP_Stream_Socket_Application"/>
+<MSHelp:Keyword Index="K" Term="applications, creating TCP stream socket"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: winsock.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_732007">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcecomm_creating_a_tcp_stream_socket_application"></A>Creating a Socket Server Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following procedure shows how to create a socket server application.</P>
+
+<P class="labelproc"><B>To create a socket server application</B>
+
+<OL type="1">
+	<LI>Perform name resolution to obtain a list of addresses to serve on. </li>
+
+	<LI>Create a list of serving sockets, one for each address, using the socket function.</li>
+
+	<LI>Name the sockets with the <A HREF="_wcesdk_bind.htm">bind</A> function using the addresses returned from the <A HREF="cerefgetaddrinfo.htm">getaddrinfo</A> function.
+<P>When you open a socket with <B>socket</B>, the socket has no name assigned to it. However, a descriptor for the socket is allocated in an address family namespace. To assign a name to the server socket, call <B>bind</B>. The sockets of the server application need to be named with the <B>bind </B>function. However, it is unnecessary to give a client socket a name by using <B>bind</B>.
+</li>
+
+	<LI>For TCP stream sockets, listen for incoming client connections with the <A HREF="_wcesdk_listen_function.htm">listen</A> function.</li>
+
+	<LI>Wait for incoming data (connection-less) or connections (connection-oriented).
+<P>For TCP, accept a client connection with the <A HREF="_wcesdk_accept_function.htm">accept</A> function.
+
+<P>The <B>accept</B> function creates a new socket. The original socket opened by the server continues to listen and can be used to accept more connections until closed. Server applications must close the listening socket, in addition to any sockets created, by accepting a client connection.
+</li>
+
+	<LI>For connection-oriented applications, send and receive data with a client using the <A HREF="_wcesdk_send.htm">send</A> and <A HREF="_wcesdk_recv.htm">recv</A> functions.
+<P>For connection-less applications, send and receive data with a client using the <A HREF="_wcesdk_sendto.htm">sendto</A> and <A HREF="_wcesdk_recvfrom.htm">recvfrom</A> functions.
+
+<P>For applications that require compatibility with both connection-oriented and connectionless sockets, always use <B>sendto</B> and <B>recvfrom</B>.
+
+<P>The send and <B>recv</B> functions can also be used with connectionless sockets. A socket must be connected before calling <B>send</B> or <B>recv</B>, however it is not recommended to use <B>connect</B> on a connectionless socket under Ipv6. Due to the multi-homed aspect of IPv6, data will be received on a public address but will likely be sent from an anonymous address. Incoming data on an address other than the one passed to connect will be quietly discarded.
+
+<P>Successfully completing a call to <B>send</B> or <B>sendto</B> does not confirm that data was successfully delivered.
+</li>
+
+	<LI>For connection-oriented sockets, shut down the socket with the <A HREF="_wcesdk_shutdown_function.htm">shutdown</A> function.</li>
+
+	<LI>When data exchange between the server and client ends, close the socket with the <A HREF="_wcesdk_closesocket.htm">closesocket</A> function. An application should call <B>shutdown</B> before calling <B>closesocket</B>. 
+<P>An application should always have a matching call to <B>closesocket</B> for each successful call to <B>socket</B> to return any socket resources to the system. For TCP stream sockets, when a socket connection ends the server must close the socket created by <B>accept</B>. If the server does not close the socket originally returned by the first call to <B>socket</B>, that socket continues to listen for clients. When the server disconnects or is out of service, it should call <B>closesocket</B> to close any listening sockets.
+</li>
+</OL>
+
+<P>For an example of a socket server application, see <A HREF="_wcecomm_tcp_stream_socket_server.htm">Socket Server</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cetskcreatingsocketclientapplication.htm">Creating a Socket Client Application</A></P>
+
+<P><A HREF="_wcecomm_tcp_stream_socket_client.htm">Socket Client</A></P>
+
+<P><A HREF="cetskstreamsocketapplication.htm">Stream Socket Application</A></P>
+
+<P><A HREF="_wcecomm_winsock_functions.htm">Winsock API</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20a%20Socket%20Server%20Application&nbsp;(_wcecomm_creating_a_tcp_stream_socket_application.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

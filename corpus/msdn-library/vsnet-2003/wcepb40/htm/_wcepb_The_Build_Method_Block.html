@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BuildMethod Block</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BuildMethod Block"/>
+<MSHelp:RLTitle Title="BuildMethod Block"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_The_Build_Method_Block"/>
+<MSHelp:Keyword Index="K" Term=".cec files - block descriptions, BuildMethod block"/>
+<MSHelp:Keyword Index="K" Term="BuildMethod block, description"/>
+<MSHelp:Keyword Index="K" Term="cec files - block descriptions, BuildMethod block"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_The_Build_Method_Block"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: adding_features.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679761">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_the_build_method_block"></A>BuildMethod Block</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The BuildMethod block provides the information needed for the build system to build and deploy this feature to an OS image. The following code example shows a BuildMethod block.</P>
+
+<PRE class="code">BuildMethods(
+   BuildMethod(
+      CPU( "x86" )
+      Step( BSP )
+      InputFiles(  )
+      OutputFiles( pcmcia.DLL )
+      Action('#BUILD(SOURCES,"$(_WINCEROOT)\platform\CEPC\Drivers\PCMCIA")' )
+   )
+
+   BuildMethod(
+      CPU( "SH3 SH4 x86" )
+      Step( makeimg )
+      Action( '#ENV(CEPC_NOPCMCIA, "")' )
+   )
+
+)</PRE>
+
+<P>The following table shows the elements of a BuildMethod block.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=15%>Element</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>CPU</TD>
+<TD width=85%>Specifies which microprocessors this build method supports. The following microprocessors are supported by default: ARMV4, ARMV4I, ARMV4T, emulator, MIPS16, MIPSII, MIPSII_FP, MIPSIV, MIPSIV_FP, SH3, SH4, and x86. 
+<P>The microprocessor list must be surrounded by quotation marks. The string "default" refers to the default microprocessor list.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>CoreOS (optional)</TD>
+<TD width=85%>Specifies the CoreOS under which this build method is supported. The IABASE value corresponds to the display-based devices OS configuration. The HLBASE value corresponds to the headless-based devices OS configuration. Uses the one of formats shown in the following code example.
+<PRE class="code">CoreOS( IABASE )
+CoreOS( HLBASE )
+CoreOS( IABASE HLBASE )</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>Step</TD>
+<TD width=85%>Build step. Only one step per build method is allowed. The following entries are valid:
+<P>BSP: Feature Build step. Valid actions are #ENV, #BUILD, #CUSTOM</P>
+
+<P>BUILDREL: Release Copy step. Valid actions are #COPY, #CUSTOM</P>
+
+<P>MAKEIMG: Make Image step. Valid actions are #ENV</P>
+
+<P>CESYSGEN: Cesysgen step. Valid actions are #COPY (from a .cec file)</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>GUID (optional)</TD>
+<TD width=85%>Supplies the GUID for the build method. If the GUID is not present, it is created when the implementation is imported. The default is none.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>Setting
+<P>(optional)</P>
+</TD>
+<TD width=85%>A string in one of the following formats.
+<PRE class="code">Setting ( '#OUTPUT( OUTPUT_NAME )' )
+Setting ( '#INPUT( "SETTING_STRING", ENV_VARIABLE, 1|0, INITIAL_VALUE, BSP_VALUE)' )
+Setting ( '#CHM( "CHM_FILE" )' )</PRE>
+
+<P>The following are descriptions of the different setting options: 
+
+<UL type="disc">
+	<LI>The #INPUT command establishes the settings in the <B>Sysgen</B> tab, located on the <B>Platform Settings</B> dialog box. 
+<P>The SETTING_STRING is used as the text for the setting. ENV_VARIABLE is the name of a TRUE/FALSE environment variable that is used during the build. The BSP_VALUE is a quoted string containing the name or GUID of a board support package. A null string in this field indicates that it is the default value, applicable to all board support packages unless it is overridden by a BSP-specific #INPUT setting.
+
+<P>The 1 | 0 indicates if the environment variable should be marked TRUE in order to obtain the functionality described in SETTING_STRING. The 1 indicates that if ENV_VARIABLE is set to TRUE, then SETTING_STRING is valid. The 0 indicates that ENV_VARIABLE is FALSE in order for SETTING_STRING to be valid. INITIAL_VALUE is the initial value of the variable. For example, MSMQ (1) must be TRUE to include MSMQ features and must be FALSE to exclude them. NOPIE (0) must be FALSE to include Pocket Internet Explorer and must be TRUE to include it. 
+
+<P>The following code example shows the setting for the Configs.cec file.
+
+<PRE class="code">Setting( '#INPUT( "Include Cursor features", NOCURSOR, 0, 0, "" )' )
+Setting( '#INPUT( "Include Cursor features", NOCURSOR, 0, 1, "CEPC" )' )</PRE>
+
+<P>For this setting, the default value is 0 for all board support packages included in the IDE. If a third-party board support package uses the default value, no additional #INPUT setting is needed. If a third-party board support package uses a value other than the default value, it would add an additional #INPUT setting, with its own values in the various fields and with its name in the BSP_VALUE string.
+</li>
+
+	<LI>The #OUTPUT command defines your output modules for the Cesysgen.bat file. The following code example shows the outputs for the Enterprise Terminal OS configuration. 
+<PRE class="code">Setting( '#OUTPUT(CE_MODULES)' )
+Setting( '#OUTPUT(WCEAPP_MODULES)' )
+Setting( '#OUTPUT(IE_MODULES)' )
+Setting( '#OUTPUT(WCESHELL_MODULES)' )
+Setting( '#OUTPUT(MSMQ_MODULES)' )</PRE>
+</li>
+
+	<LI>The #CHM command attaches an HTML Help file (.chm) or an HTML Help index file (.chi) to the feature described in the .cec file. Exported SDKs that include the feature will also contain the associated HTML help files. This setting used to determine if a help file will be exported to platform's SDK.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>Action</TD>
+<TD width=85%>Specifies actions performed by Platform Builder during the platform build, using a string in one of the following formats.
+<PRE class="code">Action( '#BUILD( DIR|SOURCES, "SOURCES_FULLPATH" )' )
+Action( '#BUILD( MAK, "MAKEFILE_DIR", "MAKEFILE_NAME" )' )
+Action( '#CUSTOM( "DIRECTORY_TO_EXECUTE_FROM", "PATH_TO_COMMAND" )' )
+Action( '#ENV( "VARIABLE", "VALUE" )' )
+Action( '#COPY("SOURCE_FILE_FULLPATH", "TARGET_DIRECTORY" )' )</PRE>
+
+<P>The following are the different types of actions:
+
+<UL type="disc">
+	<LI>SRCCODE
+<P>This action specifies the directory that contains source files that this build method uses.
+</li>
+
+	<LI>CUSTOM
+<P>This action causes Platform Builder to execute a command from the directory specified in DIRECTORY_TO_EXECUTE_FROM.
+</li>
+
+	<LI>ENV
+<P>This action sets an environment variable to a value for the current build step.
+</li>
+
+	<LI>COPY
+<P>This action causes Platform Builder to copy the file specified by SOURCE_FILE_FULLPATH. This action will work in the Cesysgen phase.
+</li>
+
+	<LI>BUILD
+<P>This action causes Platform Builder to use the dirs or source file located in the specified SOURCS_FULLPATH directory in order to build this implementation. 
+
+<P>BUILD uses MAK keyword for building a user-specified makefile file.
+
+<P>The following code example shows how to build the TMKConsole.mak file.
+
+<PRE class="code">Action( '#BUILD( MAK, "$(_WINCEROOT)\public\TMKConsole", "TMKConsole.mak" )' )</PRE>
+</li>
+</UL>
+
+<P>The following are additional examples.</P>
+
+<PRE class="code">Action( '#BUILD( SOURCES, "$(_WINCEROOT)\platform\CEPC\Drivers\DISPLAY\2BPP")' )
+Action( '#BUILD( DIRS, "e:\wince400\public\test")')
+Action( '#CUSTOM( "$(_WINCEROOT)\platform\CEPC", "$(_WINCEROOT)\platform\CEPC\myfile.bat")')
+Action( '#CUSTOM( "d:\wince400\testsrc" , "xcopy d:\wince400\testsrc\build.bat .." )')
+Action( '#COPY( "d:\wince400\testsrc\myfile.dll", "e:\RelDir" )')
+Action( '#ENV("MY_ENV_VAR", "")')
+Action( '#ENV("RUN_MINIMIZED", "0")')</PRE>
+
+<P>Platform Builder performs actions during the build process in the order in which they are listed in the .cec file. Each build method can have zero or more actions. Certain actions will only work with certain steps, as shown in the table that follows. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>An action must be in single quotation marks, and the parameters must be in double quotation marks.</BLOCKQUOTE>
+</TD>
+</TR>
+</table></div>
+
+<P>The following table shows which actions will work with which steps in the build method.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Actions</TH>
+<TH width=16%>Cesysgen step</TH>
+<TH width=15%>BSP step</TH>
+<TH width=20%>BuildRel step</TH>
+<TH width=20%>Makeimg step</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#BUILD(DIR,... )</TD>
+<TD width=16%>NO</TD>
+<TD width=15%>YES</TD>
+<TD width=20%>NO</TD>
+<TD width=20%>NO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#BUILD(SOURCES,... )</TD>
+<TD width=16%>NO</TD>
+<TD width=15%>YES</TD>
+<TD width=20%>NO</TD>
+<TD width=20%>NO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#BUILD(MAK,... )</TD>
+<TD width=16%>NO</TD>
+<TD width=15%>YES</TD>
+<TD width=20%>NO</TD>
+<TD width=20%>NO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#CUSTOM( ... , ... )</TD>
+<TD width=16%>NO</TD>
+<TD width=15%>YES</TD>
+<TD width=20%>YES</TD>
+<TD width=20%>NO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#COPY( ... , ... )</TD>
+<TD width=16%>YES</TD>
+<TD width=15%>NO</TD>
+<TD width=20%>YES</TD>
+<TD width=20%>NO</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#ENV( ... , ... )</TD>
+<TD width=16%>NO</TD>
+<TD width=15%>YES</TD>
+<TD width=20%>NO</TD>
+<TD width=20%>YES</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>#SRCCODE( … )</TD>
+<TD width=16%>NO</TD>
+<TD width=15%>NO</TD>
+<TD width=20%>NO</TD>
+<TD width=20%>NO</TD>
+</TR>
+</table></div>
+
+<P>Registry information is not exposed in a .cec file in the same way that .bib information is exposed. However, you can use the #COPY command in a .cec file to copy a .reg file to the release directory for the platform. The following code example shows how to use the #COPY command in a BuildMethod block to merge .reg file snippets together as part of the MAKEIMG phase of the build.</P>
+
+<PRE class="code">BuildMethod
+(
+    GUID( {CA8E4E82-29B4-4FB2-A63E-708C7BAA824A} )
+    Step( PreMakeImg )
+    CPU( x86 )
+    Action ( '#COPY("$(_WINCEROOT)\Examples\Display\Display.reg", "$(_FLATRELEASEDIR)")' )
+)</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_component_files.htm">Catalog Feature Files</A></P>
+
+<P><A HREF="_wcepb_building_an_os_image.htm">Platform Building</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;BuildMethod%20Block&nbsp;(_wcepb_the_build_method_block.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

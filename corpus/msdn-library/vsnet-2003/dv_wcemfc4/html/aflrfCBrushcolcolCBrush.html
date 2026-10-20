@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBrush::CBrush</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CBrush::CBrush"/>
+<MSHelp:RLTitle Title="CBrush::CBrush"/>
+<MSHelp:Keyword Index="A" Term="aflrfCBrushcolcolCBrush"/>
+<MSHelp:Keyword Index="K" Term="CBrush class, constructor"/>
+<MSHelp:Keyword Index="A" Term="aflrfCBrushcolcolCBrush"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cbrush.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709784">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcbrushcolcolcbrush"></A>CBrush::CBrush</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>Either of these constructors create instances of a <B>CBrush</B> object. The default constructor constructs an uninitialized <B>CBrush</B> object that must be initialized before it can be used. </P>
+
+<PRE class="syntax"><B>CBrush()</B><I> </I>
+
+<B>CBrush( </B>
+<B>COLORREF </B><I>crColor</I> <B>)</B>
+
+<B>CBrush(</B>
+<B>CBitmap*</B> <I>pBitmap</I> <B>)</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>crColor</I></DT>
+
+<DD>Specifies the foreground color of the brush as an RGB color. </dd>
+
+<DT><I>pBitmap</I></DT>
+
+<DD>Points to a <B>CBitmap</B> object that specifies a bitmap with which the brush paints.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If you use the constructor with no arguments, you must initialize the resulting <B>CBrush</B> object with <B>CreateSolidBrush</B>, <B>CreateBrushIndirect</B>, <B>CreatePatternBrush</B>, or <B>CreateDIBPatternBrush</B>. If you use a constructor that takes arguments, no further initialization is necessary. Constructors with arguments can throw an exception if errors are encountered; the constructor with no arguments always succeeds.</P>
+
+<P>The constructor with a single <B>COLORREF</B> parameter constructs a solid brush with the specified color. The color specifies an RGB value and can be constructed with the <B>RGB</B> macro in Windows.h.</P>
+
+<P>The constructor with a <B>CBitmap</B> parameter constructs a patterned brush. The parameter identifies a bitmap. The bitmap is assumed to have been created by using <B>CBitmap::CreateBitmap</B>, <B>CBitmap::CreateBitmapIndirect</B>, <B>CBitmap::LoadBitmap</B>, or <B>CBitmap::CreateCompatibleBitmap</B>. The minimum size for a bitmap to be used in a fill pattern is 8 pixels by 8 pixels.</P>
+
+<P>Windows CE does not support the following overloaded implementation of the constructor:</P>
+
+<PRE class="code"><B>CBrush::CBrush( </B>
+<B>int </B><I>nIndex</I><B>, </B>
+<B>COLORREF </B><I>crColor</I> <B>) </B></PRE>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void CBrushView::OnDraw(CDC* pDC)
+{
+  CBrushDoc* pDoc = GetDocument();
+  ASSERT_VALID(pDoc);
+
+  // CBrush::CBrush.
+  CBrush brush1;  // Must initialize!
+  brush1.CreateSolidBrush(RGB(0,0,255));  // Blue brush.
+
+  CBrush* pTempBrush = NULL;
+  CBrush OrigBrush;
+
+  CRect rc;
+  GetClientRect(&amp;rc);
+  ScreenToClient(&amp;rc);
+
+  pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush1);
+  // Save original brush.
+  OrigBrush.FromHandle((HBRUSH)pTempBrush);
+
+  // Paint upper left corner with blue brush.
+  pDC-&gt;Rectangle(0, 0, rc.Width() / 2, rc.Height() / 2);
+
+  // These constructors throw resource exceptions.
+  try
+  {
+    // CBrush::CBrush(COLORREF crColor)
+    CBrush brush2(RGB(255,0,0));  // Solid red brush.
+
+    // CBrush::CBrush(int nIndex, COLORREF crColor)
+    // Hatched green brush.
+    CBrush brush3(HS_DIAGCROSS, RGB(0,255,0));
+
+    // CBrush::CBrush(CBitmap* pBitmap)
+    CBitmap bmp;
+    // Load a resource bitmap.
+    bmp.LoadBitmap(IDB_BRUSH);
+    CBrush brush4(&amp;bmp);
+
+    pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush2);
+
+    // Paint upper right corner with red brush.
+    pDC-&gt;Rectangle(rc.Width() / 2, 0, rc.Width(),
+       rc.Height() / 2);
+
+    pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush3);
+
+    // Paint lower left corner with green hatched brush.
+    pDC-&gt;Rectangle(0, rc.Height() / 2, rc.Width() / 2,
+       rc.Height());
+
+    pTempBrush = (CBrush*)pDC-&gt;SelectObject(brush4);
+
+    // Paint lower right corner with resource brush.
+    pDC-&gt;Rectangle(rc.Width() / 2, rc.Height() / 2,
+       rc.Width(), rc.Height());
+  }
+  catch(CResourceException* e)
+  {
+    e-&gt;ReportError();
+    e-&gt;Delete();
+  }
+
+  // Reselect original brush into device context.
+  pDC-&gt;SelectObject(&amp;OrigBrush);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcbrushcolcolcreatesolidbrush.htm"><B>CBrush::CreateSolidBrush</B></A>, <A HREF="aflrfcbrushcolcolcreatebrushindirect.htm"><B>CBrush::CreateBrushIndirect</B></A>, <A HREF="aflrfcbrushcolcolcreatedibpatternbrush.htm"><B>CBrush::CreateDIBPatternBrush</B></A>, <A HREF="aflrfcgdiobjectcolcolcreatestockobject.htm"><B>CGdiObject::CreateStockObject</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709784', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

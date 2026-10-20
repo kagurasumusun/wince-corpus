@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Tracks</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Tracks"/>
+<MSHelp:RLTitle Title="Tracks"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Tracks"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, tracks"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Tracks"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680683">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_tracks"></A>Tracks</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Tracks are the components of a segment that contain its sequenced data, including information about notes, underlying chords, tempo, patch and band changes, and everything else that the performance needs to know to play a piece of music. </P>
+
+<P>Each track is represented by an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack" TABINDEX="0">IDirectMusicTrack</MSHelp:link> interface. The methods of this interface are called by the performance, and most applications do not need to use them directly.</P>
+
+<P>When an application calls <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__PlaySegment" TABINDEX="0">IDirectMusicPerformance::PlaySegment</MSHelp:link>, DirectMusic calls the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack__Play" TABINDEX="0">IDirectMusicTrack::Play</MSHelp:link> method on the segment's tracks. Most tracks respond by immediately generating time-stamped messages containing data that is valid for the part of the segment that is being played. These messages are placed in a queue. For more information about what happens after that, see <A HREF="_wcesdk_dxmusic_message_creation_and_delivery.htm">Message Creation and Delivery</A>.)</P>
+
+<P>A few tracks do not actively generate messages in response to <B>IDirectMusicTrack::Play</B>, but instead do their work by responding to requests for information that come from the performance or other tracks in the form of a <B>GetParam</B> call. For more information, see <A HREF="_wcesdk_dxmusic_setting_and_retrieving_track_parameters.htm">Setting and Retrieving Track Parameters</A>.</P>
+
+<P>The following list shows the standard track types implemented by DirectMusic, with a brief description of each one. For a list of the methods supported by the standard tracks, see <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack" TABINDEX="0">IDirectMusicTrack</MSHelp:link>.
+
+<UL type="disc">
+	<LI><B>Band</B>. Downloads DLS data to the performance. Sends messages of type <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PATCH_PMSG" TABINDEX="0">DMUS_PATCH_PMSG</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_TRANSPOSE_PMSG" TABINDEX="0">DMUS_TRANSPOSE_PMSG</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_CHANNEL_PRIORITY_PMSG" TABINDEX="0">DMUS_CHANNEL_PRIORITY_PMSG</MSHelp:link>, and <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_MIDI_PMSG" TABINDEX="0">DMUS_MIDI_PMSG</MSHelp:link> (for volume and pan). Used in segments based on MIDI files and styles. </li>
+
+	<LI><B>Chord</B>. Used to convert music values (as stored in patterns) to MIDI values. Sends messages of type <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_NOTIFICATION_PMSG" TABINDEX="0">DMUS_NOTIFICATION_PMSG</MSHelp:link> (for GUID_NOTIFICATION_CHORD notifications). </li>
+
+	<LI><B>Chord map</B>. Used in template segments to compose chord tracks.</li>
+
+	<LI><B>Command</B>. Used in template segments to compose chord tracks, and in style segments to determine which patterns is played. Sends messages of type <B>DMUS_NOTIFICATION_PMSG</B> (for GUID_NOTIFICATION_COMMAND notifications).</li>
+
+	<LI><B>Motif</B>. Used to play motifs to accompany other segments. Sends messages of type <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_CURVE_PMSG" TABINDEX="0">DMUS_CURVE_PMSG</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_NOTE_PMSG" TABINDEX="0">DMUS_NOTE_PMSG</MSHelp:link>, and <B>DMUS_NOTIFICATION_PMSG</B> (for GUID_NOTIFICATION_MEASUREANDBEAT notifications).</li>
+
+	<LI><B>Mute</B>. Used with either style-based or MIDI-based segments. Allows PChannels to be remapped to other PChannels or to be muted.</li>
+
+	<LI><B>Sequence</B>. Sends sequence messages of type <B>DMUS_NOTE_PMSG</B> and <B>DMUS_MIDI_PMSG</B>. Used in segments based on MIDI files. Also sends messages of type <B>DMUS_CURVE_PMSG</B> for segments saved in the .sgt format.</li>
+
+	<LI><B>Signpost</B>. Used in template segments to compose chord tracks.</li>
+
+	<LI><B>Style</B>. Fundamental track for segments based on styles. Sends messages of type <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_TIMESIG_PMSG" TABINDEX="0">DMUS_TIMESIG_PMSG</MSHelp:link>, <B>DMUS_CURVE_PMSG</B>, <B>DMUS_NOTE_PMSG</B>, and <B>DMUS_NOTIFICATION_PMSG</B> (for GUID_NOTIFICATION_MEASUREANDBEAT notifications).</li>
+
+	<LI><B>SysEx</B>. Sends system-exclusive messages of type <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_SYSEX_PMSG" TABINDEX="0">DMUS_SYSEX_PMSG</MSHelp:link>. Used in segments based on MIDI files.</li>
+
+	<LI><B>Tempo</B>. Sets the tempo of the performance by sending messages of type <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_TEMPO_PMSG" TABINDEX="0">DMUS_TEMPO_PMSG</MSHelp:link>.</li>
+
+	<LI><B>Time Signature</B>. Sends messages of type <B>DMUS_TIMESIG_PMSG</B> as well as GUID_NOTIFICATION_MEASUREANDBEAT notifications. Used in segments based on MIDI files.</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Tracks&nbsp;(_wcesdk_dxmusic_tracks.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

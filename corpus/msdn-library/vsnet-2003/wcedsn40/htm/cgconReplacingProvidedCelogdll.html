@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Replacing the Default Celog.dll</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Replacing the Default Celog.dll"/>
+<MSHelp:RLTitle Title="Replacing the Default Celog.dll"/>
+<MSHelp:Keyword Index="A" Term="cgconReplacingProvidedCelogdll"/>
+<MSHelp:Keyword Index="K" Term="Celog.dll replacing"/>
+<MSHelp:Keyword Index="A" Term="cgconReplacingProvidedCelogdll"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801674">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconreplacingprovidedcelogdll"></A>Replacing the Default Celog.dll</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>CeLogDLLEntry</B> refers to the function name of your DLL entry. When <B>CeLogDLLEntry</B> is called, the <I>Reserved</I> parameter is a pointer to the <A HREF="cmrefkernellibiocontrol.htm">KernelLibIoControl</A> function. The following code example shows how to replace the provided Celog.dll.</P>
+
+<PRE class="code">return MyInitLibrary((FARPROC)Reserved);
+
+BOOL static MyInitLibrary(FARPROC pfnKernelLibIoControl)
+{
+    CeLogExportTable exports;
+    //
+    // KernelLibIoControl provides the back doors we need to obtain kernel
+    // function pointers and register logging functions.
+    //
+    
+    // Now initialize logging
+    if (!CeLogInit()) {
+        return FALSE;
+    }
+    //
+    // Check preset zones in the desktop computer's registry
+    //
+    pfnKernelLibIoControl((HANDLE)KMOD_CELOG, IOCTL_CELOG_GETDESKTOPZONE,
+                          TEXT("CeLogZoneUser"), 13*sizeof(WCHAR),
+                          &amp;(pCelBuf-&gt;dwMaskUser), sizeof(DWORD), NULL);
+    pCelBuf-&gt;dwMaskUser |= CELZONE_ALWAYSON;
+    pfnKernelLibIoControl((HANDLE)KMOD_CELOG, IOCTL_CELOG_GETDESKTOPZONE,
+                          TEXT("CeLogZoneCE"), 11*sizeof(WCHAR),
+                          &amp;(pCelBuf-&gt;dwMaskCE), sizeof(DWORD), NULL);
+    pCelBuf-&gt;dwMaskCE |= CELZONE_ALWAYSON;
+    pfnKernelLibIoControl((HANDLE)KMOD_CELOG, IOCTL_CELOG_GETDESKTOPZONE,
+                          TEXT("CeLogZoneProcess"), 16*sizeof(WCHAR),
+                          &amp;(pCelBuf-&gt;dwMaskProcess), sizeof(DWORD), NULL);
+    
+    // Register logging functions with the kernel
+    exports.dwVersion          = CELOG_EXPORT_VERSION;
+    exports.pfnCeLogData       = CeLogData;
+    exports.pfnCeLogInterrupt  = CeLogInterrupt;
+    exports.pfnCeLogSetZones   = CeLogSetZones;
+    exports.pfnCeLogQueryZones = CeLogQueryZones;
+    if (!pfnKernelLibIoControl((HANDLE)KMOD_CELOG, IOCTL_CELOG_REGISTER,
+                                &amp;exports, sizeof(CeLogExportTable), NULL, 0, NULL)) {
+        DEBUGMSG(1, (TEXT("CeLog: Unable to register logging functions with kernel\r\n")));
+        WIN32CALL(SetLastError, (ERROR_ALREADY_EXISTS));
+        return FALSE;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconimplementingeventtracking.htm">Event Tracking Implementation</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Replacing%20the%20Default%20Celog.dll&nbsp;(cgconreplacingprovidedcelogdll.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

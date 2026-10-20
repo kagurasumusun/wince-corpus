@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Databases</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Databases"/>
+<MSHelp:RLTitle Title="Databases"/>
+<MSHelp:Keyword Index="A" Term="_wcefiles_Using_a_Windows_CE_Database"/>
+<MSHelp:Keyword Index="K" Term="databases, Windows CE .NET database model"/>
+<MSHelp:Keyword Index="K" Term="storage, Windows CE .NET database model"/>
+<MSHelp:Keyword Index="A" Term="_wcefiles_Using_a_Windows_CE_Database"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: object_store.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_662762">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcefiles_using_a_windows_ce_database"></A>Databases</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Databases provide storage, access, and sorting of property-set records. The Windows CE database model is that of a small, flat structure, optimized for small, efficient storage. As such, the Windows CE database APIs do not correspond to the Win32 database APIs. Data operations are <I>transactioned</I>, within the object store or a database volume, which protects against data loss. If a Windows CE&#0150;based device loses power (reset or suspend/resume, where the RAM is refreshed) during a data transaction, Windows CE reverts all partial database operations to the last known good state. A file system that stores a database volume still has the ability to corrupt the volume.</P>
+
+<P>Before Windows CE 2.10, a Windows CE database could exist only in the object store. Effective with version 2.10, Windows CE supports databases anywhere on the device, including PC Cards and other installed file systems. Conceptually, the object store is a single, special database volume that is always mounted.</P>
+
+<P>Each Windows CE database contains a maximum of CEDB_MAXSORTORDER sort indices and one or more records. In Windows CE .NET, a sort order can contain a maximum of CEDB_MAXSORTPROP properties per sort order. The maximum size of a record is defined in the CEDB_MAXRECORDSIZE constant in Windbase.h and in Rapi.h for remote application programming interface (RAPI) calls. </P>
+
+<P>A record can have a variable number of properties, but it cannot contain another record. The maximum size of a property is defined in the CEDB_MAXPROPDATASIZE constant, and Windows CE allocates space for a record or property only when necessary. Effective in version 3.0, a new constant CEDB_MAXNUMRECORDS of 65,535 has been added to indicate the maximum number of records that can be added to a database. Before version 3.0, the maximum record limit was implicitly imposed by the maximum number of objects that could be placed in the object store. The following table shows the different types of available record properties.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Record property type</TH>
+<TH width=70%>Contains</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_BOOL</TD>
+<TD width=70%>Boolean value</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_CEBLOB</TD>
+<TD width=70%>Binary object</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_R8</TD>
+<TD width=70%>8-byte floating-point value</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_FILETIME</TD>
+<TD width=70%>Time and date data</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_I2</TD>
+<TD width=70%>2-byte signed integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_I4</TD>
+<TD width=70%>4-byte signed integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_LPWSTR</TD>
+<TD width=70%>Long pointer to a Unicode string</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_UI2</TD>
+<TD width=70%>2-byte unsigned integer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>CEVT_UI4</TD>
+<TD width=70%>4-byte unsigned integer</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The BOOL and floating-point properties are available only on Windows CE 2.10 and later.</BLOCKQUOTE>
+
+<P>The overhead associated with creating a record is 20 bytes per record; the overhead for a property is 4 bytes per property.</P>
+
+<P>In addition to records, a database contains a name and type identifier. The database name is a null-terminated string of up to 32 characters. The type identifier is application-specific and commonly used to identify similar databases. </P>
+
+<P>Because Windows CE is designed to operate in a relatively volatile environment, the Windows CE database does not update automatically only when the database opens or closes. Instead, the database updates after each individual transaction, such as a call to the <MSHelp:link keywords="cerefCeWriteRecordProps" TABINDEX="0">CeWriteRecordProps</MSHelp:link> function. A database volume is a file that contains all of the data that is necessary for the databases inside it. Individual database volumes can be up to 16 MB in Windows CE version 3.0</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Databases&nbsp;(_wcefiles_using_a_windows_ce_database.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

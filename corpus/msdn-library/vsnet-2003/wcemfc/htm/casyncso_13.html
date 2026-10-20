@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::GetSockOpt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_getsockopt"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_casyncsocket_getsockopt"></A>CAsyncSocket::GetSockOpt</H1>
+
+<P>This method retrieves the current value for an option associated with the socket.</P>
+
+<PRE class=syntax><B>BOOL GetSockOpt(
+int </B><I>nOptionName</I><B>,
+void* </B><I>lpOptionValue</I><B>,
+int* </B><I>lpOptionLen</I><B>,
+int </B><I>nLevel</I><B> = SOL_SOCKET );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nOptionName</I></DT>
+
+<DD>The socket option for which the value is to be retrieved.</DD>
+
+<DT><I>lpOptionValue</I></DT>
+
+<DD>A pointer to the buffer in which the value for the requested option is to be returned. The value associated with the selected option is returned in the buffer <I>lpOptionValue</I>. The integer pointed to by <I>lpOptionLen</I> should originally contain the size of this buffer in bytes; on return, it is set to the size of the value returned. For <B>SO_LINGER</B>, this is the size of a <B>LINGER</B> structure; for all other options it is the size of a <B>BOOL</B> or an <B>int</B>, depending on the option. See the list of options and sizes in the Remarks section. </DD>
+
+<DT><I>lpOptionLen</I></DT>
+
+<DD>A pointer to the size of the <I>lpOptionValue</I> buffer in bytes.</DD>
+
+<DT><I>nLevel</I></DT>
+
+<DD>The level at which the option is defined; the only supported levels are <B>SOL_SOCKET</B> and <B>IPPROTO_TCP</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero, and a specific error code can be retrieved by calling <B>GetLastError</B>. If an option was never set with <B>SetSockOpt</B>, then <B>GetSockOpt</B> returns the default value for the option. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</DD>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</DD>
+
+<DT>WSAEFAULT</DT>
+
+<DD>The <I>lpOptionLen</I> argument is invalid.</DD>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</DD>
+
+<DT>WSAENOPROTOOPT</DT>
+
+<DD>The option is unknown or unsupported. In particular, SO_BROADCAST is not supported on sockets of type SOCK_STREAM, while SO_ACCEPTCONN, SO_DONTLINGER, SO_KEEPALIVE, SO_LINGER, and SO_OOBINLINE are not supported on sockets of type SOCK_DGRAM.</DD>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>GetSockOpt</B> retrieves the current value for a socket option associated with a socket of any type, in any state, and stores the result in <I>lpOptionValue</I>. Options affect socket operations, such as the routing of packets, out-of-band data transfer, and so on.</P>
+
+<P>The following options are supported for <B>GetSockOpt</B>. Type identifies the type of data addressed by <I>lpOptionValue</I>. The <B>TCP_NODELAY</B> option uses level <B>IPPROTO_TCP</B>; all other options use level <B>SOL_SOCKET</B>.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=31%>Value</TH>
+<TH width=22%>Type</TH>
+<TH width=47%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_ACCEPTCONN</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Socket is listening.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_BROADCAST</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Socket is configured for the transmission of broadcast messages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_DEBUG</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Debugging is enabled. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_DONTLINGER</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>If true, the <B>SO_LINGER</B> option is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_DONTROUTE</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Routing is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_ERROR</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Retrieve error status and clear.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_KEEPALIVE</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Keep-alive packet is being sent.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_LINGER</B></TD>
+<TD width=22%><B>struct LINGER</B></TD>
+<TD width=47%>Returns the current linger options.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_OOBINLINE</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Out-of-band data is being received in the normal data stream.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_RCVBUF</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Buffer size for receives.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_REUSEADDR</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>The socket can be bound to an address which is already in use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_SNDBUF</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Buffer size for sends.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_TYPE</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>The type of the socket, for example, <B>SOCK_STREAM</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>TCP_NODELAY</B></TD>
+<TD width=22%><B>BOOL</B></TD>
+<TD width=47%>Disables the Nagle algorithm for send coalescing.</TD>
+</TR>
+</TABLE><BR>
+
+<P>The following Berkeley Software Distribution (BSD) options are not supported for <B>GetSockOpt</B>.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=31%>Value</TH>
+<TH width=22%>Type</TH>
+<TH width=47%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_RCVLOWAT</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Receive low water mark</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_RCVTIMEO</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Receive timeout</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_SNDLOWAT</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Send low water mark</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>SO_SNDTIMEO</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Send timeout</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>IP_OPTIONS</B></TD>
+<TD width=22%>&nbsp;</TD>
+<TD width=47%>Get options in IP header</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>TCP_MAXSEG</B></TD>
+<TD width=22%><B>int</B></TD>
+<TD width=47%>Get TCP maximum segment size</TD>
+</TR>
+</TABLE><BR>
+
+<P>Calling <B>GetSockOpt</B> with an unsupported option results in an error code of <B>WSAENOPROTOOPT</B> being returned from <B>GetLastError</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_26.htm"><B>CAsyncSocket::SetSockOpt</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

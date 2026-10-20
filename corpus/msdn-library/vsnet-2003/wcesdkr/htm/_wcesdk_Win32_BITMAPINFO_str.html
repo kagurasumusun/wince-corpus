@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BITMAPINFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BITMAPINFO"/>
+<MSHelp:RLTitle Title="BITMAPINFO"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Win32_BITMAPINFO_str"/>
+<MSHelp:Keyword Index="K" Term="BITMAPINFO"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: gdi.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_win32_bitmapinfo_str"></A>BITMAPINFO</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure defines the dimensions and color information of a Windows-based device-independent bitmap (DIB). </P>
+
+<PRE class="syntax"><B>typedef</B> <B>struct</B> <B>tagBITMAPINFO</B> <B>{</B> <B>
+BITMAPINFOHEADER</B> <I>bmiHeader</I><B>;</B> <B>
+RGBQUAD</B> <I>bmiColors[1]</I><B>;</B> <B>
+}</B> <B>BITMAPINFO;</B> </PRE>
+
+<P class="label"><B>Members</B>
+
+<DL>
+<DT><B>bmiHeader</B></DT>
+
+<DD>Specifies a bitmap information header structure that contains information about the dimensions of color format. Use the <A HREF="_wcesdk_win32_bitmapinfoheader_str.htm"><B>BITMAPINFOHEADER</B></A> structure. </dd>
+
+<DT><B>bmiColors</B></DT>
+
+<DD>Contains one of the following: 
+
+<UL type="disc">
+	<LI>An array of <A HREF="_wcesdk_win32_rgbquad_str.htm"><B>RGBQUAD</B></A>. The elements of the array make up the color table.</li>
+
+	<LI>An array of 16-bit unsigned integers that specifies indexes into the currently realized logical palette. This use of <B>bmiColors</B> is allowed for functions that use DIBs. When <B>bmiColors</B> elements contain indexes to a realized logical palette, they must also call the following bitmap functions: <A HREF="_wcesdk_win32_createdibpatternbrushpt.htm"><B>CreateDIBPatternBrushPt</B></A> and <A HREF="_wcesdk_win32_createdibsection.htm"><B>CreateDIBSection</B></A>. The i<I>Usage</I> parameter of <B>CreateDIBSection</B> must be set to DIB_PAL_COLORS. 
+<P>The number of entries in the array depends on the values of the <B>biBitCount</B> and <B>biClrUsed</B> members of the <B>BITMAPINFOHEADER</B> structure. 
+
+<P>The colors in the <B>bmiColors</B> table appear in order of importance. For more information, see the “Remarks” section. 
+</li>
+</UL>
+</dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>A device-independent bitmap consists of two distinct parts: a <B>BITMAPINFO</B> structure describing the dimensions and colors of the bitmap, and an array of bytes defining the pixels of the bitmap. The bits in the array are packed together, but each scan line must be padded with zeroes to end on a <B>LONG</B> data-type boundary. If the height of the bitmap is positive, the bitmap is a bottom-up DIB and its origin is the lower-left corner. If the height is negative, the bitmap is a top-down DIB and its origin is the upper left corner. </P>
+
+<P>A bitmap is packed when the bitmap array immediately follows the <B>BITMAPINFO</B> header. Packed bitmaps are referenced by a single pointer. For packed bitmaps, the <B>ClrUsed</B> member of the <B>BITMAPINFOHEADER</B> structure must be set to an even number when using the DIB_PAL_COLORS mode so the DIB bitmap array starts on a <B>DWORD</B> boundary. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The <B>bmiColors</B> member should not contain palette indexes if the bitmap is stored in a file or transferred to another application. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Unless the application has exclusive use and control of the bitmap, the bitmap color table should contain explicit RGB values. </BLOCKQUOTE>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Wingdi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+
+<P class="label"><B>See</B> <B>Also</B></P>
+
+<P><A HREF="_wcesdk_win32_createdibpatternbrushpt.htm"><B>CreateDIBPatternBrushPt</B></A>, <A HREF="_wcesdk_win32_createdibsection.htm"><B>CreateDIBSection</B></A>, <A HREF="_wcesdk_win32_setclipboarddata.htm"><B>SetClipboardData</B></A>, <A HREF="_wcesdk_win32_bitmapinfoheader_str.htm"><B>BITMAPINFOHEADER</B></A>, <A HREF="_wcesdk_win32_logbrush_str.htm"><B>LOGBRUSH</B></A>, <A HREF="_wcesdk_win32_rgbquad_str.htm"><B>RGBQUAD</B></A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;BITMAPINFO&nbsp;(_wcesdk_win32_bitmapinfo_str.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

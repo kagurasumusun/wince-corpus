@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Changing the Properties of an Existing Route</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Changing the Properties of an Existing Route"/>
+<MSHelp:RLTitle Title="Changing the Properties of an Existing Route"/>
+<MSHelp:Keyword Index="A" Term="cmconChangingPropertiesOfExistingRoute"/>
+<MSHelp:Keyword Index="K" Term="IP Helper, changing properties of existing routes"/>
+<MSHelp:Keyword Index="K" Term="IP routing, changing properties of existing route using IP Helper"/>
+<MSHelp:Keyword Index="K" Term="routing, changing properties of existing route using IP Helper"/>
+<MSHelp:Keyword Index="A" Term="cmconChangingPropertiesOfExistingRoute"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: iphelper_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749411">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconchangingpropertiesofexistingroute"></A>Changing the Properties of an Existing Route</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This code sample finds a route in the table and changes its metric to NewMetric. The metric change must be viable otherwise TCP/IP will not accept it.</P>
+
+<PRE class="code">   PMIB_IPFORWARDTABLE pIpForwardTable = NULL;
+   ULONG dwSize = 0;
+   BOOL bOrder = FALSE;
+   DWORD dwStatus = 0;
+   DWORD Dest = 0xDDCCBBAA; // this is in host order Ip Address AA.BB.CC.DD is 0xDDCCBBAA
+   DWORD NewMetric = 3;
+
+   // Find out how big our buffer needs to be
+   dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   if (dwStatus == ERROR_INSUFFICIENT_BUFFER) {
+
+      // Allocate the memory for the table
+      if (!(pIpForwardTable = (PMIB_IPFORWARDTABLE)malloc(dwSize))) {
+         OutputMessage(TEXT("Malloc failed, Out of Memory!\r\n"));
+         exit(1);
+      }
+
+      // Now get the table
+      dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   }
+
+   if (dwStatus != ERROR_SUCCESS) {
+      OutputMessage(TEXT("GetIpForwardTable Failed, ERROR %d\r\n"), dwStatus);
+      if (pIpForwardTable) 
+         free(pIpForwardTable);
+      exit(1);
+   }
+   
+   // Search for the row in the table that is wanted.
+   for (unsigned long int i=0; i &lt; pIpForwardTable-&gt;dwNumEntries; i++) {
+      if (pIpForwardTable-&gt;table[i].dwForwardDest == 0x0000389D) {
+         
+         pIpForwardTable-&gt;table[i].dwForwardMetric1 = 3;
+
+         // Delete the old default gateway entry
+         dwStatus = SetIpForwardEntry(&amp;(pIpForwardTable-&gt;table[i]));
+
+         if (dwStatus != ERROR_SUCCESS) {
+            OutputMessage(TEXT("Could not change route metric\n"));
+            exit(1);
+         }
+      }
+   }           
+
+   if (dwStatus == NO_ERROR)
+      OutputMessage(TEXT("Metric changed successfully\n"));
+   else if (dwStatus == ERROR_INVALID_PARAMETER)
+      OutputMessage(TEXT("Invalid Parameter\n"));
+   else 
+      DisplayErrorMessage(dwStatus);
+
+   // Free resources
+   if (pIpForwardTable) 
+      free(pIpForwardTable);
+   if (pRow)
+      free(pRow);
+</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Changing%20the%20Properties%20of%20an%20Existing%20Route&nbsp;(cmconchangingpropertiesofexistingroute.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

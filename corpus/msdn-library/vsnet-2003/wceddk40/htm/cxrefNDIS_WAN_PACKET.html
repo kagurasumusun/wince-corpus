@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_WAN_PACKET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_WAN_PACKET"/>
+<MSHelp:RLTitle Title="NDIS_WAN_PACKET"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_WAN_PACKET"/>
+<MSHelp:Keyword Index="K" Term="NDIS_WAN_PACKET"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_WAN_PACKET"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690529">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndis_wan_packet"></A>NDIS_WAN_PACKET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure contains the packet passed to the <A HREF="cxrefminiportwansend.htm">MiniportWanSend</A> functions of WAN NIC drivers.</P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_WAN_PACKET {</B>
+<B>LIST_ENTRY </B><I>WanPacketQueue</I><B>;</B>
+<B>PUCHAR </B><I>CurrentBuffer</I><B>;</B>
+<B>ULONG </B><I>CurrentLength</I><B>;</B>
+<B>PUCHAR </B><I>StartBuffer</I><B>;</B>
+<B>PUCHAR </B><I>EndBuffer</I><B>;</B>
+<B>PVOID </B><I>ProtocolReserved1</I><B>;</B>
+<B>PVOID </B><I>ProtocolReserved2</I><B>;</B>
+<B>PVOID </B><I>ProtocolReserved3</I><B>;</B>
+<B>PVOID </B><I>ProtocolReserved4</I><B>;</B>
+<B>PVOID </B><I>MacReserved1</I><B>;</B>
+<B>PVOID </B><I>MacReserved2</I><B>;</B>
+<B>PVOID </B><I>MacReserved3</I><B>;</B>
+<B>PVOID </B><I>MacReserved4</I><B>;</B>
+<B>} NDIS_WAN_PACKET, *PNDIS_WAN_PACKET;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>WanPacketQueue</B></DT>
+
+<DD>Specifies the head of the send packet queue used by <B>MiniportWanSend </B>while the miniport is processing this packet.</dd>
+
+<DT><B>CurrentBuffer</B></DT>
+
+<DD>Specifies the base virtual address within the given buffer at which the net packet to be transmitted starts.</dd>
+
+<DT><B>CurrentLength</B></DT>
+
+<DD>Specifies the number of bytes of network packet data.</dd>
+
+<DT><B>StartBuffer</B></DT>
+
+<DD>Specifies the base virtual address for the given buffer, including padding.</dd>
+
+<DT><B>EndBuffer</B></DT>
+
+<DD>Specifies the virtual address for the end of the given buffer, including padding.</dd>
+
+<DT><B>ProtocolReserved1</B></DT>
+
+<DD>Specifies members reserved for use by protocols.</dd>
+
+<DT><B>ProtocolReserved2</B></DT>
+
+<DD>Specifies members reserved for use by protocols.</dd>
+
+<DT><B>ProtocolReserved3</B></DT>
+
+<DD>Specifies members reserved for use by protocols.</dd>
+
+<DT><B>ProtocolReserved4</B></DT>
+
+<DD>Specifies members reserved for use by protocols.</dd>
+
+<DT><B>MacReserved1</B></DT>
+
+<DD>Specifies members that the miniport can use for its own purposes.</dd>
+
+<DT><B>MacReserved2</B></DT>
+
+<DD>Specifies members that the miniport can use for its own purposes.</dd>
+
+<DT><B>MacReserved3</B></DT>
+
+<DD>Specifies members that the miniport can use for its own purposes.</dd>
+
+<DT><B>MacReserved4</B></DT>
+
+<DD>Specifies members that the miniport can use for its own purposes.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When a protocol calls <A HREF="_wceddk_ndissend.htm">NdisSend</A> with an <A HREF="cxconndis_packet.htm">NDIS_PACKET</A>-type transmit request for an underlying WAN NIC driver, the WAN protocol driver transforms the given packet into a packet formatted as this structure before calling the underlying driver's <B>MiniportWanSend</B> function.</P>
+
+<P>The <B>StartBuffer</B> and <B>EndBuffer</B> pointers specify a discrete virtual range. <B>CurrentBuffer</B> and <B>CurrentLength</B> specify a proper subrange of the range specified by <B>StartBuffer</B> and <B>EndBuffer</B>. Consequently, one of the following formulas yields the number of bytes of header or tail padding, if any, for the buffer passed in this structure to <B>MiniportWanSend</B>:
+
+<UL type="disc">
+	<LI>HeaderPadding = <B>CurrentBuffer</B> &#0150; <B>StartBuffer</B></li>
+
+	<LI>TailPadding = <B>EndBuffer</B> &#0150; (<B>CurrentBuffer</B> + <B>CurrentLength</B>)</li>
+</UL>
+
+<P>The WAN protocol driver always gives the underlying NIC driver at least as much header and tail padding as the driver returned in response to the <A HREF="cxtskoid_wan_get_info.htm">OID_WAN_GET_INFO</A> query during initialization.</P>
+
+<P><B>MiniportWanSend</B> can manipulate the buffer data in any manner. Until it completes a given send packet, either by returning a status other than <B>NDIS_STATUS_PENDING</B> from <B>MiniportWanSend</B> or by calling <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A>, the NIC driver retains ownership of the given packet and of everything it specifies except the <B>ProtocolReserved<I>XXX</I></B> members.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportwansend.htm">MiniportWanSend</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="cxconndis_packet.htm">NDIS_PACKET</A>, <A HREF="cxtskoid_wan_get_info.htm">OID_WAN_GET_INFO</A>, <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_WAN_PACKET&nbsp;(cxrefndis_wan_packet.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

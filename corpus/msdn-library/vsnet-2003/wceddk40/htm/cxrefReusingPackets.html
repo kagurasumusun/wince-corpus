@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Reusing Packets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Reusing Packets"/>
+<MSHelp:RLTitle Title="Reusing Packets"/>
+<MSHelp:Keyword Index="A" Term="cxrefReusingPackets"/>
+<MSHelp:Keyword Index="K" Term="NDIS, reusing packets"/>
+<MSHelp:Keyword Index="K" Term="packets, reusing"/>
+<MSHelp:Keyword Index="A" Term="cxrefReusingPackets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758529">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefreusingpackets"></A>Reusing Packets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Ownership of protocol-allocated packet resources for sends reverts to the protocol driver when <A HREF="_wceddk_ndissend.htm">NdisSend</A> returns anything other than NDIS_STATUS_PENDING or when the driver's <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A> function is called. Then the protocol driver can reclaim the returned packet resources for subsequent sends or for copying received data in <A HREF="cxrefimplementingprotocolreceivehandler.htm">Implementing a ProtocolReceive Handler</A>. </P>
+
+<P>It is more efficient for a protocol driver to reinitialize and reuse the packet descriptor and buffers than to de-allocate these resources and then later reallocate them again for a subsequent send or data-transfer operation. A protocol usually exhibits better performance if it saves unchained buffer descriptors and buffers for reuse rather than de-allocating and re-allocating such resources.</P>
+
+<P>A protocol driver reinitializes a packet descriptor by calling <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A>. First, the protocol driver should take care to remove any chained buffers and their buffer descriptors by calling <B>NdisUnchainBufferAt<I>XXX</I></B> to release the buffer descriptors and the buffers mapped by these descriptors. Otherwise, <B>NdisReinitializePacket</B> sets the member that points to the chained buffer descriptors to NULL, so reinitializing the packet descriptor without first releasing and saving the chained buffer descriptors will cause a memory leak. Similarly, if the protocol and underlying driver use out-of-band information, the resources specified in the OOB data block associated with each packet descriptor must be reclaimed before a call to <B>NdisReinitializePacket</B>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtskpacketmanagement.htm">Protocol Driver Packet Management</A></P>
+
+<P><A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A></P>
+
+<P><A HREF="_wceddk_ndissend.htm">NdisSend</A></P>
+
+<P><A HREF="_wceddk_ndisunchainbufferatback.htm">NdisUnchainBufferAtBack</A></P>
+
+<P><A HREF="_wceddk_ndisunchainbufferatfront.htm">NdisUnchainBufferAtFront</A></P>
+
+<P><A HREF="cxrefimplementingprotocolreceivehandler.htm">Implementing a ProtocolReceive Handler</A></P>
+
+<P><A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Reusing%20Packets&nbsp;(cxrefreusingpackets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

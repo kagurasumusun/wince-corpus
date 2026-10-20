@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_PACKET_OOB_DATA</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_PACKET_OOB_DATA"/>
+<MSHelp:RLTitle Title="NDIS_PACKET_OOB_DATA"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_PACKET_OOB_DATA"/>
+<MSHelp:Keyword Index="K" Term="NDIS_PACKET_OOB_DATA"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_PACKET_OOB_DATA"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674063">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndis_packet_oob_data"></A>NDIS_PACKET_OOB_DATA</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure contains out-of-band (OOB) information associated with a packet descriptor that is used by drivers whose media supplies, requires, or accepts OOB information, such as information for an asynchronous transfer mode (ATM) NIC. In addition, it is used by drivers that support multipacket receives and/or sends.</P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_PACKET_OOB_DATA {</B>
+<B>union {</B>
+<B>   ULONGLONG </B><I>TimeToSend</I><B>;</B>
+<B>   ULONGLONG </B><I>TimeSent</I><B>;</B>
+<B>};</B>
+<B>ULONGLONG </B><I>TimeReceived</I><B>;</B>
+<B>UINT </B><I>HeaderSize</I><B>;</B>
+<B>UINT </B><I>SizeMediaSpecificInfo</I><B>;</B>
+<B>PVOID </B><I>MediaSpecificInformation</I><B>;</B>
+<B>NDIS_STATUS </B><I>Status</I><B>;</B>
+<B>} NDIS_PACKET_OOB_DATA, *PNDIS_PACKET_OOB_DATA;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>TimeToSend</B></DT>
+
+<DD>Specifies the time, in system time units, at which a given packet should be transmitted over the network.
+
+<P>Protocols can set this timestamp before passing an array of packet descriptor pointers to <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A> or a packet descriptor pointer to <A HREF="_wceddk_ndissend.htm">NdisSend</A>.
+
+
+<P>The <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A> or <A HREF="cxrefminiportsend.htm">MiniportSend</A> function of underlying drivers can retrieve the value of this timestamp to determine when the given packets should be transmitted over the network. Usually, only the lowest-level underlying driver retrieves this timestamp.
+</dd>
+
+<DT><B>TimeSent</B></DT>
+
+<DD>Specifies the time, in system time units, at which a received packet was transmitted over the network from a remote node.
+
+<P>NIC drivers and, possibly, intermediate drivers that export only a set of <B>Miniport<I>XXX</I></B> functions set this timestamp before indicating receive packets.
+
+
+<P>The <B>ProtocolReceivePacket</B> functions of drivers bound above such a miniport can retrieve the value of this timestamp to determine when any particular packet was transmitted from the remote node. If the <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function is given an indication and the underlying driver sets this timestamp, <B>ProtocolReceive</B> can call <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> and <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A> to retrieve the packet that contains this timestamp.
+</dd>
+
+<DT><B>TimeReceived</B></DT>
+
+<DD>Specifies the time, in system time units, at which a given packet from a remote node on the network was received on the NIC.
+
+<P>NIC drivers and, possibly, intermediate drivers that export only a set of <B>Miniport<I>XXX</I></B> functions set this timestamp before calling <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> with a packet array, which can have one or more pointers to packet descriptors.
+
+
+<P>The <A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A> functions of drivers bound above any such miniport can retrieve the value of this timestamp to determine when the given packets were received. If the <B>ProtocolReceive</B> function is given an indication and the underlying driver sets this timestamp, <B>ProtocolReceive</B> can call <B>NdisGetReceivedPacket</B> and <B>NDIS_GET_ORIGINAL_PACKET</B> to retrieve the packet that contains this timestamp.
+</dd>
+
+<DT><B>HeaderSize</B></DT>
+
+<DD>Specifies the size, in bytes, of the medium-specific header contained in the buffer mapped by the initial buffer descriptor chained to the packet descriptor.
+
+<P>Lower-level drivers set this member for subsequent receive indications according to the medium each driver's <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> function elected to support.
+
+
+<P>The <B>ProtocolReceivePacket</B> functions of drivers bound above such a miniport can retrieve the value of this member to determine how to process the medium-specific net packet.
+</dd>
+
+<DT><B>SizeMediaSpecificInfo</B></DT>
+
+<DD>Specifies the size, in bytes, of the buffer at <A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A>.
+
+<P>A driver must set this member if it supplies OOB information with a packet to be sent or indicated.
+</dd>
+
+<DT><B>MediaSpecificInformation</B></DT>
+
+<DD>Specifies the address of a driver-allocated buffer. This buffer contains any OOB data, such as information for an ATM NIC that accompanies the net packet specified with the packet descriptor. The OOB data has been set up either by the allocating protocol for a send or by the allocating miniport for a receive indication.
+
+<P>Either type of driver can retrieve the address of the OOB data buffer and its size to determine how to process or interpret the send or receive specified with the incoming packet descriptor. If the <B>ProtocolReceive</B> function is given an indication and the underlying driver supplies this information, <B>ProtocolReceive</B> can call <B>NdisGetReceivedPacket</B> and <B>NDIS_GET_ORIGINAL_PACKET</B> to retrieve the packet that contains the virtual range of this buffer.
+</dd>
+
+<DT><B>Status</B></DT>
+
+<DD>Specifies the status of the packet descriptor and the ownership of all driver-allocated resources specified with the packet descriptor.
+
+<P>Only lower-level drivers and NDIS set this member.
+
+
+<P>In the receive path, a miniport can set this member before it calls <B>NdisMIndicateReceivePacket</B> to indicate how soon it needs to regain ownership of its allocated resources specified in the associated packet descriptors. A serialized miniport can retrieve this value on return from <B>NdisMIndicateReceivePacket</B> to determine whether the resources specified with the packet descriptor for its indication can be prepared for reuse immediately.
+
+
+<P>In the send path, a serialized miniport can set this member in its <B>MiniportSendPackets</B> function to complete an incoming send immediately, to notify NDIS that it will complete the request asynchronously, or to request that NDIS requeue some or all of the incoming packet array and resubmit those packet descriptors to <B>MiniportSendPackets</B> later.
+
+
+<P>A protocol cannot retrieve this value to determine the completion status of a send on return from its call to <B>NdisSendPackets</B> or <B>NdisSend</B>.
+
+
+<P>A deserialized or connection-oriented miniport cannot complete a multipacket send synchronously or request (by setting the <B>Status</B> member) that NDIS requeue some or all of an incoming packet array. Instead, a deserialized or connection-oriented miniport must queue internally the entire incoming packet array if it cannot send the data immediately and must always complete a multipacket send asynchronously with <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A> for each packet in the array.
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Every packet descriptor allocated with <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A> has an associated <A HREF="#_wceddk_ndis_packet_oob_data">NDIS_PACKET_OOB_DATA</A> block. Only drivers that support multipacket sends and/or receives and drivers that supply OOB information, such as packet priority, with each network packet to be transferred use the OOB block. Nevertheless, every NDIS driver that allocates packet descriptors for transfers between bound drivers must allocate those packet descriptors with <B>NdisAllocatePacket</B> from the packet pool that each such NDIS driver usually allocates when it initializes.</P>
+
+<P>In general, drivers of high-capacity busmaster DMA NICs are most likely to support multipacket receives and sends because such a NIC driver makes the greatest performance gains by supporting multipacket transfers. Any protocol that binds itself to, or above, such an underlying NIC driver also should support multipacket sends and receives for maximum performance.</P>
+
+<P>If such a protocol also binds itself above another NIC driver without multipacket transfer support, NDIS handles multipacket sends and single-packet receives in a manner transparent to both drivers by always calling the protocol's <B>ProtocolReceive</B> function and by calling that NIC driver's <B>MiniportSend</B> function with a single packet per call. Similarly, if a protocol that does not support multipacket transfers binds itself above a NIC driver that does, NDIS handles multipacket receive indications and single packet sends in a manner transparent to both drivers, although the <B>MiniportSendPackets</B> function of the underlying NIC driver is given only a single send request per call to <B>NdisSend</B> from such a protocol.</P>
+
+<P class="label"><B>Using Timestamps</B></P>
+
+<P>All timestamps set in the <B>NDIS_PACKET_OOB_DATA</B> blocks associated with packet descriptors are expressed in system time units as the number of 100-nanosecond intervals since 12:00 A.M. January 1, 1601.</P>
+
+<P>NDIS drivers can call <A HREF="_wceddk_ndisgetcurrentsystemtime.htm">NdisGetCurrentSystemTime</A> when they set these timestamps with the <B>NDIS_SET_PACKET_TIME_<I>XXX</I></B> macros. Still higher-level drivers or system components can convert these timestamps into locale-specific values more meaningful to the end user.</P>
+
+<P class="label"><B>Supplying OOB Information with Packets</B></P>
+
+<P>Any OOB information specified in the <B>SizeMediaSpecificInfo</B> and <B>MediaSpecificInformation</B> members is medium-type-specific. For example, some types of media require protocols to specify a packet priority for each packet they send and require NIC drivers to specify a packet priority with each receive packet they indicate. Such a NIC driver must call <B>NdisMIndicateReceivePacket</B> to fulfill the requirements of these types of media.</P>
+
+<P>While NDIS provides support for a range of priority values from 0 through 7, some media support only two levels of priority. For these types of media, NDIS drivers should map values 0 through 3 to the medium-specific normal priority value (usually 0 for such media types) and values 4 through 7 to the medium-specific high-priority value (usually one for such media types).</P>
+
+<P>For additional information about the structure of individual records within the buffer at <B>MediaSpecificInformation, </B>see<B> </B><A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A>, <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="cxrefminiportreturnpacket.htm">MiniportReturnPacket</A>, <A HREF="cxrefminiportsend.htm">MiniportSend</A>, <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A>, <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="_wceddk_ndisgetcurrentsystemtime.htm">NdisGetCurrentSystemTime</A>, <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A>, <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A>, <A HREF="_wceddk_ndis_get_packet_status.htm">NDIS_GET_PACKET_STATUS</A>, <A HREF="_wceddk_ndis_oob_data_from_packet.htm">NDIS_OOB_DATA_FROM_PACKET</A>, <A HREF="#_wceddk_ndis_packet_oob_data">NDIS_PACKET_OOB_DATA</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A>, <A HREF="_wceddk_ndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A>, <A HREF="cxtskoid_802_3_mac_options.htm">OID_802_3_MAC_OPTIONS</A>, <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A>, <A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A>, <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_PACKET_OOB_DATA&nbsp;(_wceddk_ndis_packet_oob_data.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

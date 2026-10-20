@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFont::FromHandle</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cfont_fromhandle"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cfont_fromhandle"></A><SUP></SUP>CFont::FromHandle</H1>
+
+<P>This method obtains a pointer to a <B>CFont</B> object when given an <B>HFONT</B> handle to a Windows CE GDI font object. If a <B>CFont</B> object is not already attached to the handle, a temporary <B>CFont</B> object is created and attached. This temporary <B>CFont</B> object is valid only until the next time the application has idle time in its event loop, at which time all temporary graphic objects are deleted. An alternate way to state this is that the temporary object is valid only during the processing of one window message.</P>
+
+<PRE class=syntax><B>static CFont* PASCAL FromHandle(
+HFONT </B><I>hFont</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hFont</I></DT>
+
+<DD>Specifies an <B>HFONT</B> handle to a Windows CE font.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A pointer to a <B>CFont</B> object if successful; otherwise, it is <B>NULL</B>.</P>
+
+<H4>Example</H4>
+
+<PRE>// This code fragment shows how to create a font object using
+// Windows API CreateFontIndirect(), convert the HFONT to a
+// CFont* before selecting the font object into a DC (device
+// context) for text drawing, and finally delete the font object.
+
+// Initialize a CFont object with the characteristics given
+// in a LOGFONT structure.
+LOGFONT lf;
+memset(&amp;lf, 0, sizeof(LOGFONT));          // Clear out structure.
+lf.lfHeight = 12;                         // Request a 12-pixel-height
+                                          // font.
+lstrcpy(lf.lfFaceName, _T("Arial"));
+// Request a face name "Arial".
+HFONT hfont = ::CreateFontIndirect(&amp;lf);  // Create the font.
+
+// Convert the HFONT to CFont*.
+CFont* pfont = CFont::FromHandle(hfont);
+
+// Use the font you just created.
+CClientDC dc(this);
+CFont* def_font = dc.SelectObject(pfont);
+dc.ExtTextOut(5, 5, ETO_OPAQUE, NULL, _T("Hello"), NULL);
+dc.SelectObject(def_font);
+
+// Finished with the font, now delete the font object.
+::DeleteObject(hfont);
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Web Server Authentication</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Web Server Authentication"/>
+<MSHelp:RLTitle Title="Web Server Authentication"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Authentication"/>
+<MSHelp:Keyword Index="K" Term="authentication, Web server"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Authentication"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: webserver_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_662804">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_authentication"></A>Web Server Authentication</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The authentication level for a virtual directory can be set to 0, 1, or 2. The following table describes each value.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Value : type</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B>=0</TD>
+<TD width=74%>Anonymous users can access the virtual directory and may have permission to read and execute scripts, depending on the P value for the virtual directory. With A=0, anyone who can access the Web server can access files in that virtual directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B>=1</TD>
+<TD width=74%>A valid user identifier and password are required to access a virtual directory with authentication that is set to A=1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A</B>=2</TD>
+<TD width=74%>Virtual directories with an authentication value set to A=2 require the browser user to have Administrator privileges. A valid user identifier and password are required to gain access to this virtual directory.</TD>
+</TR>
+</table></div>
+
+<P>The first attempt by a user to access a virtual directory that has an authentication value of 1 or 2 results in a 401 - Unauthorized status code that is sent back to the browser. The forms of acceptable authentication are sent to the browser in the Httpd header fields of the message. The authentication types that are sent depend on the values that are set for Basic and NTLM under the <B>HKEY_LOCAL_MACHINE\COMM\HTTPD</B> protected registry key. By setting both Basic and NTLM values to 1, the Web server sends both authentication types in response to the same request, allowing the client browser to select the authentication method. A script can also include an authentication scheme by setting the WWW-Authenticate field and the desired value in the Httpd headers.</P>
+
+<P>If Basic authentication is used, the client browser sends the user identifier and password over the network in plain text unless SSL is enabled for the connection. The Web server then checks the password against the client browser's network password on that local computer. The password can be set in the <B>Control Panel</B> under <B>Communications</B>. If this fails, the Web server attempts to authenticate the user with NTLM, by using the same user name and password, as well as the domain controller, if one exists and if NTLM has been enabled in the registry. This authentication process is transparent to the client browser.</P>
+
+<P>If the client uses NTLM authentication, the Web server and the client browser negotiate a means through which the client browser can send the password across the network in an encrypted format. The Web server acts as the middleman in this case, sending the requests between the authenticating domain controller and the client browser. The Web server determines which domain controller to use for pass-through authentication, based on the <B>HKEY_LOCAL_MACHINE\COMM\Redir\DefaultDomain</B> protected registry key. The Web server never has access to the client's plain-text password when it communicates with the client browser using NTLM.</P>
+
+<P>If the user identifier and password are not valid, the Web server sends another 401 - Unauthorized status code to the browser.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_http_authentication_and_permissions.htm">Web Server Authentication and Permissions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Web%20Server%20Authentication&nbsp;(_wcesdk_authentication.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

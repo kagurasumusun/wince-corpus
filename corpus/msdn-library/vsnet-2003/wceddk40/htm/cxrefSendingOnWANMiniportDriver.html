@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sending on a WAN Miniport Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sending on a WAN Miniport Driver"/>
+<MSHelp:RLTitle Title="Sending on a WAN Miniport Driver"/>
+<MSHelp:Keyword Index="A" Term="cxrefSendingOnWANMiniportDriver"/>
+<MSHelp:Keyword Index="K" Term="miniport drivers, NDISWAN packet transmission"/>
+<MSHelp:Keyword Index="K" Term="NDIS, WAN miniport driver packet transmission"/>
+<MSHelp:Keyword Index="K" Term="WAN miniport drivers, NDISWAN packet transmission"/>
+<MSHelp:Keyword Index="A" Term="cxrefSendingOnWANMiniportDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758607">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefsendingonwanminiportdriver"></A>Sending on a WAN Miniport Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An upper-layer driver calls the <A HREF="_wceddk_ndissend.htm">NdisSend</A> function to send packets to an underlying WAN miniport driver. The NDISWAN intermediate driver in turn forwards those packets from the upper-layer driver. Before NDISWAN forwards packets, it repackages them. NDISWAN also reformats the structure of packets from <A HREF="cxtskpacketstructure.htm">NDIS Packet Structure</A> structures into <A HREF="cxrefndis_wan_packet.htm">NDIS_WAN_PACKET</A> structures before forwarding.</P>
+
+<P>After NDISWAN forwards packets, NDIS in turn calls the WAN miniport driver's send function. For a standard WAN miniport driver, this send function is <A HREF="cxrefminiportwansend.htm">MiniportWanSend</A>. <B>MiniportWanSend</B> transmits packets through the NIC onto the wide area network. </P>
+
+<P>Ownership of both the packet descriptor and the packet data is transferred to the WAN miniport driver until the send completes, either synchronously or asynchronously. The WAN miniport driver returns NDIS_STATUS_PENDING from its send function to indicate that it has not finished transmitting the packet. For a standard WAN miniport driver, this completion function is <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A>. </P>
+
+<P>These completion calls do not necessarily imply that a packet has been transmitted, although, with the exception of intelligent NICs, the packet generally has been transmitted. These calls do, however, mean that the WAN miniport driver is ready to release ownership of the packet. </P>
+
+<P>If the WAN miniport driver returns a status other than NDIS_STATUS_PENDING, the send operation is considered complete, and ownership of the packet immediately reverts to the caller. In this case, the WAN miniport driver does not call a completion function for that packet.</P>
+
+<P>After the WAN miniport driver receives the packets, it should send the packets out on the active connection.</P>
+
+<P>Unlike LAN miniport drivers, the WAN miniport driver <I>cannot</I><B> </B>return a status of NDIS_STATUS_RESOURCES to indicate that it does not have enough resources currently available to process the transmission of packets. Instead, the WAN miniport driver should queue the send internally for a later time and perhaps lower the send-window value on the connection. This send-window value is the number of outstanding packets that the WAN miniport driver can handle per connection, and is specified by the miniport driver to an upper-layer driver. </P>
+
+<P>The WAN miniport driver specifies the default number of outstanding packets that it can have per data channel in the <B>MaxTransmit</B> member of the <A HREF="cxrefndis_wan_info.htm">NDIS_WAN_INFO</A> structure. The miniport driver provides this structure when the miniport driver responds to the <A HREF="cxtskoid_wan_get_info.htm">OID_WAN_GET_INFO</A> request from the protocol driver. However, the miniport driver can manage the send window dynamically and on a per-line basis by calling <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A> with a line-up indication. In this call, the miniport driver provides a new nonzero value for the <B>SendWindow</B> member of the <A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A> structure passed in the call. If the miniport driver sets the value of the <B>SendWindow</B> member to 0, NDISWAN uses the default value in <B>MaxTransmit</B> for that line.</P>
+
+<P>The standard WAN miniport driver might have to modify or add to the header as well as add to the end (tail) of the packet (for example, to add the FCS). The miniport driver provided appropriate padding at the beginning and end of the packet previously. The WAN miniport driver can alter the data in the packet in any way it sees fit in order to send that packet on the WAN medium. </P>
+
+<P>It is also an error for the WAN miniport driver to call the <A HREF="_wceddk_ndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A> function.</P>
+
+<P>Packets that are passed to the WAN miniport driver's send function will contain simple HDLC PPP framing if PPP framing is set. For SLIP or RAS framing, packets contain only the data portion with no framing whatsoever. Simple HDLC PPP framing is discussed later in more detail. </P>
+
+<P>A WAN NIC driver must <I>not</I> attempt to provide software loopback or promiscuous-mode loopback. Both of these loopback types are fully supported in the NDISWAN driver.</P>
+
+<P>The following list shows information about the NDIS WAN packet.
+
+<UL type="disc">
+	<LI>The <B>MacReserved</B><I>x</I> members as well as the <B>WanPacketQueue</B> member of the NDIS_WAN_PACKET structure<I> </I>is fully available for use by the standard WAN miniport driver. </li>
+
+	<LI>The available header padding is simply <B>CurrentBuffer</B>-<B>StartBuffer</B>. The available tail padding is <B>EndBuffer</B>-(<B>CurrentBuffer</B>+<B>CurrentLength</B>). The header and tail padding is guaranteed to be at least the amount requested, but it can be more. </li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconndiswansupport.htm">WAN Miniport Drivers</A></P>
+
+<P><A HREF="cxrefminiportwansend.htm">MiniportWanSend</A></P>
+
+<P><A HREF="cxtskpacketstructure.htm">NDIS Packet Structure</A></P>
+
+<P><A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A> </P>
+
+<P><A HREF="cxrefndis_wan_info.htm">NDIS_WAN_INFO</A></P>
+
+<P><A HREF="cxrefndis_wan_packet.htm">NDIS_WAN_PACKET</A> </P>
+
+<P><A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A> </P>
+
+<P><A HREF="_wceddk_ndismsendresourcesavailable.htm">NdisMSendResourcesAvailable</A></P>
+
+<P><A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A></P>
+
+<P><A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A></P>
+
+<P><A HREF="_wceddk_ndissend.htm">NdisSend</A> </P>
+
+<P><A HREF="cxtskoid_wan_get_info.htm">OID_WAN_GET_INFO</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sending%20on%20a%20WAN%20Miniport%20Driver&nbsp;(cxrefsendingonwanminiportdriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

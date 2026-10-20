@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CException::Delete</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CException::Delete"/>
+<MSHelp:RLTitle Title="CException::Delete"/>
+<MSHelp:Keyword Index="A" Term="aflrfCExceptioncolcolDelete"/>
+<MSHelp:Keyword Index="K" Term="Delete method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCExceptioncolcolDelete"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cexceptn.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710350">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcexceptioncolcoldelete"></A>CException::Delete</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method checks to see if the <B>CException </B>object was created on the heap, and if so, it calls the <B>delete</B> operator on the object. When deleting a <B>CException </B>object, use the <B>Delete</B> method to delete the exception. Do not use the <B>delete</B> operator directly, because the <B>CException</B> object may be a global object or have been created on the stack.</P>
+
+<P>You can specify whether the object should be deleted when the object is constructed. For more information, see <A HREF="aflrfcexceptioncolcolcexception.htm"><B>CException::CException</B></A>.</P>
+
+<P>You only need to call <B>Delete</B> if you are using the C++ <B>try</B>-<B>catch</B> mechanism, which is not supported for Window CE. If you are using the MFC macros <B>TRY</B> and <B>CATCH</B>, these macros automatically call this function.</P>
+
+<PRE class="syntax"><B>void Delete( );</B><I> </I></PRE>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">CFile* pFile = NULL;
+
+   // Constructing a CFile object with this override may throw
+   // a CFile exception, and will not throw any other exceptions.
+   // Calling CString::Format() may throw a CMemoryException,
+   // so we have a catch block for such exceptions. Any
+   // other exception types this function throws will be
+   // routed to the calling function.
+
+   // Note that this example performs the same actions as the 
+   // example for CATCH, but uses C++ try/catch syntax instead
+   // of using the MFC TRY/CATCH macros. This sample must use
+   // CException::Delete() to delete the exception objects
+   // before closing the catch block, while the CATCH example
+   // implicitly performs the deletion through the macros.
+
+   try
+   {
+      pFile = new CFile(_T("C:\\WINDOWS\\SYSTEM.INI"),
+         CFile::modeRead | CFile::shareDenyNone);
+
+      DWORD dwLength = pFile-&gt;GetLength();
+
+      CString str;
+      str.Format(_T("Your SYSTEM.INI file is %u bytes long."),
+         dwLength);
+
+      AfxMessageBox(str);
+   }
+   catch(CFileException* pEx)
+   {
+      // Simply show an error message to the user.
+
+      pEx-&gt;ReportError();
+      pEx-&gt;Delete();
+   }
+   catch(CMemoryException* pEx)
+   {
+      // We can not recover from this memory exception, so we will
+      // just terminate the app without any cleanup. Normally,
+      // an application should do everything it possibly can to
+      // clean up properly and _not_ call AfxAbort().
+
+      pEx-&gt;Delete();
+      AfxAbort();
+   }
+
+   // If an exception occurrs in the CFile constructor,
+   // the language will free the memory allocated by new
+   // and will not complete the assignment to pFile.
+   // Thus, our clean-up code needs to test for NULL.
+
+   if (pFile != NULL)
+   {
+      pFile-&gt;Close();
+      delete pFile;
+   }</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afx.h</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710350', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

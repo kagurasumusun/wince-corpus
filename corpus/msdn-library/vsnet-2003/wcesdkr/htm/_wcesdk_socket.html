@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>socket</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="socket"/>
+<MSHelp:RLTitle Title="socket"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_socket"/>
+<MSHelp:Keyword Index="K" Term="socket"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_socket"></A>socket</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function creates a socket. </P>
+
+<PRE class="syntax"><B>SOCKET</B> <B>socket</B> <B>(
+int</B> <I>af</I><B>, 
+int</B> <I>type</I><B>, 
+int</B> <I>protocol </I><B>);</B> </PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>af</I></DT>
+
+<DD>[in] Address family specification.</dd>
+
+<DT><I>type</I></DT>
+
+<DD>[in] Type specification for the new socket.
+
+<P>The following are the only two <I>type</I> specifications supported for Windows Sockets 1.1:
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>SOCK_STREAM</TD>
+<TD width=75%>Provides sequenced, reliable, two-way, connection-based byte streams with an out-of-band data transmission mechanism. Uses TCP for the Internet address family.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>SOCK_DGRAM</TD>
+<TD width=75%>Supports datagrams, which are connectionless, unreliable buffers of a fixed (typically small) maximum length. Uses UDP for the Internet address family.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>protocol</I></DT>
+
+<DD>[in] Particular protocol to be used with the socket that is specific to the indicated address family.</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>A descriptor referencing the new socket indicates that no error occurred. INVALID_SOCKET indicates failure. To get a specific error value, call <B>WSAGetLastError</B>.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>For Infrared Sockets (IrSock), this function has the following additional requirements:
+
+<UL type="disc">
+	<LI>Af_irda.h must be explicitly included.</li>
+
+	<LI>Set the <I>af</I> parameter to AF_IRDA, and set the <I>protocol</I> parameter to NULL.</li>
+</UL>
+
+<P>The PF_INET and AF_IRDA ARPA Internet address formats are supported. </P>
+
+<P>The <B>socket</B> function causes a socket descriptor and any related resources to be allocated and bound to a specific transport service provider. Windows Sockets will utilize the first available service provider that supports the requested combination of address family, socket type and protocol parameters. </P>
+
+<P>Connection-oriented sockets such as SOCK_STREAM provide full-duplex connections, and must be in a connected state before any data can be sent or received on it. A connection to another socket is created with a <A HREF="_wcesdk_connect_function.htm"><B>connect</B></A> call. Once connected, data can be transferred using <A HREF="_wcesdk_send.htm"><B>send</B></A> and <A HREF="_wcesdk_recv.htm"><B>recv</B></A> calls. When a session has been completed, a <A HREF="_wcesdk_closesocket.htm"><B>closesocket</B></A> must be performed.</P>
+
+<P>The communications protocols used to implement a reliable, connection-oriented socket ensure that data is not lost or duplicated. If data for which the peer protocol has buffer space cannot be successfully transmitted within a reasonable length of time, the connection is considered broken and subsequent calls will fail with the error value set to WSAETIMEDOUT.</P>
+
+<P>Connectionless, message-oriented sockets allow sending and receiving of datagrams to and from arbitrary peers using <B>sendto</B> and <B>recvfrom</B>. If such a socket is connected to a specific peer, datagrams can be sent to that peer using <B>send</B> and can be received only from this peer using <B>recv</B>.</P>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winsock.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcesdk_accept_function.htm"><B>accept</B></A>, <A HREF="_wcesdk_bind.htm"><B>bind</B></A>, <A HREF="_wcesdk_closesocket.htm"><B>closesocket</B></A>, <A HREF="_wcesdk_connect_function.htm"><B>connect</B></A>, <A HREF="_wcesdk_getsockname.htm"><B>getsockname</B></A>, <A HREF="_wcesdk_getsockopt.htm"><B>getsockopt</B></A>, <A HREF="_wcesdk_ioctlsocket.htm"><B>ioctlsocket</B></A>, <A HREF="_wcesdk_recvfrom.htm"><B>recvfrom</B></A>, <A HREF="_wcesdk_select.htm"><B>select</B></A>, <A HREF="_wcesdk_send.htm"><B>send</B></A>, <A HREF="_wcesdk_sendto.htm"><B>sendto</B></A>, <A HREF="_wcesdk_setsockopt.htm"><B>setsockopt</B></A>, <A HREF="_wcesdk_shutdown_function.htm"><B>shutdown</B></A>, <A HREF="_wcesdk_wsastartup.htm"><B>WSAStartup</B></A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;socket&nbsp;(_wcesdk_socket.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

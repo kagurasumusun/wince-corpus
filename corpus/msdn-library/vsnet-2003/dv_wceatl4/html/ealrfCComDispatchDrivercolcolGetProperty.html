@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComDispatchDriver::GetProperty</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CComDispatchDriver::GetProperty"/>
+<MSHelp:RLTitle Title="CComDispatchDriver::GetProperty"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComDispatchDrivercolcolGetProperty"/>
+<MSHelp:Keyword Index="K" Term="GetProperty method"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_CComDispatchDriver_GetProperty"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComDispatchDrivercolcolGetProperty"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ccdisdrv.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_706190">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfccomdispatchdrivercolcolgetproperty"></A>CComDispatchDriver::GetProperty</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method gets the value of the property identified by <I>dwDispID</I>. If you supply <I>pDisp</I>, that <B>IDispatch</B> pointer is used. If you do not, the <B>IDispatch</B> pointer contained in the <B>p</B> data member is used. </P>
+
+<PRE class="syntax"><B>HRESULT</B> <B>GetProperty(</B> 
+<B>DISPID</B> <I>dwDispID</I>, 
+<B>VARIANT*</B> <I>pvar</I> <B>);</B><I> </I>
+
+<B>static HRESULT GetProperty(</B><I> 
+</I><B>IDispatch*</B><I> pDisp</I>,<I>
+</I><B>DISPID</B><I> dwDispID</I>,<I>
+</I><B>VARIANT*</B><I> pvar</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwDispID</I></DT>
+
+<DD>[in] The DISPID of the property to be retrieved. The DISPID can be obtained from <B>IDispatch::GetIDsOfNames</B>. </dd>
+
+<DT><I>pvar</I></DT>
+
+<DD>[out] Pointer to where the property value is to be stored. </dd>
+
+<DT><I>pDisp</I></DT>
+
+<DD>[in] Pointer to the <B>IDispatch</B> interface.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>One of the standard <B>HRESULT</B> values. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The following example shows a call to the static version of <B>GetProperty</B>. This code is used to implement <B>IPersistStreamInitImpl::Save</B>.</P>
+
+<PRE class="code">CComPtr&lt;IDispatch&gt; pDispatch;
+const IID* piidOld = NULL;
+for(int i = 0; pMap[i].pclsidPropPage != NULL; i++)
+               // The pMap parameter is a pointer to an array of 
+               // ATL_PROPMAP_ENTRY structures.
+{
+   if (pMap[i].szDesc == NULL)
+      continue;
+   CComVariant var;
+   if(pMap[i].piidDispatch != piidOld)
+   {
+      if(FAILED(ControlQueryInterface(*pMap[i].piidDispatch, 
+                                (void**)&amp;pDispatch)))
+      {
+         ATLTRACE(_T("Failed to get a dispatch pointer 
+                  for property #%i\n"), i);
+         hr = E_FAIL;
+         break;
+      }
+      piidOld = pMap[i].piidDispatch;
+   }
+   if (FAILED(CComDispatchDriver::GetProperty(pDispatch, 
+                               pMap[i].dispid, &amp;var)))
+   {
+      ATLTRACE(_T("Invoked failed on DISPID %x\n"), 
+               pMap[i].dispid);
+      hr = E_FAIL;
+      break;
+   }
+   HRESULT hr = var.WriteToStream(pStm);
+   if (FAILED(hr))
+      break;
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlcom.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfccomdispatchdrivercolcolputproperty.htm"><B>CComDispatchDriver::PutProperty</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_706190', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::AbortDoc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdc_abortdoc"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdc_abortdoc"></A><SUP></SUP>CDC::AbortDoc</H1>
+
+<P>This method cancels the print job and erases everything the application has written to the device since the last call to the <B>StartDoc</B> method.</P>
+
+<PRE class=syntax><B>int AbortDoc( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>A value greater than or equal to zero if successful, or a negative value if an error has occurred. The following list shows common error values and their meanings:
+
+<UL type=disc>
+	<LI>SP_ERROR&nbsp;&nbsp;&nbsp;General error.</LI>
+
+	<LI>SP_OUTOFDISK&nbsp;&nbsp;&nbsp;Not enough disk space is available for spooling, and no more space will become available.</LI>
+
+	<LI>SP_OUTOFMEMORY&nbsp;&nbsp;&nbsp;Not enough memory is available for spooling.</LI>
+
+	<LI>SP_USERABORT&nbsp;&nbsp;&nbsp;The user cancelled the job through the print manager.</LI>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>This method replaces the <B>ABORTDOC</B> printer escape.</P>
+
+<P><B>AbortDoc</B> should be used to cancel the following:
+
+<UL type=disc>
+	<LI>Printing operations that do not specify an abort function using <B>SetAbortProc</B>.</LI>
+
+	<LI>Printing operations that have not reached their first <B>NEWFRAME</B> or <B>NEXTBAND</B> escape call.</LI>
+</UL>
+
+<P>If an application encounters a printing error or a canceled print operation, it must not attempt to cancel the operation by using the <B>EndDoc</B> or <B>AbortDoc</B> methods of class <B>CDC</B>. The GDI automatically cancels the operation before returning the error value.</P>
+
+<P>If the application displays a dialog box to allow the user to cancel the print operation, it must call <B>AbortDoc</B> before destroying the dialog box.</P>
+
+<P>If the print manager was used to start the print job, calling <B>AbortDoc</B> erases the entire spool job&#0151;the printer receives nothing. If the print manager was not used to start the print job, the data may have been sent to the printer before <B>AbortDoc</B> was called. In this case, the printer driver resets the printer and closes the print job.</P>
+
+<H4>Example</H4>
+
+<P>See the example for <A HREF="cdc_89.htm"><B>CDC::StartDoc</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

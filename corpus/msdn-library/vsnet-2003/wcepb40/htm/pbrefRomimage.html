@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Romimage</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Romimage"/>
+<MSHelp:RLTitle Title="Romimage"/>
+<MSHelp:Keyword Index="A" Term="pbrefRomimage"/>
+<MSHelp:Keyword Index="K" Term="Romimage"/>
+<MSHelp:Keyword Index="A" Term="pbrefRomimage"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: tools_2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_820221">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="pbrefromimage"></A>Romimage</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Romimage.exe is an application that creates the Windows CE .bin files, usually limited to the single file Nk.bin. </P>
+
+<P>Romimage.exe supports multiple XIP regions; for example, multiple RAMIMAGE sections. To fill these sections, you need to include the names of the files and the address of the section into which the file should be place. To do this, add the section name as a suffix after the file path declaration. Each section specified will generate a separate .bin file. For example, NK will generate Nk.bin, XIP2 will create Xip2.bin, and so on. Each of the .bin files, when loaded into ROM, will be a separate XIP region, as shown in the following example. </P>
+
+<PRE class="code">NK 80200000 00E00000 RAMIMAGE
+      XIP2 81010000 000E0000 RAMIMAGE
+      RAM 81300000 00D00000 RAM
+      player.exe $(_FLATRELEASEDIR)\player.exe XIP2 SH</PRE>
+
+<P>The following sections detail the flags that can be set and their purpose for use with Romimage.exe.</P>
+
+<P class="label"><B>FIXUPVAR</B></P>
+
+<P>FIXUPVAR is used to initialize a kernel global variable during the MAKEIMG process. You can also use this keyword for platform-specific physical memory initialization with multiple possible values controllable by MAKEIMG flags, as shown in the following example.</P>
+
+<PRE class="code">pdwXIPLoc 00000000 XIPLOC FIXUPVAR</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>This must be done in the MEMORY section. </BLOCKQUOTE>
+
+<P class="label"><B>AUTOSIZE</B></P>
+
+<P>When building nonmultiple XIP images, use AUTOSIZE to globally enable or disable all <I>xxx</I>_autosize options. This flag needs to be set in order for all multi-XIP AUTOSIZE flags to work.</P>
+
+<P class="label"><B>RAM_AUTOSIZE</B></P>
+
+<P>Use the RAM_AUTOSIZE flag to adjust the start address of RAM to the end of the last XIP region. This has the same effect as using the AUTOSIZE flag under nonmultiple XIP builds. The following example shows how to set this flag to ON.</P>
+
+<PRE class="code">RAM_AUTOSIZE=ON</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>If the RAM_AUTOSIZE flag is ON the ROM_AUTOSIZE flag must also be ON, otherwise the RAM_AUTOSIZE is ignored.</BLOCKQUOTE>
+
+<P class="label"><B>ROM_AUTOSIZE</B></P>
+
+<P>This flag automatically sizes each separate XIP region, taking into account the AUTOSIZE_ROMGAP setting. You can also use this flag to determine the initial sizes of the XIP regions. To determine the size of ROM, look for the "Total ROM size" data generated when building the XIP region. Without this set, the size of ROM is constrained to exactly what is specified by the RAMIMAGE setting in Config.bib file.</P>
+
+<PRE class="code">ROM_AUTOSIZE=ON</PRE>
+
+<P class="label"><B>DLLADDR_AUTOSIZE</B></P>
+
+<P>Set DLLADDR_AUTOSIZE to ON to automatically size the DLL address space across multiple XIP regions, for slot 0 code and read/write data and slot 1 code and read-only data, as shown in the following example.</P>
+
+<PRE class="code">DLLADDR_AUTOSIZE=ON</PRE>
+
+<P>When sizing, this setting takes into account the following parameters: AUTOSIZE_DLLADDRGAP, AUTOSIZE_DLLDATAADDRGAP, and AUTOSIZE_DLLCODEADDRGAP.</P>
+
+<P class="label"><B>XIPSCHAIN</B></P>
+
+<P>XIPSCHAING enables the creation of Chain.bin and Chain.lst. Chain.bin is a small .bin file in a format understood by boot loaders that describes the location in ROM of all the XIP regions. Chain.lst is a text that lists all the XIP regions to load. In the file, the kernel is denoted by a plus sign (+). Chain.lst can be used to load all the XIP regions into ROM before jumping to the start address. The address following the equal sign (=) is the location of the chain in ROM. It should match the FIXUPVAR that points to the chain location like <I>pdwXIPLoc</I>.</P>
+
+<PRE class="code">XIPSCHAIN=01FFFF00</PRE>
+
+<P class="label"><B>DLLHIGHADDR</B></P>
+
+<P>Use DLLHIGHADDR to specify the start of the DLL address space in slot 0 for all the XIP regions or for a specific one, as shown in the following examples. </P>
+
+<PRE class="code">DLLHIGHADDR=00200000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">DLLHIGHADDR XIP2 00100000</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>You can specify a DLLHIGHADDR for each XIP region in a single Config.bib file.</BLOCKQUOTE>
+
+<P class="label"><B>DLLHIGHCODEADDR</B></P>
+
+<P>Use DLLHIGHCODEADDR to specify the start of the DLL address space in slot 1, DLL code and read-only data, for all the XIP regions or for a specific one, as shown in the following examples. </P>
+
+<PRE class="code">DLLHIGHCODEADDR=00400000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">DLLHIGHCODEADDR XIP2 00300000</PRE>
+
+<P>This is equivalent to DLLHIGHADDR except that it is applied to slot 1.</P>
+
+<P class="label"><B>DLLLOWADDR</B></P>
+
+<P>Use DLLOWADDR to specify the low end of the DLL address space for slot 0 for all XIP regions or for a specific one, as shown in the following examples. </P>
+
+<PRE class="code">DLLLOWADDR=00060000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">DLLLOWADDR XIP2 00080000</PRE>
+
+<P class="label"><B>DLLLOWCODEADDR</B></P>
+
+<P>Use DLLOWCODEADDR to specify the low end of the DLL address space in slot 1 for all XIP regions or for a specific one, as shown in the following examples. </P>
+
+<PRE class="code">DLLLOWCODEADDR=00200000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">DLLLOWCODEADDR XIP2 00200000</PRE>
+
+<P>This is equivalent to DLLLOWADDR except that it is applied to slot 1.</P>
+
+<P class="label"><B>AUTOSIZE_ROMGAP</B></P>
+
+<P>Use AUTOSIZE_ROMGAP to specify the size of the gap to leave after the specified XIP region or all regions, as shown in the following example. This gap is added to the size of the XIP region prior to alignment. The gap allows an XIP region to expand without affecting other XIP regions that are already installed.</P>
+
+<PRE class="code">AUTOSIZE_ROMGAP NK 2000 </PRE>
+
+<P>- or -</P>
+
+<PRE class="code">AUTOSIZE_ROMGAP = 2000</PRE>
+
+<P class="label"><B>AUTOSIZE_DLLADDRGAP</B></P>
+
+<P>Use AUTOSIZE_DLLADDRGAP to specify the size of the gap to leave in the DLL address space for old style fixups, slot 0, in the data space after the specified XIP region or all regions, as shown in the following example.</P>
+
+<PRE class="code">AUTOSIZE_DLLADDRGAP NK 5000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">AUTOSIZE_DLLADDRGAP = 5000</PRE>
+
+<P class="label"><B>AUTOSIZE_DLLCODEADDRGAP</B></P>
+
+<P>Use AUTOSIZE_DLLCODEADDRGAP to specify the size of the gap to leave in the DLL address space for the code section, slot 1, after the specified XIP region or all regions, as shown in the following example.</P>
+
+<PRE class="code">AUTOSIZE_DLLADDRGAP NK 5000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">AUTOSIZE_DLLADDRGAP = 5000</PRE>
+
+<P class="label"><B>AUTOSIZE_DLLDATAADDRGAP</B></P>
+
+<P>Use AUTOSIZE_DLLDATAADDRGAP to specify the size of the gap to leave in the DLL address space for the data section, slot 0, after the specified XIP region or all regions, as shown in the following example.</P>
+
+<PRE class="code">AUTOSIZE_DLLADDRGAP NK 5000</PRE>
+
+<P>- or -</P>
+
+<PRE class="code">AUTOSIZE_DLLADDRGAP = 5000
+</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Romimage&nbsp;(pbrefromimage.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

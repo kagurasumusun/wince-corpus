@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS16 Prolog Example</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS16 Prolog Example"/>
+<MSHelp:RLTitle Title="MIPS16 Prolog Example"/>
+<MSHelp:Keyword Index="A" Term="_mipscall_MIPS16_Prolog_Example"/>
+<MSHelp:Keyword Index="A" Term="_mipscall_MIPS16_Prolog_Example"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+</xml>
+<!--Filename: mipscall.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731466">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_mipscall_mips16_prolog_example"></A>MIPS16 Prolog Example</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following example shows how to construct a prolog for a MIPS16 ISA.
+
+<OL type="1">
+	<LI>Define the prolog and set up the entry.
+<PRE class="code">.ent &lt;routine_name&gt;
+&lt;routine_name&gt;:</PRE>
+</li>
+
+	<LI>Reserve space for the stack frame.
+<PRE class="code">Addiu sp, -&lt;frame size&gt;</PRE>
+
+<P>An extended <B>addiu</B> instruction of four bytes will be generated for frame sizes greater than 1024. You can accommodate frame sizes up to 32768 bytes using the <B>addiu</B> instruction. In the unlikely event that the frame size exceeds 32768, update the stack pointer with a constant from the literal pool. This requires a sequence of four instructions.
+
+<PRE class="code">hw      $3, &lt;frame size&gt; constant offset(pc)
+move      $2, $29
+subu      $2, $2, $3
+move      $29, $2</PRE>
+
+<P>The size of the stack frame must be a multiple of eight. This includes space for local variables and temporaries, saved registers, and a procedure-call argument area for non-leaf routines, if needed. Any routine that uses registers <B>$16-$23</B>, or <B>$30,</B> or any floating-point register saved by the called function, must save these registers. The procedure call argument area is set up so that it contains the maximum number of bytes required for the arguments of any procedure called in a non-leaf routine, including those that can be passed in registers.
+</li>
+
+	<LI>Set up a virtual frame pointer. The virtual frame pointer is the <B>$29</B> register, <B>sp</B>, added to the frame size. This is the framereg added to the framepointer.
+<PRE class="code"><code class="ce">.frame framereg (usually $29), framesize, returnreg (usually $31)</code></PRE>
+</li>
+
+	<LI>The mask pseudo instruction marks the beginning of the register save area. A bit on in the bitmask should appear in Little Endian order for each general-purpose register saved. The frame offset is the offset, a negative number, from the virtual frame pointer where the register save area begins.
+<PRE class="code">.mask mask, &lt;frame offset&gt;</PRE>
+</li>
+
+	<LI>Store any registers that need to be saved.
+<P>For example, if <B>ra</B> needs to be saved:
+
+<PRE class="code">sw   ra, &lt;frame size&gt; + &lt;frame offset&gt;(sp)</PRE>
+
+<P>If subsequent lower number registers need to be saved, the offset depends on the MIPS mode.
+
+<UL type="disc">
+	<LI>If the next register is a MIPS16 register,
+<PRE class="code">sw   $&lt;MIPS16 register&gt;, &lt;frame size&gt; + &lt;frame offset&gt; - N(sp)</PRE>
+</li>
+
+	<LI>Otherwise
+<PRE class="code">move   $2, &lt;MIPSII register&gt;
+sw   $2, &lt;frame size&gt; + &lt;frame offset&gt; - N(sp)</PRE>
+
+<P>Where N is four and is incremented by four for each subsequent lower number register to be saved.
+</li>
+</UL>
+
+<P>If &lt;frame size&gt; + &lt;frame offset&gt; greater than 1020, an extended <B>sw</B> instruction is generated. In the unlikely event that the &lt;frame size&gt; + &lt;frame offset&gt; is greater than 32767, then the following 3 instruction sequence is required before executing the register save loop:
+
+<PRE class="code">lw   $2, &lt;frame size&gt; + &lt;frame offset&gt;constant offset(pc)
+move   $2, $29
+addu   $3, $2, $3</PRE>
+
+<P>In this case, the <B>sw</B> instructions depend on the mode of the MIPS register.
+
+<UL type="disc">
+	<LI>If the next register is a MIPS16 register:
+<PRE class="code">sw   $&lt;MIPS16 register&gt;, -N($3)</PRE>
+</li>
+
+	<LI>Otherwise
+<PRE class="code">move   $2,$&lt;MIPSII register&gt;
+sw   $2, -N($3)</PRE>
+</li>
+</UL>
+</li>
+
+	<LI>Mark the end of the prolog.
+<PRE class="code">.prologue 0</PRE>
+</li>
+</OL>
+
+<P>The minimum proper prolog for a leaf routine includes the following segments:
+
+<UL type="disc">
+	<LI>.ent</li>
+
+	<LI>entry label</li>
+
+	<LI>.frame </li>
+
+	<LI>.prologue 0. </li>
+</UL>
+
+<P>For a non-leaf routine, the minimum proper prolog includes the following segments:
+
+<UL type="disc">
+	<LI>.ent</li>
+
+	<LI>entry label</li>
+
+	<LI>.frame </li>
+
+	<LI>.prologue 0</li>
+
+	<LI>Save of the return address register, <B>ra($31)</B>.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_mipscall_prolog.htm">MIPS Prolog</A></P>
+
+<P><A HREF="_mipscall_mips32_prolog_example.htm">MIPSII Prolog Example</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MIPS16%20Prolog%20Example&nbsp;(_mipscall_mips16_prolog_example.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

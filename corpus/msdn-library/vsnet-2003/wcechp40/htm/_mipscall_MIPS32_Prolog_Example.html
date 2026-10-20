@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPSII Prolog Example</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPSII Prolog Example"/>
+<MSHelp:RLTitle Title="MIPSII Prolog Example"/>
+<MSHelp:Keyword Index="A" Term="_mipscall_MIPS32_Prolog_Example"/>
+<MSHelp:Keyword Index="A" Term="_mipscall_MIPS32_Prolog_Example"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+</xml>
+<!--Filename: mipscall.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731465">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_mipscall_mips32_prolog_example"></A>MIPSII Prolog Example</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following example shows how to construct a prolog for a MIPSII ISA.
+
+<OL type="1">
+	<LI>Define the prolog and set up the entry.
+<PRE class="code"><code class="ce">.ent &lt;routine_name&gt;
+&lt;routine_name&gt;:</code></PRE>
+</li>
+
+	<LI>Reserve space for the stack frame.
+<PRE class="code">Addiu sp, -&lt;frame size&gt;</PRE>
+
+<P>The size of the stack frame must be a multiple of eight. This includes space for local variables and temporaries, saved registers, and a procedure call argument area for non-leaf routines. Any routine that uses registers <B>$16-$23</B>, or <B>$30</B>, or any floating-point register that the called function saves, must save these registers. The procedure call argument area is set up so that it contains the maximum number of bytes required for the arguments of any procedure called in a non-leaf routine. This number of required bytes includes those arguments that the function can pass in registers, unless the N32 calling convention is in use. 
+</li>
+
+	<LI>Set up a virtual frame pointer. The virtual frame pointer is the sp <B>($29)</B> added to the frame size or written another way, the framereg added to the framepointer.
+<PRE class="code"><code class="ce">.frame framereg (usually $29), framesize, returnreg (usually $31)</code></PRE>
+</li>
+
+	<LI>The mask pseudo instruction marks the beginning of the register save area. Set a bit on in the bitmask for each general-purpose register saved. These bits are set in little endian order. The frame offset is the offset, a negative number, from the virtual frame pointer where the register save area begins.
+<PRE class="code">.mask mask, &lt;frame offset&gt;</PRE>
+</li>
+
+	<LI>Store any registers that need to be saved.
+<PRE class="code">sw $31, framesize + frameoffset($29)      ; save return address
+sw reg, framesize + frameoffset-N($(29))   ; save integer register
+sdc1 reg, framesize + frameoffset -N($(29)) ; save float register</PRE>
+
+<P>Issue one of the previously mentioned for each register saved where N is four and incremented by four for each subsequent lower number register saved.
+</li>
+
+	<LI>Mark the end of the prolog.
+<PRE class="code">.prologue 0</PRE>
+
+<P>The minimum proper prolog for a leaf routine includes the .ent, entry label, .frame and .prologue. For a non-leaf routine, the minimum proper prolog includes all of the previously mentioned items with and saving of the return address register, ra($31).
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_mipscall_prolog.htm">MIPS Prolog</A></P>
+
+<P><A HREF="_mipscall_mips16_prolog_example.htm">MIPS16 Prolog Example</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MIPSII%20Prolog%20Example&nbsp;(_mipscall_mips32_prolog_example.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

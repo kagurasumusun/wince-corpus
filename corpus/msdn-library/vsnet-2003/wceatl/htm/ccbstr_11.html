@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComBSTR::WriteToStream</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccombstr_writetostream"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ccombstr_writetostream"></A>CComBSTR::WriteToStream</H1>
+
+<P>This method saves the <B>m_str</B> data member to a stream.</P>
+
+<PRE class=syntax><B>HRESULT WriteToStream(
+IStream* </B><I>pStream</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStream</I></DT>
+
+<DD>[in] A pointer to the <B>IStream</B> interface on a stream.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A standard <B>HRESULT</B> value.</P>
+
+<H4>Example</H4>
+
+<PRE>// Implementation of IDataObject::GetData().
+STDMETHODIMP CPolyCtl::GetData(FORMATETC *pformatetcIn, STGMEDIUM *pmedium)
+{
+HRESULT hr = S_OK;
+if (pformatetcIn-&gt;cfFormat == CF_TEXT &amp;&amp; pformatetcIn-&gt;tymed == TYMED_ISTREAM)
+{
+IStream *pStm;
+// Create an IStream from global memory.
+HRESULT hr = CreateStreamOnHGlobal(NULL, TRUE, &amp;pStm);
+if (FAILED(hr))
+return hr;
+
+// Initialize CComBSTR
+CComBSTR bstrStr = "Hello World";
+
+// Serialize string into stream
+// the length followed by actual string is serialized into stream.
+hr = bstrStr.WriteToStream(pStm);
+
+// Pass the IStream pointer back through STGMEDIUM struct.
+pmedium-&gt;tymed = TYMED_ISTREAM;
+pmedium-&gt;pstm = pStm;
+pmedium-&gt;pUnkForRelease = NULL;
+}
+
+return hr;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlbase.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccbstr_10.htm"><B>CComBSTR::ReadFromStream</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

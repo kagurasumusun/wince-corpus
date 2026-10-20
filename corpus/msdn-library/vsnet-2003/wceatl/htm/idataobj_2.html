@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDataObjectImpl::DAdvise</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_idataobjectimpl_dadvise"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_formatetc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_com_iadvisesink" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_com_stgmedium" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_com_tymed" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wceatl_idataobjectimpl_dadvise"></A><SUP></SUP>IDataObjectImpl::DAdvise</H1>
+
+<P>This method establishes a connection between the data object and an advise sink. This enables the advise sink to receive notifications of changes in the object. In ATL for Windows CE this function does nothing and always returns E_NOTIMPL.</P>
+
+<P>To terminate the connection, call <A HREF="idataobj_3.htm"><B>DUnadvise</B></A>.</P>
+
+<PRE class=syntax><B>STDMETHOD ( DAdvise )(
+FORMATETC </B><I>*pformatetc</I><B>,
+DWORD </B><I>advf</I><B>,
+IAdviseSink </B><I>*pAdvSink</I><B>,
+DWORD </B><I>*pdwConnection</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>*pformatetc</I></DT>
+
+<DD>[in] Pointer to a <B>FORMATETC</B> structure that defines the format, target device, aspect, and medium that will be used for future notifications. For example, one sink may want to know only when the bitmap representation of the data in the data object changes. Another sink may be interested in only the metafile format of the same object. Each advise sink is notified when the data of interest changes. This data is passed back to the advise sink when notification occurs.</DD>
+
+<DT><I>advf</I></DT>
+
+<DD>[in] <B>DWORD</B> that specifies a group of flags for controlling the advisory connection. Valid values are from the enumeration ADVF. However, only some of the possible ADVF values are relevant for this method. The following table briefly describes the relevant values. Refer to <B>ADVF</B> for a more detailed description.
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>ADVF Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>ADVF_NODATA</TD>
+<TD width=66%>Asks the data object to avoid sending data with the notifications. Typically data is sent. This flag is a way to override the default behavior. When ADVF_NODATA is used, the <B>TYMED</B> member of the <B>STGMEDIUM</B> structure that is passed to <B>OnDataChange</B> will usually contain TYMED_NULL. The caller can then retrieve the data with a subsequent <B>IDataObjectImpl::GetData</B> call.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>ADVF_ONLYONCE</TD>
+<TD width=66%>Causes the advisory connection to be destroyed after the first change notification is sent. An implicit call to <B>IDataObjectImpl::DUnadvise</B> is made on behalf of the caller to remove the connection.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>ADVF_PRIMEFIRST</TD>
+<TD width=66%>Asks for an additional initial notification. The combination of ADVF_ONLYONCE and ADVF_PRIMEFIRST provides, in effect, an asynchronous <B>IDataObjectImpl::GetData</B> call.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>ADVF_DATAONSTOP</TD>
+<TD width=66%>When specified with ADVF_NODATA, this flag causes a last notification with the data included to be sent before the data object is destroyed.
+<P>If used without ADVF_NODATA, <B>IDataObjectImpl::DAdvise</B> can be implemented in one of the following ways:
+
+<UL type=disc>
+	<LI>The ADVF_DATAONSTOP can be ignored.</LI>
+
+	<LI>The object can behave as if ADVF_NODATA was specified.</LI>
+</UL>
+
+<P>A change notification is sent only in the shutdown case. Data changes prior to shutdown do not cause a notification to be sent.</P>
+</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>*pAdvSink</I></DT>
+
+<DD>[in] Pointer to the <B>IAdviseSink</B> interface on the advisory sink that will receive the change notification.</DD>
+
+<DT><I>*pdwConnection</I></DT>
+
+<DD>[out] Pointer to a <B>DWORD</B> token that identifies this connection. You can use this token later to delete the advisory connection (by passing it to <B>IDataObjectImpl::DUnadvise</B>. If this value is zero, the connection was not established.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The ATL for Windows CE implementation returns E_NOTIMPL. </P>
+
+<H4>See Also</H4>
+
+<P><A HREF="JavaScript:hhobj_1.Click()"><B>FORMATETC</B></A>, <A HREF="JavaScript:hhobj_2.Click()"><B>IAdviseSink</B></A>, <A HREF="JavaScript:hhobj_3.Click()"><B>STGMEDIUM</B></A>, <A HREF="JavaScript:hhobj_4.Click()"><B>TYMED</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

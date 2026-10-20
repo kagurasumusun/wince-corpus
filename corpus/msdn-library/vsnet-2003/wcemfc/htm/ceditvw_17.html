@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CEditView::SetTabStops</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ceditview_settabstops"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ceditview_settabstops"></A><SUP></SUP>CEditView::SetTabStops</H1>
+
+<P>This method sets the tab stops used for display and printing. Only a single tab-stop width is supported. <B>CEdit</B> objects support multiple tab widths. Widths are in dialog units, which equal one-fourth of the average character width, based on uppercase and lowercase alphabetic characters only, of the font used at the time of printing or displaying. You should not use <B>CEdit::SetTabStops</B> because <B>CEditView</B> must cache the tab-stop value.</P>
+
+<P>This method modifies only the tabs of the object for which it is called. To change the tab stops for each <B>CEditView</B> object in your application, call the <B>SetTabStops</B> function of each object.</P>
+
+<PRE class=syntax><B>void SetTabStops(
+int </B><I>nTabStops</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nTabStops</I></DT>
+
+<DD>Specifies the width of each tab stop, in dialog units.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<P>This code fragment sets the tab stops in the control to every fourth character by carefully measuring the font the control uses.</P>
+
+<PRE>// Gain a pointer to the control.
+CEdit* pCtrl = (CEdit*) GetDlgItem(IDC_EDIT1);
+ASSERT(pCtrl != NULL);
+
+// Get the specific font that the control is using.
+CFont* pFont = pCtrl-&gt;GetFont();
+TEXTMETRIC tm;
+
+// Get the DC for the control.
+CDC* pDC = pCtrl-&gt;GetDC();
+
+// Select the font that the control uses by default into the DC.
+// We must do this because the control may or may not be using
+// that font at this exact moment.
+CFont* pOldFont = pDC-&gt;SelectObject(pFont);
+
+// Retreive text metrics for that font and return the previously
+// selected font.
+pDC-&gt;GetTextMetrics(&amp;tm);
+pDC-&gt;SelectObject(pOldFont);
+
+// Get an identity rectangle and map it to dialog units.
+CRect rect(0, 0, 100, 1);
+MapDialogRect(rect);
+
+// We now know that 100 dialog units are rect.Width() screen units,
+// so we can multiply screen units by 100 and divide by rect.Width()
+// to find dialog units from screen units. The tm.tmAveCharWidth is
+// the width of _one_ character, so setting the tabs at every
+// four characters means we also multiply by four.
+
+pCtrl-&gt;SetTabStops((4 * tm.tmAveCharWidth * 100) / rect.Width());
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxext.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_181.htm"><B>CWnd::SetFont</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

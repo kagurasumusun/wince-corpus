@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Format Parameters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Format Parameters"/>
+<MSHelp:RLTitle Title="Format Parameters"/>
+<MSHelp:Keyword Index="A" Term="cmconFormatParameters"/>
+<MSHelp:Keyword Index="K" Term="file partitions, format parameters"/>
+<MSHelp:Keyword Index="K" Term="partitions, file partition format parameters"/>
+<MSHelp:Keyword Index="K" Term="Persistent Storage Manager, file partition format parameters"/>
+<MSHelp:Keyword Index="A" Term="cmconFormatParameters"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: psm_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756676">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconformatparameters"></A>Format Parameters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Format parameters are in %_WINCEROOT%\Platform\SA11X0BD\PSM\OEM\Plat_api.c and %_WINCEROOT%\Platform\SA11X0BD\PSM\INC\Plat_api.h. The default values are appropriate for general applications. The default values can be modified to improve storage efficiency or file system performance as appropriate. These parameters are members of a structure of type <A HREF="cxrefpsm_formatoptions.htm">PSM_FormatOptions</A>. A pointer to the structure is passed to those functions that format the file partition.</P>
+
+<H2 class="dtH2">Controlling When a Reformat Happens</H2>
+
+<P>At a cold boot, the Installable File System Manager (IFS) examines the file partition to see if it is valid. If it is valid, the PSM initializes itself to access files. However, if the file partition appears invalid, PSM will invoke <A HREF="cxrefplat_formatrecovery.htm">PLAT_FormatRecovery</A>. This function gives the OEM the option of reformatting the partition. If this function returns a TRUE value, the media will be reformatted using a structure of type <A HREF="cxrefpsm_formatoptions.htm">PSM_FormatOptions</A>, pointed to by <I>format_options_ptr</I>. If the function returns FALSE, the media will not be formatted.</P>
+
+<P>Of course, any reformatting operation erases everything in the partition, so the OEM may want to make sure this is the best thing to do. To make sure the media is truly corrupted, and not temporarily impaired by low batteries or some other problem, the OEM could use this function to rule out any obvious causes for soft read errors, like low battery. Once this has been done, and the PSM still reports corrupted media, the OEM can allow the format to proceed.</P>
+
+<H2 class="dtH2">Commanding a Format</H2>
+
+<P>When the OS image loads the PSM, the OS image's initialization routines examine the file partition and verify that it has a valid format. If the file partition has a valid format, PSM makes the files available to the OS. If the partition does not have a valid format, PSM gives the OEM the option of formatting it when it invokes <A HREF="cxrefplat_formatrecovery.htm">PLAT_FormatRecovery</A>.</P>
+
+<P>The OEM does not have to wait for a cold boot to do a format, they can cause a format at any time by calling <B>FG_Init</B> and passing a pointer to both an empty buffer for a memory map structure of type <A HREF="cxrefpsm_oeminfo.htm">PSM_OEMInfo</A> and to a structure of type <A HREF="cxrefpsm_formatoptions.htm">PSM_FormatOptions</A>. <A HREF="cxrefpsm_oeminfo.htm">PSM_OEMInfo</A> is only a buffer that PSM uses to pass information internally. <A HREF="cxrefpsm_formatoptions.htm">PSM_FormatOptions</A> is a constant that describes how to format the media. </P>
+
+<P>The following code shows how to command a format.</P>
+
+<PRE class="code">PSM_OEMInfo oem_info;
+static const PSM_FormatOptions format_options = {
+/* MinimumReclaimSize   */ 8192,
+/* StreamingGranularity */ 1024,
+/* MaxFilenameLength    */ 260,
+/* ReclaimThreshold     */ 50,
+/* StreamingOverhead    */ PSM_StreamingOverheadNone,
+/* UpdateAccessTimesEnabled */ FALSE
+};
+FG_Shutdown(); /* Causes PSM to exit all file operations */
+FG_Init(&amp;oem_info, &amp;format_options); /* formats the file partition */</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconformattingfilepartition.htm">File Partition Formatting</A></P>
+
+<P><A HREF="cmconmediamanagementoverview.htm">Media Manager</A></P>
+
+<P><A HREF="cmconpersistentstoragemanager.htm">Persistent Storage Manager</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Format%20Parameters&nbsp;(cmconformatparameters.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

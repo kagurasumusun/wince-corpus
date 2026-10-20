@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3dCreateSurfaceEx Handles and Flip</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3dCreateSurfaceEx Handles and Flip"/>
+<MSHelp:RLTitle Title="D3dCreateSurfaceEx Handles and Flip"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dCreateSurfaceExHandlesFlip"/>
+<MSHelp:Keyword Index="K" Term="context management%2C Direct3D, D3DCreateSurfaceEx handles and flip"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dCreateSurfaceExHandlesFlip"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664946">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcond3dcreatesurfaceexhandlesflip"></A>D3dCreateSurfaceEx Handles and Flip</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>DirectDraw's surface structures are designed to represent conceptual surfaces, not necessarily specific locations in video memory. The main usage of this abstraction is in a primary flipping chain, where the application uses one constant surface object to represent the back buffer, even though the back buffer may be moving around in video memory as a result of the <A HREF="_dxce_ddhal_flip.htm">Flip</A> operation.</P>
+
+<P>The <B>Flip</B> method takes a ring of surfaces, and rotates (sequentially reassigns) their video memory pointers around this ring. In the particular case of two surface objects, the process is reduced to trading their video memory pointers. In addition, the DirectDraw run time also rotates the <A HREF="cxcond3dcreatesurfaceex.htm">D3dCreateSurfaceEx</A> handles associated with each surface, and the driver-owned contents of the <B>dwReserved1</B> members of each surface. This behavior has some interesting consequences for a driver, and effectively rules out the embedding of pointers to DirectDraw's surface structures inside the driver's own surface structures.</P>
+
+<P>Consider two surface objects A and B that have associated handles H<SUB>A</SUB> and H<SUB>B</SUB>, and <B>fpVidMem</B> (a member of the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_gbl.htm">DDRAWI_DDRAWSURFACE_GBL</A> structure) values of F<SUB>A</SUB> and F<SUB>B</SUB>. Further, suppose that the application is using surface structure A to refer to the back buffer of a flipping chain. At <A HREF="_dxce_ddhal_flip.htm">Flip</A> time, the handles and both <B>fpVidmem</B> values are swapped, so that surface A has H<SUB>B</SUB> and F<SUB>B</SUB>, and surface B has H<SUB>A</SUB> and F<SUB>A</SUB>. The application now tries to draw to the back buffer, surface A, which should represent the video memory at F<SUB>B</SUB> (because the application called <B>Flip</B>).</P>
+
+<P>A drawing command is issued to the driver, which looks up the handle associated with that surface (which is now H<SUB>B</SUB>, not H<SUB>A</SUB>). What would happen if the driver merely stored a pointer to the DirectDraw surface structure? The driver would look up H<SUB>B</SUB>, then follow the stored pointer to surface B, which now has an <B>fpVidMem</B> value of F<SUB>A</SUB>. Drawing would begin on the video memory at F<SUB>A</SUB>. This is not what the application is expecting. If, on the other hand, the driver were to store surface data in its own structures, rather than following a pointer to DirectDraw's surface structure, then H<SUB>B</SUB> would still resolve to F<SUB>B</SUB>, and drawing would occur on the correct surface. This latter case is the way the current DDI is implemented.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dcontextmanagement.htm">Direct3D Context Management</A></P>
+
+<P><A HREF="cxcond3dcreatesurfaceexhandles.htm">D3dCreateSurfaceEx Handles</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3dCreateSurfaceEx%20Handles%20and%20Flip&nbsp;(cxcond3dcreatesurfaceexhandlesflip.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

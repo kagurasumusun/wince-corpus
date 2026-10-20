@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Alternatives to the Document/View Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Alternatives to the Document/View Architecture"/>
+<MSHelp:RLTitle Title="Alternatives to the Document/View Architecture"/>
+<MSHelp:Keyword Index="A" Term="afconAlternativestotheDocumentfsViewArchitecture"/>
+<MSHelp:Keyword Index="K" Term="CDocument class, space requirements"/>
+<MSHelp:Keyword Index="K" Term="documents, applications without"/>
+<MSHelp:Keyword Index="K" Term="views, applications without"/>
+<MSHelp:Keyword Index="A" Term="afconAlternativestotheDocumentfsViewArchitecture"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="develop.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709629">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="afconalternativestothedocumentfsviewarchitecture"></A>Alternatives to the Document/View Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>MFC applications normally use the document/view architecture to manage information, file formats, and the visual representation of data to users. For the majority of desktop applications, the document/view architecture is an appropriate and efficient application architecture. This architecture separates data from viewing and, in most cases, simplifies your application and reduces redundant code.</P>
+
+<P>However, the document/view architecture is not appropriate for some situations. Consider these examples: 
+
+<UL type="disc">
+	<LI>If you are porting an application written in C for Windows, you might want to complete your port before adding document/view support to your application.</li>
+
+	<LI>If you are writing a lightweight utility, you might find that you can do without the document/view architecture.</li>
+
+	<LI>If your original code already mixes data management with data viewing, moving the code to the document/view model is not worth the effort because you must separate the two. You might prefer to leave the code as is. </li>
+</UL>
+
+<H4 class="dtH4">Creating an Application with an Alternative Architecture </H4>
+
+<P>To create an application that does not use the document/view architecture, clear the <B>Document/View architecture support</B> check box in step 1 of the MFC AppWizard.</P>
+
+<P>The eMbedded Visual C++ wizards, as well as the source and dialog editors, work with the generated application just as they would with any other Wizard-generated application. The application can support toolbars, scrollbars, and a status bar, and has an <B>About</B> box. Your application will not register any document templates, and it will not contain a document class.</P>
+
+<P>Note that your generated application has a view class, <B>CChildView</B>, derived from <B>CWnd</B>. MFC creates and positions one instance of the view class within the frame windows created by your application. MFC still enforces using a view window, because it simplifies positioning and managing the content of your application. You can add painting code to the <B>OnPaint</B> member of this class. Your code should add scrollbars to the view rather than to the frame.</P>
+
+<P>Because the document/view architecture provided by MFC is responsible for implementing many of the basic features of an application, its absence in your project means that you are responsible for implementing many important features of your application: 
+
+<UL type="disc">
+	<LI>As provided by AppWizard, the menu for your application contains only <B>New</B> and <B>Exit</B> commands on the <B>File</B> menu. The generated menu resource does not have an <B>Edit</B> menu and will not support an MRU list.</li>
+
+	<LI>You must add handler functions and implementations for any commands that your application will support, including <B>Open</B> and <B>Save</B> on the <B>File</B> menu. MFC normally provides code to support these features, but that support is tightly bound to the document/view architecture.</li>
+
+	<LI>The toolbar for your application, if you requested one, will be minimal. </li>
+</UL>
+
+<P>It is strongly recommended that you use the MFC AppWizard to create applications without the document/view architecture, because the AppWizard guarantees a correct MFC architecture. However, if you must avoid using the AppWizard, here are several approaches for bypassing the document/view architecture in your code: 
+
+<UL type="disc">
+	<LI>Treat the document as an unused appendage and implement your data management code in the view class, as suggested above. Overhead for the document is relatively low. A single <B>CDocument</B> object incurs a small amount of overhead by itself, plus the small overhead from <B>CCmdTarget</B> and <B>CObject</B>, the base classes of <B>CDocument</B>. Both of the latter classes are small. 
+<P>Declared in <B>CDocument</B>:
+
+<UL type="disc">
+	<LI>Two <B>CString</B> objects</li>
+
+	<LI>Three <B>BOOL</B>s</li>
+
+	<LI>One <B>CDocTemplate</B> pointer</li>
+
+	<LI>One <B>CPtrList</B> object, which contains a list of the views of the document</li>
+</UL>
+
+<P>Additionally, the document requires the amount of time to create the document object, its view objects, a frame window, and a document template object.
+</li>
+
+	<LI>Treat both the document and view as unused appendages. Put your data management and drawing code in the frame window rather than the view. This approach is closer to the C-language programming model.</li>
+
+	<LI>Override the parts of the MFC framework that create the document and view to eliminate creating them at all. The document creation process begins with a call to <B>CWinApp::AddDocTemplate</B>. Eliminate that call from the <B>InitInstance</B> member function of your application class. Instead, create a frame window in <B>InitInstance</B> yourself. Put your data management code in your frame window class. This is more work and requires a deeper understanding of the framework, but it frees you entirely of the document/view overhead. </li>
+</UL>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709629', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

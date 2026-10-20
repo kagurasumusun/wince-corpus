@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS I, II Argument Registers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS I, II Argument Registers"/>
+<MSHelp:RLTitle Title="MIPS I, II Argument Registers"/>
+<MSHelp:Keyword Index="A" Term="ccrefMIPSIIIArgumentRegisters"/>
+<MSHelp:Keyword Index="K" Term="MIPS, argument registers"/>
+<MSHelp:Keyword Index="K" Term="registers, MIPS I and II argument registers"/>
+<MSHelp:Keyword Index="A" Term="ccrefMIPSIIIArgumentRegisters"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: mipscall.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_745749">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccrefmipsiiiargumentregisters"></A>MIPS I, II Argument Registers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>MIPS ISAs I and II run in 32-bit mode, and assign argument registers as follows, in precedence order:
+
+<OL type="1">
+	<LI>Double precision floating-point and 64-bit integer arguments to registers, beginning with even registers. This corresponds to always being 8-byte aligned when allocating memory on the stack for a 64-bit argument. </li>
+
+	<LI>Arguments prototyped with an ellipsis to corresponding general-purpose registers, if any corresponding general-purpose registers remain. For example, if the second argument prototype is an ellipsis, then if the first argument is four bytes, the allocation uses argument registers <B>$5</B> through <B>$7</B>, beginning with the second argument, or, if the first argument was eight bytes, argument registers <B>$6</B> through <B>$7</B> beginning with the second argument. </li>
+
+	<LI>If the first argument is floating-point and floating-point hardware is present, a 4-byte float first argument uses float register <B>$f12</B> and an 8-byte float first argument uses the float register pair starting at <B>$f12</B>.</li>
+
+	<LI>If the second argument is floating-point, floating-point hardware is present, and the first argument is floating-point, a 4-byte second argument uses float register <B>$f14</B> and an 8-byte second argument uses the float register pair starting at <B>$f14</B>. </li>
+
+	<LI>If the second argument is an 8-byte float or integer, signed or unsigned, floating-point hardware is not present or the first argument is any integer data type, then the 8-byte second argument uses the general register pair starting at <B>$6</B>. </li>
+
+	<LI>Otherwise, allocation of argument registers is done using general registers <B>$4</B> through <B>$7</B>.</li>
+</OL>
+
+<P>The following list defines the use of the symbols in the table. 
+
+<UL type="disc">
+	<LI>d followed by a number represents a double precision, or 8-byte, floating-point argument. </li>
+
+	<LI>s followed by a number represents a single precision or 4-byte floating-point argument. </li>
+
+	<LI>n followed by a number represents a 4-byte non-floating-point argument </li>
+
+	<LI>J followed by a number represents an 8-byte non-floating-point argument, such as a _int64 argument. </li>
+</UL>
+
+<P>Some entries have two register assignment sequences. The first represents the convention used with floating-point emulation; the second, if there is a difference, is the convention with floating-point hardware.</P>
+
+<P>The following table shows how arguments are passed in registers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Argument list</TH>
+<TH width=75%>Register assignment</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>n1, n2, n3, n4</TD>
+<TD width=75%>n1—&gt; <B>$4</B>, n2 —&gt; <B>$5</B>, n3 —&gt; <B>$6</B>, n4 —&gt; <B>$7</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>s1, s2, s3, s4</TD>
+<TD width=75%>s1 —&gt; <B>$4</B>, s2 —&gt; <B>$5</B>, s3 —&gt; <B>$6</B>, s4 —&gt; <B>$7</B>
+<P>s1 —&gt; <B>$f12</B>, s2 —&gt; <B>$f14</B>, s3 —&gt; <B>$6</B>, s4 —&gt; <B>$7</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>d1, d2</TD>
+<TD width=75%>d1 —&gt; <B>($4</B>, <B>$5)</B>, d2 —&gt; <B>($6</B>, <B>$7)</B>
+<P>d1 —&gt; <B>$f12</B>, d2 —&gt;<B> $f14</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>s1, s2</TD>
+<TD width=75%>s1 —&gt; <B>$4</B>, s2 —&gt; <B>$5</B>
+<P>s1 —&gt; <B>$f12</B>, s2 —&gt; <B>$f14</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>d1, s2</TD>
+<TD width=75%>d1 —&gt; <B>($4, $5)</B>, s2 —&gt; <B>$6</B>
+<P>d1 —&gt; <B>$f12</B>, s2 —&gt; <B>$f14</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>s1, d2</TD>
+<TD width=75%>s1 —&gt; <B>$4</B>, d2 —&gt; <B>($6, $7)</B>
+<P>s1 —&gt; <B>$f12</B>, d2 —&gt; <B>$f14</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>s1, s2, d3</TD>
+<TD width=75%>s1 —&gt; <B>$4</B>, s2 —&gt; <B>$5</B>, d3 —&gt; <B>($6</B>, <B>$7)</B>
+<P>s1 —&gt; <B>$f12</B>, s2 —&gt; <B>$f14</B>, d3 —&gt; <B>($6</B>, <B>$7)</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>d1, s2, d3</TD>
+<TD width=75%>d1 —&gt; <B>($4, $5)</B>, s2 —&gt; <B>$6</B>, d3 —&gt; stack
+<P>d1 —&gt; <B>$f12</B>, s2 —&gt; <B>$f14</B>, d3 —&gt; stack</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>d1, s2, s3, s4</TD>
+<TD width=75%>d1 —&gt; <B>($4</B>, <B>$5)</B>, s2 —&gt; <B>$6</B>, s3 —&gt; <B>$7</B>, s4 —&gt; stack
+<P>d1 —&gt; <B>($f12)</B>, s2 —&gt; <B>$f14</B>, s3 —&gt; <B>$7</B>, s4 —&gt; stack</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>n1, d2</TD>
+<TD width=75%>n1 —&gt; <B>$4</B>, d2 —&gt; <B>($6</B>, <B>$7)</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>n1, s1, d2</TD>
+<TD width=75%>n1 —&gt; <B>$4</B>, s1 —&gt; <B>$5</B>, d2 —&gt; <B>($6</B>, <B>$7)</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>j1, d2</TD>
+<TD width=75%>j1 —&gt; <B>($4</B>, <B>$5)</B>, d2 —&gt; <B>($6</B>, <B>$7</B>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>j1, s2</TD>
+<TD width=75%>j1 —&gt; <B>($4</B>, <B>$5)</B>, s2 —&gt; <B>$6</B></TD>
+</TR>
+</table></div>
+
+<P>The following table illustrates what happens when an ellipsis appears in the second argument position. Notice that in all cases for all arguments matching the ellipsis and beyond only general purpose registers are used even if floating-point hardware is available.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Argument List</TH>
+<TH width=75%>Register Assignment</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>n1, d2</TD>
+<TD width=75%>n1 —&gt; <B>$4</B>, d2 —&gt; <B>($6</B>, <B>$7)</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>s1, d2</TD>
+<TD width=75%>s1 —&gt; <B>$4</B>, d2 —&gt; <B>($6</B>, <B>$7)</B>
+<P>s1 —&gt; <B>$f12</B>, d2 —&gt; <B>($6</B>, <B>$7)</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>d1, s2</TD>
+<TD width=75%>d1 —&gt; <B>($4</B>, <B>$5)</B>, s2 —&gt; <B>$6</B>
+<P>d1 —&gt; <B>$f12</B>, s2 —&gt; <B>$6</B></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>d1, n1, d2</TD>
+<TD width=75%>d1 —&gt; <B>($4</B>, <B>$5)</B>, n1 —&gt; <B>$6</B>, d2 —&gt; stack
+<P>d1 —&gt; <B>$f12</B>, n1 —&gt; <B>$6</B>, d2 —&gt; stack</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>j1, d2</TD>
+<TD width=75%>j1 —&gt; <B>($4</B>, <B>$5)</B>, d2 —&gt; <B>($6</B>, <B>$7)</B></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_stack_frame.htm">MIPS Stack Frame and Argument Registers</A></P>
+
+<P><A HREF="ccrefmipsivargumentregisters.htm">MIPS IV Argument Registers</A></P>
+
+<P><A HREF="_mipscall_frame_pointer_and_stack_pointer.htm">MIPS Frame and Stack Pointers</A></P>
+
+<P><A HREF="_mipscall_leaf_routines.htm">MIPS Leaf Routines</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MIPS%20I,%20II%20Argument%20Registers&nbsp;(ccrefmipsiiiargumentregisters.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

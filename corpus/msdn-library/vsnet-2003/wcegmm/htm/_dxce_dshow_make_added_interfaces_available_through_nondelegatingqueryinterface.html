@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Make Added Interfaces Available Through NonDelegatingQueryInterface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Make Added Interfaces Available Through NonDelegatingQueryInterface"/>
+<MSHelp:RLTitle Title="Make Added Interfaces Available Through NonDelegatingQueryInterface"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_make_added_interfaces_available_through_nondelegatingqueryinterface"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dshow.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_dshow_make_added_interfaces_available_through_nondelegatingqueryinterface"></A>Make Added Interfaces Available Through NonDelegatingQueryInterface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Only filters that add interfaces that are not in the base classes, such as those required for creating property pages, need implement the <MSHelp:link keywords="_wcesdk_com_IUnknown" TABINDEX="0"><B>IUnknown</B></MSHelp:link> member functions (called <MSHelp:link keywords="_wcesdk_inondelegatingunknown_interface" TABINDEX="0"><B>INonDelegatingUnknown</B></MSHelp:link> in the base classes). The base classes provide default implementations of the <B>IUnknown</B> methods. <B>IUnknown</B> methods in any COM-based code retrieve interfaces from an object, and increment and decrement the reference counts of those interfaces. For example, the <MSHelp:link keywords="_wcesdk_com_IUnknown_QueryInterface" TABINDEX="0"><B>IUnknown::QueryInterface</B></MSHelp:link> method retrieves interfaces from an object. </P>
+
+<P>DirectShow defines a special <B>IUnknown</B> class called <B>INonDelegatingUnknown</B>, whose methods do the same thing as <B>IUnknown</B>. (The reason for the name change is so that objects can be aggregated.) The <MSHelp:link keywords="_wcesdk_cunknown__nondelegatingqueryinterface" TABINDEX="0"><B>NonDelegatingQueryInterface</B></MSHelp:link> method is called whenever some object or application wants to query a pin or filter for any interfaces it implements. If your filter implements any interface outside those listed in the base class implementation, you will need to override the <B>NonDelegatingQueryInterface</B> method to return a pointer to the implemented interface. For example, the following code example overrides the member function to distribute references to the <B>ISpecifyPropertyPages</B> and <B>IPersistStream</B> interfaces. </P>
+
+<PRE class="code">// Reveal our persistent stream, property pages, and IGargle interfaces.
+STDMETHODIMP CGargle::NonDelegatingQueryInterface(REFIID riid, void **ppv) {
+
+    if (riid == IID_IGargle) {
+        return GetInterface((IGargle *) this, ppv);
+    } else if (riid == IID_ISpecifyPropertyPages) {
+        return GetInterface((ISpecifyPropertyPages *) this, ppv);
+    } else if (riid == IID_IPersistStream) {
+        AddRef();     // add a reference count to ourselves
+        *ppv = (void *)(IPersistStream *)this;
+        return NOERROR;
+
+    } else {
+        return CTransInPlaceFilter::NonDelegatingQueryInterface(riid, ppv);
+    }
+} // NonDelegatingQueryInterface</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B> This sample calls the <MSHelp:link keywords="_wcesdk_ctransinplacefilter_class" TABINDEX="0"><B>CTransInPlaceFilter</B></MSHelp:link> implementation of the member function to finish up. </BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Make%20Added%20Interfaces%20Available%20Through%20NonDelegatingQueryInterface&nbsp;(_dxce_dshow_make_added_interfaces_available_through_nondelegatingqueryinterface.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

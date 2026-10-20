@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Troubleshooting: Building a Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Troubleshooting: Building a Driver"/>
+<MSHelp:RLTitle Title="Troubleshooting: Building a Driver"/>
+<MSHelp:Keyword Index="A" Term="cxtbsTroubleshootingBuildingDriver"/>
+<MSHelp:Keyword Index="K" Term="device drivers, building a device driver"/>
+<MSHelp:Keyword Index="K" Term="drivers, troubleshooting building a device driver"/>
+<MSHelp:Keyword Index="K" Term="troubleshooting, building a device driver"/>
+<MSHelp:Keyword Index="A" Term="cxtbsTroubleshootingBuildingDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: drivertrouble.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_815617">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxtbstroubleshootingbuildingdriver"></A>Troubleshooting: Building a Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table shows problems you may encounter in the process of building your driver and lists their possible solutions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Problem</TH>
+<TH width=50%>Possible solution</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>The build cannot find files you expected it to include.</TD>
+<TD width=50%>Ensure that the paths to the files are specified with the <B>INCLUDES</B> macro in the sources file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>The <B>C_DEFINES</B> and <B>RCOPTIONS</B> macros in your sources file are not working.</TD>
+<TD width=50%>Ensure that you are using the <B>CDEFINES</B> and <B>RDEFINES</B> macros instead. The <B>C_DEFINES</B> and <B>RCOPTIONS</B> macros are only appropriate on a Windows-based desktop platform.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You cannot compile Miniport.rc because the build cannot find Windows.h.</TD>
+<TD width=50%>Add the Windows.h file location to the <B>RDEFINES</B> macro in the sources file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Your object files are not building.</TD>
+<TD width=50%>Check the arguments you are passing to the build utilities. Ensure that you did not accidentally pass an empty argument when using a switch.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>The build cannot find a static library, or you receive an error compiling your .def file because it cannot find Deffile.inc.</TD>
+<TD width=50%>Do not copy files to the place that the build utility is searching. Instead, run the Master Build tool (Cebuild.bat) from %_WINCEROOT% with the proper build environment settings. These generate the proper library and include directories for your build environment. Ensure that you run Cebuild.bat from %_WINCEROOT% for every build configuration that you may use to build your driver. For more information on Cebuild.bat, see <MSHelp:link keywords="_wcepb_Master_Build_Tool" TABINDEX="0">Master Build Tool</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You do not have a proper build environment for your driver.</TD>
+<TD width=50%>Create a project. Then, from the <B>Build</B> menu, choose <B>Open Build Release Directory</B>. This opens a command-line interface with the correct environment variables. You can then navigate to the directory where your driver is, and then run the Build tool (Build.exe). For more information on Build.exe, see <MSHelp:link keywords="_wcepb_Build_Tool" TABINDEX="0">Build Tool</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You do not want to use a project.</TD>
+<TD width=50%>Use the Windows CE Build Environment tool (Wince.bat). For more information on Wince.bat, see <MSHelp:link keywords="_wcepb_Windows_CE_Build_Environment_Tool" TABINDEX="0">Windows CE Build Environment Tool</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You want to put your driver into the %_FLATRELEASEDIR% of your project.</TD>
+<TD width=50%>Type <B>set WINCEREL=1</B> from the command line and the build utility will move your driver to the %_FLATRELEASEDIR%. If it is a debug build, the .dll, .pdb, and .map files move to the %_FLATRELEASEDIR% as well.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You want to change your %_FLATRELEASEDIR% environment variable.</TD>
+<TD width=50%>Type <B>set _FLATRELEASEDIR=</B><I>MyFlatReleaseDir</I>. <I>MyFlatReleaseDir</I> is a placeholder for your desired flat release directory. For more information on changing environment variables, see <MSHelp:link keywords="cerefSET" TABINDEX="0">SET</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>The compiler behaves as if some structures and macros in header files do not exist, even though they do.</TD>
+<TD width=50%>Ensure that <code class="ce">WINCEOEM=1</code> is in your sources file. This is often set in a Sources.cmn file so you may run into this issue if you copy a driver from the Public directory and try to build it someplace else.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Sources files with NMAKE conditionals in them do not build properly.</TD>
+<TD width=50%>NMAKE understands conditionals, but BUILD.EXE does not. Do not use conditionals in your sources files.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtbstroubleshootingdevicedriver.htm">Troubleshooting a Device Driver</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Troubleshooting:%20Building%20a%20Driver&nbsp;(cxtbstroubleshootingbuildingdriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

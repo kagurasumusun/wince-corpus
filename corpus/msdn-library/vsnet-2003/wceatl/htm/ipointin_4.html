@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPointerInactiveImpl::OnInactiveSetCursor</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ipointerinactiveimpl.3a3a.oninactivesetcursor"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ipointerinactiveimpl.3a3a.oninactivesetcursor"></A>IPointerInactiveImpl::OnInactiveSetCursor</H1>
+
+<P>This container calls this method to set the mouse pointer over an inactive object after checking the activation policy for the object by calling the <B>IPointerInactiveImpl::GetActivationPolicy</B> method. If the object has not requested to be activated in-place through that call, the container dispatches subsequent WM_SETCURSOR messages to the inactive object by calling <B>OnInactiveSetCursor</B> as long as the mouse pointer stays over the object.</P>
+
+<P>To avoid rounding errors and to make the job easier on the object implementer, this method takes window coordinates in the units of its containing client window, that is, the window in which the object is displayed, instead of the usual HIMETRIC units. Thus, the same coordinates and code path can be used when the object is active and inactive. The window coordinates specify the mouse position. The bounding rectangle is also specified in the same coordinate system.</P>
+
+<P><B>OnInactiveSetCursor</B> takes an additional parameter (<I>fSetAlways</I>) indicating whether the object is obligated to set the cursor or not. Containers should first call this method with this parameter <B>FALSE</B>. The object may return S_FALSE to indicate that it did not set the cursor. In the case, the container should either set the cursor itself, or, if it does not wish to do this, call the <B>OnInactiveSetCursor</B> method again with <I>fSetAlways</I> being <B>TRUE</B>.</P>
+
+<PRE class=syntax><B>STDMETHOD ( OnInactiveSetCursor )(
+LPCRECT </B><I>pRectBounds</I><B>,
+long </B><I>x</I><B>,
+long </B><I>y</I><B>,
+DWORD </B><I>dwMouseMsg</I><B>,
+BOOL </B><I>fSetAlways</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pRectBounds</I></DT>
+
+<DD>[in] The object bounding rectangle specified in client coordinate units of the containing window. This parameter tells the object its exact position and size on the screen when the WM_SETCURSOR message was received. This value is specified in units of the coordinate system of the client.</DD>
+
+<DT><I>x</I></DT>
+
+<DD>[in] Horizontal coordinate of mouse location in units of the containing window of the client.</DD>
+
+<DT><I>y</I></DT>
+
+<DD>[in] Vertical coordinate of mouse location in units of the containing window of the client.</DD>
+
+<DT><I>dwMouseMsg</I></DT>
+
+<DD>[in] Identifier of the mouse message for which a WM_SETCURSOR occurred.</DD>
+
+<DT><I>fSetAlways</I></DT>
+
+<DD>[in] If this value is <B>TRUE</B>, the object must set the cursor; if this value is <B>FALSE</B>, the object is not obligated to set the cursor, and should return S_FALSE in that case.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The ATL implementation returns E_NOTIMPL.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

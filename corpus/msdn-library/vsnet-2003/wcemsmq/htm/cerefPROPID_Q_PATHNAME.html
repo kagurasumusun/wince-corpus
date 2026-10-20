@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PROPID_Q_PATHNAME</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PROPID_Q_PATHNAME"/>
+<MSHelp:RLTitle Title="PROPID_Q_PATHNAME"/>
+<MSHelp:Keyword Index="A" Term="cerefPROPID_Q_PATHNAME"/>
+<MSHelp:Keyword Index="K" Term="PROPID_Q_PATHNAME"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: msmq_properties.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_687238">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefpropid_q_pathname"></A>PROPID_Q_PATHNAME</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Required (to create the queue). This property specifies the MSMQ path name of the queue. The MSMQ path name includes the name of the computer where messages belonging to the queue are stored, whether the queue is public or private, and the name of the queue.
+
+<DL>
+<DT>Type Indicator</DT>
+
+<DD>VT_LPWSTR</dd>
+
+<DT>PROPVARIANT Field</DT>
+
+<DD>pwszVal</dd>
+
+<DT>Property Values</DT>
+
+<DD>MSMQ path name. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The PROPID_Q_PATHNAME property is the only property required when creating a queue. To specify the path name of the queue, specify PROPID_Q_PATHNAME in the <A HREF="cerefmqqueueprops.htm">MQQUEUEPROPS</A> structure and call <A HREF="cerefmqcreatequeue.htm">MQCreateQueue</A>.</P>
+
+<P>An MQ_ERROR_PROPERTY_NOTALLOWED error is returned if any attempt is made to set this property after the queue is created.</P>
+
+<P>The path name of a queue includes the name of the computer where the messages for the queue are stored, an optional PRIVATE$ key word indicating if the queue is private, followed by the name of the queue.</P>
+
+<P>When specifying the name of the computer, use its NetBIOS or full DNS name.</P>
+
+<P>The maximum length of the name of the queue is 124 Unicode characters; however, using names longer than 64 Unicode characters may cause a slight reduction in performance. </P>
+
+<P>The following example shows a MSMQ path name for a private queue.</P>
+
+<PRE class="code">myMachine\Private$\myPrivateQueue</PRE>
+
+<P>As a shortcut, you can substitute a period "." for the local computer. Then, myPrivateQueue could be specified on the local computer as shown.</P>
+
+<PRE class="code">.\Private$\myPrivateQueue</PRE>
+
+<P>Private queues are only created on the local computer. It is the responsibility of the application to ensure that all queue names on the local computer are unique. If a queue name already exists when <B>MQCreateQueue</B> is called, MSMQ returns an MQ_ERROR_QUEUE_EXISTS error to the application.</P>
+
+<P>To retrieve the MSMQ path name of a queue, specify PROPID_Q_PATHNAME<B> </B>in the <B>MQQUEUEPROPS</B> structure, and then call <A HREF="cerefmqgetqueueproperties.htm">MQGetQueueProperties</A> and examine its returned value. </P>
+
+<P>When specifying PROPID_Q_PATHNAME in the <B>MQQUEUEPROPS</B> structure, set its type indicator to VT_NULL. This tells MSMQ to allocate the memory needed for the path name. Later, this allocated memory must be freed using <A HREF="cerefmqfreememory.htm">MQFreeMemory</A>.</P>
+
+<H4 class="dtH4">Examples</H4>
+
+<P>The following examples show how PROPID_Q_PATHNAME is specified in the <B>MQQUEUEPROPS</B> structure for setting and retrieving the path name of the queue. Note that when retrieving the path name of the queue, the type indicator is set to VT_NULL.</P>
+
+<P><B>To set the path name of a queue </B></P>
+
+<PRE class="code">LPWSTR wszPathName = L".\\private$\\TestQueue";
+aPropID[i] = PROPID_Q_PATHNAME;             // Property identifier
+aVariant[i].vt = VT_LPWSTR;                 // Type indicator
+aVariant[i].pwszVal = wszPathName;          // Pathname of queue</PRE>
+
+<P><B>To retrieve the path name of a queue</B></P>
+
+<PRE class="code">aPropID[i] = PROPID_Q_PATHNAME;             // Property identifier
+aVariant[i].vt = VT_NULL;                   // Type indicator
+i++;</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later. Versions prior to 2.12 require the MSMQ add-on pack.</TD>
+<TD width=18%>Mq.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefmqcreatequeue.htm">MQCreateQueue</A>, <A HREF="cerefmqfreememory.htm">MQFreeMemory</A>, <A HREF="cerefmqgetqueueproperties.htm">MQGetQueueProperties</A>, <A HREF="cerefmqqueueprops.htm">MQQUEUEPROPS</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;PROPID_Q_PATHNAME&nbsp;(cerefpropid_q_pathname.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

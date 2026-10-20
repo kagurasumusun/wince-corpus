@@ -1,0 +1,1085 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Designing and Optimizing Microsoft Windows CE .NET for Real-Time Performance</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Designing and Optimizing Microsoft Windows CE .NET for Real-Time Performance"/>
+<MSHelp:RLTitle Title="Designing and Optimizing Microsoft Windows CE .NET for Real-Time Performance"/>
+<MSHelp:Keyword Index="A" Term="rtnetdesigning"/>
+<MSHelp:Keyword Index="K" Term="real-time performance enhancements, Windows CE .NET"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, real-time performance"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwinembed"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Discover the changes made in the Microsoft Windows CE operating system (OS) that are designed to enhance its real-time performance characteristics. Learn about the tools available to test real-time performance, and read the representative real-time performance test results for particular hardware configurations."><meta name="keywords" content="real-time performance, thread scheduling, scheduling threads, interrupt service routine, ISR, interrupt service thread, IST, real-time system, real-time operating system, Windows CE, translation look-aside buffer, TLB, kernel, Windows CE kernel, translation look-aside buffer, TLB, Kcalls, thread priority levels, priority levels, OEM Adaptation Layer, OAL, thread quantum, priority inversion, interrupts, interrupt request line, IRQ, nested interrupts, interrupt latencies, ISR latency, IST latency, Interrupt Timing Analysis, IntrTime, Scheduler Timing Analysis"><META name="rtfFileName" content="rtnetdesigning.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Mike Thomson">
+<META NAME="Date" CONTENT="2002-06-01">
+<META NAME="msdnID" CONTENT="_829900">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="rtnetdesigning"></A>Designing and Optimizing Microsoft Windows CE .NET for Real-Time Performance</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Mike Thomson <BR>
+Jason Browne <BR>
+Microsoft Corporation</P>
+
+<P>Updated: June 2002</P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.0 and later</P>
+
+<P><b class="le">Summary:</b> This paper describes in technical detail the changes made in the Microsoft Windows CE operating system (OS) that are designed to enhance its real-time performance characteristics. It also discusses the tools available to test real-time performance, and provides representative real-time performance test results for particular hardware configurations. (21 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#rtnetdesigning_intro">Introduction</A><CODE><BR>
+</CODE><A HREF="#rtnetdesigning_kernel">Changes to the Kernel</A><CODE><BR>
+</CODE><A HREF="#rtnetdesigning_real">Real-Time Measurement Tools</A><CODE><BR>
+</CODE><A HREF="#rtnetdesigning_perf">Performance Measurements</A><CODE><BR>
+</CODE><A HREF="#rtnetdesigning_summary">Summary</A></P>
+
+<H2 class="dtH1"><A NAME="rtnetdesigning_intro"></A>Introduction</H2>
+
+<P>Real-time performance is essential for the time-critical responses required in high-performance embedded applications, such as telecommunications switching equipment, industrial automation and control systems, medical monitoring equipment, and space navigation and guidance systems. Such applications must deliver their responses within specified time parameters in real time.</P>
+
+<P>What is real-time performance? For the Microsoft Windows CE .NET OS, the following list defines real-time performance:
+
+<UL type="disc">
+	<LI>Guaranteed upper bounds on high-priority thread scheduling&#151;only for the highest-priority thread among all the scheduled threads. </li>
+
+	<LI>Guaranteed upper bound on delay in scheduling high-priority interrupt service routines (ISRs). The kernel has a few places where pre-emption is turned off for a short, bounded time. </li>
+
+	<LI>Fine control over the scheduler and how it schedules threads.</li>
+</UL>
+
+<P>It is important to distinguish between a real-time system and a real-time OS (RTOS). The real-time system consists of all elements&#151;the hardware, OS, and applications&#151;that are needed to meet the system requirements. The RTOS is just one element of the complete real-time system and must provide sufficient functionality to enable the overall real-time system to meet its requirements. </P>
+
+<P>Although previous versions of Windows CE offered some RTOS capabilities, a number of significant changes made to the kernel since Windows CE 3.0 have greatly enhanced real-time performance. The Windows CE .NET kernel contains the same real-time enhancements as Windows CE 3.0 with some additional features. This paper describes the following changes that are part of Windows CE .NET and its previous versions:</P>
+
+<H4 class="dtH1">Windows CE .NET</H4>
+
+<UL type="disc">
+	<LI>Added the ability to specify the page pool size through an OEM-defined variable for x86 platforms.</li>
+</UL>
+
+<H4 class="dtH1">Windows CE 3.0</H4>
+
+<UL type="disc">
+	<LI>Increased number of thread priority levels from 8 to 256. </li>
+
+	<LI>More control over times and scheduling. Applications can control the amount of time provided to each thread and manipulate the scheduler to their advantage. Timer accuracy is now one millisecond for Sleep- and Wait-related application programming interfaces (APIs). </li>
+
+	<LI>Improved method for handling priority inversion. </li>
+
+	<LI>Full support for nested interrupts. </li>
+
+	<LI>Reduced ISR and interrupt service thread (IST) latencies.</li>
+
+	<LI>More granular memory management control.</li>
+</UL>
+
+<P>In addition, this paper describes tools used to test the real-time performance of the kernel and provides real-time performance test results on three different CPUs.</P>
+
+<H2 class="dtH1"><A NAME="rtnetdesigning_kernel"></A>Changes to the Kernel</H2>
+
+<P>The kernel is the inner core of the Windows CE OS and is responsible for scheduling and synchronizing threads, processing exceptions and interrupts, loading applications, and managing virtual memory. In Windows CE 3.0, the kernel underwent the following several changes to increase performance and reduce latencies:
+
+<UL type="disc">
+	<LI>Moving all kernel data structures into physical memory, thus largely avoiding translation look-aside buffer (TLB) misses while executing non-preemptible code in the kernel. </li>
+
+	<LI>All non-preemptible, but interruptible, portions of the kernel, known as KCALLs, were broken into smaller non-preemptible sections. This introduces some complexity, due to the increased number of sections, but now lets pre-emption be turned off for shorter periods of time. </li>
+</UL>
+
+<P>This section describes further changes made to the kernel to enhance the real-time performance of Windows CE 3.0.</P>
+
+<H3 class="dtH1">More Priority Levels</H3>
+
+<P>The kernel's scheduler runs a thread with a higher-priority level first and runs threads with the same priority in a round-robin fashion. Assigning priority levels to threads is one way to manage the execution speed.</P>
+
+<P>Windows CE 3.0 increased the number of priority levels available for threads from 8 to 256, with 0 being the highest priority and 255 the lowest. Priority levels 0 to 7 of the previous version of Windows CE correspond to levels 248 to 255 in Windows CE 3.0. More priority levels allows developers greater flexibility in controlling the scheduling of embedded systems and prevent random applications from degrading system performance by restricting the number of priority levels.</P>
+
+<P>To assign these new priorities, Windows CE 3.0 introduces two new functions: <B>CeSetThreadPriority</B> and <B>CeGetThreadPriority</B>. The new functions look exactly like the <B>SetThreadPriority</B> and <B>GetThreadPriority</B> functions in Windows CE 2.12, except that the new functions take a number in the range of 0 to 255.</P>
+
+<H3 class="dtH1">More Control over Times and Scheduling</H3>
+
+<P>Windows CE 3.0 has improved timer performance with one-millisecond accuracy in the timer and Sleep function calls, and applications can set a quantum for each thread. </P>
+
+<P>The timer, or system tick, is the rate at which a timer interrupt is generated and serviced by the OS. Previously, the timer was also the thread quantum, the maximum amount of time that a thread could run in the system without being preempted. In Windows CE 3.0, the timer is no longer directly related to the thread quantum.</P>
+
+<P>Previously, the OEM set the timer and the quantum as a constant in the OEM adaptation layer (OAL) at about 25 milliseconds. When the timer fired, the kernel scheduled a new thread if one was ready. In Windows CE 3.0, the timer is always set to one millisecond and the quantum can be set for each thread. </P>
+
+<P>Changing the timer from OEM-defined to one millisecond lets an application perform a <B>Sleep(1)</B> function and expect to receive approximately one-millisecond accuracy. Of course, this is dependent on the priority of the thread, the priority of other threads, and whether ISRs are running. Previously, <B>Sleep(1)</B> returned on a system tick, which meant <B>Sleep(1)</B> was really <B>Sleep(25)</B> if the timer was set to 25 milliseconds.</P>
+
+<H4 class="dtH1">Timer interrupt</H4>
+
+<P>The kernel has a few new variables now available to developers that determine whether a reschedule is required on the system tick. A fully implemented system tick ISR can prevent the kernel from rescheduling by returning SYSINTR_NOP flag instead of the SYSINTR_RESCHED flag, when appropriate. Nk.lib exports the following variables that are used in the Timer ISR:
+
+<UL type="disc">
+	<LI><B>dwPreempt </B>is the number of milliseconds until the thread is pre-empted. </li>
+
+	<LI><B>dwSleepMin</B> is the number of milliseconds until the first timeout&#151;if any&#151;expires, requiring a reschedule. </li>
+
+	<LI><B>ticksleft</B> is the number of system ticks that have elapsed but have not yet been processed by the scheduler's sleep queues; thus, a non-zero value causes a reschedule. </li>
+</UL>
+
+<P>In the Timer ISR, additional logic optimizes the scheduler and prevents the kernel from doing unnecessary work as the following code sample shows.</P>
+
+<PRE class="code">if (ticksleft || (dwSleepMin &amp;&amp; (DiffMSec &gt;= dwSleepMin)) || (dwPreempt &amp;&amp; 
+     (DiffMSec &gt;= dwPreempt))) return SYSINTR_RESCHED; return SYSINTR_NOP;
+</PRE>
+
+<H4 class="dtH1">OEMIdle function </H4>
+
+<P>The OEM implements the <B>OEMIdle</B> function, which is called by the kernel when there are no threads to schedule. In previous releases, the timer tick forced the OS out of an idle state and back into the kernel to determine if threads were ready to be scheduled. If no threads were ready, the kernel again called <B>OEMIdle</B>. This operation caused the kernel to be activated every 25 milliseconds&#151;or other quantum specified by the OEM&#151;to determine that there were still no threads to schedule. On a battery-powered device, such an operation uses up valuable battery life.</P>
+
+<P>To enable the reduction of power consumption with a higher tick rate in Windows CE 3.0, the <B>OEMIdle</B> function can put the CPU in standby mode for longer than one millisecond. The OEM programs the system tick timer to wake up on the first timeout available by using the <B>dwSleepMin</B> and <B>DiffMSec</B> variables. <B>DiffMSec </B>is the current millisecond value since the last interval time was retrieved from the <B>TimerCallBack</B> function. </P>
+
+<P>The hardware timer is likely to have a maximum timeout that is less than <B>MAX_DWORD</B> milliseconds, so the timer may be programmed for its maximum wait time. In all cases, when the system returns from idle, the <B>OEMIdle</B> function must update <B>CurMSec</B> and <B>DiffMSec</B> with the actual number of milliseconds that have elapsed. <B>CurMSec</B> is the current value for the interval time&#151;that is, the number of milliseconds since startup.</P>
+
+<H4 class="dtH1">Thread quantum</H4>
+
+<P>In Windows CE 3.0, the thread quantum is flexible enough to enable an application to set the quantum on a thread-by-thread basis. This lets a developer adapt the scheduler to the current needs of the application. To adjust the time quantum, two new functions have been added: <B>CeGetThreadQuantum</B> and <B>CeSetThreadQuantum</B>. This change enables an application to set the quantum of a thread based on the amount of time needed by the thread to complete a task. By setting the thread quantum of any thread to zero, a round-robin scheduling algorithm can change to a run-to-completion algorithm. Only a higher-priority thread or a hardware interrupt can preempt a thread that is set to run-to-completion.</P>
+
+<P>The default quantum is 100 milliseconds, but an OEM can override the default for the system by setting the kernel variable <B>dwDefaultThreadQuantum</B> to any value greater than zero during the OEM initialization phase.</P>
+
+<H3 class="dtH1">Changes to Handling Priority Inversion</H3>
+
+<P>To help improve response time, Windows CE 3.0 changed its approach to priority inversion, which occurs when a low-priority thread owns a kernel object that a higher-priority thread requires. Windows CE deals with priority inversion using priority inheritance, where a thread that is blocked holding a kernel object needed by a higher-priority thread inherits the higher priority. Priority inversion enables the lower-priority thread to run and free the resource for use by the higher-priority thread. Previously, the kernel handled an entire inversion chain. Since Windows CE 3.0, the kernel is guaranteed only to handle priority inversion to a depth of one level.</P>
+
+<P>There are two basic examples of priority inversion. The first is a simple case where the processing of priority inversion has not changed from Windows CE 2.12 to Windows CE 3.0. This case can be seen when, for example, you have three threads in a running state. Thread A is at priority 1 and threads B and C are at a lower priority. If thread A is running and becomes blocked because thread B is holding a kernel object that thread A needs, then thread B's priority is boosted to A's priority level to allow thread B to run. If thread B then becomes blocked because thread C is holding a kernel object that thread B needs, thread C's priority is boosted to A's priority level to allow thread C to also run. </P>
+
+<P>The second and more interesting case is where thread A can run at a higher priority then B and C, thread B holds a kernel object needed by A, thread B is blocked waiting for C to release a kernel object that it needs, and C is running. In Windows CE 2.12, when A runs and then is blocked on B, the priorities for both B and C are boosted to A's priority to enable them to run. In Windows CE 3.0, when A is blocked on B, only thread B's priority is boosted. By reducing the complexity and changing the algorithm, the largest KCALL in Windows CE was greatly reduced and bounded.</P>
+
+<H3 class="dtH1">Interrupt Handling and Nested Interrupts</H3>
+
+<P>Real-time applications use interrupts as a way to ensure that the OS quickly notices external events. Within Windows CE, the kernel and the OAL are tuned to optimize interrupt delivery and event dispatching to the rest of the system. Windows CE balances performance and ease of implementation by splitting interrupt processing into two steps: an interrupt service routine (ISR) and an interrupt service thread (IST). </P>
+
+<P>Each hardware interrupt request line (IRQ) is associated with one ISR. When interrupts are enabled and an interrupt occurs, the kernel calls the registered ISR for that interrupt. The ISR, the kernel-mode portion of interrupt processing, is kept as short as possible. Its responsibility is primarily to direct the kernel to launch the appropriate IST. </P>
+
+<P>The ISR performs its minimal processing and returns an interrupt identifier to the kernel. The kernel examines the returned interrupt identifier and sets the associated event that links an ISR to an IST. The IST waits on that event. When the kernel sets the event, the IST stops waiting and starts performing its additional interrupt processing if it is the highest-priority thread ready to run. Most of the interrupt handling actually occurs within the IST.</P>
+
+<H4 class="dtH1">Nested interrupts</H4>
+
+<P>In versions prior to Windows CE 3.0, when an ISR was running, all other interrupts were turned off. This prevented the kernel from handling any additional interrupts until one ISR had completed. So if a high-priority interrupt were ready, the kernel would not handle the new interrupt until the current ISR had completed operations and returned to the kernel.</P>
+
+<P>To prevent the loss and delay of high-priority interrupts, Windows CE 3.0 added support for the nesting of interrupts based on priority, if the CPU or additional associated hardware support it. When an ISR is running in Windows CE 3.0, the kernel runs the specified ISR the same as before, but only disables the same and lower-priority ISRs. If a higher-priority ISR is ready to run, the kernel saves the state of the running ISR, and lets the higher priority ISR run. The kernel can nest as many ISRs as supported by the CPU. ISRs nest in order of their hardware priority.</P>
+
+<P>In most cases, an OEM's current ISR code would not change because the kernel takes care of the details. If the OEM is sharing global variables between ISRs, changes may be required, but in general, ISRs are not aware that they have been interrupted for a higher-priority ISR. Where an ISR performs an action periodically, a noticeable delay may occur but only if a higher-priority IRQ is fired. </P>
+
+<P>After the highest-priority ISR ends, any pending lower-priority ISRs are executed. Then the kernel resumes processing any KCALL that was interrupted. If a thread was being scheduled and was interrupted in the middle of its KCALL, the scheduler resumes processing the thread. This enables the kernel to pick up where it left off and not totally restart the scheduling of a thread, saving valuable time. Once the pending KCALL is complete, the kernel reschedules the threads for execution and starts executing the highest-priority thread that is ready to run.</P>
+
+<H3 class="dtH1">Interrupt Latencies</H3>
+
+<P>One of the most important features of kernel real-time performance is the ability to service an IRQ within a specified amount of time. Interrupt latency refers primarily to the software interrupt handling latencies&#151;that is, the amount of time that elapses from the time that an external interrupt arrives at the processor until the time that the interrupt processing begins. </P>
+
+<P>Windows CE 3.0 interrupt latency times are bounded for threads locked in memory, if paging does not occur. This makes it possible to calculate the worst-case latencies&#151;the total times to the start of the ISR and to the start of the IST. The total amount of time until the interrupt is handled can then be determined by calculating the amount of time needed within the ISR and IST.</P>
+
+<H4 class="dtH1">ISR latency</H4>
+
+<P>ISR latency is the time from when an IRQ is set at the CPU to when the ISR begins to run. The following three time-related variables affect the start of an ISR:</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>A</B> Maximum time that interrupts are off in the kernel. The kernel seldom turns off interrupts, but when they are turned off, it is for a bounded amount of time. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>B</B> Time between when the kernel dispatches an interrupt and when an ISR is actually invoked. The kernel uses this time to determine what ISR to run and to save any register that must be saved before proceeding. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>C</B> Time between when an ISR returns to the kernel and the kernel actually stops processing the interrupt. This is the time when the kernel completes the ISR operation by restoring any states, such as registers, that were saved before the ISR was invoked. </BLOCKQUOTE>
+
+<P>The start of the ISR that is being measured can be calculated based on the current status of other interrupts in the system. If an interrupt is in progress, calculating the start of the new ISR to be measured must account for two factors: the number of higher-priority interrupts that will occur after the interrupt of interest has occurred and the amount of time spent executing an ISR. The following illustration shows the resulting start time. </P>
+
+<P><I>Start of ISR =</I></P>
+
+<P class="fig"><CODE><IMG SRC="rtnetdesigning1.gif" ALT="" BORDER=0></CODE></P>
+
+<P>Where <I>N<SUB>ISR</SUB></I> is the number of higher-priority interrupts that will occur after the interrupt of interest has occurred; and <I>T<SUB>ISR(N)</SUB></I> is the amount of time needed to execute an ISR. The formula is illustrated below in Figure 1.</P>
+
+<P class="fig"><CODE><IMG SRC="rtnetdesigning2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. Schematic representation of formula for ISR start time</B></P>
+
+<P>If no higher priority interrupts occur (N<SUB>ISR</SUB> = 0), the previous formula reduces to the following code example.</P>
+
+<P><I>Start of ISR = A + B</I></P>
+
+<P>Both Windows CE and the OEM affect the time to execute an ISR. Windows CE is in control of the variables A, B, and C, all of which are bounded. The OEM is in control of N<SUB>ISR</SUB> and T<SUB>ISR(N)</SUB>, both of which can dramatically affect ISR latencies.</P>
+
+<H3 class="dtH1">IST Latency</H3>
+
+<P>IST latency is the time from when an ISR finishes execution&#151;that is, signals a thread&#151;to when the IST begins execution. The following four time-related variables affect the start of an IST:</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>B</B> Time between when the kernel dispatches an interrupt and when an ISR is actually invoked. The kernel uses this time to determine what ISR to run and to save any register that must be saved before proceeding. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>C</B> Time between when ISR returns to the kernel and the kernel actually stops processing the interrupt. This is the time when the kernel completes the ISR operation by restoring any state, such as registers, that were saved before the ISR was invoked. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>L</B> Maximum time in a KCALL. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>M</B> Time to schedule a thread. </BLOCKQUOTE>
+
+<P>The start time of the highest-priority IST begins after the ISR returns to the kernel and the kernel performs some work to begin the execution of the IST. The IST start time is affected by the total time in all ISRs after the ISR returns and signals IST to run. The following illustration shows the resulting start time. </P>
+
+<P><I>Start of highest priority IST =</I></P>
+
+<P class="fig"><IMG SRC="rtnetdesigning3.gif" ALT="" BORDER=0></P>
+
+<P>The following illustration shows the formula.</P>
+
+<P class="fig"><CODE><IMG SRC="rtnetdesigning4.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. Schematic representation of formula for start of highest priority IST</B></P>
+
+<P>Both Windows CE and the OEM affect the time required to execute an IST. Windows CE is in control of the variables B, C, L, and M, which are bounded. The OEM is in control of N<SUB>ISR</SUB> and T<SUB>ISR(N)</SUB>, which can dramatically affect IST latencies.</P>
+
+<P>Windows CE 3.0 also adds the following restriction to ISTs: The event handle that links the ISR and IST can only be used in the <B>WaitForSingleObject</B> function. Windows CE 3.0 prevents the ISR-IST event handle from being used in a <B>WaitForMultipleObjects</B> function, which means that the kernel can guarantee an upper bound on the time to trigger the event and time to release the IST.</P>
+
+<H3 class="dtH1">Memory and Real-Time Performance</H3>
+
+<P>The kernel supports several types of kernel objects, such as processes, threads, critical sections, mutexes, events, and semaphores. Because the OS uses virtual memory, all kernel objects are allocated in virtual memory, and thus the memory for these objects is allocated on demand. Because allocating memory on demand can affect performance, OEMs should allocate kernel objects whenever a process starts. Note that once the kernel has allocated memory for a kernel object, it does not release the memory back to the system after the object has been freed. The kernel keeps this pool of memory available; it reuses memory from the pool when necessary and allocates more memory when the memory pool is insufficient.</P>
+
+<P>There are three types of memory that can affect real-time performance: virtual, heap, and stack. </P>
+
+<H4 class="dtH1">Virtual memory</H4>
+
+<P>Windows CE is a virtual memory&#0150;based OS that makes full use of a memory management unit (MMU). Because memory allocation and deallocation is based on virtual memory, real-time performance may be affected. The lowest level of memory is virtual memory, specifically virtual memory APIs such as <B>VirtualAlloc</B>. During the act of allocating virtual memory, the kernel searches for free physical memory and then associates the memory with the virtual address space of a process. Because virtual memory is allocated on 64-kilobyte (KB) boundaries, virtual memory APIs should not be used for small allocations. During a virtual memory allocation request, the kernel searches for physical memory from its pool of physical memory. Depending on the amount of memory in use and the fragmentation of the memory, the time to search for memory will vary. In a virtually managed system, all processes access memory from the same pool of physical memory. </P>
+
+<P>To reduce the impact on allocating virtual memory, a process should allocate and commit all virtual memory before proceeding with normal processing.</P>
+
+<H4 class="dtH1">Heap memory</H4>
+
+<P>The next level above virtual memory is heap memory and its associated APIs. The heap APIs rely on the low-level services that virtual memory APIs use for support. Memory allocations in a heap are not made on a 64-KB boundary and are meant for allocations smaller than 192 KB. Anything higher than 192 KB will cause the Heap Management System to use virtual memory directly to create a separate heap for the allocation.</P>
+
+<P>A default heap is created for a process when it is created. An application can use the process heap for its memory allocations and the heap will grow and shrink accordingly. However, a performance penalty could be incurred if the amount and type of memory allocations in the default heap cause the heap to become fragmented. When a heap becomes fragmented, it spends more time trying to find a hole for a new memory allocation, which can affect performance. To prevent fragmentation from occurring in a process, an OEM should take control of the memory allocation process by creating separate heaps for similar objects. If a heap exists that contains same-sized objects, the Heap Manager will more easily be able to find a free block large enough to hold a new allocation. However, even if fragmentation is manageable through separate heaps, there is still a cost associated with allocating memory as you go.</P>
+
+<P>To reduce the impact on allocating heap memory, a process should allocate heap memory before proceeding with normal processing.</P>
+
+<H4 class="dtH1">Stack memory</H4>
+
+<P>When a new thread is created in the system, the kernel reserves memory for the stack. The amount of memory reserved for the stack is determined by the <I>/STACK</I> parameter passed to the linker when the module is built. The default stack size for Windows CE components is 65 KB. When a thread is scheduled for the first time, the thread's stack memory is committed; stack memory is committed one page at a time and committed only when needed.</P>
+
+<P>To prevent the initial commitment of stack memory from affecting your performance, you should ensure that that your thread is scheduled at least once before performing real-time processing. In the case of an IST, this generally occurs because the thread performs several actions before settling down into a <B>WaitForSingleObject</B> loop. Further stack commits can be avoided if your thread requires no more than the initial stack allocation. Because memory is typically low in a Windows CE environment, the kernel will at times take back stack memory from threads in which it is no longer needed. The OEM controls the timing of this procedure and the parameters passed to <B>SetOomEvent</B>. If the values passed to <B>SetOomEvent</B> trigger a hunt for stack memory, the kernel will suspend each thread that has a free stack while memory from the stack is removed. To avoid this situation, carefully set the memory usage parameters for <B>SetOomEvent</B>.</P>
+
+<H4 class="dtH1">Page table pool size</H4>
+
+<P>In Windows CE .NET, a new OEM variable called <B>dwOEMPTPoolSize</B> was created. This variable allows the OEM to define the size of the virtual memory page table data structure that the kernel uses to maintain its list of memory pages for each process on x86 platforms. The default value is 16 pages, with the maximum being 512 pages. Depending on the system, the OEM will have to increase the value until the right fit is found. The size of the page table pool structure can affect how often a page of the pool must be zeroed to map memory to a different area in the same process or to a different process. The zeroing of a page occurs when there are no available pointers in the page table data structure. For security reasons, a page must be zeroed before assigning it to the new process. The act of zeroing several pages can adversely influence the IST latency of a real-time platform. However, the OEM must also balance this issue with the fact that as the structure gets bigger, the average process switch time will increase because the kernel needs to reset permissions for each page pointer in the structure. Because this variable is available only in Windows CE .NET and later, a quick fix engineering (QFE) topic was created for developers who use Windows CE 3.0 that sets a static size to the page table pool size. For more information, please see this <A HREF="http://go.microsoft.com/fwlink/?LinkId=8399">Microsoft Web site</A>, open the Readme.txt file, and then search for QFE 33.</P>
+
+<H2 class="dtH1"><A NAME="rtnetdesigning_real"></A>Real-Time Measurement Tools</H2>
+
+<P>The updates to the kernel for Windows CE 3.0 include two kernel-level tools, Interrupt Timing Analysis (ILTiming) and Scheduler Timing Analysis (OSBench), to test the real-time performance of the kernel and measure specific latencies. Performance numbers are hardware-specific, depending on CPU type and speed, memory architecture, and cache organization, and size.</P>
+
+<H3 class="dtH1">Interrupt Timing Analysis (ILTiming)</H3>
+
+<P>The measurements of ISR and IST latencies have been combined in the ILTiming test tool, previously called IntrTime, that is available in source code and also distributed with Microsoft Platform Builder. The measurements are made using the system clock timer in an effort to make ILTiming available to all hardware platforms on which Windows CE runs, because some platforms do not provide for a separately available, unused timer.</P>
+
+<P>Under normal circumstances, the system clock interrupts the kernel in regular intervals. The associated system timer ISR then processes the tick and returns either SYSINTR_NOP directing the kernel to ignore the tick or SYSINTR_RESCHED to wake up the scheduler.</P>
+
+<P>The ILTiming test tool measures the latencies by taking every <I>n</I><SUP>th</SUP> tick of the system clock-defaults to every fifth system tick, and signaling a special SYSINTR_TIMING interrupt identifier event. The ILTiming application's main thread waits on the SYSINTR_TIMING interrupt event, thus becoming the IST. The ISR and IST measurements are derived from time stamps&#151;that is, the counter values of the high-resolution timer since the last system tick. </P>
+
+<P>Because ILTiming requires special modifications to the OAL only and not to the kernel, it can be easily adapted and can run on any OEM platform.</P>
+
+<H4 class="dtH1">ILTiming command prompt parameters </H4>
+
+<P>The ILTiming command prompt parameters allow for the introduction of the following variations:
+
+<UL type="disc">
+	<LI>Setting the IST to run on various priorities </li>
+
+	<LI>Flushing or not flushing the cache after each interrupt </li>
+
+	<LI>Changing the ISR rate and number of interrupts captured </li>
+
+	<LI>Printing or outputting to file the collected results </li>
+</UL>
+
+<P>The following ILTiming command prompt parameters are available:</P>
+
+<PRE class="code">Usage: iltiming [ options ]
+Options:
+  -p num          Priority of the IST (default 0 ; highest)
+  -ni             no idle priority thread 
+  -i0             no idle thread (same as -ni)
+  -i1             Run idle thread type 1
+  -i2             Run idle thread type 2
+  -i3             Run idle thread type 3
+  -i4             Run idle thread type 4
+  -i5             Run idle thread type 5
+  -t num          SYSINTR_TIMING interval (default 5)
+  -n num          number of interrupts (default 10)
+  -all            print all data (default: print summary only)
+  -o file         output to file (default: output to debug)
+  -h              Display the help screen
+</PRE>
+
+<P>The IST can be run at different priority levels (<I>-p</I>). By default, the application flushes the cache before each run. The option <I>-ncs </I>disables the <B>CacheSync</B> call. The <I>-t</I> option sets the ISR rate, and the system tick ISR returns <I>SYSINTR_TIMING</I> every <I>t</I><SUP>th</SUP> tick.</P>
+
+<P>ILTiming can also create one or more idle threads running in the background. This affects the IST latencies by allowing the kernel to be in a non-preemptible kernel call that must finish before the IST is run. The following five types of idle threads are available:
+
+<UL type="disc">
+	<LI>Idle thread 1: One thread simply spinning, doing nothing </li>
+
+	<LI>Idle thread 2: One thread spinning doing a <B>SetThreadPriority(IDLE)</B> </li>
+
+	<LI>Idle thread 3: Two threads alternating the <B>SetEvent</B> and <B>WaitForSingleObject</B> functions with a 10-second timeout</li>
+
+	<LI>Idle thread 4: Two threads alternating the <B>SetEvent</B> and <B>WaitForSingleObject</B> functions with an infinite timeout</li>
+
+	<LI>Idle thread 5: One thread calling <B>VirtualAlloc</B> and <B>VirtualFree</B> with an infinite timeout. Designed to flush the cache and the TLB.</li>
+</UL>
+
+<H4 class="dtH1">External interrupt response measurements</H4>
+
+<P>For quick assessment of the day-to-day, real-time performance of the system, the Interrupt Timing Analysis tool is sufficient to determine the ISR and IST interrupt latencies. This convenient method works across all supported processors but relies on the timer on the device itself, which may affect the measurements.</P>
+
+<P>Thus, a more elaborate setup can be used to accurately measure ISR and IST latencies. The following two machines can be set up:
+
+<UL type="disc">
+	<LI>A<B> workstation</B> that generates an external interrupt and measures the time it takes to receive acknowledgements from ISR and IST routines. </li>
+
+	<LI><B>Device-under-test</B> that receives the external interrupt and toggles output lines when ISR and IST routines are reached. </li>
+</UL>
+
+<P>Testing is performed under various stress levels, running anywhere from one to hundreds of threads of varying priorities on the test device.</P>
+
+<P>The Microsoft Windows NT&#174; 4.0&#0150;based workstation, equipped with a National Instruments PC-TIO-10 digital I/O timer/counter card, is used to generate interrupts and time responses, and a CEPC target platform equipped with an identical card is used to respond to those interrupts. The Windows NT software takes advantage of the driver library supplied by National Instruments, while the Windows CE software is written by Microsoft.</P>
+
+<P>The theory of operation is simple: The PC-TIO-10 card has two sets of five timers. Each set contains one timer that provides 200-nanosecond resolution, while the other timers have one-microsecond granularity. In addition, the card contains two sets of eight digital I/O lines, with each set providing one line that can be used to interrupt on edge or level triggering. One output line from the Windows NT&#0150;based machine is wired both to the external interrupt pin of the CEPC target platform and back to the timers on the Windows NT&#0150;based workstation's card.</P>
+
+<P>As the Windows NT&#0150;based workstation asserts one of its output lines, it generates an interrupt on the CEPC target platform and starts ISR and IST timers on the Windows NT card. The ISR on the CEPC target platform acknowledges the receipt of the interrupt by asserting an output line on the card, which stops the ISR timer on the Windows NT&#0150;based workstation and notifies the kernel to schedule the IST. When the IST starts running, it asserts a different output line, stopping the second timer on the Windows NT&#0150;based workstation. At this point, the Windows NT&#0150;based workstation can read the values on the timer counters to determine the intervals between an interrupt being generated and the CEPC target platform's responses. As soon as the Windows NT&#0150;based workstation has read the counter values, it issues another interrupt that the CEPC target platform uses to bring all output lines to the standby state, ready for another cycle.</P>
+
+<P>Preliminary results gathered using the above measurements confirm the accuracy of the ILTiming testing results.</P>
+
+<H3 class="dtH1">Scheduler Timing Analysis (OSBench)</H3>
+
+<P>OSBench, previously called CEBench, is a performance tool included in Windows CE 3.0 and later. It tests for scheduler performance timing focus on measuring the time required to perform basic kernel operations, such as the following synchronization actions: how long to acquire a critical section, how long to schedule a thread waiting on an event that another thread has just set, and so on. Wherever appropriate, the test runs two sets of metrics: thread-to-thread within a process and thread-to-thread across processes. If appropriate, a stress suite may be applied while running the test.</P>
+
+<P>OSBench collects timing samples for the following performance metrics in Windows CE:
+
+<UL type="disc">
+	<LI>Acquire/release critical section (both fastpath and traditional) </li>
+
+	<LI>Wait/signal an event (wait single with auto reset) </li>
+
+	<LI>Semaphores </li>
+
+	<LI>Mutexes </li>
+
+	<LI>Voluntary yield using <B>Sleep(0)</B> </li>
+</UL>
+
+<P>Metrics that are different from the above yield/run scenarios are timings for interlocked APIs and the system-call overhead. These metrics are Interlocked Increment/Decrement, Interlocked Exchange, and System API call overhead.</P>
+
+<P>The following sample code shows the OSBench command-prompt parameters. </P>
+
+<PRE class="code">Usage: osbench [ options ]
+Options:
+  -all         Run all tests (default: run only those specified by -t option)
+  -t num       ID of test to run (need separate -t for each test)
+  -n num       Number of samples per test (default = 100)
+  -m addr      Virtual address to write marker values to (default = &lt;none&gt;)
+  -list        List test IDs with descriptions
+  -v           Verbose : show all measurements
+  -o file      Output to CSV file (default: output only to debug)
+  -h           Display the help screen
+
+OSBench &#0150;list
+TestId 0 : CriticalSections
+TestId 1 : Event set-wakeup
+TestId 2 : Semaphore release-acquire
+TestId 3 : Mutex
+TestId 4 : Voluntary yield
+TestId 5 : PSL API call overhead
+</PRE>
+
+<P>As with ILTiming measurements, the <B>QueryPerformanceCounter</B> function call is used to obtain timing information. In addition, at every timing point where <B>QueryPerformanceCounter</B> is invoked, a user can specify that a specific marker value be written to the virtual address. Providing the virtual address at the command prompt when OSBench begins enables this hardware verification feature. Markers written at the virtual address can then be monitored by an analyzer, independently timed by an external device, and the results used to double-check the <B>QueryPerformanceCounter</B> timing accuracy. The setup similar to the external measurements of interrupt latency can be used for this purpose.</P>
+
+<P>When using the <B>QueryPerformanceCounter</B> function call to get time stamps, the frequency of the counter on a particular platform and the overhead of calling this function have to be taken into account when analyzing the results. Care needs to be exercised to provide for proper exclusions of the measuring overhead in the final timing numbers. The <B>QueryPerformanceCounter</B> call is looped for a number of iterations before every test and the average is subtracted from the final result.</P>
+
+<P>When the operation takes a very short time to complete, the overhead of the <B>QueryPerformanceCounter</B> function call becomes significant. In those cases, the operation is looped for a fixed number of iterations per sample (IPS), a clear indication of which is provided with every test, and the result is then averaged. A special submarker value is provided for these cases if hardware verification was enabled. A side effect of this looping is that the cache cannot be flushed between each iteration of the operation. For other tests where the IPS is equal to 1, the test is run twice, once with and once without cache flush for each iteration.</P>
+
+<P>The following sample code shows OSBench test output.</P>
+
+<PRE class="code">==================================================
+|  1.00  |  IP =  NO  |  CS =  NO  |       1 IPS
+--------------------------------------------------
+Event intraprocess :
+Time from SetEvent in one thread to a blocked 
+              WaitForSingleObject() 
+waking in another thread in the same process.
+--------------------------------------------------
+|  Max Time =         10.057 us
+|  Min Time =          5.867 us
+|  Avg Time =          6.823 us
+==================================================
+</PRE>
+
+<P>In the example of test number 1.00, whose output is shown above, the operation was timing of the intraprocess event synchronization object. The IPS was 1; <B>CacheSync</B> (CS) was not conducted after each run; interprocess status (IP) shows that a second process was not used&#151;both threads were in the same process. The maximum, minimum, and average results for 100 operations&#151;the default if nothing is specified at the command prompt&#151;are given in microseconds. The basic suite of tests and the overall layout of the OSBench program allow for easy additions of new test cases and measurements, augmenting the implementation for particular kernel functions that might be of special interest.</P>
+
+<H2 class="dtH1"><A NAME="rtnetdesigning_perf"></A>Performance Measurements</H2>
+
+<P>Performance measurements of Windows CE .NET were taken on three different x86 CPUs. All measurements are in microseconds and the results could vary depending on system load.</P>
+
+<H3 class="dtH1">ILTiming Test Results</H3>
+
+<P>The following table shows the ISR and IST latencies.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>These numbers, in microseconds, should only be used as an example of performance on a specific piece of hardware. Many hardware and software variables can affect these numbers so users should run these tests on their own platforms and not expect to obtain identical results.</BLOCKQUOTE>
+
+<P class="label"><B>Table 1.</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=14%>CPU</TH>
+<TH colspan=3 width=43%>ISR latency (microseconds)</TH>
+<TH colspan=3 width=43%>IST latency (microseconds)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><CODE>&nbsp;</CODE></TD>
+<TD width=14%><B>Minimum</B></TD>
+<TD width=14%><B>Maximum</B></TD>
+<TD width=15%><B>Average</B></TD>
+<TD width=14%><B>Minimum</B></TD>
+<TD width=14%><B>Maximum</B></TD>
+<TD width=15%><B>Average</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>AMD K6-2 - 350 MHz</TD>
+<TD width=14%>1.6</TD>
+<TD width=14%>3.3</TD>
+<TD width=15%>1.6</TD>
+<TD width=14%>9.2</TD>
+<TD width=14%>34.3</TD>
+<TD width=15%>21.2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>Pentium &#0150; 166 MHz</TD>
+<TD width=14%>3.3</TD>
+<TD width=14%>6.7</TD>
+<TD width=15%>4.2</TD>
+<TD width=14%>19.2</TD>
+<TD width=14%>105.6</TD>
+<TD width=15%>62.1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>Pentium PIII &#0150;500 MHz</TD>
+<TD width=14%>3.3</TD>
+<TD width=14%>6.7</TD>
+<TD width=15%>3.4</TD>
+<TD width=14%>10</TD>
+<TD width=14%>26.8</TD>
+<TD width=15%>17.2</TD>
+</TR>
+</table></div>
+
+<H3 class="dtH1">OSBench Test Results</H3>
+
+<P>The OSBench tests were run on all three CPUs and used the following two basic variations to calculate the performance numbers:
+
+<UL type="disc">
+	<LI>The tests were performed in the same process or between two or more processes. </li>
+
+	<LI>The tests were performed without cache flushes and with cache flushes&#151;<B>CacheSync</B>&#151;to flush both the data and instruction cache. </li>
+</UL>
+
+<P>The table below shows the results for the OSBench tests. The results times are in microseconds to perform a specific test, which is represented by a number in the first column and defined in the section that follows the table.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>These numbers, in microseconds, should only be used as an example of performance on a specific device. Many hardware and software variables can affect these numbers so you should run these tests on their own platforms and do not expect to obtain identical results.</BLOCKQUOTE>
+
+<P class="label"><B>Table 2.</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=7%>Test</TH>
+<TH colspan=3 width=30%>AMD K6-2 - 350 MHz</TH>
+<TH colspan=3 width=33%>Pentium - 166 MHz</TH>
+<TH colspan=3 width=30%>Pentium PIII &#0150; 500 MHz</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%><CODE>&nbsp;</CODE></TD>
+<TD width=10%><B>Min</B></TD>
+<TD width=10%><B>Max</B></TD>
+<TD width=10%><B>Avg</B></TD>
+<TD width=11%><B>Min</B></TD>
+<TD width=11%><B>Max</B></TD>
+<TD width=11%><B>Avg</B></TD>
+<TD width=9%><B>Min</B></TD>
+<TD width=9%><B>Max</B></TD>
+<TD width=12%><B>Avg</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>1</TD>
+<TD width=10%>9.219</TD>
+<TD width=10%>12.571</TD>
+<TD width=10%>9.836</TD>
+<TD width=11%>26.819</TD>
+<TD width=11%>32.686</TD>
+<TD width=11%>27.776</TD>
+<TD width=9%>6.705</TD>
+<TD width=9%>17.6</TD>
+<TD width=12%>7.61</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>2</TD>
+<TD width=10%>10.057</TD>
+<TD width=10%>12.571</TD>
+<TD width=10%>11.14</TD>
+<TD width=11%>28.496</TD>
+<TD width=11%>31.848</TD>
+<TD width=11%>29.901</TD>
+<TD width=9%>8.381</TD>
+<TD width=9%>11.734</TD>
+<TD width=12%>9.71</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>3</TD>
+<TD width=10%>0.082</TD>
+<TD width=10%>0.088</TD>
+<TD width=10%>0.082</TD>
+<TD width=11%>0.144</TD>
+<TD width=11%>0.152</TD>
+<TD width=11%>0.145</TD>
+<TD width=9%>0.22</TD>
+<TD width=9%>0.229</TD>
+<TD width=12%>0.221</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>4</TD>
+<TD width=10%>0.067</TD>
+<TD width=10%>0.074</TD>
+<TD width=10%>0.067</TD>
+<TD width=11%>0.143</TD>
+<TD width=11%>0.155</TD>
+<TD width=11%>0.143</TD>
+<TD width=9%>0.221</TD>
+<TD width=9%>0.23</TD>
+<TD width=12%>0.221</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>5</TD>
+<TD width=10%>9.219</TD>
+<TD width=10%>10.057</TD>
+<TD width=10%>9.972</TD>
+<TD width=11%>27.658</TD>
+<TD width=11%>30.172</TD>
+<TD width=11%>28.631</TD>
+<TD width=9%>6.705</TD>
+<TD width=9%>17.6</TD>
+<TD width=12%>7.839</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>6</TD>
+<TD width=10%>9.219</TD>
+<TD width=10%>12.571</TD>
+<TD width=10%>11.258</TD>
+<TD width=11%>27.658</TD>
+<TD width=11%>45.258</TD>
+<TD width=11%>31.162</TD>
+<TD width=9%>8.381</TD>
+<TD width=9%>11.734</TD>
+<TD width=12%>9.659</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>7</TD>
+<TD width=10%>6.705</TD>
+<TD width=10%>15.086</TD>
+<TD width=10%>7.339</TD>
+<TD width=11%>20.115</TD>
+<TD width=11%>25.143</TD>
+<TD width=11%>21.486</TD>
+<TD width=9%>5.029</TD>
+<TD width=9%>7.543</TD>
+<TD width=12%>5.604</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>8</TD>
+<TD width=10%>20.114</TD>
+<TD width=10%>24.305</TD>
+<TD width=10%>20.977</TD>
+<TD width=11%>67.886</TD>
+<TD width=11%>74.591</TD>
+<TD width=11%>69.629</TD>
+<TD width=9%>11.734</TD>
+<TD width=9%>22.629</TD>
+<TD width=12%>12.825</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>9</TD>
+<TD width=10%>6.705</TD>
+<TD width=10%>14.248</TD>
+<TD width=10%>7.322</TD>
+<TD width=11%>20.953</TD>
+<TD width=11%>30.172</TD>
+<TD width=11%>21.664</TD>
+<TD width=9%>5.029</TD>
+<TD width=9%>6.705</TD>
+<TD width=12%>5.367</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>10</TD>
+<TD width=10%>20.114</TD>
+<TD width=10%>20.952</TD>
+<TD width=10%>20.427</TD>
+<TD width=11%>68.724</TD>
+<TD width=11%>74.591</TD>
+<TD width=11%>69.765</TD>
+<TD width=9%>11.734</TD>
+<TD width=9%>20.953</TD>
+<TD width=12%>12.775</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>11</TD>
+<TD width=10%>6.705</TD>
+<TD width=10%>10.895</TD>
+<TD width=10%>7.238</TD>
+<TD width=11%>21.791</TD>
+<TD width=11%>27.658</TD>
+<TD width=11%>22.925</TD>
+<TD width=9%>5.029</TD>
+<TD width=9%>8.381</TD>
+<TD width=12%>6.197</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>12</TD>
+<TD width=10%>20.114</TD>
+<TD width=10%>25.981</TD>
+<TD width=10%>20.325</TD>
+<TD width=11%>67.048</TD>
+<TD width=11%>83.81</TD>
+<TD width=11%>70.18</TD>
+<TD width=9%>12.572</TD>
+<TD width=9%>21.791</TD>
+<TD width=12%>13.164</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>13</TD>
+<TD width=10%>6.705</TD>
+<TD width=10%>7.543</TD>
+<TD width=10%>7.187</TD>
+<TD width=11%>22.629</TD>
+<TD width=11%>29.334</TD>
+<TD width=11%>23.966</TD>
+<TD width=9%>5.867</TD>
+<TD width=9%>15.924</TD>
+<TD width=12%>6.247</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>14</TD>
+<TD width=10%>20.114</TD>
+<TD width=10%>23.467</TD>
+<TD width=10%>20.503</TD>
+<TD width=11%>69.562</TD>
+<TD width=11%>76.267</TD>
+<TD width=11%>70.823</TD>
+<TD width=9%>12.572</TD>
+<TD width=9%>16.762</TD>
+<TD width=12%>13.604</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>15</TD>
+<TD width=10%>8.381</TD>
+<TD width=10%>10.895</TD>
+<TD width=10%>8.533</TD>
+<TD width=11%>25.981</TD>
+<TD width=11%>31.848</TD>
+<TD width=11%>27.166</TD>
+<TD width=9%>6.705</TD>
+<TD width=9%>16.762</TD>
+<TD width=12%>7.576</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>16</TD>
+<TD width=10%>21.79</TD>
+<TD width=10%>25.143</TD>
+<TD width=10%>22.298</TD>
+<TD width=11%>72.077</TD>
+<TD width=11%>79.62</TD>
+<TD width=11%>74.938</TD>
+<TD width=9%>13.41</TD>
+<TD width=9%>15.924</TD>
+<TD width=12%>14.569</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>17</TD>
+<TD width=10%>8.381</TD>
+<TD width=10%>11.733</TD>
+<TD width=10%>8.474</TD>
+<TD width=11%>26.819</TD>
+<TD width=11%>41.067</TD>
+<TD width=11%>27.708</TD>
+<TD width=9%>6.705</TD>
+<TD width=9%>17.6</TD>
+<TD width=12%>7.644</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>18</TD>
+<TD width=10%>21.79</TD>
+<TD width=10%>25.143</TD>
+<TD width=10%>22.154</TD>
+<TD width=11%>72.077</TD>
+<TD width=11%>85.486</TD>
+<TD width=11%>76.013</TD>
+<TD width=9%>14.248</TD>
+<TD width=9%>23.467</TD>
+<TD width=12%>14.798</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>19</TD>
+<TD width=10%>3.352</TD>
+<TD width=10%>4.19</TD>
+<TD width=10%>3.851</TD>
+<TD width=11%>12.572</TD>
+<TD width=11%>21.791</TD>
+<TD width=11%>13.384</TD>
+<TD width=9%>2.515</TD>
+<TD width=9%>4.191</TD>
+<TD width=12%>3.446</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>20</TD>
+<TD width=10%>15.924</TD>
+<TD width=10%>21.79</TD>
+<TD width=10%>16.499</TD>
+<TD width=11%>52.8</TD>
+<TD width=11%>62.858</TD>
+<TD width=11%>53.935</TD>
+<TD width=9%>9.219</TD>
+<TD width=9%>19.277</TD>
+<TD width=12%>10.023</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>21</TD>
+<TD width=10%>3.352</TD>
+<TD width=10%>7.543</TD>
+<TD width=10%>4.046</TD>
+<TD width=11%>11.734</TD>
+<TD width=11%>16.762</TD>
+<TD width=11%>12.817</TD>
+<TD width=9%>2.515</TD>
+<TD width=9%>5.867</TD>
+<TD width=12%>3.353</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>22</TD>
+<TD width=10%>15.924</TD>
+<TD width=10%>19.276</TD>
+<TD width=10%>16.635</TD>
+<TD width=11%>52.8</TD>
+<TD width=11%>62.02</TD>
+<TD width=11%>53.926</TD>
+<TD width=9%>9.219</TD>
+<TD width=9%>20.115</TD>
+<TD width=12%>10.057</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>23</TD>
+<TD width=10%>2.717</TD>
+<TD width=10%>2.74</TD>
+<TD width=10%>2.726</TD>
+<TD width=11%>5.385</TD>
+<TD width=11%>5.466</TD>
+<TD width=11%>5.42</TD>
+<TD width=9%>2.417</TD>
+<TD width=9%>2.514</TD>
+<TD width=12%>2.476</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>24</TD>
+<TD width=10%>2.647</TD>
+<TD width=10%>2.667</TD>
+<TD width=10%>2.653</TD>
+<TD width=11%>5.369</TD>
+<TD width=11%>5.405</TD>
+<TD width=11%>5.373</TD>
+<TD width=9%>2.386</TD>
+<TD width=9%>2.495</TD>
+<TD width=12%>2.463</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>25</TD>
+<TD width=10%>2.83</TD>
+<TD width=10%>2.839</TD>
+<TD width=10%>2.832</TD>
+<TD width=11%>5.932</TD>
+<TD width=11%>5.959</TD>
+<TD width=11%>5.935</TD>
+<TD width=9%>2.618</TD>
+<TD width=9%>2.728</TD>
+<TD width=12%>2.691</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>26</TD>
+<TD width=10%>16.623</TD>
+<TD width=10%>16.656</TD>
+<TD width=10%>16.641</TD>
+<TD width=11%>46.761</TD>
+<TD width=11%>46.785</TD>
+<TD width=11%>46.766</TD>
+<TD width=9%>9.386</TD>
+<TD width=9%>9.451</TD>
+<TD width=12%>9.412</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>27</TD>
+<TD width=10%>16.624</TD>
+<TD width=10%>16.672</TD>
+<TD width=10%>16.65</TD>
+<TD width=11%>48.881</TD>
+<TD width=11%>48.897</TD>
+<TD width=11%>48.886</TD>
+<TD width=9%>9.41</TD>
+<TD width=9%>9.517</TD>
+<TD width=12%>9.462</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>28</TD>
+<TD width=10%>17.302</TD>
+<TD width=10%>17.34</TD>
+<TD width=10%>17.322</TD>
+<TD width=11%>47.307</TD>
+<TD width=11%>47.323</TD>
+<TD width=11%>47.31</TD>
+<TD width=9%>9.634</TD>
+<TD width=9%>9.766</TD>
+<TD width=12%>9.685</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>29</TD>
+<TD width=10%>1.756</TD>
+<TD width=10%>1.765</TD>
+<TD width=10%>1.758</TD>
+<TD width=11%>3.043</TD>
+<TD width=11%>3.053</TD>
+<TD width=11%>3.044</TD>
+<TD width=9%>1.479</TD>
+<TD width=9%>1.507</TD>
+<TD width=12%>1.504</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>30</TD>
+<TD width=10%>0.019</TD>
+<TD width=10%>0.021</TD>
+<TD width=10%>0.019</TD>
+<TD width=11%>0.003</TD>
+<TD width=11%>0.017</TD>
+<TD width=11%>0.004</TD>
+<TD width=9%>0.023</TD>
+<TD width=9%>0.035</TD>
+<TD width=12%>0.023</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>31</TD>
+<TD width=10%>0.019</TD>
+<TD width=10%>0.022</TD>
+<TD width=10%>0.019</TD>
+<TD width=11%>0.003</TD>
+<TD width=11%>0.011</TD>
+<TD width=11%>0.003</TD>
+<TD width=9%>0.023</TD>
+<TD width=9%>0.027</TD>
+<TD width=12%>0.023</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>32</TD>
+<TD width=10%>0.253</TD>
+<TD width=10%>0.255</TD>
+<TD width=10%>0.253</TD>
+<TD width=11%>0.072</TD>
+<TD width=11%>0.08</TD>
+<TD width=11%>0.073</TD>
+<TD width=9%>0.056</TD>
+<TD width=9%>0.067</TD>
+<TD width=12%>0.057</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=7%>33</TD>
+<TD width=10%>0.039</TD>
+<TD width=10%>0.042</TD>
+<TD width=10%>0.039</TD>
+<TD width=11%>0.015</TD>
+<TD width=11%>0.025</TD>
+<TD width=11%>0.015</TD>
+<TD width=9%>0.015</TD>
+<TD width=9%>0.02</TD>
+<TD width=12%>0.015</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH1">Test descriptions</H4>
+
+<P>The following descriptions pertain to the tests listed in Table above:
+
+<UL type="disc">
+	<LI>(1)<B> EnterCriticalSection</B> traditional blocking with priority inversion: Time from when a lower-priority thread calls <B>LeaveCriticalSection</B> until a higher-priority thread waiting on an <B>EnterCriticalSection</B> call is unblocked. </li>
+
+	<LI>(2)<B> EnterCriticalSection</B> traditional blocking without priority inversion: Time between when a higher priority thread calls <B>EnterCriticalSection</B> (blocked) until a lower priority thread is released to run. </li>
+
+	<LI>(3)<B> EnterCriticalSection</B> fastpath: An uncontested call to <B>EnterCriticalSection</B>. </li>
+
+	<LI>(4)<B> LeaveCriticalSection</B> fastpath: An uncontested call to <B>LeaveCriticalSection</B>. </li>
+
+	<LI>(5)<B> EnterCriticalSection</B> with inversion and <B>CacheSync</B>: Time from when a lower-priority thread calls <B>LeaveCriticalSection</B> until a higher-priority thread waiting on an <B>EnterCriticalSection</B> call is unblocked. </li>
+
+	<LI>(6)<B> EnterCriticalSection</B> traditional blocking without priority inversion and <B>CacheSync</B>: Time from when a higher-priority thread calls <B>EnterCriticalSection</B> (blocked) until a lower-priority thread is released to run. </li>
+
+	<LI>(7) Event intraprocess: Time from when the <B>SetEvent</B> function in one thread signals an event until a thread that is blocked on <B>WaitForSingleObject</B> in the same process is released. </li>
+
+	<LI>(8) Event interprocess: Time from when <B>SetEvent</B> in one thread signals an event until a thread that is blocked on <B>WaitForSingleObject</B> in a different process is released. </li>
+
+	<LI>(9) Event intraprocess with <B>CacheSync</B>: Time from when <B>SetEvent</B> in one thread signals an event until a thread that is blocked on <B>WaitForSingleObject</B> in the same process is released. </li>
+
+	<LI>(10) Event interprocess with <B>CacheSync</B>: Time from when <B>SetEvent</B> in one thread signals an event until a thread that is blocked on <B>WaitForSingleObject</B> in a different process is released. </li>
+
+	<LI>(11) Semaphore signaling intraprocess: Time from when a lower-priority thread calls <B>ReleaseSemaphore</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in the same process is released. </li>
+
+	<LI>(12) Semaphore signaling interprocess: Time from when a lower-priority thread calls <B>ReleaseSemaphore</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in a different process is released. </li>
+
+	<LI>(13) Semaphore signaling intraprocess with <B>CacheSync</B>: Time from when a lower-priority thread calls <B>ReleaseSemaphore</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in the same process is released. </li>
+
+	<LI>(14) Semaphore signaling interprocess with <B>CacheSync</B>: Time from when a lower-priority thread calls <B>ReleaseSemaphore</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in a different process is released. </li>
+
+	<LI>(15) Mutex intraprocess: Time from when a lower-priority thread calls <B>ReleaseMutex</B> until a higher priority thread that is blocked on <B>WaitForSingleObject</B> in the same process is released. </li>
+
+	<LI>(16) Mutex interprocess: Time from when a lower-priority thread calls <B>ReleaseMutex</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in a different process is released. </li>
+
+	<LI>(17) Mutex intraprocess with <B>CacheSync</B>: Time from when a lower-priority thread calls <B>ReleaseMutex</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in the same process is released. </li>
+
+	<LI>(18) Mutex interprocess with <B>CacheSync</B>: Time from when a lower-priority thread calls <B>ReleaseMutex</B> until a higher-priority thread that is blocked on <B>WaitForSingleObject</B> in a different process is released. </li>
+
+	<LI>(19) Yield to thread timing intraprocess: Time from when a thread calls <B>Sleep(0)</B> until a same-priority thread in the same process wakes from a previous call to <B>Sleep(0)</B>. </li>
+
+	<LI>(20) Yield to thread timing interprocess: Time from when a thread calls <B>Sleep(0)</B> until a same-priority thread in a different process wakes from a previous call to <B>Sleep(0)</B>. </li>
+
+	<LI>(21) Yield to thread timing intraprocess with <B>CacheSync</B>: Time from when a thread calls <B>Sleep(0)</B> until a same-priority thread in the same process wakes from a previous call to <B>Sleep(0)</B>. </li>
+
+	<LI>(22) Yield to thread timing interprocess with <B>CacheSync</B>: Time from when a thread calls <B>Sleep(0)</B> until a same-priority thread in a different process wakes from a previous call to <B>Sleep(0)</B>. </li>
+
+	<LI>(23) System API call (roundtrip) intraprocess: Time required to call a system API that is part of the current process with no parameters and have the call return immediately. </li>
+
+	<LI>(24) System API call (roundtrip) intraprocess: Time required to call a system API that is part of the current process with seven <I>DWORD</I> parameters and have the call return immediately. </li>
+
+	<LI>(25) System API call (roundtrip) intraprocess: Time required to call a system API that is part of the current process with seven <I>PVOID</I> parameters and have the call return immediately. </li>
+
+	<LI>(26) System API call (roundtrip) interprocess: Time required to call a system API that is in a different process with no parameters and have the call return immediately. </li>
+
+	<LI>(27) System API call (roundtrip) interprocess: Time required to call a system API that is in a different process with seven <I>DWORD</I> parameters and have the call return immediately. </li>
+
+	<LI>(28) System API call (roundtrip) interprocess: Time required to call a system API that is in a different process with seven <I>PVOID</I> parameters and have the call return immediately. </li>
+
+	<LI>(29) System API call (roundtrip) to Nk.exe: Time required to call a system API in the kernel that returns immediately. </li>
+
+	<LI>(30)<B> InterlockedIncrement</B>: Time to call the InterlockedIncrement API. </li>
+
+	<LI>(31)<B> InterlockedDecrement</B>: Time to call the InterlockedDecrement API. </li>
+
+	<LI>(32)<B> InterlockedExchange</B>: Time to call the InterlockedExchange API.</li>
+
+	<LI>(33)<B> InterlockedTestExchange</B>: Time to call the InterlockedTestExchange API.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="rtnetdesigning_summary"></A>Summary </H2>
+
+<P>Although previous versions of Windows CE offered some real-time OS (RTOS) capabilities, a number of significant changes made to the kernel since Windows CE 3.0 have greatly enhanced real-time performance. As this paper has demonstrated, the following changes were made for Windows CE .NET:
+
+<UL type="disc">
+	<LI>Increased number of thread priority levels from 8 to 256. </li>
+
+	<LI>More control over times and scheduling. Applications can control the amount of time provided to each thread and manipulate the scheduler to their advantage. Timer accuracy is now one millisecond for Sleep- and Wait-related APIs. </li>
+
+	<LI>Improved method for handling priority inversion. </li>
+
+	<LI>Full support for nested interrupts. </li>
+
+	<LI>Reduced ISR and IST latencies. </li>
+
+	<LI>More granular memory management control. </li>
+
+	<LI>Ability to specify the page pool table size through an OEM-defined variable on x86 platforms. </li>
+</UL>
+
+<P>This paper has also described the tools&#151;ILTiming and OSBench&#151;used to test the real-time performance of the kernel, and has provided real-time performance test results on three CPUs.</P>
+
+<H3 class="dtH1">For More Information</H3>
+
+<P>For more information about the Windows Embedded family, please see the <A HREF="http://go.microsoft.com/fwlink/?linkid=407">Windows Embedded</A> Web site.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_829900', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

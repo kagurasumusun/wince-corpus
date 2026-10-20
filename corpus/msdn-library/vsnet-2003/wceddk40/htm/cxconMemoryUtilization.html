@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Memory Utilization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Memory Utilization"/>
+<MSHelp:RLTitle Title="Memory Utilization"/>
+<MSHelp:Keyword Index="A" Term="cxconMemoryUtilization"/>
+<MSHelp:Keyword Index="K" Term="memory, Bluetooth memory utilization"/>
+<MSHelp:Keyword Index="A" Term="cxconMemoryUtilization"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: bluetooth_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_752778">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconmemoryutilization"></A>Memory Utilization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Bluetooth stack supports fast, efficient memory management that prevents excessive copying.</P>
+
+<P>For internal memory structures, the Bluetooth stack uses fixed-memory allocation routines in Svsutil.hxx that provide O(1) allocation/free complexity for chunks of a fixed size.</P>
+
+<P>For variable-length data, all functions that perform buffer transfer reads and writes will pass the buffer in the <MSHelp:link keywords="cxrefBD_BUFFER" TABINDEX="0">BD_BUFFER</MSHelp:link> structure.</P>
+
+<PRE class="code">typedef void (*BD_BUFFER_FREE) (struct BD_BUFFER *pBuff);
+struct BD_BUFFER {
+   int              cSize;
+   int              cStart;
+   int              cEnd;
+   BD_BUFFER_FREE   pFree;
+   int              fMustCopy;
+   unsigned char   *pBuffer;
+};</PRE>
+
+<P><B>cSize</B> is the total size of the buffer pointed to by <B>pBuffer</B>. <B>cStart</B> and <B>cEnd</B> are offsets to user data at the current layer. What is between the start of <B>pBuffer</B> and <B>pBuffer</B>[<I>cStart</I>] and <B>pBuffer</B>[<I>cEnd</I>] and <B>pBuffer</B>[<I>cSize</I>] are protocol headers and trailers of lower levels of the stack.</P>
+
+<P>This allows the constructor of the package to pre-allocate all space for all headers when the packet is just being constructed, to avoid excessive copying.</P>
+
+<P><B>pFree</B> is a pointer to the function that is responsible to free the data buffer, and <B>fMustCopy</B> is TRUE if the stack layers, to which the buffer is being passed, are not allowed to own the buffer after the function returns, and so they must copy it before they return.</P>
+
+<P>The following utility functions are used to allocate the stack and access it.</P>
+
+<PRE class="code">inline int BufferTotal (BD_BUFFER *pB) {
+   return pB-&gt;cEnd - pB-&gt;cStart;
+}
+inline int BufferGetByte (BD_BUFFER *pB, unsigned char *puc) {
+   if (pB-&gt;cEnd - pB-&gt;cStart &lt; 1)
+      return FALSE;
+   *puc = pB-&gt;pBuffer[pB-&gt;cStart++];
+   return TRUE;
+}
+inline int BufferGetShort (BD_BUFFER *pB, unsigned short *pus) {
+   if (pB-&gt;cEnd - pB-&gt;cStart &lt; 2)
+      return FALSE;
+
+   *pus = pB-&gt;pBuffer[pB-&gt;cStart] | (pB-&gt;pBuffer[pB-&gt;cStart + 1] &lt;&lt; 8);
+   pB-&gt;cStart += 2;
+   return TRUE;
+}
+inline int BufferGetChunk (BD_BUFFER *pB, int cChunk, unsigned char *pChunk) {
+   if (pB-&gt;cEnd - pB-&gt;cStart &lt; cChunk)
+      return FALSE;
+   memcpy (pChunk, pB-&gt;pBuffer + pB-&gt;cStart, cChunk);
+   pB-&gt;cStart += cChunk;
+   return TRUE;
+}
+void BufferFree (BD_BUFFER *pBuf);
+BD_BUFFER   *BufferAlloc (int cSize);
+BD_BUFFER   *BufferCopy (BD_BUFFER  *pBuffer);</PRE>
+
+<P>Buffers do not have to be allocated by these functions, but <B>pFree</B> MUST be correctly set to prevent leaks.</P>
+
+<H2 class="dtH2">Typical life cycle of a buffer on the way down for user data</H2>
+
+<P>The TDI layer allocates the packet using <B>BufferAlloc</B> including header and trailer sizes obtained during RFCOMM initialization. These values include the L2CAP header and trailer sizes, which in turn include the HCI transport header and trailer bytes, and other information.</P>
+
+<P>The TDI layer puts its data in the middle and sets <B>cStart</B> and <B>cEnd</B> appropriately. It then passes its data down to RFCOMM. The RFCOMM inserts its headers and adjusts <B>cStart</B> and <B>cEnd</B> and gives buffer to the L2CAP.</P>
+
+<P>The L2CAP inserts its own header in the same way and passes the buffers to the HCI.</P>
+
+<P>The HCI queues the buffer for send. The thread then returns all the way up to the TDI. The TDI does not own the buffer any more because it did not set <B>fMustCopy</B> flag in the buffer. The TDI simply forgets about the buffer.</P>
+
+<P>When the HCI finishes sending the buffer, it calls the <B>pFree</B> function in it, which is set to <B>BufferFree</B> by <B>BufferAlloc</B>.</P>
+
+<H2 class="dtH2">Typical life cycle of a buffer on the way up for user data (small buffer)</H2>
+
+<P>If the buffer fits in just one HCI transport packet, meaning there is no fragmentation on the L2CAP layer, it is read into a static buffer in the HCI. The HCI then wraps the buffer into the <MSHelp:link keywords="cxrefBD_BUFFER" TABINDEX="0">BD_BUFFER</MSHelp:link> structure, sets <B>pFree</B> to NULL, and <B>fMustCopy</B> to TRUE. The HCI then passes the buffer to the L2CAP.</P>
+
+<P>The L2CAP then reads the L2CAP header out of that buffer using <B>BufferGetChunk</B>, which causes <B>cStart</B> to advance past the L2CAP header. The L2CAP then passes the buffer up to RFCOMM.</P>
+
+<P>RFCOMM removes its own headers and trailers using <B>BufferGetChunk</B>. If it is a signaling command, the RFCOMM processes it and drops the buffer. If it is user data, RFCOMM calls up to the TDI.</P>
+
+<P>The TDI sees user data and either immediately copies it into the user's buffers, if available, or queues for a read by duplicating the buffer with <B>BufferCopy</B>.</P>
+
+<H2 class="dtH2">Typical life cycle of a buffer on the way up for user data (big buffer)</H2>
+
+<P>The big buffer is allocated by the L2CAP using <B>BufferAlloc</B>. This buffer is then passed up all the way to the consumer. The consumer is then responsible for freeing the buffer using <B>pFree</B> when it is done with the buffer.</P>
+
+<H2 class="dtH2">Typical life cycle of RFCOMM signaling command</H2>
+
+<P>Buffer for a command is allocated on the stack and wrapped in the <MSHelp:link keywords="cxrefBD_BUFFER" TABINDEX="0">BD_BUFFER</MSHelp:link> structure with <B>pFree</B> set to NULL and <B>fMustCopy</B> set to TRUE. All headers must be pre-allocated. The buffer is then passed down to the L2CAP. The L2CAP inserts its own headers and gives the buffer to the HCI. The HCI then copies the buffer for queueing using <B>BufferCopy</B>. When the command is sent, the HCI destroys the buffer.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconcommonlayercharacteristics.htm">Common Layer Characteristics</A></P>
+
+<P><A HREF="cxconbluetoothadaptationguide.htm">Bluetooth Protocol Stack</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Memory%20Utilization&nbsp;(cxconmemoryutilization.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

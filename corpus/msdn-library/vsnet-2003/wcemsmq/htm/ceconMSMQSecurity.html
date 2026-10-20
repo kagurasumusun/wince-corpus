@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MSMQ Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MSMQ Security"/>
+<MSHelp:RLTitle Title="MSMQ Security"/>
+<MSHelp:Keyword Index="A" Term="ceconMSMQSecurity"/>
+<MSHelp:Keyword Index="K" Term="message queues, Message Queuing security"/>
+<MSHelp:Keyword Index="K" Term="message queues, MSMQ security"/>
+<MSHelp:Keyword Index="K" Term="MSMQ, security"/>
+<MSHelp:Keyword Index="K" Term="security, MSMQ"/>
+<MSHelp:Keyword Index="A" Term="ceconMSMQSecurity"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: msmq_security.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_816814">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconmsmqsecurity"></A>MSMQ Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In Microsoft&reg; Windows&reg; CE .NET 4.1, the Message Queuing (MSMQ) default registry configuration is more restrictive to provide a more secure environment. For example, to prevent a rogue application from causing a denial of service for a device, MSMQ limits the quota for message storage instead of allowing unlimited storage. The registry allows developers to configure MSMQ for optimal deployment. </P>
+
+<H2 class="dtH2">Best Practices</H2>
+
+<P class="label"><B>Limit the size for storage and size of incoming and outgoing messages</B></P>
+
+<P>The default registry configuration limits the size of queue quota for incoming and outgoing messages, as well as a system wide quota. This prevents a denial of service when the system becomes overwhelmed with high traffic that depletes the limited resources. The following registry values set the quota:
+
+<UL type="disc">
+	<LI><B>DefaultQuota</B></li>
+
+	<LI><B>DefaultLocalQuota</B></li>
+
+	<LI><B>MachineQuota</B></li>
+</UL>
+
+<P>For more information, see <A HREF="coconmsmqregistrykeys.htm">MSMQ Registry Settings</A>.</P>
+
+<P class="label"><B>Set up a trusted enviroment</B></P>
+
+<P>The default MSMQ configuration sets the <B>UntrustedNetwork</B> registry value to "Yes" to minimize exposure to unknown networks. This setting prevents message routing. You can change the MSMQ behavior using either the registry or the MSMQAdm utility. For more information, see <A HREF="coconmsmqregistrykeys.htm">MSMQ Registry Settings</A> and <A HREF="ceconusingthemsmqadmutility.htm">Using the MSMQAdm Utility</A>. </P>
+
+<P class="label"><B>Select the appropriate protocol</B></P>
+
+<P>When MSMQ is registered as a service, it no longer automatically starts to process messages until you explicitly enable the dersired protocol&#0150;native MSMQ and/or SOAP based MSMQ. You can use the registry or the MSMQAdm utility to configure the service. To enable the SOAP-based MSMQ, set the <B>SRMPEnabled</B> value to "Yes" and to enable the native MSMQ, set the <B>BinaryEnabled</B> value to "Yes". In addition, set <B>UntrustedNetwork</B> value to "Yes". For more information, see <A HREF="coconmsmqregistrykeys.htm">MSMQ Registry Settings</A> and <A HREF="ceconusingthemsmqadmutility.htm">Using the MSMQAdm Utility</A>.</P>
+
+<P>The following example illustrates the MSMQAdm commands to enable and disable the MSMQ protocols.</P>
+
+<PRE class="code">;default activation
+msmqadm register srmp
+msmqadm start
+
+;enter private network
+msmqadm stop
+msmqadm enable srmp               ;sets SRMPEnabled to "Yes"
+msmqadm enable trust              ;sets UntrustedNetwork to "No"
+msmqadm start
+
+;leave the private network
+msmqadm stop
+msmqadm disable srmp              ;sets SRMPEnabled to "No"
+msmqadm disable trust             ;sets UntrustedNetwork to "Yes"
+msmqadm start</PRE>
+
+<H2 class="dtH2">Default Registry Settings</H2>
+
+<P>You should be aware of the registry settings that impact security. If a value has security implications you will find a <B>Security Note</B> in the registry settings documentation.</P>
+
+<P>For MSMQ registry information, see <A HREF="coconmsmqregistrykeys.htm">MSMQ Registry Settings</A>.</P>
+
+<H2 class="dtH2">Ports</H2>
+
+<P>The following table shows the ports that MSMQ uses, for details see <A HREF="coconmsmqregistrykeys.htm">MSMQ Registry Settings</A></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Port number</TH>
+<TH width=68%>Registry value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>3527</TD>
+<TD width=68%><B>PingPort</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>1801</TD>
+<TD width=68%><B>Port</B></TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MSMQ%20Security&nbsp;(ceconmsmqsecurity.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

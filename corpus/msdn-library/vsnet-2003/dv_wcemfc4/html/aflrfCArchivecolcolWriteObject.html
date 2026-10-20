@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::WriteObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CArchive::WriteObject"/>
+<MSHelp:RLTitle Title="CArchive::WriteObject"/>
+<MSHelp:Keyword Index="A" Term="aflrfCArchivecolcolWriteObject"/>
+<MSHelp:Keyword Index="K" Term="WriteObject method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCArchivecolcolWriteObject"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="carchi.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709701">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcarchivecolcolwriteobject"></A>CArchive::WriteObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method stores the specified <B>CObject</B> to the archive.</P>
+
+<PRE class="syntax"><B>void</B> <B>WriteObject(</B> 
+<B>const</B> <B>CObject*</B> <I>pOb</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pOb</I></DT>
+
+<DD>A constant pointer to the object being stored.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is normally called by the <B>CArchive</B> insertion (<B>&lt;&lt;</B>) operator overloaded for <B>CObject</B>. <B>WriteObject</B>, in turn, calls the <B>Serialize</B> function of the archived class. </P>
+
+<P>You must use the <B>IMPLEMENT_SERIAL</B> macro to enable archiving. <B>WriteObject</B> writes the ASCII class name to the archive. This class name is validated later during the load process. A special encoding scheme prevents unnecessary duplication of the class name for multiple objects of the class. This scheme also prevents redundant storage of objects that are targets of more than one pointer. </P>
+
+<P>The exact object encoding method, including the presence of the ASCII class name, is an implementation detail and could change in future versions of the library.</P>
+
+<P>Finish creating, deleting, and updating all your objects before you begin to archive them. Your archive will be corrupted if you mix archiving with object modification.</P>
+
+<P class="label"><B>Example</B></P>
+
+<P>For a definition of the class <B>CAge</B>, see the example for <A HREF="aflrfcoblistcolcolcoblist.htm"><B>CObList::CObList</B></A>.</P>
+
+<PRE class="code">CFile myFile("myfile.dat", CFile::modeCreate | CFile::modeReadWrite);
+CAge  age(21), *pAge;
+
+// Create a storing archive.
+CArchive arStore(&amp;myFile, CArchive::store);
+
+// Write the object to the archive.
+arStore.WriteObject( &amp;age );
+
+// Close the storing archive.
+arStore.Close();
+
+// Create a loading archive.
+myFile.SeekToBegin();
+CArchive arLoad(&amp;myFile, CArchive::load);
+
+// Verify the object is in the archive.
+pAge = (CAge*) arLoad.ReadObject( RUNTIME_CLASS(CAge) );
+ASSERT( age == *pAge );</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afx.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcarchivecolcolreadobject.htm"><B>CArchive::ReadObject</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709701', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

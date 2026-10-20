@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Phase 2: PPP User Authentication</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Phase 2: PPP User Authentication"/>
+<MSHelp:RLTitle Title="Phase 2: PPP User Authentication"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Phase_2__PPP_User_Authentication"/>
+<MSHelp:Keyword Index="K" Term="PPP, user authentication"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: ppp.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_phase_2__ppp_user_authentication"></A>Phase 2: PPP User Authentication </H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In the second phase, the client computer presents the user's credentials to the remote access server. A secure authentication scheme provides protection against replay attacks and remote client impersonation. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>A replay attack occurs when a third party monitors a successful connection and uses captured packets to play back the remote client's response so that it can gain an authenticated connection. Remote client impersonation occurs when a third party takes over an authenticated connection. The intruder waits until the connection has been authenticated and then traps the conversation parameters, disconnects the authenticated user, and takes control of the authenticated connection.</BLOCKQUOTE>
+
+<P>Most implementations of PPP provide limited authentication methods, typically Password Authentication Protocol (PAP), Challenge Handshake Authentication Protocol (CHAP), and Microsoft Challenge Handshake Authentication Protocol (MSCHAP). </P>
+
+<P><B>Password Authentication Protocol (PAP)</B>. PAP is a simple, clear text   authentication scheme. The network authentication server (NAS) requests the user name and password, and PAP returns them in clear text (unencrypted). Obviously, this authentication scheme is not secure because a third party could capture the user's name and password and use it to get subsequent access to the NAS and all of the resources provided by the NAS. PAP provides no protection against replay attacks or remote client impersonation once the user's password is compromised. </P>
+
+<P><B>Challenge-Handshake Authentication Protocol (CHAP)</B>. CHAP is an encrypted authentication mechanism that avoids transmission of the actual password on the connection. The NAS sends a challenge, which consists of a session ID and an arbitrary challenge string, to the remote client. The remote client must use the MD5 one-way hashing algorithm to return the user name and an encryption of the challenge, session ID, and the client's password. The user name is sent unhashed. </P>
+
+<P>CHAP is an improvement over PAP in that the clear text password is not sent over the link. Instead, the password is used to create an encrypted hash from the original challenge. The server knows the client's clear text password, and can therefore replicate the operation and compare the result to the password sent in the client's response. CHAP protects against replay attacks by using an arbitrary challenge string for each authentication attempt. CHAP protects against remote client impersonation by unpredictably sending repeated challenges to the remote client throughout the duration of the connection. </P>
+
+<P><B>Microsoft Challenge-Handshake Authentication Protocol (MS-CHAP)</B>. MS-CHAP is an encrypted authentication mechanism very similar to CHAP. As in CHAP, the NAS sends a challenge, which consists of a session ID and an arbitrary challenge string, to the remote client. The remote client must return the user name and an MD4 hash of the challenge string, the session ID, and the MD4-hashed password. This design, which manipulates a hash of the MD4 hash of the password, provides an additional level of security because it allows the server to store hashed passwords instead of clear-text passwords. MS-CHAP also provides additional error codes, including a password expired code, and additional encrypted client-server messages that permit users to change their passwords. In Microsoft's implementation of MS-CHAP, both the Client and NAS independently generate an initial key for subsequent data encryption by MPPE. The last point is very important, as it explains why MS-CHAP authentication is required in order to enable MPPE-based data encryption. </P>
+
+<P><B>Microsoft Challenge-Handshake Authentication Protocol version 2.0 (MS-CHAPv2)</B>.<B> </B>Microsoft Windows CE 3.0 supports MS-CHAP version 2.0, which offers improved security features over MS-CHAP, such as a server authentication scheme and a single change password packet.</P>
+
+<P>During Phase 2 of PPP link configuration, the NAS collects the authentication data and then validates the data against its own user database or against a central authentication database server, such as one maintained by a Windows NT Primary Domain Controller (PDC) or a Remote Authentication Dial-In User Service (RADIUS) server. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, July 09, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Phase%202:%20PPP%20User%20Authentication&nbsp;(_wcesdk_phase_2__ppp_user_authentication.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

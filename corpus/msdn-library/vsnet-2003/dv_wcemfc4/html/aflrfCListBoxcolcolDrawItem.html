@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListBox::DrawItem</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CListBox::DrawItem"/>
+<MSHelp:RLTitle Title="CListBox::DrawItem"/>
+<MSHelp:Keyword Index="A" Term="aflrfCListBoxcolcolDrawItem"/>
+<MSHelp:Keyword Index="K" Term="DrawItem method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCListBoxcolcolDrawItem"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="clistbox.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710638">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfclistboxcolcoldrawitem"></A>CListBox::DrawItem</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework when a visual aspect of an owner-draw list box changes. </P>
+
+<PRE class="syntax"><B>virtual void DrawItem( 
+LPDRAWITEMSTRUCT </B><I>lpDrawItemStruct</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpDrawItemStruct</I></DT>
+
+<DD>Specifies a long pointer to a <A HREF="aflrfdrawitemstruct.htm"><B>DRAWITEMSTRUCT</B></A> structure that contains information about the type of drawing required.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <I>itemAction</I> and <I>itemState</I> members of the <B>DRAWITEMSTRUCT</B> structure define the drawing action that is to be performed. </P>
+
+<P>By default, this method does nothing. Override this method to implement drawing for an owner-draw <B>CListBox</B> object. The application should restore all graphics device interface (GDI) objects selected for the display context supplied in <I>lpDrawItemStruct</I> before this method terminates.</P>
+
+<P>See <B>CWnd::OnDrawItem</B> for a description of the <B>DRAWITEMSTRUCT</B> structure.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// CMyListBox is my owner-drawn list box derived from CListBox. This 
+// example draws an item's text centered vertically and horizontally. The 
+// list box control was created with the following code:
+//  pmyListBox-&gt;Create(
+//    WS_CHILD|WS_VISIBLE|WS_BORDER|WS_HSCROLL|WS_VSCROLL|
+//    LBS_SORT|LBS_MULTIPLESEL,
+//    myRect, pParentWnd, 1);
+//
+void CMyListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) 
+{
+  ASSERT(lpDrawItemStruct-&gt;CtlType == ODT_LISTBOX);
+  LPCTSTR lpszText = (LPCTSTR) lpDrawItemStruct-&gt;itemData;
+  ASSERT(lpszText != NULL);
+  CDC dc;
+
+  dc.Attach(lpDrawItemStruct-&gt;hDC);
+
+  // Save these values to restore them when done drawing.
+  COLORREF crOldTextColor = dc.GetTextColor();
+  COLORREF crOldBkColor = dc.GetBkColor();
+
+  // If this item is selected, set the background color 
+  // and the text color to appropriate values. Also, erase
+  // rect by filling it with the background color.
+  if ((lpDrawItemStruct-&gt;itemAction | ODA_SELECT) &amp;&amp;
+    (lpDrawItemStruct-&gt;itemState &amp; ODS_SELECTED))
+  {
+    dc.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
+    dc.SetBkColor(::GetSysColor(COLOR_HIGHLIGHT));
+    dc.FillSolidRect(&amp;lpDrawItemStruct-&gt;rcItem, 
+      ::GetSysColor(COLOR_HIGHLIGHT));
+  }
+  else
+    dc.FillSolidRect(&amp;lpDrawItemStruct-&gt;rcItem, crOldBkColor);
+
+  // If this item has the focus, draw a red frame around the
+  // item's rect.
+  if ((lpDrawItemStruct-&gt;itemAction | ODA_FOCUS) &amp;&amp;
+    (lpDrawItemStruct-&gt;itemState &amp; ODS_FOCUS))
+  {
+    CBrush br(RGB(255, 0, 0));
+    dc.FrameRect(&amp;lpDrawItemStruct-&gt;rcItem, &amp;br);
+  }
+
+  // Draw the text.
+  dc.DrawText(
+    lpszText,
+    strlen(lpszText),
+    &amp;lpDrawItemStruct-&gt;rcItem,
+    DT_CENTER|DT_SINGLELINE|DT_VCENTER);
+
+  // Reset the background color and the text color back to their
+  // original values.
+  dc.SetTextColor(crOldTextColor);
+  dc.SetBkColor(crOldBkColor);
+
+  dc.Detach();
+}</PRE>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfclistboxcolcolcompareitem.htm"><B>CListBox::CompareItem</B></A>, <A HREF="aflrfcwndcolcolondrawitem.htm"><B>CWnd::OnDrawItem</B></A>, <A HREF="aflrfclistboxcolcolmeasureitem.htm"><B>CListBox::MeasureItem</B></A>, <A HREF="aflrfclistboxcolcoldeleteitem.htm"><B>CListBox::DeleteItem</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710638', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

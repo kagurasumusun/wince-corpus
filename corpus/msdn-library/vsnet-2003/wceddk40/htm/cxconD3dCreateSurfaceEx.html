@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3dCreateSurfaceEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3dCreateSurfaceEx"/>
+<MSHelp:RLTitle Title="D3dCreateSurfaceEx"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dCreateSurfaceEx"/>
+<MSHelp:Keyword Index="K" Term="D3dCreateSurfaceEx"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dCreateSurfaceEx"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_663531">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcond3dcreatesurfaceex"></A>D3dCreateSurfaceEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function creates a Direct3D surface from a DirectDraw surface and associates a requested handle value to it. </P>
+
+<PRE class="syntax"><B>DWORD</B>
+  <B>(APIENTRY *PDD_CREATESURFACEEX)(</B>
+     <B>PDD_CREATESURFACEEXDATA</B>   <I>pcsxd</I>
+     <B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pcsxd</I></DT>
+
+<DD>Points to a <B>DD_CREATESURFACEEXDATA</B> structure that contains the information required for the driver to create the surface. This information is described in the following section. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>D3dCreateSurfaceEx</B> returns one of the following callback codes:
+
+<UL type="disc">
+	<LI><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor2">DDHAL_DRIVER_HANDLED</A></li>
+
+	<LI><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor3">DDHAL_DRIVER_NOTHANDLED</A></li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>All Direct3D drivers must support <B>D3dCreateSurfaceEx</B>.</P>
+
+<P><B>D3dCreateSurfaceEx</B> creates an association between a Microsoft DirectDraw&reg; surface and a small integer surface handle. By creating these associations between a handle and a DirectDraw surface, <B>D3dCreateSurfaceEx</B> allows a surface handle to be embedded in the Direct3D command stream. For example, when the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor49">D3DDP2OP_TEXBLT</A> command token is sent to <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> to load a texture map, it uses a source handle and destination handle that were associated with a DirectDraw surface through <B>D3dCreateSurfaceEx</B>. </P>
+
+<P>For every DirectDraw surface created under the local DirectDraw object, the run time generates a valid handle that uniquely identifies the surface and places it in <B>pcsxd-&gt;lpDDSLcl-&gt;lpSurfMore-&gt;dwSurfaceHandle</B>. (See the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_more.htm">DDRAWI_DDRAWSURFACE_MORE</A> structure for more information about its <B>dwSurfaceHandle</B> member.) This handle value is also used with the D3DRENDERSTATE_TEXTUREHANDLE render state to enable texturing, and with the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor41">D3DDP2OP_SETRENDERTARGET</A> and <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor24">D3DDP2OP_CLEAR</A> commands to set and clear new rendering and depth buffers. The driver should fail the call and return DDHAL_DRIVER_HANDLED if it cannot create the Direct3D surface.</P>
+
+<P>Upon the destruction of a surface with a <B>dwSurfaceHandle</B>, the driver will be notified by a <B>D3dCreateSurfaceEx</B> callback. The <B>fpVidMem</B> pointer (a member of the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_gbl.htm">DDRAWI_DDRAWSURFACE_GBL</A> structure) for the surface is cleared to zero. The driver should then invalidate and free any driver-private data associated to this surface. </P>
+
+<P>The driver should also store any surface-related information that it subsequently will need when using the surface. The driver must create a new surface table for each new <B>lpDDLcl</B> and implicitly enlarge the table when necessary to accommodate more surfaces. Typically this is done with an exponential growth algorithm so that you do not have to enlarge the table too often. See the <I>perm3</I> sample driver for implementation details.</P>
+
+<P>Direct3D calls <B>D3dCreateSurfaceEx</B> after DirectDraw creates the surface by request of the Direct3D run time or the application.</P>
+
+<H4 class="dtH4">Sample Implementation of D3dCreateSurfaceEx</H4>
+
+<PRE class="code">LPDDRAWI_DDRAWSURFACE_LCL GetAttachedSurface(
+    LPDDRAWI_DDRAWSURFACE_LCL pLcl,
+    DDSCAPS2 * pddsCaps2)
+{
+    LPATTACHLIST pAl;
+
+    pAl = pLcl-&gt;lpAttachList;
+
+
+    while (pAl)
+    {
+        LPDDRAWI_DDRAWSURFACE_LCL pLclAttached = pAl-&gt;lpAttached;
+        LPATTACHLIST pAlAttached = pLclAttached-&gt;lpAttachList;
+
+        if ((pLclAttached-&gt;lpSurfMore-&gt;ddsCapsEx.dwCaps2 &amp; pddsCaps2-&gt;dwCaps2) ||
+            (pLclAttached-&gt;lpSurfMore-&gt;ddsCapsEx.dwCaps3 &amp; pddsCaps2-&gt;dwCaps3) ||
+            (pLclAttached-&gt;lpSurfMore-&gt;ddsCapsEx.dwCaps4 &amp; pddsCaps2-&gt;dwCaps4) ||
+            (pLclAttached-&gt;ddsCaps.dwCaps &amp; pddsCaps2-&gt;dwCaps)
+            )
+        {
+            return pLclAttached;
+        }
+        pAl = pAl-&gt;lpLink;
+    }
+    return NULL;
+}
+                                             
+                                             
+void CSExProcessPossibleMipmap(LPDDRAWI_DDRAWSURFACE_LCL pLcl)
+{
+    //
+    // A more likely scenario would be to build a list of surfaces
+    // so that the driver can create one structure that represents the
+    // entire mipmap, rather than creating an object to represent each
+    // level as depicted here.
+    //
+    DDSCAPS2 ddsCaps2 = {0,DDSCAPS2_MIPMAPSUBLEVEL,0,0};
+    while (pLcl)
+    {
+        //Call the private driver routine that creates a driver-side surface structure
+        CreateMyRepresentation(pLcl);
+
+        pLcl = GetAttachedSurface(pLcl,&amp;ddsCaps2);
+    }
+}
+
+//
+// The actual return type should reflect the fact that the only
+// way this routine should fail is with DDERR_OUTOFMEMORY
+//
+void MyCreateSurfaceExHelper(LPDDRAWI_DDRAWSURFACE_LCL pLcl)
+{
+    LPATTACHLIST pAl;
+    DDSCAPS2 ddsCaps2 = {0,0,0,0};
+    LPDDRAWI_DDRAWSURFACE_LCL pLclAttached;
+    LPDDRAWI_DDRAWSURFACE_LCL pLclStart;
+
+    if (pLcl-&gt;lpGbl-&gt;fpVidMem == 0)
+    {
+        //A required check against bad surfaces
+        if (pLcl-&gt;ddsCaps.dwCaps &amp; DDSCAPS_VIDEOMEMORY)
+            return;
+
+        //Else, this is a system memory surface, so we are being informed of
+        // its destruction
+        DestroyMyRepresentation(pLcl-&gt;lpSurfMore-&gt;dwSurfaceHandle);
+        return;
+    }
+
+    CSExProcessPossibleMipmap(pLcl);
+
+    if (pLcl-&gt;lpSurfMore-&gt;ddsCapsEx.dwCaps2 &amp; DDSCAPS2_CUBEMAP)
+    {
+        int i;
+        //
+        // The root surface is always positive X, so we check for the
+        // other five face types.
+        // 
+        DWORD dw[5] = {
+            DDSCAPS2_CUBEMAP_NEGATIVEX,
+            DDSCAPS2_CUBEMAP_POSITIVEY,
+            DDSCAPS2_CUBEMAP_NEGATIVEY,
+            DDSCAPS2_CUBEMAP_POSITIVEZ,
+            DDSCAPS2_CUBEMAP_NEGATIVEZ};
+
+        for(i=0;i&lt; sizeof(dw)/sizeof(dw[0]);i++)
+        {
+            ddsCaps2.dwCaps2 = dw[i];
+            pLclAttached = GetAttachedSurface(pLcl, &amp;ddsCaps2);
+            if (pLclAttached)
+                CSExProcessPossibleMipmap(pLclAttached);
+        }
+
+        //
+        // Once we know it is a cube map, we know there cannot be any other 
+        // attachments.
+        //
+        return; 
+    }
+
+    //
+    // At this point:
+    //      If it is a cubemap, we returned above.
+    //      If it is a mipmap, we handled all cases above.
+    // The only other complex surface possibility is a primary flipping chain.
+    // Since a primary flipping chain cannot be mipmapped, we will simply return
+    // here if this surface is a mipmap.
+    //
+
+    if (pLcl-&gt;ddsCaps.dwCaps &amp; DDSCAPS_MIPMAP)
+        return;
+
+    //
+    // The only system memory surfaces we'll ever be interested in are textures (mipmaps)
+    // and cube maps. Any other kind of system memory surface is not interesting to 
+    // us, and we return here. WE DO NOT PROPAGATE AN ERROR CODE FOR SYSTEM MEMORY
+    // SURFACES WHOSE FORMAT WE DO NOT UNDERSTAND. This could cause an error code to 
+    // be propagated to the application when it was trying to use system memory surfaces
+    // of a format we don't understand, but is valid for the reference rasterizer, for example.
+    //
+
+    if (pLcl-&gt;ddsCaps.dwCaps &amp; DDSCAPS_SYSTEMMEMORY)
+        return;
+
+    //
+    // Now walk around a flipping chain. A flipping chain is a ring of
+    // surface attached to each other (each surface is attached to the next
+    // and to the previous surface in the ring, but not to any other surface
+    // in the ring).
+    // We need to watch out for this circular ring and make sure we exit appropriately.
+    // There is also the possibility of a z buffer attached to one of the surfaces
+    // in the ring, which may or may not have been CreateSurfaceEx'ed already.
+    //
+
+    pLclStart = pLcl;
+
+    while (pLcl &amp;&amp; pLcl != pLclStart)
+    {
+        //Check for Z buffer attached to this surface in the ring.
+        ddsCaps2.dwCaps = DDSCAPS_ZBUFFER;
+        ddsCaps2.dwCaps2 = 0;
+        pLclAttached = GetAttachedSurface(pLcl, &amp;ddsCaps2);
+        if (pLclAttached)
+            CreateMyRepresentation(pLclAttached);
+
+        //Check for stereo left surface attached to this surface in the ring
+        ddsCaps2.dwCaps = 0;
+        ddsCaps2.dwCaps2 = DDSCAPS2_STEREOSURFACELEFT;
+        pLclAttached = GetAttachedSurface(pLcl, &amp;ddsCaps2);
+        if (pLclAttached)
+            CreateMyRepresentation(pLclAttached);
+
+        // Move to next surface in the primary flipping ring. The next surface is 
+        // definitely in video memory (all surfaces in an attachment structure have
+        // to be in the same memory type, and we excluded system memory above).
+        // The next surface in the ring is thus the attached video memory surface
+        // that is NOT a z buffer NOR a stereo left surface.
+
+        ddsCaps2.dwCaps = DDSCAPS_VIDEOMEMORY;
+        ddsCaps2.dwCaps2 = 0;
+        do
+        {
+            pLclAttached = GetAttachedSurface(pLcl, &amp;ddsCaps2);
+        }
+        while (
+            pLclAttached-&gt;ddsCaps.dwCaps &amp; DDSCAPS_ZBUFFER ||
+            pLclAttached-&gt;lpSurfMore-&gt;ddsCapsEx.dwCaps2 &amp; DDSCAPS2_STEREOSURFACELEFT
+            );
+
+        pLcl = pLclAttached;
+
+        if (pLcl != pLclStart)
+            CreateMyRepresentation(pLcl);
+    }
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Proto.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor2">DDHAL_DRIVER_HANDLED</A>, <A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor3">DDHAL_DRIVER_NOTHANDLED</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor49">D3DDP2OP_TEXBLT</A>, <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_more.htm">DDRAWI_DDRAWSURFACE_MORE</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor41">D3DDP2OP_SETRENDERTARGET</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor24">D3DDP2OP_CLEAR</A>, <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_gbl.htm">DDRAWI_DDRAWSURFACE_GBL</A>, <A HREF="cxcondirect3ddriverfunctions.htm">Direct3D Driver Functions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3dCreateSurfaceEx&nbsp;(cxcond3dcreatesurfaceex.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

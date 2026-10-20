@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Introduction to the Syntax of XPath</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Introduction to the Syntax of XPath"/>
+<MSHelp:RLTitle Title="Introduction to the Syntax of XPath"/>
+<MSHelp:Keyword Index="A" Term="ceconIntroductionToSyntaxOfXPath"/>
+<MSHelp:Keyword Index="A" Term="ceconIntroductionToSyntaxOfXPath"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xslpg02.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801947">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconintroductiontosyntaxofxpath"></A>Introduction to the Syntax of XPath</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>XML documents represent a hierarchy or tree of nodes, similar to the hierarchy of directories and files found in a file system. This accounts for the similarity of syntax between URLs and XML Path Language (XPath). Some analogous features are compared in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>File system (URLs)</TH>
+<TH width=50%>Xpath</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Hierarchy comprised of directories and files in a file system.</TD>
+<TD width=50%>Hierarchy comprised of elements and other nodes in an XML document.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Files at each level have unique names. URLs always identify a single file.</TD>
+<TD width=50%>Element names at each level might not be unique. XPath patterns identify a set of all the matching elements.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Evaluated relative to a particular directory, called the "current directory."</TD>
+<TD width=50%>Evaluated relative to a particular node called the "context" for the query.</TD>
+</TR>
+</table></div>
+
+<P>The following XML data represents a simple hierarchy, which will be used to demonstrate some of the basic query facilities of XPath.</P>
+
+<PRE class="code">&lt;authors&gt;
+  &lt;author&gt;
+    &lt;name&gt;Victor Hugo&lt;/name&gt;
+    &lt;nationality&gt;French&lt;/nationality&gt;
+  &lt;/author&gt;
+  &lt;author period="classical"&gt;
+    &lt;name&gt;Sophocles&lt;/name&gt;
+    &lt;nationality&gt;Greek&lt;/nationality&gt;
+  &lt;/author&gt;
+  &lt;author&gt;
+    &lt;name&gt;Leo Tolstoy&lt;/name&gt;
+    &lt;nationality&gt;Russian&lt;/nationality&gt;
+  &lt;/author&gt;
+  &lt;author&gt;
+    &lt;name&gt;Alexander Pushkin&lt;/name&gt;
+    &lt;nationality&gt;Russian&lt;/nationality&gt;
+  &lt;/author&gt;
+  &lt;author period="classical"&gt;
+    &lt;name&gt;Plato&lt;/name&gt;
+    &lt;nationality&gt;Greek&lt;/nationality&gt;
+  &lt;/author&gt;
+&lt;/authors&gt;</PRE>
+
+<P>XPath can use any node in the XML document as the context for a query. In an XSLT style sheet, the context for a query is the source node being currently processed by an &lt;xsl:template&gt; or &lt;xsl:for-each&gt; element. When using XPath directly from the DOM, you define the context by performing the query from a particular node. For more information about how a context is defined, see <A HREF="ceconhowdomdefinescontextforxpathexpressions.htm">How the DOM Defines the Context for XPath Expressions</A> and <A HREF="ceconhowxsltdefinescontextforxpathexpressions.htm">How XSLT Defines the Context for XPath Expressions</A>. The examples in this topic use the context of the root of the XML document.</P>
+
+<P>A basic XPath pattern describes a path through the XML hierarchy with a slash-separated list of child element names. Starting from the document root, the following pattern traverses down through the hierarchy of the preceding sample XML document to the &lt;name&gt; elements.</P>
+
+<PRE class="code">authors/author/name</PRE>
+
+<P>The XPath pattern identifies all elements that match the path. Because XSLT has the potential for identifying a set of nodes in a tree, it can be used as a simple query mechanism.</P>
+
+<P>In addition to describing a path down a known hierarchy, XPath can include wildcards for describing unknown elements. An element of any name is represented by "*".</P>
+
+<PRE class="code">authors/*/name</PRE>
+
+<P>The preceding query also identifies all the name elements, but does not require them to be children of an &lt;author&gt; element. Here is another example that finds both &lt;name&gt; and &lt;nationality&gt; elements.</P>
+
+<PRE class="code">authors/author/*</PRE>
+
+<P>Branches on the path can be specified by using square brackets. The following query describes a branch on the &lt;author&gt; element, indicating that only &lt;author&gt; elements with nationality children should be considered.</P>
+
+<PRE class="code">authors/author[nationality]/name</PRE>
+
+<P>This becomes even more useful for the sample data when comparisons are added. The following query returns the names of Russian authors. Note that comparisons can be used only within brackets.</P>
+
+<PRE class="code">authors/author[nationality='Russian']/name</PRE>
+
+<P>Attributes are indicated in a query by preceding the name of the attribute with "@". The attribute can be tested as a branch off the main path, or the query can identify attribute nodes. The following examples return authors from the classical period, and just the two period attributes, respectively.</P>
+
+<PRE class="code">authors/author[@period="classical"]
+authors/author/@period</PRE>
+
+<P>For a complete list of XPath features supported by the Microsoft XML Parser (MSXML) for Windows CE, see <MSHelp:link keywords="cerefXPathSyntax" TABINDEX="0">XPath Syntax</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconxpath.htm">XPath</A>, <A HREF="ceconhowdomdefinescontextforxpathexpressions.htm">How the DOM Defines the Context for XPath Expressions</A>, <A HREF="ceconhowxsltdefinescontextforxpathexpressions.htm">How XSLT Defines the Context for XPath Expressions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Introduction%20to%20the%20Syntax%20of%20XPath&nbsp;(ceconintroductiontosyntaxofxpath.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

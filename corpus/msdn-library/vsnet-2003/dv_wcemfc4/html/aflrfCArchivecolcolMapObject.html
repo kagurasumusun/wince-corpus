@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::MapObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CArchive::MapObject"/>
+<MSHelp:RLTitle Title="CArchive::MapObject"/>
+<MSHelp:Keyword Index="A" Term="aflrfCArchivecolcolMapObject"/>
+<MSHelp:Keyword Index="K" Term="MapObject method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCArchivecolcolMapObject"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="carchi.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709690">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcarchivecolcolmapobject"></A>CArchive::MapObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method places an object in the map that is not actually serialized to the file, but that is available for subobjects to reference.</P>
+
+<PRE class="syntax"><B>void MapObject( 
+const CObject* </B><I>pOb</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pOb</I></DT>
+
+<DD>A constant pointer to the object being stored.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>For example, you might not serialize a document, but you might serialize items that are part of the document. By calling <B>MapObject</B>, you allow those items, or sub-objects, to reference the document. Also, serialized subitems can serialize their <B>m_pDocument</B> back pointer.</P>
+
+<P>You can call <B>MapObject</B> when you store to and load from the <B>CArchive</B> object. <B>MapObject</B> adds the specified object to the internal data structures maintained by the <B>CArchive</B> object during serialization and deserialization. Unlike <B>ReadObject </B>and <B>WriteObject</B>, it does not call serialize on the object.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// MyDoc.h
+// Document should have DECLARE_SERIAL and IMPLEMENT_SERIAL
+
+class CMyDocument : public CDocument
+{
+  CObList m_listOfSubItems;
+    ...
+  DECLARE_SERIAL(CMyDocument)
+};
+
+// MyDoc.cpp
+...
+IMPLEMENT_SERIAL(CMyDocument, CObject, 1)
+...
+void CMyDocument::Serialize(CArchive&amp; ar)
+{
+  if (ar.IsStoring())
+  {
+    // TODO: add storing code here
+  }
+  else
+  {
+    // TODO: add loading code here
+  }
+
+  ar.MapObject(this);  
+  //Serialize the subitems in the document;
+  //they can serialize their m_pDoc
+  //back pointer
+  m_listOfSubItems.Serialize(ar);
+
+}
+
+//SubItem.h
+class CSubItem : public CObject
+{
+public:
+  CSubItem(CMyDocument * pDoc)
+    { m_pDoc = pDoc; }
+
+  // Back pointer to owning document
+  CMyDocument* m_pDoc; 
+  WORD m_i; // Other item data
+
+  virtual void Serialize(CArchive&amp; ar);
+};
+
+//SubItem.cpp
+void CSubItem::Serialize(CArchive&amp; ar)
+
+{
+  if (ar.IsStoring( ) )
+  {
+    // Will serialize a reference 
+    // to the mapped document pointer
+    ar &lt;&lt; (CObject *)m_pDoc;
+    ar &lt;&lt; m_l;
+  }
+  else
+  {
+    // Will load a reference to
+    // the mapped document pointer
+    ar &gt;&gt; (CObject *&amp;) m_pDoc;
+    ar &gt;&gt; m_l;
+  }
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afx.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcarchivecolcolreadobject.htm"><B>CArchive::ReadObject</B></A>, <A HREF="aflrfcarchivecolcolwriteobject.htm"><B>CArchive::WriteObject</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709690', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

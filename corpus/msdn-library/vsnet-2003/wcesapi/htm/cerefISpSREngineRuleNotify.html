@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpSREngine::RuleNotify</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpSREngine::RuleNotify"/>
+<MSHelp:RLTitle Title="ISpSREngine::RuleNotify"/>
+<MSHelp:Keyword Index="A" Term="cerefISpSREngineRuleNotify"/>
+<MSHelp:Keyword Index="K" Term="ISpSREngine, RuleNotify"/>
+<MSHelp:Keyword Index="A" Term="cerefISpSREngineRuleNotify"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_engine_level_speech_recognition_engine.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822241">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefispsrenginerulenotify"></A>ISpSREngine::RuleNotify</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpSREngine::RuleNotify</B> informs the SR engine when CFG rules are added, changed or removed. </P>
+
+<P>The engine sees each CFG grammar as containing one or more rules. Rules can be top-level, indicating that they can be activated for recognition. Each rule has an initial state and additional states, connected by transitions. Each transition can be one of several types: a word transition indicating a word to be recognized, a rule transition indicating a reference to a sub-rule, an epsilon (null) transition, and some special transitions for such features as embedding dictation within a CFG. </P>
+
+<P>References to sub-rules can be recursive &#0150; such as rules can reference themselves, either directly or indirectly. Left recursion is not supported and SAPI will reject such grammars when loading. Inside a grammar, transitions can have semantic properties, although the engine does not typically need to see these. </P>
+
+<P>SAPI takes full control of loading of a grammar when an application asks it to. The loading can be from a file, a URL, a resource, or from memory, and can involve loading either binary or XML forms of the grammar, and resolving imports. SAPI then notifies the SR engine about the contents of the grammar through various DDI methods. </P>
+
+<P>There are five actions that are performed on rules: 
+
+<UL type="disc">
+	<LI>New rules can be added (SPCFG_ADD) or existing rules removed (SPCFG_ADD). </li>
+
+	<LI>Rules can be started (SPCFG_ACTIVATE) or stopped (SPCFG_DEATIVATE) for recognition. </li>
+
+	<LI>Rule can be invalidated (SPCFG_INVALIDATE), which means the rule has been edited by the application and thus the engine needs to reread the contents of the rule. </li>
+</UL>
+
+<P>Each rule is represented by an SPRULEENTRY structure. This contains an <I>hRule</I>, which gives a unique handle identifying the rule. The <I>pvClientRuleContext</I> is a pointer that the engine can set by using <A HREF="cerefispsrenginesitesetruleclientcontext.htm">ISpSREngineSite::SetRuleClientContext</A>. Then, subsequent calls to the <A HREF="cerefispsrenginesitegetruleinfo.htm">ISpSREngineSite::GetRuleInfo</A> method will return the same structure but with the <I>pvClientRuleContext</I> field filled in. The <I>pvClientGrammarContext</I> is the pointer that the engine set in the <A HREF="cerefispsrengineoncreategrammar.htm">ISpSREngine::OnCreateGrammar</A> method. This shows which grammar the rule belongs to. The Attributes field, of type SPCFGRULEATTRIBUTES, contains some flags giving extra information about the rule: 
+
+<UL type="disc">
+	<LI>SPRAF_TopLevel if the rule is top-level and thus can be activated for recognition. </li>
+
+	<LI>SPRAF_Active if the rule is currently activated. </li>
+
+	<LI>SPRAF_Interpreter if the rule is associated with an Interpreter object for semantic processing. </li>
+
+	<LI>SPRAF_AutoPause if the rule is auto-pause. </li>
+</UL>
+
+<P>The <I>hInitialState</I> gives the initial state of the rule. </P>
+
+<P>In order for the SR engine to find out the full contents of the rule (either immediately, or later during recognition), it can use the <A HREF="cerefispsrenginesitegetstateinfo.htm">ISpSREngineSite::GetStateInfo</A> method. This gives information about all the subsequent transitions and states following on from any given state (starting with the initial state of the rule).</P>
+
+<PRE class="syntax"><B>HRESULT RuleNotify(
+SPCFGNOTIFY </B><I>Action</I><B>,
+ULONG </B><I>cRules</I><B>,
+const SPRULEENTRY *</B><I>pRules</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Action</I> </DT>
+
+<DD>The SPCFGNOTIFY enumeration value specifying the action that is occurring. </dd>
+
+<DT><I>cRules</I> </DT>
+
+<DD>The number of rules contained in <I>pWords</I>. </dd>
+
+<DT><I>pRules</I> </DT>
+
+<DD>Array of <A HREF="cerefspruleentry.htm">SPRULEENTRY</A>Y structures containing information on each rule. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>S_OK </TD>
+<TD width=53%>Function completed successfully.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>FAILED (hr) </TD>
+<TD width=53%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapiddk.idl</TD>
+<TD width=18%>Sapiddk.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpSREngine::RuleNotify&nbsp;(cerefispsrenginerulenotify.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

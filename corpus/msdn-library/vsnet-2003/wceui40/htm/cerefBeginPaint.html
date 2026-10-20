@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BeginPaint</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BeginPaint"/>
+<MSHelp:RLTitle Title="BeginPaint"/>
+<MSHelp:Keyword Index="A" Term="cerefBeginPaint"/>
+<MSHelp:Keyword Index="K" Term="BeginPaint"/>
+<MSHelp:Keyword Index="A" Term="cerefBeginPaint"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: gdi_mwmgr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_754011">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefbeginpaint"></A>BeginPaint</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function prepares the specified window for painting and fills a <A HREF="cerefpaintstruct.htm">PAINTSTRUCT</A> structure with information about the painting. </P>
+
+<PRE class="syntax"><B>HDC BeginPaint( </B>
+<B>HWND</B> <I>hwnd</I><B>,</B> 
+<B>LPPAINTSTRUCT</B><I> lpPaint</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hwnd</I></DT>
+
+<DD>Handle to the window to be repainted. </dd>
+
+<DT><I>lpPaint</I></DT>
+
+<DD>Long pointer to the <B>PAINTSTRUCT</B> structure that will receive painting information.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The handle to a display device context for the specified window indicates success. NULL indicates that no display device context is available. </P>
+
+<P>To get extended error information, call <MSHelp:link keywords="cerefgetlasterror" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Code Example</H4>
+
+<P>The following code example shows a window procedure that processes a <A HREF="cerefwm_paint.htm">WM_PAINT</A> message by using <B>BeginPaint</B> to prepare a window for painting, and then draws an icon or bitmap in the window.</P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+
+HICON ghIcon = NULL;
+HBITMAP ghbmMask = NULL;
+HBITMAP ghbmColor = NULL;
+
+LRESULT APIENTRY MainWndProc(
+        HWND hWnd,                // window handle
+        UINT message,             // type of message
+        WPARAM wParam,            // additional information
+        LPARAM lParam)            // additional information
+{
+    switch (message) {
+
+        case WM_PAINT:
+            PAINTSTRUCT ps;
+            HDC hdc;
+            COLORREF crTxt, crBk;
+
+            hdc = BeginPaint(hWnd, &amp;ps);
+
+            if (ghIcon)
+                DrawIcon(hdc, 10, 10, ghIcon);
+
+            if (ghbmMask)
+                DrawBitmap(hdc, 10, 50, ghbmMask);
+
+            if (ghbmColor)
+                DrawBitmap(hdc, 50, 10, ghbmColor);
+            EndPaint(hWnd, &amp;ps);
+            break;  
+
+// Include case statements for other messages here.
+
+        default:  // Pass the message on if unproccessed.
+            return (DefWindowProc(hWnd, message, wParam, lParam));
+    }
+    return (0L);
+}</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>BeginPaint</B> function automatically sets the clipping region of the device context to exclude any area outside the update region. The update region is set by the <A HREF="cerefinvalidaterect.htm">InvalidateRect</A> function and by the system after sizing, moving, creating, scrolling, or any other operation that affects the client area. If the update region is marked for erasing, <B>BeginPaint</B> sends a <A HREF="cerefwm_erasebkgnd.htm">WM_ERASEBKGND</A> message to the window. </P>
+
+<P>An application should not call <B>BeginPaint</B> except in response to a WM_PAINT message. Each call to <B>BeginPaint</B> must have a corresponding call to the <A HREF="cerefendpaint.htm">EndPaint</A> function. </P>
+
+<P>If the caret is in the area to be painted, <B>BeginPaint</B> automatically hides the caret to prevent it from being erased. </P>
+
+<P>If the window's class has a background brush, <B>BeginPaint</B> uses that brush to erase the background of the update region before returning. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Winmgr.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefendpaint.htm">EndPaint</A>, <MSHelp:link keywords="cerefgetlasterror" TABINDEX="0">GetLastError</MSHelp:link>, <A HREF="cerefinvalidaterect.htm">InvalidateRect</A>, <A HREF="cerefvalidaterect.htm">ValidateRect</A>, <A HREF="cerefwm_erasebkgnd.htm">WM_ERASEBKGND</A>, <A HREF="cerefwm_paint.htm">WM_PAINT</A>, <A HREF="cerefpaintstruct.htm">PAINTSTRUCT</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;BeginPaint&nbsp;(cerefbeginpaint.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

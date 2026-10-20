@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 4: Adding Conditional Statements</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 4: Adding Conditional Statements"/>
+<MSHelp:RLTitle Title="Step 4: Adding Conditional Statements"/>
+<MSHelp:Keyword Index="A" Term="cetutStep4AddingConditionalStatements"/>
+<MSHelp:Keyword Index="A" Term="cetutStep4AddingConditionalStatements"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: xslpg01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821083">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cetutstep4addingconditionalstatements"></A>Step 4: Adding Conditional Statements</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can add a sales goal to the page, and use colored text to indicate which sales figures exceed, and which fall below, the sales goal. You do this by adding a conditional statement. A conditional statement checks a piece of data and decides how to format it based on its value. Here you will define a quarterly sales goal and then use a conditional statement to see if the sales amount is greater or less than the goal. Figures below the sales goal will appear in red; figures above the sales goal will appear in green.</P>
+
+<P class="labelproc"><B>To add conditional statements</B>
+
+<OL type="1">
+	<LI>Open <B>Transform.xsl</B> in your HTML editor.</li>
+
+	<LI>Immediately after &lt;xsl:output method="html"/&gt;, add the following text.
+<PRE class="code">&lt;xsl:param name="low_sales" select="21000"/&gt; </PRE>
+
+<P>This line creates a variable parameter named low_sales, which represents the sales goal, and assigns it the value of 21000. Now you can use the name low_sales whenever you want to refer to the sales goal. Setting a variable in one place and reusing it makes for flexible, well-organized code.
+</li>
+
+	<LI>Find and delete the following text.
+<PRE class="code">&lt;td style="text-align:right"&gt;
+  &lt;xsl:value-of select="format-number(@books_sold,'###,###')"/&gt;
+&lt;/td&gt;</PRE>
+</li>
+
+	<LI>Replace with the following text.
+<PRE class="code">&lt;td&gt;
+  &lt;xsl:attribute name="style"&gt;
+    &lt;xsl:choose&gt;
+      &lt;xsl:when test="number(@books_sold &amp;lt;= $low_sales)"&gt;color:red;&lt;/xsl:when&gt;
+      &lt;xsl:otherwise&gt;color:green;&lt;/xsl:otherwise&gt;
+    &lt;/xsl:choose&gt;
+    text-align:right;
+  &lt;/xsl:attribute&gt;
+  &lt;xsl:value-of select="format-number(@books_sold,'###,###')"/&gt;
+&lt;/td&gt;</PRE>
+</li>
+
+	<LI>Save and close <B>Transform.xsl</B>.</li>
+
+	<LI>To view the page in Internet Explorer, double-click <B>Sales.xml</B>.
+<P>Your result should look like this:
+
+<P class="fig1"><IMG SRC="xsltut03.gif" ALT="" BORDER=0>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You can change the value assigned to the low_sales parameter in Transform.xsl to change how the page appears. For example, you can change the sales goal from <CODE>21000</CODE> to <CODE>31000</CODE>. To display the result, save Transform.xls, return to Internet Explorer, and click <B>Refresh</B>.</BLOCKQUOTE>
+</li>
+</OL>
+
+<H2 class="dtH2">How It Works</H2>
+
+<P>The key to this is the &lt;xsl:choose&gt; command, which tells the parser that a conditional statement is coming. If you look just after the &lt;xsl:choose&gt; command, you will see the line &lt;xsl:when test="number(@books_sold &amp;lt;= $low_sales)"&gt;color:red;&lt;/xsl:when&gt;. The command xsl:when tells Internet Explorer that a choice is coming up. The text <B>test=</B>"number(@books_sold &amp;lt;= $low_sales)" tells Internet Explorer what the choice is. In this case, Internet Explorer is told to choose every case in which the value of books_sold in the &lt;quarter&gt; tag is less than the value in the low_sales parameter. The text color:red tells Internet Explorer to format the sales number as red text when the condition is met. The text &lt;/xsl:when&gt; tells the parser that the xsl:when command is finished. The &lt;xsl:otherwise&gt;color:green;&lt;/xsl:otherwise&gt; tag tells Internet Explorer what to do when the condition is not met.</P>
+
+<P>Finally, notice that the style sheet property that controls the alignment of the column data has been moved into the definition for the style attribute, after the &lt;/xsl:choose&gt; tag. This insures that all of the style attributes are contained in the same style attribute.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cetutstep5addingotherdocuments.htm">Step 5: Adding Other Documents</A></P>
+
+<P><A HREF="cetutstep3loopingthroughdata.htm">Step 3: Looping Through Data</A></P>
+
+<P><A HREF="cecongettingstartedwithxslttutorial.htm">Tutorial: Getting Started with XSLT</A></P>
+
+<P><A HREF="ceconexploringxsltcapabilities.htm">Exploring XSLT Capabilities</A></P>
+
+<P><A HREF="ceconxsltdevelopersguide.htm">XSLT Developer Guide</A></P>
+
+<P>0</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%204:%20Adding%20Conditional%20Statements&nbsp;(cetutstep4addingconditionalstatements.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

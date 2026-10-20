@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisSendPackets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisSendPackets"/>
+<MSHelp:RLTitle Title="NdisSendPackets"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisSendPackets"/>
+<MSHelp:Keyword Index="K" Term="NdisSendPackets"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisSendPackets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_689047">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndissendpackets"></A>NdisSendPackets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function forwards a multipacket send request, possibly with associated out-of-band information, to the underlying driver.</P>
+
+<PRE class="syntax"><B>VOID NdisSendPackets(</B>
+<B>IN NDIS_HANDLE</B> <I>NdisBindingHandle</I><B>,</B>
+<B>IN PPNDIS_PACKET</B> <I>PacketArray</I><B>,</B>
+<B>IN UINT</B> <I>NumberOfPackets</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>NdisBindingHandle</I></DT>
+
+<DD>[in] Specifies the handle returned by <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A> that identifies the target NIC or the virtual adapter of the next-lower driver to which the caller is bound.</dd>
+
+<DT><I>PacketArray</I></DT>
+
+<DD>[in] Points to an array of pointers to packet descriptors. Each packet descriptor in the array has chained buffer descriptors mapping buffers containing the data that the underlying NIC driver should transmit over the wire. Each packet descriptor also has an associated <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A> block, which the caller has already set up with any time stamp and/or medium-specific out-of-band information, such as packet priority, relevant to the underlying driver.</dd>
+
+<DT><I>NumberOfPackets</I></DT>
+
+<DD>[in] Specifies the number of pointers in the packet array.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Each element in the given array is a pointer to an NDIS_PACKET-type descriptor, and each packet descriptor can have caller-set <B>TimeToSend</B> and/or <A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A> and <B>MediaSpecificSize</B> values in its associated NDIS_PACKET_OOB_DATA block. The caller must allocate each such packet descriptor with <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>.</P>
+
+<P>A protocol can set up this time stamp with the <A HREF="_wceddk_ndis_set_packet_time_to_send.htm">NDIS_SET_PACKET_TIME_TO_SEND</A> and any out-of-band information that accompanies the send request with <A HREF="_wceddk_ndis_set_packet_media_specific_info.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A> before it calls <A HREF="#_wceddk_ndissendpackets">NdisSendPackets</A>. The underlying driver retrieves this information with the reciprocal <B>NDIS_GET_PACKET_<I>XXX</I></B> macros.</P>
+
+<P>If necessary, a protocol also can call <A HREF="_wceddk_ndissetpacketflags.htm">NdisSetPacketFlags</A> to set the packet descriptor's flags with information for the underlying driver.</P>
+
+<P>If the underlying NIC driver does not export a <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A> handler, the NDIS library makes a sequence of calls, one for each packet in the supplied array, to that driver's <A HREF="cxrefminiportsend.htm">MiniportSend</A> function. NDIS submits packets individually to an underlying driver's <B>MiniportSend</B> function in the same order as they arrive in the supplied array.</P>
+
+<P>NDIS submits packet arrays to an underlying driver's <B>MiniportSendPackets</B> function in the same order as they are passed to <B>NdisSendPackets</B>, but an underlying serialized miniport can return a subset of packets in any incoming array to NDIS by setting NDIS_STATUS_RESOURCES in the out-of-band data block for a single array element. When this occurs, NDIS queues that packet and all subsequent packets in the array for resubmission to the <B>MiniportSendPackets</B> function later.</P>
+
+<P>For serialized miniports, NDIS always preserves the protocol-determined order of send packets, whether passed in calls to <A HREF="_wceddk_ndissend.htm">NdisSend</A> or <B>NdisSendPackets</B>, and sees that they are given to the underlying driver in FIFO order. Before a protocol driver calls <B>NdisSendPackets</B> with an array of packet descriptor pointers, the protocol must ensure that it sets up the array of pointers in the order that the packets should be sent over the wire.</P>
+
+<P>The caller of <B>NdisSendPackets</B> should test the returned status for each packet in such an array individually when its <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A> function is called with the completion <I>Status</I>. While NDIS submits packets for transmission in the FIFO order determined by the sending protocol, underlying drivers might complete such sends in random order.</P>
+
+<P>If the underlying driver is a deserialized miniport, it must accept all incoming send packets and queue them internally, if necessary. A deserialized miniport should preserve the protocol-determined ordering of packet descriptors that bound protocols submit to <B>NdisSendPackets</B> while they are held in its internal queue. A deserialized driver always completes sends asynchronously. Consequently, protocols bound to a deserialized miniport should always consider the <I>Status</I> value passed in to their <B>ProtocolSendComplete</B> functions the final status of the requested send.</P>
+
+<P>As soon as a protocol calls <B>NdisSendPackets</B>, it relinquishes ownership of the following:
+
+<UL type="disc">
+	<LI>All packet descriptors at <I>PacketArray</I></li>
+
+	<LI>All buffers mapped by the buffer descriptors chained to those packet descriptors</li>
+
+	<LI>All out-of-band data blocks associated with the packet descriptors, including any medium-specific buffers specified in the out-of-band data blocks</li>
+</UL>
+
+<P>The protocol regains ownership of these resources, one packet at a time, as its <B>ProtocolSendComplete</B> function is called with each packet descriptor in the array given to <B>NdisSendPackets</B>.</P>
+
+<P>When a packet descriptor is returned to <B>ProtocolSendComplete</B>, it can call <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A> to prepare the packet for reuse after saving the buffer descriptors chained to the packet descriptor with calls to an <B>NdisUnchainBufferAt<I>XXX</I></B> function. Reusing such a packet descriptor yields better performance than returning the descriptor to a driver-allocated packet pool with <A HREF="_wceddk_ndisfreepacket.htm">NdisFreePacket</A> and, then, reallocating it for a later send.</P>
+
+<P><B>ProtocolSendComplete</B> also can prepare the out-of-band block associated with the given packet descriptor for reuse if the protocol supplies any out-of-band information. Alternatively, the protocol can explicitly reinitialize the members it uses when setting up the packet descriptor for a subsequent send.</P>
+
+<P>An NDIS intermediate driver must repackage each incoming send from still higher-level protocols in fresh packet descriptors before passing send requests to the underlying miniport with <B>NdisSendPackets</B> or <B>NdisSend</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A>, <A HREF="cxrefminiportsend.htm">MiniportSend</A>, <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A>, <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A>, <A HREF="_wceddk_ndis_set_packet_media_specific_info.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A>,<A HREF="_wceddk_ndis_set_packet_time_to_send.htm">NDIS_SET_PACKET_TIME_TO_SEND</A>, <A HREF="_wceddk_ndisallocatebuffer.htm">NdisAllocateBuffer</A>, <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="_wceddk_ndisfreepacket.htm">NdisFreePacket</A>, <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="#_wceddk_ndissendpackets">NdisSendPackets</A>, <A HREF="_wceddk_ndissetpacketflags.htm">NdisSetPacketFlags</A>, <A HREF="_wceddk_ndisunchainbufferatback.htm">NdisUnchainBufferAtBack</A>, <A HREF="_wceddk_ndisunchainbufferatfront.htm">NdisUnchainBufferAtFront</A>, <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisSendPackets&nbsp;(_wceddk_ndissendpackets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

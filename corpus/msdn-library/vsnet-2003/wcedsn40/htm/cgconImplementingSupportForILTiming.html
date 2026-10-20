@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing Support for ILTiming</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing Support for ILTiming"/>
+<MSHelp:RLTitle Title="Implementing Support for ILTiming"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingSupportForILTiming"/>
+<MSHelp:Keyword Index="K" Term="ILTiming, implementing support for"/>
+<MSHelp:Keyword Index="K" Term="ISRs, testing ISR latency"/>
+<MSHelp:Keyword Index="K" Term="ISTs, testing IST latency"/>
+<MSHelp:Keyword Index="K" Term="OAL, ILTiming support"/>
+<MSHelp:Keyword Index="K" Term="testing, ILTiming support"/>
+<MSHelp:Keyword Index="K" Term="timing, ILTiming support"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingSupportForILTiming"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757232">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconimplementingsupportforiltiming"></A>Implementing Support for ILTiming</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>ILTiming.exe is a testing tool that allows an OEM to measure ISR and IST latency. The application that controls the test is in two parts and is released as source in %_WINCEROOT%\Public\Common\Oak\Utils\Iltiming and %_WINCEROOT%\Public\Common\Oak\Utils\It_load. ILTiming.exe works by using system resources to track the amount of time spent in trying to get to the ISR and time spent trying to get to the IST.</P>
+
+<P>ILTiming.exe interacts with the kernel and OAL through an <A HREF="cmrefioctl_hal_iltiming.htm">IOCTL_HAL_ILTIMING</A>. If the <B>IOCTL_HAL_ILTIMING</B> is supported and properly implemented, ILTiming.exe will be able to measure ISR and IST latency. <B>IOCTL_HAL_ILTIMING</B> is passed to the OEM through <A HREF="cmrefoemiocontrol.htm">OEMIoControl</A>. The parameter <I>lpInBuf </I>contains an <A HREF="cmrefiltiming_message.htm">ILTIMING_MESSAGE</A> structure and the <I>wMsg </I>parameter contains a command that must be executed on behalf of the caller. The following table shows the values for the<I> wMsg</I> command.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Value</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>ILTIMING_MSG_ENABLE</TD>
+<TD width=59%>Enable the ILTiming process and set the frequency of the measurements. The frequency is how often, in ticks, before the next ISR and IST measurement are taken. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>ILTIMING_MSG_DISABLE</TD>
+<TD width=59%>Disable ILTiming functionality.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>ILTIMING_MSG_GET_TIMES</TD>
+<TD width=59%>Return the time information about an ISR measurement. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>ILTIMING_MSG_GET_PFN</TD>
+<TD width=59%>Return a function point to <A HREF="cmrefperfcountsincetick.htm">PerfCountSinceTick</A>.</TD>
+</TR>
+</table></div>
+
+<P>The ILTiming.exe file requires that you implement the following two functions: 
+
+<UL type="disc">
+	<LI><B>DWORD</B> <A HREF="cmrefperfcountsincetick.htm">PerfCountSinceTick</A>
+<P>The amount of time since the last system tick or secondary timer interrupt.
+</li>
+
+	<LI><B>DWORD</B> <A HREF="cgconperfcountfreq.htm">PerfCountFreq</A>
+<P>The frequency of the system tick or secondary timer.
+</li>
+</UL>
+
+<P>Both functions must be implemented to support the high resolution counter APIs <MSHelp:link keywords="cerefQueryPerformanceCounter" TABINDEX="0">QueryPerformanceCounter</MSHelp:link> and <MSHelp:link keywords="cerefQueryPerformanceFrequency" TABINDEX="0">QueryPerformanceFrequency</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconimplementingreal-timetools.htm">Implementing Real-Time Tools</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20Support%20for%20ILTiming&nbsp;(cgconimplementingsupportforiltiming.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

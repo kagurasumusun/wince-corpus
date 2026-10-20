@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Service Threads</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Service Threads"/>
+<MSHelp:RLTitle Title="Interrupt Service Threads"/>
+<MSHelp:Keyword Index="A" Term="cxconInterruptServiceThread"/>
+<MSHelp:Keyword Index="K" Term="interrupt service threads"/>
+<MSHelp:Keyword Index="K" Term="interrupts, interrupt service threads"/>
+<MSHelp:Keyword Index="K" Term="ISTs"/>
+<MSHelp:Keyword Index="A" Term="cxconInterruptServiceThread"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_820317">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconinterruptservicethread"></A>Interrupt Service Threads</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The interrupt service thread (IST) is a user-mode thread that does most of the interrupt processing. The IST is idle most of the time and relies on the OS to wake it when it needs to process interrupts. Achieve this by associating an event object with an interrupt identifier.</P>
+
+<P>The IST first creates an event object and associates it with the logical interrupt. Use the <MSHelp:link keywords="cerefCreateEvent" TABINDEX="0">CreateEvent</MSHelp:link> function to create an event object. As soon as possible, the IST should wait for this event to signal. When the hardware interrupt occurs, the kernel signals the event on behalf of the ISR, then the IST performs necessary I/O operations in the device to collect the data and process it. When the interrupt processing completes, the IST should inform the kernel to re-enable the hardware interrupt.</P>
+
+<P>Usually, IST threads run at above-normal priority. They can boost themselves to a higher priority before registering their event with the kernel by calling <MSHelp:link keywords="_wcesdk_CeSetThreadPriority" TABINDEX="0">CeSetThreadPriority</MSHelp:link>.</P>
+
+<P>The following table shows the functions that the IST uses commonly.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Function</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><MSHelp:link keywords="cmrefInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link></TD>
+<TD width=66%>Links the event with the interrupt identifier of the ISR.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><MSHelp:link keywords="cerefWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link></TD>
+<TD width=66%>Used to wait for an event to signal. This call is usually inside a loop so that as soon as an interrupt is processed, the IST gets back to this call waiting for the next interrupt to handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><MSHelp:link keywords="cmrefInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link></TD>
+<TD width=66%>Instruct the kernel to enable the hardware interrupt related to this thread.</TD>
+</TR>
+</table></div>
+
+<P>The following lists shows examples of what an IST might do at startup:
+
+<UL type="disc">
+	<LI>Create a structure and store interrupt values in it.</li>
+
+	<LI>Use <B>CreateEvent</B> as the IST trigger.</li>
+
+	<LI>Read the <B>IRQ</B> and <B>SysIntr</B> values from the registry and allow the OAL to create the mapping before the driver loads.</li>
+
+	<LI>Store the handle for the thread you are creating.</li>
+</UL>
+
+<P>The following code example shows a typical IST start.</P>
+
+<PRE class="code">struct ISTData      // Declare the structure to pass to the IST
+{
+    HANDLE hThread; // IST Handle
+    DWORD sysIntr;  // Logical ID
+    HANDLE hEvent;  // handle to the event to wait for interrupt
+};
+
+ISTData g_KeypadISTData;
+// Create event to link to IST
+g_KeypadISTData.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+// Translate IRQ to logical ID (x86 CEPC)
+g_KeypadISTData.sysIntr = Mapirq2Sysintr(5);
+//start the thread
+g_KeypadISTData.hThread = CreateThread(NULL, 0, &amp;KeypadIST, &amp;g_KeypadISTData, 0, NULL);</PRE>
+
+<P>The following code example shows how to set the IST thread priority, disconnect any previous events from the associated ISR, and connect to the associated ISR.</P>
+
+<PRE class="code">// change the thread's priority
+CeSetThreadPriority(g_KeypadISTData.hThread, 0);
+
+// disconnect any previous events from logical ID
+InterruptDisable(g_KeypadISTData.sysIntr);
+
+// connect logical ID with event
+InterruptInitialize(g_KeypadISTData.sysIntr, g_KeypadISTData.hEvent, NULL, 0);</PRE>
+
+<P>The critical part of the IST happens in a loop that runs until manually aborted. Once in the loop, immediately block until the triggering event returns from the kernel, this signifies that the IRQ has pulsed. This loop also does actual processing of the interrupt. Signal <MSHelp:link keywords="cmrefInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link> in the kernel with the interrupt identifier. This calls down to <MSHelp:link keywords="cmrefOEMInterruptDone" TABINDEX="0">OEMInterruptDone</MSHelp:link> in your OAL to unmask the IRQ. The following code example shows this loop.</P>
+
+<PRE class="code">DWORD KeypadIST(void *dat)
+{
+    ISTData* pData = (ISTData*)dat;
+    // loop until told to stop
+    while(!pData-&gt;abort)
+    {  // wait for the interrupt event…
+        WaitForSingleObject(pData-&gt;Event, INFINITE);
+        if(pData-&gt;abort)
+            break;
+                // handle the interrupt
+        // let OS know the interrupt processing is done
+        InterruptDone(pData-&gt;sysIntr);
+    }
+    return 0;
+}</PRE>
+
+<P>If your device is installable, you may want to disconnect and turn off the IST permanently. Set a flag that cancels the IST loop, call <MSHelp:link keywords="cmrefInterruptDisable" TABINDEX="0">InterruptDisable</MSHelp:link> to disconnect the triggering event from the logical identifier, and close the thread. The following code example shows how to disconnect and turn off the IST.</P>
+
+<PRE class="code">// set abort flag to true to let thread know that it should exit
+g_KeypadISTData.abort = TRUE;
+
+// disconnect event from logical ID
+// this internally sets g_KeypadISTData.sysIntr which in turn sets g_KeypadISTData.hEvent through the kernel
+InterruptDisable(g_KeypadISTData.sysIntr);
+
+// wait for thread to exit
+WaitForSingleObject(g_KeypadISTData.hEvent, INFINITE);
+
+CloseHandle(g_KeypadISTData.hEvent);
+CloseHandle(g_KeypadISTData.hThread);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconinterruptserviceroutine.htm">Interrupt Service Routines</A></P>
+
+<P><A HREF="cxconinterrupts.htm">Interrupts</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Interrupt%20Service%20Threads&nbsp;(cxconinterruptservicethread.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

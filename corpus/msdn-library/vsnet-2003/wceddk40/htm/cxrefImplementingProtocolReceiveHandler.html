@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing a ProtocolReceive Handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing a ProtocolReceive Handler"/>
+<MSHelp:RLTitle Title="Implementing a ProtocolReceive Handler"/>
+<MSHelp:Keyword Index="A" Term="cxrefImplementingProtocolReceiveHandler"/>
+<MSHelp:Keyword Index="K" Term="NDIS, ProtocolReceive handlers"/>
+<MSHelp:Keyword Index="K" Term="packets, ProtocolReceive handlers"/>
+<MSHelp:Keyword Index="A" Term="cxrefImplementingProtocolReceiveHandler"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758532">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefimplementingprotocolreceivehandler"></A>Implementing a ProtocolReceive Handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>If the underlying NIC driver calls a filter-specific <B>NdisMXxxIndicateReceive </B>function, NDIS always calls the <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function of each bound protocol driver.</P>
+
+<P>If one or more of such a protocol driver clients are the target of the packet and if the lookahead buffer size is less than the total packet size, <B>ProtocolReceive</B> must do the following: 
+
+<OL type="1">
+	<LI>Copy the lookahead data into an internal buffer mapped by a protocol-allocated packet descriptor. </li>
+
+	<LI>Chain buffer descriptors mapping sufficient protocol-allocated buffers to contain the rest of the network packet data to a protocol-allocated packet descriptor. </li>
+
+	<LI>Call <A HREF="cxtskndistransferdata.htm">NdisTransferData</A> with the packet descriptor, so the underlying driver copies the rest of the received data into the protocol's buffers. </li>
+</OL>
+
+<P>If <B>NdisTransferData</B> returns STATUS_SUCCESS or the <A HREF="cxrefprotocoltransferdatacomplete.htm">ProtocolTransferDataComplete</A> function is called, you can chain the lookahead buffer to the packet descriptor that contains this transferred data and is indicated up to any interested clients. </P>
+
+<P>You may call <B>NdisTransferData</B> once for each receive indication. It is the responsibility of the protocol driver to set up its packet descriptor with chained buffers of a sufficient size to contain the full network packet. After <B>NdisTransferData</B> returns, the received data is no longer available from the underlying NIC driver.</P>
+
+<P>The size of the lookahead buffer passed to <B>ProtocolReceive</B> is the minimum of the size returned by a call to <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A> with <A HREF="cxtskoid_gen_current_lookahead.htm">OID_GEN_CURRENT_LOOKAHEAD</A> and the total packet size. All data in the lookahead buffer is read-only to the <B>ProtocolReceive</B>. </P>
+
+<P>If the lookahead buffer size is greater than or equal to the size of the total packet indicated by a filter-specific <B>NdisMXxxIndicateReceive </B>function, <B>ProtocolReceive</B> should call <B>NdisTransferData</B> to copy the lookahead data into an internal buffer. Instead, the </P>
+
+<P>If the call to ProtocolReceive occurred because the underlying NIC driver set the status for one or more packets in a packet array to NDIS_STATUS_RESOURCES before calling <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, the size of the lookahead buffer will always be equal to the size of the full network packet. In these circumstances, the protocol driver never calls <B>NdisTransferData</B> because ProtocolReceive can copy the full indication into an internal buffer immediately.</P>
+
+<P>If the NDIS_MAC_OPTION_COPY_LOOKAHEAD_DATA bit is set in response to an <A HREF="cxtskoid_gen_mac_options.htm">OID_GEN_MAC_OPTIONS</A> request, a protocol driver can use any means to copy lookahead data into an internal buffer, such as calling <A HREF="_wceddk_ndismovememory.htm">NdisMoveMemory</A>. If this flag was <I>not</I> set, the protocol driver <I>must</I> call <A HREF="_wceddk_ndiscopylookaheaddata.htm">NdisCopyLookaheadData</A> to copy the indicated data; otherwise, the results from a copy operation are indeterminate. </P>
+
+<P><B>ProtocolReceive</B> must execute as quickly as possible. The protocol driver must ensure that it has protocol-allocated packet resources available before it receives incoming indications. After the protocol driver examines the packet and determines that the packet is not one it will copy, <B>ProtocolReceive</B> should simply return NDIS_STATUS_NOT_ACCEPTED.</P>
+
+<P><B>ProtocolReceive</B> must not process the received data as soon as it is copied because that would adversely impact system performance, as well as possibly causing dropped receives in the underlying NIC driver. Instead, the protocol driver processes the received data later in its <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> function. Following one or more receive indications, <B>ProtocolReceiveComplete</B> is called when the underlying NIC driver calls <B>NdisM<I>XXX</I>IndicateReceiveComplete</B>. Typically, this occurs when the underlying NIC driver has received and indicated a miniport-determined number of packets or before it exits its receive handler. The protocol driver must queue the received data in <B>ProtocolReceive</B> so that it is available to <B>ProtocolReceiveComplete</B> for post-processing.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefreceivingdatainprotocoldriver.htm">Receiving Data in a Protocol Driver</A></P>
+
+<P><A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> </P>
+
+<P><A HREF="_wceddk_ndismovememory.htm">NdisMoveMemory</A></P>
+
+<P><A HREF="_wceddk_ndiscopylookaheaddata.htm">NdisCopyLookaheadData</A> </P>
+
+<P><A HREF="cxtskoid_gen_mac_options.htm">OID_GEN_MAC_OPTIONS</A> </P>
+
+<P><A HREF="cxtskndistransferdata.htm">NdisTransferData</A></P>
+
+<P><A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A></P>
+
+<P><A HREF="_wceddk_ndismethindicatereceivecomplete.htm">NdisMEthIndicateReceiveComplete</A></P>
+
+<P><A HREF="cxrefndismtrindicatereceivecomplete.htm">NdisMTrIndicateReceiveComplete</A></P>
+
+<P><A HREF="cxrefndismwanindicatereceivecomplete.htm">NdisMWanIndicateReceiveComplete</A></P>
+
+<P><A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20a%20ProtocolReceive%20Handler&nbsp;(cxrefimplementingprotocolreceivehandler.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

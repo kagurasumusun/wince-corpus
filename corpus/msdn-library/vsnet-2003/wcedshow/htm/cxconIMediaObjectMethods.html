@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMediaObject Methods</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IMediaObject Methods"/>
+<MSHelp:RLTitle Title="IMediaObject Methods"/>
+<MSHelp:Keyword Index="A" Term="cxconIMediaObjectMethods"/>
+<MSHelp:Keyword Index="K" Term="IMediaObject Methods"/>
+<MSHelp:Keyword Index="A" Term="cxconIMediaObjectMethods"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxshow_concepts3_dmo.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_815181">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconimediaobjectmethods"></A>IMediaObject Methods</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Most of the <A HREF="cxconimediaobject.htm">IMediaObject</A> methods are wrappers that call an internal version of the same method. The derived class must implement the internal versions, which have the prefix <I>Internal-</I>.</P>
+
+<P>For a list of methods the derived class must implement, see <A HREF="cxcondmobaseclassreference.htm">DMO Base Class</A>. The following remarks give details about some of the implementations.</P>
+
+<H4 class="dtH4">AllocateStreamingResources</H4>
+
+<P>The template keeps a private flag that indicates whether this method has been called. If the method is called when the flag is already TRUE, it returns S_OK without calling the <B>InternalAllocateStreamingResources</B> method. The <B>FreeStreamingResources</B> method resets the flag to FALSE.</P>
+
+<H4 class="dtH4">DMOLock</H4>
+
+<P>The <B>DMOLock</B> method implements the <A HREF="cxconimediaobjectlock.htm">IMediaObject::Lock</A> method. To avoid name conflicts with ATL for Windows CE, <A HREF="cxconimediaobjectimplclasstemplate.htm">IMediaObjectImpl</A> has renamed the method as <B>DMOLock</B>.</P>
+
+<P>When you build the derived class, define FIX_LOCK_NAME before you include the DMO header file. The FIX_LOCK_NAME directive causes the preprocessor to substitute <B>DMOLock</B> for <A HREF="cxcon_derived_lock.htm">Lock</A> in the declaration of the <B>IMediaObject</B> interface. Applications can still invoke the method using the name <B>Lock</B> because the vtable order does not change.</P>
+
+<PRE class="code">#define FIX_LOCK_NAME
+#include &lt;dmo.h&gt;</PRE>
+
+<P>This method calls <B>Lock</B> if the parameter is TRUE or <A HREF="cxcon_derived_unlock.htm">Unlock</A> if the parameter is FALSE. The derived class must implement the <B>Lock</B> and <B>Unlock</B> methods.</P>
+
+<H4 class="dtH4">Flush</H4>
+
+<P>The template keeps a private flag that indicates the object's flushed state. The <A HREF="cxconimediaobjectflush.htm">Flush</A> method sets the flag to TRUE, and the <A HREF="cxconimediaobjectprocessinput.htm">ProcessInput</A> method resets it to FALSE. If <B>Flush</B> is called when the flag is already TRUE, the method returns S_OK without calling the <B>InternalFlush</B> method.</P>
+
+<H4 class="dtH4">GetInputSizeInfo and GetOutputSizeInfo</H4>
+
+<P>The <A HREF="cxconimediaobjectgetinputsizeinfo.htm">GetInputSizeInfo</A> and <A HREF="cxconimediaobjectgetoutputsizeinfo.htm">GetOutputSizeInfo</A> methods return DMO_E_TYPE_NOT_SET unless all of the nonoptional streams have media types. Therefore, in the derived class, the internal methods can assume that all of the nonoptional streams have media types.</P>
+
+<H4 class="dtH4">GetInputStatus</H4>
+
+<P>The <A HREF="cxconimediaobjectgetinputstatus.htm">GetInputStatus</A> method calls the <A HREF="cxcon_derived_internalacceptinginput.htm">InternalAcceptingInput</A> method, which the derived class must implement. The <B>InternalAcceptingInput</B> method returns S_OK if the specified input stream can accept input. Otherwise, it returns S_FALSE. </P>
+
+<P>Unless all of the non-optional streams have media types, the <B>GetInputStatus</B> method returns DMO_E_TYPE_NOT_SET. Therefore, the implementation of <B>InternalAcceptingInput</B> does not have to check for this condition.</P>
+
+<H4 class="dtH4">ProcessInput</H4>
+
+<P>Before the <A HREF="cxconimediaobjectprocessinput.htm">ProcessInput</A> method calls <B>InternalProcessInput</B>, it calls <A HREF="cxconimediaobjectallocatestreamingresources.htm">AllocateStreamingResources</A> and <A HREF="cxcon_derived_internalacceptinginput.htm">InternalAcceptingInput</A>. Therefore, the implementation of <B>InternalProcessInput</B> can assume the following:
+
+<UL type="disc">
+	<LI>All resources have been allocated. </li>
+
+	<LI>The input stream can accept data. </li>
+</UL>
+
+<H4 class="dtH4">ProcessOutput</H4>
+
+<P>Before the <A HREF="cxconimediaobjectprocessoutput.htm">ProcessOutput</A>method calls <B>InternalProcessOutput</B>, it calls <B>AllocateStreamingResources</B>. Therefore, the implementation of <B>InternalProcessOutput</B> can assume that all resources have been allocated.</P>
+
+<H4 class="dtH4">SetInputType</H4>
+
+<P>The <A HREF="cxconimediaobjectsetinputtype.htm">SetInputType</A>method tests, sets, or clears the media type on an input stream. It calls the <A HREF="cxcon_derived_internalcheckinputtype.htm">InternalCheckInputType</A> method, which the derived class must implement. The <B>InternalCheckInputType</B> method returns S_OK if the media type is acceptable or returns an error code otherwise. The <B>SetInputType</B> method implements the rest of the functionality.</P>
+
+<P>The <B>SetInputType</B> method does not allocate any resources. When the DMO switches to a streaming state, it calls the <B>AllocateStreamingResources</B> method. The derived class should use the <B>InternalAllocateStreamingResources</B> method to allocate any resources that it needs, such as memory buffers.</P>
+
+<H4 class="dtH4">SetOutputType</H4>
+
+<P>The <A HREF="cxconimediaobjectsetoutputtype.htm">SetOutputType</A> method tests, sets, or clears the media type on an output stream. It calls the <A HREF="cxcon_derived_internalcheckoutputtype.htm">InternalCheckOutputType</A> method, which the derived class must implement. The <B>InternalCheckOutputType</B> method returns S_OK if the media type is acceptable or returns an error code otherwise. The <B>SetOutputType</B> method implements the rest of the functionality.</P>
+
+<P>The <B>SetOutputType</B> method does not allocate any resources. When the DMO switches to a streaming state, it calls the <B>AllocateStreamingResources</B> method. The derived class should use the <B>InternalAllocateStreamingResources</B> method to allocate any resources that it needs, such as memory buffers.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondmoreference.htm">DMO Reference</A>, <A HREF="cxcondmobaseclassreference.htm">DMO Base Class Reference</A>, <A HREF="cxconimediaobjectimplclasstemplate.htm">IMediaObjectImpl</A>, <A HREF="cxconimediaobject.htm">IMediaObject</A>, <A HREF="cxconimediaobjectlock.htm">IMediaObject::Lock</A>, <A HREF="cxcon_derived_lock.htm">Lock</A>, <A HREF="cxcon_derived_unlock.htm">Unlock</A>, <A HREF="cxcon_derived_internalacceptinginput.htm">InternalAcceptingInput</A>, <A HREF="cxcon_derived_internalacceptinginput.htm">InternalAcceptingInput</A>, <A HREF="cxcon_derived_internalcheckinputtype.htm">InternalCheckInputType</A>, <A HREF="cxcon_derived_internalcheckoutputtype.htm">InternalCheckOutputType</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IMediaObject%20Methods&nbsp;(cxconimediaobjectmethods.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

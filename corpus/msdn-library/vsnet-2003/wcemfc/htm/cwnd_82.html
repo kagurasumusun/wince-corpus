@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::Invalidate</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_invalidate"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_wm_paint" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_cwnd_invalidate"></A>CWnd::Invalidate</H1>
+
+<P>This method invalidates the entire client area of <B>CWnd</B>. </P>
+
+<PRE class=syntax><B>void Invalidate(
+BOOL </B><I>bErase</I><B> = TRUE );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>bErase</I></DT>
+
+<DD>Specifies whether the background within the update region is to be erased.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The client area is marked for painting when the next <A HREF="JavaScript:hhobj_1.Click()">WM_PAINT</A> message occurs. The region can also be validated before a WM_PAINT message occurs by the <B>ValidateRect</B> method.</P>
+
+<P>The <I>bErase</I> parameter specifies whether the background within the update area is to be erased when the update region is processed. If <I>bErase</I> is <B>TRUE</B>, the background is erased when the <B>BeginPaint</B> method is called; if <I>bErase</I> is <B>FALSE</B>, the background remains unchanged. If <I>bErase</I> is <B>TRUE</B> for any part of the update region, the background in the entire region, not just in the given part, is erased. </P>
+
+<P>Windows sends a WM_PAINT message whenever the <B>CWnd</B> update region is not empty and there are no other messages in the application queue for that window.</P>
+
+<H4>Example</H4>
+
+<P>This is the example from the <B>CWnd::UpdateWindow</B> method.</P>
+
+<PRE>// In this example a rectangle is drawn in a view.
+// The OnChangeRect() function changes the dimensions
+// of the rectangle and then calls CWnd::Invalidate() so the
+// client area of the view will be redrawn next time the
+// window is updated.  It then calls CWnd::UpdateWindow
+// to force the new rectangle to be painted.
+
+void CTestView::OnChangeRect()
+{
+&nbsp;&nbsp;// Change Rectangle size.
+&nbsp;&nbsp;m_rcBox = CRect(20, 20, 210, 210);
+
+&nbsp;&nbsp;// Invalidate window so entire client area
+&nbsp;&nbsp;// is redrawn when UpdateWindow is called.
+&nbsp;&nbsp;Invalidate();&nbsp;&nbsp;
+
+&nbsp;&nbsp;// Update Window to cause View to redraw.
+&nbsp;&nbsp;UpdateWindow();
+}
+
+// On Draw function draws the rectangle.
+void CTestView::OnDraw(CDC* pDC)
+{
+//  ..  Other draw code here.
+
+&nbsp;&nbsp;pDC-&gt;Draw3dRect(m_rcBox, 0x00FF0000, 0x0000FF00);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_4.htm"><B>CWnd::BeginPaint</B></A>, <A HREF="cwnd_204.htm"><B>CWnd::ValidateRect</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

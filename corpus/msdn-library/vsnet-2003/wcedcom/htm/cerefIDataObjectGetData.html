@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDataObject::GetData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDataObject::GetData"/>
+<MSHelp:RLTitle Title="IDataObject::GetData"/>
+<MSHelp:Keyword Index="A" Term="cerefIDataObjectGetData"/>
+<MSHelp:Keyword Index="K" Term="IDataObject::GetData"/>
+<MSHelp:Keyword Index="A" Term="cerefIDataObjectGetData"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756309">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefidataobjectgetdata"></A>IDataObject::GetData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method is called by a data consumer to obtain data from a source data object. The <B>GetData</B> method renders the data described in the specified <A HREF="cerefformatetc.htm">FORMATETC</A> structure and transfers it through the specified <A HREF="cerefstgmedium.htm">STGMEDIUM</A> structure. The caller then assumes responsibility for releasing the <B>STGMEDIUM</B> structure.</P>
+
+<PRE class="syntax"><B>HRESULT GetData(</B>
+<B>FORMATETC *</B><I>pFormatetc</I>, 
+<B>STGMEDIUM *</B><I>pmedium</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pFormatetc </I></DT>
+
+<DD>[in] Pointer to the <B>FORMATETC</B> structure that defines the format, medium, and target device to use when passing the data. It is possible to specify more than one medium by using the Boolean <B>OR</B> operator, allowing the method to choose the best medium among those specified. </dd>
+
+<DT><I>pmedium </I></DT>
+
+<DD>[out] Pointer to the <B>STGMEDIUM</B> structure that indicates the storage medium containing the returned data through its <B>tymed</B> member and the responsibility for releasing the medium through the value of its <B>pUnkForRelease</B> member. If <B>pUnkForRelease</B> is NULL, the receiver of the medium is responsible for releasing it; otherwise, <B>pUnkForRelease</B> points to the <A HREF="cerefiunknown.htm">IUnknown</A> on the appropriate object so its <B>Release</B> method can be called. The medium must be allocated and filled in by <B>IDataObject::GetData</B>. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method supports the standard return values E_INVALIDARG, E_UNEXPECTED, and E_OUTOFMEMORY, as well as the following values: 
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>Data was successfully retrieved and placed in the storage medium provided. </dd>
+
+<DT>DV_E_LINDEX </DT>
+
+<DD>Invalid value for <B>lindex</B>; currently, only -1 is supported. </dd>
+
+<DT>DV_E_FORMATETC </DT>
+
+<DD>Invalid value for <I>pFormatetc</I>. </dd>
+
+<DT>DV_E_TYMED </DT>
+
+<DD>Invalid <B>tymed</B> value. </dd>
+
+<DT>DV_E_DVASPECT </DT>
+
+<DD>Invalid <B>dwAspect </B>value. </dd>
+
+<DT>OLE_E_NOTRUNNING </DT>
+
+<DD>The object application is not running. </dd>
+
+<DT>STG_E_MEDIUMFULL </DT>
+
+<DD>An error occurred when allocating the medium. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A data consumer calls <B>IDataObject::GetData</B> to retrieve data from a data object, conveyed through a storage medium (defined through the <B>STGMEDIUM</B> structure). </P>
+
+<P class="label"><B>Notes to Callers</B></P>
+
+<P>You can specify more than one acceptable TYMED medium with the Boolean <B>OR</B> operator. <B>IDataObject::GetData</B> must choose from the OR values the medium that best represents the data, do the allocation, and indicate responsibility for releasing the medium.</P>
+
+<P>Data transferred across a stream extends from position zero of the stream pointer through to the position immediately before the current stream pointer (that is, the stream pointer position on exit).</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<P class="label"><B>Notes to Implementers</B></P>
+
+<P><B>IDataObject::GetData</B> must check all fields in the <B>FORMATETC</B> structure. It is important that <B>IDataObject::GetData</B> render the requested aspect and, if possible, use the requested medium. If the data object cannot comply with the information specified in the <B>FORMATETC</B>, the method should return DV_E_FORMATETC. If an attempt to allocate the medium fails, the method should return STG_E_MEDIUMFULL. It is important to fill in all of the fields in the <B>STGMEDIUM</B> structure. </P>
+
+<P>Although the caller can specify more than one medium for returning the data, <B>IDataObject::GetData</B> can supply only one medium. If the initial transfer fails with the selected medium, this method can be implemented to try one of the other media specified before returning an error.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Objidl.h</TD>
+<TD width=15%>Objidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefidataobjectgetdatahere.htm">IDataObject::GetDataHere</A>, <A HREF="cerefidataobjectsetdata.htm">IDataObject::SetData</A>, <A HREF="cerefformatetc.htm">FORMATETC</A>, <A HREF="cerefstgmedium.htm">STGMEDIUM</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDataObject::GetData&nbsp;(cerefidataobjectgetdata.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IViewObjectExImpl::GetNaturalExtent</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_iviewobjecteximpl_getnaturalextent"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_iviewobjecteximpl_getnaturalextent"></A>IViewObjectExImpl::GetNaturalExtent</H1>
+
+<P>This method provides sizing hints from the container for the object to use as the user resizes it. </P>
+
+<P>There are two general approaches to sizing a control. The first approach gives the control responsibility for sizing itself; the second approach gives the container responsibility for sizing the control. The first approach is called autosizing. There are two alternatives involved in the second approach: content sizing and integral sizing.</P>
+
+<P>The <B>IViewObjectExImpl::GetNaturalExtent</B> method supports both content and integral sizing. In content sizing, the container passes the <B>DVEXTENTINFO</B> structure to the object into which the object returns a suggested size. In integral sizing, the container passes a preferred size to the object in <B>DVEXTENTINFO</B>, and the object actually adjusts its height. Integral sizing is used when the user rubberbands a new size in design mode.</P>
+
+<P>Autosizing typically occurs with objects such as the Label control which resizes if the autosize property was enabled and the associated text changed. Autosizing is handled differently depending on the state of the object.</P>
+
+<P>If the object is inactive, the following occurs:
+
+<OL>
+	<LI>The object calls <B>IOleClientSite::RequestNewObjectLayout</B>. </LI>
+
+	<LI>The container calls <B>IOleObject::GetExtent</B> and retrieves the new extents </LI>
+
+	<LI>The container calls <B>IOleObject::SetExtent</B> and adjusts the new extents. </LI>
+</OL>
+
+<P>If the object is active, the following occurs:
+
+<OL>
+	<LI>The object calls <B>IOleInPlaceSite::OnPosRectChange</B> to specify that it requires resizing. </LI>
+
+	<LI>The container calls <B>IOleInPlaceObject::SetObjectRects</B> and specifies the new size. </LI>
+</OL>
+
+<P>The values of the <I>dwAspect</I> parameter can be one of the following DVASPECT enumeration values:
+
+<DL>
+<DT>DVASPECT_CONTENT </DT>
+
+<DD>Provide a representation of the control so it can be displayed as an embedded object inside of a container. This value is typically specified for compound document objects. The presentation can be provided for the screen or printer. </DD>
+
+<DT>DVASPECT_DOCPRINT </DT>
+
+<DD>Provide a representation of the control on the screen as though it were printed to a printer using the Print command from the File menu. The described data may represent a sequence of pages.. </DD>
+
+<DT>DVASPECT_ICON </DT>
+
+<DD>Provide an iconic representation of the control. </DD>
+
+<DT>DVASPECT_THUMBNAIL </DT>
+
+<DD>Provide a thumbnail representation of an object so it can be displayed in a browsing tool. The thumbnail is approximately a 120 by 120 pixel, 16-color (recommended) device-independent bitmap potentially wrapped in a metafile. </DD>
+</DL>
+
+<P>If <I>dwAspect</I> is DVASPECT_CONTENT and <I>pExtentInfo-&gt;dwExtentMode </I>is DVEXTENT_CONTENT, sets *<I>psizel</I> to the data member <A HREF="cccontrl_88.htm"><B>m_sizeNatural</B></A> of the control class.</P>
+
+<PRE class=syntax><B>STDMETHOD ( GetNaturalExtent )(
+DWORD </B><I>dwAspect</I>, <B>
+LONG </B><I>lindex</I>, <B>
+DVTARGETDEVICE* </B><I>ptd</I>, <B>
+HDC </B><I>hicTargetDev</I>, <B>
+DVEXTENTINFO* </B><I>pExtentInfo</I>, <B>
+LPSIZEL </B><I>psizel</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwAspect</I></DT>
+
+<DD>[in] Requested drawing aspect. It can be any of the values from the <B>DVASPECT</B> enumeration.</DD>
+
+<DT><I>lindex</I></DT>
+
+<DD>[in] Indicates the portion of the object that is of interest for the draw operation. Its interpretation varies depending on the value in the <I>dwAspect</I> parameter. See the <B>DVASPECT</B> enumeration for more information.</DD>
+
+<DT><I>ptd</I></DT>
+
+<DD>[in] Pointer to the target device structure that describes the device for which the object is to be rendered. If <B>NULL</B>, the view should be rendered for the default target device, typically the display. A value other than <B>NULL</B> is interpreted in conjunction with <I>hicTargetDev</I> and <I>hdcDraw</I>. For example, if <I>hdcDraw</I> specifies a printer as the device context, the <I>ptd</I> parameter points to a structure describing that printer device. The data may actually be printed if <I>hicTargetDev</I> is a valid value or it may be displayed in print preview mode if <I>hicTargetDev</I> is <B>NULL</B>.</DD>
+
+<DT><I>hicTargetDev</I></DT>
+
+<DD>[in] Specifies the information context for the target device indicated by the <I>ptd</I> parameter from which the object can extract device metrics and test the capabilities of the device. If <I>ptd</I> is <B>NULL</B>; the object should ignore the value in the <I>hicTargetDev</I> parameter.</DD>
+
+<DT><I>pExtentInfo</I></DT>
+
+<DD>[in] Pointer to <B>DVEXTENTINFO</B> structure that specifies the sizing data.</DD>
+
+<DT><I>psizel</I></DT>
+
+<DD>[out] Pointer to sizing data returned by the object. The returned sizing data is set to &#0150;1 for any dimension that was not adjusted. That is if <I>cx</I> is &#0150;1 then the width was not adjusted, if <I>cy</I> is &#0150;1 then the height was not adjusted. If E_FAIL is returned indicating no size was adjusted then <I>psizel</I> may be <B>NULL</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<DL>
+<DT>E_NOTIMPL</DT>
+
+<DD>This method was not implemented.</DD>
+</DL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

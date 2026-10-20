@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Object Identifiers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Object Identifiers"/>
+<MSHelp:RLTitle Title="Using Object Identifiers"/>
+<MSHelp:Keyword Index="A" Term="_wcefiles_Using_Object_Identifiers"/>
+<MSHelp:Keyword Index="K" Term="object identifiers, Windows CE .NET"/>
+<MSHelp:Keyword Index="K" Term="Windows CE, objects and object identifiers"/>
+<MSHelp:Keyword Index="A" Term="_wcefiles_Using_Object_Identifiers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: object_store.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_662743">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcefiles_using_object_identifiers"></A>Using Object Identifiers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following code example shows how to retrieve data from the object store or mounted volume by using the Windows CE object identifier.</P>
+
+<PRE class="code">void UsingCeOidGetInfo (void)
+{
+  CEOID CeOid;            // Object identifier
+  PCEGUID pceguid;        // GUID of the mounted volume
+  CEOIDINFO CeObjectInfo; // Structure into which to retrieve
+                          // object data
+  TCHAR szMsg[200];       // String to use with object data
+
+  // Assign to pceguid the CEGUID of the mounted volume
+  // on which the object resides.
+  // ...
+
+  // Assign to CeOid the object identifier of the object about which
+  // you want to get data.
+  // ...
+
+  if (CeOidGetInfoEx (pceguid, CeOid, &amp;CeObjectInfo))
+  {
+    switch (CeObjectInfo.wObjType)
+    {
+      case OBJTYPE_FILE:
+        wsprintf (szMsg, TEXT("Object is a file: %s"),
+                  CeObjectInfo.infFile.szFileName);
+        break;
+
+      case OBJTYPE_DIRECTORY:
+        wsprintf (szMsg, TEXT("Object is a directory: %s"),
+                  CeObjectInfo.infDirectory.szDirName);
+        break;
+
+      case OBJTYPE_DATABASE:
+        wsprintf (szMsg, TEXT("Object is a database: %s"),
+                  CeObjectInfo.infDatabase.szDbaseName);
+        break;
+
+      case OBJTYPE_RECORD:
+        wsprintf (szMsg, TEXT("Object is a record"));
+        break;
+
+      case OBJTYPE_INVALID:
+        wsprintf (szMsg,
+                  TEXT("The object store does not contain a valid ")
+                  TEXT("object that has this object identifier."));
+        break;
+
+      default:
+        wsprintf (szMsg, TEXT("Object is of unknown OBJTYPE"));
+        break;
+    }
+  }
+  else
+  {
+    // Your error-handling code goes here.
+
+    if (GetLastError () == ERROR_INVALID_HANDLE)
+      wsprintf (szMsg, TEXT("Invalid Object ID"));
+    else
+      wsprintf (szMsg, TEXT("Unknown error"));
+  }
+} // End of UsingCeOidGetInfo code</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Using%20Object%20Identifiers&nbsp;(_wcefiles_using_object_identifiers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

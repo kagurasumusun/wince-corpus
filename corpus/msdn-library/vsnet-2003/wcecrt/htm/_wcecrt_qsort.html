@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>qsort</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_qsort"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_qsort.htm", "qsort")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_qsort"></A>qsort</H1>
+
+<P>Performs a quick sort.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Routine</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>qsort</B></TD>
+<TD width=73%>&lt;stdlib.h&gt; and &lt;search.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>void qsort( void</B> *<I>base</I>, <B>size_t</B> <I>num</I>, <B>size_t</B> <I>width</I>, <B>int</B> <B>(__cdecl</B> *<I>compare</I> <B>)(const</B> <B>void</B> *<I>elem1</I>, <B>const</B> <B>void</B> *<I>elem2</I> <B>) );</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>base</I></DT>
+
+<DD>Start of target array</dd>
+
+<DT><I>num</I></DT>
+
+<DD>Array size in elements</dd>
+
+<DT><I>width</I></DT>
+
+<DD>Element size in bytes</dd>
+
+<DT><I>compare</I></DT>
+
+<DD>Comparison function</dd>
+
+<DT><I>elem1</I></DT>
+
+<DD>Pointer to the key for the search</dd>
+
+<DT><I>elem2</I></DT>
+
+<DD>Pointer to the array element to be compared with the key</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>None</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>qsort</B> function implements a quick-sort algorithm to sort an array of <I>num</I> elements, each of <I>width</I> bytes. The argument base is a pointer to the base of the array to be sorted. <B>qsort</B> overwrites this array with the sorted elements. The argument <I>compare</I> is a pointer to a user-supplied routine that compares two array elements and returns a value specifying their relationship. <B>qsort</B> calls the <I>compare</I> routine one or more times during the sort, passing pointers to two array elements on each call:</P>
+
+<P><I>compare</I><B>( (void *)</B> <I>elem1</I>, <B>(void *)</B> <I>elem2</I> <B>);</B></P>
+
+<P>The routine must compare the elements, then return one of the following values:</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>Return Value</TH>
+<TH width=78%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>&lt; 0</TD>
+<TD width=78%><I>elem1</I> less than <I>elem2</I></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>0</TD>
+<TD width=78%><I>elem1</I> equivalent to <I>elem2</I></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>&gt; 0</TD>
+<TD width=78%><I>elem1</I> greater than <I>elem2</I></TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<P>The array is sorted in increasing order, as defined by the comparison function. To sort an array in decreasing order, reverse the sense of “greater than” and “less than” in the comparison function.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* QSORT.C: This program reads the command-line
+ * parameters and uses qsort to sort them. It
+ * then displays the sorted arguments.
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+
+int compare( const void *arg1, const void *arg2 );
+
+void main( int argc, char **argv )
+{
+   int i;
+   /* Eliminate argv[0] from sort: */
+   argv++;
+   argc--;
+
+   /* Sort remaining args using Quicksort algorithm: */
+   qsort( (void *)argv, (size_t)argc, sizeof( char * ), compare );
+
+   /* Output sorted list: */
+   for( i = 0; i &lt; argc; ++i )
+      printf( "%s ", argv[i] );
+   printf( "\n" );
+}
+
+int compare( const void *arg1, const void *arg2 )
+{
+   /* Compare all of both strings: */
+   return _stricmp( * ( char** ) arg1, * ( char** ) arg2 );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">[C:\code]qsort every good boy deserves favor
+boy deserves every favor good</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

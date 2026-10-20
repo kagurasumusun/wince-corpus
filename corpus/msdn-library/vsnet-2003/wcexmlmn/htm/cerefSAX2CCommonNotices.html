@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SAX2 C++ Common Notices</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SAX2 C++ Common Notices"/>
+<MSHelp:RLTitle Title="SAX2 C++ Common Notices"/>
+<MSHelp:Keyword Index="A" Term="cerefSAX2CCommonNotices"/>
+<MSHelp:Keyword Index="K" Term="MSXML, SAX2 C++ common notices"/>
+<MSHelp:Keyword Index="K" Term="SAX, SAX2 C++, common notices"/>
+<MSHelp:Keyword Index="K" Term="XML, SAX2 C++ common notices"/>
+<MSHelp:Keyword Index="A" Term="cerefSAX2CCommonNotices"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: minisax2ref_commonnotices.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759712">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefsax2ccommonnotices"></A>SAX2 C++ Common Notices</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<H2 class="dtH2">Strings</H2>
+
+<P>In this implementation, all strings returned to handler callbacks consist of two parts: a pointer to the wchar buffer and the length of the string. This includes strings passed either directly, such as the element name for the <B>startElement</B> method, or indirectly, such as strings provided by <B>ISAXAttributes</B> and <B>ISAXLocator</B> classes. Strings returned from these components are owned by the components, not the calling process. Therefore, their memory should not be released, freed, or deleted. Strings, represented as a pointer to the character buffer and length, may be not zero terminated.</P>
+
+<P>When a string consists of both a pointer to the buffer and a length, the length always contains the correct length of the string: either it is zero-terminated or not. For input parameters, the representation of strings follows traditional zero-terminated Unicode string format, for example, rdr.putBase(L"http://microsoft.com/"). It is not guaranteed that the content of the string will still keep the value at the next call to a handler.</P>
+
+<P>After any successful <B>getProperty</B> call, the caller should free the memory. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The Microsoft&reg; XML Parser 3.0 (MSXML) Simple API for XML (SAX2) property strings are the exception to the general COM rule that system-allocated objects are allocated by the data source and freed by the consumer.</BLOCKQUOTE>
+
+<H2 class="dtH2">Declaration Conflicts</H2>
+
+<P>The MSXML implementation of SAX2 is non-validating. As a result, a validation error does not occur if the same element is declared twice, with different definitions, in an internal DTD. When element/entity declaration conflicts occur, the first declaration takes precedence.</P>
+
+<H2 class="dtH2">Skipped Entities</H2>
+
+<P>In an entity is declared in an external DTD, MSXML SAX2 reports them as skipped entities and the value of the non-declared (skipped) entity is defaulted to empty. However, MSXML SAX2 does not report entities in attributes. They are quietly skipped.</P>
+
+<H2 class="dtH2">Features</H2>
+
+<P>SAXXMLReader handles and recognizes the following features:
+
+<UL type="disc">
+	<LI><code class="ce">"http://xml.org/sax/features/namespaces"</code></li>
+
+	<LI><code class="ce">"http://xml.org/sax/features/namespace-prefixes"</code></li>
+
+	<LI><code class="ce">"http://xml.org/sax/features/external-general-entities"</code></li>
+
+	<LI><code class="ce">"http://xml.org/sax/features/external-parameter-entities"</code></li>
+
+	<LI><code class="ce">"normalize-line-breaks"</code></li>
+
+	<LI><code class="ce">"server-http-request"</code></li>
+</UL>
+
+<H2 class="dtH2">Properties</H2>
+
+<P>SAXXMLReader handles and recognizes the following properties:
+
+<UL type="disc">
+	<LI><code class="ce">"http://xml.org/sax/properties/lexical-handler"</code></li>
+
+	<LI><code class="ce">"http://xml.org/sax/properties/declaration-handler"</code></li>
+
+	<LI><code class="ce">"xmldecl-encoding"</code></li>
+
+	<LI><code class="ce">"xmldecl-version"</code></li>
+
+	<LI><code class="ce">"xmldecl-standalone"</code></li>
+</UL>
+
+<H2 class="dtH2">Return Codes</H2>
+
+<P>All handlers may return either S_OK to continue or any other non-S_OK error code. For non-S_OK error codes, parsing is aborted and the return code is returned by the <B>parse()</B>, <B>parseURL()</B>, or <B>resume</B> method.</P>
+
+<P>Most parser methods may return the following general error codes:
+
+<UL type="disc">
+	<LI>E_POINTER&nbsp;&nbsp;&nbsp;Null instead of the pointer to parameter</li>
+
+	<LI>E_OUTOFMEMORY&nbsp;&nbsp;&nbsp;Out of memory</li>
+
+	<LI>E_INVALIDARG&nbsp;&nbsp;&nbsp;Input parameter is invalid</li>
+
+	<LI>E_FAIL&nbsp;&nbsp;&nbsp;General failure</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceorixmlminimalparser.htm">XML Minimal Parser</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SAX2%20C++%20Common%20Notices&nbsp;(cerefsax2ccommonnotices.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

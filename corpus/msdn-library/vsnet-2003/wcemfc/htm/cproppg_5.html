@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertyPage::OnApply</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertypage_onapply"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertypage_onapply"></A>CPropertyPage::OnApply</H1>
+
+<P>This method is called by the framework when the user chooses the <B>OK</B> or the <B>Apply Now</B> button. When the framework calls this method, changes made on all property pages in the property sheet are accepted, the property sheet retains focus, and <B>OnApply</B> returns <B>TRUE,</B> the value 1. Before <B>OnApply</B> can be called by the framework, you must have called <B>CPropertyPage::SetModified</B> and set its parameter to <B>TRUE</B>. This will activate the Apply Now button as soon as the user makes a change on the property page.</P>
+
+<P>Override this method to specify what action your program takes when the user clicks the <B>Apply Now</B> button. When overriding, the method should return <B>TRUE</B> to accept changes and <B>FALSE</B> to prevent changes from taking effect.</P>
+
+<P>The default implementation of <B>OnApply</B> calls <B>OnOK</B>.</P>
+
+<PRE class=syntax><B>virtual BOOL OnApply( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the changes are accepted; otherwise, it is zero. </P>
+
+<H4>Example</H4>
+
+<PRE>// Accept the new color selection and dismiss the CPropertySheet
+// dialog. The view's object will be painted with the new selected
+// color. CColorPage is a CPropertyPage-derived class.
+void CColorPage::OnOK()
+{
+&nbsp;&nbsp;// Store the new selected color to a member variable of
+&nbsp;&nbsp;// document class.  m_Color is a member varible of CColorPage
+&nbsp;&nbsp;// and it stores the new selected color.  doc-&gt;m_Color is
+&nbsp;&nbsp;// the color saved in the document class and it is the color
+&nbsp;&nbsp;// used by the view class.
+&nbsp;&nbsp;CFrameWnd* frame = (CFrameWnd*) AfxGetMainWnd();
+&nbsp;&nbsp;CPSheetDoc* doc = (CPSheetDoc*) frame-&gt;GetActiveDocument();
+&nbsp;&nbsp;doc-&gt;m_Color = m_Color;
+
+&nbsp;&nbsp;// Tell the view to paint with the new selected color.
+&nbsp;&nbsp;CView* view = frame-&gt;GetActiveView();
+&nbsp;&nbsp;view-&gt;Invalidate();
+
+&nbsp;&nbsp;CPropertyPage::OnOK();
+}
+
+// The default MFC implementation of OnApply() would call OnOK().
+BOOL CColorPage::OnApply()
+{
+&nbsp;&nbsp;return CPropertyPage::OnApply();
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cproppg_13.htm"><B>CPropertyPage::SetModified</B></A>, <A HREF="cproppg_8.htm"><B>CPropertyPage::OnOK</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

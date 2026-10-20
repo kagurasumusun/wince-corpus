@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Accelerated State Management</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Accelerated State Management"/>
+<MSHelp:RLTitle Title="Accelerated State Management"/>
+<MSHelp:Keyword Index="A" Term="cxconAcceleratedStateManagement"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, primitive drawing and state changes"/>
+<MSHelp:Keyword Index="K" Term="state changes, Direct3D"/>
+<MSHelp:Keyword Index="A" Term="cxconAcceleratedStateManagement"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664966">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconacceleratedstatemanagement"></A>Accelerated State Management</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Accelerated state management is a mechanism for communicating large state changes across the API and DDI in a single call. This scheme allows an application to define a collection of state-set calls as a state block defined by a single integer. Sending this integer as a render state executes all the state changes in one call.</P>
+
+<P>This reduces API overhead by reducing the number of <B>IDirect3Ddevice8::SetRenderState</B> method (described in the Direct3D SDK documentation) calls required, and can improve the efficiency of drivers by allowing them to precompile stage changes into their own hardware-specific format upon a state block define, instead of on execution of each state change.</P>
+
+<P>Most applications render in only a handful of states, so having fine-grained state transitions is seldom important. What is more important is being able to define blocks of state that can be interchanged as the driver switches between common rendering scenarios. This is the whole point of state block management.</P>
+
+<P>State-set tokens are used to record the states in the driver. A handle refers to a collection of states. The <A HREF="cxrefd3dhal_dp2stateset.htm">D3DHAL_DP2STATESET</A> structure is used to inform the driver about state-set operations to perform. </P>
+
+<P>If the <B>dwOperation </B>member of the <B>D3DHAL_DP2STATESET</B> structure is set to D3DHAL_STATESETBEGIN, the driver begins recording the states for the handle contained in the <B>dwParam</B> member. When the driver receives a <B>dwOperation</B> of D3DHAL_STATESETEND, it stops recording state.</P>
+
+<P>If the <B>dwOperation</B> member is D3DHAL_STATESETDELETE, the state-set referred to by the <B>dwParam</B> handle should be deleted. </P>
+
+<P>If the <B>dwOperation</B> member is D3DHAL_STATESETEXECUTE, the state block referred to by the <B>dwParam</B> handle should be applied in the device.</P>
+
+<P>If the <B>dwOperation</B> member is D3DHAL_STATESETCAPTURE, the current state in the driver should be captured in a specific way, giving a snapshot of the current states defined in the state block. That is, only states that are already in the state block are captured. Thus, the state block acts as a sort of mask, only recording states that are defined in it. For example, if there is a D3DRENDERSTATE_ZENABLE render state in the state block, then the current state for D3DRENDERSTATE_ZENABLE is captured and put in the state block. If there is no D3DRENDERSTATE_ZENABLE in the state block, then that state is not captured.</P>
+
+<P>Groupings of states are used to make generic state blocks that can be modified slightly for different rendering scenarios. These predefined groupings (enumerated in <MSHelp:link keywords="_wcesdk_dx3d_D3DSTATEBLOCKTYPE" TABINDEX="0">D3DSTATEBLOCKTYPE</MSHelp:link> in the DirectX SDK documentation) define generic state blocks that can be subsequently modified with state changes to accommodate anticipated recurring rendering scenarios. For example, the driver might create 100 generic predefined state blocks and then modify each slightly to accommodate a different rendering scenario. The state block type is passed in the <B>sbType</B> member of the <B>D3DHAL_DP2STATESET</B> structure.</P>
+
+<P>The <B>sbType</B> member is only valid for D3DHAL_STATESETBEGIN and D3DHAL_STATESETEND and specifies the predefined state block type with one of the following <B>D3DSTATEBLOCKTYPE</B> enumerated types: NULL for no state, D3DSBT_ALL for all state, D3DSBT_PIXELSTATE for pixel state, and D3DSBT_VERTEXSTATE for vertex state.</P>
+
+<P>The driver should ignore the <B>sbType</B> member unless it implements render state extensions. If the driver implements extended render states; that is, render states beyond those the Direct3D run time supplies, it can use <B>sbType</B> to determine what type of predefined render states are being used. From this information it can determine how to append the state block appropriately, to support its extensions.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconprimitivedrawingstatechanges.htm">Primitive Drawing and State Changes</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Accelerated%20State%20Management&nbsp;(cxconacceleratedstatemanagement.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleControl::GetDC</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_colecontrol_getdc"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_colecontrol_getdc"></A>COleControl::GetDC</H1>
+
+<P>This method provides a means for a windowless object to get a screen or compatible device context from its container. The <B>COleControl::ReleaseDC</B> method must be called to release the context after painting. When calling <B>GetDC</B>, objects pass the rectangle they wish to draw into in their own client coordinates. <B>GetDC</B> translates these to coordinates of the container client area. The object should not request a desired drawing rectangle larger than its own client area rectangle, the size of which can be retrieved with <A HREF="colectrl_47.htm"><B>GetClientRect</B></A>. This prevents objects from inadvertently drawing where they are not supposed to. </P>
+
+<PRE class=syntax><B>CDC* GetDC(
+LPCRECT </B><I>lprcRect</I><B> = NULL,
+DWORD </B><I>dwFlags</I><B> = OLEDC_PAINTBKGND );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lprcRect</I></DT>
+
+<DD>Specifies a pointer to the rectangle the windowless control wants to redraw, in client coordinates of the control. <B>NULL</B> means the full extent of the object.</DD>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Specifies a drawing attributes of the device context. Choices are:
+
+<UL type=disc>
+	<LI>OLEDC_NODRAW&nbsp;&nbsp;&nbsp;Indicates that the object will not use the device context to perform any drawing but merely to get information about the display device. The container should simply pass the DC of the window without further processing.</LI>
+
+	<LI>OLEDC_PAINTBKGND&nbsp;&nbsp;&nbsp;Requests that the container paint the background before returning the DC. An object should use this flag if it is requesting a DC for redrawing an area with transparent background.</LI>
+
+	<LI>OLEDC_OFFSCREEN&nbsp;&nbsp;&nbsp;Informs the container that the object wishes to render into an off-screen bitmap that should be copied to the screen. An object should use this flag when the drawing operation it is about to perform generates a lot of flicker. The container is free to honor this request or not. However, if this flag is not set, the container must hand back an on-screen DC. This allows objects to perform direct screen operations such as showing a selection, through an <B>XOR</B> operation.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Pointer to the display device context for the container <B>CWnd</B> client area if successful; otherwise, the return value is <B>NULL</B>. The display device context can be used in subsequent GDI functions to draw in the client area of the container window. </P>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="colectrl_127.htm"><B>COleControl::ReleaseDC</B></A><B> </B></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Driver Migration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Driver Migration"/>
+<MSHelp:RLTitle Title="Driver Migration"/>
+<MSHelp:Keyword Index="A" Term="cxconDriverMigration"/>
+<MSHelp:Keyword Index="K" Term="driver development, migration"/>
+<MSHelp:Keyword Index="K" Term="drivers, migration"/>
+<MSHelp:Keyword Index="K" Term="migration, drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconDriverMigration"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: migration_issues.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_800018">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondrivermigration"></A>Driver Migration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A device driver from Windows CE version 3.0 is source code compatible with Windows CE .NET This allows a driver to be recompiled and used on Windows CE .NET without any changes to its sources or configuration files. However, due to the many changes in the build system in Windows CE .NET, you may have to change a few build or linker parameters to correctly build your driver. </P>
+
+<P>Binary compatibility of device drivers from Windows CE 3.0 is not tested or guaranteed. However, in general, a Windows CE 3.0 device driver binary is expected to work correctly on a Windows CE .NET-based platform. Device drivers are expected to read their SYSINTR value from the registry. Using <MSHelp:link keywords="cgrefIOCTL_HAL_TRANSLATE_IRQ" TABINDEX="0">IOCTL_HAL_TRANSLATE_IRQ</MSHelp:link> may not provide a one-to-one IRQ to SYSINTR mapping, which would require the use of an installable ISR. If your Windows CE 3.0 device driver uses IOCTL_HAL_TRANSLATE_IRQ, you will need to modify it to read its SYSINTR value from the registry.</P>
+
+<P>Aside from the source or binary compatibility, you should consider migrating or transitioning your device drivers to Windows CE .NET to take advantage the improvements. The following topics related to driver migration provide lists of issues you should consider when migrating a device driver to Windows CE .NET:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Migration issue</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CSP and common drivers</TD>
+<TD width=50%>Windows CE .NET provides the basic infrastructure to rapidly create a BSP by reusing many device drivers from a number of driver libraries. These libraries include the following:
+<UL type="disc">
+	<LI>CPU Support Package or CSP drivers for microprocessor-native peripherals and microprocessor-specific OAL functions. These drivers are in %_WINCEROOT%\Public\Common\Oak\Csp.</li>
+
+	<LI>Common drivers for peripherals not integrated into the microprocessor, such as Ethernet, display, audio, storage, USB class devices, and so on. These drivers are in %_WINCEROOT%\Public\Common\Oak\Drivers and %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers.</li>
+</UL>
+
+<P>When developing a BSP, you should use these device drivers in your BSP where applicable. This minimizes the amount of new source code that you have to write while developing a BSP. When writing a device driver for your peripherals, you should model your driver on one of the sample drivers.</P>
+
+<P>For more information, see <MSHelp:link keywords="pbconCreatingBSP" TABINDEX="0">Creating a BSP</MSHelp:link>. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Device driver loading model</TD>
+<TD width=50%>The device driver loading model provides a consistent loading architecture for all drivers. You should update your drivers to load under the new model. The following list describes the new loading process for devices:
+<UL type="disc">
+	<LI>During platform boot up, the Device Manager loads the Registry Enumerator (RegEnum.dll). For more information about the Device Manager, see <MSHelp:link keywords="cxconDeviceManager" TABINDEX="0">Device Manager</MSHelp:link>.</li>
+
+	<LI>The Registry Enumerator enumerates the registry, load drivers for all built-in devices, and all bus drivers it recognizes on the system. For more information about the Registry Enumerator, see <MSHelp:link keywords="cxconRegistryEnumerator" TABINDEX="0">Registry Enumerator</MSHelp:link>.</li>
+
+	<LI>Bus drivers are subsequently responsible for loading drivers for the devices on their buses. For example, the PCMCIA host controller driver will load drivers for all PC Card client drivers.</li>
+</UL>
+
+<P>Device specific information such as PCMCIA resides in the appropriate bus driver, not in the Device Manager. This means that the PCMCIA bus driver should load PC Card client drivers, so update the registry entries accordingly.</P>
+
+<P>For more information, see <MSHelp:link keywords="cxconDeviceDriverLoadingModel" TABINDEX="0">Device Driver Loading Model</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS driver loading model</TD>
+<TD width=50%>To load NDIS miniports, use the new NDIS Driver Loading Model. See <MSHelp:link keywords="cxconNDISDriverArchitecture" TABINDEX="0">NDIS Driver Implementation Guide</MSHelp:link> for more information.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ActivateDeviceEx</TD>
+<TD width=50%>Use <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> to load all your device drivers. You can use <MSHelp:link keywords="cerefActivateDevice" TABINDEX="0">ActivateDevice</MSHelp:link>, but it simply calls <B>ActivateDeviceEx</B>. Do not use <MSHelp:link keywords="cerefRegisterDevice" TABINDEX="0">RegisterDevice</MSHelp:link> to load drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>I/O Resource Manager</TD>
+<TD width=50%>Use the I/O Resource Manager to request resources. When the system boots, the Registry Enumerator enumerates the registry as setup by the OEM or the BSP developer and loads all the built-in devices based on this registry information. At this time, the I/O Resource Manager will then track the current state of resources available in the system and then manage all further I/O resource requests and allocations by bus drivers. This means that all bus drivers should request I/O resources from the I/O Resource Manager when they load a client driver for installable or other types of devices.
+<P>For more information, see <MSHelp:link keywords="cxconResourceManager" TABINDEX="0">I/O Resource Manager</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PCI bus driver</TD>
+<TD width=50%>The PCI bus enumerator or the PCI bus driver removes unnecessary PCI specific code from the OAL and device drivers. Use the registry information provided by the PCI bus driver instead of using driver code that scans the PCI bus to read bus address registers and interrupt information from the PCI configuration space header. See <MSHelp:link keywords="cxconEnablingPCIBusDriverInstallableISRsOnPlatform" TABINDEX="0">PCI Device Support</MSHelp:link> for details on what PCI code the OAL requires, especially if the debug device is on the PCI bus.
+<P>To allow PCI enumeration of all PCI devices, update the registry for your platform. See the ARM Integrator BSP in %_WINCEROOT%\Platform\ARMIntegrator\Files for an example implementation.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Installable ISRs</TD>
+<TD width=50%>Installable ISRs allow multiple devices to share interrupts. They also extend the ability to process the device in the ISR in addition to the IST. You can program an installable ISR in a language other than assembly. You should update the ISRs for your device driver if you want to allow interrupt sharing. If you need an installable ISR, you can use the Generic Installable ISR (GIISR.dll) sample approximately 90% of the time, provided in the ISR, you only need to recognize the device generating the interrupt.
+<P>For more information, see <A HREF="cmconinstallableisrs.htm">Installable ISRs</A>, <MSHelp:link keywords="cxconInstallableISRs" TABINDEX="0">Installable ISRs with Drivers</MSHelp:link>, and <MSHelp:link keywords="cxconSharedInterrupts" TABINDEX="0">Shared Interrupts</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Power management</TD>
+<TD width=50%>Implementing peripheral-level power management in your device drivers provides a great deal of flexibility to OEMs in controlling and managing the overall system level power requirements of an OEM device. You should update your device drivers to be managed by the Power Manager by following these recommendations:
+<UL type="disc">
+	<LI>Implement the Windows CE stream interface in your driver.</li>
+
+	<LI>Support as many device power states as possible in your driver to support overall power management.</li>
+</UL>
+
+<P>For more information, see <MSHelp:link keywords="cxconDevicePowerManagement" TABINDEX="0">Power Management</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Device interface notifications</TD>
+<TD width=50%>A new device interface notification mechanism allows a device driver to send notifications to applications, services, and any other module in the system on the arrival or removal of a device interface. This is the equivalent of Plug and Play functionality. You should update your drivers to advertise their interface and send device notifications to the system.
+<P>For more information, see <MSHelp:link keywords="cxconDeviceNotifications" TABINDEX="0">Device Interface Notifications</MSHelp:link>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Audio Driver Migration</TD>
+<TD width=50%>Windows CE 3.0 waveform audio drivers should migrate to Windows CE .NET with no modifications. However, new Microsoft DirectSound&reg; and audio mixer extensions are available.
+<P>Support for DirectSound hardware abstraction layer (HAL) drivers has been discontinued in Windows CE .NET. The DirectSound driver functionality is now handled by the DirectSound extensions that are part of the Unified Audio Model.</P>
+
+<P>For more information, see <MSHelp:link keywords="cxconAudioDrivers" TABINDEX="0">Audio Drivers</MSHelp:link> and the Ensoniq sample driver source code. The sample code is in the %_WINCEROOT%\Public\Common\Oak\Drivers\Wavedev\Unified\Ensoniq directory.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Device Driver Threads</TD>
+<TD width=50%>Windows CE .NET sets the environment variable IMGNOTALLKMODE=1. Therefore, your code should not assume that driver threads run in kernel mode. When your driver must access restricted space, include code similar to the following.
+<PRE class="code">oldmode = SetKMode(TRUE);
+DoSomething();
+SetKMode(oldmode);</PRE>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cgconMigratingBSP" TABINDEX="0">Migrating a BSP</MSHelp:link></P>
+
+<P><MSHelp:link keywords="pbconCreatingBSP" TABINDEX="0">Creating a BSP</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cxconDriverTools" TABINDEX="0">Driver Development Processes</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Driver%20Migration&nbsp;(cxcondrivermigration.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

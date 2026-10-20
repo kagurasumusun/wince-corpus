@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Music Values and MIDI Notes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Music Values and MIDI Notes"/>
+<MSHelp:RLTitle Title="Music Values and MIDI Notes"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Music_Values_and_MIDI_Notes"/>
+<MSHelp:Keyword Index="K" Term="authoring music using DirectMusic, MIDI notes"/>
+<MSHelp:Keyword Index="K" Term="authoring music using DirectMusic, music values"/>
+<MSHelp:Keyword Index="K" Term="composing music using DirectMusic, MIDI notes"/>
+<MSHelp:Keyword Index="K" Term="composing music using DirectMusic, music values"/>
+<MSHelp:Keyword Index="K" Term="MIDI, DirectMusic MIDI notes"/>
+<MSHelp:Keyword Index="K" Term="music composition using DirectMusic, MIDI notes"/>
+<MSHelp:Keyword Index="K" Term="music composition using DirectMusic, music values"/>
+<MSHelp:Keyword Index="K" Term="music values%2C DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Music_Values_and_MIDI_Notes"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680739">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_music_values_and_midi_notes"></A>Music Values and MIDI Notes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Notes in a pattern within a DirectMusic style are not fixed notes. Rather, they are music values that become actual notes only when they are transposed to the current chord according to the current play mode and subchord level. </P>
+
+<P>A music value is a representation of the note's intended role. For example, a music value can specify that a note is intended to be played as the second position in the chord, up one in the scale. When that music value is applied to a particular chord, it is converted to the appropriate MIDI note &#0151; the one in the second position in the chord, up one in the scale. </P>
+
+<P>For an explanation of the data format of music values, see <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_NOTE_PMSG" TABINDEX="0">DMUS_NOTE_PMSG</MSHelp:link>.</P>
+
+<P>The play mode determines how to interpret the note against the chord. For example, if the mode is DMUS_PLAYMODE_NORMALCHORD, the note is interpreted against the intervals of the chord and scale, based on the root of the chord. If the mode is DMUS_PLAYMODE_FIXEDTOKEY, the note is interpreted as a linear value. </P>
+
+<P>For more information about the various play modes, see <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PLAYMODE_FLAGS" TABINDEX="0">DMUS_PLAYMODE_FLAGS</MSHelp:link>.</P>
+
+<P>The subchord level is a value in the range from 0 through 31 that determines which subchords can be used in establishing the music value. A DirectMusic chord (as represented by a <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_CHORD_PARAM" TABINDEX="0">DMUS_CHORD_PARAM</MSHelp:link> or <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_CHORD_KEY" TABINDEX="0">DMUS_CHORD_KEY</MSHelp:link> structure) consists of one or more subchords, allowing for complex harmonies with multiple parallel chord progressions. Each subchord supports one or more levels, as specified in the <B>dwLevels</B> member of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_SUBCHORD" TABINDEX="0">DMUS_SUBCHORD</MSHelp:link> structure. The author of the music defines the supported levels for each subchord.</P>
+
+<P>When a segment is played, each note is encapsulated in a <B>DMUS_NOTE_PMSG</B> structure. The <B>bMidiValue</B> member of this structure holds the MIDI note value that would normally be sent to the synthesizer. The message also holds the original music value, as well as the play mode and subchord level that were used in transposition. A tool can use this information to alter the note in any way it likes. For example, a tool could intercept a note that was transposed in a certain play mode, change the play mode, obtain a new MIDI note by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__MusicToMIDI" TABINDEX="0">IDirectMusicPerformance::MusicToMIDI</MSHelp:link> method, and put the new value in the <B>bMidiValue</B> member of the message before passing it on.</P>
+
+<P>The <B>MusicToMIDI</B> method is at the heart of the style playback mechanism of DirectMusic. It is called by the style track to convert its internal music values into notes, using the current chord in the chord track.</P>
+
+<P>If a tool wants to reverse the process and obtain a new music value from a MIDI note using a different chord, play mode, or subchord level, it calls the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__MIDIToMusic" TABINDEX="0">IDirectMusicPerformance::MIDIToMusic</MSHelp:link> method. The new music value can be placed in the <B>wMusicValue</B> member of the note message, in which it might be of use to other application-defined tools. However, the DirectMusic output tool ignores it and plays the note in <B>bMidiValue</B> as usual.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Music%20Values%20and%20MIDI%20Notes&nbsp;(_wcesdk_dxmusic_music_values_and_midi_notes.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

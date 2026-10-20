@@ -1,0 +1,458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Real-Time Systems with Microsoft Windows CE 2.1</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Real-Time Systems with Microsoft Windows CE 2.1"/>
+<MSHelp:RLTitle Title="Real-Time Systems with Microsoft Windows CE 2.1"/>
+<MSHelp:Keyword Index="A" Term="realtime21"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, interrupt handling"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, interrupt latency"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, measured latency"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, real-time systems"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, thread priority"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, thread synchronization"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, validating real-time performance"/>
+<MSHelp:Keyword Index="A" Term="realtime21"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="This paper lists eight prerequisites for the operating system used in real-time systems and describes how the Microsoft Windows CE 2.1 operating system was designed to meet those requirements."><meta name="keywords" content="Windows CE 2.1, real-time systems, validating real-time performance, thread priority, thread synchronization, interrupt handling, interrupt latency, measured latency"><META name="rtfFileName" content="realtime21.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="This article lists eight prerequisites for the operating system used in real-time systems and describes how the Microsoft Windows CE 2.1 operating system was designed to meet those requirements. (12 printed pages)">
+<META NAME="msdnID" CONTENT="_661498">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="realtime21"></A>Real-Time Systems with Microsoft Windows CE 2.1</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>April 2000</P>
+
+<P><B>Summary:</B> This paper lists eight prerequisites for the operating system used in real-time systems and describes how the Microsoft® Windows® CE 2.1 operating system was designed to meet those requirements. (12 printed pages)</P>
+
+<H4 class="dtH1">Contents </H4>
+
+<P><A HREF="#realtime21_intro">Introduction</A><CODE><BR>
+</CODE><A HREF="#realtime21_overview">Windows CE Overview</A><CODE><BR>
+</CODE><A HREF="#realtime21_priority">Threads and Thread Priority</A><CODE><BR>
+</CODE><A HREF="#realtime21_synchro">Thread Synchronization</A><CODE><BR>
+</CODE><A HREF="#realtime21_consider">Other Considerations</A><CODE><BR>
+</CODE><A HREF="#realtime21_handling">Interrupt Handling: IRQs, ISRs, and ISTs</A><CODE><BR>
+</CODE><A HREF="#realtime21_latency">Interrupt Latency</A><CODE><BR>
+</CODE><A HREF="#realtime21_valid">Validating the Real-time Performance of Windows CE</A><CODE><BR>
+</CODE><A HREF="#realtime21_measure">Measured Latencies on Windows CE Alder (beta)</A><CODE><BR>
+</CODE><A HREF="#realtime21_summary">Summary</A></P>
+
+<H2 class="dtH1"><A NAME="realtime21_intro"></A>Introduction</H2>
+
+<P>High-performance embedded applications must often manage time-critical responses. Examples include manufacturing process controls, high-speed data acquisition devices, telecommunications switching equipment, medical monitoring equipment, aircraft "fly-by-wire" controls, and weapons delivery, space navigation and guidance, laboratory experiment control, automobile engine control, and robotics systems.</P>
+
+<P>Validating such an application means examining not only its computational accuracy, but also the timeliness of its results. The application must deliver its responses within specified time parameters in real-time.</P>
+
+<P>A real-time system is loosely defined as "any system where a timely response by the computer to external stimuli is vital." The standard definition provided in the Internet newsgroup comp.realtime states: "A real-time system is one in which the correctness of the computations not only depends on the logical correctness of the computation, but also on the time at which the result is produced. If the timing constraints of the system are not met, system failure is said to have occurred."</P>
+
+<P>It is important to distinguish between a real-time system and a real-time operating system (RTOS). The real-time system represents the set of all system elements - the hardware, operating system, and applications - that are needed to meet the system requirements. The RTOS is just one element of the complete real-time system and must provide sufficient functionality to enable the overall real-time system to meet its requirements.</P>
+
+<P>It is also important to distinguish between a fast operating system and an RTOS. Speed, although useful for meeting the overall requirements, does not by itself meet the requirements for an RTOS. The Internet newsgroup comp.realtime lists some requirements that an operating system must meet to be considered an RTOS:
+
+<UL type="disc">
+	<LI>The OS (operating system) must be multithreaded and preemptive. </li>
+
+	<LI>The OS must support thread priority. </li>
+
+	<LI>A system of priority inheritance must exist. </li>
+
+	<LI>The OS must support predictable thread synchronization mechanisms. </li>
+</UL>
+
+<P>In addition, the OS behavior must be predictable. This means real-time system developers must have detailed information about the system interrupt levels, system calls, and timing:
+
+<UL type="disc">
+	<LI>The maximum time during which interrupts are masked by the OS and by device drivers must be known. </li>
+
+	<LI>The maximum time that device drivers use to process an interrupt, and specific IRQ information relating to those device drivers, must be known. </li>
+
+	<LI>The interrupt latency (the time from interrupt to task run) must be predictable and compatible with application requirements. </li>
+</UL>
+
+<P>The time for every system call should be predictable and independent of the number of objects in the system. This paper describes how Microsoft Windows CE operating system meets each of these requirements for a real-time operating system. Most significant, Windows CE guarantees an upper bound on the time it takes to start a real-time priority thread after receiving an interrupt. This paper describes the interrupt latency times for a specific reference platform, the "Odo" platform with the Hitachi SH3 microprocessor.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_overview"></A>Windows CE Overview</H2>
+
+<P>Microsoft Windows CE is designed as a general-purpose operating system for small form-factor devices, which are typically diskless systems with a limited memory capacity. Windows CE is adapted for a specific hardware platform by creating a thin layer of code that resides between the kernel and the hardware. This is known as the Hardware Abstraction Layer (HAL). (In previous releases, this interface was called the OEM (original equipment manufacturer) Adaptation Layer, or OAL, and the Kernel Abstraction Layer, or KAL, to avoid confusion with the Microsoft Windows NT® operating system HAL.)</P>
+
+<P>Unlike other Windows operating systems, Windows CE does not represent one standard, identical piece of software that is common to all platforms. To be flexible enough to meet the needs of a wide range of products, Windows CE is modular. This means that it can be custom-built for a product by selecting from a set of provided software modules. In addition, some of the available modules are componentized. This means these modules can themselves be custom-built by selecting from a set of available components. By selecting the minimum set of required modules and components that meet the system requirements, the OEM can minimize the memory footprint and performance of the operating system.</P>
+
+<P>The Windows CE Embedded Toolkit for Microsoft Visual C++® development system version 5.0 provides the system libraries, tools, documentation, and sample code to enable OEMs to customize Windows CE for their specific hardware platforms. The embedded toolkit also includes the device driver kit (DDK) and the software development kit (SDK). The DDK provides additional documentation about writing device drivers. The SDK provides libraries, header files, sample code, and documentation that allow developers to write applications for Windows CE-based platforms. Windows CE offers subsets of the same programming interfaces used to develop applications for other Windows operating systems. For example, Windows CE version 1.01 supported about 500 of the 1000 Microsoft Win32® API functions. This means that a wide variety of tools, third-party books, and training courses for developers for Win32 are already in place and available for developers for Windows CE system.</P>
+
+<P>Real-time systems developers can use the Windows CE Embedded Toolkit for Visual C++ version 5.0 to port the operating system to their specific platform and to develop additional device drivers and real-time applications for that platform.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_priority"></A>Threads and Thread Priority</H2>
+
+<P>Windows CE is a preemptive multitasking operating system. It allows multiple applications, or processes, to run within the system at the same time. Windows CE supports a maximum of 32 simultaneous processes. A process consists of one or more threads, where each thread represents an independent portion of that process. One thread is designated as the primary thread for the process; the process can also create an unspecified number of additional threads. The actual number of additional threads is limited only by available system resources.</P>
+
+<P>Windows CE uses a priority-based time-slice algorithm to schedule the execution of threads. Windows CE supports eight discrete priority levels, from 0 through 7, where 0 represents the highest priority. These are defined in the header file Winbase.h.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Priority level</TH>
+<TH width=77%>Constant and Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>0 (highest)</TD>
+<TD width=77%>THREAD_PRIORITY_TIME_CRITICAL<BR>
+(highest priority)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>1</TD>
+<TD width=77%>THREAD_PRIORITY_HIGHEST</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>2</TD>
+<TD width=77%>THREAD_PRIORITY_ABOVE_NORMAL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>3</TD>
+<TD width=77%>THREAD_PRIORITY_NORMAL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>4</TD>
+<TD width=77%>THREAD_PRIORITY_BELOW_NORMAL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>5</TD>
+<TD width=77%>THREAD_PRIORITY_LOWEST</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>6</TD>
+<TD width=77%>THREAD_PRIORITY_ABOVE_IDLE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>7 (lowest)</TD>
+<TD width=77%>THREAD_PRIORITY_IDLE<BR>
+(lowest priority)</TD>
+</TR>
+</table></div>
+
+<P>Levels 0 and 1 are typically used for real-time processing and device drivers; levels 2-4 for kernel threads and normal applications; and levels 5-7 for applications that can always be preempted by other applications. Note that level 6 is present and has a constant associated with it.</P>
+
+<P>Preemption is based solely on the thread's priority. Threads with a higher priority are scheduled to run first. Threads at the same priority level run in a round-robin fashion with each thread receiving a quantum or slice of execution time. The quantum has a default value of 25 milliseconds (Windows CE version 2.0 supports changes to the quantum value on MIPS platforms). Threads at a lower priority do not run until all threads with a higher priority have finished, that is, until they either yield or are blocked. An important exception is that threads at the highest priority level (level 0, THREAD_PRIORITY_TIME_CRITICAL) do not share the time slice with other threads at the highest priority level. These threads continue executing until they have finished.</P>
+
+<P>Unlike other Microsoft Windows operating systems, the Windows CE thread priorities are fixed and do not change. Windows CE does not age priorities and does not mask interrupts based on these levels. They can be temporarily modified, but only by the Windows CE kernel and only to avoid what is known as "priority inversion."</P>
+
+<P>Priority inversion refers to a situation where the use of a resource by a low-priority thread delays the execution of a high-priority thread, when both are contending for the same resources. To correct this situation and free the higher priority thread, Windows CE allows the lower priority thread to inherit the more critical thread's priority and run at the higher priority until it releases its use of the resource.</P>
+
+<P>For example, if a thread running at the highest priority attempts to acquire a mutex that is held by a lower priority thread, the lower priority thread is inverted to the higher priority and run until it releases the mutex. The priority inversion algorithm applies to all threads in the system. For example, even kernel threads running at priority 1 can be inverted to level 0 should a priority 0 thread run demand-paged code and cause a blocking fault.</P>
+
+<P>The priority-based preemptive multitasking design of the scheduler ensures that a thread running at the highest priority can be guaranteed to execute within a known period of time. This paper will later discuss specific latency figures for the Windows CE reference platform and the formulas to derive these figures for other platforms. Tools in the OAK and SDK display the thread's state and priority level and profile the performance of a given real-time system.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_synchro"></A>Thread Synchronization</H2>
+
+<P>Real-time systems must ensure that processes and threads are synchronized. For example, if one part of the real-time application completes before a second part gets the most current data, the process that the application is monitoring may become unstable. Synchronization ensures that interaction between the application threads occurs correctly.</P>
+
+<P>Like other Windows operating systems, Windows CE offers a rich set of "wait objects" for thread synchronization. These include critical section, event, and mutex objects. These wait objects allow a thread to block its own execution and wait until the specified object changes.</P>
+
+<P>Windows CE queues mutex, critical section, and event requests in "FIFO-by-priority" order: a different FIFO queue is defined for each of the eight discrete priority levels. A new request from a thread at a given priority is placed at the end of that priority's list. The scheduler adjusts these queues when priority inversions occur.</P>
+
+<P>In addition to wait objects, Windows CE supports standard Win32 timer API functions. These use software interrupts from the kernel to obtain time intervals that can be used for managing real-time applications. Threads can use the system's interval timer by calling <B>GetTickCount</B>, which returns a count of milliseconds. For more detailed timing information, the Windows CE kernel also supports the Win32 API functions <B>QueryPerformanceCounter</B> and <B>QueryPerformanceFrequency</B>. The OEM must provide the hardware and software support for these calls with a higher-resolution timer and OAL interfaces to the timer.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_consider"></A>Other Considerations</H2>
+
+<P>Windows CE provides a virtual memory system. For example, while some current hardware platforms running Windows CE offer 4 MB of physical RAM, Windows CE supports a virtual address space of 2 GB, with each process accessing its own 32 MB of virtual address space. Paging a thread's code or data into physical memory as it is needed generates paging interrupts that can affect the amount of thread execution time.</P>
+
+<P>Paging I/O occurs at a lower priority level than the real-time priority process levels. Paging within the real-time process is still free to occur, but this ensures that background virtual memory management won't interfere with processing at real-time priorities.</P>
+
+<P>Real-time threads should be locked into memory to prevent these nondeterministic paging delays that can result from using the virtual memory management system.</P>
+
+<P>Windows CE allows memory mapping, which permits multiple processes to share the same physical memory. This results in very fast data transfers between cooperating processes or between a driver and an application. Memory mapping can be used to dramatically enhance real-time performance.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_handling"></A>Interrupt Handling: IRQs, ISRs, and ISTs</H2>
+
+<P>Real-time applications are designed to respond to external events within a specified time interval. Real-time applications use interrupts as a way of ensuring that external events are quickly noticed by the operating system. Within Windows CE, the kernel and the OEM Adaptation Layer (OAL) are tuned to optimize interrupt delivery and event dispatching to the rest of the system. Windows CE balances performance and ease of implementation by splitting interrupt processing into two steps: an interrupt service routine (ISR) and an interrupt service thread (IST).</P>
+
+<P>Each hardware interrupt request line (IRQ) is associated with one ISR. When interrupts are enabled and an interrupt occurs, the kernel calls the registered ISR for that interrupt. The ISR, the kernel-mode portion of interrupt processing, is kept as short as possible. Its responsibility is primarily to direct the kernel to launch the appropriate IST.</P>
+
+<P>The ISR performs its minimal processing and returns an interrupt ID to the kernel. The kernel examines the returned interrupt ID and sets the associated event. The interrupt service thread is waiting on that event. When the kernel sets the event, the IST stops waiting and starts performing its additional interrupt processing. Most of the interrupt handling actually occurs within the IST. The two highest thread priority levels (levels 0 and 1) are usually assigned to ISTs, ensuring that these threads run as quickly as possible.</P>
+
+<P>As noted previously, ISTs at the highest priority level are not preempted by any other threads. These threads continue execution until they either yield or are blocked.</P>
+
+<P>Windows CE does not support nested interrupts. This means that an interrupt cannot be serviced while a previous interrupt is being processed. That is, if an interrupt is raised while the kernel is within an ISR, execution continues to the end of that ISR before starting the ISR for the new IRQ. This can introduce latencies or delays between the time of the hardware interrupt and the start of the ISR.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_latency"></A>Interrupt Latency</H2>
+
+<P>In this paper, the term interrupt latency refers primarily to the software interrupt handling latencies; that is, the amount of time that elapses from the time that an external interrupt arrives at the processor until the time that the interrupt processing begins.</P>
+
+<P>Windows CE interrupt latency times are bounded for threads locked in memory (when paging does not occur). This makes it possible to calculate the worst-case latencies - the total times to the start of the interrupt service routine (ISR) and to the start of the interrupt service thread (IST). The total amount of time until the interrupt is handled can then be determined by calculating the amount of time needed within the ISR and IST.</P>
+
+<P>The general formula for ISR latency is defined as follows:</P>
+
+<P><B>start of ISR = value1</B> + <I>dISR_Current</I> + <B>sum(</B><I>dISR_Higher</I><B>)</B></P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>value1</B> = latency value due to processing within the kernel. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<I>dISR_Current</I> = The duration of an ISR in progress at the time the interrupt arrives. This value can range from 0 to the duration of the longest ISR in the system. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>sum</B>(dISR_Higher) = The sum of the durations of all higher priority ISRs that arrive before this ISR starts; that is, interrupts that arrive during the time <B>value1</B> + dISR_Current. </BLOCKQUOTE>
+
+<P>For example, consider a simple embedded system with a critical-priority ISR. Because the ISR is set to the highest priority, there are no higher priority ISRs, and the value <I>dISR_Higher</I> resolves to 0. The lowest latency, when no other ISRs are in progress, is <B>value1</B>. The highest latency is <B>value1</B> plus the duration of the longest ISR in the system, when the interrupt arrives just as the longest ISR in the system is just starting.</P>
+
+<P>The general formula for IST latency is defined as follows:</P>
+
+<P><B>start of IST</B> = <B>value2 + sum(</B><I>dIST</I><B>) + sum(</B><I>dISR</I><B>)</B></P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>value2</B> = latency value due to processing within the kernel. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>sum(</B>dIST<B>)</B> = The sum of the durations of all higher priority ISTs and thread context switch times that occur between this ISR and its start of IST. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>sum(</B>dISR<B>)</B> = The sum of the durations of all other ISRs that run between this interrupt's ISR and its IST. </BLOCKQUOTE>
+
+<P>For the simplest case - the embedded system with one critical-priority ISR and just one critical-priority thread (and no other priority 0 threads) - no other ISTs can intervene between the ISR and its IST. However, it is possible that other ISRs can be processed between the time-critical ISR and the start of its associated IST.</P>
+
+<P>Because ISRs are processed as soon as they are available, it is possible to imagine pathological cases that involve generating a constant stream of ISRs, indefinitely postponing the start of IST. This is unlikely to occur, because the OEM has complete control over the number of interrupts present in the system. Because the OEM is creating a custom version of Windows CE for a specific operating environment, the OEM can take advantage of constraints within that target operating environment to optimize the system design.</P>
+
+<P>To minimize latency times, the OEM can control the processing times of the ISR and IST, interrupt priorities, and thread priorities. The <B>value1</B> and <B>value2</B> elements in the formulas represent processing times within the Windows CE kernel that the OEM cannot control. The current work on timing studies involves identifying the values for these numbers.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_valid"></A>Validating the Real-time Performance of Windows CE</H2>
+
+<P>Two different approaches are being used to validate Windows CE performance:
+
+<UL type="disc">
+	<LI>In-house inspection and analysis of the kernel code by the Windows CE development team, and </li>
+
+	<LI>OEM and ISV (independent software vendor) timing validation of specific configurations using tools that will be provided in future versions of the Windows CE Embedded Toolkit for Visual C++. </li>
+</UL>
+
+<P>The Windows CE Embedded Toolkit for Visual C++ will include the following tools:
+
+<UL type="disc">
+	<LI>An instrumented version of the kernel for timing studies, and </li>
+
+	<LI>The Intrtime.exe utility for observing minimum, maximum, and average time to interrupt processing. </li>
+</UL>
+
+<P>Microsoft can also develop other timing-related tools based on customers' needs.</P>
+
+<P>The Windows CE development team has inspected the kernel code to verify that it can be characterized by a worst-case time that is independent of the number of system objects.</P>
+
+<P>For the purposes of this inspection, the kernel is characterized as a set of KCALLs, or system calls. These are kernel routines during which the kernel turns off preemption and does not allow other threads to run. The worst-case time that a real-time thread is held from running can be characterized as the worst-case KCALL time in the kernel. (Note that these times do not affect ISRs, but only threads, such as the ISTs.)</P>
+
+<P>The development team has by inspection shown that there are no non-constant loops through the KCALLs. This means that all KCALLs can be expressed as code paths with only forward branches and ensures that it is possible to find the worst-case time through the KCALL independent of input parameters.</P>
+
+<P>Finding the actual worst-case times involves using the instrumented kernel. This is simply a version of the kernel that is compiled and built after setting a specific environment variable, KCALL_PROFILE=1, to enable additional timing-related functions. The instrumented kernel is not the same as the debug kernel. The instrumented kernel is built as a retail kernel to obtain timing values that are as close as possible to the shipping product. The only difference between the retail kernel and the instrumented kernel is its instrumentation code.</P>
+
+<P>The instrumented kernel records all KCALL times. These values, including minimum, maximum, and average times, can be printed to the debug port by calling the special API function, <B>DumpKCallProfile</B>. The instrumented kernel is typically run under heavy stress and then an application calls <B>DumpKCallProfile</B> to obtain the times.</P>
+
+<P>The interrupt test utility <B>Intrtime.exe</B> collects interrupt timing delay data on a standard version of Windows CE. The utility takes over the system timer interrupt during the test, so it is not suitable for use on systems where the timer is required. For example, this utility cannot be used with the instrumented version of the kernel, which also requires the timer for its data.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_measure"></A>Measured Latencies on Windows CE Alder (beta)</H2>
+
+<P>The Intertime utility ran a test of 1000 interrupts on the Odo SH3 reference platform, running at 58.98 MHz internal and 14.745 MHz external frequency. The tests ran on a standard Handheld/PC configuration built to include all modules and components of Windows CE. Only the main operating system processes were running (Nk.exe, Filesys.exe, Gwes.exe, Device.exe, Shell.exe, and Explorer.exe), with no user-initiated interrupts (touch screen, keyboard, or other applications) during the tests. The utility reported the following minimum and maximum times to start of ISR and start of IST.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Latency</TH>
+<TH width=79%>Minimum and maximum values (1000 tests)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>Start of ISR</TD>
+<TD width=79%>1.3-7.5 microseconds</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>Start of IST</TD>
+<TD width=79%>93-275 microseconds</TD>
+</TR>
+</table></div>
+
+<P>Most of the test results were distributed near the reported minimum values. While testing the start of ISR times, the minimum values 1.3 microseconds and 1.6 microseconds occurred 293 and 549 times, respectively, representing 84 percent of the tests. Similarly, more than 90 percent (923 of 1000) of the start-of-IST tests reported maximum latencies of 102 microseconds or less.</P>
+
+<P>The Intertime utility also creates a user-configurable number of system objects to test the ISR and IST start times with a variety of system objects. Although this work is very preliminary, it demonstrates that the start of ISR times are independent of the number of system objects. The tests ran 1000 times (unless otherwise noted) with a background thread priority set to 5 or 7.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Start of ISRMaximum</TH>
+<TH width=47%>Numbers of background threads (with one event per thread)</TH>
+<TH width=35%>Background thread priority</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>8.4</TD>
+<TD width=47%>0</TD>
+<TD width=35%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>8.6</TD>
+<TD width=47%>5 (Note: represents only 100 tests)</TD>
+<TD width=35%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>9.0</TD>
+<TD width=47%>10 (Note: represents only 100 tests)</TD>
+<TD width=35%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>14.8</TD>
+<TD width=47%>10</TD>
+<TD width=35%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>19.2</TD>
+<TD width=47%>10</TD>
+<TD width=35%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>17.0</TD>
+<TD width=47%>10</TD>
+<TD width=35%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>12.8</TD>
+<TD width=47%>20</TD>
+<TD width=35%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>11.0</TD>
+<TD width=47%>20 (Note: represents only 100 tests)</TD>
+<TD width=35%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>10.0</TD>
+<TD width=47%>50</TD>
+<TD width=35%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>15.0</TD>
+<TD width=47%>100</TD>
+<TD width=35%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>15.6</TD>
+<TD width=47%>100</TD>
+<TD width=35%>7</TD>
+</TR>
+</table></div>
+
+<P>The values are not a function of the number of objects in the system. The different values are likely accounted for by the kernel state at the time the interrupt occurred. The development team is currently working on identifying the worst case Start of ISR time.</P>
+
+<P>Working backwards from these results, and assuming that the minimum value to start of ISR represents the best-case scenario, where dISR_Current and sum(dISR_Higher) = 0, the minimum value1 = start of ISR = 1.3 microseconds. Similarly, assuming the best-case scenario where sum(dIST) and sum(dISR) have the value 0, the minimum value2 = start of IST = 93 microseconds. From these test results alone, however, it is not possible to determine the maximum values for value1 or value2.</P>
+
+<P>Additional timing information can be gleaned from the instrumented kernel. A worst-case value for the amount of time spent in the kernel before start of IST, value2, can be calculated based on the following formula:</P>
+
+<P><B>value2</B> = dKCall + dNextThread</P>
+
+<BLOCKQUOTE class="dtBlock">
+<I>dKCall</I> = The duration of the kernel call; the amount of time spent in one of the sections of the kernel during which preemption is turned off. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+<I>dNextThread</I> = The duration of the <B>NextThread</B> kernel call; the amount of time spent setting up the IST. </BLOCKQUOTE>
+
+<P>In reality, the scheduling of a thread at priority level 0 is faster than the general <B>NextThread</B> call, but this formula can simulate the upper bound. </P>
+
+<P>The following table shows the worst-case results during preliminary tests with the instrumented kernel. These tests ran under the same conditions as the Intrtime tests described above. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Kernel call profiled</TH>
+<TH width=50%>Maximum values (ad-hoc testing)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Highest maximum time, all kernel calls</TD>
+<TD width=50%>266 microseconds (LeaveCrit)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NextThread</TD>
+<TD width=50%>237 microseconds</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Total</TD>
+<TD width=50%>503 microseconds</TD>
+</TR>
+</table></div>
+
+<P>The instrumented kernel suggests that the upper bound for value2 in these conditions is about 500 microseconds. This value, the sum of two worst-case times, far exceeds the actual test results reported by the Intrtime utility, and is greater than the actual worst-case time. For example, scheduling a priority 0 thread does not lead to the worst-case path through NextThread. This suggests that the 500 microsecond value represents a conservative upper bound that is higher than the actual worst-case time.</P>
+
+<P>The Intertime utility is useful for reporting observed worst-case times of the system as a whole. The instrumented kernel is useful for reporting possible worst-case times. It profiles all latencies caused by the kernel - those cases where an IST is ready to run, but is blocked while execution continues within a non-preemptible portion of the kernel. The system worst-case latency can be calculated from the sum of the worst-case times of its parts.</P>
+
+<P>Note that in this preliminary version of this white paper, all test results are based on an internal beta version of Windows CE. The existing operating system and utilities will continue to be modified and additional testing will profile system performance under a variety of operating conditions. These values will continue to be updated and published to reflect the current shipping version of the operating system.</P>
+
+<H2 class="dtH1"><A NAME="realtime21_summary"></A>Summary</H2>
+
+<P>The Microsoft Windows CE kernel design meets the minimum requirements of an RTOS described here, enabling Windows CE to be used as the operating system in many different types of embedded and real-time systems:
+
+<UL type="disc">
+	<LI>Windows CE is multithreaded and preemptive. </li>
+
+	<LI>Windows CE supports eight levels of thread priority. </li>
+
+	<LI>Windows CE supports a system of priority inheritance that dynamically adjusts thread priorities to correct priority inversion. </li>
+
+	<LI>Windows CE supports predictable thread synchronization mechanisms, including such wait objects as mutex, critical section, and named and unnamed event objects, which are queued based on thread priority. Windows CE also supports access to system timers. </li>
+
+	<LI>The OEM can control interrupt handling performed by the system, as the OEM implements the ISRs and ISTs that make up the interrupt processing software. </li>
+
+	<LI>The OEM has complete control over all IRQs mapped to interrupt IDs and its associated interrupt handling software, the ISR and IST. Profiling tools and utilities are available to record the maximum time required to process an interrupt. </li>
+
+	<LI>Interrupt latency is predictable and bounded. The upper bound is the sum of the amount of time spent in the kernel while preemption is turned off; task switching time; and the amount of processing time required by the ISRs and ISTs implemented by the OEM. </li>
+
+	<LI>The time for every system call (KCALL) is predictable and independent of the number of objects in the system. The system call time can be validated using the instrumented kernel. </li>
+</UL>
+
+<P>The Windows CE kernel design ensures predictable, bounded latencies for interrupts and their associated threads. This makes it suitable for many real-time applications. Future releases of the Windows CE Embedded Toolkit for Visual C++ will include interrupt timing utilities and an instrumented kernel to allow the OEM to examine and calibrate timing performance.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661498', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

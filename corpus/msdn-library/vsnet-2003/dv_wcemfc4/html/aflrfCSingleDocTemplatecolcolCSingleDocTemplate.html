@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CSingleDocTemplate::CSingleDocTemplate</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CSingleDocTemplate::CSingleDocTemplate"/>
+<MSHelp:RLTitle Title="CSingleDocTemplate::CSingleDocTemplate"/>
+<MSHelp:Keyword Index="A" Term="aflrfCSingleDocTemplatecolcolCSingleDocTemplate"/>
+<MSHelp:Keyword Index="K" Term="CSingleDocTemplate class, constructor"/>
+<MSHelp:Keyword Index="A" Term="aflrfCSingleDocTemplatecolcolCSingleDocTemplate"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="csingdt.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_696887">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcsingledoctemplatecolcolcsingledoctemplate"></A>CSingleDocTemplate::CSingleDocTemplate</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This constructor creates an instance of a <B>CSingleDocTemplate</B> object. You dynamically allocate a <B>CSingleDocTemplate</B> object, and pass it to <B>CWinApp::AddDocTemplate</B> from within the <B>CWinApp::InitInstance</B> method of your application class. </P>
+
+<PRE class="syntax"><B>CSingleDocTemplate( 
+UINT </B><I>nIDResource</I><B>, 
+CRuntimeClass* </B><I>pDocClass</I><B>, 
+CRuntimeClass* </B><I>pFrameClass</I><B>, 
+CRuntimeClass* </B><I>pViewClass</I><B> );</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>nIDResource</I></DT>
+
+<DD>Specifies the ID of the resources used with the document type. This may include menu, icon, accelerator table, and string resources. 
+
+<P>The string resource consists of up to seven substrings separated by the, \n character. The, \n character, is needed as a placeholder if a substring is not included; however, trailing, \n characters, are not necessary; these substrings describe the document type. For information about the substrings, see <A HREF="aflrfcdoctemplatecolcolgetdocstring.htm"><B>CDocTemplate::GetDocString</B></A>. This string resource is found in the resource file for the application. For example:
+
+
+<PRE class="code">// MYCALC.RC
+STRINGTABLE PRELOAD DISCARDABLE
+BEGIN
+    IDR_MAINFRAME "MyCalc Windows Application\nSheet\nWorksheet\n Worksheets (*.myc)\n.myc\nMyCalcSheet\n MyCalc Worksheet"
+END</PRE>
+
+
+<P>You can edit this string using the string editor; the entire string appears as a single entry in the String Editor, not as seven separate entries.
+</dd>
+
+<DT><I>pDocClass</I></DT>
+
+<DD>Points to the <B>CRuntimeClass</B> object of the document class. This class is a <B>CDocument</B>-derived class you define to represent your documents.</dd>
+
+<DT><I>pFrameClass</I></DT>
+
+<DD>Points to the <B>CRuntimeClass</B> object of the frame window class. This class can be a <B>CFrameWnd</B>-derived class, or it can be <B>CFrameWnd</B> itself if you want default behavior for your main frame window.</dd>
+
+<DT><I>pViewClass</I></DT>
+
+<DD>Points to the <B>CRuntimeClass</B> object of the view class. This class is a <B>CView</B>-derived class you define to display your documents.</dd>
+</DL>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Example for CSingleDocTemplate::CSingleDocTemplate.
+BOOL CMyApp::InitInstance()
+{
+&nbsp;&nbsp;// ...
+&nbsp;&nbsp;// Establish the document type
+&nbsp;&nbsp;// supported by the application.
+
+&nbsp;&nbsp;AddDocTemplate( new CSingleDocTemplate( IDR_MAINFRAME,
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS( CSheetDoc ),
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS( CFrameWnd ),
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS( CSheetView ) ) );
+
+&nbsp;&nbsp;// ...
+}
+
+// Second example for CSingleDocTemplate::CSingleDocTemplate.
+
+BOOL CYourApp::InitInstance()
+{
+&nbsp;&nbsp;// Normally, an application creates a document
+&nbsp;&nbsp;// template and registers it with MFC as a part
+&nbsp;&nbsp;// of its initialization.
+
+&nbsp;&nbsp;// IDR_SAMPLERESOURCE is a resource ID string;
+&nbsp;&nbsp;// see the CDocTemplate class overview documentation
+&nbsp;&nbsp;// for more information on its format.
+
+&nbsp;&nbsp;// The next three parameters use the RUNTIME_CLASS()
+&nbsp;&nbsp;// macro to get runtime type information for the doc,
+&nbsp;&nbsp;// frame, and view classes that will be associated by
+&nbsp;&nbsp;// the template.
+
+&nbsp;&nbsp;CSingleDocTemplate* pDocTemplate;
+&nbsp;&nbsp;pDocTemplate = new CSingleDocTemplate(
+&nbsp;&nbsp;&nbsp;&nbsp;IDR_SAMPLERESOURCE,
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS(CYourDoc),
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS(CChildFrame),
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS(CYourViewClass));
+
+&nbsp;&nbsp;// After the following call, MFC for Windows CE is aware of the doc
+&nbsp;&nbsp;// template and will free it when the application is
+&nbsp;&nbsp;// shut down. The doc templates known to MFC for Windows CE will
+&nbsp;&nbsp;// automatically be used when CWinApp:OnFileOpen() or 
+&nbsp;&nbsp;// CWinApp::OnFileNew() are called.
+
+&nbsp;&nbsp;AddDocTemplate(pDocTemplate);
+
+&nbsp;&nbsp;// You might have other initialization code ...
+&nbsp;&nbsp;// ...
+
+&nbsp;&nbsp;return TRUE;
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcdoctemplatecolcolgetdocstring.htm"><B>CDocTemplate::GetDocString</B></A>, <A HREF="aflrfcwinappcolcoladddoctemplate.htm"><B>CWinApp::AddDocTemplate</B></A>, <A HREF="aflrfcwinappcolcolinitinstance.htm"><B>CWinApp::InitInstance</B></A>, <A HREF="aflrfcruntimeclass.htm"><B>CRuntimeClass</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_696887', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

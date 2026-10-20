@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Play Buffer Notification</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Play Buffer Notification"/>
+<MSHelp:RLTitle Title="Play Buffer Notification"/>
+<MSHelp:Keyword Index="A" Term="_dxce_Play_Buffer_Notification_dsound"/>
+<MSHelp:Keyword Index="K" Term="buffers, DirectSound play notification"/>
+<MSHelp:Keyword Index="K" Term="DirectSound, buffers"/>
+<MSHelp:Keyword Index="K" Term="notifications, DirectSound play buffer notification"/>
+<MSHelp:Keyword Index="K" Term="play notification"/>
+<MSHelp:Keyword Index="K" Term="playback, DirectSound"/>
+<MSHelp:Keyword Index="A" Term="_dxce_Play_Buffer_Notification_dsound"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxsound_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680819">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_play_buffer_notification_dsound"></A>Play Buffer Notification</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When streaming audio, you may want your application to be notified when the current play position reaches a certain point in the buffer, or when playback is stopped. With the <MSHelp:link keywords="_wcesdk_IDirectSoundNotify_SetNotificationPositions_dsound" TABINDEX="0">IDirectSoundNotify::SetNotificationPositions</MSHelp:link> method you can set any number of points within the buffer where events are to be signaled. You cannot do this while the buffer is playing.</P>
+
+<P>First you have to obtain a pointer to the <MSHelp:link keywords="_wcesdk_IDirectSoundNotify_dsound" TABINDEX="0">IDirectSoundNotify</MSHelp:link> interface. You can do this by using the buffer object's <MSHelp:link keywords="cerefIUnknownQueryInterface" TABINDEX="0">QueryInterface</MSHelp:link> method, as in the following C++ example.</P>
+
+<PRE class="code">// LPDIRECTSOUNDBUFFER lpDsbSecondary;
+// The buffer has been initialized already. 
+ 
+LPDIRECTSOUNDNOTIFY lpDsNotify;  // pointer to the interface
+ 
+HRESULT hr = lpDsbSecondary-&gt;QueryInterface(IID_IDirectSoundNotify, 
+                                            (LPVOID *)&amp;lpDsNotify); 
+if SUCCEEDED(hr) 
+{ 
+    // Go ahead and use lpDsNotify-&gt;SetNotificationPositions. 
+} 
+ </PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>IDirectSoundNotify</B> interface is associated with the object that obtained the pointer, in this case the secondary buffer. The methods of the new interface will automatically apply to that buffer. </BLOCKQUOTE>
+
+<P>Now create an event object with the Microsoft&reg; Win32&reg; <B>CreateEvent</B> function. You put the handle to this event in the <B>hEventNotify</B> member of a <MSHelp:link keywords="_wcesdk_DSBPOSITIONNOTIFY_dsound" TABINDEX="0">DSBPOSITIONNOTIFY</MSHelp:link> structure, and in the <B>dwOffset</B> member of that structure you specify the offset within the buffer where you want the event to be signaled. Then you pass the address of the structure &#0151; or of an array of structures, if you want to set more than one notification position &#0151; to the <B>IDirectSoundNotify::SetNotificationPositions</B> method. </P>
+
+<P>The following example sets a single notification position. The event will be signaled when playback stops, either because it was not looping and the end of the buffer has been reached, or because the application called the <B>IDirectSoundBuffer::Stop</B> method.</P>
+
+<PRE class="code">DSBPOSITIONNOTIFY PositionNotify;
+ 
+PositionNotify.Offset = DSBPN_OFFSETSTOP;
+PositionNotify.hEventNotify = hMyEvent;
+// hMyEvent is the handle returned by CreateEvent()
+ 
+lpDsNotify-&gt;SetNotificationPositions(1, &amp;PositionNotify);
+ </PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Play%20Buffer%20Notification&nbsp;(_dxce_play_buffer_notification_dsound.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListBox::DrawItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_clistbox_drawitem"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_clistbox_drawitem"></A><SUP></SUP>CListBox::DrawItem</H1>
+
+<P>This method is called by the framework when a visual aspect of an owner-draw list box changes. </P>
+
+<PRE class=syntax><B>virtual void DrawItem(
+LPDRAWITEMSTRUCT </B><I>lpDrawItemStruct</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpDrawItemStruct</I></DT>
+
+<DD>Specifies a long pointer to a <A HREF="struct_12.htm"><B>DRAWITEMSTRUCT</B></A> structure that contains information about the type of drawing required.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <I>itemAction</I> and <I>itemState</I> members of the <B>DRAWITEMSTRUCT</B> structure define the drawing action that is to be performed. </P>
+
+<P>By default, this method does nothing. Override this method to implement drawing for an owner-draw <B>CListBox</B> object. The application should restore all graphics device interface (GDI) objects selected for the display context supplied in <I>lpDrawItemStruct</I> before this method terminates.</P>
+
+<P>See <B>CWnd::OnDrawItem</B> for a description of the <B>DRAWITEMSTRUCT</B> structure.</P>
+
+<H4>Example</H4>
+
+<PRE>// CMyListBox is my owner-drawn list box derived from CListBox. This
+// example draws an item's text centered vertically and horizontally. The
+// list box control was created with the following code:
+//&nbsp;&nbsp;pmyListBox-&gt;Create(
+//&nbsp;&nbsp;&nbsp;&nbsp;WS_CHILD|WS_VISIBLE|WS_BORDER|WS_HSCROLL|WS_VSCROLL|
+//&nbsp;&nbsp;&nbsp;&nbsp;LBS_SORT|LBS_MULTIPLESEL,
+//&nbsp;&nbsp;&nbsp;&nbsp;myRect, pParentWnd, 1);
+//
+void CMyListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
+{
+&nbsp;&nbsp;ASSERT(lpDrawItemStruct-&gt;CtlType == ODT_LISTBOX);
+&nbsp;&nbsp;LPCTSTR lpszText = (LPCTSTR) lpDrawItemStruct-&gt;itemData;
+&nbsp;&nbsp;ASSERT(lpszText != NULL);
+&nbsp;&nbsp;CDC dc;
+
+&nbsp;&nbsp;dc.Attach(lpDrawItemStruct-&gt;hDC);
+
+&nbsp;&nbsp;// Save these values to restore them when done drawing.
+&nbsp;&nbsp;COLORREF crOldTextColor = dc.GetTextColor();
+&nbsp;&nbsp;COLORREF crOldBkColor = dc.GetBkColor();
+
+&nbsp;&nbsp;// If this item is selected, set the background color
+&nbsp;&nbsp;// and the text color to appropriate values. Also, erase
+&nbsp;&nbsp;// rect by filling it with the background color.
+&nbsp;&nbsp;if ((lpDrawItemStruct-&gt;itemAction | ODA_SELECT) &amp;&amp;
+&nbsp;&nbsp;&nbsp;&nbsp;(lpDrawItemStruct-&gt;itemState &amp; ODS_SELECTED))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;dc.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
+&nbsp;&nbsp;&nbsp;&nbsp;dc.SetBkColor(::GetSysColor(COLOR_HIGHLIGHT));
+&nbsp;&nbsp;&nbsp;&nbsp;dc.FillSolidRect(&amp;lpDrawItemStruct-&gt;rcItem,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::GetSysColor(COLOR_HIGHLIGHT));
+&nbsp;&nbsp;}
+&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;dc.FillSolidRect(&amp;lpDrawItemStruct-&gt;rcItem, crOldBkColor);
+
+&nbsp;&nbsp;// If this item has the focus, draw a red frame around the
+&nbsp;&nbsp;// item's rect.
+&nbsp;&nbsp;if ((lpDrawItemStruct-&gt;itemAction | ODA_FOCUS) &amp;&amp;
+&nbsp;&nbsp;&nbsp;&nbsp;(lpDrawItemStruct-&gt;itemState &amp; ODS_FOCUS))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush br(RGB(255, 0, 0));
+&nbsp;&nbsp;&nbsp;&nbsp;dc.FrameRect(&amp;lpDrawItemStruct-&gt;rcItem, &amp;br);
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Draw the text.
+&nbsp;&nbsp;dc.DrawText(
+&nbsp;&nbsp;&nbsp;&nbsp;lpszText,
+&nbsp;&nbsp;&nbsp;&nbsp;strlen(lpszText),
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;lpDrawItemStruct-&gt;rcItem,
+&nbsp;&nbsp;&nbsp;&nbsp;DT_CENTER|DT_SINGLELINE|DT_VCENTER);
+
+&nbsp;&nbsp;// Reset the background color and the text color back to their
+&nbsp;&nbsp;// original values.
+&nbsp;&nbsp;dc.SetTextColor(crOldTextColor);
+&nbsp;&nbsp;dc.SetBkColor(crOldBkColor);
+
+&nbsp;&nbsp;dc.Detach();
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="clistbox_5.htm"><B>CListBox::CompareItem</B></A>, <A HREF="cwnd_114.htm"><B>CWnd::OnDrawItem</B></A>, <A HREF="clistbox_31.htm"><B>CListBox::MeasureItem</B></A>, <A HREF="clistbox_7.htm"><B>CListBox::DeleteItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

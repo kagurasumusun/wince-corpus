@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Updating a Status Bar</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Updating a Status Bar"/>
+<MSHelp:RLTitle Title="Updating a Status Bar"/>
+<MSHelp:Keyword Index="A" Term="aftasUpdatingaStatusBar"/>
+<MSHelp:Keyword Index="K" Term="status bars, updating"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="develop.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709656">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aftasupdatingastatusbar"></A>Updating a Status Bar</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>A status bar&#0151;a window object of class <B>CStatusBar</B>&#0151;contains several “panes.” Each pane is a rectangular area of the status bar that you can use to display information. For example, many applications display the status of the CAPS LOCK, NUM LOCK, and other keys in the rightmost panes. Applications also often display informative text in the leftmost pane (pane 0), sometimes called the “message pane.” For example, the default MFC status bar uses the message pane to display a string explaining the currently selected menu item or toolbar button.</P>
+
+<P>By default, MFC does not enable a <B>CStatusBar</B> pane when it creates the pane. To activate a pane, you must use the <B>ON_UPDATE_COMMAND_UI</B> macro for each pane on the status bar and update the panes. Because panes do not send WM_COMMAND messages (they aren’t like toolbar buttons), you can’t use ClassWizard to create an update handler to activate a pane; you must type the code manually. </P>
+
+<P>For example, suppose one pane has <B>ID_INDICATOR_PAGE</B> as its command identifier and that it contains the current page number in a document. The following procedure describes how to create a new pane in the status bar. </P>
+
+<P class="labelproc"><B>To make a new pane</B>
+
+<OL type="1">
+	<LI>Define the command ID of the pane.
+<P>Open the <B>ResourceView</B> in the Project Workspace window. Open the <B>Symbol</B> <B>Browser </B>with the <B>Resource Symbols</B> command on the <B>View </B>menu, and click <B>New</B>. Type a command ID name; for example, <B>ID_INDICATOR_PAGE</B>. Specify a value for the ID, or accept the value suggested by the <B>Symbol Browser</B>. For example, for <B>ID_INDICATOR_PAGE</B>, accept the default value. Close the <B>Symbol Browser</B>.
+</li>
+
+	<LI>Define a default string to display in the pane.
+<P>From the <B>Insert</B> menu, choose <B>Resource</B> to open the <B>Insert Resource </B>dialog box. Double-click <B>String Table</B> to open the <B>String Table</B> editor. Double-click in the client area of the editor to open the <B>String Properties </B>dialog box. Select the command ID of the pane (for example, <B>ID_INDICATOR_PAGE</B>) and enter a caption. 
+</li>
+
+	<LI>Add the pane to the <B>indicators</B> array.</li>
+
+	<LI>In file Mainfrm.cpp, locate the <B>indicators</B> array. This array lists command IDs for all of the status bar indicators, in order from left to right. At the appropriate point in the array, enter the command ID of the pane, as shown here for <B>ID_INDICATOR_PAGE</B>:
+<PRE class="code">static UINT BASED_CODE indicators[] =
+{
+    ID_SEPARATOR,           // status line indicator
+    ID_INDICATOR_CAPS,
+    ID_INDICATOR_NUM,
+    ID_INDICATOR_SCRL,
+    ID_INDICATOR_PAGE,
+};</PRE>
+</li>
+</OL>
+
+<P>The recommended way to display text in a pane is to call the <B>SetText</B> member function of class <B>CCmdUI</B> in an update handler function for the pane. For example, you might want to set up an integer variable <B>m_nPage</B> that contains the current page number and use <B>SetText</B> to set the pane text to a string version of that number.</P>
+
+<P>The <B>SetText</B> approach is recommended. It is possible to perform this task at a slightly lower level by calling the <B>CStatusBar</B> member function <B>SetPaneText</B>. Even so, you still need an update handler. Without such a handler for the pane, MFC automatically disables the pane, erasing its content.</P>
+
+<P>The following procedure shows how to use an update handler function to display text in a pane.</P>
+
+<P class="labelproc"><B>To make a pane display text</B>
+
+<OL type="1">
+	<LI>Add a command update handler for the command.
+<P>You cannot use ClassWizard to write a handler for a status bar pane, so manually add a prototype for the handler, as shown here for <B>ID_INDICATOR_PAGE</B> (in Mainfrm.h):
+
+<PRE class="code">afx_msg void OnUpdatePage(CCmdUI *pCmdUI);</PRE>
+
+<P>In the appropriate .CPP file, add the handler’s definition, as shown here for <code class="ce">ID_INDICATOR_PAGE</code> (in Mainfrm.cpp):
+
+<PRE class="code">void CMainFrame::OnUpdatePage(CCmdUI *pCmdUI)
+{
+    pCmdUI-&gt;Enable(); 
+}</PRE>
+
+<P>In the appropriate message map, add the <B>ON_UPDATE_COMMAND_UI</B> macro (outside the “{{AFX” comments), as shown here for <B>ID_INDICATOR_PAGE</B> (in Mainfrm.cpp):
+
+<PRE class="code">ON_UPDATE_COMMAND_UI(ID_INDICATOR_PAGE, OnUpdatePage)</PRE>
+</li>
+
+	<LI>Add code to the handler to display your text.
+<P>For <B>ID_INDICATOR_PAGE</B>, expand the <B>OnUpdatePage</B> handler from step 1 above, adding the last three lines:
+
+<PRE class="code">void CMainFrame::OnUpdatePage(CCmdUI *pCmdUI) 
+{
+    pCmdUI-&gt;Enable(); 
+    CString strPage;
+    strPage.Format( "Page %d", m_nPage ); 
+    pCmdUI-&gt;SetText( strPage ); 
+}</PRE>
+</li>
+</OL>
+
+<P>Once you define the value of the <B>m_nPage</B> member variable (of class <B>CMainFrame</B>), this technique causes the page number to appear in the pane during idle processing in the same manner that the application updates other indicators. If <B>m_nPage</B> changes, the display changes during the next idle loop. </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709656', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

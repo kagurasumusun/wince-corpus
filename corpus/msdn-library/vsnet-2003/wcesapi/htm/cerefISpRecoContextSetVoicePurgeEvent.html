@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpRecoContext::SetVoicePurgeEvent</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpRecoContext::SetVoicePurgeEvent"/>
+<MSHelp:RLTitle Title="ISpRecoContext::SetVoicePurgeEvent"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextSetVoicePurgeEvent"/>
+<MSHelp:Keyword Index="K" Term="ISpRecoContext, SetVoicePurgeEvent"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextSetVoicePurgeEvent"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822449">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisprecocontextsetvoicepurgeevent"></A>ISpRecoContext::SetVoicePurgeEvent</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpRecoContext::SetVoicePurgeEvent</B> sets the SR engine events that stop audio output, and purges the current speaking queue.</P>
+
+<H4 class="dtH4">When To Use</H4>
+
+<P>Applications can call SetVoicePurgeEvent when implementing "barge-in" type functionality. For example, when a user calls a telephony server, and the server uses TTS Voice prompts, the Voice should stop speaking when the user is speaking. The application would want the ISpRecoContext's associated Voice object (see <A HREF="cerefisprecocontextgetvoice.htm">ISpRecoContext::GetVoice</A>) to stop and purge when the SR Engine hears a sound (see SPEI_SOUND_START).</P>
+
+<PRE class="syntax"><B>HRESULT SetVoicePurgeEvent(</B>
+<B>ULONGLONG </B><I>ullEventInterest</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ullEventInterest</I> </DT>
+
+<DD>[in] The set of flags indicating the event interest(s). The event interest(s) must be in the set of Speech Recognition events (such as between SPEI_MIN_SR and SPEI_MAX_SR) (see <A HREF="cerefspeventenum.htm">SPEVENTENUM</A> and SPFEI_ALL_SR_EVENTS) </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The ISpRecoContext event interest will be updated to include the Voice Purge Events (see <A HREF="cerefispeventsourcesetinterest.htm">ISpEventSource::SetInterest</A>).</P>
+
+<P>To find the current Voice Purge Event(s), use <A HREF="cerefisprecocontextgetvoicepurgeevent.htm">ISpRecoContext::GetVoicePurgeEvent</A>.</P>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>Value </TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>S_OK </TD>
+<TD width=52%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>E_INVALIDARG </TD>
+<TD width=52%>One or more of the event interests set is not allowed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>FAILED(hr) </TD>
+<TD width=52%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of <B>ISpRecoContext::SetVoicePurgeEvent</B> and "barge-in" setup</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+// create a shared recognition context
+hr = cpRecoContext.CoCreateInstance(CLSID_SpSharedRecoContext);
+// Check hr
+// create a voice from the context (with same audio format as context)
+hr = cpRecoContext-&gt;GetVoice(&amp;cpVoice);
+// Check hr
+// tell the associated Voice to stop speaking when the SR Engine hears a recognizable sound
+hr = cpRecoContext-&gt;SetVoicePurgeEvent(SPFEI(SPEI_SOUND_START));
+// Check hr</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpRecoContext::SetVoicePurgeEvent&nbsp;(cerefisprecocontextsetvoicepurgeevent.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

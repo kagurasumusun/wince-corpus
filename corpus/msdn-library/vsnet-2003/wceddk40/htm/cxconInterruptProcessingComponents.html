@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Processing Components</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Processing Components"/>
+<MSHelp:RLTitle Title="Interrupt Processing Components"/>
+<MSHelp:Keyword Index="A" Term="cxconInterruptProcessingComponents"/>
+<MSHelp:Keyword Index="K" Term="interrupts, device driver processing components"/>
+<MSHelp:Keyword Index="A" Term="cxconInterruptProcessingComponents"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757430">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconinterruptprocessingcomponents"></A>Interrupt Processing Components</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The exception handler is the primary target of all interrupts. When an interrupt occurs, the microprocessor transfers control to an exception handler in the kernel. The exception handler then calls the ISR registered to handle the current interrupt. The ISR is responsible for translating the interrupt into a logical interrupt identifier, a SYSINTR, which it passes back to the kernel as its return value. The kernel sets an event associated with the logical interrupt, which causes an interrupt service thread (IST) to be scheduled. Code in the IST is responsible for actually servicing the device interrupt. It runs in the context of a thread in the Device Manager process and is essentially a typical application thread running at a high priority.</P>
+
+<P>You generally register your ISRs with the exception handler at system boot time. During boot, the kernel calls the <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> function in the OEM Adaptation Layer (OAL). Next, <B>OEMInit</B> calls the <MSHelp:link keywords="cmrefHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function to inform the exception handler of which ISRs correspond to individual physical interrupt lines. A few subroutines in the OAL, such as the <MSHelp:link keywords="cmrefOEMInterruptEnable" TABINDEX="0">OEMInterruptEnable</MSHelp:link>, <MSHelp:link keywords="cmrefOEMInterruptDisable" TABINDEX="0">OEMInterruptDisable</MSHelp:link>, and <MSHelp:link keywords="cmrefOEMInterruptDone" TABINDEX="0">OEMInterruptDone</MSHelp:link> functions, are also used in interrupt processing. The interrupt handler manages the details of registering a driver for a particular interrupt and deregistering it later. It also maintains communication among the ISR, the IST, and subroutines within the OAL.</P>
+
+<P>The following list shows an example interrupt handling sequence:
+
+<OL type="1">
+	<LI>If the kernel's exception-trapping code receives a hardware interrupt and then the kernel detects an exception, the kernel handles this. Otherwise, go to the next step.</li>
+
+	<LI>The kernel’s interrupt support handler calls the OAL function <MSHelp:link keywords="cmrefOEMInterruptDisable" TABINDEX="0">OEMInterruptDisable</MSHelp:link>. This function notifies the hardware to disable the specific interrupt until the required handling completes. All other interrupts remain enabled.</li>
+
+	<LI>The exception handler calls the ISR to determine how to handle the interrupt.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Details may vary depending on the CPU architecture.</BLOCKQUOTE>
+</li>
+
+	<LI>The kernel receives the return value from the ISR, which lets the kernel know what to do about the interrupt. The following table shows the possible responses from the kernel.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Response</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSINTR_NOP</TD>
+<TD width=50%>The kernel does nothing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSINTR_RESHED</TD>
+<TD width=50%>The interrupt was for the thread scheduling timer tick.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Call the driver's IST to respond to and handle the interrupt.</TD>
+<TD width=50%>The kernel triggers its interrupt support handler to trigger the IST to wake up and do its work. The interrupt service thread is a normal Win32 thread. Once started, it creates an event and then waits on the event. The interrupt support handler wakes the thread by calling the <MSHelp:link keywords="cerefPulseEvent" TABINDEX="0">PulseEvent</MSHelp:link> function, which causes the IST to wake up. Go to the next step.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>When the IST wakes up, the IST does whatever work it needs to do to handle the interrupt. This could mean moving data into a buffer or interpreting the data in some meaningful way.</li>
+
+	<LI>As needed, the IST calls various I/O routines to access the hardware to do its work.</li>
+
+	<LI>When the IST finishes its work, it notifies the kernel by calling <MSHelp:link keywords="cmrefInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link>.</li>
+
+	<LI>The kernel calls the OAL function <MSHelp:link keywords="cmrefOEMInterruptDone" TABINDEX="0">OEMInterruptDone</MSHelp:link> to complete all handling for the interrupt. The OAL notifies the hardware to re-enable the interrupt.</li>
+</OL>
+
+<P>The following illustration shows the interaction of components during interrupt processing.</P>
+
+<P class="fig"><IMG SRC="intrrupt.gif" ALT="" BORDER=0></P>
+
+<P>The following table shows some event-related functions; for more information on events and event objects, see <MSHelp:link keywords="_wcesdk_Event_Objects" TABINDEX="0">Event Object Notification</MSHelp:link> and <MSHelp:link keywords="cmconSynchronization" TABINDEX="0">Synchronization</MSHelp:link>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cerefCreateEvent" TABINDEX="0">CreateEvent</MSHelp:link></TD>
+<TD width=67%>Creates a named or an unnamed event object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cerefResetEvent" TABINDEX="0">ResetEvent</MSHelp:link></TD>
+<TD width=67%>Sets the state of the specified event object to nonsignaled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cerefSetEvent" TABINDEX="0">SetEvent</MSHelp:link></TD>
+<TD width=67%>Sets the state of the specified event object to signaled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefCeSetPowerOnEvent" TABINDEX="0">CeSetPowerOnEvent</MSHelp:link></TD>
+<TD width=67%>Allows power callbacks in device drivers to set arbitrary events during system resume processing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefSetInterruptEvent" TABINDEX="0">SetInterruptEvent</MSHelp:link></TD>
+<TD width=67%>Allows a device driver to cause an artificial interrupt event.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cerefWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link></TD>
+<TD width=67%>Returns when the specified object is in the signaled state or when the time-out interval elapses. The kernel provides special treatment to interrupt events. ISTs cannot use <B>WaitForMultipleObject</B> with an interrupt event.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the functions that the OAL calls to associate an incoming hardware interrupt line with a software ISR.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link></TD>
+<TD width=67%>Called in the <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> function to associate an ISR with an IRQ.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefUnhookInterrupt" TABINDEX="0">UnhookInterrupt</MSHelp:link></TD>
+<TD width=67%>Called to break the association between an ISR and an IRQ.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the functions that your driver DLL calls as part of the IST. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefInterruptDisable" TABINDEX="0">InterruptDisable</MSHelp:link></TD>
+<TD width=67%>Disables a hardware interrupt as specified by its interrupt identifier.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefInterruptDone" TABINDEX="0">InterruptDone</MSHelp:link></TD>
+<TD width=67%>Signals to the kernel that interrupt processing is complete.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><MSHelp:link keywords="cmrefInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link></TD>
+<TD width=67%>Initializes a hardware interrupt with the kernel. This initialization allows the device driver to register an event and enable the interrupt.</TD>
+</TR>
+</table></div>
+
+<P>Layered drivers use the same functions to process interrupts, but you need not use these functions to port layered drivers because the model device driver (MDD) layer, which typically does not require modification, already contains the proper calls to these functions.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconinterrupts.htm">Interrupts</A></P>
+
+<P><A HREF="cxconsharedinterrupts.htm">Shared Interrupts</A></P>
+
+<P><A HREF="cxconnestedinterrupts.htm">Nested Interrupts</A> </P>
+
+<P><A HREF="cxconinterruptmasking.htm">Interrupt Masking</A></P>
+
+<P><A HREF="cxconinterruptnotifications.htm">Interrupt Notifications</A> </P>
+
+<P><A HREF="cxconinterrupthandlerregistration.htm">Interrupt Handler Registration</A> </P>
+
+<P><A HREF="cxconinterruptprocessing.htm">Interrupt Processing</A> </P>
+
+<P><A HREF="cxconinterrupthandlerderegistration.htm">Interrupt Handler Deregistration</A> </P>
+
+<P><A HREF="cxconreal-timeprioritysystem.htm">Real-Time Priority System</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Interrupt%20Processing%20Components&nbsp;(cxconinterruptprocessingcomponents.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeOpenDatabaseEx</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeOpenDatabaseEx"/>
+<MSHelp:RLTitle Title="CeOpenDatabaseEx"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_CeOpenDatabaseEx"/>
+<MSHelp:Keyword Index="K" Term="CeOpenDatabaseEx"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: database.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_ceopendatabaseex"></A>CeOpenDatabaseEx</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function opens an existing database on any database volume, including mounted databases. A remote application interface (RAPI) version of this function exists, and it is also called <A HREF="_wcesdk_ceopendatabaseex_rapi_.htm"><B>CeOpenDatabaseEx</B></A>. </P>
+
+<PRE class="syntax"><B>HANDLE CeOpenDatabaseEx( </B>
+<B>PCEGUID </B><I>pceguid</I><B>,</B><I> </I>
+<B>PCEOID</B><I> poid</I><B>,</B>
+<B>LPWSTR</B><I> lpszName</I><B>,</B><I> </I>
+<B>CEPROPID</B><I> propid</I><B>,</B><I> </I>
+<B>DWORD</B><I> dwFlags</I><B>,</B>
+<B>CENOTIFYREQUEST *pRequest</B><I> hwndNotify</I><B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>pceguid</I></DT>
+
+<DD>[in] Pointer to the <B>CEGUID</B> that contains the globally unique identifier<B> </B>of a mounted database. If <I>pceguid</I> points to a <B>CEGUID</B> created with the <A HREF="_wcesdk_create_invalidguid.htm"><B>CREATE_INVALIDGUID</B></A> macro, then <I>poid</I> is ignored, and the object store and all mounted databases are searched for a database whose name matches <I>lpszName</I>. The search is completed when the first match is located.</dd>
+
+<DT><I>poid </I></DT>
+
+<DD>[in/out] Pointer to the object identifier of the database to be opened. To open a database by name, set the value pointed to by <I>poid</I> to zero, set <I>lpszName</I> to the database name, and set <I>pceguid </I>to the database volume. </dd>
+
+<DT><I>lpszName </I></DT>
+
+<DD>[in] Long pointer to the null-terminated string that contains the name of the database to be opened. This is used along with <I>pceguid</I> to specify the database if the value pointed to by <I>poid</I> is zero. If the value pointed to by <I>poid</I> is nonzero, <I>lpszName</I> is ignored.</dd>
+
+<DT><I>propid </I></DT>
+
+<DD>[in] Property identifier of the sort key for the database. All subsequent calls to <A HREF="_wcesdk_ceseekdatabase.htm"><B>CeSeekDatabase</B></A> assume this sort order. This parameter can be zero if the sort order is not important. </dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>[in] Specifies an action flag. It is one of the following flags:
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CEDB_AUTOINCREMENT</TD>
+<TD width=67%>Current seek position is automatically incremented with each call to <A HREF="_wcesdk_cereadrecordpropsex.htm"><B>CeReadRecordPropsEx</B></A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>0</TD>
+<TD width=67%>Current seek position is not incremented with each call to <B>CeReadRecordPropsEx</B>.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pRequest </I></DT>
+
+<DD>[in] Pointer to a <A HREF="_wcesdk_cenotifyrequest.htm"><B>CENOTIFYREQUEST</B></A> structure that requests notifications be sent to an identified window. This parameter can be NULL if an application does not need to receive notifications. </dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>A handle to the open database indicates success. INVALID_HANDLE_VALUE indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. Possible values for <B>GetLastError</B> include the following:
+
+<DL>
+<DT>ERROR_INVALID_PARAMETER </DT>
+
+<DD>A parameter was invalid. </dd>
+
+<DT>ERROR_FILE_NOT_FOUND </DT>
+
+<DD>No database exists with the specified name. This error code applies only if the value pointed to by <I>poid</I> was set to NULL, when the function was called. </dd>
+
+<DT>ERROR_NOT_ENOUGH_MEMORY </DT>
+
+<DD>No memory was available to allocate the database handle. </dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>An application must use the <A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A> function to close the handle returned by the <B>CeOpenDatabaseEx</B> function. </P>
+
+<P>Changes to Windows CE databases are committed after each individual call, not when opening and closing a database.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Earlier versions (2.12 and prior) of Windows CE assigned OIDs to objects in other file systems, such as the FAT file system. These OIDs were guaranteed to be unique within a volume, but not across multiple volumes. Effective with version 3.0, only objects in the object store have valid, unique OIDs and the object store is the only volume that can return an object identifier.</BLOCKQUOTE>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Windbase.h</TD>
+<TD width=15%>Winbase.h</TD>
+<TD width=20%>Fsdbase.lib</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcesdk_cecreatedatabaseex.htm"><B>CeCreateDatabaseEx</B></A>, <A HREF="_wcesdk_ceopendatabaseex_rapi_.htm"><B>CeOpenDatabaseEx</B></A>, <A HREF="_wcesdk_cereadrecordpropsex.htm"><B>CeReadRecordPropsEx</B></A>, <A HREF="_wcesdk_ceseekdatabase.htm"><B>CeSeekDatabase</B></A>, <A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_create_invalidguid.htm"><B>CREATE_INVALIDGUID</B></A>, <A HREF="_wcesdk_cenotification.htm"><B>CENOTIFICATION</B></A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CeOpenDatabaseEx&nbsp;(_wcesdk_ceopendatabaseex.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

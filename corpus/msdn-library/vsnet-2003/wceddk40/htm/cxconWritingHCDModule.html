@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HCD Module Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HCD Module Implementation"/>
+<MSHelp:RLTitle Title="HCD Module Implementation"/>
+<MSHelp:Keyword Index="A" Term="cxconWritingHCDModule"/>
+<MSHelp:Keyword Index="K" Term="HCD modules"/>
+<MSHelp:Keyword Index="K" Term="host controller module, UDB drivers"/>
+<MSHelp:Keyword Index="K" Term="universal serial bus drivers, HCD module implementation"/>
+<MSHelp:Keyword Index="K" Term="USB drivers, HCD module implementation"/>
+<MSHelp:Keyword Index="A" Term="cxconWritingHCDModule"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: usb_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_712118">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconwritinghcdmodule"></A>HCD Module Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To support USB on a platform, OEMs must customize one of the sample HCD modules. Microsoft provides sample HCD modules that work with HCI-compliant USB host controllers. You must port the PDD of the appropriate sample HCD to your platforms as part of your OAL implementation.</P>
+
+<P>To reduce the effort involved in porting the sample HCD to your platform, the HCD is divided into two layers, a platform-independent MDD layer and a small hardware-specific PDD layer. Because the specifications for HCI hardware explicitly define the behavior of such hardware, the PDD layer does very little. The PDD layer for most HCD modules merely has to locate the hardware address of the host controller within memory and provide the MDD layer with the hardware address and a pointer to a shared memory area.</P>
+
+<P>The MDD and PDD layers in the HCD module interact more than the MDD and PDD layers in most device drivers. For example, in the majority of device drivers, the MDD layer calls DDSI functions exposed by the PDD layer. In the HCD module, the MDD layer not only calls the DDSI functions, but also exposes a set of functions that the PDD layer must call at specific times during initialization.</P>
+
+<P>You must create a registry key within <B>HKEY_LOCAL_MACHINE\Drivers\Builtin\OHCI</B> so that the <A HREF="cxcondevicemanager.htm">Device Manager</A> loads the HCD module when the platform starts. Device drivers that the Device Manager loads must expose the stream interface to get power management callbacks. Therefore, the PDD layer is required to include some additional functions, such as <A HREF="_wceddk_ohcdpdd_open.htm">HcdPdd_Open</A> and <A HREF="_wceddk_ohcdpdd_iocontrol.htm">HcdPdd_IoControl</A>, even though the HCD module is not purely a stream interface driver. The benefit of this approach is that the Device Manager calls the HCD module's <A HREF="_wceddk_ohcdpdd_init.htm">HcdPdd_Init</A> function, which in turn enables the HCD module to call the required MDD functions. The following example shows the registry key for the HCD module. It should contain the same values as other stream interface driver keys.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\Builtin\OHCI]
+    "Prefix"="HCD"
+    "Dll"="ohci.dll"
+    "Index"=dword:1
+    "Order"=dword:1</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconhcdmodulemddfunctions.htm">HCD Module MDD Functions</A></P>
+
+<P><A HREF="cxconhcdmodulepddfunctions.htm">HCD Module PDD Functions</A></P>
+
+<P><A HREF="cxconusbdevicedriverimplementation.htm">USB Device Driver Implementation</A></P>
+
+<P><A HREF="_wceddk_usb_device_driver_load_process.htm">USB Device Driver Load Process</A></P>
+
+<P><A HREF="_wceddk_usb_device_driver_installation.htm">USB Device Driver Installation</A></P>
+
+<P><A HREF="_wceddk_usb_device_driver_attach_processing.htm">USB Device Driver Attach Processing</A></P>
+
+<P><A HREF="cxconusbdevicedriverremoval.htm">USB Device Driver Removal</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;HCD%20Module%20Implementation&nbsp;(cxconwritinghcdmodule.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

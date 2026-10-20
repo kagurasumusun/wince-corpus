@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBrush::CreateDIBPatternBrush</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CBrush::CreateDIBPatternBrush"/>
+<MSHelp:RLTitle Title="CBrush::CreateDIBPatternBrush"/>
+<MSHelp:Keyword Index="A" Term="aflrfCBrushcolcolCreateDIBPatternBrush"/>
+<MSHelp:Keyword Index="K" Term="CreateDIBPatternBrush method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCBrushcolcolCreateDIBPatternBrush"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cbrush.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709786">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcbrushcolcolcreatedibpatternbrush"></A>CBrush::CreateDIBPatternBrush</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method initializes a brush with the pattern specified by a device-independent bitmap (DIB). You can select the brush for any device context that supports raster operations.</P>
+
+<PRE class="syntax"><B>BOOL CreateDIBPatternBrush ( </B>
+<B>HGLOBAL </B><I>hPackedDIB</I><B>, </B>
+<B>UINT </B><I>nUsage</I> <B>);</B>
+
+<B>BOOL CreateDIBPatternBrush( </B>
+<B>const void*</B> <I>lpPackedDIB</I>,<B> </B>
+<B>UINT</B> <I>nUsage</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hPackedDIB</I></DT>
+
+<DD>Identifies a global-memory object containing a packed DIB.</dd>
+
+<DT><I>nUsage</I></DT>
+
+<DD>Specifies whether the <B>bmiColors</B> fields of the <B>BITMAPINFO</B> data structure, a part of the packed DIB, contain explicit RGB values or indexes to the currently realized logical palette. The parameter must be one of the following values:
+
+<UL type="disc">
+	<LI>DIB_PAL_COLORS&nbsp;&nbsp;&nbsp;The color table consists of an array of 16-bit indexes.</li>
+
+	<LI>DIB_RGB_COLORS&nbsp;&nbsp;&nbsp;The color table contains literal RGB values.</li>
+</UL>
+
+
+<P>The following value is available only in the second version of this method:
+
+
+<UL type="disc">
+	<LI>DIB_PAL_INDICES&nbsp;&nbsp;&nbsp;No color table is provided. The bitmap contains indexes to the logical palette of the device context into which the brush is to be selected.</li>
+</UL>
+</dd>
+
+<DT><I>lpPackedDIB</I></DT>
+
+<DD>Points to a packed DIB consisting of a <B>BITMAPINFO</B> structure immediately followed by an array of bytes defining the pixels of the bitmap.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The two versions differ in the way you handle the DIB:
+
+<UL type="disc">
+	<LI>In the first version, to obtain a handle to the DIB you call the Windows CE <B>LocalAlloc</B> function to allocate a block of global memory and fill the memory with the packed DIB.</li>
+
+	<LI>In the second version, you do not need to call <B>LocalAlloc</B> to allocate memory for the packed DIB.</li>
+</UL>
+
+<P>Bitmaps used as fill patterns should be 8 pixels by 8 pixels. If the bitmap is larger, Windows creates a fill pattern using only the bits corresponding to the first 8 rows and 8 columns of pixels in the upper-left corner of the bitmap.</P>
+
+<P>When an application selects a two-color DIB pattern brush into a monochrome device context, Windows ignores the colors specified in the DIB and displays the pattern brush using the current text and background colors of the device context. Pixels mapped to the first color, at offset zero in the DIB color table, of the DIB are displayed using the text color. Pixels mapped to the second color, at offset one in the color table, are displayed using the background color.</P>
+
+<P>For information about using the following Windows CE functions, see the SDK<I> </I>Programmer's Reference:
+
+<UL type="disc">
+	<LI><B>CreateDIBPatternBrush</B>&nbsp;&nbsp;&nbsp;This function is provided only for compatibility with applications written for versions of Windows earlier than 3.0; use the <B>CreateDIBPatternBrushPt</B> function.</li>
+
+	<LI><B>CreateDIBPatternBrushPt</B>&nbsp;&nbsp;&nbsp;This function should be used for Windows CE-based applications.</li>
+
+	<LI><B>LocalAlloc</B></li>
+</UL>
+
+<P>Windows CE 1.0 does not support the DIB_PAL_COLORS flag for the <I>nUsage</I> parameter.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Resource handle to bitmap.
+HRSRC hRes; 
+// Global handles to bitmap resource.
+HGLOBAL hData, hLockedData;
+CBrush brush;
+
+// Find the resource handle.
+hRes = ::FindResource(AfxGetResourceHandle(),
+   MAKEINTRESOURCE(IDB_BRUSH), RT_BITMAP);
+if (hRes != NULL)
+{
+  // Lock and Load (or Load and Lock).
+  if (((hData = ::LoadResource(AfxGetResourceHandle(),
+     hRes)) != NULL) &amp;&amp; 
+    ((hLockedData = (HGLOBAL)::LockResource(hData)) != NULL))
+  {
+    // Initialize the brush.
+    brush.CreateDIBPatternBrush(hLockedData,
+       DIB_RGB_COLORS);
+
+    // Select the brush into the device context.
+    CBrush* pOldBrush = pDC-&gt;SelectObject(&amp;brush);
+
+    // Draw.
+    pDC-&gt;Rectangle(50, 50, 200, 200);
+
+    // Restore the original device context.
+    pDC-&gt;SelectObject(pOldBrush);
+
+    // Free the resource.
+    ::FreeResource(hLockedData);
+  }
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcbrushcolcolcreatebrushindirect.htm"><B>CBrush::CreateBrushIndirect</B></A>, <A HREF="aflrfcbrushcolcolcreatesolidbrush.htm"><B>CBrush::CreateSolidBrush</B></A>, <A HREF="aflrfcgdiobjectcolcolcreatestockobject.htm"><B>CGdiObject::CreateStockObject</B></A>, <A HREF="aflrfcdccolcolselectobject.htm">CDC::SelectObject</A>, <A HREF="aflrfcgdiobjectcolcoldeleteobject.htm"><B>CGdiObject::DeleteObject</B></A>, <A HREF="aflrfcdccolcolgetbrushorg.htm">CDC::GetBrushOrg</A>, <A HREF="aflrfcdccolcolsetbrushorg.htm">CDC::SetBrushOrg</A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709786', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

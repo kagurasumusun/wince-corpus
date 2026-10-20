@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Forms-Based Applications</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_forms_based_applications"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_forms_based_applications"></A><SUP></SUP>Forms-Based Applications</H1>
+
+<P><B>CFormView</B> is the base class for form views. A form view is essentially a view that contains controls. A forms-based application lets the user create and use one or more forms within the application, as do the AppWizards and other dialog-based applications. The view class of a forms-based application is based on one of the form-style classes, such as <B>CFormView</B> or <B>CDialog</B>.</P>
+
+<P>To create a forms-based application, use one of the following procedures:
+
+<UL type=disc>
+	<LI>Create an application using MFC AppWizard. Either create a dialog-based application or select a form-style class as the view's base class.</LI>
+
+	<LI>Insert a new form into an existing MFC application. Even if your application did not initially support forms, embedded Visual C++ will add this support when you insert a new form. </LI>
+</UL>
+
+<P>The procedures above are preferred for creating forms-based applications. Because these procedures automatically and correctly implement the forms-based architecture, you should never have to do so by hand. However, if you need to create a forms-based application without using the AppWizard or the <B>New Form</B> command on the <B>Insert</B> menu, the following steps are provided for your information. These steps are the same as those that the MFC AppWizard performs in creating a <B>CFormView</B>-based application.</P>
+
+<P class=indent><B>Note&nbsp;&nbsp;&nbsp;</B>The following steps do not apply to <B>CDialog</B>-based applications. For dialog-based applications, the MFC AppWizard creates a <B>CDialog</B>-based class and a dialog resource with appropriate styles as described in step 1 below.
+
+<OL>
+	<LI>Creating a view based on <B>CFormView</B> is similar to creating a dialog box. Use the dialog editor to design the dialog box.</LI>
+
+	<LI>On the <B>Styles </B>property page, set the following properties:
+<UL type=disc>
+	<LI>In the <B>Style </B>box, select <B>Child </B>(WS_CHILD on).</LI>
+
+	<LI>In the <B>Border </B>box, select <B>None </B>(WS_BORDER off).</LI>
+
+	<LI>Clear the <B>Titlebar </B>check box (WS_CAPTION off). </LI>
+
+	<LI>On the <B>More Styles</B> page, clear the <B>Visible </B>check box (WS_VISIBLE off).</LI>
+</UL>
+
+<P>These steps are necessary because a form view is not a true dialog box.
+</LI>
+
+	<LI>Create a view class.
+<P>With your dialog template open, run ClassWizard and choose <B>CFormView</B> as the class type when you are filling in the <B>Add Class</B> dialog box. ClassWizard creates a <B>CFormView</B>-derived class and connects it to the dialog template you just designed. This connection is established in the constructor for your class; ClassWizard generates a call to the base-class constructor, <B>CFormView::CFormView</B>, and passes the resource ID of your dialog template. For example:
+
+<PRE>CMyFormView::CMyFormView()
+    : CFormView( CMyFormView::IDD )
+{
+    //{{AFX_DATA_INIT( CMyFormView )
+    // NOTE: the ClassWizard will add member
+    // initialization here
+    //}}AFX_DATA_INIT
+
+    // Other construction code, such as data initialization
+}</PRE>
+
+<P>If you choose not to use ClassWizard, you must define the appropriate ID you supply to the <B>CFormView</B> constructor (that is, <B>CMyFormView::IDD</B> is not predefined). ClassWizard declares <CODE>IDD</CODE> as an <B>enum</B> value in the class it creates for you.
+
+<P>If you want to define member variables in your view class that correspond to the controls in your form view, use the <B>Add Variables</B> button on the <B>Member Variables</B> tab of the ClassWizard. This allows you to use the dialog data exchange (DDX) mechanism. If you want to define message handlers for control-notification messages, use the <B>Add Function</B> button on the <B>Message Maps</B> tab of the ClassWizard.
+</LI>
+
+	<LI>Override the <B>OnUpdate</B> member function.
+<P>The <B>OnUpdate</B> member function is defined by <B>CView</B> and is called to update the form view’s appearance. Override this function to update the member variables in your view class with the appropriate values from the current document. Then, if you are using DDX, use the <B>UpdateData</B> member function (defined by <B>CWnd</B>) with an argument of <B>FALSE</B> to update the controls in your form view.
+
+<P>The <B>OnInitialUpdate</B> member function (also defined by <B>CView</B>) is called to perform one-time initialization of the view. <B>CFormView</B> overrides this function to use DDX to set the initial values of the controls you have mapped using ClassWizard. Override <B>OnInitialUpdate</B> if you want to perform custom initialization.
+</LI>
+
+	<LI>Implement a member function to move data from your view to your document.
+<P>This member function is typically a message handler for a control-notification message or for a menu command. If you are using DDX, call the <B>UpdateData</B> member function to update the member variables in your view class. Then move their values to the document associated with the form view.
+</LI>
+
+	<LI>Override the <B>OnPrint</B> member function (optional).
+<P>The <B>OnPrint</B> member function is defined by <B>CView</B> and prints the view. By default, printing and print preview are not supported by the <B>CFormView</B> class. To add printing support, override the <B>OnPrint</B> function in your derived class.
+</LI>
+
+	<LI>Associate your view class with a document class and a frame-window class using a document template. </LI>
+</OL>
+
+<P>Unlike ordinary views, form views do not require you to override the <B>OnDraw</B> member function defined by <B>CView</B>. This is because controls are able to paint themselves. Only if you want to customize the display of your form view (for example, to provide a background for your view) should you override <B>OnDraw</B>. If you do so, be careful that your updating does not conflict with the updating done by the controls.</P>
+
+<P>Form views support scrolling, as needed, using functionality provided by <B>CScrollView</B>. If your view contains controls that are derived from (or instances of) <B>CSliderCtrl</B> or <B>CSpinButtonCtrl</B> and you have message handlers for WM_HSCROLL and WM_VSCROLL, you should write code that calls the proper routines. The code example below calls <B>CWnd::OnHScroll</B> if a WM_HSCROLL message is sent by either a spin button or slider control.</P>
+
+<PRE>void CMyFormView::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
+{
+    if ( pScrollBar-&gt;IsKindOf( RUNTIME_CLASS( CScrollBar ) ))
+    {
+        CFormView::OnHScroll( nSBCode, nPos, pScrollBar );
+    }
+    else if ( pScrollBar-&gt;IsKindOf( RUNTIME_CLASS( CSliderCtrl ) ))
+    {
+        CWnd::OnHScroll( nSBCode, nPos, pScrollBar );
+    }
+    else if ( pScrollBar-&gt;IsKindOf( RUNTIME_CLASS( CSpinButtonCtrl ) ))
+    {
+        CWnd::OnHScroll( nSBCode, nPos, pScrollBar );
+    }
+}
+</PRE>
+
+<P>If the view becomes smaller than the dialog template, scroll bars appear automatically. Views derived from <B>CFormView</B> support only the <B>MM_TEXT</B> mapping mode.</P>
+
+<P>If you are not using DDX, use the <B>CWnd</B> dialog functions to move data between the member variables in your view class and the controls in your form view.</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

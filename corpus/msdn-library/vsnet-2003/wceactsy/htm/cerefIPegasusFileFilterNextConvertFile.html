@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPegasusFileFilter::NextConvertFile</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IPegasusFileFilter::NextConvertFile"/>
+<MSHelp:RLTitle Title="IPegasusFileFilter::NextConvertFile"/>
+<MSHelp:Keyword Index="A" Term="cerefIPegasusFileFilterNextConvertFile"/>
+<MSHelp:Keyword Index="K" Term="IPegasusFileFilter, NextConvertFile"/>
+<MSHelp:Keyword Index="A" Term="cerefIPegasusFileFilterNextConvertFile"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: actsyncref.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_755269">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefipegasusfilefilternextconvertfile"></A>IPegasusFileFilter::NextConvertFile</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Pocket Internet Explorer calls this<B> </B>method when the user selects a conversion type from the Pocket Internet Explorer conversion selection dialog box.</P>
+
+<PRE class="syntax"><B>STDMETHODIMP IPegasusFileFilter::NextConvertFile(</B>
+<B>int</B> <I>nConversion</I><B>,</B>
+<B>PFF_CONVERTINFO</B> <B>*</B><I>pci</I><B>,</B>
+<B>PFF_SOURCEFILE</B> <B>*</B><I>psf</I><B>,</B>
+<B>PFF_DESTINATIONFILE</B> <B>*</B><I>pdf</I><B>,</B>
+<B>volatile BOOL</B> <B>*</B><I>pbCancel</I><B>,</B>
+<B>PR_ERROR</B> <B>*</B><I>perr</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nConversion</I></DT>
+
+<DD>Counter for converting a single source file into multiple destination files. This parameter is zero the first time <B>NextConvertFile</B> is called and is incremented for each successive call. A simple filter should return HRESULT_FROM_WIN32<B>(</B>ERROR_NO_MORE_ITEMS<B>)</B> if this parameter is not zero.</dd>
+
+<DT><I>pci</I></DT>
+
+<DD>[in] Pointer to a <A HREF="cerefpff_convertinfo.htm">PFF_CONVERTINFO</A> structure that contains a pointer to an <B>IPegasusFileFilterSite</B> object. A file filter uses this interface to create an <MSHelp:link keywords="cerefIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link> or <MSHelp:link keywords="cerefIStorageIUnknown" TABINDEX="0">IStorage</MSHelp:link> object to read the contents of the source file or to write to the destination file. The type of interface object to create is determined by the <I>nHowToOpen</I> parameter in the <A HREF="cerefipegasusfilefiltersiteopensourcefile.htm">IPegasusFileFilterSite::OpenSourceFile</A> and <A HREF="cerefipegasusfilefiltersiteopendestinationfile.htm">IPegasusFileFilterSite::OpenDestinationFile</A> methods. Any files opened in this way should be closed using the corresponding <A HREF="cerefipegasusfilefiltersiteclosesourcefile.htm">IPegasusFileFilterSite::CloseSourceFile</A> or <A HREF="cerefipegasusfilefiltersiteclosedestinationfile.htm">IPegasusFileFilterSite::CloseDestinationFile</A> method.</dd>
+
+<DT><I>psf</I></DT>
+
+<DD>[in] Pointer to a <MSHelp:link keywords="cerefPFF_SOURCEFILE" TABINDEX="0">PFF_SOURCEFILE</MSHelp:link> structure that contains information about the source file.</dd>
+
+<DT><I>pdf</I></DT>
+
+<DD>[in] Pointer to a <MSHelp:link keywords="cerefPFF_DESTINATIONFILE" TABINDEX="0">PFF_DESTINATIONFILE</MSHelp:link> structure that contains information about the destination file.</dd>
+
+<DT><I>pbCancel</I></DT>
+
+<DD>Pointer to a Boolean value that is set TRUE if the user cancels the file conversion before it is completed, or FALSE otherwise. Because this variable is updated asynchronously by another thread, its contents can change at any time. A file filter must check this variable regularly during the conversion process, and return ERROR_CANCELLED (after cleaning up) if it is ever set TRUE.</dd>
+
+<DT><I>perr</I></DT>
+
+<DD>Pointer to a filter-defined error value that can be passed by the Pocket Internet Explorer application to the <A HREF="cerefipegasusfilefilterformatmessage.htm">IPegasusFileFilter::FormatMessage</A> method. This error value is ignored unless the return value from <B>NextConvertFile</B> is E_FAIL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>NOERROR</TD>
+<TD width=67%>Subconversion successful. Proceed to next subconversion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>HRESULT_FROM_WIN32 (ERROR_CANCELLED)</TD>
+<TD width=67%>The user canceled the conversion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>HRESULT_FROM_WIN32 (ERROR_NO_MORE_ITEMS)</TD>
+<TD width=67%>The conversion, or last subconversion, was successful. End calls to <B>IPegasusFileFilter::NextConvertFile</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>E_FAIL</TD>
+<TD width=67%>The <I>perr</I> parameter contained an error value that should be passed to <B>IPegasusFileFilter::FormatMessage</B>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Pocket Internet Explorer calls <B>NextConvertFile</B> repeatedly, incrementing the <I>nConversion</I> parameter, until the return value is ERROR_NO_MORE_ITEMS. A simple filter should return NOERROR the first time this method is called, and thereafter return HRESULT_FROM_WIN32(ERROR_NO_MORE_ITEMS<B>)</B>. Alternatively, a file filter can return E_FAIL and specify a filter-defined error code in the variable pointed to by <I>perr</I>.</P>
+
+<P>As a file conversion progresses, a file filter should periodically call <A HREF="cerefipegasusfilefiltersitereportprogress.htm">IPegasusFileFilterSite::ReportProgress</A> to report its progress. Pocket Internet Explorer uses the progress information to update a progress bar that shows the user how much of the conversion is complete.</P>
+
+<P>If any important data is intentionally discarded by a file filter during the conversion process, the filter should call <A HREF="cerefipegasusfilefiltersitereportloss.htm">IPegasusFileFilterSite::ReportLoss</A> to report the loss. When calling this <B>ReportLoss</B>, the filter specifies a message that explains the data loss, and Pocket Internet Explorer formats and displays the message in a message box when the file conversion has completed.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Replfilt.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefIStorageIUnknown" TABINDEX="0">IStorage</MSHelp:link>, <MSHelp:link keywords="cerefIStreamIUnknown" TABINDEX="0">IStream</MSHelp:link>, <A HREF="cerefipegasusfilefilterformatmessage.htm">IPegasusFileFilter::FormatMessage</A>, <A HREF="cerefipegasusfilefiltersiteclosedestinationfile.htm">IPegasusFileFilterSite::CloseDestinationFile</A>, <A HREF="cerefipegasusfilefiltersiteclosesourcefile.htm">IPegasusFileFilterSite::CloseSourceFile</A>, <A HREF="cerefipegasusfilefiltersiteopendestinationfile.htm">IPegasusFileFilterSite::OpenDestinationFile</A>, <A HREF="cerefipegasusfilefiltersiteopensourcefile.htm">IPegasusFileFilterSite::OpenSourceFile</A>, <A HREF="cerefipegasusfilefiltersitereportloss.htm">IPegasusFileFilterSite::ReportLoss</A>, <A HREF="cerefipegasusfilefiltersitereportprogress.htm">IPegasusFileFilterSite::ReportProgress</A>, <A HREF="cerefpff_convertinfo.htm">PFF_CONVERTINFO</A>, <MSHelp:link keywords="cerefPFF_DESTINATIONFILE" TABINDEX="0">PFF_DESTINATIONFILE</MSHelp:link>, <MSHelp:link keywords="cerefPFF_SOURCEFILE" TABINDEX="0">PFF_SOURCEFILE</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IPegasusFileFilter::NextConvertFile&nbsp;(cerefipegasusfilefilternextconvertfile.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

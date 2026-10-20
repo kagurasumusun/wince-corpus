@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DDGPE::AllocSurface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DDGPE::AllocSurface"/>
+<MSHelp:RLTitle Title="DDGPE::AllocSurface"/>
+<MSHelp:Keyword Index="A" Term="_dxce_allocsurface_ddhal"/>
+<MSHelp:Keyword Index="K" Term="DDGPE, AllocSurface"/>
+<MSHelp:Keyword Index="A" Term="_dxce_allocsurface_ddhal"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ddraw_reference2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_681526">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_allocsurface_ddhal"></A>DDGPE::AllocSurface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The DDGPE <B>AllocSurface</B> routines are extensions to its counterpart, the <A HREF="_wceddk_gpe_allocsurface.htm">GPE::AllocSurface</A> method. With the addition of the <I>pixelFormat</I> parameter or the <I>pddgpeAllocSurfaceData</I>, your driver can allocate many different types of surfaces, instead of being restricted to the limited number of <B>GPE</B> surface types.</P>
+
+<PRE class="syntax"><B>// Surface memory allocation
+virtual SCODE AllocSurface(</B>
+<B>DDGPESurf   **</B><I>ppSurf</I><B>,</B>
+<B>int</B>    <I>width</I><B>,</B>
+<B>int</B>    <I>height</I><B>,</B>
+<B>EGPEFormat</B>   <I>format</I><B>,</B>
+<B>EDDGPEPixelFormat</B>   <I>pixelFormat</I><B>,</B>
+<B>int</B>    <I>surfaceFlags</I>
+<B>);</B>
+
+<B>virtual SCODE AllocSurface(</B>
+<B>DDGPESurf   **</B><I>ppSurf</I><B>,</B>
+<B>DDGPEAllocSurfaceData   *</B><I>pddgpeAllocSurfaceData</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppSurf</I></DT>
+
+<DD>Contains a pointer to a new <B>DDGPESurf</B> object.</dd>
+
+<DT><I>width</I></DT>
+
+<DD>The desired width of the surface.</dd>
+
+<DT><I>height</I></DT>
+
+<DD>The desired height of the surface.</dd>
+
+<DT><I>format</I></DT>
+
+<DD>The desired format of the surface.</dd>
+
+<DT><I>pixelFormat</I></DT>
+
+<DD>The desired pixel format of the surface.</dd>
+
+<DT><I>surfaceFlags</I></DT>
+
+<DD>GPE surface flags for the surface.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Flag</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>GPE_REQUIRE_VIDEO_MEMORY</TD>
+<TD width=60%>Surface memory must be allocated in video memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>GPE_PREFER_VIDEO_MEMORY</TD>
+<TD width=60%>Surface memory should be allocated in video memory if possible, but can be allocated in system memory, if necessary.</TD>
+</TR>
+</table></div>
+
+
+
+<P>If no flags are set, for example, surfaceFlags is set to zero (0)), the surface will be allocated in system memory.
+</dd>
+
+<DT><I>pddgpeAllocSurfaceData</I></DT>
+
+<DD>See <A HREF="_dxce_ddgpeallocsurfacedata_ddhal.htm">DDGPEAllocSurfaceData</A>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is S_OK if the function is successful. Otherwise an error code is returned.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Your driver should override the first <B>DDGPE</B> <B>AllocSurface</B> function below to perform the necessary allocation. Otherwise, the function merely wraps to the standard <B>GPE</B> <B>AllocSurface</B>, that you must define in your driver. In this case, the pixelFormat information is ignored. The default implementation of the second <B>DDGPE</B> <B>AllocSurface</B> routine below just calls the first one, ignoring the information you might have in <B>DDGPEStandardHeader</B>. Your driver needs to override it in case you want to take advantage of <B>DDGPEStandardHeader</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>2.12 and later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=20%>Ddgpe.h</TD>
+<TD width=20%>Ddgpe.h</TD>
+<TD width=20%>Ddgpe.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_gpe_allocsurface.htm">GPE::AllocSurface</A>, <A HREF="_dxce_ddgpeallocsurfacedata_ddhal.htm">DDGPEAllocSurfaceData</A>, <A HREF="_dxce_ddgpe_class_ddhal.htm">DDGPE Class</A>, <A HREF="_dxce_ddgpe_class_definition_ddhal.htm">DDGPE Class Definition</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DDGPE::AllocSurface&nbsp;(_dxce_allocsurface_ddhal.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

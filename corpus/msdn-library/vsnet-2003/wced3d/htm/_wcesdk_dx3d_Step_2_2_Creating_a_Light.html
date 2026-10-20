@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 2.2: Creating a Light</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 2.2: Creating a Light"/>
+<MSHelp:RLTitle Title="Step 2.2: Creating a Light"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Step_2_2_Creating_a_Light"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: dx3d_concepts6_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680295">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_step_2_2_creating_a_light"></A>Step 2.2: Creating a Light</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>There are two types of lights available in Microsoft&reg; Direct3D&reg;: point lights and directional lights. The sample code creates a directional light, which is a light that goes in one direction, and it oscillates the direction of the light.</P>
+
+<P>The following code fragment uses the <MSHelp:link keywords="_wcesdk_dx3d_D3DLIGHT8" TABINDEX="0">D3DLIGHT8</MSHelp:link> structure to create a directional light.</P>
+
+<PRE class="code">D3DXVECTOR3 vecDir;
+D3DLIGHT8 light;
+ZeroMemory( &amp;light, sizeof(D3DLIGHT8) );
+light.Type       = D3DLIGHT_DIRECTIONAL;</PRE>
+
+<P>The following code fragment sets the diffuse color for this light to white.</P>
+
+<PRE class="code">light.Diffuse.r  = 1.0f;
+light.Diffuse.g  = 1.0f;
+light.Diffuse.b  = 1.0f;</PRE>
+
+<P>The following code fragment rotates the direction of the light around in a circle.</P>
+
+<PRE class="code">vecDir = D3DXVECTOR3(cosf(timeGetTime()/360.0f),
+                     0.0f,
+                     sinf(timeGetTime()/360.0f) );
+D3DXVec3Normalize( (D3DXVECTOR3*)&amp;light.Direction, &amp;vecDir );</PRE>
+
+<P>The call to <MSHelp:link keywords="_wcesdk_dx3d_D3DXVec3Normalize" TABINDEX="0">D3DXVec3Normalize</MSHelp:link> normalizes the direction vector used to determine the direction of the light.</P>
+
+<P>A range can be specified to tell Direct3D how far the light will have an effect. This member does not affect directional lights. The following code fragment assigns a range of 1000 units to this light.</P>
+
+<PRE class="code">light.Range       = 1000.0f;</PRE>
+
+<P>The following code fragment assigns the light to the Direct3D device by calling <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__SetLight" TABINDEX="0">IDirect3DDevice8::SetLight</MSHelp:link>.</P>
+
+<PRE class="code">g_pd3dDevice-&gt;SetLight( 0, &amp;light );</PRE>
+
+<P>The first parameter that <B>SetLight</B> accepts is the index that this light will be assigned to. Note that if a light already exists at that location, it will be overwritten by the new light. The second parameter is a pointer to the light structure that defines the light. The Lights sample project places this light at index 0.</P>
+
+<P>The following code fragment enables the light by calling <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__LightEnable" TABINDEX="0">IDirect3DDevice8::LightEnable</MSHelp:link>.</P>
+
+<PRE class="code">g_pd3dDevice-&gt;LightEnable( 0, TRUE);</PRE>
+
+<P>The first parameter that <B>LightEnable</B> accepts is the index of the light to enable. The second parameter is a Boolean value that tells whether to turn the light on (TRUE) or off (FALSE). In the sample code above, the light at index 0 is turned on.</P>
+
+<P>The following code fragment tells Direct3D to render lights by calling <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__SetRenderState" TABINDEX="0">IDirect3DDevice8::SetRenderState</MSHelp:link>.</P>
+
+<PRE class="code">g_pd3dDevice-&gt;SetRenderState( D3DRS_LIGHTING, TRUE );</PRE>
+
+<P>The first two parameters that <B>SetRenderState</B> accepts is which device state variable to modify and what value to set it to. This code sample sets the D3DRS_LIGHTING device variable to TRUE, which has the effect of enabling the rendering of lights.</P>
+
+<P>The final step in this code sample is to turn on ambient lighting by again calling <B>SetRenderState</B>.</P>
+
+<PRE class="code">g_pd3dDevice-&gt;SetRenderState( D3DRS_AMBIENT, 0x00202020 );</PRE>
+
+<P>The preceding code fragment sets the D3DRS_AMBIENT device variable to a light gray color (0x00202020). Ambient lighting will light up all objects by the given color.</P>
+
+<P>For more information on lighting, see <A HREF="_wcesdk_dx3d_mathematics_of_direct3d_lighting.htm">Mathematics of Direct3D Lighting</A>.</P>
+
+<P>This tutorial has shown you how to use lights and materials. <A HREF="_wcesdk_dx3d_tutorial_5_using_texture_maps.htm">Tutorial 5: Using Texture Maps</A> shows you how to add texture to surfaces.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%202.2:%20Creating%20a%20Light&nbsp;(_wcesdk_dx3d_step_2_2_creating_a_light.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

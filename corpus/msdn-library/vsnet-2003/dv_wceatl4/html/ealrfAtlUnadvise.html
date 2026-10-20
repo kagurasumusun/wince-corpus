@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AtlUnadvise</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AtlUnadvise"/>
+<MSHelp:RLTitle Title="AtlUnadvise"/>
+<MSHelp:Keyword Index="A" Term="ealrfAtlUnadvise"/>
+<MSHelp:Keyword Index="K" Term="AtlUnadvise function"/>
+<MSHelp:Keyword Index="A" Term="ealrfAtlUnadvise"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="atlapi.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_705808">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfatlunadvise"></A>AtlUnadvise</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This global function terminates the connection established through <B>AtlAdvise</B>.</P>
+
+<PRE class="syntax"><B>ATLAPI AtlUnadvise( 
+IUnknown* </B><I>pUnkCP</I><B>, 
+const IID&amp; </B><I>iid</I><B>, 
+DWORD </B><I>dw</I><B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pUnkCP</I></DT>
+
+<DD>[in] A pointer to the <B>IUnknown</B> of the object that the client is connected with.</dd>
+
+<DT><I>iid</I></DT>
+
+<DD>[in] The GUID of the connection point. Typically, this is the same as the outgoing interface managed by the connection point.</dd>
+
+<DT><I>dw</I></DT>
+
+<DD>[in] The cookie that uniquely identifies the connection.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>A standard <B>HRESULT</B> value. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">LPUNKNOWN m_pSourceUnk;
+LPUNKNOWN m_pSinkUnk;
+DWORD m_dwCustCookie;
+
+// create source object
+HRESULT hr = CoCreateInstance (CLSID_MyComponent, NULL, CLSCTX_ALL, 
+      IID_IUnknown, (LPVOID*)&amp;m_pSourceUnk);
+_ASSERT (SUCCEEDED (hr));
+
+// Create sink object.  CMySink is a CComObjectRootEx-derived class 
+// that implements the event interface methods.
+CComObject&lt;CMySink&gt; *pSinkClass;
+CComObject&lt;CMySink&gt;::CreateInstance (&amp;pSinkClass);
+hr = pSinkClass-&gt;QueryInterface (IID_IUnknown, (LPVOID*)&amp;m_pSinkUnk);
+_ASSERT (SUCCEEDED (hr));
+
+hr = AtlAdvise (m_pSourceUnk, m_pSinkUnk, IID__IMyEvent, &amp;m_dwCustCookie);
+_ASSERT (SUCCEEDED (hr));
+
+// Do something
+
+HRESULT hr = AtlUnadvise (m_pSourceUnk, IID__IMyEvent, m_dwCustCookie);
+_ASSERT (SUCCEEDED (hr));</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlbase.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfatladvise.htm"><B>AtlAdvise</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_705808', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

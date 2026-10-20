@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows Networking API/Redirector Security</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows Networking API/Redirector Security"/>
+<MSHelp:RLTitle Title="Windows Networking API/Redirector Security"/>
+<MSHelp:Keyword Index="A" Term="ceconWindowsNetworkingAPIRedirectorSecurity"/>
+<MSHelp:Keyword Index="K" Term="redirector, security"/>
+<MSHelp:Keyword Index="K" Term="security, redirector"/>
+<MSHelp:Keyword Index="K" Term="security, WNet redirector"/>
+<MSHelp:Keyword Index="K" Term="WNet, security"/>
+<MSHelp:Keyword Index="A" Term="ceconWindowsNetworkingAPIRedirectorSecurity"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: winnet_security.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_816714">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconwindowsnetworkingapiredirectorsecurity"></A>Windows Networking API/Redirector Security</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The redirector is a system-supplied (network) file system driver that provides access to files on remote computers. Applications can use Windows networking functions to establish and terminate network connections and to retrieve current configuration data for the Microsoft Network. Windows CE provides applications that allow the user to directly connect to, and retrieve data from, remote file shares. </P>
+
+<P>For more information about the Redirector, see <A HREF="_wcecomm_windows_networking.htm">Windows Networking API/Redirector</A>. </P>
+
+<P>Because the Server Message Block (SMB) is susceptible to hacker attacks, and data is transmitted in readable form, the Redirector feature poses some security risks. However, you can use some techniques to lower the risk to both your client and your server.</P>
+
+<H2 class="dtH2">Best Practices</H2>
+
+<P class="label"><B>Use credentials</B></P>
+
+<P>You can protect redirector shares with credentials, such as restrictions that allow only certain users to connect. </P>
+
+<P>When using credentials, keep in mind that credential caching works the following way in the Windows CE redirector:</P>
+
+<P>When the Windows CE redirector first connects to a server, it authenticates using the credentials supplied by the user or an application (if the <A HREF="_wcesdk_win32_wnetaddconnection3.htm">WNetAddConnection3</A> function is being called). The session established is kept connected for a period of time, during which other applications may access files over this connection, with the same level of access as the original logon. Once all files open on the server have been closed, the redirector will shut down the session to the server, requiring subsequent accesses to reauthenticate. The period of time between when the last file is closed and the OS shuts down the session is controlled by the <B>ResourceExpiryInt</B> registry setting. For more information, see <A HREF="coconredirectorregistrykeys.htm">Redirector Registry Settings</A>.</P>
+
+<P>An application may use the <A HREF="_wcesdk_win32_wnetenumresource.htm">WNetEnumResource</A> and <A HREF="_wcesdk_win32_wnetcancelconnection2.htm">WNetCancelConnection2</A> functions to force all files that are open on a particular server to be closed. This may be a good practice if an application needs to support switching users, so that a user cannot leverage connections established by earlier users.</P>
+
+<H2 class="dtH2">Default Registry Settings</H2>
+
+<P>You should be aware of the registry settings that impact security. In the registry settings documentation you will find a <B>Security Note</B> for those values with security implications.</P>
+
+<P>For Redirector registry information, see <A HREF="coconredirectorregistrykeys.htm">Redirector Registry Settings</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Windows%20Networking%20API%2FRedirector%20Security&nbsp;(ceconwindowsnetworkingapiredirectorsecurity.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

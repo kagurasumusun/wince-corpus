@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisReturnPackets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisReturnPackets"/>
+<MSHelp:RLTitle Title="NdisReturnPackets"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisReturnPackets"/>
+<MSHelp:Keyword Index="K" Term="NdisReturnPackets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673343">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndisreturnpackets"></A>NdisReturnPackets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function releases ownership of one or more packets after a protocol has consumed the received data.</P>
+
+<PRE class="syntax"><B>VOID NdisReturnPackets(</B>
+<B>PNDIS_PACKET</B> <B>*</B><I>PacketsToReturn</I><B>,</B>
+<B>UINT</B> <I>NumberOfPackets</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>PacketsToReturn</I></DT>
+
+<DD>[in] Pointer to an array of pointers to packet descriptors to be returned to the underlying driver that allocated them for a receive indication.</dd>
+
+<DT><I>NumberOfPackets</I></DT>
+
+<DD>[in] Specifies the number of pointers in the array.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An NDIS intermediate driver should call <B>NdisReturnPacket</B> as soon as possible after its <A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A> function has returned control. Otherwise, both the underlying driver that supports multipacket receive indications and the bound protocol driver that processes them suffer a performance degradation.</P>
+
+<P>When an underlying NIC driver runs low on available packet pool for receive indications or its NIC runs low on empty receive buffers, the miniport can force the NDIS library to call every bound protocol driver's <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function, each time with a single packet descriptor, until the miniport has regained ownership of its packet descriptors and the NIC has receive buffers available for incoming net packets. A <B>ProtocolReceive</B> function cannot begin post-processing a packet of received data and forwarding the processed data to clients until the driver's <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> function is called.</P>
+
+<P>For a packet descriptor passed in to its <B>ProtocolReceivePacket</B> function, a highest-level protocol driver can process its copy of received data and forward the processed data to clients immediately because the protocol can control how long it retains ownership of the resources allocated by the indicating driver. Assuming a highest-level protocol driver does not manipulate the data that it indicates to its clients, the protocol can even set up the range of data within the receive buffer of interest to its client, and make a receive indication to its clients by forwarding the input packet descriptor to those clients.</P>
+
+<P>If an intermediate protocol driver's <B>ProtocolReceivePacket</B> function returns a nonzero reference count to an input packet descriptor, that driver must call <B>NdisReturnPackets</B> one or more times. After <B>ProtocolReceivePacket</B> calls <B>NdisReturnPackets</B> with a particular packet descriptor the number of times indicated in the reference count, the NDIS library returns the packet descriptor to the driver that made the indication. </P>
+
+<P>A protocol driver can rely on NDIS to manage the reference count for every receive packet passed to <B>ProtocolReceivePacket</B>. When the reference count for a packet descriptor originally set to the return from <B>ProtocolReceivePacket</B> resets to 0, the NDIS library calls the indicating driver's <A HREF="cxrefminiportreturnpacket.htm">MiniportReturnPacket</A> function with the released packet descriptor.</P>
+
+<P><B>NdisReturnPackets</B> cannot be called from <B>ProtocolReceivePacket</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="_wceddk_ndisfreepacket.htm">NdisFreePacket</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="cxrefminiportreturnpacket.htm">MiniportReturnPacket</A>, <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A>, <A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisReturnPackets&nbsp;(_wceddk_ndisreturnpackets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

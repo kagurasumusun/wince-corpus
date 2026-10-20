@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO"/>
+<MSHelp:RLTitle Title="NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO"/>
+<MSHelp:Keyword Index="K" Term="NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_macros.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_689079">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndis_get_packet_media_specific_info"></A>NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This macro returns the <A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A> pointer and the <I>SizeMediaSpecificInfo</I> value from the out-of-band data block associated with a given packet descriptor.</P>
+
+<PRE class="syntax"><B>VOID NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO(</B>
+<B>PNDIS_PACKET</B> <I>_Packet</I><B>,</B>
+<B>PPVOID</B> <I>_pMediaSpecificInfo</I><B>,</B>
+<B>PUINT</B> <I>_pSizeMediaSpecificInfo</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>_Packet</I></DT>
+
+<DD>Points to a packet descriptor.</dd>
+
+<DT><I>_pMediaSpecificInfo</I></DT>
+
+<DD>Points to a caller supplied variable that this macro sets to the <B>MediaSpecificInformation</B> pointer. The returned address gives the caller access to any buffered out-of-band information, such as packet priority, associated with the specified net packet indicated or to be transmitted.</dd>
+
+<DT><I>_pSizeMediaSpecificInfo</I></DT>
+
+<DD>Points to a caller-supplied variable that this macro sets to the <I>SizeMediaSpecificInfo </I>value, which specifies the size in bytes of the buffer at <B>MediaSpecificInformation</B>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO</B> returns a NULL pointer at <I>pMediaSpecificInfo</I> and 0 at <I>pSizeMediaSpecificInfo</I> if there is no media-specific information in the <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A> block associated with the given packet descriptor.</P>
+
+<P>Depending on the medium, a NIC miniport might set these members with <A HREF="_wceddk_ndis_set_packet_media_specific_info.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A> in the out-of-band data blocks associated with the packet descriptors it allocates for receive indications.</P>
+
+<P>Depending on the medium of the underlying driver to which it is bound, a protocol might set <B>MediaSpecificInformation</B> and <B>SizeMediaSpecificInfo</B> in the out-of-band blocks associated with the packet descriptors it allocates for sends.</P>
+
+<P>In either case, while a higher-level protocol is consuming a receive indication or a lower-level miniport is processing a send, that driver must have exclusive access to the buffer at <B>MediaSpecificInformation</B>. This restriction implies the following:
+
+<UL type="disc">
+	<LI>A miniport cannot access the buffer it set up with media-specific information when <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> returns control if NDIS_STATUS_PENDING is set in the <B>Status</B> member of the associated out-of-band block. The driver can use <A HREF="_wceddk_ndis_get_packet_status.htm">NDIS_GET_PACKET_STATUS</A> to determine whether each packet in the packet array it just indicated has this status set or has been returned with NDIS_STATUS_SUCCESS.</li>
+
+	<LI>A protocol driver cannot access the media-specific information buffer it set up for a send, nor anything else in the out-of-band data block associated with a packet descriptor it passes to <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A> or <A HREF="_wceddk_ndissend.htm">NdisSend</A>, until the packet descriptor is returned to its <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A> function.
+<P>Because NDIS queues send packets and resubmits them if the <A HREF="cxrefminiportsend.htm">MiniportSend</A> function returns NDIS_STATUS_RESOURCES or if the <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A> function sets NDIS_STATUS_RESOURCES for the <B>Status</B> of a packet in a submitted array, the final status of each packet in a send array is volatile until that packet has been returned to <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A>.
+</li>
+</UL>
+
+<P>A protocol driver can call <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> followed by <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A> to obtain this information from the <B>NDIS_PACKET_OOB_DATA</B> block associated with a packet descriptor when its <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function is given an indication. However, these calls are superfluous if the protocol is bound to an underlying driver that does not supply out-of-band information with its indications.</P>
+
+<P>The <B>NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO</B> macro is defined as follows.</P>
+
+<PRE class="code">#define NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO(_Packet,                    \
+                                            _pMediaSpecificInfo,        \
+                                            _pSizeMediaSpecificInfo)    \
+{                                                                       \
+    if (!((_Packet)-&gt;Private.NdisPacketFlags &amp; fPACKET_ALLOCATED_BY_NDIS) ||\
+        !((_Packet)-&gt;Private.NdisPacketFlags &amp; fPACKET_CONTAINS_MEDIA_SPECIFIC_INFO))\
+    {                                                                   \
+        *(_pMediaSpecificInfo) = NULL;                                  \
+        *(_pSizeMediaSpecificInfo) = 0;                                 \
+    }                                                                   \
+    else                                                                \
+    {                                                                   \
+        *(_pMediaSpecificInfo) =((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) +\
+                    (_Packet)-&gt;Private.NdisPacketOobOffset))-&gt;MediaSpecificInformation;\
+        *(_pSizeMediaSpecificInfo) = ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) +\
+                    (_Packet)-&gt;Private.NdisPacketOobOffset))-&gt;SizeMediaSpecificInfo;\
+    }                                                                   \
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_mediaspecificinformation.htm">MediaSpecificInformation</A>, <A HREF="cxrefminiporthandleinterrupt.htm">MiniportHandleInterrupt</A>, <A HREF="cxrefminiportsend.htm">MiniportSend</A>, <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A>, <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A>, <A HREF="_wceddk_ndis_get_packet_status.htm">NDIS_GET_PACKET_STATUS</A>, <A HREF="_wceddk_ndis_oob_data_from_packet.htm">NDIS_OOB_DATA_FROM_PACKET</A>, <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A>, <A HREF="_wceddk_ndis_set_packet_media_specific_info.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A>, <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A>, <A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A>, <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO&nbsp;(_wceddk_ndis_get_packet_media_specific_info.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

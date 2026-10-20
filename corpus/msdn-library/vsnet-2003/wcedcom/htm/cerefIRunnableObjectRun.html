@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IRunnableObject::Run</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IRunnableObject::Run"/>
+<MSHelp:RLTitle Title="IRunnableObject::Run"/>
+<MSHelp:Keyword Index="A" Term="cerefIRunnableObjectRun"/>
+<MSHelp:Keyword Index="K" Term="IRunnableObject, Run"/>
+<MSHelp:Keyword Index="A" Term="cerefIRunnableObjectRun"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces4.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748062">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefirunnableobjectrun"></A>IRunnableObject::Run</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method runs an object.</P>
+
+<PRE class="syntax"><B>HRESULT Run(</B>
+<B>LPBC </B><I>lpbc</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpbc</I></DT>
+
+<DD>[in] Pointer to the binding context of the run operation. Can be NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method supports the standard return values E_OUTOFMEMORY and E_UNEXPECTED, as well as the following: 
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The object was successfully placed in the running state.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Containers call <B>IRunnableObject::Run</B> to force their objects to enter the running state. If the object is not already running, calling <B>IRunnableObject::Run</B> can be an expensive operation, on the order of many seconds. If the object is already running, then this method has no effect on the object.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Notes to Callers</H4>
+
+<P>When called on a linked object that has been converted to a new class since the link was last activated, <B>IRunnableObject::Run</B> can return OLE_E_CLASSDIFF. In this case, the client should call <B>IOleLink::BindToSource</B>.</P>
+
+<P><A HREF="cerefolerun.htm">OleRun</A> is a helper function that conveniently repackages the functionality offered by <B>IRunnableObject::Run</B>. With the release of OLE 2.01, the implementation of <B>OleRun</B> was changed so that it calls <A HREF="cerefiunknownqueryinterface.htm">QueryInterface</A>, asks for <B>IRunnableObject</B>, and then calls <B>IRunnableObject::Run</B>. In other words, you can use the interface and the helper function interchangeably.</P>
+
+<H4 class="dtH4">Notes to Implementers</H4>
+
+<P>The object should register in the running object table if it has a moniker assigned. The object should not hold any strong locks on itself; instead, it should remain in the unstable, unlocked state. The object should be locked when the first external connection is made to the object.</P>
+
+<P>An embedded object must hold a lock on its embedding container while it is in the running state. The Default handler provided by OLE 2 takes care of locking the embedding container on behalf of objects implemented by an EXE object application. Objects implemented by a DLL object application must explicitly put a lock on their embedding containers, which they do by first calling <A HREF="cerefioleclientsitegetcontainer.htm">IOleClientSite::Getcontainer</A> to get a pointer to the container, then calling <B>IOleContainer::LockContainer</B> to actually place the lock. This lock must be released when <A HREF="cerefioleobjectclose.htm">IOleObject::Close</A> is called.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>Objidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefolerun.htm">OleRun</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IRunnableObject::Run&nbsp;(cerefirunnableobjectrun.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

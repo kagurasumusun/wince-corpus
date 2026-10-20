@@ -1,0 +1,523 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Real-Time Clock</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Real-Time Clock"/>
+<MSHelp:RLTitle Title="Real-Time Clock"/>
+<MSHelp:Keyword Index="A" Term="cmconReal-TimeClock"/>
+<MSHelp:Keyword Index="K" Term="performance - real time, impact of real-time clocks on real-time performance"/>
+<MSHelp:Keyword Index="A" Term="cmconReal-TimeClock"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_perfm.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747397">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconreal-timeclock"></A>Real-Time Clock</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The impact of the real-time clock (RTC) on a real-time environment can vary, according to the hardware and the OEM's implementation. In a standard x86 bus architecture in which the CMOS houses the RTC, the impact can be greater then desired. Because the CMOS resides on the bus, accessing the RTC requires the OEM to access the bus several times. In doing so, the bus can be locked for several microseconds, which blocks it from other activities. This translates into higher latencies for ISRs and longer times to fully service an IRQ. If you are using a system where the RTC can impact the operations in this way, alternatives to using the RTC should be considered. To implement the impact of the CMOS RTC, an OEM can replace the hardware RTC with a software RTC. Replacing the current RTC behavior on the CEPC platform requires the elimination of the calls to the RTC when <MSHelp:link keywords="_wcesdk_win32_GetSystemTime" TABINDEX="0">GetSystemTime</MSHelp:link> is called. To ensure a large drift is not introduced, the RTC can be queried during times when the impact of accessing the RTC will not be felt.</P>
+
+<P>The following code sample shows how the hardware RTC and be replaced with a software RTC.</P>
+
+<PRE class="code">/*++
+THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+PARTICULAR PURPOSE.
+Copyright (c) 1995-2000 Microsoft Corporation.  All rights reserved.
+
+Module Name:  
+
+Abstract:  
+   This file implements the NK kernel interfaces for the real time clock.
+
+Functions:
+
+Notes: 
+
+--*/
+
+#include &lt;windows.h&gt;
+#include &lt;nkintr.h&gt;
+#include "pc.h"
+#include "timer.h"
+
+// NOTE: A problem has been found with some chipsets such that
+// setting the time to 23:59:59 on the 29th or 30th day of a month that
+// has less than 31 days causes the clock to roll over incorrectly.
+// Uncomment the following line to fix this problem. However, be aware 
+// that the fix consists of responding to calls that set the time to 
+// HH:MM:59 by instead setting the time to HH:MM:58.
+// #define HARDWARE_TIME_SET_PROBLEM 1
+
+__int64 RealTimeBias;
+
+unsigned long AlarmTime[2];
+
+SYSTEMTIME RTC_AlarmTime;
+CRITICAL_SECTION RTC_critsect;
+BOOL fRTCInit;
+
+unsigned long volatile CurMSecHigh;
+
+// RTC without CMOS 
+// Global Variables
+//
+BOOL          rtInited = FALSE;
+FILETIME      rtStartFileTime;
+FILETIME      rtDeltaTime;
+FILETIME      rtCurFileTime;
+FILETIME      rtLastFileTime;
+DWORD         rtLastCurMSec;
+extern DWORD  CurMSec;
+
+// Prototypes for RTC without CMOS 
+//
+BOOL    RT_Init_RealTime ( void );
+BOOL    RT_Bare_GetRealTime (LPSYSTEMTIME lpst);
+BOOL    RT_Bare_SetRealTime (LPSYSTEMTIME lpst);
+void    add64_64_64 (const FILETIME *lpnum1, 
+                                     LPFILETIME lpnum2, 
+                                     LPFILETIME lpres);
+
+void CMOS_Write( BYTE offset, BYTE value )
+{
+    BYTE cAddr;
+    
+    // Remember, only the low order 5 bits in the address register are changed
+    cAddr = _inp( CMOS_ADDR );
+    _outp( CMOS_ADDR, (cAddr &amp; RTC_ADDR_MASK) | offset );
+    _outp( CMOS_DATA, value );
+    
+    //
+    // NOTE : If bytes 16-45 are ever updated, the checksum should be 
+    // recalculated and stored. However, because none of those bytes are
+    // currently used, it will not be addressed here.
+    //
+    DEBUGCHK(offset &lt; 16);
+}
+
+BYTE CMOS_Read( BYTE offset )
+{
+    BYTE cAddr, cResult;
+    
+    // Remember, only the low order 5 bits in the address register are changed
+    cAddr = _inp( CMOS_ADDR );
+    _outp( CMOS_ADDR, (cAddr &amp; RTC_ADDR_MASK) | offset );    
+    cResult = _inp( CMOS_DATA );
+    
+    return (cResult);
+}
+
+BOOL IsTimeEqual(LPSYSTEMTIME lpst1, LPSYSTEMTIME lpst2) 
+{
+    if (lpst1-&gt;wYear != lpst2-&gt;wYear)           return(FALSE);
+    if (lpst1-&gt;wMonth != lpst2-&gt;wMonth)         return(FALSE);
+    if (lpst1-&gt;wDayOfWeek != lpst2-&gt;wDayOfWeek) return(FALSE);
+    if (lpst1-&gt;wDay != lpst2-&gt;wDay)             return(FALSE);
+    if (lpst1-&gt;wHour != lpst2-&gt;wHour)           return(FALSE);
+    if (lpst1-&gt;wMinute != lpst2-&gt;wMinute)       return(FALSE);
+    if (lpst1-&gt;wSecond != lpst2-&gt;wSecond)       return(FALSE);
+
+    return (TRUE);
+}
+
+// NOTE : The RTC routines are not thread safe. But the ether debug
+// functions do not want me to change interrupts, and so on. So the
+// Bare_ functions is provided for callers who run with interrupts off, and so on.
+// Then the real functions call into the bare functions after 
+// turning off interrupts.
+BOOL
+Bare_GetRealTime(LPSYSTEMTIME lpst)
+{
+    SYSTEMTIME st;
+    LPSYSTEMTIME lpst1 = &amp;st, lpst2 = lpst, lptmp;
+
+    lpst1-&gt;wSecond = 61; // initialize to an invalid value 
+    lpst2-&gt;wSecond = 62; // initialize to an invalid value 
+
+    do {
+   
+        // exchange lpst1 and lpst2
+       lptmp = lpst1;
+       lpst1 = lpst2;
+       lpst2 = lptmp;
+   
+        // wait until not updating
+       while (CMOS_Read(RTC_STATUS_A) &amp; RTC_SRA_UIP);
+   
+       // Read all the values.
+       lpst1-&gt;wYear = CMOS_Read(RTC_YEAR);
+       lpst1-&gt;wMonth = CMOS_Read(RTC_MONTH); 
+       lpst1-&gt;wDayOfWeek = CMOS_Read(RTC_DO_WEEK);
+       lpst1-&gt;wDay = CMOS_Read(RTC_DO_MONTH);
+       lpst1-&gt;wHour = CMOS_Read(RTC_HOUR); 
+       lpst1-&gt;wMinute = CMOS_Read(RTC_MINUTE); 
+       lpst1-&gt;wSecond = CMOS_Read(RTC_SECOND); 
+   
+    } while (!IsTimeEqual (lpst1, lpst2));
+   
+    lpst-&gt;wMilliseconds = 0; // Not sure how you would get this
+   
+    if (!(CMOS_Read (RTC_STATUS_B) &amp; RTC_SRB_DM)) {
+        // Values returned in BCD.
+       lpst-&gt;wSecond = DECODE_BCD(lpst-&gt;wSecond);
+       lpst-&gt;wMinute = DECODE_BCD(lpst-&gt;wMinute);
+       lpst-&gt;wHour   = DECODE_BCD(lpst-&gt;wHour);
+       lpst-&gt;wDay    = DECODE_BCD(lpst-&gt;wDay);
+       lpst-&gt;wDayOfWeek = DECODE_BCD(lpst-&gt;wDayOfWeek);
+       lpst-&gt;wMonth  = DECODE_BCD(lpst-&gt;wMonth);
+       lpst-&gt;wYear   = DECODE_BCD(lpst-&gt;wYear);
+    }
+   
+    // OK - PC RTC returns 1998 as 98.
+    lpst-&gt;wYear += (lpst-&gt;wYear &gt; 70)? 1900 : 2000;
+   
+#ifdef NOTDEF
+    NKDbgPrintfW(TEXT("\r\nReal Time %d, %d, %d, %d, %d, %d, %d, %d\r\n"),
+                 lpst-&gt;wYear,
+                 lpst-&gt;wMonth,
+                 lpst-&gt;wDayOfWeek,
+                 lpst-&gt;wDay,
+                 lpst-&gt;wHour,
+                 lpst-&gt;wMinute,
+                 lpst-&gt;wSecond,
+                 lpst-&gt;wMilliseconds );
+#endif
+    return (TRUE);
+}
+
+BOOL 
+Bare_SetRealTime(LPSYSTEMTIME lpst)
+{
+    BYTE cStatusRegA, cStatusRegB, Year;
+
+#ifdef NOTDEF
+    NKDbgPrintfW(TEXT("\r\nSet Real Time %d, %d, %d, %d, %d, %d, %d, %d\r\n"),
+                 lpst-&gt;wYear,
+                 lpst-&gt;wMonth,
+                 lpst-&gt;wDayOfWeek,
+                 lpst-&gt;wDay,
+                 lpst-&gt;wHour,
+                 lpst-&gt;wMinute,
+                 lpst-&gt;wSecond,
+                 lpst-&gt;wMilliseconds );
+#endif
+
+    Year = lpst-&gt;wYear % 100;
+
+#ifdef HARDWARE_TIME_SET_PROBLEM
+    if (lpst-&gt;wSecond == 59) {
+       lpst-&gt;wSecond = 58;
+    }
+#endif
+
+    // Read the update in progress bit, wait for it to be clear. This bit 
+    // will be set once per second for about 2us (Undoc. PC, page 897)
+    do {
+        cStatusRegA = CMOS_Read( RTC_STATUS_A);
+    } while ( cStatusRegA &amp; RTC_SRA_UIP );
+
+    // Disable updates while the values are changed
+    cStatusRegB = CMOS_Read( RTC_STATUS_B );
+    cStatusRegB |= RTC_SRB_UPDT;
+    CMOS_Write( RTC_STATUS_B, cStatusRegB );
+
+    if ( !(cStatusRegB &amp; RTC_SRB_DM) ) {
+        // BCD Mode
+        CMOS_Write( RTC_YEAR,     (BYTE)(CREATE_BCD(Year))); 
+        CMOS_Write( RTC_MONTH,    (BYTE)(CREATE_BCD(lpst-&gt;wMonth))); 
+        CMOS_Write( RTC_DO_WEEK,  (BYTE)(CREATE_BCD(lpst-&gt;wDayOfWeek))); 
+        CMOS_Write( RTC_DO_MONTH, (BYTE)(CREATE_BCD(lpst-&gt;wDay))); 
+        CMOS_Write( RTC_HOUR,     (BYTE)(CREATE_BCD(lpst-&gt;wHour))); 
+        CMOS_Write( RTC_MINUTE,   (BYTE)(CREATE_BCD(lpst-&gt;wMinute))); 
+        CMOS_Write( RTC_SECOND,   (BYTE)(CREATE_BCD(lpst-&gt;wSecond))); 
+        // Not sure how you can do lpst-&gt;wMilliseconds;
+    } else {
+        // Binary mode
+        CMOS_Write( RTC_YEAR, (UCHAR)Year); 
+        CMOS_Write( RTC_MONTH, (UCHAR)lpst-&gt;wMonth); 
+        CMOS_Write( RTC_DO_WEEK, (UCHAR)lpst-&gt;wDayOfWeek); 
+        CMOS_Write( RTC_DO_MONTH, (UCHAR)lpst-&gt;wDay); 
+        CMOS_Write( RTC_HOUR, (UCHAR)lpst-&gt;wHour); 
+        CMOS_Write( RTC_MINUTE, (UCHAR)lpst-&gt;wMinute); 
+        CMOS_Write( RTC_SECOND, (UCHAR)lpst-&gt;wSecond); 
+        // Not sure how you can do lpst-&gt;wMilliseconds;
+    }
+
+    // Reenable updates
+    cStatusRegB &amp;= ~RTC_SRB_UPDT;
+    CMOS_Write( RTC_STATUS_B, cStatusRegB );
+
+    return (TRUE);
+}
+
+BOOL Bare_SetAlarmTime(LPSYSTEMTIME lpst)
+{
+
+    BYTE cStatusRegA, cStatusRegB, Year;
+
+#ifdef NOTDEF
+    NKDbgPrintfW(TEXT("\r\nSet Alarm Time %d, %d, %d, %d, %d, %d, %d, 
+%d\r\n"),
+                 lpst-&gt;wYear,
+                 lpst-&gt;wMonth,
+                 lpst-&gt;wDayOfWeek,
+                 lpst-&gt;wDay,
+                 lpst-&gt;wHour,
+                 lpst-&gt;wMinute,
+                 lpst-&gt;wSecond,
+                 lpst-&gt;wMilliseconds );
+#endif
+    
+    // NOTE : Because our alarm only has a 1-day rollover, the full alarm 
+    // time needs to be stored and compared on alarm interrupts to see if 
+    // it is at the correct day.
+    RTC_AlarmTime = *lpst;
+
+    Year = lpst-&gt;wYear % 100;
+
+    // Read the update in progress bit, wait for it to be clear. This bit 
+    // will be set once per second for about 2us (Undoc. PC, page 897)
+    do {
+        cStatusRegA = CMOS_Read( RTC_STATUS_A);
+    } while ( cStatusRegA &amp; RTC_SRA_UIP );
+
+    // Disable updates while the values are changed
+    cStatusRegB = CMOS_Read( RTC_STATUS_B );
+    cStatusRegB |= RTC_SRB_UPDT;
+    CMOS_Write( RTC_STATUS_B, cStatusRegB );
+
+    if ( !(cStatusRegB &amp; RTC_SRB_DM) ) {
+        // BCD Mode
+        CMOS_Write( RTC_ALRM_HOUR,     (BYTE)(CREATE_BCD(lpst-&gt;wHour))); 
+        CMOS_Write( RTC_ALRM_MINUTE,   (BYTE)(CREATE_BCD(lpst-&gt;wMinute))); 
+        CMOS_Write( RTC_ALRM_SECOND,   (BYTE)(CREATE_BCD(lpst-&gt;wSecond))); 
+    } else {
+        // Binary mode
+        CMOS_Write( RTC_ALRM_HOUR, (UCHAR)lpst-&gt;wHour); 
+        CMOS_Write( RTC_ALRM_MINUTE, (UCHAR)lpst-&gt;wMinute); 
+        CMOS_Write( RTC_ALRM_SECOND, (UCHAR)lpst-&gt;wSecond); 
+    }
+
+    // Enable alarm interrupt and reenable updates
+    cStatusRegB = (cStatusRegB | RTC_SRB_AI) &amp; ~RTC_SRB_UPDT;
+    CMOS_Write( RTC_STATUS_B, cStatusRegB );
+
+    return( TRUE );
+}
+
+BOOL OEMGetRealTime(LPSYSTEMTIME lpst)
+{
+    BOOL RetVal;
+
+    if (!fRTCInit) {
+        InitializeCriticalSection(&amp;RTC_critsect);
+        // RTC without CMOS
+        if( !rtInited )RT_Init_RealTime();
+            fRTCInit = TRUE;
+    }
+
+    EnterCriticalSection(&amp;RTC_critsect);
+    if( rtInited ){
+        //RTC without CMOS
+        RetVal = RT_Bare_GetRealTime( lpst );
+    }
+    else {
+        RetVal = Bare_GetRealTime(lpst);
+    }
+    LeaveCriticalSection(&amp;RTC_critsect);
+
+    return RetVal;
+}
+
+BOOL OEMSetRealTime(LPSYSTEMTIME lpst)
+{
+    BOOL RetVal;
+
+    if (!fRTCInit) {
+        InitializeCriticalSection(&amp;RTC_critsect);
+        if( !rtInited )RT_Init_RealTime();
+            fRTCInit = TRUE;
+    }
+
+    EnterCriticalSection(&amp;RTC_critsect);
+    if( rtInited ){
+        RetVal = RT_Bare_SetRealTime(lpst);
+    }
+    else {
+        RetVal = Bare_SetRealTime(lpst);
+    }
+    LeaveCriticalSection(&amp;RTC_critsect);
+    
+    return RetVal;
+}
+
+BOOL OEMSetAlarmTime(LPSYSTEMTIME lpst)
+{
+    BOOL RetVal;
+
+    if (!fRTCInit) {
+        InitializeCriticalSection(&amp;RTC_critsect);
+        fRTCInit = TRUE;
+    }
+
+    EnterCriticalSection(&amp;RTC_critsect);
+    RetVal = Bare_SetAlarmTime(lpst);
+    LeaveCriticalSection(&amp;RTC_critsect);
+    
+    return RetVal;
+}
+
+// The following function attempts to eliminate the dependency on the 
+// CMOS for the clock times. A startup value is taken from the CMOS 
+// with all later times being returned as the Tick Count plus this 
+// initial value. Roll over is accounted for. If the RT system 
+// has not been initialized, the legacy Bare_GetRealTime is called.
+//
+BOOL
+RT_Bare_GetRealTime(LPSYSTEMTIME lpst)
+{
+    DWORD delta;
+
+    // Calculate the current diference
+    //
+    if( CurMSec &gt;= rtLastCurMSec )
+    {
+        delta = CurMSec - rtLastCurMSec;
+    }
+    else
+    {
+        // The counter had to be wrapped
+        delta = CurMSec + (ULONG_MAX - rtLastCurMSec);
+    }
+
+    rtDeltaTime.dwHighDateTime = 0;
+    rtDeltaTime.dwLowDateTime = delta * 10000;
+
+    // Add the delta to the last
+    //
+    add64_64_64(  &amp;rtLastFileTime , &amp; rtDeltaTime, &amp; rtCurFileTime );
+
+    // Add the current time difference in &amp; record the values 
+    //
+    rtLastFileTime.dwLowDateTime = rtCurFileTime.dwLowDateTime;
+    rtLastFileTime.dwHighDateTime = rtCurFileTime.dwHighDateTime;
+    rtLastCurMSec = CurMSec;
+
+    // Get the answer in a system time format
+    //
+    if(KFileTimeToSystemTime( &amp;rtCurFileTime, lpst ) )
+    {
+        return TRUE;
+    }
+    else
+    {
+        // Failed and what time is it?
+        //
+        return FALSE;
+    }
+}
+
+// The following functions Converts the system time to the 
+// rtLastFileTime which stores the last time called.  
+// Zero the MS delta counter by setting the rtLastCurMSec to the CurMSec.
+BOOL
+RT_Bare_SetRealTime(LPSYSTEMTIME lpst)
+{
+    if( KSystemTimeToFileTime(lpst, &amp;rtLastFileTime ) )
+    {
+        rtLastCurMSec = CurMSec;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// The following function initializes the RT area in an attempt to 
+// eliminate the run time dependency of the OS on the CMOS. The X86
+// CMOS is very slow and can take up to 1ms to get the full CMOS clock.
+// This function get the start time from the CMOS and initializes the
+// local variables that the RT functions need.
+//
+BOOL
+RT_Init_RealTime( void )
+{
+    SYSTEMTIME sysTime;
+
+    RETAILMSG(1,(TEXT("\r\n\n******Called RT_Init_GetRealTime\r\n\n")));
+    // Get the curren time and store it
+    //
+    if( !Bare_GetRealTime( &amp;sysTime ))
+    {
+    // Are not able to get the time?
+    return FALSE;
+    }
+
+    // Convert the file time structure
+    //
+    if( !KSystemTimeToFileTime( &amp;sysTime, &amp;rtCurFileTime ) )
+    {
+        return FALSE;
+    }
+
+    // Store Start and Current Versions of the File Time and Large Ints
+    //
+    rtLastCurMSec = (DWORD)CurMSec;
+
+    rtStartFileTime.dwLowDateTime = rtCurFileTime.dwLowDateTime;
+    rtStartFileTime.dwHighDateTime = rtCurFileTime.dwHighDateTime;
+
+    rtLastFileTime.dwLowDateTime = rtCurFileTime.dwLowDateTime;
+    rtLastFileTime.dwHighDateTime = rtCurFileTime.dwHighDateTime;
+    rtInited = TRUE;
+
+    return TRUE;
+}
+
+void add64_64_64(const FILETIME *lpnum1, LPFILETIME lpnum2, 
+                 LPFILETIME, lpres) {
+    __int64 num1, num2;
+    num1 = (((__int64)lpnum1-&gt;dwHighDateTime)&lt;&lt;32)+
+    (__int64)lpnum1-&gt;dwLowDateTime;
+    num2 = (((__int64)lpnum2-&gt;dwHighDateTime)&lt;&lt;32)+
+    (__int64)lpnum2-&gt;dwLowDateTime;
+    num1 += num2;
+    lpres-&gt;dwHighDateTime = (DWORD)(num1&gt;&gt;32);
+    lpres-&gt;dwLowDateTime = (DWORD)(num1&amp;0xffffffff);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconperipheralaccessconsiderationsinreal-time.htm">Peripheral Access Considerations in Real-Time</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Real-Time%20Clock&nbsp;(cmconreal-timeclock.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

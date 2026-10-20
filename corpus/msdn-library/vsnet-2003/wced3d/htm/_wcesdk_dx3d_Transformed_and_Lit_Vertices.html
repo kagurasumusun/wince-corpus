@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Transformed and Lit Vertices</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Transformed and Lit Vertices"/>
+<MSHelp:RLTitle Title="Transformed and Lit Vertices"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Transformed_and_Lit_Vertices"/>
+<MSHelp:Keyword Index="K" Term="vertices%2C Direct3D, transformed and lit"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts3_using.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680477">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_transformed_and_lit_vertices"></A>Transformed and Lit Vertices</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>If you include the D3DFVF_XYZRHW flag in your vertex format description, you are telling the system that your application is using transformed and lit vertices. This means that Microsoft&reg; Direct3D&reg; does not transform your vertices with the world, view, or projection matrices, nor does it perform any lighting calculations. It assumes that your application has taken care of these steps. This fact makes transformed and lit vertices common when porting existing 3-D applications to Direct3D. In short, Direct3D does not modify transformed and lit vertices at all. It passes them directly to the driver to be rasterized.</P>
+
+<P>The vertex format flags associated with untransformed vertices and lighting (D3DFVF_XYZ and D3DFVF_NORMAL) are not allowed if D3DFVF_XYZRHW is present. For more about flag dependencies and exclusions, see the description for each of the <A HREF="_wcesdk_dx3d_flexible_vertex_format_flags.htm">Flexible Vertex Format Flags</A>.</P>
+
+<P>The system requires that the vertex position you specify be already transformed. The x and y values must be in screen coordinates, and z must be the depth value of the pixel to be used in the z-buffer. Z values can range from 0.0 to 1.0, where 0.0 is the closest possible position to the user, and 1.0 is the farthest position still visible within the viewing area. Immediately following the position, transformed and lit vertices must include a reciprocal of homogeneous W (RHW) value. RHW is the reciprocal of the W coordinate from the homogeneous point (x,y,z,w) at which the vertex exists in <I>projection space</I>. This value often works out to be the distance from the eyepoint to the vertex, taken along the z-axis.</P>
+
+<P>Other than the position and RHW requirements, this vertex format is similar to an untransformed and lit vertex. To summarize:
+
+<UL type="disc">
+	<LI>The system does not do any lighting calculations with this format, so it does not need a vertex normal.</li>
+
+	<LI>You can specify a diffuse or specular color. If you do not, the system uses 0x0 for specular color and 0xFFFFFFFF for diffuse color.</li>
+
+	<LI>You can use up to eight sets of texture coordinates, or none at all.</li>
+</UL>
+
+<P>When you define your own vertex format, remember which vertex components your application needs, and make sure they appear in the required order by declaring a properly ordered structure. The following code example declares a valid transformed and lit vertex, with diffuse and specular vertex colors, and one set of texture coordinates.</P>
+
+<PRE class="code">//
+// The vertex format description for this vertex would be
+// (D3DFVF_XYZRHW | D3DFVF_DIFFUSE |  D3DFVF_SPECULAR | D3DFVF_TEX1)
+//
+typedef struct _TRANSLITVERTEX {
+    float x, y;      // screen position    
+    float z;         // Z-buffer depth    
+    float rhw;       // reciprocal homogeneous W    
+    DWORD Diffuse;   // diffuse color    
+    DWORD Specular;  // specular color    
+    float tu1, tv1;  // texture coordinates
+} TRANSLITVERTEX, *LPTRANSLITVERTEX; </PRE>
+
+<P>The vertex description for the preceding structure would be a combination of the D3DFVF_XYZRHW, D3DFVF_DIFFUSE, D3DFVF_SPECULAR, and D3DFVF_TEX1 flexible vertex format flags. </P>
+
+<P>For more information, see <A HREF="_wcesdk_dx3d_about_vertex_formats.htm">About Vertex Formats</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Transformed%20and%20Lit%20Vertices&nbsp;(_wcesdk_dx3d_transformed_and_lit_vertices.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

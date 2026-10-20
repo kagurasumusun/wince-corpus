@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Active and Passive KITL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Active and Passive KITL"/>
+<MSHelp:RLTitle Title="Active and Passive KITL"/>
+<MSHelp:Keyword Index="A" Term="cgconActivePassiveKITL"/>
+<MSHelp:Keyword Index="K" Term="active KITL mode"/>
+<MSHelp:Keyword Index="K" Term="KITL transport, active and passive KITL"/>
+<MSHelp:Keyword Index="K" Term="passive KITL mode"/>
+<MSHelp:Keyword Index="A" Term="cgconActivePassiveKITL"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757299">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconactivepassivekitl"></A>Active and Passive KITL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>KITL contains the following two modes of operation:
+
+<UL type="disc">
+	<LI>Active
+<P>The device boots the OAL, calls <MSHelp:link keywords="cerefKitlInit" TABINDEX="0">KitlInit</MSHelp:link>(TRUE) to initialize KITL, and initializes all default KITL clients like the debugger. The KITL service then calls <MSHelp:link keywords="cerefOEMKitlInit" TABINDEX="0">OEMKitlInit</MSHelp:link> and registers all default clients that are used by the system.
+</li>
+
+	<LI>Passive
+<P>KITL is not automatically started when the device boots. In this mode, KITL initializes itself and the default KITL clients. Call <B>KitlInit</B> (FALSE) to initialize in passive mode. <B>OEMKitlInit</B> is then called when a client registers with the KITL servers like the debugger.
+</li>
+</UL>
+
+<P>You must determine which mode the device should enter on boot. KITL provides a flag called KTS_PASSIVE_MODE that determines which mode is used. You must pass this flag, if used, to the OAL before <B>KitlInit</B> is called. On the CEPC platform, this is done by passing the data through the boot loader in the BootArgs section. To view an example, see %_WINCEROOT%\Platform\Cepc\Kernel\Hal\Halkitl.c.</P>
+
+<P>Active KITL is best suited for the development processes so that the debugger can maintain a constant connection. Passive KITL is better suited to a real-world scenario where the debugger is not constantly needed. The benefit of the passive mode is that it allows you to create a device that does not have to be tethered to the desktop tools. The device can even be mobile and if it enters a state where the desktop tools are needed, it initiates a KITL connection between the device and desktop.</P>
+
+<P>The following code example shows how this is done.</P>
+
+<PRE class="code">BOOL OEMKitlInit (PKITLTRANSPORT pKitl)
+{
+    BOOL fRet = TRUE;
+    BOOT_ARGS *pBootArgs = (BOOT_ARGS *) ((ULONG)(*(PBYTE *)BOOT_ARG_PTR_LOCATION) | 0x80000000);
+
+    KITLOutputDebugString ("+OEMKitlInit\n");
+
+    // start the requested transport
+    switch(pBootArgs-&gt;KitlTransport &amp; ~KTS_PASSIVE_MODE)
+    {
+        case KTS_SERIAL:
+            fRet = InitSerial(pKitl);
+            break;
+
+        case KTS_ETHER:
+        case KTS_DEFAULT:
+        default:
+            fRet = InitEther(pKitl);
+            break;
+    }
+
+    if(!fRet)
+        KITLOutputDebugString ("Unable to initialize KITL Transports!\n");
+
+    KITLOutputDebugString ("-OEMKitlInit\n");
+    return fRet;
+}
+
+void InitDebugEther (void)
+{
+    BOOT_ARGS *pBootArgs = (BOOT_ARGS *) ((ULONG)(*(PBYTE *)BOOT_ARG_PTR_LOCATION) | 0x80000000);
+
+    if ((pBootArgs-&gt;KitlTransport &amp; ~KTS_PASSIVE_MODE) == KTS_NONE)
+        return;
+
+    // Initialize KITL transport
+    if (KitlInit(!(pBootArgs-&gt;KitlTransport &amp; KTS_PASSIVE_MODE))) {
+        KITLOutputDebugString ("KITL Initialized\n");
+        // no longer need to start kernel services
+        // since KITL config message told us what to start and
+        // kitl will start it accordingly
+    } else {
+        KITLOutputDebugString ("KITL Initialization Failed, No debugging support available\n");
+    }
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconkernelindependenttransportlayer.htm">Kernel Independent Transport Layer</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Active%20and%20Passive%20KITL&nbsp;(cgconactivepassivekitl.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

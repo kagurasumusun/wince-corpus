@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SH-4 Mode Bits</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SH-4 Mode Bits"/>
+<MSHelp:RLTitle Title="SH-4 Mode Bits"/>
+<MSHelp:Keyword Index="A" Term="ccconHandlingSH-4ModeBits"/>
+<MSHelp:Keyword Index="K" Term="SH-4 Mode Bits"/>
+<MSHelp:Keyword Index="A" Term="ccconHandlingSH-4ModeBits"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: shx_inline_assembly.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_810198">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccconhandlingsh-4modebits"></A>SH-4 Mode Bits</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The semantics of several instructions of the SH-4 are subject to the control of mode bits in the floating-point control register (FPSCR). These bits include <B>FR</B>, <B>PR</B>, and <B>SZ</B>. These bits dictate which floating-point register bank is currently active and the size of floating point register operands - 32 or 64 bits.</P>
+
+<P>The SH-4 specification dictates specific rules about the state of these mode bits on entry to and exit from function calls. Inline assembly code, which modifies the values of these bits, must be careful to avoid the violation of these rules and should follow these rules as if they in fact were separate function calls.</P>
+
+<P>Specifically, before control leaves the scope of an inline assembly sequence, the state of the mode bits must be returned to their value on entry to the scope. Failure to maintain consistency in these mode bits may result in undefined and unanticipated program failures.</P>
+
+<P>The following code fragment illustrates how to change and restore the PR bit in the FPSCR control register.</P>
+
+<PRE class="code">// Compute x+y+z --&gt; result
+float add_trig(float x, float y, float z)
+{
+  float result;
+  __asm("lds r4,    fpul  ;   load lw-part of x to fpul \n"
+     "fsts   fpul,  fr5   ; copy lw-part of x to fr5 \n"
+     "lds    r5,    fpul  ; load hi-part of x to fpul \n"
+     "fsts   fpul,  fr4   ; copy hi-part of x to fr4 \n" 
+     "lds    r6,    fpul  ; load lw-part of y to fpul \n"
+     "fsts   fpul,  fr7   ; copy lw-part of y to fr7 \n"
+     "lds    r7,    fpul  ; load hi-part of y to fpul \n"
+     "fsts   fpul,  fr6   ; copy hi-part of y to fr6 \n"
+     "mov.l  @(16,sp),r0  ; load lw-part of z to r0 \n"
+     "lds    r0,    fpul  ; \n"
+     "fsts   fpul,  fr9   ; copy lw-part of z to fr9 \n"
+     "mov.l  @(20,sp),r0   ; load hi-part of z to r0 \n"
+     "lds    r0,     fpul  ; \n"
+     "fsts   fpul,   fr8   ; copy hi-part of z to fr8 \n"
+     "mov    #8,     r0    ; prepare to mask the pr bit \n"
+     "shll16 r0      ; \n"
+     "sts    fpscr,  r1    ; \n"
+     "xor    r0,     r1    ; toggle pr bit \n"
+     "lds    r1,     fpscr ; turn-on pr bit \n"
+     "fcnvds dr4,    fpul  ; convert x double to single precision\n"
+     "fsts   fpul,   fr4   ; store float x in fr4\n"
+     "fcnvds dr6,    fpul  ; convert y double to single precision\n"
+     "fsts   fpul,   fr5   ; store float y in fr5\n"
+     "fcnvds dr8,    fpul  ; convert z double to single precision\n"
+     "fsts   fpul,   fr6   ; store float z in fr6\n"
+     "xor    r0,     r1    ; toggle pr bit \n"
+     "lds    r1,     fpscr ; turn-off pr bit\n" 
+     "fadd   fr4,    fr5   ; compute x+y\n"
+     "fadd   fr5,    fr6   ; compute x+y+z \n"
+     "mov.l  @(24,sp), r0  ; load result address\n"
+     "fmov.s fr6, @r0      ; store fr6 into result addr\n",
+  x,   // promoted to double and passed in r4 and r5 
+  y,   // promoted to double and passed in r6 and r7
+  z,   // promoted to double and passed in @(16,sp) 
+      // and @(20,sp)
+  &amp;result);  // pointer to result passed in @(24,sp) 
+  return result;
+}
+void main()
+{
+  float  retval = add_trig(1.0f, 2.0f,3.0f);
+  printf("%g\n", retval);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccconelementsof__asmblock.htm">Elements of the SHx __asm Block</A></P>
+
+<P><A HREF="ccconthe__asmkeyword.htm">The __asm Keyword in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccconunderstanding__asmrecord.htm">__asm Restrictions in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccconconstants.htm">Constants in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccconsymbolslabels.htm">Symbols and Labels in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccrefshxinlineassemblyparameters.htm">SHx Inline Assembly Parameters</A></P>
+
+<P><A HREF="ccconusingbranchesin__asmstatements.htm">Branching in SHx Inline Assembly</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SH-4%20Mode%20Bits&nbsp;(ccconhandlingsh-4modebits.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

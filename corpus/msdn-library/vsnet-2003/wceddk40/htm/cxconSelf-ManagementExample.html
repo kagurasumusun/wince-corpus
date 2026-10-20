@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Self-Management Example</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Self-Management Example"/>
+<MSHelp:RLTitle Title="Self-Management Example"/>
+<MSHelp:Keyword Index="A" Term="cxconSelf-ManagementExample"/>
+<MSHelp:Keyword Index="A" Term="cxconSelf-ManagementExample"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: powermgrdrv_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760662">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconself-managementexample"></A>Self-Management Example</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A device that implements all five power states manages its power dynamically by stepping down from D0 to D1, or D1 to D2, if it has been inactive for some period of time. The device does this in stages because D2's power consumption is lower but it is much less responsive also. If the device detects activity, and it is not in D0, it will attempt to go to D0.</P>
+
+<P>Such a device's interrupt service thread might look like the following code example.</P>
+
+<PRE class="code">while(!fDone) {
+    dwStatus = WaitForSingleObject(hInterruptEvent, dwTimeout);
+    switch(dwStatus) {
+    case WAIT_OBJECT_0: // device activity
+        // service device
+        ...
+        if(deviceDx != D0 &amp;&amp; !fBoostRequested) {
+            fBoostRequested = TRUE;
+            DevicePowerNotify(pszDeviceName, D0, POWER_DRIVER | POWER_NAME);
+
+        }
+        dwTimeout = INACTIVITY_TIMEOUT;
+        break;
+    case WAIT_TIMEOUT:  // device inactive
+        if(deviceDx &lt; D2 &amp;&amp; !fReductionRequested) {
+            fReductionRequested = TRUE;
+            DevicePowerNotify(pszDeviceName, deviceDx + 1, POWER_DRIVER | POWER_NAME);
+
+        }
+        if(deviceDx &gt;= D2) {
+            dwTimeout = INFINITE;
+        }
+    default:            // error handling
+        break;
+    }
+}</PRE>
+
+<P>The device's <MSHelp:link keywords="cerefDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> routine might include the following code example.</P>
+
+<PRE class="code">case IOCTL_POWER_SET:
+    // update device registers
+    ...
+    deviceDx = *(PCEDEVICE_POWER_STATE) pOutBuf;
+    fBoostRequested = FALSE;
+    fReductionRequested = FALSE;
+    break;</PRE>
+
+<P>The driver code only keeps track of whether or not it has requested a state transition, not whether the transition has occurred. This is important, because the device might request D0 while at D2, but the Power Manager might only set it to D1 because of the current power state. On the next device activity the device would request D0 again and the Power Manager might simply leave it at D1. Keeping track of the fact that it requested a state transition would prevent further unnecessary Power Manager API calls while the device is active. The same logic applies to power state reductions due to inactivity time-outs.</P>
+
+<P>The device's IST sets the fBoostRequested and fReductionRequested flags before calling <B>DevicePowerNotify</B>. This is because the <B>DevicePowerNotify</B> invocation may result in an <B>IOCTL_POWER_SET</B> call into the driver on the same thread. The <B>DeviceIoControl</B> call clears the flags, which enables the driver to make further adjustments to the device power state in the future.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicepowerself-management.htm">Device Power Self-Management</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Self-Management%20Example&nbsp;(cxconself-managementexample.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

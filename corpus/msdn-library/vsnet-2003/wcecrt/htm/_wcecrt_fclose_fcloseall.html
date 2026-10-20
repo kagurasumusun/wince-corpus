@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fclose, _fcloseall</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fclose_fcloseall"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_fclose_fcloseall.htm", "fclose,%20_fcloseall")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_fclose_fcloseall"></A>fclose, _fcloseall</H1>
+
+<P>Closes a stream (<B>fclose</B>) or closes all open streams (<B>_fcloseall</B>).</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fclose</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>_fcloseall</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>int _fcloseall( void );
+int fclose( FILE *</B><I>stream</I><B> );</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Pointer to FILE structure</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P><B>fclose</B> returns 0 if the stream is successfully closed. _<B>fcloseall</B> returns the total number of streams closed. Both functions return EOF to indicate an error.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>fclose</B> function closes <I>stream</I>. _<B>fcloseall</B> closes all open streams except <B>stdin</B>, <B>stdout</B>, <B>stderr</B> (and, in MS-DOS®, _<B>stdaux</B> and _<B>stdprn</B>). It also closes and deletes any temporary files created by <B>tmpfile</B>. In both functions, all buffers associated with the stream are flushed prior to closing. System-allocated buffers are released when the stream is closed. Buffers assigned by the user with <B>setbuf</B> and <B>setvbuf</B> are not automatically released.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FOPEN.C: This program opens files named "data"
+ * and "data2".It  uses fclose to close "data" and
+ * _fcloseall to close all remaining files.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream, *stream2;
+
+void main( void )
+{
+   int numclosed;
+
+   /* Open for read (will fail if file "data" does not exist) */
+   if( (stream  = fopen( "data", "r" )) == NULL )
+      printf( "The file 'data' was not opened\n" );
+   else
+      printf( "The file 'data' was opened\n" );
+
+   /* Open for write */
+   if( (stream2 = fopen( "data2", "w+" )) == NULL )
+      printf( "The file 'data2' was not opened\n" );
+   else
+      printf( "The file 'data2' was opened\n" );
+
+   /* Close stream */
+   if( fclose( stream ) )
+      printf( "The file 'data' was not closed\n" );
+
+   /* All other files are closed: */
+   numclosed = _fcloseall( );
+   printf( "Number of files closed by _fcloseall: %u\n", numclosed );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">The file 'data' was opened
+The file 'data2' was opened
+Number of files closed by _fcloseall: 1
+ </PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fflush.htm"><B>fflush</B></A>, <A HREF="_wcecrt_fopen_wfopen.htm"><B>fopen</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

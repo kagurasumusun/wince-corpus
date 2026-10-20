@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Presentation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Presentation"/>
+<MSHelp:RLTitle Title="Presentation"/>
+<MSHelp:Keyword Index="A" Term="cxconPresentation"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, presentation"/>
+<MSHelp:Keyword Index="K" Term="presentation, Direct3D"/>
+<MSHelp:Keyword Index="A" Term="cxconPresentation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715366">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconpresentation"></A>Presentation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>DirectX 8.0 formalizes the concept of "presentation" (or making the results of rendering visible to the user) in the API. Previously, this was accomplished either by page flipping in full screen mode or by blitting in windowed mode. The new <B>Present</B> API abstracts the differences of full screen and windowed mode away. However, this abstraction is not yet exposed at the DDI level. The runtime simply maps the present API to either the <A HREF="_dxce_ddhal_flip.htm">Flip</A> or <A HREF="_dxce_ddhal_blt.htm">Blt</A> DDI entry points depending on the application mode.</P>
+
+<P>DirectX 8.0 has added two new DirectDraw blit flags, which are passed to the driver as notification of when a blit operation is actually part of a <B>Present</B> and hence marks a frame boundary. These new flags are DDBLT_PRESENTATION and DDBLT_LAST_PRESENTATION. Two flags are necessary because clipping may result in a single <B>Present</B> call invoking multiple blit operations in the driver. In this case all of the blits that are invoked as a result of the <B>Present</B> operation have the DDBLT_PRESENTATION flag set. However, only the final blit of the sequence used to perform the <B>Present</B> will have the DDBLT_LAST_PRESENTATION bit set. Therefore, if blit is used to implement a <B>Present</B> call, the driver will see zero or more blits with the DDBLT_PRESENTATION bit set followed by exactly one blit with both the DDLT_PRESENTATION and DDBLT_LAST_PRESENTATION bits set. These flags are never set by the application. Only the runtime is allowed to pass these flags to a blit. In addition, these flags will only be passed to drivers supporting the DirectX 8.0 DDI.</P>
+
+<P>The driver is only permitted to queue a maximum of three frames. If the driver sees a blit call with DDBLT_PRESENTATION set and it already has three DDBLT_LAST_PRESENTATION blits queued it must fail the call with DDERR_WASSTILLDRAWING. The runtime will retry until the queue has drained sufficiently.</P>
+
+<P>If the driver can't effectively determine when a DDBLT_LAST_PRESENTATION blit in the queue has been retired, then the must not queue frames at all. DDBLT_LAST_PRESENTATION should cause such drivers to return DDERR_WASSTILLDRAWING until the accelerator is completely finished, exactly as if the application had called <B>Lock</B> on the source surface before calling <B>Blt</B>.</P>
+
+<P>Finally, in the case of multiple windowed applications running simultaneously, the driver should count presentation blits based on the source of each blit, rather than the primary, that is, the driver is allowed to queue three frames per window/render target. This will result in better performance in this case.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectx80ddisupport.htm">DirectX 8.0 DDI Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Presentation&nbsp;(cxconpresentation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

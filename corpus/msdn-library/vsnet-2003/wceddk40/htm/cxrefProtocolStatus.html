@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolStatus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolStatus"/>
+<MSHelp:RLTitle Title="ProtocolStatus"/>
+<MSHelp:Keyword Index="A" Term="cxrefProtocolStatus"/>
+<MSHelp:Keyword Index="K" Term="ProtocolStatus"/>
+<MSHelp:Keyword Index="A" Term="cxrefProtocolStatus"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_lower_edge_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_678773">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefprotocolstatus"></A>ProtocolStatus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is a required driver function that handles status-change notifications raised by an underlying connectionless network adapter driver or by NDIS.</P>
+
+<PRE class="syntax"><B>VOID ProtocolStatus(</B>
+<B>NDIS_HANDLE</B> <I>ProtocolBindingContext</I><B>,</B>
+<B>NDIS_STATUS</B> <I>GeneralStatus</I><B>,</B>
+<B>PVOID</B> <I>StatusBuffer</I><B>,</B>
+<B>UINT</B> <I>StatusBufferSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ProtocolBindingContext</I></DT>
+
+<DD>[in] Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>.</dd>
+
+<DT><I>GeneralStatus</I></DT>
+
+<DD>[in] Indicates the general status code, either raised by NDIS or propagated from the underlying driver's call to <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A>.</dd>
+
+<DT><I>StatusBuffer</I></DT>
+
+<DD>[in] Points to a buffer containing medium-specific data that depends on the value of <I>GeneralStatus</I>.
+
+<P>For example, if the <I>GeneralStatus</I> argument is NDIS_STATUS_RING_STATUS, this parameter points to a ULONG-sized bitmask and <I>StatusBufferSize</I> is four. As another example, if <I>GeneralStatus</I> is NDIS_STATUS_WAN_LINE_UP, this parameter points to an <A HREF="cxrefndis_wan_line_up.htm">NDIS_WAN_LINE_UP</A> structure and <I>StatusBufferSize</I> is <B>sizeof(</B>NDIS_STATUS_WAN_LINE_UP<B>)</B>.
+
+
+<P>For some NDIS_STATUS_<I>XXX</I> values, this pointer is NULL and <I>StatusBufferSize</I> is set to zero.
+</dd>
+
+<DT><I>StatusBufferSize</I></DT>
+
+<DD>[in] Specifies the number of bytes at <I>StatusBuffer</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A call to <B>ProtocolStatus</B> notifies the protocol about changes in status of the underlying network adapter or its driver.</P>
+
+<P><B>ProtocolStatus</B> interprets a general status code. The General Status code is defined by NDIS as an NDIS_STATUS_<I>XXX</I> value, and indicates a change on the network adapter or in the underlying driver</P>
+
+<P>If NDIS has called the underlying driver's <A HREF="cxrefminiportreset.htm">MiniportReset</A> function in an attempt to restore the network adapter to an operational state, NDIS can substitute NDIS_STATUS_RESET_START for the <I>GeneralStatus</I> indicated in the miniport's call to <B>NdisMIndicateStatus</B>.</P>
+
+<P>Depending on the status at <I>GeneralStatus</I>, additional information about the specific reason for the change in status, which can be medium-specific</P>
+
+<P>For example, ring-insert failures are specific to Token Ring (802.5) networks and do not apply for Ethernet (802.3) networks.</P>
+
+<P>NDIS notifies all bound protocols when an underlying driver is resetting its network adapter by calling their <B>ProtocolStatus</B> functions, first with NDIS_STATUS_RESET_START and later, when the reset operation is done, with NDIS_STATUS_RESET_END. After each such call to a <B>ProtocolStatus</B> function, NDIS also calls the driver's <A HREF="cxrefprotocolstatuscomplete.htm">ProtocolStatusComplete</A> function.</P>
+
+<P>Because NDIS will not accept protocol-initiated sends and requests to a miniport while a reset is in progress, the NDIS_STATUS_RESET_START notification warns bound protocols to hold off on their calls to <B>NdisSendPackets</B>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, and <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A> on the binding designated by the respective <I>ProtocolBindingContext</I> given to their <B>ProtocolStatus</B> functions until they receive the corresponding NDIS_STATUS_RESET_END notification.</P>
+
+<P>If the protocol itself initiated the reset operation with a call to <A HREF="_wceddk_ndisreset.htm">NdisReset</A>, its <B>ProtocolStatus</B> function receives the NDIS_STATUS_RESET_START and NDIS_STATUS_RESET_END notifications like any other protocol bound to the same underlying driver. However, if <B>NdisReset</B> returns NDIS_STATUS_PENDING, only the <B>ProtocolStatusComplete</B> function of the driver that initiated the reset operation is called.</P>
+
+<P>Consequently, every protocol's <B>ProtocolStatus</B> function should take whatever action is required to prevent that protocol from submitting sends and requests as soon as <B>ProtocolStatus</B> receives the NDIS_STATUS_RESET_START notification and should re-enable subsequent sends and requests when <B>ProtocolStatus</B> receives the NDIS_STATUS_RESET_END notification. Usually, <B>ProtocolStatus</B> simply sets and clears a ResetInProgress flag in the <I>ProtocolBindingContext</I> area that other driver functions check before they initiate sends or requests on the binding.</P>
+
+<P>As another example, the <B>ProtocolStatus</B> function of any protocol bound above NDISWAN receives a line-up notification whenever the underlying WAN network adapter miniport is establishing a new link. After such a protocol has traded link-specific context handles with NDISWAN, its <B>ProtocolStatus</B> function can receive additional link-specific line-up, line-down, and fragment indications, which the protocol can use to optimize throughput and/or performance on the link.</P>
+
+<P>When the underlying network adapter driver signals a status change, it does not change associated event counters and thresholds.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportreset.htm">MiniportReset</A>, <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A>, <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A>, <A HREF="_wceddk_ndisreset.htm">NdisReset</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="#cxrefprotocolstatus">ProtocolStatus</A>, <A HREF="cxrefprotocolstatuscomplete.htm">ProtocolStatusComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ProtocolStatus&nbsp;(cxrefprotocolstatus.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

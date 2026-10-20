@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PSM_FormatOptions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PSM_FormatOptions"/>
+<MSHelp:RLTitle Title="PSM_FormatOptions"/>
+<MSHelp:Keyword Index="A" Term="cxrefPSM_FormatOptions"/>
+<MSHelp:Keyword Index="K" Term="PSM_FormatOptions"/>
+<MSHelp:Keyword Index="A" Term="cxrefPSM_FormatOptions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: psm_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_686448">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefpsm_formatoptions"></A>PSM_FormatOptions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure stores user-configurable format options.</P>
+
+<PRE class="syntax"><B>typedef struct PSM_FormatOptions {</B>
+<B>UINT32 </B><I>MinimumReclaimSize</I><B>;</B>
+<B>UINT16 </B><I>StreamingGranularity</I><B>;</B>
+<B>UINT16 </B><I>MaxFilenameLength</I><B>;</B>
+<B>UINT8 </B><I>ReclaimThreshold</I><B>;</B>
+<B>UINT8 </B><I>StreamingOverhead</I><B>;</B>
+<B>UINT8 </B><I>UpdateAccessTimesEnabled</I><B>;</B>
+<B>UINT8 </B><I>Reserved</I><B>;</B>
+<B>} PSM_FormatOptions, *PSM_FormatOptionsPtr;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>MinimumReclaimSize</B></DT>
+
+<DD>This defines the minimum amount of dirty space, in bytes, that must exist in an erase block before it can automatically be reclaimed in a threshold reclaim operation. Allowable range is 0 KB to 252 KB. This member works in conjunction with the <B>ReclaimThreshold</B> member. </dd>
+
+<DT><B>StreamingGranularity</B></DT>
+
+<DD>This defines the smallest granularity, in bytes, that an object can be allocated at when using the streaming interface. For example, a five-byte data object written using the streaming interface will cause <B>StreamingGranularity</B> bytes to be reserved for future additions to the original logical unit. Nonstreamed writes use a much smaller, internal granularity that is not user-definable. 
+
+<P>Values less than 1 KB decrease overall performance significantly. Allowable values are 256, 512, 1024, 2048, 4096, and 8192. 
+</dd>
+
+<DT><B>MaxFilenameLength</B></DT>
+
+<DD>The maximum length in characters of a single path element like a file or directory name. Includes all file name characters, name, extension, '.' delimiter, and so on. Allowable range is 8 to 1024.</dd>
+
+<DT><B>ReclaimThreshold</B></DT>
+
+<DD>This defines the minimum amount of dirty space that must exist in an erase block before it can automatically be reclaimed in a threshold reclaim operation. This differs from the <B>MinimumReclaimSize</B><I> </I>member in that it is expressed as a percentage of the total available space in the erase block, rather than a fixed value. For example, if this is set to 20, a block will only be eligible for threshold reclaim if 20% of its available space is dirty. 
+
+<P>This value is always overridden by the <B>MinimumReclaimSize</B> member, in case the percentage works out to be a very small value. 
+</dd>
+
+<DT><B>StreamingOverhead</B></DT>
+
+<DD>This defines the amount of overhead that is set-aside during the format to ensure that a constant data rate can be maintained during overwrite and streaming data operations. 
+
+<P>It is always set to the PSM_StreamingOverheadNone which indicates that no extra overhead will be set aside. No constant data rates can be guaranteed. 
+</dd>
+
+<DT><B>UpdateAccessTimesEnabled</B></DT>
+
+<DD>When set to TRUE, a file or directory's time and date stamp is updated every time it is accessed, or whenever its contents are updated. When set to FALSE, this information is not stored, greatly reducing the amount of flash that is dirtied. In this latter case, the creation timestamp will be returned in place of the update and access timestamps.</dd>
+
+<DT><B>Reserved</B></DT>
+
+<DD>This member is reserved for future use. Its contents are undefined, and are ignored by the PSM software stack.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>These parameters are in %_WINCEROOT%\Platform\SA11X0BD\PSM\OEM\Plat_api.c and %_WINCEROOT%\Platform\SA11X0BD\PSM\INC\Plat_api.h. The default parameters are appropriate for general applications. They can be modified to improve storage efficiency or file system performance as appropriate. These parameters are members of a structure of type <A HREF="#cxrefpsm_formatoptions">PSM_FormatOptions</A>. A pointer to the structure is passed to those functions that format the file partition.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>Psm_ext.h</TD>
+<TD width=15%>Psm_ext.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="#cxrefpsm_formatoptions">PSM_FormatOptions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;PSM_FormatOptions&nbsp;(cxrefpsm_formatoptions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

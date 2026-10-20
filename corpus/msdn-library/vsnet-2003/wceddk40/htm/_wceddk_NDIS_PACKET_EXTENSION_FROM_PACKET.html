@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_PACKET_EXTENSION_FROM_PACKET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_PACKET_EXTENSION_FROM_PACKET"/>
+<MSHelp:RLTitle Title="NDIS_PACKET_EXTENSION_FROM_PACKET"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_PACKET_EXTENSION_FROM_PACKET"/>
+<MSHelp:Keyword Index="K" Term="NDIS_PACKET_EXTENSION_FROM_PACKET"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_PACKET_EXTENSION_FROM_PACKET"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_macros.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_689068">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndis_packet_extension_from_packet"></A>NDIS_PACKET_EXTENSION_FROM_PACKET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This macro returns a pointer to the <A HREF="cxconndis_packet_extension.htm">NDIS_PACKET_EXTENSION</A> structure associated with a packet descriptor.</P>
+
+<PRE class="syntax"><B>PNDIS_PACKET_EXTENSION NDIS_PACKET_EXTENSION_FROM_PACKET(</B>
+<B>PNDIS_PACKET</B> <I>_P</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>_P</I></DT>
+
+<DD>Points to a packet descriptor.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is a pointer to the <B>NDIS_PACKET_EXTENSION</B> structure associated with the given packet descriptor. The return value is NULL if there is no per-packet information for the packet.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>NDIS_PACKET_EXTENSION</B> structure contains an array of <B>PVOID</B>, each of which either points to or contains a specific type of per-packet information. After obtaining the pointer to the <B>NDIS_PACKET_EXTENSION</B> structure, the driver can use the appropriate array index to access a particular type of per-packet information.</P>
+
+<P>A protocol or miniport driver should call this macro when it needs to read and/or write more than one type of per-packet information associated with a packet descriptor. If the driver needs to access just one type of per-packet information, it should call the <A HREF="_wceddk_ndis_per_packet_info_from_packet.htm">NDIS_PER_PACKET_INFO_FROM_PACKET</A> macro.</P>
+
+<P>After obtaining the pointer to the <B>NDIS_PACKET_EXTENSION</B> structure returned by <B>NDIS_PACKET_EXTENSION_FROM_PACKET</B>, a driver can use array indexes to access a particular type of per-packet information.</P>
+
+<P>The following table shows the possible array indexes a driver can use.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Array Index</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TcpIpChecksumPacketInfo</TD>
+<TD width=60%>Indexes a pointer to an <A HREF="cxrefndis_tcp_ip_checksum_packet_info.htm">NDIS_TCP_IP_CHECKSUM_PACKET_INFO</A> structure.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>IpSecPacketInfo</TD>
+<TD width=60%>Not supported in Windows CE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>TcpLargeSendPacketInfo</TD>
+<TD width=60%>Indexes a pointer that contains a <B>ULONG</B> value. Before passing a large TCP packet to a miniport for segmentation, the TCP/IP transport writes this value with the maximum segment size (MSS), which is the current maximum transmission unit (MTU). Before completing the send of a large TCP packet that it has segmented into smaller packets, a miniport writes this value with the total number of user data bytes that it sent in the packets segmented from the large TCP packet.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>ClassificationHandlePacketInfo</TD>
+<TD width=60%>This is reserved.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>ScatterGatherListPacketInfo</TD>
+<TD width=60%>Not supported in Windows CE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>Ieee8021pPriority</TD>
+<TD width=60%>Indexes a <B>UINT</B>, which specifies 802.1p priority information that is used to establish packet priority in shared-media 802 networks. The bits that are set to one in this <B>UINT</B> specify an 802.1p priority value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>OriginalPacketInfo</TD>
+<TD width=60%>Indexes a pointer to a <A HREF="cxconndis_packet.htm">NDIS_PACKET</A> structure. This structure specifies a packet descriptor that contains original information that was previously received over the network and indicated up by the lowest-level driver in a stack of NDIS drivers. Each driver in the layered stack can access the out-of-band (OOB) data block that is associated with the packet that is received from the network without requiring that the packet be copied to each layer.</TD>
+</TR>
+</table></div>
+
+<DL>
+<DT>The <B>NDIS_PACKET_EXTENSION_FROM_PACKET</B> macro is defined as follows.</DT>
+</DL>
+
+<PRE class="code">#define NDIS_PACKET_EXTENSION_FROM_PACKET(_P)  ((PNDIS_PACKET_EXTENSION)((PUCHAR)(_P) + (_P)-&gt;Private.NdisPacketOobOffset + sizeof(NDIS_PACKET_OOB_DATA)))</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Ndis.h</TD>
+<TD width=20%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconndis_packet.htm">NDIS_PACKET</A>, <A HREF="_wceddk_ndis_per_packet_info_from_packet.htm">NDIS_PER_PACKET_INFO_FROM_PACKET</A>, <A HREF="cxconndis_packet_extension.htm">NDIS_PACKET_EXTENSION</A>, <A HREF="_wceddk_ndisimcopysendcompleteperpacketinfo.htm">NdisIMCopySendCompletePerPacketInfo</A>, <A HREF="_wceddk_ndisimcopysendperpacketinfo.htm">NdisIMCopySendPerPacketInfo</A>, <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A>, <A HREF="cxrefndis_tcp_ip_checksum_packet_info.htm">NDIS_TCP_IP_CHECKSUM_PACKET_INFO</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_PACKET_EXTENSION_FROM_PACKET&nbsp;(_wceddk_ndis_packet_extension_from_packet.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

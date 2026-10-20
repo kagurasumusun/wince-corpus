@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFont::FromHandle</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CFont::FromHandle"/>
+<MSHelp:RLTitle Title="CFont::FromHandle"/>
+<MSHelp:Keyword Index="A" Term="aflrfCFontcolcolFromHandle"/>
+<MSHelp:Keyword Index="K" Term="FromHandle method [MFC for Windows CE]"/>
+<MSHelp:Keyword Index="A" Term="aflrfCFontcolcolFromHandle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cfont.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710430">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcfontcolcolfromhandle"></A>CFont::FromHandle</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method obtains a pointer to a <B>CFont</B> object when given an <B>HFONT</B> handle to a Windows CE GDI font object. If a <B>CFont</B> object is not already attached to the handle, a temporary <B>CFont</B> object is created and attached. This temporary <B>CFont</B> object is valid only until the next time the application has idle time in its event loop, at which time all temporary graphic objects are deleted. An alternate way to state this is that the temporary object is valid only during the processing of one window message.</P>
+
+<PRE class="syntax"><B>static CFont* PASCAL FromHandle( 
+HFONT </B><I>hFont</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hFont</I></DT>
+
+<DD>Specifies an <B>HFONT</B> handle to a Windows CE font.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>A pointer to a <B>CFont</B> object if successful; otherwise, it is <B>NULL</B>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// This code fragment shows how to create a font object using
+// Windows API CreateFontIndirect(), convert the HFONT to a 
+// CFont* before selecting the font object into a DC (device 
+// context) for text drawing, and finally delete the font object.
+
+// Initialize a CFont object with the characteristics given 
+// in a LOGFONT structure.
+LOGFONT lf;
+memset(&amp;lf, 0, sizeof(LOGFONT));          // Clear out structure.
+lf.lfHeight = 12;                         // Request a 12-pixel-height
+                                          // font.
+lstrcpy(lf.lfFaceName, _T("Arial"));
+// Request a face name "Arial".
+HFONT hfont = ::CreateFontIndirect(&amp;lf);  // Create the font.
+
+// Convert the HFONT to CFont*.
+CFont* pfont = CFont::FromHandle(hfont);
+
+// Use the font you just created.
+CClientDC dc(this);
+CFont* def_font = dc.SelectObject(pfont);
+dc.ExtTextOut(5, 5, ETO_OPAQUE, NULL, _T("Hello"), NULL);
+dc.SelectObject(def_font);
+
+// Finished with the font, now delete the font object.
+::DeleteObject(hfont);</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710430', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

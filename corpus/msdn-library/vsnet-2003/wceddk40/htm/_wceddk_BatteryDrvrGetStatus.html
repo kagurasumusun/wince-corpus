@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BatteryDrvrGetStatus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BatteryDrvrGetStatus"/>
+<MSHelp:RLTitle Title="BatteryDrvrGetStatus"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_BatteryDrvrGetStatus"/>
+<MSHelp:Keyword Index="K" Term="BatteryDrvrGetStatus"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_BatteryDrvrGetStatus"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: battery_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673070">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_batterydrvrgetstatus"></A>BatteryDrvrGetStatus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function returns the status of the main and backup batteries.</P>
+
+<PRE class="syntax"><B>BOOL BatteryDrvrGetStatus(</B>
+<B>PSYSTEM_POWER_STATUS_EX2 </B><I>pStatus</I><B>,</B>
+<B>PBOOL </B><I>pfBatteriesChangedSinceLastCall</I> 
+<B>)</B>;</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pStatus</I></DT>
+
+<DD>[out] Pointer to the return buffer containing the battery status information.</dd>
+
+<DT><I>pfBatteriesChangedSinceLastCall</I></DT>
+
+<DD>[in] Pointer to a flag that the function sets to TRUE if the system's batteries have been replaced or changed since the last call to this function. The battery drivers should only set this value to TRUE if its <A HREF="_wceddk_batterydrvrsupportschangenotification.htm">BatteryDrvrSupportsChangeNotification</A> implementation returns TRUE.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Implement this GWES function as part of porting device drivers.</P>
+
+<P>When implementing <B>BatteryDrvrGetStatus</B>, the appropriate battery information fills in the <MSHelp:link keywords="cerefSYSTEM_POWER_STATUS_EX2" TABINDEX="0">SYSTEM_POWER_STATUS_EX2</MSHelp:link> structure. Declare a variable of type <B>SYSTEM_POWER_STATUS_EX2</B> as a pointer to the return buffer containing the battery status information. The <I>pfBatteriesChangedSinceLastCall</I> parameter is a pointer to the flag and is set to TRUE if you replaced or changed the system's batteries since the last call to this function. The following code example, %_WINCEROOT%\Platform\SA11X0BD\GWE\Battery\Battery.c, shows an implementation of <B>BatteryDrvrGetStatus</B>.</P>
+
+<PRE class="code">BOOL WINAPI
+BatteryDrvrGetStatus(
+                    PSYSTEM_POWER_STATUS_EX2 pstatus,
+                    PBOOL pfBatteriesChangedSinceLastCall
+                    )
+{
+    // system is always on AC power
+    pstatus-&gt;ACLineStatus               = AC_LINE_ONLINE;
+    pstatus-&gt;BatteryFlag                = BATTERY_FLAG_NO_BATTERY;
+    pstatus-&gt;BatteryLifePercent         = 0;
+    pstatus-&gt;Reserved1                  = 0;
+    pstatus-&gt;BatteryLifeTime            = BATTERY_LIFE_UNKNOWN;
+    pstatus-&gt;BatteryFullLifeTime        = BATTERY_LIFE_UNKNOWN;
+
+    pstatus-&gt;Reserved2                  = 0;
+    pstatus-&gt;BackupBatteryFlag          = BATTERY_FLAG_HIGH;
+    pstatus-&gt;BackupBatteryLifePercent   = 0;
+    pstatus-&gt;Reserved3                  = 0;
+    pstatus-&gt;BackupBatteryLifeTime      = BATTERY_LIFE_UNKNOWN;
+    pstatus-&gt;BackupBatteryFullLifeTime  = BATTERY_LIFE_UNKNOWN;
+
+    pstatus-&gt;BatteryChemistry           = BATTERY_CHEMISTRY_UNKNOWN;
+    pstatus-&gt;BatteryVoltage             = 0;
+    pstatus-&gt;BatteryCurrent             = 0;
+    pstatus-&gt;BatteryAverageCurrent      = 0;
+    pstatus-&gt;BatteryAverageInterval     = 0;
+    pstatus-&gt;BatterymAHourConsumed      = 0;
+    pstatus-&gt;BatteryTemperature         = 0;
+    pstatus-&gt;BackupBatteryVoltage       = 0;
+    
+    *pfBatteriesChangedSinceLastCall = FALSE;    
+    return (TRUE);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>Battery.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefSYSTEM_POWER_STATUS_EX2" TABINDEX="0">SYSTEM_POWER_STATUS_EX2</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;BatteryDrvrGetStatus&nbsp;(_wceddk_batterydrvrgetstatus.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

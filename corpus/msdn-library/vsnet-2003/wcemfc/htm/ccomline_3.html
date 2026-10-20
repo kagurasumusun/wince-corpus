@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCommandLineInfo::ParseParam</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ccommandlineinfo_parseparam"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ccommandlineinfo_parseparam"></A><SUP></SUP>CCommandLineInfo::ParseParam</H1>
+
+<P>This method is called by the framework to parse and interpret individual parameters from the command line.</P>
+
+<PRE class=syntax><B>virtual void ParseParam (
+LPCTSTR</B> <I>pszParam</I>,<B>
+BOOL</B> <I>bFlag</I>,<B>
+BOOL</B> <I>bLast</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pszParam</I></DT>
+
+<DD>Specifies the parameter or flag.</DD>
+
+<DT><I>bFlag</I></DT>
+
+<DD>Indicates whether <I>lpszParam</I> is a parameter or a flag.</DD>
+
+<DT><I>bLast</I></DT>
+
+<DD>Indicates if this is the last parameter or flag on the command line.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CWinApp::ParseCommandLine</B> calls <B>ParseParam</B> once for each parameter or flag on the command line, passing the argument to <I>lpszParam</I>. If the first character of the parameter is a hyphen (-) or a slash mark (/), it is removed and <I>bFlag </I>is set to <B>TRUE</B>. When parsing the final parameter, <I>bLast</I> is set to <B>TRUE</B>.</P>
+
+<P>The default implementation of this function recognizes the following flags: <B>/p</B>, <B>/pt</B>, <B>/dde</B>, <B>/Automation</B>, and <B>/Embedding</B>, as shown in the following table:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=46%>Command-line argument</TH>
+<TH width=54%>Command executed</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I></TD>
+<TD width=54%>New file</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I> filename</TD>
+<TD width=54%>Open file</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I> <B>/p</B> filename</TD>
+<TD width=54%>Print file to default printer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I> <B>/pt</B> filename printer driver port</TD>
+<TD width=54%>Print file to specified printer</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I> <B>/dde</B></TD>
+<TD width=54%>Start up and wait for DDE command</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I> <B>/Automation</B></TD>
+<TD width=54%>Start up as an OLE automation server</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><I>app</I> <B>/Embedding</B></TD>
+<TD width=54%>Start up to edit an embedded OLE item</TD>
+</TR>
+</TABLE><BR>
+
+<P>This information is stored in <B>m_nShellCommand</B>. Flags are marked by either a slash mark (/) or hyphen (-).</P>
+
+<P>The default implementation puts the first nonflag parameter into <B>m_strFileName</B>. In the case of the <B>/pt</B> flag, the default implementation puts the second, third, and fourth nonflag parameters into <B>m_strPrinterName</B>, <B>m_strDriverName</B>, and <B>m_strPortName</B>, respectively.</P>
+
+<P>The default implementation also sets <B>m_bShowSplash</B> to <B>TRUE</B> only in the case of a new file. In the case of a new file, the user has taken action involving the application itself. In any other case, including opening existing files using the shell, the user action involves the file directly, and the splash screen does not need to announce the application starting up.</P>
+
+<P>Override this function in your derived class to handle other flag and parameter values.</P>
+
+<P>In the current version of MFC for Windows CE, this method does not support the following command-line flags:
+
+<UL type=disc>
+	<LI><B>/p</B></LI>
+
+	<LI><B>/pt</B></LI>
+
+	<LI><B>/dde</B></LI>
+
+	<LI><B>/Automation</B></LI>
+
+	<LI><B>/Embedding</B></LI>
+</UL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwinapp_28.htm"><B>CWinApp::ParseCommandLine</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

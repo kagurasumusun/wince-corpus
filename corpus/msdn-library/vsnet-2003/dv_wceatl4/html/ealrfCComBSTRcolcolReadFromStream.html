@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComBSTR::ReadFromStream</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CComBSTR::ReadFromStream"/>
+<MSHelp:RLTitle Title="CComBSTR::ReadFromStream"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComBSTRcolcolReadFromStream"/>
+<MSHelp:Keyword Index="K" Term="ReadFromStream method"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_CComBSTR_ReadFromStream"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComBSTRcolcolReadFromStream"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ccbstr.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_705983">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfccombstrcolcolreadfromstream"></A>CComBSTR::ReadFromStream</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method sets the <B>m_str</B> data member to the <B>BSTR</B> contained in the specified stream. <B>ReadToStream</B> requires a previous call to WriteToStream.</P>
+
+<PRE class="syntax"><B>HRESULT ReadFromStream( 
+IStream* </B><I>pStream</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pStream</I></DT>
+
+<DD>[in] A pointer to the <B>IStream</B> interface on the stream containing the data.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>A standard <B>HRESULT</B> value.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void CMyView::OnEditCopy()
+{
+IDataObject* pDataObj;
+
+// Fill in the FORMATETC struct to retrieve the desired format 
+// from the clipboard.
+FORMATETC formatetcIn = {CF_TEXT, NULL, DVASPECT_CONTENT, &#0150;1, 
+TYMED_ISTREAM};
+STGMEDIUM medium;
+ZeroMemory(&amp;medium, sizeof(STGMEDIUM));
+
+// Get the IDataObject from clipboard.
+HRESULT hr = ::OleGetClipboard(&amp;pDataObj);
+
+// Retrieve data from the clipboard.
+hr = pDataObj-&gt;GetData(&amp;formatetcIn, &amp;medium);
+
+if ( SUCCEEDED(hr) &amp;&amp; medium.tymed == TYMED_ISTREAM)
+{
+CComBSTR bstrStr;
+// Get BSTR out of the stream.
+hr = bstrStr.ReadFromStream(medium.pstm);
+
+// Release the stream.
+::ReleaseStgMedium(&amp;medium);
+}
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlbase.h</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_705983', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

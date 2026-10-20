@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComObjectRootEx::FinalConstruct</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomobjectrootex_finalconstruct"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ccomobjectrootex_finalconstruct"></A>CComObjectRootEx::FinalConstruct</H1>
+
+<P>This method can be overridden to create an aggregated object.</P>
+
+<PRE class=syntax><B>HRESULT</B> <B>FinalConstruct(</B> <B>);</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>One of the standard <B>HRESULT</B> values. </P>
+
+<H4>Remarks</H4>
+
+<P>Typically, override this method in the class derived from <B>CComObjectRootEx</B> to create any aggregated objects. For example:</P>
+
+<PRE>class CMyAggObject : public CComObjectRootEx&lt; ... &gt;
+{
+   DECLARE_GET_CONTROLLING_UNKNOWN
+   HRESULT FinalConstruct( )
+   {
+      return CoCreateInstance(CLSID_SomeServer,
+               GetControllingUnknown(), CLSCTX_ALL,
+               IID_ISomeServer, &amp;m_pSomeServer);
+   }
+   ...
+};
+</PRE>
+
+<P>If the construction fails, you can return an error. You can also use the macro <B>DECLARE_PROTECT_FINAL_CONSTRUCT</B> to protect your outer object from being deleted if, during creation, the internal aggregated object increments the reference count then decrements the count to zero.</P>
+
+<P>By default, <B>CComObjectRootEx::FinalConstruct</B> simply returns S_OK.</P>
+
+<P>Here is a typical way to create an aggregate:
+
+<UL type=disc>
+	<LI>Add an <B>IUnknown</B> pointer to your class object and initialize it to <B>NULL</B> in the constructor. </LI>
+
+	<LI>Override <B>FinalConstruct</B> to create the aggregate. </LI>
+
+	<LI>Use the <B>IUnknown</B> pointer you defined as the parameter to the <B>COM_INTERFACE_ENTRY_AGGREGATE</B> macro.</LI>
+
+	<LI>Override <B>FinalRelease</B> to release the <B>IUnknown</B> pointer.</LI>
+</UL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccomrtex_4.htm"><B>CComObjectRootEx::FinalRelease</B></A>, <A HREF="atlapi2_1.htm"><B>DECLARE_GET_CONTROLLING_UNKNOWN</B></A><B> </B></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

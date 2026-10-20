@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supporting GetDriverInfo2</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Supporting GetDriverInfo2"/>
+<MSHelp:RLTitle Title="Supporting GetDriverInfo2"/>
+<MSHelp:Keyword Index="A" Term="cxconSupportingGetDriverInfo2"/>
+<MSHelp:Keyword Index="K" Term="GetDriverInfo3"/>
+<MSHelp:Keyword Index="A" Term="cxconSupportingGetDriverInfo2"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715341">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconsupportinggetdriverinfo2"></A>Supporting GetDriverInfo2</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The DirectX 8.0 DDI introduces a new mechanism for querying the driver for information. This mechanism extends the existing <A HREF="_dxce_ddhal_getdriverinfo.htm">GetDriverInfo</A> entry point to query for additional information from the driver. Currently, this mechanism is only used for querying for DirectX 8.0 style Direct3D caps.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;As you read the following you may be confused as to why the <B>GetDriverInfo2</B> mechanism is necessary at all. It would seem preferable to simply define a new <B>GetDriverInfo</B> GUID that the driver would handle by returning a D3DCAP8 structure. <B>GetDriverInfo2</B>, introduced in the following paragraphs, is a mechanism to minimize the changes required to the Windows Operating Systems to enable DirectX 8.0 level functionality and thus make redistributing the DirectX 8.0 runtime practical.</BLOCKQUOTE>
+
+<P>This extension to <B>GetDriverInfo</B> takes the form of a <B>GetDriverInfo</B> call with GUID_GetDriverInfo2. When a <B>GetDriverInfo</B> call with that GUID is received by the driver, it must examine the data structure passed in the <B>lpvData</B> field of the <A HREF="_dxce_ddhal_ddhal_getdriverinfodata.htm">DDHAL_GETDRIVERINFODATA</A> data structure to see what information is being requested. As described below, <B>lpvData</B> can point to either a <B>DD_GETDRIVERINFO2DATA</B> or <B>DD_STEREOMODE</B> structure.</P>
+
+<P>The GUID_GetDriverInfo2 is the same GUID value as GUID_DDStereoMode. If your driver does not handle GUID_DDStereoMode, this is not an issue. However, if your DirectX 8.0 driver will handle GUID_DDStereoMode, please note that when a call to <B>GetDriverInfo</B> with the GUID_GetDriverInfo2(GUID_DDStereoMode) is made, the runtime sets the <B>dwHeight</B> field of the <B>DD_STEREOMODE</B> structure to the special value D3DGDI2_MAGIC. This field corresponds to the <B>dwMagic</B> field of the <B>DD_GETDRIVERINFO2DATA</B> structure. Therefore, by casting the <B>lpvData</B> pointer to either a pointer to a <B>DD_STEREOMODE</B> structure or a pointer to a <B>DD_GETDRIVERINFO2DATA</B> structure and checking the value of the corresponding field (<B>dwHeight</B> or <B>dwMagic</B>) for the value D3DGDI2_MAGIC, you can distinguish between a call to determine stereo mode capabilities or a request of Direct3D 8.0 capabilities.</P>
+
+<P>Once the driver has determined that this is a call to <B>GetDriverInfo2</B> it must then determine the type of information being requested by the runtime. This type is contained in the <B>dwType</B> field of the <B>DD_GETDRIVERINFO2DATA</B> data structure.</P>
+
+<P>Finally, the driver copies the requested data into the supplied buffer. It is important to note that the <B>lpvData</B> field of the <B>DDHAL_GETDRIVERINFODATA</B> data structure points to the buffer to which to copy the requested data. <B>lpvData</B> also points to the <B>DD_GETDRIVERINFO2DATA</B> structure. This means that the data returned by the driver will overwrite the <B>DD_GETDRIVERINFO2DATA</B> structure (and, therefore, that the <B>DD_GETDRIVERINFO2DATA</B> structure occupies the first few <B>DWORD</B>s of the buffer).</P>
+
+<P>In order to be called with <B>GetDriverInfo2</B>, and report DirectX 8.0 capabilities, it is necessary for the driver to set the new flag DDHALINFO_GETDRIVERINFO2 in the <B>dwFlags</B> field of the <A HREF="_dxce_ddhal_ddhalinfo.htm">DDHALINFO</A> structure returned by the driver. If this flag is not set, the runtime will not send <B>GetDriverInfo2</B> calls to the driver and the driver will not be recognized as a DirectX 8.0 level driver.</P>
+
+<P>The runtime uses <B>GetDriverInfo2</B> with type D3DGDI2_TYPE_DXVERSION to notify the driver of the current DX runtime version being used by the application. The runtime provides a pointer to a <B>DD_DXVERSION</B> structure in the <B>lpvData</B> field of <B>DDHAL_GETDRIVERINFODATA</B>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectx80ddisupport.htm">DirectX 8.0 DDI Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Supporting%20GetDriverInfo2&nbsp;(cxconsupportinggetdriverinfo2.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

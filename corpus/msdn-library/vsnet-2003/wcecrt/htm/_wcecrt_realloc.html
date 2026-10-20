@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>realloc</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_realloc"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_realloc.htm", "realloc")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_realloc"></A>realloc</H1>
+
+<P>Reallocate memory blocks.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Routine</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>realloc</B></TD>
+<TD width=73%>&lt;stdlib.h&gt; and &lt;malloc.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>void *realloc( void</B> *<I>memblock</I>,<B> size_t</B> <I>size</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>memblock</I></DT>
+
+<DD>Pointer to previously allocated memory block</dd>
+
+<DT><I>size</I></DT>
+
+<DD>New size in bytes</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P><B>realloc</B> returns a <B>void</B> pointer to the reallocated (and possibly moved) memory block. The return value is <B>NULL</B> if the size is zero and the buffer argument is not <B>NULL</B>, or if there is not enough available memory to expand the block to the given size. In the first case, the original block is freed. In the second, the original block is unchanged. The return value points to a storage space that is guaranteed to be suitably aligned for storage of any type of object. To get a pointer to a type other than <B>void</B>, use a type cast on the return value.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>realloc</B> function changes the size of an allocated memory block. The <I>memblock</I> argument points to the beginning of the memory block. If <I>memblock</I> is <B>NULL</B>, <B>realloc</B> behaves the same way as <B>malloc</B> and allocates a new block of size bytes. If <I>memblock</I> is not <B>NULL</B>, it should be a pointer returned by a previous call to <B>malloc</B>, or <B>realloc</B>.</P>
+
+<P>The size argument gives the new size of the block, in bytes. The contents of the block are unchanged up to the shorter of the new and old sizes, although the new block can be in a different location. Because the new block can be in a new memory location, the pointer returned by <B>realloc</B> is not guaranteed to be the pointer passed through the <I>memblock</I> argument.</P>
+
+<P><B>realloc</B> calls <B>malloc</B> in order to use the C++ <B>_set_new_mode</B> function to set the new handler mode. The new handler mode indicates whether, on failure, <B>malloc</B> is to call the new handler routine as set by<B> _set_new_handler</B>. By default, <B>malloc</B> does not call the new handler routine on failure to allocate memory. You can override this default behavior so that, when <B>realloc</B> fails to allocate memory, <B>malloc</B> calls the new handler routine in the same way that the <B>new</B> operator does when it fails for the same reason. To override the default, call </P>
+
+<PRE class="code">_set_new_mode(1)</PRE>
+
+<P>early in your program, or link with Newmode.obj.</P>
+
+<P>When the application is linked with a debug version of the C run-time libraries, <B>realloc</B> resolves to <B>_realloc_dbg</B>. For more information about how the heap is managed during the debugging process, see Using C Run-Time Library Debugging Support.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* REALLOC.C: This program allocates a block of memory for
+ * buffer and then uses _msize to display the size of that
+ * block. Next, it uses realloc to expand the amount of
+ * memory used by buffer and then calls _msize again to
+ * display the new amount of memory allocated to buffer.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+#include &lt;stdlib.h&gt;
+
+void main( void )
+{
+   long *buffer;
+   size_t size;
+
+   if( (buffer = (long *)malloc( 1000 * sizeof( long ) )) == NULL )
+      exit( 1 );
+
+   size = _msize( buffer );
+   printf( "Size of block after malloc of 1000 longs: %u\n", size );
+
+   /* Reallocate and show new size: */
+   if( (buffer = realloc( buffer, size + (1000 * sizeof( long )) ))
+        ==  NULL )
+      exit( 1 );
+   size = _msize( buffer );
+   printf( "Size of block after realloc of 1000 more longs: %u\n",
+            size );
+
+   free( buffer );
+   exit( 0 );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Size of block after malloc of 1000 longs: 4000
+Size of block after realloc of 1000 more longs: 8000</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_free.htm"><B>free</B></A>, <A HREF="_wcecrt_malloc.htm"><B>malloc</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

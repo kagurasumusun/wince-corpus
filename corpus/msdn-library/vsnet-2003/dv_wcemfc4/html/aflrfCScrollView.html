@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CScrollView</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CScrollView"/>
+<MSHelp:RLTitle Title="CScrollView"/>
+<MSHelp:Keyword Index="A" Term="aflrfCScrollView"/>
+<MSHelp:Keyword Index="K" Term="CScrollView class"/>
+<MSHelp:Keyword Index="K" Term="CScrollView class, overview"/>
+<MSHelp:Keyword Index="A" Term="aflrfCScrollView"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cscrolvw.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_696873">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcscrollview"></A>CScrollView</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This class is a <B>CView</B> with scrolling capabilities. </P>
+
+<P>You can handle standard scrolling yourself in any class derived from <B>CView</B> by overriding the message-mapped <A HREF="aflrfcwndcolcolonhscroll.htm"><B>OnHScroll</B></A> and <A HREF="aflrfcwndcolcolonvscroll.htm"><B>OnVScroll</B></A> methods. But <B>CScrollView</B> adds the following features to its <B>CView</B> capabilities:
+
+<UL type="disc">
+	<LI>It manages window and viewport sizes and mapping modes. </li>
+
+	<LI>It scrolls automatically in response to scroll-bar messages. </li>
+
+	<LI>It scrolls automatically in response to messages from the keyboard, a non-scrolling mouse, or the IntelliMouse wheel.</li>
+</UL>
+
+<P>To take advantage of automatic scrolling, derive your view class from <B>CScrollView</B> instead of from <B>CView</B>. When the view is first created, if you want to calculate the size of the scrollable view based on the size of the document, call the <B>SetScrollSizes</B> method from your override of either <A HREF="aflrfcviewcolcoloninitialupdate.htm"><B>CView::OnInitialUpdate</B></A> or <A HREF="aflrfcviewcolcolonupdate.htm"><B>CView::OnUpdate</B></A>. You must write your own code to query the size of the document.</P>
+
+<P>The call to the <B>SetScrollSizes</B> method sets the mapping mode, the total dimensions of the scroll view, and the amounts to scroll horizontally and vertically for the view. All sizes are in logical units. The logical size of the view is usually calculated from data stored in the document, but in some cases you may want to specify a fixed size. For examples of both approaches, see <A HREF="aflrfcscrollviewcolcolsetscrollsizes.htm"><B>CScrollView::SetScrollSizes</B></A>.</P>
+
+<P>You specify the amounts to scroll horizontally and vertically in logical units. By default, if the user clicks a scroll bar shaft outside of the scroll box, <B>CScrollView</B> scrolls a page. If the user clicks a scroll arrow at either end of a scroll bar, <B>CScrollView</B> scrolls a line. By default, a page is 1/10 of the total size of the view; a line is 1/10 of the page size. Override these default values by passing custom sizes in the <B>SetScrollSizes</B> method. For example, you might set the horizontal size to some fraction of the width of the total size and the vertical size to the height of a line in the current font.</P>
+
+<P>Instead of scrolling, <B>CScrollView</B> can automatically scale the view to the current window size. In this mode, the view has no scroll bars and the logical view is stretched or shrunk to exactly fit the client area of the window. To use this scale-to-fit capability, call <A HREF="aflrfcscrollviewcolcolsetscaletofitsize.htm"><B>CScrollView::SetScaleToFitSize</B></A>. Call either <B>SetScaleToFitSize</B> or <B>SetScrollSizes</B>, but not both.</P>
+
+<P>Before the <B>OnDraw</B> method of your derived view class is called, <B>CScrollView</B> automatically adjusts the viewport origin for the <B>CPaintDC</B> device-context object that it passes to <B>OnDraw</B>.</P>
+
+<P>To adjust the viewport origin for the scrolling window, <B>CScrollView</B> overrides <A HREF="aflrfcviewcolcolonpreparedc.htm"><B>CView::OnPrepareDC</B></A>. This adjustment is automatic for the <B>CPaintDC</B> device context that <B>CScrollView</B> passes to <B>OnDraw</B>, but you must call <B>CScrollView::OnPrepareDC</B> yourself for any other device contexts you use, such as a <B>CClientDC</B>. You can override <B>CScrollView::OnPrepareDC</B> to set the pen, background color, and other drawing attributes, but call the base class to do scaling.</P>
+
+<P>Scroll bars can appear in three places relative to a view, as shown in the following cases:
+
+<UL type="disc">
+	<LI>Standard window-style scroll bars can be set for the view using the WS_HSCROLL and WS_VSCROLL Windows Styles.  </li>
+
+	<LI>Scroll-bar controls can also be added to the frame containing the view, in which case the framework forwards WM_HSCROLL and WM_VSCROLL messages from the frame window to the currently active view. </li>
+
+	<LI>The framework also forwards scroll messages from a <B>CSplitterWnd</B> splitter control to the currently active splitter pane, a view. When placed in a <A HREF="aflrfcsplitterwnd.htm"><B>CSplitterWnd</B></A> with shared scroll bars, a <B>CScrollView</B> object will use the shared ones rather than creating its own.</li>
+</UL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>Because MFC for Windows CE only supports the MM_TEXT map mode, it supports the following<B> </B>methods of the <B>CScrollView</B> class differently than standard MFC:
+
+<UL type="disc">
+	<LI><A HREF="aflrfcscrollviewcolcolsetscaletofitsize.htm"><B>CScrollView::SetScaleToFitSize</B></A><B> </B></li>
+
+	<LI><A HREF="aflrfcscrollviewcolcolsetscrollsizes.htm"><B>CScrollView::SetScrollSizes</B></A></li>
+
+	<LI><A HREF="aflrfcscrollviewcolcolgetdevicescrollsizes.htm"><B>CScrollView::GetDeviceScrollSizes</B></A></li>
+</UL>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcview.htm"><B>CView</B></A>, <A HREF="aflrfcsplitterwnd.htm"><B>CSplitterWnd</B></A>, <A HREF="aforiviewclasses.htm"><B>View Classes</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_696873', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

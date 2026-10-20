@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Status Before Driver Loading</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Status Before Driver Loading"/>
+<MSHelp:RLTitle Title="Registry Status Before Driver Loading"/>
+<MSHelp:Keyword Index="A" Term="cxconRegistryStatusBeforeLoadingDrivers"/>
+<MSHelp:Keyword Index="K" Term="registry status, before driver loading"/>
+<MSHelp:Keyword Index="A" Term="cxconRegistryStatusBeforeLoadingDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverloadingmodel.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753221">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconregistrystatusbeforeloadingdrivers"></A>Registry Status Before Driver Loading</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When Device.exe is loaded, it examines the <B>HKEY_LOCAL_MACHINE\Drivers</B> key for the <B>RootKey</B> value. It then examines the key pointed to by <B>RootKey</B>, in this case <B>Drivers</B>, for a DLL to load. In this example, it is the Registry Enumerator (RegEnum.dll). The Registry Enumerator's entry point, <B>Init</B>, is called with the <B>HKEY_LOCAL_MACHINE\Drivers</B> key. The Registry Enumerator examines the first level of keys just below the key passed to it according to <B>Order</B>. In this example, the <B>Drivers\Debug</B> key has <B>Order</B> of 0, so it is examined first.</P>
+
+<P>The DLL loaded for <B>Drivers\Debug</B> is again the Registry Enumerator; it is re-entrant. The <B>Flags</B> value is set to 0x0001, or DEVFLAGS_UNLOAD, meaning that RegEnum.dll is unloaded, or its reference count is decremented. Its reference count is decremented in this example. <B>Init</B> is called with the <B>Drivers\Debug</B> key. It examines the immediate subkeys for ordering information. In this example, <B>Drivers\Debug\EDBG</B> has the lowest and only <B>Order</B> key. The Flags value for <B>Drivers\Debug\EDBG</B> is 0x0004, or DEVFLAGS_LOAD, which indicates that the DLL is not loaded because the Ethernet debugging adapter driver has already been loaded by the OAL. Any resources used by this device and any other devices not loaded by a bus driver should be excluded from the list of available resources used by the <A HREF="cxconresourcemanager.htm">I/O Resource Manager</A>.</P>
+
+<P>The next key under the <B>Drivers</B> key is <B>Drivers\Virtual</B> with <B>Order</B> equal to 1. The Registry Enumerator is activated through a call to its <B>Init</B> function with the parameter <B>Drivers\Virtual</B>. <B>Init</B> examines the immediate subkeys for ordering information. In this example, <B>Drivers\Virtual\NDIS</B> has the lowest and only <B>Order</B> key. The <B>Dll</B> value is examined and NDIS.dll is loaded. The entry point, <B>NDS_Init</B>, is called with driver's <B>Active</B> key due the properties of the stream interface, which contains a <B>Key</B> value equal to <B>Drivers\Virtual\NDIS</B>. There are no more keys under <B>Drivers\Virtual</B>, so the Registry Enumerator's <B>Init</B> function returns.</P>
+
+<P>The next key under the <B>Drivers</B> key is <B>Drivers\CSP</B> with <B>Order</B> equal to 2. The Registry Enumerator is activated through a call to <B>Init</B> with parameter <B>Drivers\CSP</B>. <B>Init</B> scans the registry for subkeys of <B>Drivers\CSP</B>. In this case, the first and only key is <B>Drivers\CSP\Serial</B>. The indicated DLL, Com16550.dll, is loaded and the entry point, <A HREF="_wceddk_com_init.htm">COM_Init</A> is called with the <B>Active</B> key, which contains a <B>Key</B> value of <B>Drivers\CSP\Serial</B>. The <B>Unimodem</B> subkey will be available to the serial driver.</P>
+
+<P>The next key under the <B>Drivers</B> key is <B>Drivers\ISA</B> with <B>Order</B> equal to 3. The Registry Enumerator is used in place of an ISA bus driver. You can also use a Plug and Play ISA bus driver. If you do not use a Plug and Play ISA bus driver to configure and allocate ISA resources, the ISA resources must be allocated through the registry. In this case, RegEnum.dll can be used again to enumerate the registry for ISA devices. The use of the <B>ISA</B> subkey, as well as the <B>CSP</B> subkey, is optional. You can choose any registry structure, including hierarchical. For example, <B>ISA</B> can be a subkey of <B>PCI</B>, which can be a subkey of <B>BuiltIn</B>.</P>
+
+<P>In this example, the first key by <B>Order</B> under <B>Drivers\ISA</B> is <B>Drivers\ISA\Serial</B>. The DLL is loaded. In this case, because Com16550.dll is already loaded from a previous key, nothing happens other than a reference count increment, and the default entry point is called. The next key by Order is <B>Drivers\ISA\PCMCIA</B>.</P>
+
+<P>The last key by <B>Order</B> under the <B>Drivers</B> key is <B>Drivers\PCI</B>. The DLL is PCIbus.dll, a PCI bus driver and enumerator. This driver takes care of configuring and enumerating the PCI bus, allocating resources to the devices it finds on the bus, and populating the registry with device instances. It does this in conjunction with the I/O Resource Manager. When the PCI bus driver's <B>Init</B> function is called, it examines the values under <B>Drivers\PCI</B> for information regarding the resources available for use by the PCI bus. These values include <B>MemBase</B> and <B>MemLen</B>, which specify the ranges of memory-mapped I/O, and <B>IoBase</B> and <B>IoLen</B>, which specify the ranges of port I/O.</P>
+
+<H2 class="dtH2">Device Identification</H2>
+
+<P>After configuring the PCI bus, the PCI bus driver re-scans the PCI bus for the purpose of enumeration and matching devices with registry entries. When a device is enumerated, the registry is searched using the device's identifiers. The following table shows the device identifiers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Subkey</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>Class</B></TD>
+<TD width=50%>Identifies basic function of device, for example, a mass storage controller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>SubClass</B></TD>
+<TD width=50%>Identifies a specific sub-class of basic function, for example, an IDE controller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ProgIF</B></TD>
+<TD width=50%>Identifies a register-specific programming interface, for example, USB OHCI versus UHCI.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>VendorID</B></TD>
+<TD width=50%>Identifies the manufacturer of the device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>DeviceID</B></TD>
+<TD width=50%>Identifies the type of device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>SubsystemVendorID</B></TD>
+<TD width=50%>Identifies the vendor of a card or subsystem that uses a device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>SubsystemID</B></TD>
+<TD width=50%>Identifies the type of card or subsystem that uses a device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>RevisionID</B></TD>
+<TD width=50%>Identifies the revision number of the device.</TD>
+</TR>
+</table></div>
+
+<P>The identifiers are listed in order of increasing specificity. When matching a found device with a registry entry, all of the values that are listed in the registry must match the found device. For example, a driver that works with all 16550-compatible serial controllers has the values shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Subkey</TH>
+<TH width=33%>Value</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Class</B></TD>
+<TD width=33%><B>7</B></TD>
+<TD width=34%>Simple communications controllers</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>SubClass</B></TD>
+<TD width=33%><B>0</B></TD>
+<TD width=34%>Serial</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>ProgIF</B></TD>
+<TD width=33%><B>2</B></TD>
+<TD width=34%>16550-compatible serial controller</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;These values are part of the <I>PCI Revision 2.2 Specification</I>.</BLOCKQUOTE>
+
+<P>If a particular serial driver were tailored to a particular vendor's device, then the <B>VendorID</B> and <B>DeviceID</B> values would be listed as well. The registry entry for this driver would only match a device that contains the exact same <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B> and <B>DeviceID</B>. The <B>VendorID</B>, <B>DeviceID</B>, <B>SubsystemVendorID</B>, <B>SubsystemID</B> and <B>RevisionID</B> can have a list of values associated so the driver can be matched with a subset of cards.</P>
+
+<H2 class="dtH2">Registry Keys Before Driver Loading</H2>
+
+<P>The following registry information shows the state of the registry before the drivers are loaded.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers]
+    "RootKey"="Drivers"
+    "Dll"="RegEnum.dll"
+[HKEY_LOCAL_MACHINE\Drivers\Debug]
+    "Dll"="RegEnum.dll"
+    "Order"=dword:0
+    "Flags"=dword:1
+[HKEY_LOCAL_MACHINE\Drivers\Debug\EDBG]
+    "Flags"=dword:4
+    "Irq"=dword:1
+    "MemBase"=dword:FFBFA000
+    "MemLen"=dword:1000
+    "SysIntr"=dword:11
+[HKEY_LOCAL_MACHINE\Drivers\Virtual]
+    "Dll"="RegEnum.dll"
+    "Order"=dword:1
+    "Flags"=dword:1
+[HKEY_LOCAL_MACHINE\Drivers\Virtual\NDIS]
+    "Dll"="NDIS.dll"
+    "Order"=dword:1
+    "Prefix"="NDS"
+    "Index"=dword:0
+[HKEY_LOCAL_MACHINE\Drivers\CSP]
+    "Dll"="RegEnum.dll"
+    "Order"=dword:2
+    "Flags"=dword:1
+[HKEY_LOCAL_MACHINE\Drivers\CSP\Serial]
+    "Dll"="Com16550.Dll"
+    "Order"=dword:0
+    "Irq"=dword:3
+    "MemBase"=dword:FFBFC000
+    "MemLen"=dword:8
+    "SysIntr"=dword:13
+    "Prefix"="COM"
+    "DeviceArrayIndex"=dword:0
+    "Priority"=dword:0
+[HKEY_LOCAL_MACHINE\Drivers\CSP\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on COM1:"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+[HKEY_LOCAL_MACHINE\Drivers\ISA]
+    "Dll"="RegEnum.dll"
+    "Order"=dword:3
+    "Flags"=dword:1
+[HKEY_LOCAL_MACHINE\Drivers\ISA\Serial]
+    "Dll"="Com16550.Dll"
+    "Order"=dword:0
+    "Irq"=dword:4
+    "IoBase"=dword:02F8
+    "IoLen"=dword:8
+    "SysIntr"=dword:14
+    "Prefix"="COM"
+    "DeviceArrayIndex"=dword:1
+[HKEY_LOCAL_MACHINE\Drivers\ISA\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on COM2:"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+[HKEY_LOCAL_MACHINE\Drivers\ISA\PCMCIA]
+    "Dll"="PCMCIA.dll"
+    "Order"=dword:1
+    "Irq"=dword:B
+    "SysIntr"=dword:1B
+    "IoBase"=dword:03e0
+    "IoLen"=dword:2
+[HKEY_LOCAL_MACHINE\Drivers\PCI]
+    "Dll"="PCIbus.dll"
+    "Order"=dword:4
+    "Flags"=dword:1
+    "MemBase"=dword:FFC00000
+    "MemLen"=dword:100000
+    "IoBase"=dword:D000
+    "IoLen"=dword:3000    
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\Serial]
+    "Dll"="Com16550.Dll"
+    "Class"=dword:07
+    "SubClass"=dword:00
+    "ProgIF"=dword:02
+    "VendorID"=multi_sz:"0AF0","B320","B320"
+    "DeviceID"=multi_sz:"0020","0300","0302"
+    "Prefix"="COM"
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on PCI"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1\Unimodem]
+    "FriendlyName"="Serial Cable on COM3:"
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\NE2000]
+    "Dll"="NDIS.dll"
+    "ConfigDll"="NE2000cfg.dll"
+    "ConfigEntry"="DeviceConfig"
+    "Class"=dword:02
+    "SubClass"=dword:00
+    "ProgIF"=dword:00
+    "MiniPort"="NE2000"
+; NE2000 common and instance specific information     
+[HKEY_LOCAL_MACHINE\Comm\NE2000]
+    "DisplayName"="NE2000 Compatible Ethernet Driver"
+    "Group"="NDIS"
+    "ImagePath"="NE2000.dll"
+[HKEY_LOCAL_MACHINE\Comm\NE20001]
+    "DisplayName"="NE2000 Compatible Ethernet Driver 1"
+[HKEY_LOCAL_MACHINE\Comm\NE20001\Parms]
+    "Transceiver"=dword:3
+[HKEY_LOCAL_MACHINE\Comm\NE20001\Parms\TcpIp]
+    "EnableDHCP"=dword:1
+    "DefaultGateway"=""
+    "UseZeroBroadcast"=dword:0
+    "IpAddress"="0.0.0.0"
+    "Subnetmask"="0.0.0.0"
+[HKEY_LOCAL_MACHINE\Comm\NE20002]
+    "DisplayName"="NE2000 Compatible Ethernet Driver 2"
+[HKEY_LOCAL_MACHINE\Comm\NE20002\Parms]
+    "Transceiver"=dword:2
+[HKEY_LOCAL_MACHINE\Comm\NE20002\Parms\TcpIp]
+    "EnableDHCP"=dword:0
+    "DefaultGateway"=""
+    "UseZeroBroadcast"=dword:0
+    "IpAddress"="157.56.148.128"
+    "Subnetmask"="255.255.252.0"</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicedriverloadingprocess.htm">Device Driver Loading Process</A></P>
+
+<P><A HREF="cxconpcibusconfigurationenumeration.htm">PCI Bus Configuration and Enumeration</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20Status%20Before%20Driver%20Loading&nbsp;(cxconregistrystatusbeforeloadingdrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

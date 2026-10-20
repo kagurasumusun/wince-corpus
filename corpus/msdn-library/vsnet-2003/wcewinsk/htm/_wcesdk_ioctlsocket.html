@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ioctlsocket</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ioctlsocket"/>
+<MSHelp:RLTitle Title="ioctlsocket"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ioctlsocket"/>
+<MSHelp:Keyword Index="K" Term="ioctlsocket"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ioctlsocket"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720497">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_ioctlsocket"></A>ioctlsocket</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function controls the I/O mode of a socket.</P>
+
+<PRE class="syntax"><B>int ioctlsocket(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>long </B><I>cmd</I><B>,</B>
+<B>u_long FAR *</B><I>argp</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying a socket.</dd>
+
+<DT><I>cmd</I></DT>
+
+<DD>[in] Command to perform on socket <I>s</I>.</dd>
+
+<DT><I>argp</I></DT>
+
+<DD>[in/out] Pointer to a parameter for <I>cmd</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>On successful completion, the <B>ioctlsocket</B> function returns zero. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code can be retrieved by calling <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>. The following table shows a list of possible error values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Error value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSANOTINITIALISED </TD>
+<TD width=66%>A successful <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> call must occur before using the <B>ioctlsocket</B> function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAENETDOWN </TD>
+<TD width=66%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAEINPROGRESS </TD>
+<TD width=66%>A blocking Winsock call is in progress, or the service provider is still processing a callback function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAENOTSOCK </TD>
+<TD width=66%>The descriptor<I> s </I>is not a socket. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAEFAULT </TD>
+<TD width=66%>The <I>argp</I> parameter is not a valid part of the user address space. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAEINVAL</TD>
+<TD width=66%>An unsupported or invalid parameter.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>ioctlsocket</B> function can be used on any socket in any state. It is used to set or retrieve operating parameters associated with the socket, independent of the protocol and communications subsystem. The supported commands to use in the <I>cmd</I> parameter and their semantics are as follows.</P>
+
+<P>FIONBIO </P>
+
+<BLOCKQUOTE class="dtBlock">
+Use FIONBIO with a nonzero <I>argp</I> parameter to enable the nonblocking mode of socket <I>s</I>. The <I>argp</I> parameter is zero if nonblocking is to be disabled. The <I>argp</I> parameter points to an unsigned long value. When a socket is created, it operates in blocking mode by default (nonblocking mode is disabled). This is consistent with BSD sockets. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+The <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A> function automatically sets a socket to nonblocking mode. If <B>WSAEventSelect</B> has been issued on a socket, then any attempt to use <B>ioctlsocket</B> to set the socket back to blocking mode will fail with WSAEINVAL. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+To set the socket back to blocking mode, an application must first disable <B>WSAEventSelect</B> by calling <B>WSAEventSelect</B> with the <I>lNetworkEvents</I> parameter equal to zero. </BLOCKQUOTE>
+
+<P>FIONREAD </P>
+
+<BLOCKQUOTE class="dtBlock">
+Use FIONREAD to determine the amount of data pending in the network's input buffer that can be read from socket <I>s</I>. The <I>argp</I> parameter points to an unsigned long value in which <B>ioctlsocket</B> stores the result. If<I> s </I>is stream-oriented (for example, type <B>SOCK_STREAM</B>), FIONREAD returns the amount of data that can be read in a single call to the <A HREF="_wcesdk_recv.htm">recv</A> function; this might not be the same as the total amount of data queued on the socket. If<I> s </I>is message-oriented (for example, type <B>SOCK_DGRAM</B>), FIONREAD returns the size of the first datagram (message) queued on the socket. </BLOCKQUOTE>
+
+<P>SIOCATMARK </P>
+
+<BLOCKQUOTE class="dtBlock">
+SIOCATMARK is not supported and returns WSAEINVAL.</BLOCKQUOTE>
+
+<H4 class="dtH4">Compatibility</H4>
+
+<P>This <B>ioctlsocket</B> function performs only a subset of functions on a socket when compared to the <B>ioctl</B> function found in Berkeley sockets. The <B>ioctlsocket</B> function has no command parameter equivalent to the FIOASYNC of <B>ioctl</B>, and SIOCATMARK is the only socket-level command that is supported by <B>ioctlsocket</B>.</P>
+
+<H4 class="dtH4">Notes for Bluetooth</H4>
+
+<P>The <A HREF="_wcesdk_wsaioctl.htm">WSAIoctl</A> and <B>ioctlsocket</B> functions control the mode of a socket. <B>WSAIoctl</B> requires Winsock 2.2 and allows overlapped or asynchronous operation. The <B>ioctlsocket</B> function can be used with Winsock 1.1 or later. The following Bluetooth-specific IOCTL codes exist:
+
+<UL type="disc">
+	<LI>SIO_RFCOMM_COMM_PARAMETERS sets or queries modem attributes. The structures used and calling semantics are the same as TDI_ACTION RFCOMM_COMM_PARAMETERS.</li>
+
+	<LI>SIO_RFCOMM_WAIT_MODEM_STATUS gets the current status of the modem. The semantics are the same as TDI_ACTION RFCOMM_MODEM_STATUS.</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_getsockopt.htm">getsockopt</A>, <A HREF="_wcesdk_recv.htm">recv</A>, <A HREF="_wcesdk_setsockopt.htm">setsockopt</A>, <A HREF="_wcesdk_socket.htm">socket</A>, <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A>, <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsaioctl.htm">WSAIoctl</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ioctlsocket&nbsp;(_wcesdk_ioctlsocket.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Display Driver Extension Using DDGPE Classes</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Display Driver Extension Using DDGPE Classes"/>
+<MSHelp:RLTitle Title="Display Driver Extension Using DDGPE Classes"/>
+<MSHelp:Keyword Index="A" Term="cxconDisplayDriverExtensionUsingDDGPEClasses"/>
+<MSHelp:Keyword Index="K" Term="extensions, DirectDraw driver using DDGPE"/>
+<MSHelp:Keyword Index="A" Term="cxconDisplayDriverExtensionUsingDDGPEClasses"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ddraw_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750895">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondisplaydriverextensionusingddgpeclasses"></A>Display Driver Extension Using DDGPE Classes</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic describes the steps required to extend your display driver using the DDGPE C++ classes.</P>
+
+<P>The DDGPE C++ classes extend the functionality of GPE in order to support the inclusion of a DirectDraw hardware abstraction layer (DDHAL). To add this functionality, you will need to make a few minor and nondestructive changes to your source code.</P>
+
+<P>Before you begin, you will need to know the location of the following:
+
+<UL type="disc">
+	<LI>The contents of the DDGPE package (Ddgpe.lib and Ddgpe.h).</li>
+
+	<LI>The build file containing information to link your device driver to Gpe.lib (usually called sources).</li>
+
+	<LI>The header file containing your device-specific declaration of a GPE-derived class.</li>
+
+	<LI>The source code file containing the constructor of the device-specific derivation of the <B>GPE</B> class, along with any other files that include the Gpe.h header file.</li>
+
+	<LI>Any header files containing the device-specific derivation of the <A HREF="_dxce_ddgpesurf_class_ddhal.htm">GPESurf class</A>.</li>
+
+	<LI>Any source code files referencing the <B>GPESurf</B> class directly (for example, constructors for any derived classes).</li>
+</UL>
+
+<P>Place Ddgpe.lib in the appropriate library directory path, and put Ddgpe.h in the appropriate header directory path. Make the changes in your build file to link to Ddgpe.lib (in addition to Gpe.lib, which should already exist). Depending on your build environment, you may need to add Ddgpe.lib as one of your <B>SOURCELIB</B> entries, in order for <A HREF="_dxce_halinit_ddhal.htm">HALInit</A> to be exported properly by your linker.</P>
+
+<P>Next, change the header file defining your device-specific class to derive directly from DDGPE instead of GPE. Make any necessary changes to your constructors or other functions to accommodate this change of base class. Change the files that include Gpe.h to include Gdgpe.h instead.</P>
+
+<P>Change any header files deriving from the <B>GPESurf</B> class (these may or may not be present in your display driver), to derive from <B>DDGPESurf</B>, instead. Modify your source code to accommodate this change of base class. You should be sure that your code always refers to <B>DDGPESurf</B> where it would normally refer to <B>GPESurf</B>.</P>
+
+<P>Recompile your display driver and test it to be sure that it still works properly. When you have verified that it continues to work properly, you may continue to the next topic, <A HREF="cxconddhalfunctionalityimplementation.htm">DDHAL Functionality Implementation</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectdrawdisplaydrivercreation.htm">DirectDraw Display Driver Creation</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Display%20Driver%20Extension%20Using%20DDGPE%20Classes&nbsp;(cxcondisplaydriverextensionusingddgpeclasses.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

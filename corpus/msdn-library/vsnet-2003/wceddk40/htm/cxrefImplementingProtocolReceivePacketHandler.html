@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing a ProtocolReceivePacket Handler</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing a ProtocolReceivePacket Handler"/>
+<MSHelp:RLTitle Title="Implementing a ProtocolReceivePacket Handler"/>
+<MSHelp:Keyword Index="A" Term="cxrefImplementingProtocolReceivePacketHandler"/>
+<MSHelp:Keyword Index="K" Term="NDIS, ProtocolReceivePacket handlers"/>
+<MSHelp:Keyword Index="K" Term="packets, ProtocolReceivePacket handlers"/>
+<MSHelp:Keyword Index="A" Term="cxrefImplementingProtocolReceivePacketHandler"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758531">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefimplementingprotocolreceivepackethandler"></A>Implementing a ProtocolReceivePacket Handler</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When an underlying NIC driver indicates an array of one or more packet descriptors with <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, NDIS will usually call a bound protocol driver's <A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A> function with each packet descriptor, thereby allowing the protocol driver (or its clients) to retain the packet descriptor and all the resources it specifies until the protocol or its clients have consumed the data and returned the packet descriptor. Two kinds of NIC drivers typically call <B>NdisMIndicateReceivePacket</B> with an array of packet descriptors: 
+
+<UL type="disc">
+	<LI>A NIC driver managing a busmaster DMA adapter that is capable of receiving several packets at a time into a ring of buffers </li>
+
+	<LI>A NIC driver that provides out-of-band data containing media-specific information, such as packet priority, in the <A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A> block associated with the packet descriptor </li>
+</UL>
+
+<P>If a protocol driver is aware that it is (or might be) bound to such a NIC driver, it should have a <B>ProtocolReceivePacket</B> function. This allows the protocol driver to do all of the following: 
+
+<UL type="disc">
+	<LI>To receive indications of full network packets from the underlying NIC driver </li>
+
+	<LI>To read the OOB data associated with each packet descriptor using NDIS-supplied macros </li>
+
+	<LI>To retain ownership of the input packet descriptor and direct read-only access to the buffered data specified by the descriptor if the protocol makes copies of the data for its clients, or even to forward the indicated packet descriptor to its clients after selecting the range of packet data of interest to the clients </li>
+
+	<LI>To return the packet descriptor and the resources it described, possibly along with other retained packet descriptors, with <A HREF="_wceddk_ndisreturnpackets.htm">NdisReturnPackets</A> when the protocol has consumed the indicated data if it retains ownership of the input packet descriptor; otherwise, to have clients to which the protocol forwarded a receive indication return the packet descriptor. </li>
+</UL>
+
+<P>Even when a protocol driver provides a <B>ProtocolReceivePacket</B> handler, there are cases when a call by a NIC driver to <B>NdisMIndicateReceivePacket</B> results in a call to the protocol driver's <B>ProtocolReceive</B> function. Because a NIC driver temporarily relinquishes ownership of driver-allocated resources when it calls <B>NdisMIndicateReceivePacket</B>, the underlying driver depends on the consumers of those packets to return them in a timely manner. Otherwise, the NIC driver can run short of receive resources; such as receive buffer space in the NIC. When it does, the NIC driver sets NDIS_STATUS_RESOURCES in the OOB block associated with a packet descriptor in the packet array it passes to <B>NdisMIndicateReceivePacket</B>. Indicating a packet with this status causes NDIS to call the overlying driver's <B>ProtocolReceive</B> function with such a packet and with any subsequent packets in the array, thus forcing the protocol driver to copy the packet data immediately, rather than retaining the NIC-driver-allocated packet resources. </P>
+
+<P>If the protocol driver requires the OOB data associated with a packet descriptor but is called at <B>ProtocolReceive</B>, it must call <A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A> and <A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A> to copy the media-specific information into a protocol-supplied buffer and possibly the <I>TimeSent</I> and <I>TimeReceived</I> values if the underlying NIC driver provides these timestamps. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefreceivingdatainprotocoldriver.htm">Receiving Data in a Protocol Driver</A></P>
+
+<P><A HREF="_wceddk_ndis_get_original_packet.htm">NDIS_GET_ORIGINAL_PACKET</A></P>
+
+<P><A HREF="_wceddk_ndis_packet_oob_data.htm">NDIS_PACKET_OOB_DATA</A> </P>
+
+<P><A HREF="_wceddk_ndisgetreceivedpacket.htm">NdisGetReceivedPacket</A></P>
+
+<P><A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A></P>
+
+<P><A HREF="_wceddk_ndisreturnpackets.htm">NdisReturnPackets</A></P>
+
+<P><A HREF="cxconprotocolreceivepacket.htm">ProtocolReceivePacket</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20a%20ProtocolReceivePacket%20Handler&nbsp;(cxrefimplementingprotocolreceivepackethandler.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

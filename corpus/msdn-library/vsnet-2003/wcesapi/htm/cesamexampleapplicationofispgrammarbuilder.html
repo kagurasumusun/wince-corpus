@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Example application of ISpGrammarBuilder</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Example application of ISpGrammarBuilder"/>
+<MSHelp:RLTitle Title="Example application of ISpGrammarBuilder"/>
+<MSHelp:Keyword Index="A" Term="cesamExampleApplicationOfISpGrammarBuilder"/>
+<MSHelp:Keyword Index="A" Term="cesamExampleApplicationOfISpGrammarBuilder"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_grammar_compiler.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822336">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cesamexampleapplicationofispgrammarbuilder"></A>Example application of ISpGrammarBuilder</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following code example illustrates an implementation of the <A HREF="cerefispgrammarbuilder.htm">ISpGrammarBuilder</A> interface.</P>
+
+<PRE class="code">// HRESULT checking code omitted
+SPSTATEHANDLE hStateTravel;
+hr = pGrammarBuilder-&gt;GetRule(L"Travel", 0, SPRAF_TopLevel | SPRAF_Active, TRUE, &amp;hStateTravel);
+
+// Approach 1: list all possible phrases
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, NULL, L"fly to Seattle", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, NULL, L"fly to New York", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, NULL, L"fly to Washington DC", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, NULL, L"drive to Washington DC", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, NULL, L"drive to New York", L" ", SPWT_LEXICAL, 1, NULL);
+// This is the most intuitive approach, and it does not sacrefice efficiency
+// because the grammar builder will merge shared sub-phrases when possible.
+
+// Approach 2: construct the directed-graph using intermediate states
+SPSTATEHANDLE hStateTravel1;
+hr = pGrammarBuilder-&gt;CreateNewState(hStateTravel, &amp;hStateTravel1);
+
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, hStateTravel1, L"fly to", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, hStateTravel1, L"drive to", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel, hStateTravel1, L"take train to", L" ", SPWT_LEXICAL, 1, NULL);
+
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel1, NULL, L"Seattle", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel1, NULL, L"New York", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateTravel1, NULL, L"Washington DC", L" ", SPWT_LEXICAL, 1, NULL);
+// This approach gives you more control of the grammar layout, and can be
+// easier to implement when you have some combinations.
+
+// Approach 3: using sub rules
+SPSTATEHANDLE hStateMethod;
+SPSTATEHANDLE hStateDest;
+hr = pGrammarBuilder-&gt;GetRule(L"Method", 0, 0, TRUE, &amp;hStateMethod);
+hr = pGrammarBuilder-&gt;GetRule(L"Dest", 0, SPRAF_Dynamic, TRUE, &amp;hStateDest); // dynamic rules can be modified after commit and reload
+
+SPSTATEHANDLE hStateTravel2;
+hr = pGrammarBuilder-&gt;CreateNewState(hStateTravel, &amp;hStateTravel2);
+hr = pGrammarBuilder-&gt;AddRuleTransition(hStateTravel, hStateTravel2, hStateMethod, 1, NULL);
+hr = pGrammarBuilder-&gt;AddRuleTransition(hStateTravel2, NULL, hStateDest, 1, NULL);
+
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateMethod, NULL, L"fly to", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateMethod, NULL, L"drive to", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateMethod, NULL, L"take train to", L" ", SPWT_LEXICAL, 1, NULL);
+
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateDest, NULL, L"Seattle", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateDest, NULL, L"New York", L" ", SPWT_LEXICAL, 1, NULL);
+hr = pGrammarBuilder-&gt;AddWordTransition(hStateDest, NULL, L"Washington DC", L" ", SPWT_LEXICAL, 1, NULL);
+// This approach let you structure the grammars and is useful when building large grammars
+// Must Commit before using the grammar
+hr = pGrammarBuilder-&gt;Commit(0);</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Example%20application%20of%20ISpGrammarBuilder&nbsp;(cesamexampleapplicationofispgrammarbuilder.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

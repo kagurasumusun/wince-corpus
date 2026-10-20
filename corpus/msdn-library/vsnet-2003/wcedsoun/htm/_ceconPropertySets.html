@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Property Sets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Property Sets"/>
+<MSHelp:RLTitle Title="Property Sets"/>
+<MSHelp:Keyword Index="A" Term="_ceconPropertySets"/>
+<MSHelp:Keyword Index="K" Term="DirectSound, devices"/>
+<MSHelp:Keyword Index="K" Term="property sets, DirectSound"/>
+<MSHelp:Keyword Index="A" Term="_ceconPropertySets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxsound_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_752514">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_ceconpropertysets"></A>Property Sets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>DirectSound is able to support extended services offered by sound cards, and their associated drivers, through the <A HREF="_cerefikspropertyset.htm">IKsPropertySet</A> interface.</P>
+
+<P>Properties are arranged in sets. A GUID identifies a set, and a ULONG identifies a particular property within the set. For example, a hardware vendor might design a card capable of reverberation effects and define a property set DSPROPSETID_ReverbProperties containing properties such as DSPROPERTY_REVERBPROPERTIES_HALL and DSPROPERTY_REVERBPROPERTIES_STADIUM.</P>
+
+<P>Typically, the property identifiers are defined using a C language enumeration starting at ordinal 0.</P>
+
+<P>Individual properties can also have associated parameters. The <B>IKsPropertySet</B> interface specification intentionally leaves these parameters undefined. This allows the designer of the property set to optimize the parameters' use within their property set. The precise meaning of the parameters is defined with the definition of the properties.</P>
+
+<P>To make use of extended properties on sound cards, you must first determine whether the driver supports the <B>IKsPropertySet</B> interface, and then obtain a pointer to the interface if it is supported.</P>
+
+<P>Once you have determined that support for a particular property exists, you can determine its present state by using the <A HREF="_cerefikspropertysetget.htm">IKsPropertySet::Get</A> method. You can change the state of the property by using the <A HREF="_cerefikspropertysetset.htm">IKsPropertySet::Set</A> method.</P>
+
+<P>The <B>IKsPropertySet::Set</B> method allows you to pass additional property parameters through a parameter that points to a structure. The exact way in which this parameter is to be used is defined in the hardware vendor's specifications for the property set, but typically it would be used to define the instance of the property set. In practice, this technique is rarely used.</P>
+
+<P>For example, suppose a sound card has the ability to play famous arias in the voices of several tenors. The driver developer can create a property set, DSPROPSETID_Aria, containing properties such as DSPROPERTY_ARIA_VESTI_LA_GIUBBA and DSPROPERTY_ARIA_CHE_GELIDA_MANINA that apply to all tenors supported by the sound card. The driver developer can specify that the <I>pPropertyParam</I> parameter of <B>IKsPropertySet::Set</B> method identifies a particular tenor. With this driver support, your application can access the special feature of the sound card using the following code to produce the sound of Caruso singing the great aria from Pagliacci. </P>
+
+<PRE class="code">DWORD WhichTenor = CARUSO;
+BOOL  StartOrStop = START;
+
+HRESULT hr = lpKsPropertySet-&gt;Set(
+                     DSPROPSETID_Aria,
+                     KSPROPERTY_ARIA_VESTI_LA_GIUBBA,
+                     &amp;WhichTenor,
+                     sizeof(WhichTenor),
+                     &amp;StartOrStop),
+                     sizeof(StartOrStop));</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Property%20Sets&nbsp;(_ceconpropertysets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComPolyObject</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccompolyobject"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ccompolyobject"></A>CComPolyObject</H1>
+
+<P>This class implements <B>IUknown</B> for an aggregated or nonaggregated class. The <I>contained</I> class is your class.</P>
+
+<PRE class=syntax><B>template&lt; class </B><I>contained</I><B> &gt;</B>
+<B>class CComPolyObject : public IUnknown,
+public CComObjectRootEx&lt; </B><I>contained</I><B>::_ThreadModel::ThreadModelNoCS &gt;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>contained</I></DT>
+
+<DD>Your class, derived from <A HREF="ccomroot.htm"><B>CComObjectRoot</B></A> or <A HREF="ccomrtex.htm"><B>CComObjectRootEx</B></A>, as well as from any other interfaces you want to support on the object.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>When an instance of <B>CComPolyObject</B> is created, the value of the outer unknown is checked. If it is <B>NULL</B>, <B>IUnknown</B> is implemented for a nonaggregated object. If the outer unknown is not <B>NULL</B>, <B>IUnknown</B> is implemented for an aggregated object. </P>
+
+<P>The advantage of using <B>CComPolyObject</B> is that you avoid having both <A HREF="ccagg.htm"><B>CComAggObject</B></A> and <A HREF="ccomobj.htm"><B>CComObject</B></A> in your module to handle the aggregated and nonaggregated cases. A single <B>CComPolyObject</B> object handles both cases. This means only one copy of the vtable and one copy of the functions exist in your module. If your vtable is large, this can substantially decrease your module size. However, if your vtable is small, using <B>CComPolyObject</B> can result in a slightly larger module size because it is not optimized for an aggregated or nonaggregated object, as are <B>CComAggObject</B> and <B>CComObject</B>.</P>
+
+<P>If the <B>DECLARE_POLY_AGGREGATABLE</B> macro is specified in the class definition of your object, <B>CComPolyObject</B> will be used to create your object. <B>DECLARE_POLY_AGGREGATABLE</B> will automatically be declared if you use the ATL Object Wizard to create a full control or Internet Explorer control. </P>
+
+<P>If aggregated, the <B>CComPolyObject</B> object has its own <B>IUnknown</B>, separate from the <B>IUnknown</B> of the outer object, and maintains its own reference count. <B>CComPolyObject</B> uses <A HREF="cccobj.htm"><B>CComContainedObject</B></A> to delegate to the outer unknown.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccomrtex.htm"><B>CComObjectRootEx</B></A>, <A HREF="atlapi2_6.htm"><B>DECLARE_POLY_AGGREGATABLE</B></A><B> </B></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

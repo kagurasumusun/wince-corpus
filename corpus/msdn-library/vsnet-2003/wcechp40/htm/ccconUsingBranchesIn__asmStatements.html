@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Branching in SHx Inline Assembly</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Branching in SHx Inline Assembly"/>
+<MSHelp:RLTitle Title="Branching in SHx Inline Assembly"/>
+<MSHelp:Keyword Index="A" Term="ccconUsingBranchesIn__asmStatements"/>
+<MSHelp:Keyword Index="A" Term="ccconUsingBranchesIn__asmStatements"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: shx_inline_assembly.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_815672">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccconusingbranchesin__asmstatements"></A>Branching in SHx Inline Assembly</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A branch instruction may be given a fixed displacement, or as a jump to a targeted label. If a label is used, the label must be defined within an <B>__asm</B> string in the current function. <B>__asm</B> labels are not visible outside of <B>__asm</B> strings. The <B>__asm</B> label must be isolated in its own <B>__asm</B> block. The distance from a label reference to its definition must fit within the displacement field of the corresponding branch instruction. </P>
+
+<P>Although it is possible to branch between different <B>__asm</B> statements, it is not recommended. This could result in undefined behavior, especially when compiled with optimizing options. </P>
+
+<P>The following example demonstrates how to use displacement branch instructions within <B>__asm</B> statements. </P>
+
+<PRE class="code">  __asm(
+    "sett      ; set T bit\n"
+    "bf 6      ; branch to print FAIL if not set\n"
+    "jsr @R6   ; print PASS\n"
+    "nop       ; delay slot\n"
+    "bra 4     ; branch using displacement\n"
+    "nop       ; delay slot\n"
+    "jsr @R6   ; print PASS\n"
+    "nop       ; delay slot\n"
+    ,"PASS\n"  // argument #1 (R4)
+    ,"FAIL\n"  // argument #2 (R5)
+    ,printf    // argument #3 (R6)
+  );</PRE>
+
+<P>The following example demonstrates how to use labels in branch instructions within <B>__asm</B> statements. </P>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+
+void main()
+{
+  __asm(
+    "sett      ; set T bit\n"
+    "bf lab1   ; branch to print FAIL if not set\n"
+    "jsr @R5   ; print PASS\n"
+    "nop       ; delay slot\n"
+    "bra lab2  ; branch using label\n"
+    "nop       ; delay slot"
+    ,"PASS\n"
+    ,printf
+    );
+  __asm(
+    "lab1:     ; isolate label"
+    );
+  __asm(
+    "jsr @R5   ; print FAIL\n"
+    "nop       ; delay slot"
+    ,"FAIL\n"
+    ,printf
+    );
+  __asm(
+    "lab2:"
+    );
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccconelementsof__asmblock.htm">Elements of the SHx __asm Block</A></P>
+
+<P><A HREF="ccconthe__asmkeyword.htm">The __asm Keyword in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccconunderstanding__asmrecord.htm">__asm Restrictions in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccconconstants.htm">Constants in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccconsymbolslabels.htm">Symbols and Labels in SHx Inline Assembly</A></P>
+
+<P><A HREF="ccrefshxinlineassemblyparameters.htm">SHx Inline Assembly Parameters</A></P>
+
+<P><A HREF="ccconhandlingsh-4modebits.htm">SH-4 Mode Bits</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Branching%20in%20SHx%20Inline%20Assembly&nbsp;(ccconusingbranchesin__asmstatements.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

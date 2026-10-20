@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling SOAP Headers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling SOAP Headers"/>
+<MSHelp:RLTitle Title="Handling SOAP Headers"/>
+<MSHelp:Keyword Index="A" Term="ceconHandlingSOAPHeaders"/>
+<MSHelp:Keyword Index="A" Term="ceconHandlingSOAPHeaders"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: soap_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749795">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconhandlingsoapheaders"></A>Handling SOAP Headers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Windows CE .NET Simple Object Access Protocol (SOAP) Toolkit allows messages to contain header content in addition to the normal body content. Headers often pass information between the client and service that is not strictly part of the operation being performed. For example, a client request for a login operation may cause the server to store a session ID in the header of a response message. The client would then return this session ID in the header of each subsequent request message.</P>
+
+<P>The SOAP Toolkit allows headers to be accessed and created on both the client and the server.</P>
+
+<H2 class="dtH2">Using Headers on the Client Side</H2>
+
+<P>To use headers on the client, you must provide a COM class that implements the <B>IHeaderHandler</B> interface. Furthermore, you must have the <B>HeaderHandler</B> property of the <B>SoapClient</B> object reference an instance of this class.</P>
+
+<P>Each time that the client application calls one of the methods of the <B>SoapClient</B> object, the <B>SoapClient</B> object calls the <B>willWriteHeaders </B>method of the header handler. If <B>willWriteHeaders</B> returns True, the <B>SoapClient</B> object writes a SOAP &lt;Header&gt; element to the request message, and then calls the <B>writeHeaders</B> method of the header handler. The <B>writeHeaders</B> method uses the specified <B>SoapSerializer</B> object to write any header content that is desired. Next, the <B>SoapClient</B> object writes the body of the request message, sends the message to the server, and receives the response message. When the response message is complete, the <B>SoapClient</B> object calls the <B>readHeader</B> method of the header handler once for each header in the response message. Finally, the operation method returns to the client application.</P>
+
+<P>On the client, the <I>pObject</I> parameter of the <B>readHeader</B> and <B>writeHeader</B> methods is always null. Also, the return value of <B>readHeader</B> is ignored.</P>
+
+<H2 class="dtH2">Using Headers on the Server Side</H2>
+
+<P>To use headers in the service, you must provide a COM class that implements the <B>IHeaderHandler</B> interface and identify that class in the appropriate &lt;service&gt; element in the Web Services Meta Language (WSML) file. In that &lt;service&gt; element, you use a &lt;using&gt; element to define the header handler object. Then, to associate this header handler object to a particular port or service, you use the <B>headerHandler</B> attribute of that particular &lt;port&gt; or &lt;operation&gt; element. For example, the following WSML file defines the <B>ServiceHeaderHandler</B> object as being the <B>SessionInfo.ServiceHeaderHandler</B> class, then associates the handler with the port named <B>ServiceSoapPort</B>.</P>
+
+<PRE class="code">&lt;service name='SessionInfo'&gt;
+  &lt;using PROGID='SessionInfo.Service' cachable='0' ID='ServiceObject' /&gt;
+  &lt;using PROGID='SessionInfo.ServiceHeaderHandler' 
+         cachable='0' ID='ServiceHeaderHandler' /&gt;
+  &lt;port name='ServiceSoapPort' headerHandler="ServiceHeaderHandler"&gt;
+         ...
+  &lt;/port&gt;
+&lt;/service&gt;</PRE>
+
+<P>Each time the server receives a request for a port or operation for which a header handler is defined, the <B>SoapServer</B> object first calls the header handler's <B>readHeader</B> method for each header in the request message. The <B>readHeader</B> method returns True if the handler understood the header. If the header handler returns False for any header that contains the mustUnderstand='1' attribute, the <B>SoapServer</B> object returns the must understand fault. The <I>pObject</I> parameter passed to <B>readHeader</B> method references the object that is going to handle the request. The header handler may set properties or call methods on this object as necessary to prepare it for the request.</P>
+
+<P>After each header in the request has been passed to <B>readHeader</B> method, the <B>SoapServer</B> object calls the server object as usual. When the server object returns, the <B>SoapServer</B> object calls the header handler's <B>willWriteHeaders</B> method. If <B>willWriteHeaders</B> returns True, the <B>SoapServer</B> calls the handler's <B>writeHeader</B> method. The <I>pObject</I> parameter passed to the <B>writeHeader</B> references the object that has handled the request. The header handler may access properties or call methods on this object as necessary to retrieve the information that will be sent in the response header. The <B>writeHeader</B> method can use the provided <B>SoapSerializer</B> object to write header content to the response message.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Handling%20SOAP%20Headers&nbsp;(ceconhandlingsoapheaders.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

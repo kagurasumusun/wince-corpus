@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDialogBar::Create</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CDialogBar::Create"/>
+<MSHelp:RLTitle Title="CDialogBar::Create"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDialogBarcolcolCreate"/>
+<MSHelp:Keyword Index="K" Term="Create method, dialogs"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDialogBarcolcolCreate"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cdialbar.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710161">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcdialogbarcolcolcreate"></A>CDialogBar::Create</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method loads the dialog-box resource template specified by <I>lpszTemplateName</I> or <I>nIDTemplate</I>, creates the dialog-bar window, sets its style, and associates it with the <B>CDialogBar</B> object.</P>
+
+<PRE class="syntax"><B>BOOL Create(
+ CWnd* </B><I>pParentWnd</I><B>,
+ LPCTSTR </B><I>lpszTemplateName</I><B>, 
+ UINT </B><I>nStyle</I><B>,
+ UINT </B><I>nID</I><B> );
+</B>
+<B>BOOL Create(
+ CWnd* </B><I>pParentWnd</I><B>,
+ UINT </B><I>nIDTemplate</I><B>, 
+ UINT </B><I>nStyle</I><B>,
+ UINT </B><I>nID</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pParentWnd</I></DT>
+
+<DD>A pointer to the parent <B>CWnd</B> object.</dd>
+
+<DT><I>lpszTemplateName</I></DT>
+
+<DD>A pointer to the name of the dialog-box resource template of the <B>CDialogBar</B> object.</dd>
+
+<DT><I>nStyle</I></DT>
+
+<DD>The alignment style of the dialog bar. The following styles are supported:
+
+<UL type="disc">
+	<LI>CBRS_TOP&nbsp;&nbsp;&nbsp;Control bar is at the top of the frame window. </li>
+
+	<LI>CBRS_BOTTOM&nbsp;&nbsp;&nbsp;Control bar is at the bottom of the frame window.</li>
+
+	<LI>CBRS_NOALIGN&nbsp;&nbsp;&nbsp;Control bar is not repositioned when the parent is resized.</li>
+
+	<LI>CBRS_LEFT&nbsp;&nbsp;&nbsp;Control bar is at the left of the frame window.</li>
+
+	<LI>CBRS_RIGHT&nbsp;&nbsp;&nbsp;Control bar is at the right of the frame window.</li>
+</UL>
+</dd>
+
+<DT><I>nID</I></DT>
+
+<DD>The control ID of the dialog bar.</dd>
+
+<DT><I>nIDTemplate</I></DT>
+
+<DD>The resource ID of the dialog-box template of the <B>CDialogBar</B> object.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If you specify the CBRS_TOP or CBRS_BOTTOM alignment style, the width of the dialog bar is that of the frame window and its height is that of the resource specified by <I>nIDTemplate</I>. If you specify the CBRS_LEFT or CBRS_RIGHT alignment style, the height of the dialog bar is that of the frame window and its width is that of the resource specified by <I>nIDTemplate</I>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Mainfrm.h.
+
+class CMainFrame : public CFrameWnd
+{
+// Constructor.
+public:
+  CMainFrame();
+  virtual ~CMainFrame();
+
+protected:  // Control bar embedded members.
+  CDialogBar  m_wndDlgBar;
+
+  // Other data members and methods.
+
+  DECLARE_MESSAGE_MAP()
+};
+
+
+// Mainfrm.cpp.
+
+#include "MainFrm.h"
+
+/////////////////////////////////////////////////////
+
+int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+  if (CFrameWnd::OnCreate(lpCreateStruct) == &#0150;1)
+    return &#0150;1;
+
+  EnableDocking(CBRS_ALIGN_ANY);
+
+  // IDD_VIEWSELECT - Resource ID of the dialog 
+  // template. This dialog template should be created 
+  // with  the  style  WS_CHILD and no other style.
+  // The template must not have the style WS_VISIBLE.
+
+  if (!m_wndDlgBar.Create(this, IDD_VIEWSELECT,
+    CBRS_LEFT|CBRS_TOOLTIPS|CBRS_FLYBY, IDD_VIEWSELECT))
+  {
+    TRACE0("Failed to create DlgBar\n");
+    return &#0150;1;      // Fail to create.
+  }
+
+  return 0;
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.10 and later<BR>
+<B>Header file:</B> Declared in Afxext.h</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710161', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

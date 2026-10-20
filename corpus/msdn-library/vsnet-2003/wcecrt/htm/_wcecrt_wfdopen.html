@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_wfdopen</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_wfdopen"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_wfdopen.htm", "_wfdopen")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_wfdopen"></A>_wfdopen</H1>
+
+<P>Associate a stream with a file that was previously opened for low-level I/O.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Function</TH>
+<TH width=60%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%><B>_wfdopen</B></TD>
+<TD width=60%>&lt;stdio.h&gt; </TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>FILE *_wfdopen( int</B> <I>handle</I>, <B>const</B> <B>wchar_t</B> *<I>mode</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>handle</I></DT>
+
+<DD>Handle to open file</dd>
+
+<DT><I>mode</I></DT>
+
+<DD>Type of file access</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>This function returns a pointer to the open stream. A null pointer value indicates an error.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>_wfdopen</B> function associates an I/O stream with the file identified by <I>handle</I>, thus allowing a file opened for low-level I/O to be buffered and formatted. The <I>mode</I> argument to <B>_wfdopen</B> is a wide-character string.<B> </B></P>
+
+<P class="label"><B>Generic-Text Routine Mappings</B></P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>TCHAR.H Routine </TH>
+<TH width=62%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>_tfdopen</TD>
+<TD width=62%>_wfdopen</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<P>The <I>mode</I> character string specifies the type of file and file access. </P>
+
+<P>The character string <I>mode</I> specifies the type of access requested for the file, as follows:
+
+<DL>
+<DT><B>"r"</B></DT>
+
+<DD>Opens for reading. If the file does not exist or cannot be found, the <B>fopen</B> call fails.</dd>
+
+<DT><B>"w"</B></DT>
+
+<DD>Opens an empty file for writing. If the given file exists, its contents are destroyed.</dd>
+
+<DT><B>"a"</B></DT>
+
+<DD>Opens for writing at the end of the file (appending); creates the file first if it doesn’t exist.</dd>
+
+<DT><B>"r+"</B></DT>
+
+<DD>Opens for both reading and writing. (The file must exist.)</dd>
+
+<DT><B>"w+"</B></DT>
+
+<DD>Opens an empty file for both reading and writing. If the given file exists, its contents are destroyed.</dd>
+
+<DT><B>"a+"</B></DT>
+
+<DD>Opens for reading and appending; creates the file first if it doesn’t exist.</dd>
+</DL>
+
+<P>When a file is opened with the <B>"a"</B> or <B>"a+"</B> access type, all write operations occur at the end of the file. The file pointer can be repositioned using <B>fseek</B>, but is always moved back to the end of the file before any write operation is carried out. Thus, existing data cannot be overwritten. When the <B>"r+"</B>, <B>"w+"</B>, or <B>"a+"</B> access type is specified, both reading and writing are allowed (the file is said to be open for “update”). However, when you switch between reading and writing, there must be an intervening <B>fflush</B>, <B>fsetpos</B>, or <B>fseek</B> operation. The current position can be specified for the <B>fsetpos</B> or <B>fseek</B> operation, if desired.</P>
+
+<P>In addition to the above values, the following characters can be included in <I>mode</I> to specify the translation mode for newline characters:
+
+<DL>
+<DT><B>t</B></DT>
+
+<DD>Open in text (translated) mode. In this mode, carriage return&#0150;linefeed (CR-LF) combinations are translated into single linefeeds (LF) on input, and LF characters are translated to CR-LF combinations on output. Also, CTRL+Z is interpreted as an end-of-file character on input. In files opened for reading/writing, <B>fopen</B> checks for a CTRL+Z at the end of the file and removes it, if possible. This is done because using the <B>fseek</B> and <B>ftell</B> functions to move within a file that ends with a CTRL+Z may cause <B>fseek</B> to behave improperly near the end of the file.</dd>
+
+<DT><B>b</B></DT>
+
+<DD>Open in binary (untranslated) mode; the above translations are suppressed.</dd>
+
+<DT><B>c</B></DT>
+
+<DD>Enable the commit flag for the associated <I>filename</I> so that the contents of the file buffer are written directly to disk if either <B>fflush</B> or <B>_flushall</B> is called.</dd>
+
+<DT><B>n</B></DT>
+
+<DD>Reset the commit flag for the associated <I>filename</I> to “no-commit.” This is the default. </dd>
+</DL>
+
+<P>The <B>t</B>, <B>c</B>, and <B>n</B> <I>mode</I> options are Microsoft extensions for <B>fopen</B> and should not be used where ANSI portability is desired.</P>
+
+<P>If <B>t</B> or <B>b</B> is not given in <I>mode</I>, the default translation mode is defined by the global variable <B>_fmode</B>. If <B>t</B> or <B>b</B> is prefixed to the argument, the function fails and returns <B>NULL</B>. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* _FDOPEN.C: This program opens a file using low-
+ * level I/O, then uses _fdopen to switch to stream
+ * access. It counts the lines in the file.
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;io.h&gt;
+
+void main( void )
+{
+   FILE *stream;
+   int  fh, count = 0;
+   char inbuf[128];
+
+   /* Open a file handle. */
+   if( (fh = _open( "_fdopen.c", _O_RDONLY )) == -1 )
+      exit( 1 );
+
+   /* Change handle access to stream access. */
+   if( (stream = _fdopen( fh, "r" )) == NULL )
+      exit( 1 );
+
+   while( fgets( inbuf, 128, stream ) != NULL )
+      count++;
+
+   /* After _fdopen, close with fclose. */
+   fclose( stream );
+   printf( "Lines in file: %d\n", count );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Lines in file: 32</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fclose_fcloseall.htm">fclose</A>, <A HREF="_wcecrt_fopen_wfopen.htm">fopen</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

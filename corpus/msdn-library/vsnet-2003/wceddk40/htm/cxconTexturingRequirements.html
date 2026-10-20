@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Texturing Requirements</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Texturing Requirements"/>
+<MSHelp:RLTitle Title="Texturing Requirements"/>
+<MSHelp:Keyword Index="A" Term="cxconTexturingRequirements"/>
+<MSHelp:Keyword Index="K" Term="texture%2C Direct3D, texturing requirements"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664929">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcontexturingrequirements"></A>Texturing Requirements</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following are requirements for texture sizes and texture filtering. There are also texture-related requirements for the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__ValidateDevice" TABINDEX="0">IDirect3DDevice8::ValidateDevice</MSHelp:link> method.</P>
+
+<H2 class="dtH2">Texture Sizes</H2>
+
+<P>The following are requirements for texture sizes.
+
+<OL type="1">
+	<LI>The driver must expose its minimum and maximum texture dimensions through the <B>dwMinTextureWidth</B>, <B>dwMinTextureHeight</B>, <B>dwMaxTextureWidth</B>, and <B>dwMaxTextureHeight</B> members of the <B>D3DDEVICEDESC8</B> structure.</li>
+
+	<LI>If the hardware has an aspect ratio restriction on its textures, that ratio must be present in the <B>dwMaxTextureAspectRatio</B> member of the <B>D3DDEVICEDESC8</B> structure.</li>
+
+	<LI>If the device supports only texture dimensions that are powers of two, then it must set the <B>dwTextureCaps</B> member of the <A HREF="cxrefd3dprimcaps.htm">D3DPRIMCAPS</A> structure to contain the D3DPTEXTURECAPS_POW2 flag for the appropriate primitive type (line or triangle).</li>
+
+	<LI>If the device can support textures of an arbitrary size when the texture addressing mode for the texture stage is set to D3DTADDRESS_CLAMP, and the texture wrapping for the texture stage is disabled (D3DRENDERSTATE_WRAP<I>n </I>set to 0), and MIP mapping is not in use, then it must set the D3DPTEXTURECAPS_NONPOW2CONDITIONAL flag.</li>
+
+	<LI>If the device only supports textures whose dimensions are equal, then it must set the <B>dwTextureCaps</B> member of the <A HREF="cxrefd3dprimcaps.htm">D3DPRIMCAPS</A> structure to contain the D3DPTEXTURECAPS_SQUAREONLY flag for the appropriate primitive type (line or triangle).</li>
+</OL>
+
+<P>If the device supports textures of an arbitrary size without restrictions other than those described in the first and second requirement, then it must not set any of the flags described in third, fourth, and fifth requirements.</P>
+
+<H2 class="dtH2">Texture Filtering</H2>
+
+<P>Texture magnification and minification filters must be enabled and disabled through the D3DTSS_MAGFILTER and D3DTSS_MINFILTER texture stage states. (See the <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTURESTAGESTATETYPE" TABINDEX="0">D3DTEXTURESTAGESTATETYPE</MSHelp:link> enumerated type in the Direct3D SDK documentation for more information about the D3DTSS_Xxx texture stage states.) This filtering must not be performed automatically when these states are disabled.</P>
+
+<P>Texture MIP mapping must be enabled and disabled through the D3DTSS_MIPFILTER texture stage state. If this state is disabled, but the texture was created as a MIP map, the device must use only the top level of the MIP map. MIP mapped filtering must not be performed when this state is disabled.</P>
+
+<P>If the device supports anisotropic filtering, the maximum anisotropy level must be exported through the value of the <B>dwMaxAnisotropy</B> member of the <B>D3DDEVICEDESC8</B> structure value. Furthermore, the device must accept any setting from 1 through <B>dwMaxAnisotropy</B> in the D3DTSS_MAXANISOTROPY texture stage state.</P>
+
+<P>The device must be able to apply all supported filter modes to textures of any supported format. For example, if MIP mapping is supported with other texture formats, MIP map filtering of YUV textures can be performed.</P>
+
+<H2 class="dtH2">IDirect3DDevice8::ValidateDevice</H2>
+
+<P>If a device supports a particular combination of texture stage state blending operations and operands in a single pass, then the device must return DD_OK from a call to the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__ValidateDevice" TABINDEX="0">IDirect3DDevice8::ValidateDevice</MSHelp:link> method (described in the Direct3D SDK documentation) for each such combination.</P>
+
+<P>If a device does not support a particular combination of texture stage state blending operations in a single pass, or does not support one or more of the blending operations or operands, then it must return one of the error codes allowable for the <B>IDirect3DDevice8::ValidateDevice</B> method. Invalid blending operations cannot silently fail the <B>IDirect3DDevice8::ValidateDevice</B> method.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dimplementationrequirements.htm">Direct3D Implementation Requirements</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Texturing%20Requirements&nbsp;(cxcontexturingrequirements.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

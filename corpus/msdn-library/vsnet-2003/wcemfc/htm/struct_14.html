@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>FINDREPLACE Structure</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_findreplace_structure"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_makeintresource" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_showwindow" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_updatewindow" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_win32_wm_initdialog" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_findreplace_structure"></A>FINDREPLACE</H1>
+
+<P>This structure contains information used to initialize the <B>Find</B> and <B>Replace</B> common dialog boxes.</P>
+
+<P>The FINDMSGSTRING registered message uses this structure to pass the user search or replacement input to the owner window of a <B>Find</B> or <B>Replace</B> common dialog box.</P>
+
+<PRE class=syntax><B>typedef struct tagFINDREPLACEW
+{
+&nbsp;&nbsp;&nbsp;DWORD </B><I>lStructSize</I><B>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>// size of this struct 0x20<B>
+&nbsp;&nbsp;&nbsp;HWND </B><I>hwndOwner</I><B>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>// handle to owner's window<B>
+&nbsp;&nbsp;&nbsp;HINSTANCE </B><I>hInstance</I><B>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>// instance handle of .EXE that
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// contains cust. dlg. template<B>
+&nbsp;&nbsp;&nbsp;DWORD </B><I>Flags</I><B>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>// one or more of the FR_??<B>
+&nbsp;&nbsp;&nbsp;LPTSTR </B><I>lpstrFindWhat</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ptr. to search string<B>
+&nbsp;&nbsp;&nbsp;LPTSTR </B><I>lpstrReplaceWith</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ptr. to replace string<B>
+&nbsp;&nbsp;&nbsp;WORD </B><I>wFindWhatLen</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// size of find buffer<B>
+&nbsp;&nbsp;&nbsp;WORD </B><I>wReplaceWithLen</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// size of replace buffer<B>
+&nbsp;&nbsp;&nbsp;LPARAM </B><I>lCustData</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// data passed to hook fn.<B>
+&nbsp;&nbsp;&nbsp;LPFRHOOKPROC </B><I>lpfnHook</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ptr. to hook fn. or NULL<B>
+&nbsp;&nbsp;&nbsp;LPCTSTR </B><I>lpTemplateName</I><B>;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// custom template name<B>
+} FINDREPLACE, *LPFINDREPLACE;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>lStructSize</I> </DT>
+
+<DD>Specifies the length, in bytes, of the structure. </DD>
+
+<DT><I>hwndOwner</I> </DT>
+
+<DD>Handle to the window that owns the dialog box. The window procedure of the specified window receives FINDMSGSTRING messages from the dialog box. This member can be any valid window handle, but it must not be <B>NULL</B>. </DD>
+
+<DT><I>hInstance</I> </DT>
+
+<DD>If the FR_ENABLETEMPLATEHANDLE flag is set in the <I>Flags</I> member, <I>hInstance</I> is a handle to a memory object containing a dialog box template. If the FR_ENABLETEMPLATE flag is set, <I>hInstance</I> is a handle to a module that contains a dialog box template named by the <I>lpTemplateName</I> member. If neither flag is set, this member is ignored. </DD>
+
+<DT><I>Flags</I> </DT>
+
+<DD>A set of bit flags that you can use to initialize the dialog box. The dialog box sets these flags when it sends the FINDMSGSTRING registered message to indicate the user input. This member can be a combination of the following flags:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Flag</TH>
+<TH width=63%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_DIALOGTERM</TD>
+<TD width=63%>If set in a FINDMSGSTRING message, indicates that the dialog box is closing. When you receive a message with this flag set, the dialog box window handle returned by the <B>FindText</B> or <B>ReplaceText</B> function is no longer valid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_DOWN</TD>
+<TD width=63%>If set, the <B>Down</B> button of the direction radio buttons in a <B>Find</B> dialog box is selected indicating that you should search from the current location to the end of the document. If not set, the <B>Up</B> button is selected so you should search to the beginning of the document. You can set this flag to initialize the dialog box. If set in a FINDMSGSTRING message, indicates the user selection.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_ENABLEHOOK</TD>
+<TD width=63%>Enables the hook function specified in the <I>lpfnHook</I> member. This flag is used only to initialize the dialog box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_ENABLETEMPLATE</TD>
+<TD width=63%>Indicates that the <I>hInstance</I> and <I>lpTemplateName</I> members specify a dialog box template to use in place of the default template. This flag is used only to initialize the dialog box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_ENABLETEMPLATEHANDLE</TD>
+<TD width=63%>Indicates that the <I>hInstance</I> member identifies a data block that contains a preloaded dialog box template. The system ignores the <I>lpTemplateName</I> member if this flag is specified.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_FINDNEXT</TD>
+<TD width=63%>If set in a FINDMSGSTRING message, indicates that the user clicked the <B>Find</B> <B>Next</B> button in a <B>Find</B> or <B>Replace</B> dialog box. The <I>lpstrFindWhat</I> member specifies the string to search for.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_HIDEUPDOWN</TD>
+<TD width=63%>If set when initializing a <B>Find</B> dialog box, hides the search direction radio buttons.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_HIDEMATCHCASE</TD>
+<TD width=63%>If set when initializing a <B>Find</B> or <B>Replace</B> dialog box, hides the <B>Match</B> <B>Case</B> check box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_HIDEWHOLEWORD</TD>
+<TD width=63%>If set when initializing a <B>Find</B> or <B>Replace</B> dialog box, hides the <B>Match</B> <B>Whole</B> <B>Word</B> <B>Only</B> check box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_MATCHCASE</TD>
+<TD width=63%>If set, the <B>Match</B> <B>Case</B> check box is checked indicating that the search should be case-sensitive. If not set, the check box is unchecked so the search should be case-insensitive. You can set this flag to initialize the dialog box. If set in a FINDMSGSTRING message, indicates the user selection.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_NOMATCHCASE</TD>
+<TD width=63%>If set when initializing a <B>Find</B> or <B>Replace</B> dialog box, disables the <B>Match</B> <B>Case</B> check box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_NOUPDOWN</TD>
+<TD width=63%>If set when initializing a <B>Find</B> dialog box, disables the search direction radio buttons.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_NOWHOLEWORD</TD>
+<TD width=63%>If set when initializing a <B>Find</B> or <B>Replace</B> dialog box, disables the <B>Whole</B> <B>Word</B> check box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_REPLACE</TD>
+<TD width=63%>If set in a FINDMSGSTRING message, indicates that the user clicked the <B>Replace</B> button in a <B>Replace</B> dialog box. The <I>lpstrFindWhat</I> member specifies the string to be replaced and the <I>lpstrReplaceWith</I> member specifies the replacement string.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_REPLACEALL</TD>
+<TD width=63%>If set in a FINDMSGSTRING message, indicates that the user clicked the <B>Replace</B> <B>All</B> button in a <B>Replace</B> dialog box. The <I>lpstrFindWhat</I> member specifies the string to be replaced and the <I>lpstrReplaceWith</I> member specifies the replacement string.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_SHOWHELP</TD>
+<TD width=63%>Causes the dialog box to display the <B>Help</B> button. The <I>hwndOwner</I> member must specify the window to receive the HELPMSGSTRING registered messages that the dialog box sends when the user clicks the <B>Help</B> button.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>FR_WHOLEWORD</TD>
+<TD width=63%>If set, the <B>Match</B> <B>Whole</B> <B>Word</B> <B>Only</B> check box is checked indicating that you should search only for whole words that match the search string. If not set, the check box is unchecked so you should also search for word fragments that match the search string. You can set this flag to initialize the dialog box. If set in a FINDMSGSTRING message, indicates the user selection.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>lpstrFindWhat</I> </DT>
+
+<DD>Pointer to a buffer that a FINDMSGSTRING message uses to pass the null terminated search string that the user typed in the <B>Find</B> <B>What</B> edit control. You must dynamically allocate the buffer or use a global or static array so it does not go out of scope before the dialog box closes. The buffer should be at least 80 characters long. If the buffer contains a string when you initialize the dialog box, the string is displayed in the <B>Find</B> <B>What</B> edit control.
+
+<P>If a FINDMSGSTRING message specifies the FR_FINDNEXT flag, <I>lpstrFindWhat</I> contains the string to search for. The FR_DOWN, FR_WHOLEWORD, and FR_MATCHCASE flags indicate the direction and type of search. If a FINDMSGSTRING message specifies the FR_REPLACE or FR_REPLACE flags, <I>lpstrFindWhat</I> contains the string to be replaced.
+</DD>
+
+<DT><I>lpstrReplaceWith</I> </DT>
+
+<DD>Pointer to a buffer that a FINDMSGSTRING message uses to pass the null terminated replacement string that the user typed in the <B>Replace</B> <B>With</B> edit control. You must dynamically allocate the buffer or use a global or static array so it does not go out of scope before the dialog box closes. If the buffer contains a string when you initialize the dialog box, the string is displayed in the <B>Replace</B> <B>With</B> edit control.
+
+<P>If a FINDMSGSTRING message specifies the FR_REPLACE or FR_REPLACEALL flags, <I>lpstrReplaceWith</I> contains the replacement string .
+
+
+<P>The <B>FindText</B> function ignores this member.
+</DD>
+
+<DT><I>wFindWhatLen</I> </DT>
+
+<DD>Specifies the length, in bytes, of the buffer pointed to by the <I>lpstrFindWhat</I> member. </DD>
+
+<DT><I>wReplaceWithLen</I> </DT>
+
+<DD>Specifies the length, in bytes, of the buffer pointed to by the <I>lpstrReplaceWith</I> member. </DD>
+
+<DT><I>lCustData</I> </DT>
+
+<DD>Specifies application-defined data that the system passes to the hook procedure identified by the <I>lpfnHook</I> member. When the system sends the WM_INITDIALOG message to the hook procedure, the message <I>lParam</I> parameter is a pointer to the <B>FINDREPLACE</B> structure specified when the dialog was created. The hook procedure can use this pointer to get the <I>lCustData</I> value. </DD>
+
+<DT><I>lpfnHook</I> </DT>
+
+<DD>Pointer to an <B>FRHookProc</B> hook procedure that can process messages intended for the dialog box. This member is ignored unless the FR_ENABLEHOOK flag is set in the <I>Flags</I> member.
+
+<P>If the hook procedure returns <B>FALSE</B> in response to the WM_INITDIALOG message, the hook procedure must display the dialog box or else the dialog box will not be shown. To do this, first perform any other paint operations, and then call the <B>ShowWindow</B> and <B>UpdateWindow</B> functions.
+</DD>
+
+<DT><I>lpTemplateName</I> </DT>
+
+<DD>Pointer to a null-terminated string that names the dialog box template resource in the module identified by the <I>hInstance</I> member. This template is substituted for the standard dialog box template. For numbered dialog box resources, this can be a value returned by the <B>MAKEINTRESOURCE</B> macro. This member is ignored unless the FR_ENABLETEMPLATE flag is set in the <I>Flags</I> member. </DD>
+</DL>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in wcealt.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P>FindText, FRHookProc, <A HREF="JavaScript:hhobj_1.Click()"><B>MAKEINTRESOURCE</B></A>, ReplaceText, <A HREF="JavaScript:hhobj_2.Click()"><B>ShowWindow</B></A>, <A HREF="JavaScript:hhobj_3.Click()"><B>UpdateWindow</B></A>, <A HREF="JavaScript:hhobj_4.Click()"><B>WM_INITDIALOG</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

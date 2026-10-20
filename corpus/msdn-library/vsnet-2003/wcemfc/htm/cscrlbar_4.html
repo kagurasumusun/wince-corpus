@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CScrollBar::GetScrollInfo</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cscrollbar_getscrollinfo"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cscrollbar_getscrollinfo"></A>CScrollBar::GetScrollInfo</H1>
+
+<P>This method retrieves the information that the <B>SCROLLINFO</B> structure maintains about a scroll bar. <B>GetScrollInfo</B> enables applications to use 32-bit scroll positions. </P>
+
+<PRE class=syntax><B>BOOL GetScrollInfo(
+LPSCROLLINFO </B><I>lpScrollInfo</I><B>,
+UINT </B><I>nMask</I><B>  = SIF_ALL );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpScrollInfo</I></DT>
+
+<DD>Specifies a pointer to a <B>SCROLLINFO</B> structure.</DD>
+
+<DT><I>nMask</I></DT>
+
+<DD>Specifies the scroll bar parameters to retrieve. Typical usage, SIF_ALL, specifies a combination of SIF_PAGE, SIF_POS, SIF_TRACKPOS, and SIF_RANGE. See <B>SCROLLINFO</B> for more information on the <I>nMask</I> values.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>If the message retrieved any values, the return is <B>TRUE</B>. Otherwise, it is <B>FALSE</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>SCROLLINFO</B> structure contains information about a scroll bar, including the minimum and maximum scrolling positions, the page size, and the position of the scroll box (the thumb). See the <B>SCROLLINFO</B> structure for more information about changing the structure defaults.</P>
+
+<P>The MFC for Windows CE message handlers that indicate scroll bar position, <B>CWnd::OnHScroll</B> and <B>CWnd::OnVScroll</B>, provide only 16 bits of position data.  <B>GetScrollInfo</B> and <B>SetScrollInfo</B> provide 32 bits of scroll bar position data. Therefore, an application can call <B>GetScrollInfo</B> while processing either <B>CWnd::OnHScroll</B> or <B>CWnd::OnVScroll</B> to obtain 32-bit scroll bar position data.</P>
+
+<H4>Example</H4>
+
+<P>This is the code example for <B>CWnd::OnHScroll</B> that also shows how to use the following <B>CScrollBar</B> methods:
+
+<UL type=disc>
+	<LI><B>CScrollBar::GetScrollInfo</B></LI>
+
+	<LI><B>CScrollBar::GetScrollLimit</B></LI>
+
+	<LI><B>CScrollBar::GetScrollPos</B></LI>
+
+	<LI><B>CScrollBAr::GetScrollRange</B></LI>
+</UL>
+
+<PRE>void CMyView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+&nbsp;&nbsp;// Get the minimum and maximum scroll-bar positions.
+&nbsp;&nbsp;int minpos;
+&nbsp;&nbsp;int maxpos;
+&nbsp;&nbsp;pScrollBar-&gt;GetScrollRange(&amp;minpos, &amp;maxpos);
+&nbsp;&nbsp;maxpos = pScrollBar-&gt;GetScrollLimit();
+
+&nbsp;&nbsp;// Get the current position of scroll box.
+&nbsp;&nbsp;int curpos = pScrollBar-&gt;GetScrollPos();
+
+&nbsp;&nbsp;// Determine the new position of scroll box.
+&nbsp;&nbsp;switch (nSBCode)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;case SB_LEFT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll to far left.
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = minpos;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_RIGHT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll to far right.
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = maxpos;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_ENDSCROLL:&nbsp;&nbsp;// End scroll.
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_LINELEFT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll left.
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &gt; minpos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curpos--;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_LINERIGHT:&nbsp;&nbsp;// Scroll right.
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &lt; maxpos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curpos++;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_PAGELEFT:&nbsp;&nbsp; // Scroll one page left.
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the page size.
+&nbsp;&nbsp;&nbsp;&nbsp;SCROLLINFO&nbsp;&nbsp;info;
+&nbsp;&nbsp;&nbsp;&nbsp;pScrollBar-&gt;GetScrollInfo(&amp;info, SIF_ALL);
+&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &gt; minpos)
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = max(minpos, curpos - (int) info.nPage);
+&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_PAGERIGHT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll one page right.
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the page size.
+&nbsp;&nbsp;&nbsp;&nbsp;SCROLLINFO&nbsp;&nbsp;info;
+&nbsp;&nbsp;&nbsp;&nbsp;pScrollBar-&gt;GetScrollInfo(&amp;info, SIF_ALL);
+
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &lt; maxpos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curpos = min(maxpos, curpos + (int) info.nPage);
+&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_THUMBPOSITION: // Scroll to absolute position. nPos is the position
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = nPos;      // of the scroll box at the end of the drag operation.
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_THUMBTRACK:   // Drag scroll box to specified position. nPos is the
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = nPos;     // position that the scroll box has been dragged to.
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Set the new position of the thumb (scroll box).
+&nbsp;&nbsp;pScrollBar-&gt;SetScrollPos(curpos);
+
+&nbsp;&nbsp;CView::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cscrlbar_8.htm"><B>CScrollBar::SetScrollInfo</B></A>, <A HREF="cwnd_188.htm"><B>CWnd::SetScrollInfo</B></A>, <A HREF="cwnd_189.htm"><B>CWnd::SetScrollPos</B></A>, <A HREF="cwnd_148.htm"><B>CWnd::OnVScroll</B></A>, <A HREF="cwnd_120.htm"><B>CWnd::OnHScroll</B></A>, <A HREF="#_wcemfc_cscrollbar_getscrollinfo"><B>CScrollBar::GetScrollInfo</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMEthIndicateReceiveComplete</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMEthIndicateReceiveComplete"/>
+<MSHelp:RLTitle Title="NdisMEthIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisMEthIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="K" Term="NdisMEthIndicateReceiveComplete"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673273">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndismethindicatereceivecomplete"></A>NdisMEthIndicateReceiveComplete</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function notifies NDIS that an Ethernet receive packet, identified in a preceding call to the <B>NdisMEthIndicateReceive</B> function, has been fully transferred by the NIC so that NDIS can notify the appropriate bound protocols.</P>
+
+<PRE class="syntax"><B>VOID NdisMEthIndicateReceiveComplete(</B>
+<B>NDIS_HANDLE </B><I>MiniportAdapterHandle</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Handle originally input to the <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>After any Ethernet receive indication, a miniport eventually must call this function to indicate the end of the transfer operation over the net, even if a particular packet is accepted by no bound protocol.</P>
+
+<P>This function both indicates the completion of a transfer operation for a receive and notifies any bound protocol that has already consumed the initial indication that it can begin post processing the received data.</P>
+
+<P>When a miniport calls this function, NDIS indicates the completion of the receive operation to each such protocol by calling its <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> function.</P>
+
+<P><B>ProtocolReceiveComplete</B> functions need not operate under the severe time constraints of the corresponding <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> functions. However, another receive indication to the <B>ProtocolReceive</B> function can come in while the <B>ProtocolReceiveComplete</B> function is running.</P>
+
+<P>A miniport need not call this function in one-to-one correspondence with its calls to the <A HREF="_wceddk_ndismethindicatereceive.htm">NdisMEthIndicateReceive</A> function. That is, an NIC driver can issue a single receive-complete indication for some number of receive indications, particularly when network traffic is high. For example, when a miniport is continually indicating receives from the same source; it might call this function once for every ten indications. On the other hand, a miniport might call this function once for each indication when network traffic is low so that the driver can promptly regain ownership of the memory that it allocated for receives.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndis.dll</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="_wceddk_ndismethindicatereceive.htm">NdisMEthIndicateReceive</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A>, <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisMEthIndicateReceiveComplete&nbsp;(_wceddk_ndismethindicatereceivecomplete.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

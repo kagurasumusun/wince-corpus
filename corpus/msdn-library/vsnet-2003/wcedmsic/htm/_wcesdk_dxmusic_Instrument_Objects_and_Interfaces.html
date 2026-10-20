@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Instrument Objects and Interfaces</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Instrument Objects and Interfaces"/>
+<MSHelp:RLTitle Title="Instrument Objects and Interfaces"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Instrument_Objects_and_Interfaces"/>
+<MSHelp:Keyword Index="K" Term="instrument objects and interfaces%2C DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Instrument_Objects_and_Interfaces"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680619">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_instrument_objects_and_interfaces"></A>Instrument Objects and Interfaces</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An instrument is an object that represents a basic musical timbre or other sound. For all ports except legacy hardware MIDI ports, each instrument is associated with its own set of <A HREF="_wcesdk_dxmusic_downloadable_sounds.htm">downloadable sounds</A> (DLS), which must be downloaded to the port before the instrument can be used.</P>
+
+<P>Downloadable sounds can be handled at three levels of abstraction. At the highest level, you load a band from a file and let the band object handle the DLS downloading for the instruments. At the next level, you directly access individual instruments in a collection and download them to a port. At the lowest level, you work with the DLS data itself.</P>
+
+<P>The following objects and interfaces are used for managing instruments. </P>
+
+<H2 class="dtH2"><A NAME="_wcesdk_dxmusic_collection"></A>Collection</H2>
+
+<P>Instruments are stored in a DirectMusicCollection object, which represents an instance of a DLS file. Once the DirectMusicCollection object has been loaded, the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicCollection" TABINDEX="0">IDirectMusicCollection</MSHelp:link> interface can be used to enumerate instruments in the collection and to obtain a pointer to an instrument that has a given MIDI patch number. </P>
+
+<H2 class="dtH2"><A NAME="_wcesdk_dxmusic_instrument"></A>Instrument</H2>
+
+<P>An instrument from a collection is represented by a pointer to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicInstrument" TABINDEX="0">IDirectMusicInstrument</MSHelp:link> interface. This pointer can be passed to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__DownloadInstrument" TABINDEX="0">IDirectMusicPerformance::DownloadInstrument</MSHelp:link> or the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPort__DownloadInstrument" TABINDEX="0">IDirectMusicPort::DownloadInstrument</MSHelp:link> method to download DLS data to a port.</P>
+
+<P>Once an instrument has been downloaded, it is represented by an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicDownloadedInstrument" TABINDEX="0">IDirectMusicDownloadedInstrument</MSHelp:link> interface pointer. This pointer is used only to unload the instrument by calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPort__UnloadInstrument" TABINDEX="0">IDirectMusicPort::UnloadInstrument</MSHelp:link>.</P>
+
+<P>Applications that need to download their own DLS data for an instrument (such as collection-editing tools) use the methods of the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload" TABINDEX="0">IDirectMusicPortDownload</MSHelp:link> interface (implemented by the port object) to get that data to the synthesizer. When this interface is used to allocate a buffer for instrument data, an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicDownload" TABINDEX="0">IDirectMusicDownload</MSHelp:link> interface pointer is returned. The single method of this interface can be used to obtain a pointer to the buffer itself.</P>
+
+<H2 class="dtH2"><A NAME="_wcesdk_dxmusic_band"></A>Band</H2>
+
+<P>The DirectMusicBand object represents a set of instruments and MIDI program changes for a musical segment. The band is created in an authoring tool and can be loaded separately from a file, or it can be part of an authored segment or style.</P>
+
+<P>The <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicBand" TABINDEX="0">IDirectMusicBand</MSHelp:link> interface can be used to download and unload bands. It also has a method for creating a secondary segment from a band. This segment can be played by the performance to effect program changes.</P>
+
+<P>The key differences between a collection and a band are as follows:
+
+<UL type="disc">
+	<LI>A collection is a group of instruments available for use in the playback of any segment. A band is a group of instruments that actually plays a particular segment. </li>
+
+	<LI>Instruments in a collection contain DLS data defining their timbre. Instruments in a band contain no such data but are linked to instruments in one or more collections.</li>
+
+	<LI>An instrument from a collection is not inherently associated with any particular performance channel (<I>PChannel</I>) of a segment. A band assigns the patch number of an instrument to each PChannel in a segment and assigns a voice priority to the channel.</li>
+
+	<LI>A collection does not contain any information about how the instruments are to be played. A band contains settings for the volume, pan, and transposition of each instrument.</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Instrument%20Objects%20and%20Interfaces&nbsp;(_wcesdk_dxmusic_instrument_objects_and_interfaces.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

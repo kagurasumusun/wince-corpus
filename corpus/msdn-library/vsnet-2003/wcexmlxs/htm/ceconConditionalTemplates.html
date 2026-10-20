@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Conditional Templates</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Conditional Templates"/>
+<MSHelp:RLTitle Title="Conditional Templates"/>
+<MSHelp:Keyword Index="A" Term="ceconConditionalTemplates"/>
+<MSHelp:Keyword Index="A" Term="ceconConditionalTemplates"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xslpg01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801924">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconconditionaltemplates"></A>Conditional Templates</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Conditional templates are output only if certain conditions exist within the source document. Conditional templates are defined with the &lt;xsl:if&gt; and &lt;xsl:choose&gt; elements.</P>
+
+<P>In the following portfolio data, the "stock" element has an attribute named "exchange". You might want to generate some output only when this attribute has a certain value.</P>
+
+<PRE class="code">&lt;?xml version="1.0"?&gt;
+&lt;portfolio xmlns:dt="urn:schemas-microsoft-com:datatypes"&gt;
+  &lt;stock exchange="nyse"&gt;
+    &lt;name&gt;zacx corp&lt;/name&gt;
+    &lt;symbol&gt;ZCXM&lt;/symbol&gt;
+    &lt;price dt:dt="number"&gt;28.875&lt;/price&gt;
+  &lt;/stock&gt;
+  &lt;stock exchange="nasdaq"&gt;
+    &lt;name&gt;zaffymat inc&lt;/name&gt;
+    &lt;symbol&gt;ZFFX&lt;/symbol&gt;
+    &lt;price dt:dt="number"&gt;92.250&lt;/price&gt;
+  &lt;/stock&gt;
+  &lt;stock exchange="nasdaq"&gt;
+    &lt;name&gt;zysmergy inc&lt;/name&gt;
+    &lt;symbol&gt;ZYSZ&lt;/symbol&gt;
+    &lt;price dt:dt="number"&gt;20.313&lt;/price&gt;
+  &lt;/stock&gt;
+&lt;/portfolio&gt;</PRE>
+
+<P>You can easily create another row in the table in which to place the attribute value. However, if you want to indicate stocks from a particular exchange, not by a completely new table row, but by noting them with an asterisk (*). The &lt;xsl:if&gt; element provides a mechanism for conditionally inserting structure into the output tree.</P>
+
+<P>In the following example, the &lt;xsl:if&gt; element inserts an asterisk after the symbol for those stocks listed on the NASDAQ stock exchange. The &lt;xsl:if&gt; contents can be simple text, as in this example, or any structure allowed by XSLT, such as elements or attributes.</P>
+
+<PRE class="code">&lt;?xml version='1.0'?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;HTML&gt;
+      &lt;BODY&gt;
+        &lt;TABLE BORDER="2"&gt;
+          &lt;TR&gt;
+            &lt;TD&gt;Symbol&lt;/TD&gt;
+            &lt;TD&gt;Name&lt;/TD&gt;
+            &lt;TD&gt;Price&lt;/TD&gt;
+          &lt;/TR&gt;
+          &lt;xsl:for-each select="portfolio/stock"&gt;
+            &lt;TR&gt;
+            &lt;TD&gt;
+                &lt;xsl:value-of select="symbol"/&gt;
+                <B>&lt;xsl:if test="@exchange[.='nasdaq']"&gt;*&lt;/xsl:if&gt;</B>
+              &lt;/TD&gt;
+              &lt;TD&gt;&lt;xsl:value-of select="name"/&gt;&lt;/TD&gt;
+              &lt;TD&gt;&lt;xsl:value-of select="price"/&gt;&lt;/TD&gt;
+            &lt;/TR&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/TABLE&gt;
+        &lt;P&gt;* Listed on Nasdaq stock exchange&lt;/P&gt;
+      &lt;/BODY&gt;
+    &lt;/HTML&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</PRE>
+
+<P>The <B>test</B> attribute takes a pattern. If the query described by the pattern selects one or more nodes, the <B>&lt;</B>xsl:if<B>&gt;</B> template is inserted. If the selection is empty, the conditional is skipped. In this case, the query checks to see if the &lt;stock&gt; element has an <B>exchange</B> attribute, and then verifies that the value of the <B>exchange</B> attribute is equal to "nasdaq". For more information about qualifying a pattern using brackets ([]) and constructing patterns that compare values, see <A HREF="ceconintroductiontosyntaxofxpath.htm">Introduction to the Syntax of XPath</A>.</P>
+
+<H2 class="dtH2">Choosing Alternatives</H2>
+
+<P>The &lt;xsl:choose&gt; element provides a mechanism for "either/or" processing. &lt;xsl:choose&gt; contains a series of &lt;xsl:when&gt; elements that are tested in order from top to bottom until a match is found. An &lt;xsl:otherwise&gt; element can be used to insert a template if no match is found.</P>
+
+<P>The following code can be added to the preceding example to color-code the rows by price. 0-25 are displayed in green; 25-50 are displayed in blue; and 50 or higher are displayed in red. The color is changed by conditionally generating a portion of the value of the <B>STYLE</B> attribute on the table row.</P>
+
+<PRE class="code">&lt;TR&gt;
+  &lt;xsl:attribute name="STYLE"&gt;color:
+    &lt;xsl:choose&gt;
+      &lt;xsl:when test="price[. &amp;lt; 25]"&gt;green&lt;/xsl:when&gt;
+      &lt;xsl:when test="price[. &amp;lt; 50]"&gt;blue&lt;/xsl:when&gt;
+      &lt;xsl:otherwise&gt;red&lt;/xsl:otherwise&gt;
+    &lt;/xsl:choose&gt;
+  &lt;/xsl:attribute&gt;
+  &lt;TD&gt;
+    ...</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Conditional%20Templates&nbsp;(ceconconditionaltemplates.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

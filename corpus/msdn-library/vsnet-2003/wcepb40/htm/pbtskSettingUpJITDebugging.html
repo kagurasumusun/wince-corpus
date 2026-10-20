@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>JIT Debugging Setup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="JIT Debugging Setup"/>
+<MSHelp:RLTitle Title="JIT Debugging Setup"/>
+<MSHelp:Keyword Index="A" Term="pbtskSettingUpJITDebugging"/>
+<MSHelp:Keyword Index="K" Term="JIT debugging, setup"/>
+<MSHelp:Keyword Index="K" Term="just-in-time debugging, setup"/>
+<MSHelp:Keyword Index="K" Term="setup, JIT debugging"/>
+<MSHelp:Keyword Index="A" Term="pbtskSettingUpJITDebugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: debugging_platform.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_685393">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="pbtsksettingupjitdebugging"></A>JIT Debugging Setup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In order to use JIT debugging, you must first configure your platform to support KITL services, and package the correct debugging libraries into the OS kernel. To find more about configuring your platform for KITL, see Configuring KITL Services.</P>
+
+<P>The second prerequisite to JIT debugging is that the developer needs to enable debugger support in the kernel. There are two possibilities for how this can be accomplished:
+
+<UL type="disc">
+	<LI>The first possibility is that the static library file KdStub was included in the kernel at build time; for example, Nk.exe contains KdStub. </li>
+
+	<LI>The second possibility occurs when the device's kernel does not contain KdStub; in this situation, the option is to dynamically load KdStub. To do this, the OS developer must run Loaddbg.exe, which will add the dynamically linked library Dbg.dll.</li>
+</UL>
+
+<P>The first possibility is typical for a debug version of an OS, during the early phase of platform development. During the final phase, the OS developer will be working with a release build; the second option mentioned previously provides JIT debugging for this phase. Instead of the debug build with KdStub, the developer creates a release build of the OS, and runs Loaddbg.exe. This loads Dbg.dll, which acts as KdStub for the release build. </P>
+
+<P>This dynamically linked library must be loaded beforehand. If it is not loaded, then the exceptions will not be handled in the way described earlier, and unhandled second-chance exceptions will simply cause the relevant application to be terminated. Therefore, in order to have the option of running the kernel debugger, the developer must run loaddbg.exe before testing a release build. In contrast, the final release of an OS should not contain these debug libraries. This ensures the proper response to a second-chance exception: the application terminates but the operating system stays functional.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbrefjitdebugging.htm">Just-in-Time Debugging</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;JIT%20Debugging%20Setup&nbsp;(pbtsksettingupjitdebugging.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

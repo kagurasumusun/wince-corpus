@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Display Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Display Driver Architecture"/>
+<MSHelp:RLTitle Title="Display Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconDisplayDriverArchitecture"/>
+<MSHelp:Keyword Index="K" Term="architecture, display drivers"/>
+<MSHelp:Keyword Index="K" Term="display drivers, architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconDisplayDriverArchitecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750720">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondisplaydriverarchitecture"></A>Display Driver Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Display drivers are loaded and called directly by the graphics, windowing, and event subsystem (GWES.exe). Windows CE&#0150;based display drivers are most commonly written using a layered architecture because of the number of hardware-independent operations. The Graphics Primitive Engine (GPE) library handles all of the default drawing, acting as the display driver's model device driver (MDD) upper layer. You write the hardware-specific code that corresponds to the display driver's lower layer (the PDD). </P>
+
+<P>The following table shows the modules that make up the Windows CE graphics pipeline.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Module</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Application</TD>
+<TD width=76%>An application must be present to cause graphic output to appear on the display screen. It can be as simple as a typical Hello World program, or as complex as a 3D engineering application. Whichever it is, it calls into GDI. Coredll.dll exposes these functions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Coredll.dll</TD>
+<TD width=76%>The major set of functions is exposed through a single DLL, called Coredll.dll. In most cases, this library does not do the work itself. Instead, this library packages up the parameters for the function call, then triggers a local procedure call (LPC) to another process. The specific process to be called depends on the specific function call. All drawing and windowing calls are sent to GWES.EXE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>GWES.exe</TD>
+<TD width=76%>The GWES process is responsible for all graphical output, and all interactions with the user. Among the drivers that reside in the GWES address space are display drivers, printer drivers, keyboard drivers, mouse drivers, and touch screen drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>DDI.dll</TD>
+<TD width=76%>The default name for the display driver is DDI.dll. As with most DLLs, the outside world communicates through exported functions. DDI.dll exports a single function, <A HREF="_wceddk_drvenabledriver.htm">DrvEnableDriver</A>, which returns to the caller a pointer to an array of 27 function pointers. When GWES has work to do with a display driver, it calls one of these 27 functions. Writing a device driver involves writing the code for these 27 functions. Three of these functions are specific to printer drivers, which leaves 24 for display driver developer to deal with.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Hardware</TD>
+<TD width=76%>The graphic pipeline ends at the hardware. The display driver communicates to the hardware using whatever mechanism required by the hardware. This typically involves a combination of memory-mapped video buffers and I/O registers.</TD>
+</TR>
+</table></div>
+
+<P>The following illustration shows the Windows CE graphics pipeline.</P>
+
+<P class="fig"><IMG SRC="graphicspipeline.gif" ALT="" BORDER=0></P>
+
+<P>Display driver writers can minimize the amount of time and effort that is needed to create a display driver by customizing one of the sample drivers provided with Microsoft&reg; Platform Builder. All of the sample drivers take advantage of the GPE class to provide default drawing with hardware-specific issues.</P>
+
+<P>The GDI makes calls to the display driver and the display driver writes to the physical display device. All Windows CE&#0150;based display drivers must implement a set of display DDI functions, which you use to initialize the display driver and draw to the display. </P>
+
+<P>The GPE classes serve as a base of code that you can use to derive new display drivers for your hardware. The GPE classes handle all communication within the display DDI layer and handle all of the default drawing. Using the GPE classes can save you a large amount of development and debugging work. All the sample display drivers use the GPE. They demonstrate how you can add extensions to the display driver, for example, to enable hardware accelerations. If you decide to use the GPE classes, you will have to provide code necessary to ensure that your display device operates correctly. In addition, if your device supports some kind of hardware acceleration for <MSHelp:link keywords="cerefBitBlt" TABINDEX="0">BitBlt</MSHelp:link> transfers, you can also enable it. Be aware that using the GPE classes involves hardware requirements. The GPE classes are for display devices that support a flat-frame buffer. Flat-frame implies that all the display device memory must be in a single block of contiguous memory.</P>
+
+<P>All display driver controls write to the built-in display hardware of the system. This hardware can be an LCD screen, but it can also be any sort of display hardware that is suitable for your platform. The display driver model for built-in display hardware is the same as the model for peripheral display adapter drivers.</P>
+
+<P>Create a registry key under <B>HKEY_LOCAL_MACHINE\Drivers\Display</B> to store configuration entries for your display driver. The initialization routine of your display driver should create keys under <B>HKEY_LOCAL_MACHINE\Drivers\Display\Active</B> so that applications can determine which display devices are available.</P>
+
+<P>PCI-based display drivers can benefit from the PCI bus driver loading model. The PCI bus driver and/or the platform's BIOS enumerates and programs the PCI configuration space of the device and populates the registry with configuration information. The display driver can then read this registry information without having to scan the bus for its device and read the PCI configuration space itself. For an example of this, refer to the <A HREF="cxrefdisplayinit.htm">DisplayInit</A> and <B>MapPhysicalDevice</B> functions for the MQ200 driver in %_WINCEROOT%\Public\Common\OAK\Drivers\Display\MQ200\Devmap.cpp. </P>
+
+<P>GWES writes the driver that it is using into <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers\MainDisplay</B>. GWES determines which display driver to load by following these steps:
+
+<OL type="1">
+	<LI>GWES checks the list of candidate displays in <B>HKEY_LOCAL_MACHINE\System\GDI\DisplayCandidates</B> to see if any are instantiated on the local system. If so, GWES takes the first one it finds, for example, the one with the lowest number. This list is usually set up in Platform.reg.</li>
+
+	<LI>GWES checks <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers</B>. This value explicitly names the display driver.</li>
+
+	<LI>GWES attempts to load Ddi.dll, which is the default display driver name. A registry entry in Common.reg loads Ddi.dll. A dedicated process can load secondary drivers by calling <MSHelp:link keywords="cerefCreateDC" TABINDEX="0">CreateDC</MSHelp:link><B>("MyDDI.DLL")</B>.</li>
+</OL>
+
+<P>GWES allows you to create OS images that determine the display adapter at run time based on PCI instance data for example, and load the appropriate driver. If it is possible that no display adapter is present, you can use Ddi_nop.</P>
+
+<P>For example, assume that a device could have TVIA5000 or Permedia3 displays in PCI slots. The system could also run in a headless configuration with no display adapter. You can create an image to support this by setting BSP_DISPLAY_TVIA5000=1, BSP_DISPLAY_PERM3=1, and BSP_DISPLAY_NOP=1. You also need to create PCI templates and a GDI candidate list in your Platform.reg file. If the PCI bus driver detects a display adapter card, it will create a PCI instance key that GDI will use to load the driver. If no adapter cards are found, the Ddi_nop driver will be loaded because it appears after the others in the following registry example.</P>
+
+<PRE class="code">IF BSP_NODISPLAY !
+
+IF BSP_DISPLAY_MQ200
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_mq200.dll"
+
+;        
+;MediaQ MQ200 driver settings
+;
+[HKEY_LOCAL_MACHINE\Drivers\Display\MQ200]
+   "Rotate"=dword:0
+   "PPSupport"=dword:0
+   "PPSupportEnable"=dword:0
+
+;; 640x480x16
+   "CxScreen"=dword:280
+   "CyScreen"=dword:1E0
+   "BPP"=dword:10
+   "Freq"=dword:3C
+
+;; FB_BASE address
+   "FB_BASE"=dword:00000000
+
+;; OEM run time flag
+   "Flag"=dword:00030503
+
+   "MIU2"=dword:00EA0086
+   "MIU3"=dword:6C4848C4
+   "MIU5"=dword:00000119
+   "DC0"=dword:0EF2082A
+   "PLL1Freq"=dword:00530000
+   
+   "PWM"=dword:000000A1
+        
+[HKEY_LOCAL_MACHINE\Drivers\Display\MQ200\Color]
+;; Cursor Color setting
+   "CC"=dword:F
+
+;
+; Add power manager for MQ200 displays
+;
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PMDDI]
+   "Prefix"="DDI"
+   "Dll"="pmddi.dll"
+   "Order"=dword:1
+
+;
+; MQ200 supports saving/restoring video memory surfaces during suspend/resume.
+;
+[HKEY_LOCAL_MACHINE\SYSTEM\GWE]
+    ; "PORepaint"=dword:0 - the display driver handles everything
+    ; "PORepaint"=dword:1 - gwe should save and restore the bits
+    ; "PORepaint"=dword:2 - gwe should invalidate and repaint
+    ; "PORepaint"=dword:3 - gwe and driver need to save video memory
+    ;
+    "PORepaint"=dword:3
+ENDIF   
+
+IF BSP_DISPLAY_TVIA5000
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_tvia5.dll"
+ENDIF   
+
+IF BSP_DISPLAY_PERM3
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_perm3.dll"
+ENDIF   
+
+IF BSP_DISPLAY_ATI
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_ati.dll"
+ENDIF
+
+IF BSP_DISPLAY_S3V
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_s3v.dll"
+ENDIF
+
+IF BSP_DISPLAY_RFLAT
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_rflat.dll"
+ENDIF
+
+IF BSP_DISPLAY_FLAT
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_flat.dll"
+ENDIF
+
+IF BSP_DISPLAY_NOP
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="ddi_nop.dll"
+ENDIF
+
+ENDIF BSP_NODISPLAY !
+
+; @CESYSGEN ENDIF CE_MODULES_DISPLAY</PRE>
+
+<P>The following illustration shows display driver architecture.</P>
+
+<P class="fig"><IMG SRC="displayarch.gif" ALT="" BORDER=0></P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_display_drivers.htm">Display Drivers</A></P>
+
+<P><A HREF="cxcondisplaydriveradvancedtopics.htm">Display Driver Extension</A></P>
+
+<P><A HREF="cxcondisplaydriverresources.htm">Display Driver Samples</A></P>
+
+<P><A HREF="_wceddk_primary_display_driver.htm">Primary Display Driver</A></P>
+
+<P><A HREF="_wceddk_secondary_display_drivers.htm">Secondary Display Drivers</A></P>
+
+<P><A HREF="_wceddk_ddi_functions.htm">DDI Functions</A></P>
+
+<P><A HREF="_wceddk_functions_in_the_blit_emulation_library.htm">Functions in the BitBlT Emulation Library</A></P>
+
+<P><A HREF="_wceddk_gpe_base_classes.htm">GPE Base Classes</A></P>
+
+<P><A HREF="_wceddk_gdi_support_services_for_display_drivers.htm">GDI Support Services for Display Drivers</A></P>
+
+<P><A HREF="_wceddk_display_buffer_formats.htm">Display Buffer Formats</A></P>
+
+<P><A HREF="_wceddk_line_drawing.htm">Line Drawing</A></P>
+
+<P><A HREF="_wceddk_display_driver_escape_codes.htm">Display Driver Escape Codes</A></P>
+
+<P><A HREF="_wceddk_including_display_drivers_in_an_os_image.htm">Display Drivers and the OS Image</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Display%20Driver%20Architecture&nbsp;(cxcondisplaydriverarchitecture.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

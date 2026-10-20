@@ -1,0 +1,561 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Diagnosing Deadlock-Stall Conditions Within Microsoft Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Diagnosing Deadlock-Stall Conditions Within Microsoft Windows CE .NET"/>
+<MSHelp:RLTitle Title="Diagnosing Deadlock-Stall Conditions Within Microsoft Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="diagdeadlock"/>
+<MSHelp:Keyword Index="K" Term="Priority Runner, diagnosing deadlock-stall conditions"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, diagnosing deadlock-stall conditions"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, Priority Runner application"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwinembed"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Diagnose deadlock and stall situations in embedded applications with the Priority Runner application in Windows CE .NET. The Priority Runner application can work in combination with hardware as simple as LEDs to identify and correct problems, such as debugging stalled thread priorities."><meta name="keywords" content="deadlock-stall conditions, Windows CE .NET, Kernel Tracker, Priority Runner, thread priority, Platform Builder 4.0"><META name="rtfFileName" content="diagdeadlock.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Nat Frampton">
+<META NAME="Date" CONTENT="2002-06-01">
+<META NAME="msdnID" CONTENT="_828587">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="diagdeadlock"></A>Diagnosing Deadlock-Stall Conditions Within Microsoft Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Nat Frampton, Windows Embedded MVP, President <BR>
+Real Time Development Corp.</P>
+
+<P>June 2002</P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET with Microsoft Platform Builder version 4.0</P>
+
+<P><B>Summary:</B> Microsoft Windows CE .NET provides a rich set of tools and development environments for creating embedded applications. We start by examining the Kernel Tracker Tool to understand its power. Often an embedded developer faces situations where external tools are not able to provide assistance because of their dependence on particular operating system (OS) resources that are not available. As a solution to diagnosing these deadlock or stall situations, where the tools have been rendered useless, we develop a simple Priority Runner application to identify the lowest schedulable thread priority in the system. (14 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#diagdeadlock_intro">Introduction</A> <BR>
+<A HREF="#diagdeadlock_kerneltracker">Kernel Tracker&#0151;Snapshot</A> <BR>
+<A HREF="#diagdeadlock_deadlock">Deadlock-Stall Thread</A> <BR>
+<A HREF="#diagdeadlock_strategy">Strategy for Priority Runner</A> <BR>
+<A HREF="#diagdeadlock_implementing">Implementing Priority Runner</A> <BR>
+<A HREF="#diagdeadlock_thread">Thread and Event Initialization</A> <BR>
+<A HREF="#diagdeadlock_priority">Priority Runner Thread</A> <BR>
+<A HREF="#diagdeadlock_interrupt">Interrupt Initialization</A> <BR>
+<A HREF="#diagdeadlock_istinterrupt">IST-Interrupt Service Routine</A> <BR>
+<A HREF="#diagdeadlock_testing">Testing Priority Runner</A> <BR>
+<A HREF="#diagdeadlock_summary">Summary</A> </P>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_intro"></A>Introduction</H2>
+
+<P>There are many demonstrations and examples of the use of tools like the integrated development environment of Microsoft&#174; Platform Builder 4.0 or Microsoft eMbedded Visual C++&#174; to explain the behavior of the system. When the system is well behaved, the combination of tools provides an excellent view of the system state. What happens when the system is in a deadlocked state? I want to explore diagnosing a scenario on Microsoft Windows&#174; CE .NET where a particular high priority thread is consuming a large portion of the CPU bandwidth. In this scenario, the drivers that deliver the messages and refresh the Screen Display will never be scheduled. We will explore a simple software example titled Priority Runner, which can work in combination with hardware as simple as LEDs or a serial port to diagnose this problem. The first question you will want to know is how to find out which thread priority is consuming the CPU and not allowing the other thread priorities to run. This is the goal of our software solution. The diagnostic thread will identify the last available priority that was scheduled in.</P>
+
+<P>We start with two quick definitions. Deadlock is where a thread requires a system resource like a Semaphore or Mutex and is prevented from running because this resource is not available. A stall condition is where another thread at equal or higher priority is consuming the CPU and not allowing other threads of equal or lower priority the opportunity to run. We will create a thread that demonstrates both conditions. </P>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_kerneltracker"></A>Kernel Tracker&#151;Snapshot</H2>
+
+<P>The existing graphical tools and data acquisition mechanisms built into the operating system are very powerful. They work together to provide a critical high resolution view of the history of activities on the device. The <B>Kernel Tracker</B> Tool provides a detailed view of activities of all process and operating system threads in a single view. Below is a simple example of a <B>Kernel Tracker</B> display snapshot from a Windows CE .NET Device.</P>
+
+<P class="fig"><P><A HREF="diagdeadlock_Fig1.gif" target="_Top"><IMG SRC="diagdeadlock_Fig1_thumbnail.gif" ALT="Click here to see larger image" BORDER=0></A></P> </P>
+
+<P class="label"><B>Figure 1.</B> (Click picture to see larger image)</P>
+
+<P>All system processes and interrupts are represented on the Workspace area to the left of the screen. A High resolution graphical display is in the center of the diagram with a complete symbol Key to the right of the display. In the diagram above, the individual interrupts are graphically represented along the leaves to the Interrupts Tree Branch. This diagram had a screen resolution of 1000 ms, which creates a good overall view of the present activity. We can scroll into a particular point in the diagram by selecting an interrupt of interest and set the Zoom Range to 1 ms. The following diagram represents this high resolution view.</P>
+
+<P class="fig"><CODE><IMG SRC="diagdeadlock_fig2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. </B></P>
+
+<P>Thread execution is represented by the Horizontal green bars. Context switches are seen as the vertical lines between these bars. In this example, Interrupt 24 occurs, causing the Kernel to pulse the event registered for the Interrupt Service Thread (IST-Thread 0xCDD92926) in the RealTimeLab.exe. The IST's execution is seen in two sections of activity in which it waits on an OS object, which causes activity in CEMON.EXE. The first context switch is the result of a retail message and the second is the publishing of the interrupt count back to Kernel Tracker through the CELOG service on the Target.</P>
+
+<P>A full explanation of Kernel Tracker or the Interrupt Mechanisms is not the focus of this article. Explore the documentation in Platform Builder focusing on Kernel Tracker as a starting point and, most importantly, start exploring your target system with these tools. It is important to understand the available tools and exhaust their ability before we move on to manually creating our own debug techniques. </P>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_deadlock"></A>Deadlock-Stall Thread</H2>
+
+<P>We will create a rogue thread in order to create a representative problem to solve. The deadlock-stall thread for our example is the function <B>ThreadHigh</B>. The thread stalls while monitoring the performance counter and holding the critical section for one second. It then sleeps for 5 ms. This bounds all threads above the priority of this thread to .5% of the CPU. </P>
+
+<PRE class="code">DWORD WINAPI ThreadHigh( LPVOID lpvParam )
+{
+    while( g_fRun )
+    {
+        // Grab the critical Section
+        EnterCriticalSection( &amp;g_csCriticalSection );
+        // Wait on the performance counter for 1 second
+        //
+        ulDiffuS = 0;
+        QueryPerformanceCounter( &amp;liStart );
+        while( ulDiffuS &lt; 1000000 )
+        {
+            QueryPerformanceCounter( &amp;liCurrent );
+            ulDiffuS = STCalcDeltaUS( liStart, liCurrent );
+        }
+        // Release the critical section
+        LeaveCriticalSection( &amp;g_csSTCriticalSection );
+        // Sleep for a while
+        Sleep( 5 );
+    }
+    return 0;
+}
+</PRE>
+
+<P>The key components to this high priority thread are:
+
+<UL type="disc">
+	<LI>Enter the Critical Section</li>
+
+	<LI>Wait for the 1,000,000 us to expire on the Performance Counter (1 sec)</li>
+
+	<LI>Leave the Critical Section</li>
+
+	<LI>Sleep</li>
+
+	<LI>Repeat</li>
+</UL>
+
+<P>We are going to create and set the thread priority of this thread to 20. Windows CE .NET has 256 available priorities to applications. The highest priority is priority 0. Increasing priority numbers represent lower priority threads. The result of <B>ThreadHigh</B>'s execution on the CPU is that all threads with priority lower than 20 are unable to run (Priority 21-255). All drivers, file system, GUI, ISTs are suspended, waiting to be scheduled. </P>
+
+<P>The deadlock-stall thread and event initialization can be placed anywhere within an application. Examine the function: </P>
+
+<PRE class="code">void InitializeDeadStallThread( void )
+{
+    // Set the stall thread priority
+    //
+    m_nSTHighPriority = 20;
+    // Initalize the Critical Section
+    //
+    InitializeCriticalSection( &amp;g_csSTCriticalSection );
+    // Create the High Priority Thread
+    //
+    g_htTVHigh    =     CreateThread(
+                NULL,             // CE Has No Security
+                0,                // No Stack Size
+                STThreadHigh,     // Interrupt Thread
+                NULL,             // No Parameters
+                CREATE_SUSPENDED, // No Creation Flags
+                &amp;dwThreadID       // Thread Id
+                );
+    // Set the thread priority to real time
+    //
+    if( !CeSetThreadPriority( g_htSTHigh, m_nSTHighPriority ))
+    {
+        RETAILMSG(1,(TEXT("RTL-ST : Failed setting High Thread 
+      Priority.\r\n")));
+        return;
+    }
+    // Get the thread going
+    //
+    g_fSTRun    = TRUE;
+    ResumeThread( g_htSTHigh );
+}
+</PRE>
+
+<P>The key steps in initializing an interrupt are:
+
+<UL type="disc">
+	<LI>Initialize the Critical Section.</li>
+
+	<LI>Create the High Priority Thread suspended.</li>
+
+	<LI>Set the High Priority Thread's priority.</li>
+
+	<LI>Resuming the Stall Thread to get it started.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_strategy"></A>Strategy for Priority Runner</H2>
+
+<P>The basic scenario for finding which thread priority is stalled is simple. We will use a thread to run the priorities from start to finish. The priority runner thread will be launched and immediately wait on a start event. Upon receiving the start event, the thread will at each priority, flash the LED for 100 ms, increment and set the priority, sleep for 1 second, and check to see if we have reached the stop priority. Below is a diagram of this behavior.</P>
+
+<P class="fig"><CODE><IMG SRC="diagdeadlock_fig3.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 3. </B></P>
+
+<P>The Priority Runner functionality can be implemented in your choice of mechanisms. Ensure if possible that it can be started by a hardware switch or push button since the Graphics Environment on the target may be prevented from running depending on the rouge thread priority. The external switch will be tied to an IST. The following code examples implement the setting of the start event from an IST.</P>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_implementing"></A>Implementing Priority Runner</H2>
+
+<P>There are four critical sections to the implementation. The following global variables and definitions are required for these five functions:</P>
+
+<PRE class="code">// Globals
+//
+HANDLE          g_hevInterrupt;        // Interrupt Event
+HANDLE          g_htIST;            // Interrupt Thread
+DWORD           g_dwInterruptCount;        // Interrupt Count
+DWORD           g_dwSysInt = 8;        // System Interrupt Number
+BOOL            g_fRun = FALSE;        // Interrupt Running Flag  
+CRITICAL_SECTION  g_csSTCriticalSection;    // ST Critical Section
+HANDLE            g_htSTHigh;            // ST High Priority Thread Handle
+BOOL              g_fSTRun    = TRUE;    // ST Running Flag 
+HANDLE            g_htPR;            // PR Thread
+int               g_nPRStartPriority;        // PR Start Thread Priority
+int               g_nPRStopPriority;        // PR Stop Thread Priority
+int               g_nPRPriority;        // PR Priority
+BOOL              g_fPRRunning = FALSE;    // PR Running Flag
+HANDLE            g_hevPRFinished;        // PR Finished Event
+HANDLE            g_hevPRStart;            // PR Start Event
+
+// Prototypes
+//
+DWORD WINAPI      ThreadIST( LPVOID lpvParam );    // Interrupt 
+   Routine IST
+DWORD WINAPI      STThreadHigh ( LPVOID lpvParam );// ST High 
+   Priority Thread
+ULONG             STCalcDeltaUS ( LARGE_INTEGER liStart, 
+                                  LARGE_INTEGER liCurrent );
+                                  // ST Calc Delta us
+DWORD WINAPI      PRThread( LPVOID lpvParam );    // PR Priority 
+   Runner Thread
+DWORD             PRLED    ( BYTE     ucPort, 
+                BOOL fState  );        // Led Control
+</PRE>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_thread"></A>Thread and Event Initialization</H2>
+
+<P>The thread and event initialization can be placed anywhere within an application. The following function demonstrates the necessary initialization: </P>
+
+<PRE class="code">Void InitializePriorityRunner
+{
+// Create an event
+//
+g_hevPRFinished = CreateEvent(NULL, FALSE, FALSE, NULL);
+if (g_hevPRFinished == NULL) 
+{
+    RETAILMSG(1, (TEXT("RTL-PR : Finished Event creation 
+      failed!!!\r\n")));
+    return;
+}
+
+// Create an event
+//
+g_hevPRStart = CreateEvent(NULL, FALSE, FALSE, NULL);
+if (g_hevPRStart == NULL) 
+{
+    RETAILMSG(1, (TEXT("RTL-PR : Start Event creation failed!!!\r\n")));
+    return;
+}
+// Create the Priority Runner Thread
+//
+g_htPR = CreateThread( NULL,            // Windows CE Has No Security
+                       0,               // No Stack Size
+                       PRThread,        // Interrupt Thread
+                       NULL,            // No Parameters
+                       CREATE_SUSPENDED,    // No Creation Flags
+                       &amp;dwThreadID          // Thread Id
+                     );
+// Look for a good Thread handle
+//
+if( !g_htPR )
+{
+    RETAILMSG(1,(TEXT("RTL-PR : Failed create Priority Runner 
+      Thread.\r\n")));
+    return;
+}
+// Setup the start priorities
+//
+g_nPRPriority = 0;
+// Set the thread priority to the start priority
+//
+if( !CeSetThreadPriority( g_htPR, g_nPRPriority ))
+{
+    RETAILMSG(1,(TEXT("RTL-PR : Failed setting Start Priority.\r\n")));
+    return;
+}
+// Get the thread started
+g_fPRRunning = TRUE;
+ResumeThread( g_htPR );
+}
+</PRE>
+
+<P>The key steps in initializing the priority runner are:
+
+<UL type="disc">
+	<LI>Creating the Start and Finished Events.</li>
+
+	<LI>Creating a Priority Runner thread that is suspended.</li>
+
+	<LI>Set the thread priority to the start priority.</li>
+
+	<LI>Set the g_fPRRunning Flag to true.</li>
+
+	<LI>Resuming the Thread.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_priority"></A>Priority Runner Thread</H2>
+
+<P>The Priority Runner Thread is in the function <B>PRThread</B>. </P>
+
+<PRE class="code">DWORD WINAPI PRThread( LPVOID lpvParam )
+{
+DWORD dwCount;
+DWORD dwStatus;
+// Make sure we have the object
+//
+dwStatus    = WaitForSingleObject(g_hevPRStart, INFINITE);
+if( dwStatus != WAIT_OBJECT_0 )
+    {
+        return 0;
+    }
+// Check to see if we have reached the stop priority
+// 
+while ( g_nPRPriority &lt; g_nPRStopPriority )
+    {
+        // Write to CELog that we own it
+        dwCount = (DWORD) g_nPRPriority;
+        // Set the LED On
+        //
+        LED( 1, TRUE );
+        // Wait 
+        //
+        Sleep( 100 );
+        // Set the LED Off
+        //
+        LED( 1, FALSE );
+        // Go to the next Priority
+        g_nPRPriority++;
+        // Set the new thread priority
+        //
+        if( !CeSetThreadPriority( g_htPR, g_nPRPriority ))
+        {
+            RETAILMSG(1,(TEXT("RTL-PR : Failed Setting Priority 
+         %d!!!\r\n"),
+            g_nPRPriority));
+            return 0;
+        }
+        // Wait for next cycle
+        //
+        Sleep( 1000 );
+    }
+    // We are done set the event
+    //
+    SetEvent( g_hevPRFinished );
+    return 0;
+}
+</PRE>
+
+<P>The key components to this Priority Runner thread are:
+
+<UL type="disc">
+	<LI>Waiting for the Start Event, which is set in the IST based on a button press.</li>
+
+	<LI>Cycle Through the Priorities from the Dialog.</li>
+
+	<LI>Turn the LED On.</li>
+
+	<LI>Wait 100 ms.</li>
+
+	<LI>Turn the LED Off.</li>
+
+	<LI>Set our thread priority to the next thread priority.</li>
+
+	<LI>Sleep for 1000 ms (1 second).</li>
+
+	<LI>Repeat cycling through the thread priorities.</li>
+
+	<LI>Set the g_<B>hevPRFinished</B> Event.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_interrupt"></A>Interrupt Initialization</H2>
+
+<P>There are two critical sections to the code we have just added. The interrupt initialization can be placed in the initialization code to your application or executed in response to a particular start event. Examine the following code snippet: </P>
+
+<PRE class="code">Void InitializeInterrupt( void )
+{
+// Create an event
+//
+g_hevInterrupt = CreateEvent(NULL, FALSE, FALSE, NULL);
+if (g_hevInterrupt == NULL) 
+{
+    RETAILMSG(1, (TEXT("RTL-IST: Event creation failed!!!\r\n")));
+    return;
+}
+// Have the OEM adaption layer (OAL) Translate the interrupt request 
+      (IRQ) to a system irq
+//
+fRetVal = KernelIoControl( IOCTL_HAL_TRANSLATE_IRQ, 
+                           &amp;dwIrq,
+                           sizeof( dwIrq ),
+                           &amp;g_dwSysInt,
+                           sizeof( g_dwSysInt ),
+                           NULL );
+// Create a thread that waits for signaling
+//
+g_fRun = TRUE;
+g_htIST = CreateThread(NULL, // Windows CE Has No Security
+                       0,    // No Stack Size
+                       ThreadIST,    // Interrupt Thread
+                       NULL,         // No Parameters
+                       CREATE_SUSPENDED, // Create Suspended
+                       &amp;dwThreadID    // Thread Id
+                       );
+// Set the thread priority to real time
+//
+m_nISTPriority = 0;
+if( !CeSetThreadPriority( g_htIST, m_nISTPriority ))
+{
+    RETAILMSG(1,(TEXT("RTL-IST: Failed setting Thread Priority.\r\n")));
+    return;
+}
+// Initialize the interrupt
+//
+if ( !InterruptInitialize(g_dwSysInt,g_hevInterrupt,NULL,0) ) 
+{
+    RETAILMSG (1, (TEXT("RTL-IST: InterruptInitialize failed!!!\r\n")));
+    return;
+}
+// Update the dialog with the thread number
+//
+m_szISTHandle.Format( L"0x%08X", g_htIST );
+UpdateData( FALSE );
+m_ISTEnableButton.EnableWindow    ( FALSE );
+m_ISTDisableButton.EnableWindow    ( TRUE );
+// Get the thread started
+//
+ResumeThread( g_htIST );
+}
+</PRE>
+
+<P>The key steps in initializing an interrupt are:
+
+<UL type="disc">
+	<LI>Creating an Event.</li>
+
+	<LI>Getting the System Interrupt number for your IRQ.</li>
+
+	<LI>Creating an interrupt service thread (IST) that is <B>suspended</B>.</li>
+
+	<LI>Calling <B>InterruptInitialize</B> to create an association of the IRQ-&gt;Event.
+<UL type="disc">
+	<LI>Creating an IST that isn't suspended may cause the <B>InterruptInitialize</B> to fail because the event is already being waited on.</li>
+</UL>
+</li>
+
+	<LI>Set the thread priority to the highest priority, which is 0.</li>
+
+	<LI>Resuming the IST.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_istinterrupt"></A>IST-Interrupt Service Routine</H2>
+
+<P>The actual IST is in the function <B>ThreadIST</B>. We have set the <B>g_hevPRStart</B> Event to get the Priority Runner thread started.</P>
+
+<PRE class="code">DWORD WINAPI ThreadIST( LPVOID lpvParam )
+{
+DWORD dwStatus;
+BOOL fState = TRUE;
+// Always check the running flag
+//
+while( g_fRun )
+{
+    dwStatus = WaitForSingleObject(g_hevInterrupt, INFINITE);
+    // Check to see if we are finished
+    //
+    if(!g_fRun ) return 0;
+    // Make sure we have the object
+    //
+    if( dwStatus == WAIT_OBJECT_0 )
+    {
+        // Only look for button ups. Get an interrupt on up and down
+        //
+        if (!( READ_REGISTER_ULONG(g_pButtonPort) &amp; BUTTON_MASK))
+        {
+            RETAILMSG(1, (TEXT("Button up...")));
+            g_dwInterruptCount ++;
+            // Store our count out the the CELOG
+            //
+            CELOGDATA( TRUE, 
+                       CELID_RAW_LONG, 
+                       &amp;g_dwInterruptCount, 
+                       (WORD) (sizeof(DWORD)), 
+                       1, 
+                       CELZONE_MISC);
+            RETAILMSG(1, (TEXT("RTL-IST  \\Button Count : %d! \r\n"),
+                      g_dwInterruptCount));
+                // See if we are to start the Priority Runner
+                //
+                if( g_fPRRunning )
+                {
+                    SetEvent( g_hevPRStart );
+                }
+                // Flash the LED
+                LED( 0, fState );
+                fState    = !fState;
+        }
+        // Finish the interrupt
+        //
+        InterruptDone( g_dwSysInt );
+    }
+}
+return 0;
+}
+</PRE>
+
+<P>The key components to this IST interrupt handling thread are:
+
+<UL type="disc">
+	<LI>Waiting for the Interrupt Event.</li>
+
+	<LI>Confirming that we have a pulsed event from the OS.</li>
+
+	<LI>Confirm the button is in an up state.</li>
+
+	<LI>Handling the interrupt in the shortest time possible.</li>
+
+	<LI>Create CELOGDATA to be viewed in Kernel Tracker.</li>
+
+	<LI>Check to see if the <B>g_fPRRunning</B> flag is set and then set the <B>g_hevPRStart</B> Event.</li>
+
+	<LI>Toggle the LED state.</li>
+
+	<LI>Reporting InterruptDone().
+<UL type="disc">
+	<LI>The OS will not provide another interrupt on this IRQ until the <B>InterruptDone</B> is reported.</li>
+</UL>
+</li>
+
+	<LI>Waiting for the Interrupt Event again.</li>
+</UL>
+
+<P>We are now ready to run and test the Priority Runner.</P>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_testing"></A>Testing Priority Runner</H2>
+
+<P>Integrate the previous functions into your application. Once you have started and initialized the events, start the interrupt handler, deadlock-stall, and priority runner threads. Set the start event for the Priority runner. In this example, you would push the external button causing the IST to execute. The <B>Priority Runner</B> thread blinks on each priority, starting at priority <B>0</B> in this case. You will be counting light flashes on <B>LED</B> starting with the start priority. It will flash the <B>LED </B>once for each priority. The light will stop flashing when you reach the stalled priority. In this case, the stalled priority is <B>20</B>. You should count <B>21</B> <B>LED</B> flashes total. You can configure the start and stop priorities for priority runner in the initialization code.</P>
+
+<H2 class="dtH1"><A NAME="diagdeadlock_summary"></A>Summary</H2>
+
+<P>Windows CE .NET provides the embedded developer a rich development environment and tools to develop and debug embedded applications. Kernel Tracker provides a high resolution view into the scheduler of Windows CE .NET. This tool will serve most of your debugging needs. As with all embedded systems, there are times when hardware-only interface solutions are required to identify and correct problems. The Priority Runner application provides one such mechanism. Debugging stalled thread priorities is difficult without such a tool. The development of embedded applications and debugging tools must be based on an understanding of all operating system mechanisms. This article serves as a beginning to the process. Good luck on the journey! </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_828587', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

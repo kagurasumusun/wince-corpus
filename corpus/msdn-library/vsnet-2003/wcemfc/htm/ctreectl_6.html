@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CTreeCtrl::DeleteItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ctreectrl_deleteitem"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ctreectrl_deleteitem"></A>CTreeCtrl::DeleteItem</H1>
+
+<P>This method deletes an item from the tree view control.</P>
+
+<PRE class=syntax><B>BOOL DeleteItem(
+HTREEITEM </B><I>hItem</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hItem</I></DT>
+
+<DD>Specifies the handle of the tree item to be deleted. If <I>hitem</I> has the TVI_ROOT value, all items are deleted from the tree view control.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// Gain a pointer to our tree control
+CTreeCtrl* pCtrl = (CTreeCtrl*) GetDlgItem(IDC_TREE1);
+ASSERT(pCtrl != NULL);
+
+// Look at all of the root-level items
+HTREEITEM hCurrent = pCtrl-&gt;GetNextItem(TVI_ROOT, TVGN_NEXT);
+while (hCurrent != NULL)
+{
+&nbsp;&nbsp;// Get the text for the item. Notice we use TVIF_TEXT because
+&nbsp;&nbsp;// we want to retrieve only the text, but also specify TVIF_HANDLE
+&nbsp;&nbsp;// because we are getting the item by its handle.
+&nbsp;&nbsp;TVITEM item;
+&nbsp;&nbsp;TCHAR szText[1024];
+&nbsp;&nbsp;item.hItem = hCurrent;
+&nbsp;&nbsp;item.mask = TVIF_TEXT | TVIF_HANDLE;
+&nbsp;&nbsp;item.pszText = szText;
+&nbsp;&nbsp;item.cchTextMax = 1024;
+
+&nbsp;&nbsp;BOOL bWorked = pCtrl-&gt;GetItem(&amp;item);
+
+&nbsp;&nbsp;// Try to get the next item
+&nbsp;&nbsp;hCurrent = pCtrl-&gt;GetNextItem(hCurrent, TVGN_NEXT);
+
+&nbsp;&nbsp;// If we successfuly retrieved an item, and the text of the item
+&nbsp;&nbsp;// contains a lowercase letter 'e', delete the item.
+&nbsp;&nbsp;if (bWorked &amp;&amp; _tcschr(item.pszText, 'e'))
+&nbsp;&nbsp;&nbsp;&nbsp;pCtrl-&gt;DeleteItem(item.hItem);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ctreectl_5.htm"><B>CTreeCtrl::DeleteAllItems</B></A>, <A HREF="ctreectl_33.htm"><B>CTreeCtrl::InsertItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

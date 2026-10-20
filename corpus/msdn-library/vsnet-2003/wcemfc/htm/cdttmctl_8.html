@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDateTimeCtrl::GetTime</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdatetimectrl_gettime"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_nmdatetimechange" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_cdatetimectrl_gettime"></A><SUP></SUP>CDateTimeCtrl::GetTime</H1>
+
+<P>This method retrieves the selected time from a DTP control.</P>
+
+<P>Store the time information in a <B>COleDateTime</B> class, a <B>CTime</B> class, or a <B>SYSTEMTIME</B> structure.</P>
+
+<PRE class=syntax><B>DWORD GetTime(
+CTime&amp;</B> <I>timeDest</I> <B>)
+const;</B><I> </I>
+
+<B>BOOL GetTime(
+COleDateTime&amp; </B><I>timeDest</I><B> )</B><I>
+</I><B>const;</B><I> </I>
+
+<B>DWORD GetTime(
+LPSYSTEMTIME</B> <I>pTimeDest</I> <B>)
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>timeDest</I></DT>
+
+<DD>In the first version, a reference to a <B>COleDateTime</B> object that receives the system time information. In the second version, a reference to a <B>CTime</B> object that receives the system time information.</DD>
+
+<DT><I>pTimeDest</I></DT>
+
+<DD>Pointer to the <B>SYSTEMTIME</B> structure to receive the system time information. Must not be <B>NULL</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>In the first version, nonzero if the time is successfully written to the <B>COleDateTime</B> object; otherwise, it is zero. In the second and third versions, a <B>DWORD</B> value equal to the <I>dwFlag</I> member set in the <B>NMDATETIMECHANGE</B> structure.</P>
+
+<H4>Remarks</H4>
+
+<P>The return value <B>DWORD</B> in the second and third versions, above, indicates whether the date and time picker control is set to no-date status, as indicated in the <B>NMDATETIMECHANGE</B> structure member <I>dwFlags</I>. If the value returned equals GDT_NONE, the control is set to no-date status and uses the DTS_SHOWNONE style. If the value returned equals GDT_VALID, the system time is successfully stored in the destination location.</P>
+
+<H4>Example</H4>
+
+<PRE>void CDatesDlg::OnButton2()
+{
+   // Gain a pointer to the control.
+   CDateTimeCtrl* pCtrl = (CDateTimeCtrl*) GetDlgItem(IDC_DATETIMEPICKER1);
+   ASSERT(pCtrl != NULL);
+
+   // Get a CTime
+   CTime timeTime;
+   DWORD dwResult = pCtrl-&gt;GetTime(timeTime);
+   if (dwResult == GDT_VALID)
+   {
+      // The user checked the box and specified data.
+      CString str;
+
+      // Is it a time-only control or a date-only control?
+      if ((pCtrl-&gt;GetStyle() &amp; DTS_TIMEFORMAT) == DTS_TIMEFORMAT)
+         str = timeTime.Format(_T("%X"));
+      else
+         str = timeTime.Format(_T("%x"));
+      AfxMessageBox(str);
+   }
+   else
+   {
+      // The user cleared the "none" box.
+      AfxMessageBox(_T("Time not set!"));
+   }
+
+   // Calling as SYSTIME is much the same, but calling COleDateTime
+   // tests the state of the COleDateTime object for validity to
+   // see if the user did or did not check the "none" box.
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdtctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="struct_30.htm"><B>SYSTEMTIME</B></A>, <A HREF="JavaScript:hhobj_1.Click()"><B>NMDATETIMECHANGE</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

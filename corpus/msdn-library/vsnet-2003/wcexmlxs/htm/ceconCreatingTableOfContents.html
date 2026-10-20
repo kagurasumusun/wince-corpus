@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Table of Contents</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Table of Contents"/>
+<MSHelp:RLTitle Title="Creating a Table of Contents"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingTableOfContents"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingTableOfContents"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xslpg03.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801971">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconcreatingtableofcontents"></A>Creating a Table of Contents</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Often an element from the source XML document appears multiple times in the output, with different formatting in each case. The classic example is the table of contents, in which section titles appear at the start of the document, and each one is also displayed at the start of the section. XSLT makes it easy to place something in multiple places&#0151;just select it multiple times using the &lt;xsl:for-each&gt; or &lt;xsl:apply-templates&gt; elements.</P>
+
+<P>The &lt;xsl:for-each&gt; element provides a simple way to apply different formatting for each location. The &lt;xsl:for-each&gt; element contains its own template, so different output for various occurrences of an element is implied. In the following example, the title elements are pulled from the top-level section and used in a simple table of contents.</P>
+
+<PRE class="code">&lt;xsl:template match="/"&gt;
+  &lt;H4&gt;Table of Contents&lt;/H4&gt;
+  &lt;xsl:for-each select="document/section"&gt;
+    &lt;DIV STYLE="margin-left:1em"&gt;
+      &lt;xsl:value-of select="title"/&gt;
+    &lt;/DIV&gt;
+  &lt;/xsl:for-each&gt;
+  &lt;xsl:apply-templates select="document/section"/&gt;
+&lt;/xsl:template&gt;
+&lt;xsl:template match="section"&gt;
+  &lt;DIV&gt;
+    &lt;H2&gt;&lt;xsl:value-of select="title"/&gt;&lt;/H2&gt;
+    &lt;xsl:apply-templates /&gt;
+  &lt;/DIV&gt;
+&lt;/xsl:template&gt;</PRE>
+
+<P>This example is a simplification of that found in the To The Pole Sample (with TOC).</P>
+
+<P>Often, however, a hierarchical table of contents is needed. Typically this is the case when the document itself defines sections recursively, for example sections which generate subsections, which in turn generate further subsections. &lt;xsl:apply-templates&gt; is suited for recursive structure, and allows templates to be defined locally. A template scoped in this way will not participate in the selection of an appropriate template at the global level. The template will only apply for items placed in the table of contents.</P>
+
+<P>A document grammar with recursive structure is used by the Worldwide Web Consortium (W3C) for XML versions of recommendations, such as the XSLT Transformation. This grammar contains nested sections named "div1", "div2", and so on.</P>
+
+<P>The following example shows a hierarchical table of contents for this grammar. It uses an &lt;xsl:template&gt; element contained in, or scoped to, the &lt;xsl:apply-templates&gt; element, which selects the top-level sections, "div1" in the document body.</P>
+
+<PRE class="code">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+&lt;xsl:output method="html"/&gt;
+&lt;xsl:template match="text()"/&gt;
+
+&lt;xsl:template match="/"&gt;
+  &lt;html&gt;
+    &lt;body&gt;
+      &lt;H3&gt;Table of Contents&lt;/H3&gt;
+      &lt;xsl:apply-templates select="spec/body/div1 | spec/back/*" mode="toc"/&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match="div1|div2|div3|div4|div5|div6" mode="toc"&gt;
+  &lt;DIV STYLE="margin-left:1em"&gt;&lt;xsl:number level="multiple" format="1.1.1.1.1. " count="div1|div2|div3|div4|div5|div6"/&gt;
+  &lt;xsl:value-of select="head"/&gt;&lt;br/&gt;
+  &lt;xsl:apply-templates select="div2|div3|div4|div5|div6" mode="toc"/&gt;
+  &lt;/DIV&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match="inform-div1" mode="toc"&gt;
+  &lt;DIV STYLE="margin-left:1em"&gt;&lt;xsl:number level="multiple" format="1.1.1.1.1. "/&gt;
+    &lt;xsl:value-of select="head"/&gt; (Non-Normative)
+    &lt;xsl:apply-templates select="div2" mode="toc"/&gt;
+  &lt;/DIV&gt;
+&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</PRE>
+
+<P>The local templates are tested for a match before looking for a global template, and build nested &lt;DIV&gt; elements to indent each level in relation to its parent. Because &lt;xsl:apply-templates&gt; is careful to select only elements that can be matched by local templates, there is no possibility of interfering with the operation of other templates in the style sheet.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconadvancedxsltfeatures.htm">Advanced XSLT Features</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20a%20Table%20of%20Contents&nbsp;(ceconcreatingtableofcontents.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

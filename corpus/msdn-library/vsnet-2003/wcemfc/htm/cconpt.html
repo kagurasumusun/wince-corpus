@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CConnectionPoint</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cconnectionpoint"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cconnectionpoint"></A><SUP></SUP>CConnectionPoint</H1>
+
+<P>This class defines a special type of interface used to communicate with other OLE objects, called a <I>connection point.</I> Unlike normal OLE interfaces, which are used to implement and expose the functionality of an OLE control, a connection point implements an outgoing interface that can initiate actions on other objects, such as firing events and change notifications. </P>
+
+<P>A connection consists of two parts: the object calling the interface, called the <I>source</I>, and the object implementing the interface, called the <I>sink</I>. By exposing a connection point, a source allows a sink to establish connections to itself. Through the connection point mechanism, a source object obtains a pointer to the sink implementation of a set of methods. For example, to fire an event implemented by the sink, the source can call the appropriate method of the sink implementation.</P>
+
+<P>By default, a <B>COleControl</B>-derived class implements two connection points: one for events and one for property change notifications. These connections are used, respectively, for event firing and for notifying a sink&#0151;for example, the control container&#0151;when a property value has changed. Support is also provided for OLE controls to implement additional connection points. For each additional connection point implemented in your control class, you must declare a connection part that implements the connection point. If you implement one or more connection points, you also need to declare a single connection map in your control class.</P>
+
+<P>The following example demonstrates a simple connection map and one connection point for the <B>Sample</B> OLE control, consisting of two fragments of code: the first portion declares the connection map and point; the second implements this map and point. The first fragment is inserted into the declaration of the control class, under the <B>protected</B> section.</P>
+
+<PRE>// Connection point for ISample interface
+BEGIN_CONNECTION_PART(CSampleCtrl, SampleConnPt)
+&nbsp;&nbsp;&nbsp;&nbsp;CONNECTION_IID(IID_ISampleSink)
+END_CONNECTION_PART(SampleConnPt)
+
+DECLARE_CONNECTION_MAP()
+</PRE>
+
+<P>The <B>BEGIN_CONNECTION_PART</B> and <B>END_CONNECTION_PART</B> macros declare an embedded class, <B>XSampleConnPt</B> derived from <B>CConnectionPoint</B>, that implements this particular connection point. To override <B>CConnectionPoint</B> methods or add your own methods, declare them between these two macros. For example, the <B>CONNECTION_IID</B> macro overrides the <B>CConnectionPoint::GetIID</B> method when placed between these two macros.</P>
+
+<P>The second code fragment is inserted into the implementation file (.cpp) of your control class. This code implements the connection map, which includes the additional connection point, <B>SampleConnPt</B>.</P>
+
+<PRE>BEGIN_CONNECTION_MAP(CSampleCtrl, COleControl)
+    CONNECTION_PART(CSampleCtrl, IID_ISampleSink, SampleConnPt)
+END_CONNECTION_MAP()
+</PRE>
+
+<P>Once these code fragments are inserted, the Sample OLE control exposes a connection point for the <B>ISampleSink</B> interface.</P>
+
+<P>Typically, connection points support multicasting&#0151;the ability to broadcast to multiple sinks connected to the same interface. The following code fragment demonstrates how to accomplish multicasting by iterating through each sink on a connection point.</P>
+
+<PRE>void CSampleCtrl::CallSinkFunc()
+{
+    const CPtrArray* pConnections = m_xSampleConnPt.GetConnections();
+    ASSERT(pConnections != NULL);
+
+    int cConnections = pConnections-&gt;GetSize();
+    ISampleSink* pSampleSink;
+    for (int i = 0; i &lt; cConnections; i++)
+    {
+        pSampleSink = (ISampleSink*)(pConnections-&gt;GetAt(i));
+        ASSERT(pSampleSink != NULL);
+        pSampleSink-&gt;SinkFunc();
+    }
+}
+</PRE>
+
+<P>This example retrieves the current set of connections to the <B>SampleConnPt</B> connection point with a call to <B>CConnectionPoint::GetConnections</B>. It then iterates through the connections and calls <B>ISampleSink::SinkFunc</B> on every active connection.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="compare_13.htm"><B>Application Architecture Classes</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

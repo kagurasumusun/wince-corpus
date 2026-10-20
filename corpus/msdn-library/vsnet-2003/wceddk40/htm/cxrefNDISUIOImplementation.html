@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDISUIO Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDISUIO Implementation"/>
+<MSHelp:RLTitle Title="NDISUIO Implementation"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDISUIOImplementation"/>
+<MSHelp:Keyword Index="K" Term="NDISUIO Implementation"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDISUIOImplementation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndisuio_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801427">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndisuioimplementation"></A>NDISUIO Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>NDISUIO is implemented as an NDIS protocol driver. As a protocol driver, NDISUIO is an NDIS-aware component, and can directly open an NDIS miniport driver to send requests, set, and query information. NDISUIO provides an interface between a user-mode application and NDIS using <MSHelp:link keywords="cerefDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link>.</P>
+
+<P>Applications load NDISUIO from a <A HREF="cxtskdriverentryofndisminiportdrivers.htm">DriverEntry</A> routine. The application calls to <MSHelp:link keywords="cerefCreateFile" TABINDEX="0">CreateFile</MSHelp:link> to generate a file handle, then associates the file handle with the target network device by sending <A HREF="cxrefioctl_ndisuio_open_device.htm">IOCTL_NDISUIO_OPEN_DEVICE</A><B> </B>from <B>DeviceIoControl</B>. The application uses one file handle for each device that it communicates with.</P>
+
+<P>The following shows how to call <B>CreateFile</B> to obtain a handle to the device.</P>
+
+<PRE class="code">hAdapter = CreateFile(
+     NDISUIO_DEVICE_NAME,
+     GENERIC_READ | GENERIC_WRITE,
+     FILE_SHARE_READ | FILE_SHARE_WRITE,
+     NULL,
+     OPEN_EXISTING,
+     FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
+     INVALID_HANDLE_VALUE);</PRE>
+
+<P>The following function call shows the use of <B>IOCTL_NDISUIO_OPEN_DEVICE</B> to create a binding with an NE20001 network device using the handle obtained from <B>CreateFile</B>.</P>
+
+<PRE class="code">DeviceIoControl(
+hAdapter, 
+     IOCTL_NDISUIO_OPEN_DEVICE,
+TEXT("NE20001"),
+wcslen(TEXT("NE20001")) + sizeof(TCHAR),
+NULL,
+0,
+&amp;dwReturnedBytes,
+NULL);</PRE>
+
+<P>The following list shows the operations NDISUIO does using the file object:
+
+<UL type="disc">
+	<LI>Read and write operations</li>
+
+	<LI>Send or query NDIS OIDs</li>
+
+	<LI>Receive bind and unbind notifications</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefndisuser-modeiodriver.htm">NDIS User-mode I/O Driver</A></P>
+
+<P><A HREF="cxrefndisuiooperations.htm">NDISUIO Operations</A></P>
+
+<P><A HREF="cxrefsimultaneousaccessformultipleapplications.htm">Simultaneous Access for Multiple Applications</A></P>
+
+<P><A HREF="cxrefndisuiodriverregistration.htm">NDISUIO Driver Registration</A></P>
+
+<P><A HREF="cxrefndisuiobindingunbinding.htm">NDISUIO Binding and Unbinding</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDISUIO%20Implementation&nbsp;(cxrefndisuioimplementation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

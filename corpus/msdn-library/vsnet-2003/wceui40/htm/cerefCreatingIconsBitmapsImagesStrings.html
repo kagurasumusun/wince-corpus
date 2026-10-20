@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Icons, Bitmaps, Images, and Strings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating Icons, Bitmaps, Images, and Strings"/>
+<MSHelp:RLTitle Title="Creating Icons, Bitmaps, Images, and Strings"/>
+<MSHelp:Keyword Index="A" Term="cerefCreatingIconsBitmapsImagesStrings"/>
+<MSHelp:Keyword Index="K" Term="bitmaps, creating"/>
+<MSHelp:Keyword Index="K" Term="icons, creating"/>
+<MSHelp:Keyword Index="K" Term="images, creating"/>
+<MSHelp:Keyword Index="K" Term="resources, creating bitmaps"/>
+<MSHelp:Keyword Index="K" Term="resources, creating icons"/>
+<MSHelp:Keyword Index="K" Term="resources, creating images"/>
+<MSHelp:Keyword Index="K" Term="resources, creating strings"/>
+<MSHelp:Keyword Index="K" Term="strings, creating"/>
+<MSHelp:Keyword Index="A" Term="cerefCreatingIconsBitmapsImagesStrings"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: cersrc.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753552">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcreatingiconsbitmapsimagesstrings"></A>Creating Icons, Bitmaps, Images, and Strings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An <I>icon</I> is an image that used to identify an application, file, or other object. It consists of a bit image combined with a mask. An application icon always appears on the taskbar while the application is running, and it can be used to recover the application main window when another window has the foreground. The icon can also be used to identify the application in the Windows CE Explorer. Every application should register both 16 by 16 pixel and 32 by 32 pixel icons for its main executable file and the types of files it stores in the file system.</P>
+
+<P>A <I>bitmap</I> is a graphics image that you can include in an application. Unlike icons, which have a fixed size, you determine the bitmap size. Both icons and bitmaps must be defined in a resource file.</P>
+
+<P class="labelproc"><B>To create an icon</B>
+
+<OL type="1">
+	<LI>Draw the icon by using a graphics application.</li>
+
+	<LI>Include the icon as a resource in the application resource-definition file.</li>
+
+	<LI>Call the WM_SETICON message to associate an icon with a window class.
+<P>Icons are associated with window classes rather than with individual windows.
+</li>
+
+	<LI>Call the WM_GETICON message to retrieve the handle of the icon that is associated with a window class.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Windows CE does not support any of the standard predefined icons (IDI_*) that Windows-based desktop platforms support.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P class="labelproc"><B>To create a bitmap</B>
+
+<OL type="1">
+	<LI>Draw the bitmap by using a graphics application.</li>
+
+	<LI>Include the bitmap as a resource in the application resource-definition file.</li>
+
+	<LI>Call the <MSHelp:link keywords="cerefLoadBitmap" TABINDEX="0">LoadBitmap</MSHelp:link> function to initialize the bitmap.
+<P>The bitmap you create with this function will be read-only because Windows&nbsp;CE does not copy the bitmap into RAM as Windows-based desktop platforms do.
+</li>
+
+	<LI>Call the <MSHelp:link keywords="cerefSelectObject" TABINDEX="0">SelectObject</MSHelp:link> function to select the bitmap into a device context. This enables you to display the bitmap.
+<P>When you select the bitmap into a device context, you cannot modify the device context &#0151; or example, by drawing text into it &#0151; because that would require the ability to write to the bitmap.
+</li>
+</OL>
+
+<P>The following code example shows how to load a bitmap and display it.</P>
+
+<PRE class="code">HBITMAP hbm = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
+
+// Clear the window.
+InvalidateRect(hWnd, NULL, TRUE);
+UpdateWindow(hWnd);
+
+HDC hdc = GetDC(hWnd);
+HDC hdcTemp = CreateCompatibleDC(hdc);
+SelectObject(hdcTemp, hbm);
+
+// Get the size of the bitmap.
+BITMAP bm;
+GetObject(hbm, sizeof(BITMAP), &amp;bm );
+
+BitBlt(hdc, 50, 50, bm.bmWidth + 50, bm.bmHeight + 50, hdcTemp, 0, 0, SRCCOPY);
+
+ReleaseDC(hWnd,hdc);</PRE>
+
+<P>Images and strings are created similarly to icons and bitmaps. Both are resources that must be defined in a resource file. The following code example shows how to define a resource for an icon, bitmap, cursor, and string.</P>
+
+<PRE class="code">#include "windows.h"
+
+#define IDB_BITMAP                      101
+#define IDC_CURSOR                      102
+#define IDI_CEPADICON                   103
+
+IDB_CEPADBITMAP     BITMAP  DISCARDABLE     "CePad.bmp"
+IDC_CEPADCURSOR     CURSOR  DISCARDABLE     "CePad.cur"
+IDI_CEPADICON       ICON    DISCARDABLE     "CePad.ico"
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+  1                 "CePad"
+  2                 "CePad Application"
+END</PRE>
+
+<P>When adding an image or string to an application, call the <MSHelp:link keywords="cerefLoadImage" TABINDEX="0">LoadImage</MSHelp:link> function to load an image and call the <MSHelp:link keywords="cerefLoadString" TABINDEX="0">LoadString</MSHelp:link> function to load a string. Windows CE does not support stretching and shrinking of images or any loading options other than LR_DEFAULTCOLOR. Windows CE supports only Unicode strings.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20Icons,%20Bitmaps,%20Images,%20and%20Strings&nbsp;(cerefcreatingiconsbitmapsimagesstrings.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

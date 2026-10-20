@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSAAccept</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSAAccept"/>
+<MSHelp:RLTitle Title="WSAAccept"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAAccept"/>
+<MSHelp:Keyword Index="K" Term="WSAAccept"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAAccept"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720509">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_wsaaccept"></A>WSAAccept</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function conditionally accepts a connection based on the return value of a condition function and allows the transfer of connection data.</P>
+
+<PRE class="syntax"><B>SOCKET WSAAccept(</B>
+<B>SOCKET<I> </I></B><I>s<B>,</B></I>
+<B>struct SOCK_ADDR *</B><I>addr</I><B>,</B>
+<B>LPINT</B> <I>addrlen</I><B>,</B>
+<B>LPCONDITIONPROC</B> <I>lpfnCondition</I><B>,</B>
+<B>DWORD</B> <I>dwCallbackData</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying a socket that is listening for connections after a call to the <A HREF="_wcesdk_listen_function.htm">listen</A> function.</dd>
+
+<DT><I>addr</I></DT>
+
+<DD>[out] Optional pointer to a buffer that receives the address of the connecting entity, as known to the communications layer. The exact format of the <I>addr</I> parameter is determined by the address family established when the socket was created.</dd>
+
+<DT><I>addrlen</I></DT>
+
+<DD>[in/out] Optional pointer to an integer that contains the length of the address <I>addr</I>.</dd>
+
+<DT><I>lpfnCondition</I></DT>
+
+<DD>[in] Procedure instance address of the optional, application-supplied condition function that will make an accept/reject decision based on the caller information passed in as parameters.</dd>
+
+<DT><I>dwCallbackData</I></DT>
+
+<DD>[in] Callback data passed back to the application as the value of the <I>dwCallbackData</I> parameter of the condition function. This parameter is not interpreted by Windows Sockets.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>WSAAccept</B> returns a value of type <B>SOCKET</B> that is a descriptor for the accepted socket. Otherwise, a value of INVALID_SOCKET is returned, and a specific error code can be retrieved by calling <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>.</P>
+
+<P>The integer referred to by <I>addrlen</I> initially contains the amount of space pointed to by <I>addr</I>. On return it will contain the actual length in bytes of the address returned. The following table shows a list of possible error values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Error value</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSANOTINITIALISED </TD>
+<TD width=65%>A successful <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> call must occur before using the <B>WSAAccept</B> function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAECONNREFUSED </TD>
+<TD width=65%>The connection request was forcefully rejected as indicated in the return value of the condition function (CF_REJECT). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAENETDOWN </TD>
+<TD width=65%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEFAULT </TD>
+<TD width=65%>The <I>addrlen</I> parameter is too small or the <I>addr</I> or <I>lpfnCondition</I> are not part of the user address space. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEINTR </TD>
+<TD width=65%>A blocking Winsock call was canceled, or the socket was closed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEINPROGRESS </TD>
+<TD width=65%>A blocking Winsock call is in progress. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEINVAL</TD>
+<TD width=65%>The <B>listen</B> function was not invoked prior to <B>WSAAccept</B>, the return value of the condition function is not a valid one, or any case where the specified socket is in an invalid state. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEMFILE </TD>
+<TD width=65%>The queue is nonempty on entry to <B>WSAAccept</B> and there are no socket descriptors available. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAENOBUFS </TD>
+<TD width=65%>No buffer space is available. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAENOTSOCK </TD>
+<TD width=65%>The descriptor is not a socket. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEOPNOTSUPP </TD>
+<TD width=65%>The referenced socket is not a type that supports connection-oriented service. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSATRY_AGAIN </TD>
+<TD width=65%>The acceptance of the connection request was deferred as indicated in the return value of the condition function (CF_DEFER). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEWOULDBLOCK </TD>
+<TD width=65%>The socket is marked as nonblocking and no connections are present to be accepted. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEACCES </TD>
+<TD width=65%>The connection request that was offered has timed out or been withdrawn. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>WSAAccept</B> function extracts the first connection on the queue of pending connections on socket <I>s</I> and checks it against the condition function, provided the condition function is specified (that is, not NULL). If the condition function returns CF_ACCEPT, <B>WSAAccept</B> creates a new socket. The newly created socket has the same properties as socket<I> s, </I>including asynchronous events registered with <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A>. If the condition function returns CF_REJECT, <B>WSAAccept</B> rejects the connection request. The condition function runs in the same thread as this function and should return as soon as possible. If the decision cannot be made immediately, the condition function should return CF_DEFER to indicate that no decision has been made and no action about this connection request should be taken by the service provider. When the application is ready to take action on the connection request, it will invoke <B>WSAAccept</B> again and return either CF_ACCEPT or CF_REJECT as a return value from the condition function.</P>
+
+<P>A socket in default mode (blocking) will block until a connection is present when an application calls <B>WSAAccept</B> and no connections are pending on the queue.</P>
+
+<P>A socket in nonblocking mode fails with the error WSAEWOULDBLOCK when an application calls <B>WSAAccept</B> and no connections are pending on the queue. After <B>WSAAccept</B> succeeds and returns a new socket handle, the new socket cannot be used to accept any more connections. The original socket remains open and listens for new connection requests.</P>
+
+<P>The <I>addr</I> parameter is a result parameter that is completed with the address of the connecting entity, as known to the communications layer. The exact format of the <I>addr</I> parameter is determined by the address family in which the communication is occurring. The <I>addrlen</I> parameter is a value-result parameter; it should initially contain the amount of space pointed to by <I>addr</I>. On return, it will contain the actual length (in bytes) of the address returned. This call is used with connection-oriented socket types such as <B>SOCK_STREAM</B>. If <I>addr</I> and/or <I>addrlen</I> are equal to NULL, then no information about the remote address of the accepted socket is returned. Otherwise, these two parameters will be completed regardless of whether the condition function is specified or what it returns.</P>
+
+<P>A following syntax shows a prototype of the condition function.</P>
+
+<PRE class="syntax"><B>int CALLBACK ConditionFunc(</B>
+<B>IN LPWSABUF </B><I>lpCallerId</I><B>,</B> 
+<B>IN LPWSABUF</B> <I>lpCallerData</I><B>,</B> 
+<B>IN OUT LPQOS</B> <I>lpSQOS</I><B>, </B>
+<B>IN OUT LPQOS</B> <I>lpGQOS</I><B>, </B>
+<B>IN LPWSABUF</B> <I>lpCalleeId</I><B>, </B>
+<B>OUT LPWSABUF</B> <I>lpCalleeData</I><B>, </B>
+<B>OUT GROUP FAR</B> <B>*</B><I>g</I><B>, </B>
+<B>IN DWORD</B> <I>dwCallbackData</I>
+<B>);</B></PRE>
+
+<P>The <B>ConditionFunc</B> function is a placeholder for the application-supplied callback function. The actual condition function must reside in a DLL or application module. It is exported in the module definition file. </P>
+
+<P>The <I>lpCallerId</I> parameter points to a <A HREF="cerefwsabuf.htm">WSABUF</A> structure that contains the address of the connecting entity, where its <I>len</I> parameter is the length of the buffer in bytes and its <I>buf</I> parameter is a pointer to the buffer. The <I>lpCallerData</I> parameter is a value parameter that contains any user data. The information in these parameters is sent along with the connection request. If no caller identification or caller data is available, the corresponding parameters will be NULL. Many network protocols do not support connect-time caller data. Most conventional network protocols can be expected to support caller identifier information at connection-request time. The <I>buf </I>portion of the <B>WSABUF</B> structure pointed to by <I>lpCallerId</I> points to a <A HREF="cerefsockaddr.htm">sockaddr</A> structure. The <B>sockaddr</B> structure is interpreted according to its address family (typically by casting the <B>sockaddr</B> to some type specific to the address family).</P>
+
+<P>The <I>lpCalleeId</I> parameter is a value parameter that contains the local address of the connected entity. The <I>buf </I>portion of the <B>WSABUF</B> structure pointed to by <I>lpCalleeId</I> points to a <B>sockaddr</B> structure. The <B>sockaddr </B>structure is interpreted according to its address family (typically by casting the <B>sockaddr </B>to some type specific to the address family).</P>
+
+<P>The <I>lpCalleeData</I> parameter is a result parameter used by the condition function to supply user data back to the connecting entity. The <I>lpCalleeData</I>-&gt;<I>len </I>initially contains the length of the buffer allocated by the service provider and pointed to by <I>lpCalleeData</I>-&gt;<I>buf</I>. A value of zero means passing user data back to the caller is not supported. The condition function should copy up to <I>lpCalleeData</I>-&gt;<I>len </I>bytes of data into <I>lpCalleeData</I>-&gt;<I>buf</I> and then update lpCalleeData-&gt;<I>len </I>to indicate the actual number of bytes transferred. If no user data is to be passed back to the caller, the condition function should set <I>lpCalleeData</I>-&gt;<I>len </I>to zero. The format of all address and user data is specific to the address family to which the socket belongs.</P>
+
+<P>The <I>dwCallbackData</I> parameter value passed to the condition function is the value passed as the <I>dwCallbackData</I> parameter in the original <B>WSAAccept</B> call. This value is interpreted only by the Winsock client. This allows a client to pass some context information from the <B>WSAAccept</B> call site through to the condition function. This also provides the condition function with any additional information required to determine whether to accept the connection. A typical usage is to pass a (suitably cast) pointer to a data structure containing references to application-defined objects with which this socket is associated.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_accept_function.htm">accept</A>, <A HREF="_wcesdk_bind.htm">bind</A>, <A HREF="_wcesdk_connect_function.htm">connect</A>, <A HREF="_wcesdk_getsockopt.htm">getsockopt</A>, <A HREF="_wcesdk_listen_function.htm">listen</A>, <A HREF="_wcesdk_select.htm">select</A>, <A HREF="cerefsockaddr.htm">sockaddr</A>, <A HREF="_wcesdk_socket.htm">socket</A>, <A HREF="_wcesdk_wsaconnect.htm">WSAConnect</A>, <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A>, <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSAAccept&nbsp;(_wcesdk_wsaaccept.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

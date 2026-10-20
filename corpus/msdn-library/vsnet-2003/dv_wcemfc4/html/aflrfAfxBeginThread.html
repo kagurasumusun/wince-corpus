@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxBeginThread</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AfxBeginThread"/>
+<MSHelp:RLTitle Title="AfxBeginThread"/>
+<MSHelp:Keyword Index="A" Term="aflrfAfxBeginThread"/>
+<MSHelp:Keyword Index="K" Term="AfxBeginThread function"/>
+<MSHelp:Keyword Index="A" Term="aflrfAfxBeginThread"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="funct.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697654">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfafxbeginthread"></A>AfxBeginThread </H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This function creates a new thread. The first form of <B>AfxBeginThread</B> creates a worker thread. The second form creates a user-interface thread. </P>
+
+<P><B>AfxBeginThread</B> creates a new <B>CWinThread</B> object, calls its <A HREF="aflrfcwinthreadcolcolcreatethread.htm"><B>CreateThread</B></A> function to start executing the thread, and returns a pointer to the thread. Checks are made throughout the procedure to make sure all objects are deallocated properly should any part of the creation fail. To end the thread, call <A HREF="aflrfafxendthread.htm"><B>AfxEndThread</B></A> from within the thread, or return from the controlling function of the worker thread.</P>
+
+<PRE class="syntax"><B>CWinThread*</B> <B>AfxBeginThread(</B> 
+<B>AFX_THREADPROC</B> <I>pfnThreadProc</I><B>,</B> 
+<B>LPVOID</B> <I>pParam</I><B>,</B> 
+<B>int</B> <I>nPriority</I> <B>=</B> <B>THREAD_PRIORITY_NORMAL,</B> 
+<B>UINT</B> <I>nStackSize</I> <B>=</B> <B>0,</B> 
+<B>DWORD</B> <I>dwCreateFlags</I> <B>=</B> <B>0,</B> 
+<B>LPSECURITY_ATTRIBUTES</B> <I>lpSecurityAttrs</I> <B>=</B> <B>NULL</B> <B>);</B>
+<B>CWinThread*</B> <B>AfxBeginThread(</B> 
+<B>CRuntimeClass*</B> <I>pThreadClass</I><B>,</B> 
+<B>int</B> <I>nPriority</I> <B>=</B> <B>THREAD_PRIORITY_NORMAL,</B> 
+<B>UINT</B> <I>nStackSize</I> <B>=</B> <B>0,</B> 
+<B>DWORD</B> <I>dwCreateFlags</I> <B>=</B> <B>0,</B> 
+<B>LPSECURITY_ATTRIBUTES</B> <I>lpSecurityAttrs</I> <B>=</B> <B>NULL</B> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>pfnThreadProc</I></DT>
+
+<DD>Points to the controlling function for the worker thread. Cannot be <B>NULL</B>. This function must be declared as follows:
+
+<PRE class="code">UINT MyControllingFunction( LPVOID pParam );</PRE>
+</dd>
+
+<DT><I>pThreadClass</I></DT>
+
+<DD>The RUNTIME_CLASS of an object derived from <A HREF="aflrfcwinthread.htm"><B>CWinThread</B></A>.</dd>
+
+<DT><I>pParam</I></DT>
+
+<DD>Parameter to be passed to the controlling function as shown in the parameter to the function declaration in <I>pfnThreadProc</I>.</dd>
+
+<DT><I>nPriority</I></DT>
+
+<DD>The desired priority of the thread. If 0, the same priority as the creating thread will be used. For a full list and description of the available priorities, see <B>SetThreadPriority</B>.</dd>
+
+<DT><I>nStackSize</I></DT>
+
+<DD>Specifies the size in bytes of the stack for the new thread. If 0, the stack size defaults to the same size stack as the creating thread.</dd>
+
+<DT><I>dwCreateFlags</I></DT>
+
+<DD>Specifies an additional flag that controls the creation of the thread. This flag can contain one of two values:
+
+<UL type="disc">
+	<LI><B>CREATE_SUSPENDED</B>&nbsp;&nbsp;&nbsp;Start the thread with a suspend count of one. Use <B>CREATE_SUSPENDED</B> if you want to initialize any member data of the <B>CWinThread</B> object, such as <A HREF="aflrfcwinthreadcolcolmusbautodelete.htm"><B>m_bAutoDelete</B></A> or any members of your derived class, before the thread starts running. Once your initialization is complete, use the <A HREF="aflrfcwinthreadcolcolresumethread.htm"><B>CWinThread::ResumeThread</B></A> to start the thread running. The thread will not execute until <B>CWinThread::ResumeThread</B> is called.</li>
+
+	<LI><B>0</B>&nbsp;&nbsp;&nbsp;Start the thread immediately after creation.</li>
+</UL>
+</dd>
+
+<DT><I>lpSecurityAttrs</I></DT>
+
+<DD>Points to a <B>SECURITY_ATTRIBUTES</B> structure that specifies the security attributes for the thread. If <B>NULL</B>, the same security attributes as the creating thread will be used. For more information on this structure, see the <I>Platform SDK</I>.</dd>
+</DL>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>Pointer to the newly created thread object.</P>
+
+<P class="label"><B>Requirements</B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfafxgetthread.htm"><B>AfxGetThread</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697654', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

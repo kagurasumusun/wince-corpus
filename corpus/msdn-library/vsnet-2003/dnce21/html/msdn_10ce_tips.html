@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Ten Tips for Programming for Microsoft Windows CE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Ten Tips for Programming for Microsoft Windows CE"/>
+<MSHelp:RLTitle Title="Ten Tips for Programming for Microsoft Windows CE"/>
+<MSHelp:Keyword Index="A" Term="msdn_10ce_tips"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Windows CE, programming tips"/>
+<MSHelp:Keyword Index="K" Term="programming tips, Windows CE"/>
+<MSHelp:Keyword Index="A" Term="msdn_10ce_tips"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Status" Value="New"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<META name="rtfFileName" content="10ce_tips.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="This article describe ten key tips for programming Microsoft Windows CE. (8 printed pages)">
+<META NAME="Author" CONTENT="Doug Wilson, Raima Corporation
+">
+<META NAME="msdnID" CONTENT="_661420">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="msdn_10ce_tips"></A>Ten Tips for Programming for Microsoft Windows CE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Doug Wilson<BR>
+Raima Corporation</P>
+
+<P>July 1998</P>
+
+<P>My team recently spent the better part of two weeks porting an existing application to Microsoft® Windows® CE. In general, this project was not difficult. We started with Microsoft Win32® code, and Windows CE is, of course, based on the Win32 application programming interface (API). It helped that our application, Raima Database Manager, has little in the way of a user interface and contains a library of about 150 functions, all written in C, for creating, managing, and accessing databases.</P>
+
+<P>Because of the way our application was built, porting it to Windows CE began as a relatively straightforward exercise in C programming. However, we soon ran into several pitfalls along the way. These ranged from mindless mistakes, such as using Microsoft Windows NT libraries on the Windows NT-based Windows CE emulator, to breaches of the Windows CE programming commandments we soon discovered, such as "Thou Shalt Not Assign Odd Memory Addresses to Unicode Strings."</P>
+
+<P>About 90 percent of the porting issues we encountered were related in some way to Unicode. Not that it's difficult to program for Unicode, but it's easy to make mistakes (I made most of them) when porting code written for single-byte characters.</P>
+
+<P>The following tips are based on our experiences porting Raima Database Manager to Windows CE, but I believe they are worth examining before starting almost any Windows CE project. After all, what most Windows developers are really "porting" when they create their first Windows CE application is their existing Win32 knowledge.</P>
+
+<H4 class="dtH1">1. Don't use Windows NT libraries on the emulator</H4>
+
+<P>Our first mistake is almost too stupid to include in this discussion, but I fell into it, and you might, too. When you create a Windows CE project in Microsoft Visual C++® version 5.0 you'll find that the include, library, and executable paths are automatically adjusted to reflect your choice of target environment. So when you build an application for the Windows CE emulator, for example, you'll find your include path does not point to the regular Win32 include files (under the VC directory), but instead points to the Windows CE include files (under the WCE directory). Do not be tempted to change this.</P>
+
+<P>Because the Windows CE emulator runs under Windows NT, a program running on the emulator can call functions in any Windows NT dynamic-link library (DLL), even a DLL that is not part of the emulator. Clearly, this is not a very useful thing to do, because the same functions may not be available on the Handheld PC (H/PC) or other Windows CE device where your software ultimately must run.</P>
+
+<P>When you first start porting a non-Unicode application to the Windows CE emulator, you'll find that a number of functions you are using are not supported, such as American National Standards Institute (ANSI) string functions like <B>strcpy()</B>. This may tempt you to link the Windows NT run-time library to your application, conveniently resolving all the unresolved symbols.</P>
+
+<P>If you've just started programming for Windows CE, it may not be obvious which include files and libraries you can use. The answer is that you should not use any of the include files or libraries you used when writing regular Win32, non-Windows CE applications.</P>
+
+<H4 class="dtH1">2. Don't confuse TCHARs with bytes</H4>
+
+<P>If you are porting non-Unicode applications to Windows CE you will probably choose to convert all strings from chars to widechars (for example, the C variable type wchar_t). Almost all the Win32 and run-time library functions supported under Windows CE require widechar arguments. Unicode is not supported on Windows 95, however, so to make your code portable you will most likely use the TCHAR type defined in tchar.h, instead of directly using wchar_t.</P>
+
+<P>TCHAR is defined as wchar_t or char, depending on whether the preprocessor symbol UNICODE is defined. Likewise, there are macros for all the string handling functions, such as the _tcsncpy macro, which is defined as either the Unicode function <B>wcsncpy</B> or the ANSI function <B>strncpy</B>, depending on whether UNICODE is defined.</P>
+
+<P>In your existing Windows application, you may have code that implicitly relies on the fact that the size of a char is one byte. This is often used when allocating memory for character strings, as in the following:</P>
+
+<PRE class="code">int myfunc(char *p)
+{
+char *pszFileName;
+
+pszFileName = malloc(MAXFILELEN);
+if (pszFileName)
+strncpy(pszFileName, p, MAXFILELEN);
+/* etc */
+</PRE>
+
+<P>In this piece of code the size of the memory block being allocated could be written as (<code class="ce">MAXFILELEN&nbsp;*&nbsp;sizeof(char)</code>), but most programmers would abbreviate this to <code class="ce">MAXFILELEN, </code>since <code class="ce">sizeof(char)</code> evaluates to one on all platforms. When you replace the chars with TCHARs, however, it is easy to forget this implicit reliance on the size of a char, and change the code to the following:</P>
+
+<PRE class="code">int myfunc(TCHAR *p)
+{
+TCHAR *pszFileName;
+
+pszFileName = (TCHAR*)malloc(MAXFILELEN);
+if (pszFileName)
+_tcsncpy(szFileName, p, MAXFILELEN);
+/* etc */
+</PRE>
+
+<P>This is not good. Sooner or later it will cause an access violation. The mistake here lies in the fact that the argument to malloc specifies a size in bytes, whereas the third argument to _tcsncpy specifies a size in TCHARs, not bytes. When UNICODE is defined, a TCHAR will be two bytes.</P>
+
+<P>The preceding section of code should be changed to:</P>
+
+<PRE class="code">int myfunc(TCHAR *p)
+{
+TCHAR *pszFileName;
+
+pszFileName = (TCHAR*)malloc(MAXFILELEN * sizeof(TCHAR));
+if (pszFileName)
+_tcsncpy(szFileName, p, MAXFILELEN);
+/* etc */
+</PRE>
+
+<H4 class="dtH1">3. Don't put Unicode strings on odd memory addresses</H4>
+
+<P>On an Intel-architecture processor, you can store any variable or array on an odd memory address without causing any significant ill effects. On an H/PC, this is not necessarily true&#0151;you must be careful of any data type larger than one byte, including wchar_t, which is defined as unsigned short. Locating these on odd memory addresses will cause an exception as soon as you try to access them.</P>
+
+<P>The compiler usually takes care of this problem for you. You have no control over the addresses of your stack variables, and the compiler will ensure that these addresses are appropriate for the variable types. Likewise, the run-time library makes sure that memory allocated from the heap always starts on a word boundary, so you normally don't have to worry about that either. Problems may occur, however, if your application contains code that moves areas of memory using <B>memcpy()</B>, or uses some form of pointer arithmetic to determine a memory address. Consider the following example:</P>
+
+<PRE class="code">int send_name(TCHAR *pszName)
+{
+char *p, *q;
+int nLen = (_tcslen(pszName) + 1) * sizeof(TCHAR);
+
+p = malloc(HEADER_SIZE + nLen);
+if (p)
+{
+q = p + HEADER_SIZE;
+_tcscpy((TCHAR*)q, pszName);
+}
+/* etc */
+</PRE>
+
+<P>This code is allocating memory from the heap and copying a string into it, leaving a header of size HEADER_SIZE bytes before the start of the string. Assuming that UNICODE is defined, the string is a widechar string. This code will work fine as long as HEADER_SIZE is an even number, but it will cause an exception if HEADER_SIZE is odd, because the address that q points to will also then be odd.</P>
+
+<P>Keep in mind that this problem will not show up when you test your code on a Windows CE emulator running on an Intel-architecture processor.</P>
+
+<P>In this example, you could avoid the problem by making sure HEADER_SIZE is an even number. In some cases, however, you may not be able to do this. For example, if your application imports data from a desktop PC, you may have to work with binary data in a predefined format not appropriately padded for an H/PC. In such cases, you will have to implement Unicode string handling functions that manipulate strings using char pointers rather than TCHAR pointers. If you know the length of a string, you can copy it using <B>memcpy()</B>. Thus, it may be sufficient to implement a function that parses a Unicode string byte by byte to determine its length in widechars.</P>
+
+<H4 class="dtH1">4. Translate between ANSI and Unicode strings</H4>
+
+<P>If your Windows CE application interfaces with a desktop PC, you may have to manipulate ANSI string data (for example, char strings) imported from that PC. This is true even if you use only Unicode strings in your application.</P>
+
+<P>You can't do much with an ANSI string on Windows CE, because there are no library functions for manipulating them. The best solution is to convert the ANSI string to a Unicode string for use on an H/PC, and then convert it back to ANSI for use on a PC. To create these conversions, use the <B>MultiByteToWideChar()</B> and <B>WideCharToMultiByte()</B> Win32 API functions.</P>
+
+<H4 class="dtH1">5. For Windows CE 1.0 string translation, hack it</H4>
+
+<P>These Win32 API functions are not implemented in Windows CE version 1.0, so if you need to support CE 1.0 as well as 2.0, you'll have to use other functions. To convert from ANSI strings to Unicode you can use <B>wsprintf()</B>, which takes a widechar string as its first parameter, and will recognize the format specifier "%S" (uppercase), meaning a char string. Since there is no <B>wsscanf()</B>, and <B>wsprintfA()</B> is not implemented, you'll have to find some other way of converting from Unicode to ANSI. Since national language support (NLS) is absent from Windows CE 1.0, you might as well resort to a complete hack, as shown below:</P>
+
+<PRE class="code">/*
+Definitions / prototypes of conversion functions 
+Multi-Byte (ANSI) to WideChar (Unicode)
+
+atow() converts from ANSI to widechar
+wtoa() converts from widechar to ANSI
+*/
+#if ( _WIN32_WCE &gt;= 101 )
+
+#define atow(strA,strW,lenW) \
+MultiByteToWideChar(CP_ACP,0,strA,-1,strW,lenW)
+
+#define wtoa(strW,strA,lenA) \
+WideCharToMultiByte(CP_ACP,0,strW,-1,strA,lenA,NULL,NULL)
+
+#else /* _WIN32_WCE &gt;= 101 */
+
+/*
+MultiByteToWideChar() and WideCharToMultiByte() not supported on Windows CE 1.0
+*/
+int atow(char *strA, wchar_t *strW, int lenW);
+int wtoa(wchar_t *strW, char *strA, int lenA);
+
+#endif /* _WIN32_WCE &gt;= 101 */
+
+#if ( _WIN32_WCE &lt; 101 )
+
+int atow(char *strA, wchar_t *strW, int lenW)
+{
+   int len;
+   char *pA;
+   wchar_t *pW;
+
+   /*
+      Start with len=1, not len=0, as string length returned
+      must include null terminator, as in MultiByteToWideChar()
+   */
+   for (pA=strA, pW=strW, len=1; lenW; pA++, pW++, lenW--, len++)
+   {
+      *pW = (lenW == 1) ? 0 : (wchar_t)(*pA);
+      if (!(*pW))
+         break;
+   }
+   return len;
+}
+
+int wtoa(wchar_t *strW, char *strA, int lenA)
+{
+   int len;
+   char *pA;
+   wchar_t *pW;
+
+   /*
+      Start with len=1, not len=0, as string length returned
+      must include null terminator, as in WideCharToMultiByte()
+   */
+   for (pA=strA, pW=strW, len=1; lenA; pA++, pW++, lenA--, len++)
+   {
+      *pA = (lenA == 1) ? 0 : (char)(*pW);
+      if (!(*pA))
+         break;
+   }
+   return len;
+}
+
+#endif /* _WIN32_WCE &lt; 101 */
+</PRE>
+
+<P>This implementation for Windows CE 1.0 seems easier than using <B>wsprintf()</B>, because it's harder to limit the length of the string placed at the destination pointer using <B>wsprintf()</B>.</P>
+
+<H4 class="dtH1">6. Choose the correct String Compare functions</H4>
+
+<P>If you need to sort Unicode strings, you'll find several functions to choose from. Consider using any of these functions:
+
+<OL type="1">
+	<LI><B>wcscmp()</B>, <B>wcsncmp()</B>, <B>wcsicmp()</B>, and <B>wcsnicmp()</B></li>
+
+	<LI><B>wcscoll()</B>, <B>wcsncoll()</B>, <B>wcsicoll()</B>, and <B>wcsnicoll()</B></li>
+
+	<LI><B>CompareString()</B></li>
+</OL>
+
+<P>The first set of functions will compare strings without reference to locale or to foreign language characters. These are fine if you never intend to support foreign languages, or if you simply want to test if the contents of two strings are identical.</P>
+
+<P>The second set of functions will collate two strings using the current locale settings (the system settings, unless you call <B>wsetlocale()</B> prior to the string collation functions). They also will sort foreign language characters correctly. If the "C" locale is selected, they will do the same thing as the first set of functions.</P>
+
+<P>The third function is the Win32 function <B>CompareString()</B>. This is similar to the second set of functions, but it allows you to specify the locale as an argument, rather than using the current locale setting. <B>CompareString()</B> also gives you the option of specifying the length of the two strings. You can specify a case-insensitive comparison by setting the flag NORM_IGNORECASE in the second argument.</P>
+
+<P>We found that <B>CompareString()</B> always did case-insensitive comparisons, even if we did not set NORM_IGNORECASE. We also found that <B>wcsncoll()</B> behaved the same way, unless we used the "C" locale. So, in our code we used <B>CompareString()</B> for case-insensitive comparisons and <B>wcsncmp()</B> for case-sensitive ones.</P>
+
+<H4 class="dtH1">7. Don't use relative paths</H4>
+
+<P>Unlike Windows NT, Windows CE has no concept of a current directory, so any path is interpreted relative to the root directory. If your software uses relative paths for files and directories you may have to remove these. For example, the path ".\abc" will be treated as "\abc" on Windows CE.</P>
+
+<H4 class="dtH1">8. Remove calls to calloc() and time() functions</H4>
+
+<P>The C run-time library function <B>calloc()</B> is not implemented, but calls to <B>calloc()</B> can be replaced by calls to <B>malloc()</B>. Don't forget, though, that <B>calloc()</B> initializes the allocated memory to zero, whereas <B>malloc()</B> does not. Likewise, the function <B>time()</B> is not implemented, but you can use the Win32 function <B>GetSystemTime()</B> instead.</P>
+
+<P>After all these warnings, you might be glad to learn that my final two tips are more like pleasant surprises.</P>
+
+<H4 class="dtH1">9. No need to change Win32 file I/O calls</H4>
+
+<P>Win32 file input/output (I/O) functions are supported on Windows CE, allowing you to access the Object Store just as you would in a Win32 file system. The <B>CreateFile()</B> function doesn't recognize the flag FILE_FLAG_RANDOM_ACCESS on Windows CE, but this flag is only used to allow optimal disk access, and doesn't affect the functionality of the call.</P>
+
+<H4 class="dtH1">10. Don't worry about byte order</H4>
+
+<P>One nice discovery we made when porting our application to Windows CE was that the byte order of numeric data types is the same as the Intel-architecture byte order, on all the processors supported by Windows CE.</P>
+
+<P>Like almost all database engines, Raima Database Manager stores numeric data in its database files in binary form. This means that whenever a record is written to or read from the database, the record is treated as just a series of bytes, regardless of what fields it may contain. As long as the database files are never transferred to any other system, the byte order of numeric data is not an issue. If the database files are ever accessed by a processor with a different byte order from the originating system, numeric data will be misinterpreted.</P>
+
+<P>This issue becomes relevant whenever you transfer files between machines with different processor types. Happily, in this case all the processor types involved use the same byte order.</P>
+
+<P>These 10 tips should be enough to get you started on Windows CE, and avoid some of the pitfalls we learned the hard way.</P>
+
+<P>To learn more about developing with Windows CE, visit the Microsoft Windows CE Toolkits site at <A HREF="http://msdn.microsoft.com/cetools">http://msdn.microsoft.com/cetools</A>.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661420', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

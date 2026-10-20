@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Opening a Port</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Opening a Port"/>
+<MSHelp:RLTitle Title="Opening a Port"/>
+<MSHelp:Keyword Index="A" Term="cmconOpeningPort"/>
+<MSHelp:Keyword Index="K" Term="CreateFile"/>
+<MSHelp:Keyword Index="K" Term="OPEN_EXISTING"/>
+<MSHelp:Keyword Index="K" Term="ports, serial"/>
+<MSHelp:Keyword Index="K" Term="serial ports, opening"/>
+<MSHelp:Keyword Index="A" Term="cmconOpeningPort"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: serial_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748687">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconopeningport"></A>Opening a Port</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Call the <MSHelp:link keywords="cerefCreateFile" TABINDEX="0">CreateFile</MSHelp:link> function to open a serial port. Because hardware vendors and device driver developers can give any name to a port, an application should list the available ports and enable users to specify the port to open. If a port does not exist, <B>CreateFile</B> returns ERROR_FILE_NOT_FOUND, and users should be notified the port is not available.</P>
+
+<P class="labelproc"><B>To open a serial port</B>
+
+<OL type="1">
+	<LI>Insert a colon after the communication port pointed to with the first parameter, <I>lpzPortName</I>. For example, specify COM1: as the communication port.</li>
+
+	<LI>Specify zero in the <I>dwShareMode</I> parameter unless you are using one of the supported drivers that allows multiple opens. Only one device can perform read/write or any operation that changes the behavior of the port. Other applications can perform operations such as port monitoring, or controlling line status. </li>
+
+	<LI>Specify OPEN_EXISTING in the <I>dwCreationDisposition</I> parameter. This flag is required.</li>
+
+	<LI>Specify zero in the <I>dwFlagsAndAttributes</I> parameter. Windows CE supports only nonoverlapped I/O.</li>
+</OL>
+
+<P>The following code example shows how to open a serial communications port.</P>
+
+<PRE class="code">// Open the serial port.
+  hPort = CreateFile (lpszPortName, // Pointer to the name of the port
+                      GENERIC_READ | GENERIC_WRITE,
+                                    // Access (read-write) mode
+                      0,            // Share mode
+                      NULL,         // Pointer to the security attribute
+                      OPEN_EXISTING,// How to open the serial port
+                      0,            // Port attributes
+                      NULL);        // Handle to port with attribute
+                                    // to copy</PRE>
+
+<P>Before writing to or reading from a port, configure the port. When an application opens a port, it uses the default configuration settings, which may not be suitable for the device at the other end of the connection.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Opening%20a%20Port&nbsp;(cmconopeningport.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

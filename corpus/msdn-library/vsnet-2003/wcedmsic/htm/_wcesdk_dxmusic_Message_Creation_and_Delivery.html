@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Message Creation and Delivery</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Message Creation and Delivery"/>
+<MSHelp:RLTitle Title="Message Creation and Delivery"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Message_Creation_and_Delivery"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Message_Creation_and_Delivery"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680627">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_message_creation_and_delivery"></A>Message Creation and Delivery</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When a segment is played, most of its tracks generate messages containing information about events that are to take place during playback. For more information, see <A HREF="_wcesdk_dxmusic_tracks.htm">Tracks</A>.</P>
+
+<P>A few tracks send more than one kind of message. For example, a style track sends note messages and time signature messages. In such cases, an application can disable certain kinds of messages in the track. For more information, see <A HREF="_wcesdk_dxmusic_setting_and_retrieving_track_parameters.htm">Setting and Retrieving Track Parameters</A>.</P>
+
+<P>Applications can also place messages in the queue directly. You might do this, for example, to change the tempo. </P>
+
+<P>For sample code, see <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SendPMsg" TABINDEX="0">IDirectMusicPerformance::SendPMsg</MSHelp:link>.</P>
+
+<P>The performance engine determines when each message is to be processed in real time (reference time). In the case of channel messages, the performance also determines to what PChannel the message is directed. This information, along with other data &#0151; including the message type, its source track, and pointers to the first graph and tool that are to receive the message &#0151; are stored in the message.</P>
+
+<P>Certain messages, such as tempo and time-signature changes, are immediately processed and freed by the performance. Other messages, such as notes and patch changes, are placed in a queue, in which they are processed in order of time stamp. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;</b>&nbsp;&nbsp;There is no guarantee that messages with the same time stamp will be processed in any particular order.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Tempo messages tell the performance how to convert music time to reference time. Time-signature messages are purely informational, because the time signature is built into the segment and cannot be changed. </BLOCKQUOTE>
+
+<P>Messages are first sent to any tools in the segment's graph, and then to tools in the performance's graph. (The application is responsible for creating either or both of these graphs and defining the tools. There is no default graph.)</P>
+
+<P>The first tool in a graph processes the message, and then, if it wants to pass it on, has the graph stamp the message with a pointer to the next tool. For more information, see <A HREF="_wcesdk_dxmusic_tutorial_2__using_tools.htm">Tutorial 2: Using Tools</A>.</P>
+
+<P>At this point, the graph also flags the message with a delivery type that determines when the message is delivered to the next tool. This flag is based on what delivery type the tool is expecting, as follows: 
+
+<UL type="disc">
+	<LI>If the message is flagged as DMUS_PMSGF_TOOL_IMMEDIATE, it is delivered to the next tool immediately. </li>
+
+	<LI>If it is flagged as DMUS_PMSGF_TOOL_QUEUE, the message is delivered just before the time at which it is supposed to play, taking latency into account. For more information, see <A HREF="_wcesdk_dxmusic_latency_and_bumper_time.htm">Latency and Bumper Time</A>.</li>
+
+	<LI>If it is flagged as DMUS_PMSGF_TOOL_ATTIME, it is delivered at exactly the time at which it is to be processed. Notification messages are given this flag because there is little or no latency involved in processing a notification.</li>
+</UL>
+
+<P>The current tool can change the delivery type after the graph has finished stamping and flagging the message.</P>
+
+<P>Ultimately, unless a message has been discarded, it arrives at the DirectMusic output tool, which converts all the data that it receives into standard MIDI messages and delivers these to the synthesizer through the port buffer.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Message%20Creation%20and%20Delivery&nbsp;(_wcesdk_dxmusic_message_creation_and_delivery.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

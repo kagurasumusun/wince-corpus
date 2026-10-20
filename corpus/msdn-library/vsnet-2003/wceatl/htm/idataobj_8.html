@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDataObjectImpl::GetDataHere</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_idataobjectimpl_getdatahere"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_formatetc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_com_stgmedium" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wceatl_idataobjectimpl_getdatahere"></A>IDataObjectImpl::GetDataHere</H1>
+
+<P>This method is similar to <B>GetData</B>, except the client must allocate the <B>STGMEDIUM</B> structure. In ATL for Window CE this function does nothing and always returns E_NOTIMPL.</P>
+
+<P>The <B>IDataObjectImpl::GetDataHere</B> method is similar to <B>IDataObjectImpl::GetData</B>, except that the caller must both allocate and free the medium specified in <I>pmedium</I>. <B>GetDataHere</B> renders the data described in a <B>FORMATETC</B> structure and copies the data into that caller-provided <B>STGMEDIUM</B> structure. For example, if the medium is TYMED_HGLOBAL, this method cannot resize the medium or allocate a new <I>hGlobal</I>.</P>
+
+<P>Some media are not appropriate in a call to <B>GetDataHere</B>, including GDI types such as metafiles. The <B>GetDataHere</B> method cannot put data into a caller-provided metafile. In general, the only storage media it is necessary to support in this method are TYMED_ISTORAGE, TYMED_ISTREAM, AND TYMED_FILE.</P>
+
+<P>When the transfer medium is a stream, OLE makes assumptions about where the data is being returned and the position of the seek pointer of the stream. In a <B>GetData</B> call, the data returned is from stream position zero through just before the current seek pointer of the stream (that is, the position on exit). For <B>GetDataHere</B>, the data returned is from the stream position on entry through just before the position on exit.</P>
+
+<PRE class=syntax><B>STDMETHOD ( GetDataHere )(
+FORMATETC* </B><I>pformatetc</I><B>,
+STGMEDIUM* </B><I>pmedium</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pformatetc</I></DT>
+
+<DD>[in] Pointer to the <B>FORMATETC</B> structure that defines the format, medium, and target device to use when passing the data. Only one medium can be specified in <I>tymed</I> values are valid:
+
+<UL type=disc>
+	<LI>TYMED_STORAGE</LI>
+
+	<LI>TYMED_STREAM</LI>
+
+	<LI>TYMED_HGLOBAL</LI>
+
+	<LI>TYMED_FILE</LI>
+</UL>
+</DD>
+
+<DT><I>pmedium</I></DT>
+
+<DD>[out] Pointer to the <B>STGMEDIUM</B> structure that defines the storage medium containing the data being transferred. The medium must be allocated by the caller and filled in by <B>IDataObjectImpl::GetDataHere</B>. The caller must also free the medium. The implementation of this method must always supply a value of <B>NULL</B> for the <I>punkForRelease</I> member of the <B>STGMEDIUM</B> structure to which this parameter points.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The ATL for Windows CE implementation returns E_NOTIMPL. </P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="idataobj_7.htm"><B>IDataObjectImpl::GetData</B></A>, <A HREF="idataobj_9.htm"><B>IDataObjectImpl::QueryGetData</B></A>, <A HREF="idataobj_10.htm"><B>IDataObjectImpl::SetData</B></A>, <A HREF="JavaScript:hhobj_1.Click()"><B>FORMATETC</B></A>, <A HREF="JavaScript:hhobj_2.Click()"><B>STGMEDIUM</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

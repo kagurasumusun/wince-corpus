@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 6: Add the Tool to the Performance</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 6: Add the Tool to the Performance"/>
+<MSHelp:RLTitle Title="Step 6: Add the Tool to the Performance"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_6__Add_the_Tool_to_the_Performance"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, adding tools to (Tutorial 2)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_6__Add_the_Tool_to_the_Performance"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690672">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_6__add_the_tool_to_the_performance"></A>Step 6: Add the Tool to the Performance</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Once it has defined the CEchoTool class, the application can create a tool object, insert it into a graph, and add it to the performance so that it will intercept appropriate messages in the pipeline.</P>
+
+<P>The following code creates an instance of the CEchoTool class, initializes the number of echoes to be produced by the tool, creates a graph to contain the tool, and adds the graph to the performance. (In the EchoTool sample application, some of this work is done in a helper function, <B>AddTool</B>. The code has been modified here to make it easier to follow.)</P>
+
+<PRE class="code">/* It is assumed that pPerf is a valid pointer to the
+   IDirectMusicPerformance interface of a performance object. */
+ 
+CEchoTool         *pEchoTool;
+IDirectMusicGraph* pGraph;
+ 
+pEchoTool = new CEchoTool;
+if (pEchoTool)
+{
+    pEchoTool-&gt;SetEchoNum(0);
+ 
+    // Create an IDirectMusicGraph object to hold the tool.
+    if (SUCCEEDED(CoCreateInstance(
+            CLSID_DirectMusicGraph,
+            NULL,
+            CLSCTX_INPROC, 
+            IID_IDirectMusicGraph,
+            (void**)&amp;pGraph)))
+    {
+        // Add the tool to the graph.
+        if (SUCCEEDED(pGraph-&gt;InsertTool(
+                (IDirectMusicTool*)pCEchoTool, 
+                NULL,   // Apply to all PChannels
+                0,      // How many PChannels otherwise
+                0)))    // Index of tool in graph
+        {
+        // Add the graph to the performance. This increments the
+        // reference count, so the original graph can then be
+        // released.
+        pPerf-&gt;SetGraph(pGraph);
+        }
+        pGraph-&gt;Release();
+    } 
+}
+ </PRE>
+
+<P>Note that setting the graph on the performance ensures that messages from all segments will have the opportunity to be processed by its tools. Alternatively, you could use the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetGraph" TABINDEX="0">IDirectMusicSegment::SetGraph</MSHelp:link> method to apply tools only to a particular segment.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%206:%20Add%20the%20Tool%20to%20the%20Performance&nbsp;(_wcesdk_dxmusic_step_6__add_the_tool_to_the_performance.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

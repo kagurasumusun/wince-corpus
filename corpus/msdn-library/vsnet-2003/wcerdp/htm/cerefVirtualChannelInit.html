@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VirtualChannelInit</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="VirtualChannelInit"/>
+<MSHelp:RLTitle Title="VirtualChannelInit"/>
+<MSHelp:Keyword Index="A" Term="cerefVirtualChannelInit"/>
+<MSHelp:Keyword Index="K" Term="VirtualChannelInit"/>
+<MSHelp:Keyword Index="A" Term="cerefVirtualChannelInit"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: rdp_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_761032">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefvirtualchannelinit"></A>VirtualChannelInit</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function initializes a client DLL's access to Terminal Services virtual channels. The client calls <B>VirtualChannelInit</B> to register the names of its virtual channels.</P>
+
+<P>Terminal Services provides a pointer to a <B>VirtualChannelInit</B> function in the <A HREF="cerefchannel_entry_points.htm">CHANNEL_ENTRY_POINTS</A> structure passed to your <A HREF="cerefvirtualchannelentry.htm">VirtualChannelEntry</A> entry point.</P>
+
+<PRE class="syntax"><B>UINT VCAPITYPE VirtualChannelInit(</B>
+<B>LPVOID</B> <B>*</B><I>ppInitHandle</I><B>,</B>
+<B>PCHANNEL_DEF</B><I> pChannel</I><B>,</B>
+<B>INT</B><I> channelCount</I><B>,</B>
+<B>ULONG</B> <I>versionRequested</I><B>,</B>
+<B>PCHANNEL_INIT_EVENT_FN</B> <I>pChannelInitEventProc</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppInitHandle</I></DT>
+
+<DD>[in] Pointer to a variable that receives a handle that identifies the client connection. Use this handle to identify the client in subsequent calls to <A HREF="cerefvirtualchannelopen.htm">VirtualChannelOpen</A>.</dd>
+
+<DT><I>pChannel</I></DT>
+
+<DD>[in/out] Pointer to an array of <A HREF="cerefchannel_def.htm">CHANNEL_DEF</A> structures. Each structure contains the name and initialization options of a virtual channel that the client DLL will open. Note that the <B>VirtualChannelInit</B> call does not open these virtual channels; it only reserves the names for use by this application.</dd>
+
+<DT><I>channelCount</I></DT>
+
+<DD>[in] Specifies the number of entries in the <I>pChannel</I> array.</dd>
+
+<DT><I>versionRequested</I></DT>
+
+<DD>[in] Specifies the level of virtual channel support. Set this parameter to VIRTUAL_CHANNEL_VERSION_WIN2000.</dd>
+
+<DT><I>pChannelInitEventProc</I></DT>
+
+<DD>[in] Pointer to an application-defined <A HREF="cerefvirtualchannelinitevent.htm">VirtualChannelInitEvent</A> function that Terminal Services calls to notify the client DLL of virtual channel events.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=56%>Value</TH>
+<TH width=44%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_OK</TD>
+<TD width=44%>Function succeeded.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_ALREADY_CONNECTED</TD>
+<TD width=44%>The client is already connected to a terminal server.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_BAD_CHANNEL</TD>
+<TD width=44%>The <I>pChannel</I> parameter is incorrect or one of the channel names is syntactically incorrect.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_BAD_INIT_HANDLE</TD>
+<TD width=44%>The <I>ppInitHandle</I> parameter is incorrect.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_BAD_PROC</TD>
+<TD width=44%>The <I>pChannelInitEventProc</I> parameter is incorrect.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_NOT_IN_VIRTUALCHANNELENTRY</TD>
+<TD width=44%><B>VirtualChannelInit</B> was not called from within your <A HREF="cerefvirtualchannelentry.htm">VirtualChannelEntry</A> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=56%>CHANNEL_RC_TOO_MANY_CHANNELS</TD>
+<TD width=44%>The <I>pChannel</I> array has more channels than can be registered. Therefore, none of the channels were registered. The maximum number of channels allowed per client is CHANNEL_MAX_COUNT.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>You can call <B>VirtualChannelInit</B> only from your <A HREF="cerefvirtualchannelentry.htm">VirtualChannelEntry</A> function. Calls to <B>VirtualChannelInit</B> at any other time fail.</P>
+
+<P>When <B>VirtualChannelInit</B> returns successfully, Terminal Services has registered the requested channels. However, Terminal Services might not have completed other initializations. When all initialization is complete, Terminal Services calls your <A HREF="cerefvirtualchannelinitevent.htm">VirtualChannelInitEvent</A> callback function with the CHANNEL_EVENT_INITIALIZED event.</P>
+
+<P>Do not make assumptions about the number of available virtual channels before calling this function, because the system and other plug-ins may have reserved virtual channels. You should always check for the CHANNEL_RC_TOO_MANY_CHANNELS return code after calling this function.</P>
+
+<P>When <B>VirtualChannelInit</B> returns, the options member of each <A HREF="cerefchannel_def.htm">CHANNEL_DEF</A> structure includes CHANNEL_OPTION_INITIALIZED if the channel was successfully initialized.</P>
+
+<P>The maximum number of channels per client session is CHANNEL_MAX_COUNT.</P>
+
+<P><B>RDP 5.1 Clients </B>A client plug-in can declare a channel as remote control persistent. This is done by specifying CHANNEL_OPTION_REMOTE_CONTROL_PERSISTENT in a <B>CHANNEL_DEF</B> structure pointed to by the <I>pChannel</I> parameter. For more information, see <A HREF="cerefremote-controlpersistentvirtualchannels.htm">Remote-Control Persistent Virtual Channels</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>Cchannel.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;VirtualChannelInit&nbsp;(cerefvirtualchannelinit.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

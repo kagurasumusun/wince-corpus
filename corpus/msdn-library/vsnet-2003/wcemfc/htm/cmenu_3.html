@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::AppendMenu</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_appendmenu"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_wm_measureitem" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_wm_drawitem" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_cmenu_appendmenu"></A>CMenu::AppendMenu</H1>
+
+<P>This method appends a new item to the end of a menu.</P>
+
+<PRE class=syntax><B>BOOL AppendMenu (
+UINT </B><I>nFlags</I><B>,
+UINT </B><I>nIDNewItem</I><B> = 0,
+LPCTSTR </B><I>lpszNewItem</I><B> = NULL);</B><I>
+</I>
+<B>BOOL AppendMenu (
+UINT </B><I>nFlags</I><B>,
+UINT </B><I>nIDNewItem</I><B>,
+const CBitmap* </B><I>pBmp</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies information about the state of the new menu item when it is added to the menu. It consists of one or more of the values listed in the Remarks section.</DD>
+
+<DT><I>nIDNewItem</I></DT>
+
+<DD>Specifies either the command ID of the new menu item or, if <I>nFlags</I> is set to MF_POPUP, the menu handle (<B>HMENU</B>) of a pop-up menu. The <I>nIDNewItem</I> parameter is ignored, not needed, if <I>nFlags</I> is set to MF_SEPARATOR.</DD>
+
+<DT><I>lpszNewItem</I></DT>
+
+<DD>Specifies the content of the new menu item. The <I>nFlags</I> parameter is used to interpret <I>lpszNewItem</I> in the following way:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>nFlags</TH>
+<TH width=66%>Interpretation of lpszNewItem</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_OWNERDRAW</TD>
+<TD width=66%>Contains an application-supplied 32-bit value that the application can use to maintain additional data associated with the menu item. This 32-bit value is available to the application when it processes <A HREF="JavaScript:hhobj_1.Click()">WM_MEASUREITEM</A> and <A HREF="JavaScript:hhobj_2.Click()">WM_DRAWITEM</A> messages. The value is stored in the <I>itemData</I> member of the structure supplied with those messages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_STRING</TD>
+<TD width=66%>Contains a pointer to a null-terminated string. This is the default interpretation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_SEPARATOR</TD>
+<TD width=66%>The <I>lpszNewItem</I> parameter is ignored, not needed.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>pBmp</I></DT>
+
+<DD>Points to a <B>CBitmap</B> object that will be used as the menu item.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The application can specify the state of the menu item by setting values in <I>nFlags</I>. When <I>nIDNewItem</I> specifies a pop-up menu, it becomes part of the menu to which it is appended. If that menu is destroyed, the appended menu is also destroyed. An appended menu should be detached from a <B>CMenu</B> object to avoid conflict. Note that MF_STRING and MF_OWNERDRAW are not valid for the bitmap version of <B>AppendMenu</B>.</P>
+
+<P>The following list describes the flags that may be set in <I>nFlags</I>:
+
+<UL type=disc>
+	<LI>MF_CHECKED&nbsp;&nbsp;&nbsp;Acts as a toggle with MF_UNCHECKED to place the default check mark next to the item. When the application supplies check-mark bitmaps, the check mark on bitmap is displayed. See the <B>SetMenuItemBitmpas</B> method.</LI>
+
+	<LI>MF_UNCHECKED&nbsp;&nbsp;&nbsp;Acts as a toggle with MF_CHECKED to remove a check mark next to the item. When the application supplies check-mark bitmaps, the check mark off bitmap is displayed. See the <B>SetMenuItemBitmaps</B> method.</LI>
+
+	<LI>MF_DISABLED&nbsp;&nbsp;&nbsp;Disables the menu item so that it cannot be selected but does not dim it.</LI>
+
+	<LI>MF_ENABLED&nbsp;&nbsp;&nbsp;Enables the menu item so that it can be selected and restores it from its dimmed state.</LI>
+
+	<LI>MF_GRAYED&nbsp;&nbsp;&nbsp;Disables the menu item so that it cannot be selected and dims it.</LI>
+
+	<LI>MF_MENUBARBREAK&nbsp;&nbsp;&nbsp;Places the item on a new line in static menus or in a new column in pop-up menus. The new pop-up menu column is separated from the old column by a vertical dividing line.</LI>
+
+	<LI>MF_MENUBREAK&nbsp;&nbsp;&nbsp;Places the item on a new line in static menus or in a new column in pop-up menus. No dividing line is placed between the columns.</LI>
+
+	<LI>MF_OWNERDRAW&nbsp;&nbsp;&nbsp;Specifies that the item is an owner-draw item. When the menu is displayed for the first time, the window that owns the menu receives a WM_MEASUREITEM message, which retrieves the height and width of the menu item. The WM_DRAWITEM message is the one sent whenever the owner must update the visual appearance of the menu item. This option is not valid for a top-level menu item.</LI>
+
+	<LI>MF_POPUP&nbsp;&nbsp;&nbsp;Specifies that the menu item has a pop-up menu associated with it. The ID parameter specifies a handle to a pop-up menu that is to be associated with the item. This is used for adding either a top-level pop-up menu or a hierarchical pop-up menu to a pop-up menu item.</LI>
+
+	<LI>MF_SEPARATOR&nbsp;&nbsp;&nbsp;Draws a horizontal dividing line. Can only be used in a pop-up menu. This line cannot be dimmed, disabled, or highlighted. Other parameters are ignored.</LI>
+
+	<LI>MF_STRING&nbsp;&nbsp;&nbsp;Specifies that the menu item is a character string.</LI>
+</UL>
+
+<P>Each of the following groups lists flags that are mutually exclusive and cannot be used together:
+
+<UL type=disc>
+	<LI>MF_DISABLED, MF_ENABLED, and MF_GRAYED</LI>
+
+	<LI>MF_STRING, MF_OWNERDRAW, MF_SEPARATOR, and the bitmap version</LI>
+
+	<LI>MF_MENUBARBREAK and MF_MENUBREAK</LI>
+
+	<LI>MF_CHECKED and MF_UNCHECKED</LI>
+</UL>
+
+<P>Whenever a menu that resides in a window is changed, whether or not the window is displayed, the application should call <B>CWnd::DrawMenuBar</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The following flags are not supported for the <I>ulFlags</I> parameter:
+
+<UL type=disc>
+	<LI>MF_BITMAP</LI>
+
+	<LI>MF_DISABLED</LI>
+
+	<LI>MFS_GRAYED</LI>
+</UL>
+
+<P>Windows CE 1.0 does not support cascading menus. If you are using version 1.0, you cannot insert an MF_POPUP menu into another pop-up menu.</P>
+
+<P>In version 1.0, the following flags are not supported:
+
+<UL type=disc>
+	<LI>MF_POPUP</LI>
+
+	<LI>MF_MENUBREAK</LI>
+
+	<LI>MF_MENUBARBREAK</LI>
+</UL>
+
+<P>In Windows CE versions 2.0 and later, these flags are supported. Cascading menus are also supported.</P>
+
+<H4>Example</H4>
+
+<P>See the example for <A HREF="cmenu_7.htm"><B>CMenu::CreateMenu</B></A>.</P>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmenu_23.htm"><B>CMenu::InsertMenu</B></A>, <A HREF="cmenu_27.htm"><B>CMenu::RemoveMenu</B></A>, <A HREF="cmenu_12.htm"><B>CMenu::Detach</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateDIBSection</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CreateDIBSection"/>
+<MSHelp:RLTitle Title="CreateDIBSection"/>
+<MSHelp:Keyword Index="A" Term="cerefCreateDIBSection"/>
+<MSHelp:Keyword Index="K" Term="CreateDIBSection"/>
+<MSHelp:Keyword Index="A" Term="cerefCreateDIBSection"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: gdi_mgdi.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753905">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcreatedibsection"></A>CreateDIBSection</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function creates a device-independent bitmap (DIB) that applications can write to directly. The function returns a handle to the bitmap. </P>
+
+<PRE class="syntax"><B>HBITMAP</B> <B>CreateDIBSection(</B>
+<B>HDC</B> <I>hdc</I><B>, </B>
+<B>const</B> <B>BITMAPINFO</B> <B>*</B><I>pbmi</I><B>, </B>
+<B>UINT</B> <I>iUsage</I><B>, </B>
+<B>void</B> <B>*</B><I>ppvBits</I><B>, </B>
+<B>HANDLE</B> <I>hSection</I><B>, </B>
+<B>DWORD</B> <I>dwOffset</I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hdc</I></DT>
+
+<DD>[in] Handle to a device context. If the value of <I>iUsage</I> is DIB_PAL_COLORS, the function uses this device context's logical palette to initialize the device-independent bitmap's colors.</dd>
+
+<DT><I>pbmi</I></DT>
+
+<DD>[in] Pointer to a <A HREF="cerefbitmapinfo.htm">BITMAPINFO</A> structure that specifies various attributes of the device-independent bitmap, including the bitmap's dimensions and colors. </dd>
+
+<DT><I>iUsage</I></DT>
+
+<DD>[in] Specifies the type of data contained in the <B>bmiColors</B> array member of the <B>BITMAPINFO</B> structure pointed to by <I>pbmi</I> (either logical palette indexes or literal RGB values). The following values are defined.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>DIB_RGB_COLORS</TD>
+<TD width=75%>The <B>BITMAPINFO</B> structure contains an array of literal RGB values. Specify this value except when an 8 bpp bitmap is used.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>DIB_PAL_COLORS</TD>
+<TD width=75%>Specify this value when an 8 bpp bitmap is used. When DIB_PAL_COLORS is used, the system ignores the <B>bmiColors</B> member of the <B>BITMAPINFO</B> structure and the <I>dwOffset</I> parameter. Set <I>dwOffset</I> to zero and the <I>hSection</I> parameter to NULL.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>ppvBits</I></DT>
+
+<DD>[in] Pointer to a variable that receives a pointer to the location of the device-independent bitmap's bit values.</dd>
+
+<DT><I>hSection</I></DT>
+
+<DD>[in] Unsupported; set to NULL. </dd>
+
+<DT><I>dwOffset</I></DT>
+
+<DD>[in] Ignored.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A handle to the newly created device-independent bitmap indicates success, and *<I>ppvBits</I> points to the bitmap's bit values. </P>
+
+<P>NULL indicates failure, and *<I>ppvBits</I> is NULL. </P>
+
+<P>To get extended error information, call <MSHelp:link keywords="cerefgetlasterror" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>As noted above, if <I>hSection</I> is NULL, the system allocates memory for the device-independent bitmap. The system closes the handle to that memory when you later delete the device-independent bitmap by calling the <A HREF="cerefdeleteobject.htm">DeleteObject</A> function. If <I>hSection</I> is not NULL, you must close the <I>hSection</I> memory handle yourself after calling <B>DeleteObject</B> to delete the bitmap. </P>
+
+<P>In Windows CE versions 2.0 and later, the <B>BITMAPINFO </B>structure must include a color table if the images are palettized (usually 1,2,4, and 8 bpp formats). For 16bpp or 32bpp non-palettized images, the color table must be three entries long; the entries must specify the values of the red, green, and blue bitmasks. Also, the <I>biCompression</I> field in the <A HREF="cerefbitmapinfoheader.htm">BITMAPINFOHEADER</A> structure should be set to BI_BITFIELDS. BI_RBG is not supported for these bit depths. GDI ignores the color table for 24 bpp images; their pixels must be stored in Blue-Green-Red (BGR) format. Windows CE does not support 332 bitfields devices.</P>
+
+<P>In Windows CE versions 1.0 and 1.01, the <B>BITMAPINFO</B> structure pointed to by the <I>pbmi</I> parameter must specify 1 or 2 bits per pixel.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Wingdi.h</TD>
+<TD width=15%>Windows.h</TD>
+<TD width=20%>Coredll.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefdeleteobject.htm">DeleteObject</A>, <MSHelp:link keywords="cerefgetlasterror" TABINDEX="0">GetLastError</MSHelp:link>, <A HREF="cerefgetobject.htm">GetObject</A>, <A HREF="cerefselectobject.htm">SelectObject</A>, <A HREF="cerefbitmapinfo.htm">BITMAPINFO</A>, <A HREF="cerefbitmapinfoheader.htm">BITMAPINFOHEADER</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CreateDIBSection&nbsp;(cerefcreatedibsection.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

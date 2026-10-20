@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Direct Memory Access</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Direct Memory Access"/>
+<MSHelp:RLTitle Title="Direct Memory Access"/>
+<MSHelp:Keyword Index="A" Term="cxconDirectMemoryAccess"/>
+<MSHelp:Keyword Index="K" Term="device drivers, direct memory access"/>
+<MSHelp:Keyword Index="K" Term="direct memory access, device drivers"/>
+<MSHelp:Keyword Index="K" Term="DMA, device drivers"/>
+<MSHelp:Keyword Index="K" Term="memory, device driver direct memory access"/>
+<MSHelp:Keyword Index="A" Term="cxconDirectMemoryAccess"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750178">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondirectmemoryaccess"></A>Direct Memory Access</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Direct memory access (DMA) is a method of moving data from a device to memory, or vice versa, without the help of the microprocessor. You can perform common buffer and scatter/gather DMA using the CEDDK or kernel functions. For more information on the CEDDK functions, see <MSHelp:link keywords="cgconCreatingCEDDK" TABINDEX="0">Creating a Ceddk Driver</MSHelp:link>.</P>
+
+<P>Using the CEDDK functions for DMA is recommended. The following table compares the two ways to perform DMA.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>CEDDK functions</TH>
+<TH width=50%>Kernel functions</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><MSHelp:link keywords="cmrefHalAllocateCommonBuffer" TABINDEX="0">HalAllocateCommonBuffer</MSHelp:link>, <MSHelp:link keywords="cmrefHalFreeCommonBuffer" TABINDEX="0">HalFreeCommonBuffer</MSHelp:link>
+<P><MSHelp:link keywords="cmrefHalTranslateSystemAddress" TABINDEX="0">HalTranslateSystemAddress</MSHelp:link></P>
+</TD>
+<TD width=50%><MSHelp:link keywords="_wcesdk_win32_AllocPhysMem" TABINDEX="0">AllocPhysMem</MSHelp:link>, <MSHelp:link keywords="_wcesdk_win32_FreePhysMem" TABINDEX="0">FreePhysMem</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Implementation calls the kernel functions.</TD>
+<TD width=50%>CEDDK implementation calls these functions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Handles bus and platform specific address translations.</TD>
+<TD width=50%>Must perform platform-specific address translations. You can call <B>HalTranslateSystemAddress</B> to translate the address.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Useful for common buffer DMA.</TD>
+<TD width=50%>May be useful for scatter/gather DMA.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Uses default memory alignment of 64 K.</TD>
+<TD width=50%>Can change the default memory alignment.</TD>
+</TR>
+</table></div>
+
+<P>The CEDDK functions handle address translations between the system and the PCI bus or ISA bus for the DMA controller. You can support other bus types. They translate a physical RAM address into the corresponding bus-relative physical address for the DMA controller. To set up a common buffer for bus master DMA using the CEDDK functions, a bus master DMA device driver can call <B>HalAllocateCommonBuffer</B> with the <MSHelp:link keywords="cgrefDMA_ADAPTER_OBJECT" TABINDEX="0">DMA_ADAPTER_OBJECT</MSHelp:link> structure. The following code example shows a proper call to <B>HalAllocateCommonBuffer</B>. The code example is from the ES1371 driver located in %_WINCEROOT%\Public\Common\OAK\Drivers\WaveDev\PDD\ES1371.</P>
+
+<PRE class="code">// Allocate an adapter object on the stack
+DMA_ADAPTER_OBJECT AdapterObject; 
+AdapterObject.ObjectSize = sizeof(AdapterObject); 
+AdapterObject.InterfaceType = PCIBus; 
+AdapterObject.BusNumber = 0; 
+
+// Allocate a single paged 4k output buffer
+dma_out_page[0] = (PUCHAR) HalAllocateCommonBuffer(&amp;AdapterObject, dma_buffer_size * AUDIO_DMA_BUFFERS, &amp;dma_out_logical_address, FALSE);
+
+if (!dma_out_page[0]) { 
+  ERRMSG("PDD_AudioInitialize: DMA Buffer Page Allocation Failed");
+  return FALSE;
+}</PRE>
+
+<P>If the call to <B>HalAllocateCommonBuffer</B> succeeds, it returns the allocated buffer, or NULL if the call fails. The driver can use the allocated common buffer as a storage area for DMA transfers. The function also returns the physical bus-relative address of the buffer, which the function optionally provides to the DMA controller.</P>
+
+<P>You can also use the <MSHelp:link keywords="_wcesdk_win32_AllocPhysMem" TABINDEX="0">AllocPhysMem</MSHelp:link> and <MSHelp:link keywords="_wcesdk_win32_FreePhysMem" TABINDEX="0">FreePhysMem</MSHelp:link> kernel functions for common buffer DMA transfers. If you use the kernel functions, call <MSHelp:link keywords="cmrefHalTranslateSystemAddress" TABINDEX="0">HalTranslateSystemAddress</MSHelp:link> to translate the address you are passing to the DMA controller to avoid a memory violation. These functions take an alignment parameter, the CEDDK functions use default alignment of 64 KB. For a common buffer DMA example with the kernel functions, see %_WINCEROOT%\Public\Common\OAK\Drivers\USB\HCD.</P>
+
+<P>To set up scatter/gather DMA, you can program the device with multiple pairs of base addressed and lengths simultaneously. The ATAPI driver located in %_WINCEROOT%\Public\Common\OAK\Drivers\Block\ATAPI is an example of scatter/gather DMA implementation.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cgconCreatingCEDDK" TABINDEX="0">Creating a Ceddk Driver</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefHalFreeCommonBuffer" TABINDEX="0">HalFreeCommonBuffer</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Direct%20Memory%20Access&nbsp;(cxcondirectmemoryaccess.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

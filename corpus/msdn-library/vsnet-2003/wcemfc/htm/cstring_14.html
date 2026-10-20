@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CString::GetBuffer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cstring_getbuffer"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcecrt_strlen_wcslen" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_cstring_getbuffer"></A>CString::GetBuffer</H1>
+
+<P>This method retrieves a pointer to the internal character buffer for the <B>CString</B> object. The returned <B>LPTSTR</B> is not <B>const</B> and thus allows direct modification of <B>CString</B> contents.</P>
+
+<P>If <I>nMinBufLength</I> is greater than the length of the current buffer, the call to <B>GetBuffer</B> will destroy the current buffer. Replace it with a buffer of the requested size, and reset the reference count to zero. If you have previously called <A HREF="cstring_21.htm"><B>LockBuffer</B></A> on this buffer, you will lose the lock on the buffer.</P>
+
+<PRE class=syntax><B>LPTSTR GetBuffer(
+int </B><I>nMinBufLength</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nMinBufLength</I></DT>
+
+<DD>Specifies the minimum size of the character buffer in characters. This value does not include space for a null terminator.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>This is an <B>LPTSTR</B> pointer to the character buffer of the null-terminated object.</P>
+
+<H4>Remarks</H4>
+
+<P>If you use the pointer returned by <B>GetBuffer</B> to change the string contents, you must call <A HREF="cstring_26.htm"><B>ReleaseBuffer</B></A> before using any other <B>CString</B> methods. </P>
+
+<P>The address returned by <B>GetBuffer</B> may not be valid after the call to <B>ReleaseBuffer</B> since additional <B>CString</B> operations may cause the <B>CString</B> buffer to be reallocated. The buffer will not be reallocated if you do not change the length of the <B>CString</B>.</P>
+
+<P>The buffer memory will be freed automatically when the <B>CString</B> object is destroyed. </P>
+
+<P>Note that, if you keep track of the string length yourself, you should not append the terminating null character. You must, however, specify the final string length when you release the buffer with <B>ReleaseBuffer</B>. If you do append a terminating null character, you should pass &#0150;1 for the length to <B>ReleaseBuffer, </B>which will perform a <A HREF="JavaScript:hhobj_1.Click()"><B>_tcslen</B></A> on the buffer to determine its length. </P>
+
+<H4>Example</H4>
+
+<P>The following example demonstrates the use of <B>CString::GetBuffer</B>.</P>
+
+<PRE>// example for CString::GetBuffer
+CString s( "abcd" );
+#ifdef _DEBUG
+afxDump &lt;&lt; "CString s " &lt;&lt; s &lt;&lt; "\n";
+#endif
+LPTSTR p = s.GetBuffer( 10 );
+lstrcpy( p, _T("Hello") );&nbsp;&nbsp;// directly access CString buffer
+s.ReleaseBuffer( );
+#ifdef _DEBUG
+afxDump &lt;&lt; "CString s " &lt;&lt; s &lt;&lt; "\n";
+#endif
+</PRE>
+
+<H4>Requirements</H4>
+
+<P>&nbsp;&nbsp;<B>Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cstring_15.htm"><B>CString::GetBufferSetLength</B></A>, <A HREF="cstring_26.htm"><B>CString::ReleaseBuffer</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

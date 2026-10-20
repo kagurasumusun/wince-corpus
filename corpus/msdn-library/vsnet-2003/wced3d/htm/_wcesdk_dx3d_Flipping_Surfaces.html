@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Flipping Surfaces</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Flipping Surfaces"/>
+<MSHelp:RLTitle Title="Flipping Surfaces"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Flipping_Surfaces"/>
+<MSHelp:Keyword Index="K" Term="flipping%2C Direct3D, flipping surfaces"/>
+<MSHelp:Keyword Index="K" Term="surfaces%2C Direct3D, flipping surfaces"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts3_using.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680439">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_flipping_surfaces"></A>Flipping Surfaces</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A Microsoft&reg; Direct3D&reg; application typically displays an animated sequence by generating the frames of the animation in back buffers and presenting them in sequence. Back buffers are organized into swap chains. A swap chain is a series of buffers that flip to the screen one after another. This can be used to render one scene in memory and then flip the scene to the screen when rendering is complete. This avoids the phenomenon known as <I>tearing</I> and allows for smoother animation.</P>
+
+<P>Each device created in Direct3D has at least one swap chain. When you initialize the first Direct3D device, you set the <B>BackBufferCount</B> member of the <A HREF="_wcesdk_dx3d_d3dpresent_parameters.htm">D3DPRESENT_PARAMETERS</A> structure, which tells Direct3D the number of back buffers that will be in the swap chain. The call to <A HREF="_wcesdk_dx3d_idirect3d8__createdevice.htm">IDirect3D8::CreateDevice</A> then creates the Direct3D device and corresponding swap chain.</P>
+
+<P>When you use the <A HREF="_wcesdk_dx3d_idirect3ddevice8__present.htm">IDirect3DDevice8::Present</A> method to request a surface flip operation, the pointers to surface memory for the front buffer and back buffers are swapped. Flipping is performed by switching pointers that the display device uses for referencing memory, not by copying surface memory. When a flipping chain contains a front buffer and more than one back buffer, the pointers are switched in a circular pattern, as shown in the following illustration.</P>
+
+<P class="fig"><IMG SRC="dx3d-trplflip.gif" ALT="" BORDER=0></P>
+
+<P>You can create addition swap chains for a device by calling <A HREF="_wcesdk_dx3d_idirect3ddevice8__createadditionalswapchain.htm">IDirect3DDevice8::CreateAdditionalSwapChain</A>. An application can create one swap chain per view and associate each swap chain with a particular window. The application renders images in the back buffers of each swap chain, and then presents them individually. The two parameters that <B>CreateAdditionalSwapChain</B> takes are a pointer to a <B>D3DPRESENT_PARAMETERS</B> structure and the address of a pointer to an <A HREF="_wcesdk_dx3d_idirect3dswapchain8.htm">IDirect3DSwapChain8</A> interface. You can then use <A HREF="_wcesdk_dx3d_idirect3dswapchain8__present.htm">IDirect3DSwapChain8::Present</A> to display the contents of the next back buffer to the front buffer. Note that a device can only have one full-screen swap chain.</P>
+
+<P>You can gain access to a specific back buffer by calling the <A HREF="_wcesdk_dx3d_idirect3ddevice8__getbackbuffer.htm">IDirect3DDevice8::GetBackBuffer</A> or <A HREF="_wcesdk_dx3d_idirect3dswapchain8__getbackbuffer.htm">IDirect3DSwapChain8::GetBackBuffer</A> methods, which return a pointer to a <A HREF="_wcesdk_dx3d_idirect3dsurface8.htm">IDirect3DSurface8</A> interface that represents the returned back buffer surface. Note that calling this method increases the internal reference count on the <B>IDirect3DDevice8 </B>interface so be sure to call <MSHelp:link keywords="cerefIUnknownRelease" TABINDEX="0">IUnknown::Release</MSHelp:link> when you are done using this surface or you will have a memory leak.</P>
+
+<P>Remember, Direct3D flips surfaces by swapping surface memory pointers within the swap chain, not by swapping the surfaces themselves. This means that you will always render to the back buffer that will be displayed next.</P>
+
+<P>It is important to note the distinction between a flipping operation, as performed by a display adapter driver, and a Present operation applied to a swap chain created with D3DSWAPEFFECT_FLIP.</P>
+
+<P>The term flip conventionally denotes an operation that alters the range of video memory addresses that a display adapter uses to generate its output signal, thus causing the contents of a previously hidden back buffer to be displayed. In DirectX 8, the term is often used more generally to describe the presentation of a back buffer in any swap chain created with the D3DSWAPEFFECT_FLIP swap effect.</P>
+
+<P>While such Present operations are almost invariably implemented by flip operations when the swap chain is a full-screen one, they are necessarily implemented by copy operations when the swap chain is windowed. Furthermore, a display adapter driver may use flipping to implement Present operations against full-screen swap chains based on the D3DSWAPEFFECT_DISCARD, D3DSWAPEFFECT_COPY and D3DSWAPEFFECT_COPY_VSYNC swap effects.</P>
+
+<P>The discussion above applies to the commonly used case of a full-screen swap chain created with D3DSWAPEFFECT_FLIP. </P>
+
+<P>For a more general discussion of the different swap effects for both windowed and full-screen swap chains, see <A HREF="_wcesdk_dx3d_d3dswapeffect.htm">D3DSWAPEFFECT</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Flipping%20Surfaces&nbsp;(_wcesdk_dx3d_flipping_surfaces.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

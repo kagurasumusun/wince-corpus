@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AFX_EXTENSION_MODULE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AFX_EXTENSION_MODULE"/>
+<MSHelp:RLTitle Title="AFX_EXTENSION_MODULE Structure"/>
+<MSHelp:Keyword Index="A" Term="aflrfAFXusEXTENSIONusMODULE"/>
+<MSHelp:Keyword Index="K" Term="AFX_EXTENSION_MODULE structure"/>
+<MSHelp:Keyword Index="A" Term="aflrfAFXusEXTENSIONusMODULE"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="struct.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697722">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfafxusextensionusmodule"></A>AFX_EXTENSION_MODULE </H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This structure is used during initialization of MFC extension DLLs to hold the state of extension DLL module. </P>
+
+<PRE class="syntax"><B>struct AFX_EXTENSION_MODULE</B>
+<B>{</B>
+<B>&nbsp;&nbsp;&nbsp;BOOL </B><I>bInitialized</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;HMODULE </B><I>hModule</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;HMODULE </B><I>hResource</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;CRuntimeClass* </B><I>pFirstSharedClass</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;COleObjectFactory* </B><I>pFirstSharedFactory</I><B>;</B>
+<B>};</B><I> </I></PRE>
+
+<P class="label"><B>Members</B>
+
+<DL>
+<DT><I>bInitialized</I></DT>
+
+<DD><B>TRUE</B> if the DLL module has been initialized with <B>AfxInitExtensionModule</B>.</dd>
+
+<DT><I>hModule</I></DT>
+
+<DD>Specifies the handle of the DLL module.</dd>
+
+<DT><I>hResource</I></DT>
+
+<DD>Specifies the handle of the DLL custom resource module.</dd>
+
+<DT><I>pFirstSharedClass</I></DT>
+
+<DD>A pointer to information (the <B>CRuntimeClass</B> structure) about the first runtime class in the DLL module. Used to provide the start of the runtime class list.</dd>
+
+<DT><I>pFirstSharedFactory</I></DT>
+
+<DD>A pointer to the first object factory in the DLL module (a <B>COleObjectFactory</B> object). Used to provide the start of the class factory list.</dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>MFC extension DLLs need to do two things in their <B>DllMain</B> function:
+
+<UL type="disc">
+	<LI>Call <A HREF="aflrfafxinitextensionmodule.htm"><B>AfxInitExtensionModule</B></A> and check the return value.</li>
+
+	<LI>Create a <B>CDynLinkLibrary</B> object if the DLL will be exporting <A HREF="aflrfcruntimeclass.htm"><B>CRuntimeClass</B></A> objects or has its own custom resources.</li>
+</UL>
+
+<P>The <B>AFX_EXTENSION_MODULE</B> structure is used to hold a copy of the extension DLL module state, including a copy of the runtime class objects that have been initialized by the extension DLL as part of normal static object construction executed before <B>DllMain</B> is entered. For example:</P>
+
+<PRE class="code">static AFX_EXTENSION_MODULE extensionDLL;
+extern "C" int APIENTRY
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
+{
+   // initialize this DLL extension module
+   VERIFY(AfxInitExtensionModule(extensionDLL, hInstance));</PRE>
+
+<P>The module information stored in the <B>AFX_EXTENSION_MODULE</B> structure can be copied into the <B>CDynLinkLibrary</B> object. For example:</P>
+
+<PRE class="code">// CDynLinkLibrary class
+IMPLEMENT_DYNAMIC(CDynLinkLibrary, CCmdTarget)
+// Constructor
+CDynLinkLibrary::CDynLinkLibrary(AFX_EXTENSION_MODULE&amp; state, BOOL bSystem)
+{
+#ifndef _AFX_NO_OLE_SUPPORT
+   m_factoryList.Construct(offsetof(COleObjectFactory, m_pNextFactory));
+#endif
+   m_classList.Construct(offsetof(CRuntimeClass, m_pNextClass));
+
+   // copy info from AFX_EXTENSION_MODULE struct
+   ASSERT(state.hModule != NULL);
+   m_hModule = state.hModule;
+   m_hResource = state.hResource;
+   m_classList.m_pHead = state.pFirstSharedClass;
+#ifndef _AFX_NO_OLE_SUPPORT
+   m_factoryList.m_pHead = state.pFirstSharedFactory;
+#endif
+   m_bSystem = bSystem;</PRE>
+
+<P class="label"><B>Requirements </B>
+
+<DL>
+<DT><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdll_.h</DT>
+</DL>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfafxinitextensionmodule.htm"><B>AfxInitExtensionModule</B></A>, <A HREF="aflrfafxtermextensionmodule.htm"><B>AfxTermExtensionModule</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697722', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

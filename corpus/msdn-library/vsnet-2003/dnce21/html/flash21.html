@@ -1,0 +1,464 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Linear Flash Memory Devices on Microsoft Windows CE 2.1</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Linear Flash Memory Devices on Microsoft Windows CE 2.1"/>
+<MSHelp:RLTitle Title="Linear Flash Memory Devices on Microsoft Windows CE 2.1"/>
+<MSHelp:Keyword Index="A" Term="flash21"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, database storage"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, flash file system"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, linear flash memory device"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, memory technology drivers"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, OEM design"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, registry storage"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, system memory"/>
+<MSHelp:Keyword Index="A" Term="flash21"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="This document describes the use of Linear Flash Memory devices on Windows CE. With the proper driver support, flash memory devices can be used to support filesystems that reside in Linear Flash Memory and to extend system memory for additional registry and database storage."><meta name="keywords" content="Windows CE 2.1, linear flash memory devices, system memory, registry storage, database storage"><META name="rtfFileName" content="flash21.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="Describes the use of Linear Flash Memory devices on Windows CE. With the proper driver support, flash memory devices can be used to support file systems that reside in Linear Flash Memory and to extend system memory for registry and database storage.">
+<META NAME="msdnID" CONTENT="_661472">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="flash21"></A>Linear Flash Memory Devices on Microsoft Windows CE 2.1</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>April 2000</P>
+
+<P><B>Summary:</B> This document describes the use of Linear Flash Memory devices on Microsoft® Windows® CE. With the proper driver support, flash memory devices can be used to support filesystems that reside in Linear Flash Memory and to extend system memory for additional registry and database storage. (14 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#flash21_intro">Introduction</A><CODE><BR>
+</CODE><A HREF="#flash21_design">OEM Design Considerations</A><CODE><BR>
+</CODE><A HREF="#flash21_program">Programming Considerations</A><CODE><BR>
+</CODE><A HREF="#flash21_future">Future Issues</A><CODE><BR>
+</CODE><A HREF="#flash21_info">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="flash21_intro"></A>Introduction</H2>
+
+<P>Initially, Windows CE assumed that applications were stored in battery-backed RAM storage (the object store), and used a simple file-system to manage this storage. Embedded systems cannot depend on battery-backed RAM for storage, yet they have a need for local storage. Flash memory has been accepted as the industry standard solution for non-volatile storage in embedded applications. However, turning "raw" flash chips into a usable disk replacement in an embedded application is not a simple task. This paper discusses the use of one of type of flash memory, namely Linear Flash Memory, in a Windows CE-based embedded application.</P>
+
+<P>There are two primary types of flash memory architectures: Linear Flash Memory and ATA. Both conform to the industry standard PCMCIA form factor and can be used interchangeably in existing PC Card slots. Windows CE supports Linear Flash Memory in several form factors: MiniCards from Intel, industry standard PC Cards, and built-in DiskOnChip devices from M-Systems, Inc.</P>
+
+<P>ATA cards emulate the behavior of an ATA-style hard drive by means of flash memory components and a special microcontroller chip that performs hardware emulation of an ATA-style hard disk. ATA cards will appear like a normal hard drive to any operating system. The flash memory components themselves are not directly addressable, but only indirectly addressable through the ATA emulation hardware. This document does not discuss ATA cards in any detail.</P>
+
+<P>Linear Flash Memory on Windows CE uses a software driver layer to emulate a disk drive. There is no need for special purpose controller hardware as with ATA Flash. Linear Flash Memory devices use the driver layer to translate data to and from a block format that Windows CE can understand. This software layer is called the Flash Translation Layer (FTL). The underlying data format used by the FTL software is part of a well-known PCMCIA standard. The FTL software component implemented under Windows CE is the TrueFFS driver licensed from M-Systems, Inc. Note that Linear Flash Memory support exists only in Windows CE 2.10 and later. In addition, the TrueFFS driver is a stream interface driver since it exposes the standard Windows CE stream interface functions to the operating system.</P>
+
+<P>All types of Flash Memory devices are solid-state storage devices that can retain their data when unpowered. Linear Flash Memory has the further property that the storage is addressable through a flat, linear address space. Linear Flash Memory typically provides read-access times similar to ordinary DRAM, but has slow write-access times and limited write-cycle lifetimes which make them unsuitable as replacements for true DRAM. Linear Flash Memory is best suited for supplementary storage space.</P>
+
+<H3 class="dtH1">Flash File System</H3>
+
+<P>The TrueFFS driver implements its own data organization scheme, known as the Virtual Block Device Flash Translation Layer, to manage the memory cells on the Linear Flash Memory hardware. This data organization scheme was originally designed for PCMCIA cards but is also applied to MiniCards and DiskOnChip devices.</P>
+
+<P>Windows CE does not implement a separate Flash File System to support linear flash devices. Instead, the FAT filesystem (FATFS), included with Windows CE, services files on the linear flash media via the use of the FTL driver, which is a block device driver. FATFS does not directly read or write to the Linear Flash Memory hardware; the TrueFFS driver performs all low level hardware access. The TrueFFS driver presents the Linear Flash Memory to FATFS as a block-oriented device.</P>
+
+<P>The TrueFFS driver transparently emulates an ordinary disk drive; applications do not need to behave differently when reading and writing files to Linear Flash Memory. FATFS implements a logical file system on the linear flash media. FATFS provides an abstraction between files in the application name space, such as "\PC Card\Excel Docs\expense report.pxl", and devices in the device name space, such as "DSK1:". FATFS guarantees safe file I/O operations even when interrupted by a power off/on cycle. FAT performs no low-level I/O on the flash media. Instead, it indirectly calls the TrueFFS driver by invoking the driver's IOControl() routine with the appropriate control codes.</P>
+
+<H3 class="dtH1">Benefits of Linear Flash Memory to Windows CE</H3>
+
+<P>Linear Flash Memory components offer very attractive features for data storage. It is non-volatile, so data remains stored indefinitely even when no power is supplied to the hardware. No backup batteries are required. Linear Flash Memory performs as well as ordinary DRAM memory for read operations. Linear Flash Memory is inexpensive, with a price per bit at or below that of DRAM memory. Linear Flash Memory has low power requirements and takes up little space, making it ideal for embedded, mobile or handheld applications. It is solid-state, making it suitable for work in rugged environments that mechanical disks could not survive.</P>
+
+<P>Linear Flash Memory can be used for the following purposes in Windows CE:
+
+<UL type="disc">
+	<LI>XIP - The most popular use of linear flash memory is for eXecute-In-Place (XIP) functionality. Since linear flash memory is inherently linear in nature, it supports XIP of code. Details of XIP on linear flash memory under Windows CE are covered later in this article. </li>
+
+	<LI>Extending the size of the Windows CE Object Store. In a Windows CE-based platform, a Linear Flash Memory device will appear as a folder within the Windows CE Explorer and users can - drag-and-drop files to and from the desktop, create/delete files and directories, retrieve file and directory information, and reformat the card. In addition, users can store user programs and data (code+data) on a linear flash device. In earlier versions of Windows CE, launching a program stored on a memory card, would cause the whole program to be loaded into RAM and then run. In Windows CE 2.10, the operating system uses demand paging to load portions of the program into memory as needed. </li>
+
+	<LI>Interoperability - Data on the linear flash card will transfer seamlessly between Windows CE, Windows 95, Windows NT, and MS-DOS, since all these operating systems provide support for linear flash memory via the TrueFFS driver which implements the standard FTL format. </li>
+
+	<LI>Registry storage. Registry information may be stored on Linear Flash Memory cards, although it may not be used directly from there. Registry data must first be copied to the RAM-based registry before it can be used. To facilitate this task, Windows CE 2.10 supports new APIs for loading and saving registry information to other storage media. </li>
+
+	<LI>Database storage. Windows CE databases can be stored and used in-place on Linear Flash Memory cards. Windows CE 2.10 has new APIs for mounting database volumes from locations other than RAM and ROM. </li>
+</UL>
+
+<P>Further details about all of these uses are contained later in this document.</P>
+
+<H3 class="dtH1">Limitations of Linear Flash Memory in Windows CE</H3>
+
+<P>There are presently several limitations on using Linear Flash Memory in Windows CE:
+
+<UL type="disc">
+	<LI>There is no support for Resident Flash Array (RFA) devices. </li>
+
+	<LI>There is no support for Code+Data functionality. </li>
+
+	<LI>New Memory Technology Drivers (MTDs) cannot be added dynamically to support additional types Linear Flash Memory hardware. </li>
+
+	<LI>The TrueFFS driver is required to be a Stream Interface Driver. </li>
+</UL>
+
+<P>These limitations may be addressed in future releases of Windows CE.</P>
+
+<H3 class="dtH1">System Architecture for Linear Flash Memory</H3>
+
+<P>As mentioned before, Linear Flash Memory devices used on Windows CE appear as ordinary disk drives. From an application's perspective, files on a Linear Flash Memory device are accessed through the standard Win32 File I/O APIs-(CreateFile(), ReadFile(), etc.-on the appropriate device filename, such as "DSK1:" or "DSK2:". A conceptual view of the flow of control from an application call to ReadFile() through to the actual read from various kinds of Linear Flash Memory is shown in the following figure:</P>
+
+<P class="fig"><CODE><IMG SRC="flash21.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1.</B></P>
+
+<P>The application calls the function ReadFile(), using a handle to a file stored in Linear Flash Memory. FATFS translates the read request to logical blocks. The FAT filesystem searches the buffer cache for the requested blocks. If these are not present, it issues an IOControl() request to read bytes from the Linear Flash Memory device. The TrueFFS driver receives the IOControl() request, then fulfills the request by accessing the Linear Flash Memory through one of the Socket Layers.</P>
+
+<H2 class="dtH1"><A NAME="flash21_design"></A>OEM Design Considerations</H2>
+
+<P>This section describes aspects of Linear Flash Memory usage in Windows CE that OEMs should be aware of when implementing Windows CE platforms that use Linear Flash Memory.</P>
+
+<H3 class="dtH1">TrueFFS Driver Customization</H3>
+
+<P>OEMs can customize the TrueFFS driver in a number of ways. The Windows CE Embedded Toolkit contains a core library, TFFSCore.LIB, and a single customizable source file, FLCustom.C, which together comprise the TrueFFS driver. FLCustom.C may be modified to change the behavior of the TrueFFS driver to suit the needs of an OEMs Windows CE platform. The components that can be customized by the OEM are Memory Technology Drivers (MTDs), Translation Layers, and Socket Interfaces.</P>
+
+<P>In order to include a component into the TrueFFS driver, the component's registration routine must be called at initialization of the driver. This is a customization task that is done in a function called flRegisterComponents() defined in the FLCustom.C. Prototypes for all the component's registration routines are provided in the header file STDComp.H. OEMs can modify flRegisterComponents() to include the desired subset of components for the application. The flRegisterComponents() function takes no parameters and has no return value, it simply consists of calls to each component's registration routine.</P>
+
+<H4 class="dtH1">Memory Technology Drivers</H4>
+
+<P>Memory Technology Drivers are software components through which the TrueFFS driver accesses different types of Linear Flash Memory hardware. Each type requires its own MTD, which handles the specific details of interacting with that type of Linear Flash Memory hardware. OEMs can omit any unnecessary MTDs. For example, if a Windows CE platform only supports built-in DiskOnChip hardware and does not have PC-Card support at all, many MTDs can be left out. If an OEM needs to support a new type of Linear Flash Memory hardware, they will need to create an MTD for it. The existing MTDs and the corresponding registration routines are as follows:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Manufacturer</TH>
+<TH width=26%>Product</TH>
+<TH width=47%>Registration Routine to be called in FLCUSTOM.C</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M-Systems, Inc.</TD>
+<TD width=26%>DiskOnChip</TD>
+<TD width=47%>flRegisterDOC2000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M-Systems, Inc.</TD>
+<TD width=26%>Series 2000</TD>
+<TD width=47%>flRegisterCDSN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M-Systems, Inc.</TD>
+<TD width=26%>FlashLite<BR>
+(8-bit mode)</TD>
+<TD width=47%>flRegisterI28F008</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M-Systems, Inc.</TD>
+<TD width=26%>FlashLite<BR>
+(16-bit mode)</TD>
+<TD width=47%>flRegisterI28F016</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Series II<BR>
+(8-bit mode)</TD>
+<TD width=47%>flRegisterI28F008</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Series II<BR>
+(16-bit mode)</TD>
+<TD width=47%>flRegisterI28F016</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Series II+</TD>
+<TD width=47%>flRegisterI28F016</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Series 100 Miniature Card<BR>
+(8-bit mode)</TD>
+<TD width=47%>flRegisterI28F008</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Series 100 Miniature Card<BR>
+(16-bit mode)</TD>
+<TD width=47%>flRegisterI28F016</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Series 200 Miniature Card</TD>
+<TD width=47%>flRegisterCFISCS</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Value Series 100<BR>
+(8-bit mode)</TD>
+<TD width=47%>FlRegisterI28F008</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Value Series 100<BR>
+(16-bit mode)</TD>
+<TD width=47%>FlRegisterI28F016</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Value Series 200<BR>
+(8-bit mode)</TD>
+<TD width=47%>FlRegisterCFISCS</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Intel</TD>
+<TD width=26%>Value Series 200<BR>
+(16-bit mode)</TD>
+<TD width=47%>FlRegisterCFISCS</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH1">Translation Layers</H4>
+
+<P>Translation Layers provide the necessary mapping between the FAT filesystem's data structures and the underlying data format on the Linear Flash Memory hardware. The most widely known and used translation layer is Flash Translation Layer (FTL), which is a PCMCIA industry standard for NOR-based Linear Flash Memory hardware. NAND-based Linear Flash Memory hardware uses the NFTL translation layer. M-Systems, Inc's DiskOnChip and other Series-2000 products are NAND-based products. OEMs can omit unnecessary translation layers in their builds of Windows CE. For example, an OEM wishing to use only built-in DiskOnChip hardware could omit the FTL Translation Layer and keep only the NTFL Translation Layer. Note that TrueFFS supports storage of both FAT16 and FAT32 data structures. The following table lists the existing translation layers registration routines.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Registration Routine</TH>
+<TH width=66%>Used With:</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>FlRegisterFTL</TD>
+<TD width=66%>NOR-based Linear Flash Memory hardware</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>DFlRegisterNFTL</TD>
+<TD width=66%>NAND-based Linear Flash Memory hardware</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH1">Socket Interfaces </H4>
+
+<P>Socket Interface components control the access of the TrueFFS driver to sockets in which Linear Flash Memory hardware resides. For PC Cards these are the PCMCIA sockets. For built-in DiskOnChip devices, the socket interface is a specially designed software component. An OEM using DiskOnChip hardware, but not providing PC Card sockets would only need to keep the DiskOnChip Socket Layer. The following table lists the registration routines for the existing socket layers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Registration Routine</TH>
+<TH width=67%>Used With:</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>flRegisterFixedFlash</TD>
+<TD width=67%>Built-in DiskOnChip hardware</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>flRegisterCS</TD>
+<TD width=67%>PC-Card based Linear Flash Memory hardware</TD>
+</TR>
+</table></div>
+
+<H3 class="dtH1">The Detection Sequence</H3>
+
+<P>At boot time or media insertion time, the Device Manager calls a detection function, DetectTFFSDisk(), exposed by the TrueFFS driver. The detection function attempts to recognize the type of Linear Flash Memory hardware present by querying the device. If the media type is successfully detected, the Device Manager will load the TrueFFS driver into memory. This process of identifying a flash card via the Detect functions is identical for all installable device drivers, and is described fully in the Windows CE Device Driver Kit. Note that TrueFFS driver's detection function is unique among Windows CE device drivers for PC-Card devices in that it attempts to recognize the flash media without using the information in the CIS or AIS structure on the flash device. This logic of querying the chip and detecting the flash card allows the TrueFFS driver to detect a Common Flash Interface (CFI) compliant device, such as a Strata-based Linear Flash Memory device. An embedded platform developer must setup the platform registry correctly such that the detection function is called for detecting the linear flash devices.</P>
+
+<H3 class="dtH1">Registry Keys </H3>
+
+<P>The Device Manager uses and manages several registry keys under the HKEY_LOCAL_MACHINE\Drivers key when loading, tracking, and unloading installable and built-in device drivers. Built-in devices such as M-Systems, Inc.'s DiskOnChip rely on the registry settings to be present at boot time, therefore these keys must be part of the default registry. Keys for removable media such as Linear Flash Memory PC-Cards may be installed at the time when the user wishes to add the media to the list of devices known to his or her Windows CE device. This section describes the registry entries the Device Manager uses in conjunction with the TrueFFS driver. Many of these keys are keys that all stream interface drivers must have. Full information on registry keys used by installable device drivers is in the Windows CE Device Driver Kit.</P>
+
+<H4 class="dtH1">Flash PC-Cards and Miniature Cards Entries</H4>
+
+<P>In order to detect PC Cards or Miniature Cards, the Device Manager will initiate a detection sequence to determine the card type. The Registry entries shown below are part of the default registry in Windows CE 2.1. They are required by the Device Manager to initiate the detection sequence.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE
+  [Drivers]
+    [PCMCIA]
+      [TrueFFS]
+        SZ: Prefix = DSK
+      SZ: Dll = TrueFFS.DLL
+      SZ: IOCTL = (DWORD)4
+      SZ: FSD = FATFS.DLL
+      SZ: Folder = Flash Disk
+
+     [Detect]
+       [20]
+         SZ: Dll = TrueFFS.DLL
+         SZ: Entry = DetectTFFSDisk
+</PRE>
+
+<P>The Folder value within the TrueFFS key is optional, and is not a part of the default registry. Its value determines the folder name(s) associated with Linear Flash Memory devices. The default name is "Storage Card" for the first device, "Storage Card2" for the second, and so forth. If the "Folder" key is used to change the folder name to, for example, "Flash Disk", then this will be the actual name of the first device. The second will be called "Flash Disk2", the third "Flash Disk3" and so on.</P>
+
+<P>The subkey 20 within the Detect key is an example only. It can be any other number. Its value will determine the order in which the device manager will try the TrueFFS driver when attempting to detect an unknown type of PC Card.</P>
+
+<H4 class="dtH1">DiskOnChip</H4>
+
+<P>EntriesDiskOnChip, used for non-removable Linear Flash Memory devices that are part of the native hardware of a Windows CE platform, are recognized based on the BuiltIn registry key as shown below. The following registry entries should be in the registry at boot time. If you are building a CE/PC version of Windows CE, the CEPC_DISKONCHIP environment variable must be set to 1 prior to creation of the operating system image. For other platforms these entries can be added to one of the registry (".reg") files.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE
+  [Drivers]
+    [BuiltIn]
+      [TrueFFS]
+        SZ: Prefix = DSK
+        SZ: Dll = TrueFFS.DLL
+        SZ: Index = DWORD:1
+        SZ: Order = DWORD:1
+        SZ: IOCTL = DWORD:4
+        SZ: FSD = FATFS.DLL
+        SZ: WindowBase = DWORD:D0000
+        SZ: Folder = Flash Disk</PRE>
+
+<P>The "Folder" entry is optional, as before. The value of "WindowBase" is an example only. It can be any other 32-bit value as specified in the documentation for the DiskOnChip hardware. This value determines the location of the DiskOnChip hardware's memory window.</P>
+
+<H3 class="dtH1">Setting up Built-in Devices</H3>
+
+<P>The TrueFFS driver accesses any built-in devices, such as the DiskOnChip product from M-Systems, Inc. or a Resident Flash Array product from Intel Corporation, by mapping the built-in device's address space directly into the operating system's address space, rather than indirectly through a memory window managed by the Windows CE PC Card Socket driver. The TrueFFS driver queries the HKEY_LOCAL_MACHINE\Drivers\BuiltIn registry key to decide on the location and size of the memory window. It then uses VirtualCopy() to map the Linear Flash Memory device's address space into the system's virtual memory space. Note that Windows CE 2.1 does not support the Resident Flash Array product, hence this method only applies to the DiskOnChip product today.</P>
+
+<H3 class="dtH1">Power On and Power Off Processing</H3>
+
+<P>The Windows CE power management protocol supports power down/power up cycles that are transparent to applications, and so the TrueFFS driver must handle the POWER_DOWN and POWER_UP system messages correctly. Like all device drivers, the TrueFFS driver must constrain itself to minimal, very fast processing of the POWER_DOWN message. Typically device drivers simply save any volatile state information in RAM, set a flag to indicate that power is going to be turned off, and exit. POWER_ON processing is exactly like a regular card removal and followed by an insertion. Upon resume, the PCMCIA driver will first issue a card removal notification for all sockets with inserted cards and then it will check the socket status and issue card insertion notices for each socket with a card in it. For each socket, Device Manager will launch its detection sequence and load the appropriate driver.</P>
+
+<P>It is the TrueFFS driver's responsibility to detect whether it is being loaded in response to a POWER_ON message or because a Linear Flash Memory device really was removed and then replaced or re-inserted. This is important, because the driver should preserve state information for any handles held by applications to files stored in the Linear Flash Memory device across simple POWER_DOWN/POWER_UP cycles. However, if the Linear Flash Memory device is removed and replaced with a different card, any open file handles should be closed. The following table lists how open file handles should be treated during POWER_UP processing.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=49%>Transition</TH>
+<TH width=51%>Preserve Open File Handles?</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>Simple power down/power up cycle.</TD>
+<TD width=51%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>Linear Flash Memory device removed and subsequently re-inserted</TD>
+<TD width=51%>Yes, if it is possible to detect that the contents of the device have not been changed</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>Linear Flash Memory removed and replaced with a different one</TD>
+<TD width=51%>No</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="flash21_program"></A>Programming Considerations</H2>
+
+<P>This section discusses considerations that OEMs and IHVs may have when implementing Linear Flash Memory driver software.</P>
+
+<H3 class="dtH1">Writing a Linear Flash Memory Driver</H3>
+
+<P>Linear Flash Memory drivers are examples of Stream Interface Drivers, and expose the stream interface functions common to all drivers managed by the Device Manager component of Windows CE. The stream interface functions are documented in the Windows CE Device Driver Kit (DDK). The stream interface functions for Linear Flash Memory drivers are all prefixed by "DSK_". DSK_IOControl() is the main function in this group, and handles all I/O requests. The IOControl codes themselves are the same as those used by Windows CE's FAT Filesystem. Details about the semantics of those codes are in the Windows CE Software Development Kit. Note that the TrueFFS driver is implemented under Windows CE as a stream interface driver, but in general a driver that supports Linear Flash media is not required to be a Stream driver. An OEM could implement a custom driver (for example, a monolithic driver) that supports Linear Flash media, as long as the driver fits into the Windows CE device driver model.</P>
+
+<H3 class="dtH1">Persistent Databases on Linear Flash</H3>
+
+<P>Linear Flash Memory can be used to store Windows CE databases. Database information, such as that in the Windows CE Contacts database, Task list, and Calender, can be stored and updated directly on Linear Flash Memory storage.</P>
+
+<P>With Windows CE now available for the embedded systems market, there is a need for additional database storage with increased capacity and persistence for devices that are do not have battery backed RAM. Windows CE 2.10 supports databases on any mounted file system, regardless of the file system's storage mechanism. Windows CE 2.10 provides new database APIs that allow developers to create and mount database volumes, like the one in the Windows CE object store, on an external storage devices such as Linear Flash Memory cards. All operations on new database volumes are exactly the same as operations on the object store databases. The new database volume contains both the data and an integrity log that tracks changes for atomic operations. There are several new database APIs like CeMountDBVol() to mount a database and extended versions of V2.0 APIs like CeOpenDatabaseEx() to open a database on a mounted volume. These APIs are fully documented in the Windows CE Software Development Kit.</P>
+
+<H3 class="dtH1">Persistent Registry on Linear Flash Memory</H3>
+
+<P>Similar to the situation with databases, Linear Flash Memory card can be used to store registry information as well. However, Windows CE cannot directly use registry information stored in Linear Flash Memory. The information must first be copied to the RAM-based registry.</P>
+
+<P>Windows CE version 2.0 and earlier implemented the registry as a RAM based heap file. However, this means that registry information is lost if power is lost to the platform's RAM, a circumstance which forces Windows CE to reload the registry from ROM. To support the embedded system market in which battery-backed RAM is not always available, Windows CE 2.10 provides new APIs for saving and restoring registry information to and from external storage such as Linear Flash Memory devices. The strategy is to save the registry to non-volatile Linear Flash Memory when the Windows CE platform is turned off, and to restore that information when power is restored.</P>
+
+<P>The APIs are RegCopyFile() to save registry information and RegRestoreFile() to load registry information. These APIs are documented in the Windows CE Software Development Kit.</P>
+
+<P>One solution for restoring registry information involves a dual boot setup of the Windows CE based embedded platform. In this scenario, the cold-boot sequence is used to restore the registry, and then a warm boot is employed to boot the system normally. RAM is maintained during a warm boot, so the restored registry information will be available to control the boot sequence. The OEM would provide a special registry cold-boot tool that would copy the saved registry information from Linear Flash Memory into RAM, after the TrueFFS driver has been loaded. The utility would then force a warm-boot of the system.</P>
+
+<P>A single boot solution is possible if the system uses the internal ROM filesystem code to restore the registry from its saved location. This is possible by using the WriteRegistryToOEM() and ReadRegistryFromOEM() functions in the platform's OAL layer. Note that implementing those two functions can be complex, because at the time they are called very little system support is present. Device Manager has not been loaded, and no device drivers are available. Therefore, those functions will need enough understanding of the external registry storage mechanism to locate and load the registry information without the help of the TrueFFS device driver. Full documentation for WriteRegistryToOEM() and ReadRegistryFromOEM() is in the Windows CE Embedded Toolkit.</P>
+
+<H3 class="dtH1">Execute-In-Place Functionality</H3>
+
+<P>Execute-In-Place (XIP) is the ability to run a program directly from Linear Flash Memory instead of copying the program into RAM memory and running it from there. To support XIP, a flash device must be linear in nature - meaning it can be mapped into a memory window and read directly through the window as if the Linear Flash Memory were RAM or ROM. Certain Linear flash devices have this linear interface and hence support direct code execution from the flash chips. Among linear flash devices, only NOR-based flash devices (such as Miniature Card or Resident Flash Array) implement XIP. NAND-based flash devices (such as the M-Systems' DiskOnChip) do not support XIP since they use complicated access-methods to access the on-card memory. ATA products do not support XIP since the microcontroller chip that performs disk emulation prevents direct access to the Linear Flash Memory components.</P>
+
+<P>XIP functionality from linear flash memory is supported under Windows CE. Note that implementing XIP from a built-in linear flash device such as RFA does not require use of the TrueFFS driver. The TrueFFS driver is only required to install a filesystem on a linear flash device and access it as a random-access storage device. XIP does not need a filesystem, hence implementing XIP does not require use of the TrueFFS driver. An OEM can implement XIP if the OEM platform provides built-in linear flash memory (for example RFA). The following caveats or factors need to be considered while implementing XIP from a linear flash device. See the "Booting from Linear Flash Memory" section for implementation details.
+
+<OL type="1">
+	<LI>Windows CE 2.10 can only support XIP from one address space, that in which the Kernel itself runs. This is because Windows CE modifies the addresses of many system calls, thus enabling the calls to run in the context of the calling thread. Doing so has beneficial ramifications for memory use, but limits XIP to the virtual memory address space of the Windows CE Kernel. </li>
+
+	<LI>Since XIP can only occur in the Kernel's address space, and since Windows CE itself is executed in place, this implies that any Linear Flash Memory that might be used for XIP must be built-in Linear Flash device or a flash device that is memory-mapped directly onto the system bus. Furthermore, the same Linear Flash Memory device must also contain the Windows CE kernel image. So in order to implement XIP currently, an OEM must be able to boot a Windows CE kernel image from Linear Flash Memory. </li>
+</OL>
+
+<H3 class="dtH1">Partitioning Linear Flash</H3>
+
+<H4 class="dtH1">Single Partition</H4>
+
+<P>The OEM can treat Linear Flash as a single contiguous address space. In this configuration, the Linear Flash may be used for XIP or for data storage. Data storage can include one or more of the following: Registry, Database, or user data files managed by the FAT file system.</P>
+
+<H4 class="dtH1">Multiple Partitions</H4>
+
+<P>In a future release of Windows CE, we will consider adding support for multiple partitions. These are not supported in Windows CE 2.10. Multiple partitions support would enable OEMs to logically divide the Linear Flash into separate partitions. One partition might be used for XIP while the other would be used for data storage. This configuration is typically referred to as "Code Plus Data". While it is not supported currently, we will consider supporting it in a future release. Another configuration that might be of interest would be dividing the Linear Flash into two data storage partitions. One partition would provide data storage managed by the TrueFFS driver (for Database, Registry, or user data files accessed through the FAT file system). The other partition would provide data storage managed exclusively by OEM-defined code. This configuration is typically referred to as "Data Plus Data". Again, while we don't currently support this configuration in Windows CE 2.10, we will consider its support in a future release.</P>
+
+<H3 class="dtH1">DiskOnChip Customization</H3>
+
+<P>While Windows CE 2.10 does not provide built-in support for "Data Plus Data" partitioning, M-Systems does offer a customization toolkit that can potentially work around this limitation. With the DiskOnChip product from M-Systems, it is possible to setup 2 separate partitions on the DiskOnChip by using the M-Systems DiskOnChip DOS toolkit that is supplied with the DiskOnChip product. The TrueFFS driver running under Windows CE will not be able to read the separate partition setup under DOS. Instead, it will use the rest of the flash device to store data under Windows CE. OEMs should contact M-Systems, Inc. for further assistance on how to access this hidden partition from within Windows CE. Note that this workaround only applies to "Data Plus Data" partitioning and cannot apply to "Code Plus Data" partitioning since DiskOnChip does not support XIP.</P>
+
+<H3 class="dtH1">Booting From Linear Flash Memory</H3>
+
+<P>An interesting use of Linear Flash Memory is the ability to boot your Windows CE kernel image directly from a Linear Flash Memory device instead of from ROM. Booting the OS image from linear flash implies XIP, which also means that booting is possible only on built-in linear flash devices or a flash device that is memory-mapped directly onto the system bus. One method for implementing Booting involves writing a separate bootloader program that would copy the OS image to the built-in linear flash device and execute that image. This method does not involve the use of the TrueFFS driver, since the linear flash device will be accessed directly from the bootloader program. There are several other solutions to booting from built-in flash devices that either require or do not require the use of the TrueFFS driver; this paper will not discuss the advantages or disadvantages to each one of them. OEMs are free to implement their own booting solutions on linear flash devices. OEMs wishing to implement booting from the M-Systems DiskOnChip products through the use of the existing TrueFFS driver can contact M-Systems, Inc. for assistance.</P>
+
+<H2 class="dtH1"><A NAME="flash21_future"></A>Future Issues</H2>
+
+<P>Windows CE 2.10 supports the use of Linear Flash Memory devices on CE-based platforms through the use of the TrueFFS driver. Currently, Windows CE supports the following form factors: MiniCards, PC Cards and built-in DiskOnChip from M-Systems. The built-in FATFS software can access files stored on Linear Flash Memory transparently to the both users and applications. Linear Flash Memory devices can be used for storing normal programs or data, and for storing database and registry information.</P>
+
+<P>In a future release of Windows CE, the TrueFFS driver may be enhanced to provide support for Resident Flash Array devices, and native abilities to boot from a Linear Flash Memory device.</P>
+
+<H2 class="dtH1"><A NAME="flash21_info"></A>For More Information</H2>
+
+<UL type="disc">
+	<LI>Windows CE SDK: Information on FATFS IOControl codes. </li>
+
+	<LI>Windows CE DDK: Information on writing device drivers </li>
+
+	<LI>Windows CE ETK: Information on building custom Windows CE operating systems, and adapting Windows CE to custom hardware. </li>
+
+	<LI>Windows CE Tech Journal, March 1998: Information on M-Systems, Inc DiskOnChip 2000 series products. </li>
+
+	<LI>Details about M-Systems, Inc. Linear Flash Memory technologies and software: <A HREF="http://www.m-sys.com/">M-Systems, Inc.</A></li>
+
+	<LI>Information about PCMCIA cards and standards: <A HREF="http://www.pc-card.com/">PCMCIA Standards Organization</A></li>
+</UL>
+
+<P><I>The information contained in this document represents the current view of Microsoft Corporation on the issues discussed as of the date of publication. Because Microsoft must respond to changing market conditions, it should not be interpreted to be a commitment on the part of Microsoft, and Microsoft cannot guarantee the accuracy of any information presented after the date of publication. This document is for informational purposes only.</I></P>
+
+<P><I>This White Paper is for informational purposes only. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, IN THIS DOCUMENT.</I></P>
+
+<P><I>TrueFFS and DiskOnChip are trademarks of M-Systems, Inc.</I></P>
+
+<P><I>Java is a trademark of Sun Microsystems, Inc.</I></P>
+
+<P><I>Other product and company names mentioned herein may be the trademarks of their respective owners.</I></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661472', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

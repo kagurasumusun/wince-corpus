@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Point, Line, and Triangle Filling Requirements</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Point, Line, and Triangle Filling Requirements"/>
+<MSHelp:RLTitle Title="Point, Line, and Triangle Filling Requirements"/>
+<MSHelp:Keyword Index="A" Term="cxconPointLineTriangleFillingRequirements"/>
+<MSHelp:Keyword Index="K" Term="filling requirements, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="line filling requirements, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="lines, Direct3D line filling requirements"/>
+<MSHelp:Keyword Index="K" Term="point filling requirements, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="triangle filling requirements, Direct3D"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664927">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconpointlinetrianglefillingrequirements"></A>Point, Line, and Triangle Filling Requirements</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following are requirements for filling points, lines, and triangles.</P>
+
+<H2 class="dtH2">Points</H2>
+
+<P>The point fill and rasterization rules are identical to the triangle fill rules. All flags and capabilities that apply to triangles also apply to points, and vice versa. The reference implementation expands a point into a rectangle and applies the triangle fill rules to the result.</P>
+
+<P>Given a point with coordinates P<SUB>0</SUB>(x,y), generate four new points P<SUB>1</SUB>, P<SUB>2</SUB>, P<SUB>3</SUB>, and P<SUB>4</SUB> as follows.</P>
+
+<PRE class="code">P<SUB>1</SUB>(x,y) = (x – 0.5, y – 0.5)
+P<SUB>2</SUB>(x,y) = (x – 0.5, y + 0.5)
+P<SUB>3</SUB>(x,y) = (x + 0.5, y + 0.5)
+P<SUB>4</SUB>(x,y) = (x + 0.5, y – 0.5)</PRE>
+
+<P>The rectangle is then generated as two triangles, such as (P<SUB>1</SUB>, P<SUB>2</SUB>, P<SUB>3</SUB>) and (P<SUB>1</SUB>, P<SUB>3</SUB>, P<SUB>4</SUB>). You may also examine the reference rasterizer implementation in the source files Setup.cpp<I> </I>and Scancnv.cpp.</P>
+
+<H2 class="dtH2">Lines</H2>
+
+<P>Line fill rules for the desktop are found in the reference rasterizer source files, Setup.cpp<I> </I>and Scancnv.cpp.</P>
+
+<H2 class="dtH2">Triangles</H2>
+
+<P>Triangle fill rules are documented in the DirectX Windows NT&reg; DDK in the reference rasterizer source files Setup.cpp<I> </I>and<I> </I>Scancnv.cpp.</P>
+
+<P>Hardware should supply the culling caps and properly implement the three culling modes. The following code fragment determines whether to cull the current triangle.</P>
+
+<PRE class="code">if (CurrentCullMode != D3DCULL_NONE) {
+    int ccw = (((v[0]-&gt;sx - v[2]-&gt;sx) *
+                (v[1]-&gt;sy - v[2]-&gt;sy)) &lt;
+               ((v[1]-&gt;sx - v[2]-&gt;sx) *
+                (v[0]-&gt;sy - v[2]-&gt;sy)));
+if ((CurrentCullMode == D3DCULL_CW &amp;&amp; (ccw == 0)) ||
+        (CurrentCullMode == D3DCULL_CCW &amp;&amp; (ccw != 0))) {
+        // Current triangle is culled, move onto
+        // next triangle.
+    }
+}
+// Current triangle is not culled, render it</PRE>
+
+<P>The preceding code sample tests to determine which way the triangle is facing. The triangle is defined 0,1,2 and tested for being counter-clockwise in screen space. If it is not, and there is clockwise culling, then that triangle will not be drawn because the vertices go in clockwise order.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dimplementationrequirements.htm">Direct3D Implementation Requirements</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Point,%20Line,%20and%20Triangle%20Filling%20Requirements&nbsp;(cxconpointlinetrianglefillingrequirements.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

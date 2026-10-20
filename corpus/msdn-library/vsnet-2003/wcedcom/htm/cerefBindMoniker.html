@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BindMoniker</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="BindMoniker"/>
+<MSHelp:RLTitle Title="BindMoniker"/>
+<MSHelp:Keyword Index="A" Term="cerefBindMoniker"/>
+<MSHelp:Keyword Index="K" Term="BindMoniker"/>
+<MSHelp:Keyword Index="A" Term="cerefBindMoniker"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747875">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefbindmoniker"></A>BindMoniker</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function locates an object by means of its moniker, activates the object if it is inactive, and retrieves a pointer to the specified interface on that object.</P>
+
+<PRE class="syntax"><B>HRESULT BindMoniker(</B>
+<B>LPMONIKER </B><I>pmk</I><B>,</B>
+<B>DWORD </B><I>grfOpt</I><B>,</B>
+<B>REFIID </B><I>iidResult</I><B>,</B>
+<B>LPVOID FAR *</B><I>ppvResult</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pmk</I></DT>
+
+<DD>[in] Pointer to the object's moniker.</dd>
+
+<DT><I>grfOpt</I></DT>
+
+<DD>[in] Reserved for future use; must be zero.</dd>
+
+<DT><I>iidResult</I></DT>
+
+<DD>[in] Interface identifier to be used to communicate with the object.</dd>
+
+<DT><I>ppvResult</I></DT>
+
+<DD>[out] Address of pointer variable that receives the interface pointer requested in <I>iidResult</I>. Upon successful return, *<I>ppvResult</I> contains the requested interface pointer. If an error occurs, *<I>ppvResult</I> is NULL. If the call is successful, the caller is responsible for releasing the pointer with a call to the object's <A HREF="cerefiunknownrelease.htm">IUnknown::Release</A>. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The object was located and activated, if necessary, and that a pointer to the requested interface was returned.</dd>
+
+<DT>MK_E_NOOBJECT</DT>
+
+<DD>The object that the moniker object identified could not be found. </dd>
+</DL>
+
+<P>This function can also return any of the error values returned by the <A HREF="cerefimonikerbindtoobject.htm">IMoniker::BindToObject</A> method.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>BindMoniker</B> is a helper function supplied as a convenient way for a client that has the moniker of an object to obtain a pointer to one of its interfaces. The <B>BindMoniker</B> function packages the following calls.</P>
+
+<PRE class="code">CreateBindCtx(0, &amp;pbc); 
+pmk-&gt;BindToObject(pbc, NULL, riid, ppvObj); </PRE>
+
+<P><A HREF="cerefcreatebindctx.htm">CreateBindCtx</A> creates a bind context object that supports the system implementation of <B>IBindContext</B>. The <I>pmk</I> parameter is actually a pointer to the <A HREF="cerefimonikeriunknown.htm">IMoniker</A> implementation on a moniker object. This implementation's <A HREF="cerefimonikerbindtoobject.htm">BindToObject</A> method supplies the pointer to the requested interface pointer.</P>
+
+<P>If you have several monikers to bind in quick succession, and if you know that those monikers will activate the same object, it may be more efficient to call the <B>IMoniker::BindToObject</B> method directly, which allows you to use the same bind context object for all the monikers. See the <B>IBindCtx</B> interface for more information.</P>
+
+<P>Container applications that allow their documents to contain linked objects are a special client that generally does not make direct calls to <B>IMoniker</B> methods. Instead, the client manipulates the linked objects through the <B>IOleLink</B> interface. The default handler implements this interface and calls the appropriate <B>IMoniker</B> methods as needed. </P>
+
+<P>To determine whether the platform supports this function, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>Objbase.h</TD>
+<TD width=20%>Ole32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefcreatebindctx.htm">CreateBindCtx</A>, <A HREF="cerefimonikerbindtoobject.htm">IMoniker::BindToObject</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;BindMoniker&nbsp;(cerefbindmoniker.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

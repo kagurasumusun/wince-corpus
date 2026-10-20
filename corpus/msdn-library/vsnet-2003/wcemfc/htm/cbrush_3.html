@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBrush::CreateBrushIndirect</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cbrush_createbrushindirect"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cbrush_createbrushindirect"></A>CBrush::CreateBrushIndirect</H1>
+
+<P>This method initializes a brush with a style, color, and pattern specified in a <B>LOGBRUSH</B> structure. You can select the brush as the current brush for any device context. </P>
+
+<PRE class=syntax><B>BOOL CreateBrushIndirect(
+LPLOGBRUSH </B><I>lpLogBrush</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpLogBrush</I></DT>
+
+<DD>Points to a <B>LOGBRUSH</B> structure that contains information about the brush.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>A brush created using a monochrome (one plane, one bit per pixel) bitmap is drawn using the current text and background colors. Pixels represented by a bit set to zero is drawn with the current text color. Pixels represented by a bit set to one is drawn with the current background color.</P>
+
+<P>Only the following values are supported for the <I>lbStyle</I> member in the <B>LOGBRUSH</B> structure referenced by the <I>lpLogBrush</I> parameter:
+
+<UL type=disc>
+	<LI>BS_SOLID</LI>
+
+	<LI>BS_DIBPATTERNPT</LI>
+
+	<LI>NULL_BRUSH</LI>
+</UL>
+
+<H4>Example</H4>
+
+<PRE>// Initialize a LOGBRUSH structure.
+LOGBRUSH logBrush;
+logBrush.lbStyle = BS_HATCHED;
+logBrush.lbColor = RGB(0, 192, 192);
+logBrush.lbHatch = HS_CROSS;
+
+// Declare an uninitialized CBrush
+CBrush brush;
+// and initialize it with the LOGBRUSH.
+brush.CreateBrushIndirect(&amp;logBrush);
+
+// Select the brush, and perhaps a pen into
+// the device context.
+CBrush* pOldBrush = (CBrush*)pDC-&gt;SelectObject(&amp;brush);
+CPen* pOldPen = (CPen*)pDC-&gt;SelectStockObject(BLACK_PEN);
+
+// Have fun!
+pDC-&gt;Pie(CRect(100, 100, 300, 300), CPoint(0, 0), CPoint(50, 200));
+
+// Restore the original device context objects.
+pDC-&gt;SelectObject(pOldBrush);
+pDC-&gt;SelectObject(pOldPen);
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cbrush_4.htm"><B>CBrush::CreateDIBPatternBrush</B></A>, <A HREF="cbrush_6.htm"><B>CBrush::CreateSolidBrush</B></A>, <A HREF="cgdiob_4.htm"><B>CGdiObject::CreateStockObject</B></A>, <A HREF="cgdiob_5.htm"><B>CGdiObject::DeleteObject</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

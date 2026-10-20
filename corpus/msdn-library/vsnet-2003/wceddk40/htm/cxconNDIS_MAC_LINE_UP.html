@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_MAC_LINE_UP</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_MAC_LINE_UP"/>
+<MSHelp:RLTitle Title="NDIS_MAC_LINE_UP"/>
+<MSHelp:Keyword Index="A" Term="cxconNDIS_MAC_LINE_UP"/>
+<MSHelp:Keyword Index="K" Term="NDIS_MAC_LINE_UP"/>
+<MSHelp:Keyword Index="A" Term="cxconNDIS_MAC_LINE_UP"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690507">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconndis_mac_line_up"></A>NDIS_MAC_LINE_UP</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure contains information associated with a line-up indication made by a wide area network (WAN) network interface card (NIC) miniport.</P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_MAC_LINE_UP {</B>
+<B>ULONG </B><I>LinkSpeed</I><B>;</B>
+<B>NDIS_WAN_QUALITY </B><I>Quality</I><B>;</B>
+<B>USHORT </B><I>SendWindow</I><B>;</B>
+<B>NDIS_HANDLE </B><I>ConnectionWrapperID</I><B>;</B>
+<B>NDIS_HANDLE </B><I>NdisLinkHandle</I><B>;</B>
+<B>NDIS_HANDLE </B><I>NdisLinkContext</I><B>;</B>
+<B>} NDIS_MAC_LINE_UP, *PNDIS_MAC_LINE_UP;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>LinkSpeed</B></DT>
+
+<DD>Specifies the speed of the link, in units of 100 bits per second (BPS).</dd>
+
+<DT><B>Quality</B></DT>
+
+<DD>Specifies the quality of service (QOS) of the new line as returned when the protocol called <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A> with <A HREF="cxtskoid_wan_quality_of_service.htm">OID_WAN_QUALITY_OF_SERVICE</A>.</dd>
+
+<DT><B>SendWindow</B></DT>
+
+<DD>Specifies the number of send packets the miniport, or its NIC, can accept at a time; effectively how many <A HREF="cxrefndis_wan_packet.htm">NDIS_WAN_PACKET</A>-type send packets the WAN NIC driver queues internally. Zero indicates that the WAN protocol driver should use the value of the <B>MaxTransmit</B> member of the <A HREF="cxrefndis_wan_info.htm">NDIS_WAN_INFO</A> structure returned in response to the <A HREF="cxtskoid_wan_get_info.htm">OID_WAN_GET_INFO</A> query.</dd>
+
+<DT><B>ConnectionWrapperID</B></DT>
+
+<DD>Specifies the handle by which this link (or data channel on a link) will be known to TAPI clients. This handle must be unique, so the miniport uses the <B>htCall</B> handle supplied by NDISTAPI. Before the miniport makes the initial line-up indication that establishes such a link (or data channel), it already acquired the NDISTAPI-assigned <B>htCall</B> handle in one of the following ways:
+
+<UL type="disc">
+	<LI>For an outbound call, the driver's <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A> function saved the <B>htCall</B> member of the <A HREF="cxrefndis_tapi_make_call.htm">NDIS_TAPI_MAKE_CALL</A> structure that NDISTAPI supplied in a preceding <A HREF="cxrefoid_tapi_make_call.htm">OID_TAPI_MAKE_CALL</A> request.</li>
+
+	<LI>For an incoming call, the miniport saved the <B>htCall</B> handle that NDISTAPI returned in the <B>ulParam2</B> member of the <A HREF="cxrefndis_tapi_event.htm">NDIS_TAPI_EVENT</A> structure that the miniport passed to <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A> with <B>ulMsg</B> set to <B>LINE_NEWCALL</B>.</li>
+</UL>
+</dd>
+
+<DT><B>NdisLinkHandle</B></DT>
+
+<DD>Specifies the handle, originally supplied by the NIC driver, drivers pass down in subsequent calls, such a call to <A HREF="cxrefminiportwansend.htm">MiniportWanSend</A> to identify a particular link or to identify a particular channel on a link capable of handling more than one data stream.</dd>
+
+<DT><B>NdisLinkContext</B></DT>
+
+<DD>Specifies 0 when a WAN NIC driver calls <B>NdisMIndicateStatus</B> with this structure to establish a link. On return from <B>NdisMIndicateStatus</B>, this member contains a handle (supplied by the WAN protocol driver) useful for future calls. For example, such a call might indicate a receive for the established link.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A WAN NIC driver calls <B>NdisMIndicateStatus</B> with this type of indication in any of the following conditions:
+
+<UL type="disc">
+	<LI>When a link between a local node and a remote node in a WAN becomes active in the process of establishing the new link, the <B>MiniportQueryInformation</B> function makes this indication in the context of an <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A> request for which <I>ulSelect</I> is set to <B>LINECALLSELECT_CALL</B>.
+<P>When <B>NdisMIndicateStatus</B> returns, the miniport must save the <I>NdisLinkContext</I> handle, supplied by the WAN protocol driver, for subsequent calls to <B>NdisMIndicateStatus</B> and <B>NdisWan<I>XXX</I></B> functions affecting the just established link.
+
+<P><B>MiniportQueryInformation</B> must also use the returned <B>NdisLinkContext</B> handle as the value returned to NDISTAPI in the <B>DeviceID</B> member of the <A HREF="cxrefndis_tapi_get_id.htm">NDIS_TAPI_GET_ID</A> structure.
+
+<P>If it can handle more than one data channel on a link, a WAN NIC driver's <B>MiniportQueryInformation</B> function is called once with <B>OID_TAPI_GET_ID</B> as each such channel on the link is opened. On such a link, <B>NdisLinkContext</B> handles are channel-specific rather than link-specific.
+</li>
+
+	<LI>After such a link is established, the NIC driver makes this indication with the given <B>NdisLinkContext</B> handle if line characteristics change. For example, a miniport can make a subsequent line-up indication if the originally specified quality of the line changes.</li>
+
+	<LI>After such a link is established, the NIC driver makes this indication to dynamically change the value of the <B>SendWindow</B><I> </I>member specifying the number of outstanding sends the NIC driver accepts for its internal queue.</li>
+</UL>
+
+<P>Typically, a WAN NIC driver provides a pointer to a driver-allocated control block for each link as <B>NdisLinkHandle</B>. This handle is link-specific or, if the driver manages more than one data stream per link, data-channel-specific. In either case, a WAN NIC miniport must set up its <B>NdisLinkHandle</B> member at the first <B>NDIS_MAC_LINE_UP</B> indication that the miniport makes for each link or data channel.</P>
+
+<P>After the WAN protocol driver has submitted the number of packets specified in the <B>SendWindow</B> member to the <B>MiniportWanSend</B> function, the WAN protocol driver holds incoming send packets queued until the miniport returns a completed send packet or calls <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A> with a packet for which it previously returned an NDIS_STATUS_PENDING status, whichever occurs first. Subsequent <B>NDIS_MAC_LINE_UP</B> indications can be used if the NIC driver needs to change the <I>SendWindow</I> value dynamically.</P>
+
+<P>Whenever subsequent <B>NDIS_MAC_LINE_UP</B> indications are made, whether to change the <I>SendWindow</I> value or for changes in line characteristics, the <B>NdisLinkHandle</B> member must be filled with the value set in the driver's initial line-up call to <B>NdisMIndicateStatus</B> for the same link.</P>
+
+<P>The WAN protocol driver supplies a unique handle in the <B>NdisLinkContext</B> member of every initial <B>NDIS_MAC_LINE_UP</B> indication that establishes a new link or channel. The miniport must supply the given <B>NdisLinkContext</B> handle when it makes any subsequent <B>NDIS_MAC_LINE_UP</B>, <A HREF="cxconndis_mac_line_down.htm">NDIS_MAC_LINE_DOWN</A>, and <A HREF="cxrefndis_mac_fragment.htm">NDIS_MAC_FRAGMENT</A> indications for the same link or channel.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndiswan.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A>, <A HREF="cxrefminiportwansend.htm">MiniportWanSend</A>, <A HREF="cxrefndis_mac_fragment.htm">NDIS_MAC_FRAGMENT</A>, <A HREF="cxconndis_mac_line_down.htm">NDIS_MAC_LINE_DOWN</A>, <A HREF="cxrefndis_tapi_event.htm">NDIS_TAPI_EVENT</A>, <A HREF="cxrefndis_tapi_make_call.htm">NDIS_TAPI_MAKE_CALL</A>, <A HREF="cxrefndis_wan_info.htm">NDIS_WAN_INFO</A>, <A HREF="cxrefndis_wan_packet.htm">NDIS_WAN_PACKET</A>, <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A>, <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A>, <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A>, <A HREF="cxtskoid_gen_link_speed.htm">OID_GEN_LINK_SPEED</A>, <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A>, <A HREF="cxrefoid_tapi_make_call.htm">OID_TAPI_MAKE_CALL</A>, <A HREF="cxtskoid_wan_get_info.htm">OID_WAN_GET_INFO</A>, <A HREF="cxtskoid_wan_quality_of_service.htm">OID_WAN_QUALITY_OF_SERVICE</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_MAC_LINE_UP&nbsp;(cxconndis_mac_line_up.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

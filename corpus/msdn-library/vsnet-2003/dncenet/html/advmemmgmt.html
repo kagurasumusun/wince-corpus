@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows CE .NET Advanced Memory Management</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows CE .NET Advanced Memory Management"/>
+<MSHelp:RLTitle Title="Windows CE .NET Advanced Memory Management"/>
+<MSHelp:Keyword Index="A" Term="advmemmgmt"/>
+<MSHelp:Keyword Index="K" Term="Pocket PC 2002, Windows CE memory management"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, memory management"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 3.0, memory management"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenet"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="Win32API"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbWin32API"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn how Windows CE manages memory. This document includes a section dedicated to Pocket PC 2002 development and DLLs."><meta name="keywords" content="Windows CE .NET, Windows CE 3.0, Pocket PC 2002, advanced memory management"><META name="rtfFileName" content="advmemmgmt.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Douglas Boling">
+<META NAME="Date" CONTENT="2002-08-23">
+<META NAME="msdnID" CONTENT="_835631">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="advmemmgmt"></A>Windows CE .NET Advanced Memory Management</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Douglas Boling, Windows Embedded MVP<BR>
+Boling Consulting</P>
+
+<P>August 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Windows CE 3.0<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Pocket PC 2002</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#advmemmgmt_topic1">Abstract</A> <BR>
+<A HREF="#advmemmgmt_topic2">Living Within the Box</A> <BR>
+<A HREF="#advmemmgmt_topic3">DLL Load Problem</A></P>
+
+<H2 class="dtH1"><A NAME="advmemmgmt_topic1"></A>Abstract</H2>
+
+<P>One of the advantages of Microsoft&#174; Windows&#174;<CODE>&nbsp;</CODE>CE is its Microsoft Win32&#174; application programming interface (API) support. The hundreds of thousands of Windows programmers can leverage their knowledge of the Win32 API and MFC to move to Windows&nbsp;CE with relatively little difficulty. Windows&nbsp;CE can implement a subset of the Win32 API, but programmers should never forget that Windows&nbsp;CE is a completely different operating system from Windows&nbsp;XP with different requirements and a different implementation. Knowing how Windows&nbsp;CE implements its Win32 compatibility can make all the difference when designing applications or diagnosing problems.</P>
+
+<P>Memory management is one of the places in which the difference in the implementation between Windows&nbsp;CE and Windows&nbsp;XP is most apparent. Although Windows&nbsp;CE supports almost every Win32 memory management function, with the exception of deprecated global heap functions the implementation of these memory management APIs is completely different. These differences can hinder those unfamiliar with the subtle differences between Windows&nbsp;CE and the desktop versions of Windows. To understand where these problems are located you must first understand how Windows&nbsp;CE manages memory.</P>
+
+<H3 class="dtH1">System Memory Map</H3>
+
+<P>Both Windows&nbsp;XP and Windows&nbsp;CE are 32 bit operating systems, and as such support a 4-gigabyte (GB) virtual address space. Windows&nbsp;XP divides the address space into two 2 GB areas. The top half of the address space is reserved for the system. The bottom 2 GB of the address space is replicated for each running application.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig01.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. The Windows&nbsp;XP virtual memory space</B></P>
+
+<P>The virtual address space of Windows&nbsp;CE is at first glance, organized in a similar fashion with an area reserved for the system and replicated application spaces. Figure 2 shows the Windows&nbsp;CE address space. In this case the top 2 gigabytes (GB) of the address space are also reserved by the system. The lower half of the address space is divided into many regions. The majority of this area, almost half of the space, is defined as the Large Memory Area. This area is used to allocate large blocks of memory space typically used for memory-mapped files.</P>
+
+<P>Below the Large Memory Area is another large area, referred to in this paper as <I>reserved</I>. Below the reserved area, at the extreme low end of the memory space, is a 64-megabyte (MB) area. This 64 MB area, more precisely the lowest 32 MB of the area, is replicated for each running application.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig02.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. The Windows&nbsp;CE virtual memory space</B></P>
+
+<H3 class="dtH1">Windows&nbsp;CE Application Memory Map</H3>
+
+<P>The lowest 64 MB of the virtual address space is where Windows&nbsp;CE applications are. Figure 3 shows this application virtual address space. The application code is loaded starting at virtual address 0x10000, like it is in Windows&nbsp;XP applications. When the application is launched, enough space for all the code is reserved in the address space. The actual code is then demand paged into the address space as it is needed.</P>
+
+<P>Above the area reserved for the code, pages are reserved for the read-only and read/write static data areas. In addition, regions are reserved for the local heap and for a stack for each thread running in the application. The size of the region reserved for each stack is fixed when the thread is launched. The actual RAM is only committed as the stack grows. The heap, on the other hand, reserves an area that can be grown as necessary as blocks of RAM are allocated in the heap.</P>
+
+<P>When execute in place (XIP) DLLs are loaded, they are loaded from the top of the 64 MB space down. Each XIP DLL is based (positioned in the address space) when the ROM is created. When a non XIP DLL is loaded, it is positioned below the 32 MB boundary. Non-XIP DLLs, also called RAM-based DLLs, are those that are loaded from the object store, decompressed from ROM or loaded from an external file system such as a Compact Flash card. The upper 32 MB of the applications virtual memory space is only used for XIP DLLs.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig03.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 3. A Windows&nbsp;CE .NET application virtual memory space</B></P>
+
+<P>Any additional memory allocated by the application by either creating separate heaps or by directly calling the VirtualAlloc API is allocated from the bottom up with the system finding the first free region that is large enough to satisfy the allocation.</P>
+
+<H2 class="dtH1"><A NAME="advmemmgmt_topic2"></A>Living Within the Box</H2>
+
+<P>Although one limiting factor of a Windows&nbsp;CE application is the amount of RAM available to the application, another major limitation is the application's relatively small 32 MB virtual address space. Although XIP DLLs are loaded above the 32 MB space, all other memory allocations and any RAM-based DLLs all must fit in the 32 MB memory space of the application. This 32 MB "box" is not as much a problem for the Windows&nbsp;CE programmer as it is a challenge to be overcome.</P>
+
+<P>To understand how this seeming large memory space is constraining, you must understand the operation of the VirtualAlloc API. VirtualAlloc is the most fundamental memory allocation call in any Microsoft Win32 operating system. It allocates memory at the page level; the page being the smallest unit of memory that can be allocated or freed by the CPU. The page size of a Windows&nbsp;CE .NET CPU is either 1024 or 4096 bytes depending on the CPU. The 4 KB page size is the most widely used.</P>
+
+<P>The VirtualAlloc call allocates memory in two steps. First, a region of the virtual memory space is reserved. This reservation does not consume any RAM; it simply prevents a portion of the virtual address space from being used for other reasons. After the memory space is reserved, portions or the entire region can be <I>committed</I>, which maps actual physical memory into the reserved region. The VirtualAlloc function is used for both reserving memory space and committing memory. The prototype for the VirtualAlloc function is shown below.</P>
+
+<PRE class="code">LPVOID VirtualAlloc (LPVOID lpAddress, DWORD dwSize,
+                     DWORD flAllocationType,
+                     DWORD flProtect);
+</PRE>
+
+<P>The first parameter to <I>VirtualAlloc</I> is the virtual address of the region of memory to allocate. The lpAddress parameter is used to identify the previously reserved memory block when you use VirtualAlloc to commit a block of memory previously reserved. If this parameter is NULL, the system determines where to allocate the memory region, rounded to a 64 KB boundary. The second parameter is <I>dwSize</I>, the size of the region to allocate or reserve. Because this parameter is specified in bytes, not pages, the system rounds the requested size up to the next page boundary.</P>
+
+<P>The <I>flAllocationType</I> parameter specifies the type of allocation. You can specify a combination of the following flags: MEM_COMMIT, MEM_AUTO_COMMIT and MEM_RESERVE. The MEM_COMMIT flag allocates the memory to be used by the program. MEM_RESERVE reserves the virtual address space to be later committed. Reserved pages cannot be accessed until another call is made to <I>VirtualAlloc</I> specifying the region and using the MEM_COMMIT flag. The MEM_AUTO_COMMIT flag is unique to Windows&nbsp;CE and is quite handy but not a subject for this article.</P>
+
+<P>Therefore, to use VirtualAlloc to allocate usable RAM, an application must either call VirtualAlloc twice, once to reserve memory space and again to commit the physical RAM, or call it once, combining both the MEM_RESERVE and MEM_COMMIT flags in the <I>flAllocationType</I> parameter.</P>
+
+<P>Combining the reserve and commit flags uses less code, and is quicker and simpler. This technique is used often in Windows&nbsp;XP applications but is not a good idea in Windows&nbsp;CE applications. The problem is illustrated with the following code fragment.</P>
+
+<PRE class="code">INT i;
+PVOID pMem[512];
+
+for (i = 0; i &lt; 512; i++) {
+   pMem[i] = VirtualAlloc (0, PAGE_SIZE, MEM_RESERVE | MEM_COMMIT,
+                           PAGE_READWRITE);
+}
+</PRE>
+
+<P>This code fragment seems harmless. It allocates 512 blocks of memory each 1 page in size. The problem is that on a Windows&nbsp;CE system this code will always fail, even on a system with megabytes of free RAM. The problem is how Win32 operating systems reserve regions of memory.</P>
+
+<P>When an area of virtual memory space is reserved on any Win32 operating system, including Windows&nbsp;CE .NET, it aligns the reserved region on a 64kilobyte boundary. Thus, the fragment above attempts to reserve 512 regions each aligned on a 64 KB boundary. The problem with Windows&nbsp;CE applications is that they must be located in the confines of a 32 MB virtual memory space. This space has only 512 64 KB boundaries in the entire application memory space, and some of those are needed for the regions for the application code, local heap, stack, and for each DLL loaded by the application. Typically, the code fragment above will fail after approximately 470 calls to VirtualAlloc.</P>
+
+<P>The solution to the above problem is to first reserve a region large enough for the total allocation, and then commit the RAM as needed as shown below.</P>
+
+<PRE class="code">INT i;
+PVOID pBase, pMem[512];
+
+pBase = VirtualAlloc (0, 512*PAGE_SIZE, MEM_RESERVE, PAGE_READWRITE);
+
+for (i = 0; i &lt; 512; i++) {
+   pMem[i] = VirtualAlloc (pBase + (i * PAGE_SIZE), PAGE_SIZE,
+                           MEM_COMMIT, PAGE_READWRITE);
+}
+</PRE>
+
+<P>The key to avoiding this problem is knowing about it. This is only one of a number of places where the issue of only 512 regions in a Windows&nbsp;CE application's address space impacts the application.</P>
+
+<H3 class="dtH1">Allocating Large Memory Blocks</H3>
+
+<P>Another issue with living within the 32 MB address space of a Windows&nbsp;CE .NET application is how to allocate huge blocks of memory. If an application needs a block of 8, 16, or 32 megabytes of RAM for a specific need, how can it allocate this memory when the entire address space of the application is limited to 32 MB? The answer is to apply a fix that was first used in earlier versions of Windows&nbsp;CE .NET for video drivers. It works out that if Windows&nbsp;CE .NET detects a call to <B>VirtualAlloc</B> that reserves address space of larger than 2 MB, the address space is not reserved in the 32 MB box. Instead, the block is reserved in the Large Memory Area that is positioned in the global memory space just below the 2 GB system reserved space.</P>
+
+<P>When the memory space has been reserved, the application can commit specific pages within the reserved space with calls to VirtualAlloc. This allows huge memory blocks to be available to the application, or driver, even though it lives within the constraints of the 32 MB box. The code below shows a simple allocation of a 64 MB block, and then commits one page of the reserved area.</P>
+
+<PRE class="code">   PVOID ptrVirt, ptrMem;
+   ptrVirt = VirtualAlloc (0, 1024 * 1024 * 64, MEM_RESERVE,
+                        PAGE_NOACCESS);
+   if (!ptrVirt) return 0;
+
+   ptrMem = VirtualAlloc ((PVOID)((int)ptrVirt+4096),
+                          4096, MEM_COMMIT, PAGE_READWRITE);
+   if (!ptrMem) {
+      VirtualFree (ptr, 0, MEM_RELEASE);
+      return 0;
+   }
+   return ptrMem;
+</PRE>
+
+<P>The preceding code also shows one of the features of dealing directly with the virtual memory API. You can create large sparse arrays without consuming large amounts of RAM. In the code above, the 64 MB region reserved does not consume any physical RAM. In this example, the only RAM consumed is one page, 4096 bytes, when the page is committed with the second call to VirtualAlloc.</P>
+
+<H2 class="dtH1"><A NAME="advmemmgmt_topic3"></A>DLL Load Problem</H2>
+
+<P>There are currently a large number of Windows&nbsp;CE programmers that are programming on the Pocket PC 2002. Despite being fixed by a change to the Windows&nbsp;CE .NET memory architecture, there is a significant problem that is impacting Pocket PC 2002 programmers concerning the loading of DLLs by applications. To understand this problem, you first must understand one of the major differences between how Windows&nbsp;CE .NET differs from Windows&nbsp;CE 3.0 and how both versions of Windows&nbsp;CE load and manage DLLs.</P>
+
+<P>One of the new features of Windows&nbsp;CE .NET is the expansion of an application's virtual address space from 32 MB, in earlier versions of Windows&nbsp;CE, to 64 MB. The upper 32 MB of the virtual space that is available for XIP DLLs is not available in Windows&nbsp;CE 3.0. Because of this, applications running on Windows&nbsp;CE 3.0-based systems must load their XIP DLLs, their code and all their data into a 32 MB virtual address space. Figure 4 shows the application memory space of a Windows&nbsp;CE 3.0 application. A diagram of the Windows&nbsp;CE 3.0 application memory space is shown in Figure 4.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig04.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 4. A Windows&nbsp;CE 3.0 application virtual memory space</B></P>
+
+<P>Because the Pocket PC 2002 is based on Windows&nbsp;CE 3.0, this limitation of the virtual memory space applies to applications running on that platform.</P>
+
+<H3 class="dtH1">DLL Loading</H3>
+
+<P>The technique that Windows&nbsp;CE uses to load DLLs is the same for Windows&nbsp;CE .NET in addition to earlier versions of Windows&nbsp;CE with the exception of the extra 32 MB of space on Windows&nbsp;CE .NET where XIP DLLs are loaded.</P>
+
+<P>When a request is made to load a DLL the kernel first checks to see if the DLL has been previously loaded by another application, if not, and the DLL is not an XIP DLL, the kernel uses a modified top-down search to find the first available space in the 32 MB virtual memory map. The search is considered to be modified because the kernel avoids any address that is used by another DLL even if the DLL is not loaded by the current process. This search technique ensures that every DLL in the system is loaded at a unique, non-overlapping address.</P>
+
+<P>The unique address is necessary because if a DLL is loaded by more than one process, it must be located at the same virtual address in all processes. By loading different DLLs each at a unique address, the kernel ensures that if an application wants to load a DLL previously loaded by another process, the virtual address where the DLL is mapped in the other process is available in the process requesting the DLL. Figure 5 shows a diagram of three processes each loading a series of DLLs. In this figure, DLL A is loaded by all three processes at the same address. Process 2 loads DLL C, which is lower in the address space than DLL B and DLL A, which were loaded by Process 1. Process C later loads DLL A and its own DLL D. Notice that in each of the processes the same DLLs are loaded at identical addresses while each different DLL is loaded at a unique address.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig05.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 5. Three processes loading a series of DLLs</B></P>
+
+<P>Now consider what to do if you encounter a potential problem. Suppose Process 2 loaded DLL C that was quite large as shown in Figure 6. Note that process 3 has the bad luck of being both a large .exe file and loading a DLL after process 2 had loaded its rather immense DLL C. Clearly, process 3 is close to trouble if it attempted to load any more DLLs that had not been loaded already by other processes. This is a somewhat contrived example because the size of DLL C would have to be incredibly large, or Process 2 would have to load a large number of DLLs for this problem to occur naturally.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig06.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 6. Three processes loading a series of DLLs with Process 2 loading a huge DLL</B></P>
+
+<P>From general loading of DLLs, now it is time to add the complication of dealing with XIP and non-XIP DLLs. Each execute in place DLL is based at a unique address when the ROM image is created by the OEM. This way, all XIP DLLs can be loaded without any conflicts among them. Because they are XIP, the ROM containing the DLL code can be mapped directly into the virtual address space of any application that requests it. XIP DLLs cannot be rebased at another address when they are loaded by a process, because changing the base would involve modifying the read-only code.</P>
+
+<P>When the kernel looks for free virtual addresses for non-XIP DLLs, it begins its search for a free virtual address below the lowest based XIP DLL. This is not the lowest based XIP DLL your application has loaded, rather it is the lowest based XIP DLL in the entire system whether it is loaded by any applications or not. Here again this technique insures that every DLL currently loaded can be loaded by other processes. Although this system works quite well, there are times when a DLL won't load due to the unique implementation of Windows&nbsp;CE .NET on the Pocket PC 2002.</P>
+
+<P>The implementation of Windows&nbsp;CE .NET on the Pocket PC 2002 takes advantage of a feature in Windows&nbsp;CE 3.0 that allows for more than one ROM to be used on a device. This feature allows more than one ROM to be used in a system even if they do not have contiguous physical addresses.</P>
+
+<P>As mentioned above, DLLs require special processing to be XIP. Because the basing of a DLL requires changing the code of the DLL, a DLL has to be based when the image of a ROM is created. When the first ROM is created, the ROM creation tool bases each DLL so that it does not overlap any other DLL in the ROM.</P>
+
+<P>The use of multiple XIP regions meant that the DLL load issue needed to be revisited by the kernel designers. To ensure that the XIP DLLs never overlap on a multiple XIP region system, the DLLs in the second ROM had to be based at a virtual address lower than the lowest DLL of the first ROM image. If other ROMs were used, the DLLs in those XIP regions also had to be based lower than the previous ROM.</P>
+
+<P>The use of multiple ROM images is handy for other reasons. If an OEM or Microsoft wanted to update part of a Windows&nbsp;CE image, they could send out an update for a specific ROM without having to update the entire system. To insure that an update of one ROM does not require changes to another, Microsoft encourages that the DLLs based in a lower image be based not at the address of the lowest DLL in the previous image but at a lower address to artificially introduce a virtual memory gap between set of DLLs and another.</P>
+
+<P>The developers inside Microsoft responsible for the Pocket PC 2002, which is based on Windows&nbsp;CE 3.0, took advantage of multiple XIP regions to the extreme. Most Pocket PC implementations have five or more XIP regions. The problem is that the gaps between the regions are far too large. The lowest based XIP DLL in a Pocket PC 2002 image is typically based below 0x0100000. Because Windows&nbsp;CE places RAM based DLLs below the lowest XIP DLL, the space available for RAM based DLLs, the application code, its heaps and stacks is not limited to the 32 MB virtual address space but the space below the lowest XIP DLL, which is less than 16 megabytes.</P>
+
+<P>In Figure 7, the problem of the Pocket PC 2002 is illustrated. Notice that the area in the virtual memory space for the XIP DLLs is rather large. In reality, this figure is quite conservative because it does not show the XIP region taking over half the virtual memory space, which it typically does on a Pocket PC 2002. Notice that the loading of the RAM-based DLLs; A, B, C, and D takes place much lower in the virtual address space.</P>
+
+<P class="fig"><CODE><IMG SRC="advmemmgmtfig07.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 7. DLL loading on the Pocket PC 2002 where a large part of the virtual address space is used by XIP DLLs</B></P>
+
+<P>With corporate applications processing vast amounts of data, corporate developers are forced to use large databases in their Windows&nbsp;CE applications. Usually the database engine is implemented as a DLL and it is usually quite large. In the example above, the database DLL is the troublemaking DLL C. With the combination of less than 16 megabytes of virtual memory space available for a Pocket PC 2002 application and the requirements of large, RAM-based DLLs, many developers are discovering that their applications will not run due to lack of space&#151;not RAM, but virtual memory space.</P>
+
+<H3 class="dtH1">Combining DLLs</H3>
+
+<P>Various techniques are available to alleviate this problem on the Pocket PC 2002. First, developers should reduce the number of DLLs by combining their small DLLs into larger ones. Each DLL takes up at least one 64-kilobyte region. If an application has 4 DLLs each 20 kilobytes in size, the total memory space used by the DLLs is 256 kilobytes. By combining the four DLLs, the resulting large DLL will consume only 64 kilobytes of virtual memory space&#151;the code takes up only 60 kilobytes, but the minimum footprint is 64 kilobytes. As a general rule, combine DLLs into sizes up to, but not over, multiples of 64 kilobytes. In some applications with an excessive number of small DLLs, the simple act of combining the DLLs into a few large ones will solve the DLL load problem for their application.</P>
+
+<H3 class="dtH1">Moving DLL Code into the Application</H3>
+
+<P>Another method of reducing the problem of DLLs in the Pocket PC 2002 is to move code based in DLLs into the application. Even if the code is shared among more than one process, sometimes is advantageous to duplicate the code in both processes because different processes load independently from other applications.</P>
+
+<P>At first, moving code into the application seems like it will not help&#151;the code still is in the 32 MB virtual space of the application. However, the key here is to make some a large application that doesn't need the large, RAM based DLLs and other small application that loads and uses the RAM based DLL. In this technique, the large application performs most of the business logic and small application that loads the large DLL. If the large application needs the services of the large DLL, it must use interprocess communication to have the smaller process make the call to the DLL and return the data to the large process again by using interprocess communication.</P>
+
+<H3 class="dtH1">Defining the DLL Load Order</H3>
+
+<P>When reducing the number of DLLs or relaying out the application's code isn't enough, it is time for a more radical method: manually specifying the load order of the DLLs. The load order is important because if a large DLL is loaded early, it pushes down the load address of all subsequent small DLLs. Typically, the large DLL is used by a single application. But if it is loaded early, it can impact the other application by pushing down the load address of the other applications DLLs to the point where they cannot be loaded.</P>
+
+<P>The solution is to load the small DLLs first, and then have the offending large DLL loaded later or even last. This raises the issue of how to force the load order of the DLLs. One way is to sequence the startup of the different processes in the application suite but this sometimes can be problematic.</P>
+
+<P>Another way to define the DLL load order is to write a small application that runs before the primary application that loads the RAM based DLLs in a defined order by repeatedly calling the Win32 function LoadLibrary. The DLL loader stays running for the life of the primary application and then terminates. It can even launch the primary application by calling CreateProcess and wait until the primary application terminates by blocking on the process handle returned by CreateProcess. The DLL load application does not use a lot of RAM because the loaded DLLs will all be loaded eventually by the other processes.</P>
+
+<P>All of the solutions discussed for solving the DLL load problem on the Pocket PC 2002 are hacks of one way or another. None are elegant, nor that maintainable. However, these are the solutions that developers are using to develop their products. Future releases of the Pocket PC should solve this problem, but for developers working on Pocket PC 2002 products, improvisation is the key.</P>
+
+<P>By knowing how Windows&nbsp;CE manages memory, developers can avoid pitfalls and diagnose problems more quickly. Understanding how DLLs are managed by Windows&nbsp;CE helps avoid potential problems in Pocket PC 2002 applications. Even when future releases of the Pocket PC appear that solve this problem, the millions of devices already in the field will need applications. Knowing where to look for the problem is the first step in finding, and then solving the problem.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_835631', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

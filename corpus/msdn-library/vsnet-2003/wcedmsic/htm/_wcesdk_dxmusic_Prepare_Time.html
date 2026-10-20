@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Prepare Time</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Prepare Time"/>
+<MSHelp:RLTitle Title="Prepare Time"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Prepare_Time"/>
+<MSHelp:Keyword Index="K" Term="bands%2C DirectMusic, prepare time"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, timing"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Prepare_Time"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680694">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_prepare_time"></A>Prepare Time</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>As a segment is played, the performance makes repeated calls to the segment's tracks, causing them to generate messages for the supplied time range, which is some fraction of a second. These messages are then placed in the queue behind those that were generated in previous calls. By default, about a second's worth of messages are in the queue at any given time.</P>
+
+<P>For an illustration, see <A HREF="_wcesdk_dxmusic_latency_and_bumper_time.htm">Latency and Bumper Time</A>.</P>
+
+<P>The queue is like a gas tank that is constantly being topped off by calls to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack__Play" TABINDEX="0">IDirectMusicTrack::Play</MSHelp:link>. Each time the performance calls <B>Play</B>, it calculates the end time for that call by adding the prepare time to the current time. If the current time is 10,000 milliseconds (or the equivalent in REFERENCE_TIME units) and the prepare time is the default 1000 ms, the end time is 11,000—that is, all new messages that are to play up to time 11,000 must be prepared and placed in the queue.</P>
+
+<P>The size of the queue can be changed by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SetPrepareTime" TABINDEX="0">IDirectMusicPerformance::SetPrepareTime</MSHelp:link> method, and the current size can be retrieved by using <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__GetPrepareTime" TABINDEX="0">IDirectMusicPerformance::GetPrepareTime</MSHelp:link>.</P>
+
+<P>Most applications do not need to change the default prepare time, and the process just described is not visible to the application. However, it is helpful to understand the concept of prepare time because of the DMUS_SEGF_AFTERPREPARETIME flag, which the application can pass to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__PlaySegment" TABINDEX="0">IDirectMusicPerformance::PlaySegment</MSHelp:link>.</P>
+
+<P>Normally, if you set a start time of now for the segment, the performance invalidates any messages currently in the queue. Any tracks that are still valid at this point (for example, tracks of secondary segments that continue to play despite the introduction of a new primary segment) then have to resend their messages, taking into account any changes made to the musical environment by the new segment. To avoid unnecessary processing and to ensure continuity (for example, to ensure that a long note or nonmusical DLS sound is not cut short), you can use the DMUS_SEGF_AFTERPREPARETIME flag to specify that the segment is not to start playing until all messages currently in the queue have been processed and passed to the port buffer. So, for example, if messages up to time 10,000 are in the queue and the current time is 9,000, a segment cued to play immediately starts playing just after the 10,000 ms mark.</P>
+
+<P>For more information, see <A HREF="_wcesdk_dxmusic_segment_timing.htm">Segment Timing</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Prepare%20Time&nbsp;(_wcesdk_dxmusic_prepare_time.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COM Architecture for Meta-Rendering</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COM Architecture for Meta-Rendering"/>
+<MSHelp:RLTitle Title="COM Architecture for Meta-Rendering"/>
+<MSHelp:Keyword Index="A" Term="cxconCOMArchitectureForMeta-Rendering"/>
+<MSHelp:Keyword Index="K" Term="COM, DVD-Video renderer COM architecture"/>
+<MSHelp:Keyword Index="K" Term="DVD-Video renderer, COM architecture for meta-rendering"/>
+<MSHelp:Keyword Index="K" Term="meta-rendering, DVD-Video renderer"/>
+<MSHelp:Keyword Index="A" Term="cxconCOMArchitectureForMeta-Rendering"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dvd_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759194">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconcomarchitectureformeta-rendering"></A>COM Architecture for Meta-Rendering</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The DVD playback middleware on Windows CE uses a meta-renderer COM object to instantiate the actual renderer of a DVD stream. As such, the meta-rendering framework is not restricted for the sole use of DVD. The meta-rendering framework can also be used to support multiple media data types, middleware and application software by the same or multiple renderers. However, its use in Windows CE is limited to the DVD-Video API.</P>
+
+<P>The meta-renderer is a well-known object in the system. This means that any component can instantiate in-proc and query for the interface it needs to render a particular type of multimedia content. Such an interface is called a primary playback control or primary rendering interface. It is primary in the sense that two multimedia data types are considered identical if they can be rendered using exactly the same (with the same GUID) primary rendering interface. This means that the primary rendering interface and its GUIDE uniquely represents the multimedia data type in the meta-rendering environment.</P>
+
+<P>For example, the DVD-Video navigator middleware on Windows CE required the <B>IDVDRenderer</B> interface provided to it to be able to function as a complete navigation and playback subsystem. This means that <B>IDVDRenderer</B> is a primary rendering interfaced used by the DVD-Video navigator on Windows CE. To acquire access to the DVD rendering functionality, the navigator simply creates an instance of the meta-renderer and queries it for the <B>IDVDRenderer</B> interface.</P>
+
+<P>The function of the meta-renderer is to locate COM objects that are implementing the requested interface in the system. The meta-renderer will then instantiate and properly initialize it, provide all necessary support to it, and return a fully functional interface to the requesting component. This means that aside from the primary rendering interface, the renderer often has to support other interfaces that serve the purposes of initialization and other secondary functions including data transfer.</P>
+
+<P>The current version of the meta-renderer object required that every renderer implement the <B>IBitstreamProcessor</B> interface, which is used to initialize the renderer object. <B>IBitstreamProcessor</B> in turn makes use of the <B>IDMAChannel</B> interface to represent low level data transfer facilities of the renderer.</P>
+
+<P>On successful return from QI to the meta-renderer, a fully functional and initialized primary playback control interface is returned together with a set of data ports to be used for data streaming into the renderer.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;In this schema, any renderer can choose to implement and expose an arbitrary number of primary rendering interfaces representing multiple media types, rendering capabilities, and the needs of various middleware or application software.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconuseofcomaggregationinmeta-rendering.htm">Use of COM Aggregation in Meta-Rendering</A></P>
+
+<P><A HREF="cxconmeta-rendererprotocol.htm">Meta-Renderer Protocol</A></P>
+
+<P><A HREF="cxcondvd-videorendererregistrysettings.htm">DVD-Video Renderer Registry Settings</A></P>
+
+<P><A HREF="_wceddk_directdvd_renderer_interfaces.htm">DVD-Video Renderer Interfaces</A></P>
+
+<P><A HREF="cxcondvd-videorendererimplementationguide.htm">DVD-Video Renderer Implementation Guide</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;COM%20Architecture%20for%20Meta-Rendering&nbsp;(cxconcomarchitectureformeta-rendering.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

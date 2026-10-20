@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDocument::OnNewDocument</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CDocument::OnNewDocument"/>
+<MSHelp:RLTitle Title="CDocument::OnNewDocument"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDocumentcolcolOnNewDocument"/>
+<MSHelp:Keyword Index="K" Term="OnNewDocument method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDocumentcolcolOnNewDocument"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cdocumnt.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710245">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcdocumentcolcolonnewdocument"></A>CDocument::OnNewDocument</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework as part of the <B>File New</B> command. The default implementation of this method calls the <B>DeleteContents</B> method to ensure that the document is empty and then marks the new document as clean. </P>
+
+<P>Override this method to initialize the data structure for a new document. You should call the base class implementation of this method from your override.</P>
+
+<P>If the user chooses the <B>File New</B> command in an SDI application, the framework uses this function to reinitialize the existing document, rather than creating a new one. If the user chooses <B>File New</B> in a multiple document interface (MDI) application, the framework creates a new document each time and then calls this function to initialize it. You must place your initialization code in this function instead of in the constructor for the <B>File New</B> command to be effective in SDI applications.</P>
+
+<PRE class="syntax"><B>virtual BOOL OnNewDocument( );</B><I> </I></PRE>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if the document was successfully initialized; otherwise, it is zero.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// The following examples illustrate alternative methods to
+// initialize a document object.
+
+// Method 1: In an MDI application, the simplest place to do 
+// initialization is in the document constructor. The framework 
+// always creates a new document object for File New or File Open.
+
+CMyDoc::CMyDoc()
+{
+   // Do initialization of MDI document here.
+   // ...
+}
+
+// Method 2: In an SDI or MDI application, do all initialization 
+// in an override of OnNewDocument, if you are certain the initialization
+// is effectively saved upon File Save and fully restored upon File Open,
+// through serialization.
+
+BOOL CMyDoc::OnNewDocument()
+{
+   if (!CDocument::OnNewDocument())
+      return FALSE;
+
+   // Do initialization of new document here.
+
+   return TRUE;
+}
+
+// Method 3: If the initialization of your document is not
+// effectively saved and restored by serialization during File Save
+// and File Open, then implement the initialization in single
+// function, named InitMyDocument in this example. Call the
+// shared initialization function from overrides of both
+// OnNewDocument and OnOpenDocument.
+
+BOOL CMyDoc::OnNewDocument()
+{
+   if (!CDocument::OnNewDocument())
+      return FALSE;
+
+   InitMyDocument(); // Call your shared initialization function.
+
+   // If your new document object requires additional initialization
+   // not necessary when the document is deserialized through File Open,
+   // then perform the additional initialization here.
+
+   return TRUE;
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcdocumentcolcolcdocument.htm"><B>CDocument::CDocument</B></A>, <A HREF="aflrfcdocumentcolcoldeletecontents.htm"><B>CDocument::DeleteContents</B></A>, <A HREF="aflrfcdocumentcolcolonclosedocument.htm"><B>CDocument::OnCloseDocument</B></A>, <A HREF="aflrfcdocumentcolcolonopendocument.htm"><B>CDocument::OnOpenDocument</B></A>, <A HREF="aflrfcdocumentcolcolonsavedocument.htm"><B>CDocument::OnSaveDocument</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710245', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

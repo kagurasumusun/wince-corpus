@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBitmapButton</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cbitmapbutton"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cbitmapbutton"></A>CBitmapButton</H1>
+
+<P>This class creates push button controls labeled with bitmapped images instead of text. </P>
+
+<H4>Remarks</H4>
+
+<P><B>CBitmapButton</B> objects contain up to four bitmaps, which contain images for the different states a button can assume: up or normal, down or selected, focused, and disabled. Only the first bitmap is required; the others are optional.</P>
+
+<P>Bitmap-button images include the border around the image as well as the image itself. The border typically plays a part in showing the state of the button. For example, the bitmap for the focused state usually is like the one for the up state but with a dashed rectangle inset from the border or a thick solid line at the border. The bitmap for the disabled state usually resembles the one for the up state but has lower contrast (like a dimmed or grayed menu selection).</P>
+
+<P>These bitmaps can be of any size, but all are treated as if they were the same size as the bitmap for the up state.</P>
+
+<P>Various applications demand different combinations of bitmap images:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=16%>Up</TH>
+<TH width=17%>Down</TH>
+<TH width=17%>Focused</TH>
+<TH width=17%>Disabled</TH>
+<TH width=33%>Application</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>&times;</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=33%>Bitmap</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>&times;</TD>
+<TD width=17%>&times;</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=33%>Button without WS_TABSTOP style</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>&times;</TD>
+<TD width=17%>&times;</TD>
+<TD width=17%>&times;</TD>
+<TD width=17%>&times;</TD>
+<TD width=33%>Dialog button with all states</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>&times;</TD>
+<TD width=17%>&times;</TD>
+<TD width=17%>&times;</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=33%>Dialog button with WS_TABSTOP style</TD>
+</TR>
+</TABLE><BR>
+
+<P>When creating a bitmap-button control, set the BS_OWNERDRAW style to specify that the button is owner-drawn. This causes Windows CE to send the WM_MEASUREITEM and WM_DRAWITEM messages for the button; the framework handles these messages and manages the appearance of the button.</P>
+
+<P><B>To create a bitmap-button control in a window’s client area</B>
+
+<OL>
+	<LI>Create one to four bitmap images for the button.</LI>
+
+	<LI>Construct the <B>CBitmapButton</B> object.</LI>
+
+	<LI>Call the <B>Create</B> function to create the Windows button control and attach it to the <B>CBitmapButton</B> object.</LI>
+
+	<LI>Call the <B>LoadBitmaps</B> method to load the bitmap resources after the bitmap button is constructed.</LI>
+</OL>
+
+<P><B>To include a bitmap-button control in a dialog box</B>
+
+<OL>
+	<LI>Create one to four bitmap images for the button.</LI>
+
+	<LI>Create a dialog template with an owner-draw button positioned where you want the bitmap button. The size of the button in the template does not matter.</LI>
+
+	<LI>Set the button caption to a value such as <B>MYIMAGE</B> and define a symbol for the button such as <B>IDC_MYIMAGE</B>.</LI>
+
+	<LI>In your application resource script, give each image created for the button an identifier constructed by appending a letter U, D, F, or X&#0151;for up, down, focused, and disabled&#0151;to the string used for the button caption in step 3. For the button caption <B>MYIMAGE</B>, for example, the identifiers would be <B>"MYIMAGEU"</B>, <B>"MYIMAGED"</B>, <B>"MYIMAGEF"</B>, and <B>"MYIMAGEX"</B>. You must specify the identifier of your bitmap within double quotes. Otherwise the resource editor assigns an integer to the resource, and MFC fails when loading the image.</LI>
+
+	<LI>In your application’s dialog class, derived from <B>CDialog</B>, add a <B>CBitmapButton</B> member object.</LI>
+
+	<LI>In the <B>OnInitDialog</B> routine of the <B>CDialog</B> object, call the <B>AutoLoad</B> function of the <B>CBitmapButton</B> object, using as parameters the control identifier of the button and the <B>CDialog</B> object, <B>this</B> pointer.</LI>
+</OL>
+
+<P>To handle Windows notification messages, such as BN_CLICKED, sent by a bitmap-button control to its parent, usually a class derived from <B>CDialog</B>, add a message-map entry and message-handler method for each message sent to the <B>CDialog</B>-derived object. The notifications sent by a <B>CBitmapButton</B> object are the same as those sent by a <B>CButton</B> object.</P>
+
+<P>The class <B>CToolBar</B> takes a different approach to bitmap buttons. </P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxext.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cbutton.htm"><B>CButton</B></A>, <A HREF="cbitmapb_3.htm"><B>CBitmapButton::AutoLoad</B></A>, <A HREF="compare_15.htm"><B>Control Classes</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

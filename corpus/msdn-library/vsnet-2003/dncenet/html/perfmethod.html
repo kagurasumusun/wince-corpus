@@ -1,0 +1,1300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Performance Test Methodologies for Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Performance Test Methodologies for Windows CE .NET"/>
+<MSHelp:RLTitle Title="Performance Test Methodologies for Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="perfmethod"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET 4.1, multimedia performance"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET 4.1, performance improvements"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET 4.1, performance tests"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET 4.1, RDP"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET 4.1, Remote Desktop Protocol"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="MM"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbMM"/>
+<MSHelp:Attr Name="Technology" Value="WinMedia"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbWinMedia"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn about performance tests and performance improvements between Windows CE .NET 4.0 and Windows CE .NET 4.1. The paper also describes the rationale behind the performance tests."><meta name="keywords" content="Windows CE .NET, Platform Builder, performance testing"><META name="rtfFileName" content="perfmethod.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Mike Hall and Jason Browne">
+<META NAME="Date" CONTENT="2002-07-30">
+<META NAME="msdnID" CONTENT="_831994">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="perfmethod"></A>Performance Test Methodologies for Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Mike Hall and Jason Browne<BR>
+Microsoft Corporation</P>
+
+<P>July 2002</P>
+
+<P>Applies To:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.1 with Platform Builder 4.1</P>
+
+<P><B>Summary: </B>Learn about performance tests and performance improvements between Windows CE .NET 4.0 and Windows CE .NET 4.1. The paper also describes the rationale behind the performance tests. (16 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#perfmethod_topic1">Introduction</A> <BR>
+<A HREF="#perfmethod_topic2">Scenario Testing</A> <BR>
+<A HREF="#perfmethod_topic3">Conclusion</A> <BR>
+<A HREF="#perfmethod_topic4">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="perfmethod_topic1"></A>Introduction</H2>
+
+<P>Each release of Microsoft&#174; Windows&#174; CE .NET typically introduces support for a range of new technologies, support for additional hardware reference boards, processors (and therefore new compilers), and new tools that can be used to aid device bring up, development, and debugging. Adding support for new technologies can potentially degrade operating system performance, therefore performance testing needs to be carried out during the development of Windows&nbsp;CE to ensure the operating system is performing as well as it has in previous releases, if not better.</P>
+
+<P>In order to ensure optimal performance of the Windows&nbsp;CE .NET operating system, it is critical that performance testing is executed regularly. Performance tests are performed at a high level to ensure that the operating system as a whole is tested. For example, the networking components may perform at near maximum speed for the networking hardware, but this does not ensure that Microsoft Internet Explorer's use of the network stack will produce optimal results. An application may not set up the stack optimally, or the use of synchronous calls within the application may impact the user experience.</P>
+
+<P>Performance testing of Windows&nbsp;CE .NET focuses on a number of user scenarios; this provides overall operating system performance results. For the purposes of this paper we will be discussing a subset of the scenario tests, focusing on Remote Desktop Protocol (RDP), Internet Explorer, and multimedia technologies.</P>
+
+<H2 class="dtH1"><A NAME="perfmethod_topic2"></A>Scenario Testing</H2>
+
+<P>Windows&nbsp;CE .NET performance tests take a two-pronged approach. In the first approach, the performance of Windows&nbsp;CE .NET 4.1 is compared with the performance of Windows&nbsp;CE .NET 4.0. The output from these tests confirms that changes to the operating system do not negatively impact operating system performance. The results do, of course, also highlight performance improvements. The second approach to performance testing is to compare the user scenarios between Windows&nbsp;CE .NET and Microsoft Windows&nbsp;XP. A number of technologies within Windows&nbsp;CE .NET are ported from the desktop, like WinInet for example. In order to compare Windows&nbsp;CE .NET performance figures with Windows&nbsp;XP, we need to run the scenario tests on hardware which is capable of running both Windows&nbsp;CE .NET and Windows&nbsp;XP operating systems. This will produce like-for-like results.</P>
+
+<P>One of the biggest issues with testing performance of an operating system is the dependency of performance results on the underlying hardware. CPU speed, memory bus speed, and graphics hardware are just some of the variables that have a major impact on performance test results. To minimize these variables, the scenario tests are run on hardware that can support both Windows&nbsp;CE .NET and Windows&nbsp;XP.</P>
+
+<P>The Windows&nbsp;CE .NET images are all configured as Release images.</P>
+
+<H3 class="dtH1">Client Device (Used as the Windows&nbsp;CE .NET and Windows&nbsp;XP Client)</H3>
+
+<P>A Microsoft Windows&nbsp;CE .NET PC-based hardware development platform (CEPC) reference platform with the following configuration is used on the client-side device in the Windows&nbsp;CE .NET and Windows&nbsp;XP scenario tests. The following list shows the hardware configuration for the client device:
+
+<UL type="disc">
+	<LI>Pentium-II 233 MHz</li>
+
+	<LI>64 MB Memory (Windows&nbsp;CE), 256 MB Memory (Windows&nbsp;XP)</li>
+
+	<LI>PCMCIA Socket LPE Ethernet card</li>
+
+	<LI>PCMCIA Cisco 802.11 Wireless card</li>
+
+	<LI>ESS1354 Audio Card</li>
+
+	<LI>Tvia5000 PCI Video Card (800 &#215; 600 &#215; 16)</li>
+</UL>
+
+<P>A PCMCIA Socket LPE Ethernet 10MB Network Interface Card (NIC) is used as the network interface card for both Windows&nbsp;CE .NET and Windows&nbsp;XP scenario tests; tests were also conducted using a PCMCIA Cisco 802.11 Wireless card. Both Windows CE .NET and Windows&nbsp;XP support the TVIA 5000. By using this graphics card we are able to use the hardware acceleration capabilities on both operating systems and test the performance of the operating system and applications with minimal impact from the graphics hardware. The TVIA 5000 graphics hardware was chosen to remove the graphics card as a bottleneck in the system. Most of the display drivers that ship with Windows&nbsp;CE .NET are supplied as samples, in source code form. This provides OEMs with the ability to develop drivers based on the Windows&nbsp;CE .NET samples that are tailored to the graphics hardware that the OEM has selected for their application.</P>
+
+<H3 class="dtH1">Server Device</H3>
+
+<P>The following list shows the server hardware configuration used for RDP, Internet Explorer, and multimedia tests:
+
+<UL type="disc">
+	<LI>1.2 Intel P3 processor </li>
+
+	<LI>512 MB memory SDram Non-ECC</li>
+
+	<LI>Nvidia GEforce 2 video card (1024 &#215; 768 &#215; 32)</li>
+
+	<LI>Asus TUV4x Socket 370 MotherBoard</li>
+
+	<LI>Apollo Pro133T Chipset</li>
+
+	<LI>CM18738 C3DX PCI sound</li>
+
+	<LI>Intel Pro 100 PCI NIC</li>
+</UL>
+
+<H3 class="dtH1">Performance Tests</H3>
+
+<P>The Windows CE .NET development team uses a dedicated performance test team to develop and execute Windows&nbsp;CE .NET performance tests. Using a dedicated test team allows tests to be run in a controlled and standardized environment and ensures that changes made to the operating system do not impact the performance of the operating system.</P>
+
+<P>The Windows&nbsp;CE .NET performance tests can be divided into two types&#151;user-scenario tests and low-level tests. The user-scenario tests are used by the performance test team to ensure that the operating system components are working well together. The low-level tests are used by feature teams to maximize the performance of each component individually. Because each feature team is most knowledgeable about the low-level attributes of their feature, the feature teams are responsible for building and running the low-level tests. This paper describes user-scenario test configuration and results.</P>
+
+<H3 class="dtH1">The User-Scenario Tests</H3>
+
+<P>Each of the scenarios described below has a test that has been specifically designed to test typical usage of the appropriate application, for example, RDP, Internet Explorer, and multimedia.</P>
+
+<P>Each test scenario requires a client device, based on the CEPC hardware platform described above, running Windows&nbsp;CE .NET 4.1, Windows&nbsp;CE .NET 4.0, or Windows&nbsp;XP; in some cases, tests were also carried out using Windows&nbsp;CE 3.0.</P>
+
+<P>The scenario tests were carried out on a private network, using only the client and server devices. The client and server were both configured to use fixed IP addresses. The following network configuration is used for RDP, Internet Explorer, and multimedia tests&#151;the server and client devices are connected through a 10 MBit Ethernet hub.</P>
+
+<P class="fig"><CODE><IMG SRC="permethod_fig1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. </B></P>
+
+<H4 class="dtH1">Remote Desktop scenario</H4>
+
+<P>The RDP tests run the RDP client and measure the time that each step in a typical RDP session takes. This includes running the RDP client, connecting, logging on, running WinBench, logging off, and disconnecting. The RDP scenario uses a PC running Windows&nbsp;XP Professional as the server. The client device consists of either a Windows&nbsp;CE .NET Webpad Enterprise configuration or Windows&nbsp;XP Professional; in both cases the client-side device uses the CEPC hardware configuration listed earlier. The server and client are connected through a 10 MB Ethernet hub. Both devices use the PCMCIA Socket LPE Ethernet 10 MB Network Interface Card (NIC) for the network connection. The RDP session is set up with 16-bit color depth and bitmap caching disabled.</P>
+
+<P>To measure RDP performance timings, we use an RDP virtual channel. There are two components to the RDP virtual channel test harness, one running on the server and the other running on the client. The server component sends a message to the client at the start of a test and again when the test is completed. The time difference between the start and end of the test is measured. A virtual channel is used because timing the server would provide inaccurate timing values; we actually want to obtain timing information when the client completes drawing operations.</P>
+
+<P>In the Terminal Services section of the Platform SDK, <MSHelp:link keywords="_win32_Virtual_Channel_Client_Registration" TABINDEX="0">Virtual Channel Client Registration</MSHelp:link> describes the process for creating a virtual channel.</P>
+
+<P>The virtual channel DLL used in RDP testing exposes a callback function that deals with the following conditions: CHANNEL_EVENT_CONNECTED, CHANNEL_EVENT_DISCONNECTED, CHANNEL_EVENT_INITIALIZED, CHANNEL_EVENT_TERMINATED, CHANNEL_EVENT_V1_CONNECTED. Results of running an RDP session can be captured using the callback function.</P>
+
+<P>The Remote Desktop scenario tests consist of the following client-side steps.</P>
+
+<P><B>Connect to Host machine (server)</B>
+
+<UL type="disc">
+	<LI>The total time from clicking <B>Connect</B> until the program is ready for user input of the password for login.</li>
+</UL>
+
+<P><B>Log in</B>
+
+<UL type="disc">
+	<LI>The total time from clicking <B>OK</B> until the system has logged in and is ready to execute applications. No special security measures will be used except for password authentication in this task.</li>
+</UL>
+
+<P><B>Run WinBench</B>
+
+<UL type="disc">
+	<LI>WinBench will be run on the server machine and the total execution time in milliseconds will be recorded.</li>
+
+	<LI>The following list shows the WinBench configuration:
+<UL type="disc">
+	<LI>[Config]</li>
+
+	<LI>Benchmark=WB99</li>
+
+	<LI>[Registration]</li>
+
+	<LI>UserName=zxcv</li>
+
+	<LI>UserOrg=zxcv</li>
+
+	<LI>SerialNumber=</li>
+
+	<LI>[Options]</li>
+
+	<LI>DemoMode=False</li>
+
+	<LI>ExitBenchmark=True</li>
+
+	<LI>SystemConfigurationCheck=False</li>
+
+	<LI>[Step1]</li>
+
+	<LI>Database=c:\ZDBENCH\RESULTS\RESULTS2001.ZTD</li>
+
+	<LI>RebootSystem=False</li>
+
+	<LI>SuiteSection=Suite1</li>
+
+	<LI>StartMessage=10,The batch mode tests will start in 10 seconds.</li>
+
+	<LI>EndMessage=10,The batch mode tests have finished.</li>
+
+	<LI>DirectDraw Tests:DirectDraw Hardware=0</li>
+
+	<LI>DirectDraw Tests:Show Test Name=Yes</li>
+
+	<LI>DirectDraw Tests:Full Screen=Yes</li>
+
+	<LI>DirectDraw Tests:Clipping Window=No</li>
+
+	<LI>DirectDraw Tests:Color Depth=8</li>
+
+	<LI>DirectDraw Tests:Screen Width=640</li>
+
+	<LI>DirectDraw Tests:Screen Height=480</li>
+
+	<LI>DirectDraw Tests:Test Type=0</li>
+
+	<LI>DirectDraw Tests:Blt Type=1</li>
+
+	<LI>DirectDraw Tests:Scaling Factor=1.0</li>
+
+	<LI>DirectDraw Tests:Source In Video=Yes</li>
+
+	<LI>DirectDraw Tests:Work In Video=Yes</li>
+
+	<LI>DirectDraw Tests:Blt Size Width=64</li>
+
+	<LI>DirectDraw Tests:Blt Size Height=64</li>
+
+	<LI>Disk Inspection Tests:CPU Utilization/Transfer Rate=4000</li>
+
+	<LI>Disk Inspection Tests:CPU Utilization/Block Size=16384</li>
+
+	<LI>Disk Inspection Tests:Transfer Rate/Bitmap Path=</li>
+
+	<LI>Disk Inspection Tests:Transfer Rate/CSV Path=</li>
+
+	<LI>Disk Inspection Tests:Transfer Rate/CSV Blocks Per Point=16</li>
+
+	<LI>GDI Tests:User-Supplied Bitmap=</li>
+
+	<LI>Graphics WinMarks:Show Record Numbers=No</li>
+
+	<LI>Graphics WinMarks:Allow VGA Display Resolution=No</li>
+
+	<LI>Graphics WinMarks:Patch GDI on Windows 95=Yes</li>
+
+	<LI>Common Properties:Disk Drive=c:\</li>
+
+	<LI>Common Properties:CDROM Drive=d:\</li>
+
+	<LI>Common Properties:Report CPU Util=No</li>
+
+	<LI>Common Properties:Retry On Errors=1</li>
+
+	<LI>Common Properties:Halt On Errors=Yes</li>
+
+	<LI>Common Properties:Repeat Count=1</li>
+
+	<LI>Common Properties:Variance Limit=3</li>
+
+	<LI>Common Properties:Training Run Count=1</li>
+
+	<LI>Common Properties:Error If Variance Exceeded=Yes</li>
+
+	<LI>Common Properties:Fast Inspection Tests=Yes</li>
+
+	<LI>Common Properties:Install Once=No</li>
+
+	<LI>Common Properties:Repeat Each Test=No</li>
+
+	<LI>Common Properties:Training Runs=No</li>
+
+	<LI>Common Properties:Reboot Frequency=2</li>
+
+	<LI>Common Properties:Defrag Frequency=2</li>
+
+	<LI>Common Properties:Reboot Delay=1</li>
+
+	<LI>[Suite1]</li>
+
+	<LI>GDI/CToS/BitBlt, All ROPs=True</li>
+
+	<LI>GDI/CToS/BitBlt, SRCCOPY=True</li>
+
+	<LI>GDI/CToS/StretchBlt, All ROPs=True</li>
+
+	<LI>GDI/CToS/StretchBlt, SRCCOPY=True</li>
+
+	<LI>GDI/MToS/BitBlt, All ROPs=True</li>
+
+	<LI>GDI/MToS/BitBlt, SRCCOPY=True</li>
+
+	<LI>GDI/MToS/StretchBlt, All ROPs=True</li>
+
+	<LI>GDI/MToS/StretchBlt, SRCCOPY=True</li>
+
+	<LI>GDI/S/Arc, Circular, Complete=True</li>
+
+	<LI>GDI/S/Arc, Circular, Partial=True</li>
+
+	<LI>GDI/S/Arc, Elliptical, Complete=True</li>
+
+	<LI>GDI/S/Arc, Elliptical, Partial=True</li>
+
+	<LI>GDI/S/BltDIBits, 1 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/BltDIBits, 24 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/BltDIBits, 4 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/BltDIBits, 8 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/Chord, Circular=True</li>
+
+	<LI>GDI/S/Chord, Elliptical=True</li>
+
+	<LI>GDI/S/Circle=True</li>
+
+	<LI>GDI/S/Ellipse=True</li>
+
+	<LI>GDI/S/ExtFloodFill, Border=True</li>
+
+	<LI>GDI/S/ExtFloodFill, Surface=True</li>
+
+	<LI>GDI/S/FillRgn=True</li>
+
+	<LI>GDI/S/FloodFill=True</li>
+
+	<LI>GDI/S/FrameRgn=True</li>
+
+	<LI>GDI/S/GetNearestColor=True</li>
+
+	<LI>GDI/S/InvertRgn=True</li>
+
+	<LI>GDI/S/Line, Diagonal=True</li>
+
+	<LI>GDI/S/Line, Horizontal=True</li>
+
+	<LI>GDI/S/Line, Vertical=True</li>
+
+	<LI>GDI/S/MoveTo=True</li>
+
+	<LI>GDI/S/MoveToEx=True</li>
+
+	<LI>GDI/S/PaintRgn=True</li>
+
+	<LI>GDI/S/PatBlt, All ROPs=True</li>
+
+	<LI>GDI/S/PatBlt, DESTINVERT=True</li>
+
+	<LI>GDI/S/PatBlt, PATCOPY=True</li>
+
+	<LI>GDI/S/PatBlt, WHITENESS=True</li>
+
+	<LI>GDI/S/Pie, Circular=True</li>
+
+	<LI>GDI/S/Pie, Elliptical=True</li>
+
+	<LI>GDI/S/Polygon, Few-sides=True</li>
+
+	<LI>GDI/S/Polygon, Many-sides=True</li>
+
+	<LI>GDI/S/Polygon, Trapezoid=True</li>
+
+	<LI>GDI/S/Polygon, Triangle=True</li>
+
+	<LI>GDI/S/SetDIBitsBlt, 1 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsBlt, 24 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsBlt, 4 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsBlt, 8 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsToDevice, 1 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsToDevice, 24 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsToDevice, 4 bpp=True</li>
+
+	<LI>GDI/S/SetDIBitsToDevice, 8 bpp=True</li>
+
+	<LI>GDI/S/StretchDIBits, 1 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/StretchDIBits, 24 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/StretchDIBits, 4 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/StretchDIBits, 8 bpp, SRCCOPY=True</li>
+
+	<LI>GDI/S/Text, Times Roman 16=True</li>
+
+	<LI>GDI/S/Text, Times Roman 16, 45=True</li>
+
+	<LI>GDI/S/Text, Times Roman 16, 90=True</li>
+
+	<LI>GDI/SToS/BitBlt, All ROPs=True</li>
+
+	<LI>GDI/SToS/BitBlt, SRCCOPY=True</li>
+
+	<LI>GDI/SToS/StretchBlt, All ROPs=True</li>
+
+	<LI>GDI/SToS/StretchBlt, SRCCOPY=True</li>
+
+	<LI>USER/S/DrawFocusRect=True</li>
+
+	<LI>USER/S/DrawIcon=True</li>
+
+	<LI>USER/S/DrawText, Times Roman 16=True</li>
+
+	<LI>USER/S/FillRect=True</li>
+
+	<LI>USER/S/FrameRect=True</li>
+
+	<LI>USER/S/GrayString, Times Roman 16=True</li>
+
+	<LI>USER/S/InvertRect=True</li>
+
+	<LI>USER/S/ScrollDC=True</li>
+
+	<LI>USER/S/TabbedTextOut, Times Roman 16=True</li>
+
+	<LI>GDI Playback/Bus/Corel WordPerfect Suite 8=True</li>
+
+	<LI>GDI Playback/Bus/Lotus SmartSuite 97=True</li>
+
+	<LI>GDI Playback/Bus/Microsoft Office 97=True</li>
+</UL>
+</li>
+
+	<LI>Note that WinBench runs on the server device. The time taken to complete the WinBench test is affected by the performance of the RDP Client, but the WinBench score is not.</li>
+</UL>
+
+<P><B>Logout</B>
+
+<UL type="disc">
+	<LI>Logout will be selected and the total time from Selecting Logout until the time when the system is ready to login again will be recorded.</li>
+</UL>
+
+<H4 class="dtH1">Internet Explorer scenario</H4>
+
+<P>The Internet Explorer tests examine a number of typical user scenarios, including page load speed, loading small, medium, and large images, and file load speed. The industry standard benchmark tool, i-Bench, is used to verify Internet Explorer performance. The Internet Explorer scenario uses a PC running MIcrosoft Windows&nbsp;2000 Advanced Server with IIS 5.0 as the server. The server provides content for the client (test) machines. The client device consists of either a Windows&nbsp;CE .NET Webpad Enterprise configuration or Windows&nbsp;XP Professional. In both cases, the client-side device uses the CEPC hardware configuration listed earlier. The server and client are connected through a 10 MB Ethernet hub. Both devices use the PCMCIA Socket LPE Ethernet 10 MB Network Interface Card (NIC) for the network connection.</P>
+
+<P>To ensure maximum performance, the Internet Explorer 5.5 cache size should be set large enough to completely cache the i-Bench pages when i-Bench is running the cached tests. To ensure this, the value of 4096 KB was used in the cache setting in the <B>Options</B> dialog box in iesample.</P>
+
+<P>The Internet Explorer test timings are conducted using a Browser Helper Object (BHO). A Browser Helper Object is an in-process Component Object Model (COM) component that Internet Explorer will load each time it starts. BHO objects run in the same memory context as the browser and can perform any action on the available windows and modules. For example, a BHO could detect the browser's typical events (such as GoBack, GoForward, and DocumentComplete), access the browser's menu and toolbar, and make changes, create windows to display additional information on the currently viewed page, and install hooks to monitor messages and actions. <MSHelp:link keywords="bho" TABINDEX="0">Browser Helper Objects: The Browser the Way You Want It</MSHelp:link> describes how to create BHO components.</P>
+
+<P>The Internet Explorer scenario tests consist of the following steps.</P>
+
+<P><B>Load Internet Explorer</B>
+
+<UL type="disc">
+	<LI>The total time from calling CreateProcess() on Internet Explorer until the application is ready for user input is measured in milliseconds.</li>
+</UL>
+
+<P><B>Load a single page on a private network (i-Bench.html</B>&#151;<B>i-Bench welcome page)</B>
+
+<UL type="disc">
+	<LI>The total time from pressing enter until the Web site is fully loaded will be measured in milliseconds (the server is pinged first).</li>
+
+	<LI>Browse forward.
+<UL type="disc">
+	<LI>The total time from pressing forward button until the Web site is fully loaded will be recorded in milliseconds. A dummy Web site is used for this operation.</li>
+</UL>
+</li>
+
+	<LI>Browse back.
+<UL type="disc">
+	<LI>The total time from pressing back button until the Web site is fully loaded will be recorded in milliseconds. A dummy Web site is used for this operation.</li>
+</UL>
+</li>
+
+	<LI>Refresh.
+<UL type="disc">
+	<LI>The total time from pressing the refresh button until the Web site is fully loaded will be recorded in milliseconds.</li>
+</UL>
+</li>
+</UL>
+
+<P><B>Load a 500 KB .jpg and .gif</B>
+
+<UL type="disc">
+	<LI>These files will be loaded from the server machine into the browser and the total download and display time will be recorded in milliseconds.</li>
+</UL>
+
+<P><B>Load a 4 MB .jpg and .gif</B>
+
+<UL type="disc">
+	<LI>These files will be loaded from the server machine into the browser and the total download and display time will be recorded in milliseconds.</li>
+</UL>
+
+<P><B>Download a small (500 KB), medium (1 MB), and large (4 MB) .txt file</B>
+
+<UL type="disc">
+	<LI>These files will be downloaded from the server machine and the total download time to the object store will be recorded in milliseconds.</li>
+</UL>
+
+<P><B>Download a small (500 KB), medium (1 MB), and large (4 MB) .exe file</B>
+
+<UL type="disc">
+	<LI>These files will be downloaded from the server machine and the total download time to the object store will be recorded in milliseconds.</li>
+</UL>
+
+<P><B>Download a small (500 KB), medium (1 MB), and large (4 MB) uncompressible binary file</B>
+
+<UL type="disc">
+	<LI>These files will be downloaded from the server machine and the total download time to the object store will be recorded in milliseconds.</li>
+</UL>
+
+<P><B>Run i-Bench test</B>
+
+<UL type="disc">
+	<LI>i-Bench 3.0 html load pages test is run on the client.</li>
+</UL>
+
+<P><B>Close Internet Explorer</B>
+
+<UL type="disc">
+	<LI>The total time from clicking the <B>Close</B> window button until the application is completely unloaded will be measured in milliseconds.</li>
+</UL>
+
+<H4 class="dtH1">Multimedia Technologies scenario</H4>
+
+<P>The multimedia technologies tests consist of playing a number of multimedia clips at low, medium, and high bandwidth and measure dropped frames, bandwidth, and CPU utilization. The multimedia scenario uses a server running Windows&nbsp;XP Professional. The server provides streaming Microsoft Windows Media&#153; audio and video to the client over the network. The client device runs either a Windows&nbsp;CE .NET Webpad Enterprise configuration or Windows&nbsp;XP Professional, in both cases the client-side device uses the CEPC hardware configuration described earlier. The server and client are connected through a 10 MB Ethernet hub. Both devices use the PCMCIA Socket LPE Ethernet 10 MB Network Interface Card (NIC) for the network connection.</P>
+
+<P>The multimedia server is running Windows Server 2003 with the following installed components: Microsoft Internet Information Server and Microsoft Windows Media Technologies.</P>
+
+<P>The multimedia tests are designed to examine the CPU utilization and the number of dropped frames during playback. There are a number of ways in which dropped frames can be calculated. For example, the number of dropped frames can easily be obtained through the Windows Media Player, or through interfaces exposed by the Windows Media ActiveX&#174; control. Specifically, the <B>IAMDroppedFrames</B> interface can provide the number of dropped and non-dropped frames as well as the frame rate and data rate achieved during playback. A call to <B>GetNumDropped</B> will return the total number of frames dropped since the streaming started and <B>GetNumNotDropped</B> will return the number of frames that achieved transfer successfully.</P>
+
+<P>The multimedia scenario tests consist of the following steps.</P>
+
+<P><B>Load the Windows Media Player in the Internet Explorer browser</B>
+
+<UL type="disc">
+	<LI>The total time from calling <B>CreateProcess()</B> on Internet Explorer until the application is ready for user input will be measured in milliseconds.</li>
+</UL>
+
+<P><B>Play Windows Media video files at the following bandwidths</B>
+
+<UL type="disc">
+	<LI>For each of these bit rates, the frame rate and total number of dropped frames will be recorded:
+<UL type="disc">
+	<LI>High (300 kbps)</li>
+
+	<LI>Medium (100 kbps)</li>
+
+	<LI>Low (56 kbps)</li>
+</UL>
+</li>
+</UL>
+
+<P><B>Play Windows Media Audio and MP3 audio files at the following bit rates</B>
+
+<UL type="disc">
+	<LI>For each of these bit rates, the number of dropped packets and CPU utilization will be recorded:
+<UL type="disc">
+	<LI>High (128 kbps)</li>
+
+	<LI>Medium (32 kbps)</li>
+
+	<LI>Low (8 kbps)</li>
+</UL>
+</li>
+</UL>
+
+<H3 class="dtH1">The Results</H3>
+
+<P>During the development of Windows&nbsp;CE .NET, scenario test results are examined and if any performance issues are discovered, bugs are logged with the appropriate feature team. Each of the feature teams is supplied with the performance data so that they can determine both where they stand in relationship to Windows&nbsp;XP and how well they perform compared to Windows&nbsp;CE .NET 4.0 and, in some cases, Windows&nbsp;CE 3.0. A number of performance issues were identified through scenario testing and this resulted in several investigations being launched. The following sections show the product improvements that have resulted from this work.</P>
+
+<H4 class="dtH1">Remote Desktop Protocol (RDP)</H4>
+
+<P>The following table shows the comparison of Windows CE .NET 4.0 and Windows&nbsp;CE .NET 4.1. The results show time in seconds.</P>
+
+<P class="label"><B>Table 1. </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Test Case&#151;RDP</TH>
+<TH width=27%>Windows&nbsp;CE .NET 4.0</TH>
+<TH width=32%>Windows&nbsp;CE .NET 4.1</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to connect</TD>
+<TD width=27%>0.50</TD>
+<TD width=32%>0.33</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to logon</TD>
+<TD width=27%>4.26</TD>
+<TD width=32%>1.95</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>WinBench time</TD>
+<TD width=27%>1,967</TD>
+<TD width=32%>1,583</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to logoff</TD>
+<TD width=27%>9.18</TD>
+<TD width=32%>9.78</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to disconnect</TD>
+<TD width=27%>0.57</TD>
+<TD width=32%>0.94</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the comparison of Windows&nbsp;CE .NET 4.1 and Windows&nbsp;XP. The results show time in seconds.</P>
+
+<P class="label"><B>Table 2. </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Test Case&#151;RDP</TH>
+<TH width=27%>Windows&nbsp;XP</TH>
+<TH width=32%>Windows&nbsp;CE .NET 4.1</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to connect</TD>
+<TD width=27%>0.86</TD>
+<TD width=32%>0.33</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to logon</TD>
+<TD width=27%>2.99</TD>
+<TD width=32%>1.95</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>WinBench time</TD>
+<TD width=27%>1,527</TD>
+<TD width=32%>1,583</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to logoff</TD>
+<TD width=27%>7.90</TD>
+<TD width=32%>9.78</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Time to disconnect</TD>
+<TD width=27%>0.11</TD>
+<TD width=32%>0.94</TD>
+</TR>
+</table></div>
+
+<P>The following list shows the key metrics for RDP performance improvements.
+
+<UL type="disc">
+	<LI>WinBench execution time was 20% faster than Windows&nbsp;CE .NET 4.0.</li>
+
+	<LI>WinBench execution time was 30% slower than Windows&nbsp;XP and is now only 4% slower than Windows&nbsp;XP (256 MB) on the same reference hardware. See earlier description of hardware.</li>
+</UL>
+
+<H4 class="dtH1">Internet Explorer</H4>
+
+<P>Test results comparing Windows&nbsp;CE .NET 4.1 compared with Windows&nbsp;CE .NET 4.0. The results show time in seconds.</P>
+
+<P class="label"><B>Table 3. </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Test Case&#151;Internet Explorer</TH>
+<TH width=19%>Windows&nbsp;XP</TH>
+<TH width=20%>Windows&nbsp;CE .NET 4.0</TH>
+<TH width=17%>Windows&nbsp;CE .NET 4.1</TH>
+<TH width=17%>Windows&nbsp;CE 3.0</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Load</TD>
+<TD width=19%>3.88</TD>
+<TD width=20%>3.14</TD>
+<TD width=17%>3.01</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Back</TD>
+<TD width=19%>0.28</TD>
+<TD width=20%>0.25</TD>
+<TD width=17%>0.22</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Forward</TD>
+<TD width=19%>0.26</TD>
+<TD width=20%>0.32</TD>
+<TD width=17%>0.31</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Refresh</TD>
+<TD width=19%>0.02</TD>
+<TD width=20%>0.01</TD>
+<TD width=17%>0.00</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Close</TD>
+<TD width=19%>0.6</TD>
+<TD width=20%>0.47</TD>
+<TD width=17%>1.37</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Blank</TD>
+<TD width=19%>1.57</TD>
+<TD width=20%>0.40</TD>
+<TD width=17%>0.29</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>S JPG</TD>
+<TD width=19%>1.43</TD>
+<TD width=20%>0.67</TD>
+<TD width=17%>0.51</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>L JPG</TD>
+<TD width=19%>13.67</TD>
+<TD width=20%>3.27</TD>
+<TD width=17%>2.66</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>S GIF</TD>
+<TD width=19%>2.24</TD>
+<TD width=20%>0.30</TD>
+<TD width=17%>0.33</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>L GIF</TD>
+<TD width=19%>1.51</TD>
+<TD width=20%>0.86</TD>
+<TD width=17%>0.84</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>S TXT</TD>
+<TD width=19%>1.16</TD>
+<TD width=20%>3.87</TD>
+<TD width=17%>3.83</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M TXT</TD>
+<TD width=19%>1.53</TD>
+<TD width=20%>8.00</TD>
+<TD width=17%>9.49</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>L TXT</TD>
+<TD width=19%>6.87</TD>
+<TD width=20%>41.59</TD>
+<TD width=17%>44.87</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>S EXE</TD>
+<TD width=19%>4.07</TD>
+<TD width=20%>3.11</TD>
+<TD width=17%>1.65</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M EXE</TD>
+<TD width=19%>2.74</TD>
+<TD width=20%>4.21</TD>
+<TD width=17%>2.22</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>L EXE</TD>
+<TD width=19%>6.14</TD>
+<TD width=20%>13.73</TD>
+<TD width=17%>5.73</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>S ZIP</TD>
+<TD width=19%>2.18</TD>
+<TD width=20%>2.04</TD>
+<TD width=17%>1.37</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>M ZIP</TD>
+<TD width=19%>3.83</TD>
+<TD width=20%>5.98</TD>
+<TD width=17%>1.55</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>L ZIP</TD>
+<TD width=19%>7.85</TD>
+<TD width=20%>15.44</TD>
+<TD width=17%>7.65</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>i-Bench Score</TD>
+<TD width=19%>219.39</TD>
+<TD width=20%>351.5</TD>
+<TD width=17%>298.00</TD>
+<TD width=17%>523.00</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Total</TD>
+<TD width=19%>277.34</TD>
+<TD width=20%>456.02</TD>
+<TD width=17%>382.90</TD>
+<TD width=17%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P>The following list shows the key metrics for Internet Explorer performance improvements.
+
+<UL type="disc">
+	<LI>i-Bench score: Improved 15% from Windows&nbsp;CE .NET 4.0, 60% faster than Windows&nbsp;CE 3.0</li>
+
+	<LI>Single HTML page load: Improved 19% from Windows&nbsp;CE .NET 4.0, 23% faster than Windows&nbsp;XP</li>
+
+	<LI>File download: Improved about 40% from Windows&nbsp;CE .NET 4.0, comparable to Windows&nbsp;XP</li>
+
+	<LI>Display .jpg (x86 only): Improved 50%+ from Windows&nbsp;CE .NET 4.0, 60-70% faster than Windows&nbsp;XP</li>
+</UL>
+
+<H4 class="dtH1">Multimedia Technologies </H4>
+
+<P>The following graph and table show CPU utilization when a medium-sized Windows Media Audio file is streamed on Windows&nbsp;CE .NET 4.1 and Windows&nbsp;XP Professional. Note that the same hardware is used in both cases. The computer running Windows&nbsp;CE .NET is using 64 MB RAM; the computer running Windows&nbsp;XP is using 256 MB RAM. The WPE columns are based on a Webpad Enterprise configuration build from Platform Builder and the MDX is a special build based on the Media Appliance configuration that makes use of the Direct Draw and Direct Audio components.</P>
+
+<P class="fig"><CODE><IMG SRC="permethod_fig2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2.</B></P>
+
+<P>All data is for 100% playback, no lost or recovered packets, unless otherwise noted.</P>
+
+<P class="label"><B>Table 4. </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=12%>Quality</TH>
+<TH width=13%>Type</TH>
+<TH width=12%>Stream/Local</TH>
+<TH width=13%>Windows&nbsp;CE .NET 4.0 WPE</TH>
+<TH width=12%>Windows&nbsp;CE .NET 4.0 MDX</TH>
+<TH width=13%>Windows&nbsp;XP 256 MB</TH>
+<TH width=12%>Windows&nbsp;CE .NET 4.1 WPE</TH>
+<TH width=13%>Windows&nbsp;CE .NET 4.1 MDX</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>High</TD>
+<TD width=13%>Windows Media Video</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>82%</TD>
+<TD width=12%>Dropped Frames</TD>
+<TD width=13%>95%</TD>
+<TD width=12%>84%</TD>
+<TD width=13%>70%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Medium</TD>
+<TD width=13%>Windows Media Video</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>67%</TD>
+<TD width=12%>63%</TD>
+<TD width=13%>58%</TD>
+<TD width=12%>63%</TD>
+<TD width=13%>65%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Low</TD>
+<TD width=13%>Windows Media Video</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>21%</TD>
+<TD width=12%>23%</TD>
+<TD width=13%>17%</TD>
+<TD width=12%>20%</TD>
+<TD width=13%>18%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>High</TD>
+<TD width=13%>Windows Media Video</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>79%</TD>
+<TD width=12%>66%</TD>
+<TD width=13%>92%</TD>
+<TD width=12%>83%</TD>
+<TD width=13%>68%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Medium</TD>
+<TD width=13%>Windows Media Video</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>65%</TD>
+<TD width=12%>61%</TD>
+<TD width=13%>58%</TD>
+<TD width=12%>62%</TD>
+<TD width=13%>63%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Low</TD>
+<TD width=13%>Windows Media Video</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>20%</TD>
+<TD width=12%>22%</TD>
+<TD width=13%>16%</TD>
+<TD width=12%>19%</TD>
+<TD width=13%>17%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>High</TD>
+<TD width=13%>Windows Media Audio</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>18%</TD>
+<TD width=12%>21%</TD>
+<TD width=13%>22%</TD>
+<TD width=12%>19%</TD>
+<TD width=13%>21%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Medium</TD>
+<TD width=13%>Windows Media Audio</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>15%</TD>
+<TD width=12%>18%</TD>
+<TD width=13%>18%</TD>
+<TD width=12%>15%</TD>
+<TD width=13%>19%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Low</TD>
+<TD width=13%>Windows Media Audio</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>11%</TD>
+<TD width=12%>14%</TD>
+<TD width=13%>11%</TD>
+<TD width=12%>11%</TD>
+<TD width=13%>10%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>High</TD>
+<TD width=13%>Windows Media Audio</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>19%</TD>
+<TD width=12%>22%</TD>
+<TD width=13%>22%</TD>
+<TD width=12%>19%</TD>
+<TD width=13%>22%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Medium</TD>
+<TD width=13%>Windows Media Audio</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>16%</TD>
+<TD width=12%>19%</TD>
+<TD width=13%>17%</TD>
+<TD width=12%>16%</TD>
+<TD width=13%>19%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Low</TD>
+<TD width=13%>Windows Media Audio</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>11%</TD>
+<TD width=12%>14%</TD>
+<TD width=13%>10%</TD>
+<TD width=12%>11%</TD>
+<TD width=13%>10%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>High</TD>
+<TD width=13%>MP3</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>26%</TD>
+<TD width=12%>28%</TD>
+<TD width=13%>22%</TD>
+<TD width=12%>25%</TD>
+<TD width=13%>28%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Medium</TD>
+<TD width=13%>MP3</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>18%</TD>
+<TD width=12%>21%</TD>
+<TD width=13%>15%</TD>
+<TD width=12%>18%</TD>
+<TD width=13%>22%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Low</TD>
+<TD width=13%>MP3</TD>
+<TD width=12%>Stream</TD>
+<TD width=13%>14%</TD>
+<TD width=12%>14%</TD>
+<TD width=13%>10%</TD>
+<TD width=12%>11%</TD>
+<TD width=13%>10%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>High</TD>
+<TD width=13%>MP3</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>21%</TD>
+<TD width=12%>23%</TD>
+<TD width=13%>20%</TD>
+<TD width=12%>21%</TD>
+<TD width=13%>25%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Medium</TD>
+<TD width=13%>MP3</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>15%</TD>
+<TD width=12%>18%</TD>
+<TD width=13%>14%</TD>
+<TD width=12%>15%</TD>
+<TD width=13%>19%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=12%>Low</TD>
+<TD width=13%>MP3</TD>
+<TD width=12%>Local</TD>
+<TD width=13%>11%</TD>
+<TD width=12%>13%</TD>
+<TD width=13%>11%</TD>
+<TD width=12%>10%</TD>
+<TD width=13%>9%</TD>
+</TR>
+</table></div>
+
+<P>The following list shows the performance improvements for Multimedia Technologies.
+
+<UL type="disc">
+	<LI>20% improvement of Windows Media Video playback with overlays using the DMO codec</li>
+
+	<LI>Dramatically improved Windows Media streaming high bit rate video playback</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="perfmethod_topic3"></A>Conclusion</H2>
+
+<P>This paper outlines the methodology used to perform specific scenario-based performance tests and also includes the results of these tests against RDP, Internet Explorer, and multimedia technologies. The test results clearly show performance improvements for Windows&nbsp;CE .NET 4.1 compared with Windows&nbsp;CE .NET 4.0.</P>
+
+<P>It is important to note that testing of an operating system or device should occur at a number of levels. The performance of individual components or technologies, while important, should be looked at in the context of the complete operating system or device.</P>
+
+<P>To ensure optimal performance of Windows&nbsp;CE .NET, developers should be aware of the importance of choosing appropriate hardware that can be optimized for the specific device. The graphics hardware can impact the performance of most user scenarios, and should therefore be a major area of focus for hardware selection.</P>
+
+<P>Windows&nbsp;CE .NET ships with a number of tools that can be used to test the performance of your embedded design. These tools can be divided into three distinct groups: verification and performance, informational and utility, and debugging. The following list shows the tools in these groupings:</P>
+
+<P>Verification/Performance
+
+<UL type="disc">
+	<LI>Kernel Tracker</li>
+
+	<LI>Remote Call Profiler</li>
+
+	<LI>Remote Performance Monitor</li>
+</UL>
+
+<P>Informational/Utility
+
+<UL type="disc">
+	<LI>Remote Zoom-in</li>
+
+	<LI>Remote File Viewer</li>
+
+	<LI>Remote Registry Viewer</li>
+
+	<LI>Remote System Info</li>
+</UL>
+
+<P>Debugging
+
+<UL type="disc">
+	<LI>Remote SPY++</li>
+
+	<LI>Remote Heap Walker</li>
+
+	<LI>Remote Process Viewer</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="perfmethod_topic4"></A>For More Information</H2>
+
+<P>For the latest information about Windows&nbsp;CE .NET, visit the <A HREF="http://go.microsoft.com/fwlink/?linkid=407">Microsoft Windows Embedded</A> Web site.</P>
+
+<P>The online documentation and context-sensitive Help included with Windows&nbsp;CE .NET also provides comprehensive background information and instructions for using Windows&nbsp;CE .NET.</P>
+
+<P>To access the online documentation for Windows&nbsp;CE .NET
+
+<OL type="1">
+	<LI>Start Platform Builder. </li>
+
+	<LI>Select the <B>Contents</B> tab on the <B>Help</B> menu to view the documentation.</li>
+</OL>
+
+<P>Also see the product documentation for Windows&nbsp;CE .NET in the <A href="http://msdn.microsoft.com/library/default.asp?url=/nhp/default.asp?contentid=28000437">Embedded Operating System Development</A> section of MSDN.</P>
+
+<P>The following table shows the files that were used in the Internet Explorer file transfer tests.</P>
+
+<P class="label"><B>Table 5. </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>File</TH>
+<TH width=63%>Size in bytes</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>small.exe</TD>
+<TD width=63%>512,784</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>medium.exe</TD>
+<TD width=63%>1,011,757</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>large.exe</TD>
+<TD width=63%>4,188,432</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>small.zip</TD>
+<TD width=63%>346,306</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>medium.zip</TD>
+<TD width=63%>1,918,979</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>large.zip</TD>
+<TD width=63%>5,714,674</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>small.gif</TD>
+<TD width=63%>12,071</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>large.gif</TD>
+<TD width=63%>163,381</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>small.jpg</TD>
+<TD width=63%>21,124</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>large.jpg</TD>
+<TD width=63%>1,004,440</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>small.txt</TD>
+<TD width=63%>512,001</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>medium.txt</TD>
+<TD width=63%>1,024,001</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>large.txt</TD>
+<TD width=63%>4,096,001</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the files that were used in the multimedia playback tests.</P>
+
+<P class="label"><B>Table 6. </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>File</TH>
+<TH width=62%>Size in bytes</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Buddy Holly_128.mp3</TD>
+<TD width=62%>2,550,096</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Buddy Holly_128.wma</TD>
+<TD width=62%>2,569,812 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Buddy Holly_32.mp3</TD>
+<TD width=62%>637,488 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Buddy Holly_32.wma</TD>
+<TD width=62%>654,918 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Buddy Holly_8.mp3</TD>
+<TD width=62%>159,336 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Buddy Holly_8.wma</TD>
+<TD width=62%>169,534 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Dance_100.wmv</TD>
+<TD width=62%>1,887,173 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Dance_300.wmv</TD>
+<TD width=62%>5,381,935 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>Dance_56.wmv</TD>
+<TD width=62%>850,927 </TD>
+</TR>
+</table></div>
+
+<P>Third-party software used during performance tests:</P>
+
+<P>WinBench 99 is a subsystem-level benchmark that measures the performance of a PC's graphics, disk, and video subsystems in a Windows environment. WinBench 99's tests can run on Microsoft Windows&nbsp;95, Windows&nbsp;98, Microsoft Windows&nbsp;NT&#174;, Windows&nbsp;2000, and Windows&nbsp;Me systems.</P>
+
+<P>i-Bench is a comprehensive, cross-platform benchmark that tests the performance and capability of Web clients as they take on the latest Web technology and features. A Web client is defined as any combination of hardware and software you can use to retrieve content from the Web.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_831994', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

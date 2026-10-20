@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the CD/DVD-ROM Block Driver Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running the CD/DVD-ROM Block Driver Test"/>
+<MSHelp:RLTitle Title="Running the CD/DVD-ROM Block Driver Test"/>
+<MSHelp:Keyword Index="A" Term="ctconRunningCDDVD-ROMBlockDriverTest"/>
+<MSHelp:Keyword Index="A" Term="ctconRunningCDDVD-ROMBlockDriverTest"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: cdromtest.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757949">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ctconrunningcddvd-romblockdrivertest"></A>Running the CD/DVD-ROM Block Driver Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The CD/DVD-ROM Block Driver Test executes the <code class="ce">tux &#0150;o &#0150;d cdromtest &#0150;f</code> command line on default execution. You can modify the test by editing the command line. The following table shows the additional command-line options that you can insert and describes their results.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Command-line entry</TH>
+<TH width=50%>Result</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">-d DSKx:</PRE>
+</TD>
+<TD width=50%>Specifies the device name of the disk to be tested. If you do not specify this option, the CD/DVD-ROM Block Driver Test probes for a CD-ROM on devices <CODE>DSK1-9</CODE>. Specifying this option overrides the automatic detection process and forces the tests to use the disk that you specify.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">-i image.file</PRE>
+</TD>
+<TD width=50%>Sets the name of the image file in the release directory on the development workstation. Test cases 6003 through 6005 use this option. The contents of the image file are compared to the actual contents of the CD media in the drive. If you do not specify this option, the test attempts to open the Cdsector.dat file in the release directory. You can specify an .iso file or other type of CD-ROM image that you used to create the test media. When you specify this option for test case 6101, an image of the media in the drive is created in the release directory under the specified name. If the test cannot access the release directory on the development workstation, then the image file is not used.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">-s max_sectors_per_read</PRE>
+</TD>
+<TD width=50%>Sets the maximum number of sectors that can be read from the disk in any single read request. Test cases 6003 through 6006 use this value. The default value is 64 sectors.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">-t track#</PRE>
+</TD>
+<TD width=50%>Sets the track number to read from the audio CD. Test cases 6008 and 6009 use this value. The default value is track 1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>
+<PRE class="code">-v</PRE>
+</TD>
+<TD width=50%>Specifies that the disk in the drive is a DVD rather than a CD. This parameter affects the maximum final sector that the test attempts to read. When you do not specify this option, the maximum sector read is 328220. When you specify this option, the maximum sector read is 3725375.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the various test cases for the CD/DVD-ROM Block Driver test.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Test case</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6001: Device ready check</TD>
+<TD width=50%>Tests the functionality of the IOCTL_CDROM_TEST_UNIT_READY I/O control code. This test case fails when the <B>DeviceIoControl</B> function call returns FALSE. Failure occurs if the driver does not properly support the IOCTL_CDROM_TEST_UNIT_READY control code. Failure also occurs when the <B>DeviceIoControl</B> function call does not set the <I>bUnitReady</I> flag to TRUE in the CDROM_TESTUNITREADY output structure. This test case fails if there is no media in the drive because the function call sets the flag to TRUE only when there is media present.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6002: Query CD-ROM Disk information</TD>
+<TD width=50%>Tests the functionality of the IOCTL_CDROM_DISC_INFO I/O control code. This test case fails when the <B>DeviceIoControl</B> function call returns FALSE. Failure occurs if there is no CD or DVD in the drive.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6003: Perform 1 Sector Reads</TD>
+<TD width=50%>Reads each sector from the media one sector at a time and compares the contents of each sector to the contents of the image file in the release directory. This test case fails if it is unable to read any sector from the media in the drive. The test case also fails when fewer bytes are read than were requested, and when there is a discrepancy between the data on the media and the data in the image file. You should make sure that there is media in the drive and that the specified image file in the release directory on the development workstation matches the contents of the media.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6004: Perform 32 Sector Reads</TD>
+<TD width=50%>Reads each sector from the media 32 sectors at a time and compares the contents of the sectors to the contents of the image file in the release directory. This test fails when it is unable to read any sector from the media in the drive. The test case also fails when fewer bytes are read than were requested, and when there is a discrepancy between the data on the media and the data in the image file. You should make sure that there is media in the drive and that the specified image file in the release directory on the development workstation matches the contents of the media.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6005: Perform 128 Sector Reads</TD>
+<TD width=50%>Reads each sector from the media 128 sectors at a time and compares the contents of the sectors to the contents of the image file in the release directory. This test fails when it is unable to read any sector from the media in the drive. The test case also fails when fewer bytes are read than were requested, and when there is a discrepancy between the data on the media and the data in the image file. You should make sure that there is media in the drive and that the specified image file in the release directory on the development workstation matches the contents of the media.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6006: Test increasing read request sizes</TD>
+<TD width=50%>Performs multiple-sector reads. The number of sectors included in each read starts at one and increases with each read until the number reaches the maximum number of sectors that can be read, as specified by the <CODE>&#0150;s</CODE> command-line option. The data that is read is compared to the data in the specified image file. This test case fails if the test is unable to allocate a large enough buffer to store the data being read. Such a failure does not indicate a problem and can be solved by setting a smaller maximum number of sectors using the <CODE>&#0150;s </CODE>option.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6007: Perform Multi-SG Reads</TD>
+<TD width=50%>Tests the ability for the block driver to support reads with multiple scatter-gather (SG) buffers. This test reads data from the disk using a single SG buffer and then reads the same data in multiple SG buffers. The test verifies that the data read is the same in both cases. This test case fails when the device does not support multiple SG buffer reads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6011: Issue an ATAPI device info inquiry</TD>
+<TD width=50%>Tests the functionality of the IOCTL_CDROM_ISSUE_INQUIRY I/O control code, passing an INQUIRY_DATA structure as the output parameter. This test fails when the <B>DeviceIoControl</B> function call returns FALSE for the IOCTL_CDROM_ISSUE_INQUIRY I/O control code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6012: Verify media eject and load functionality</TD>
+<TD width=50%>Tests the functionality of the IOCTL_CDROM_LOAD_MEDIA and IOCTL_CDROM_UNLOAD MEDIA I/O control codes. The test case first attempts to eject the media, then follows with an IOCTL_CDROM_TEST_UNIT_READY I/O control code to verify that the media is not present. The test case then loads the media and follows with a second IOCTL_CDROM_TEST_UNIT_READY I/O control code to verify that the media is loaded. This test case fails if any of the <B>DeviceIoControl</B> function calls return FALSE, if the unit appears to be ready after ejecting the media, or if the unit is not ready after reloading the media.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6021: Read MSF Audio data from audio CD</TD>
+<TD width=50%>Tests the ability to read an audio track in M:S:F format from the block driver. The M:S:F format is the standard format for specifying a location on an audio CD. This test is skipped if the track specified using the <CODE>&#0150;t</CODE> command-line option does not exist on the CD or is not in M:S:F format. Make sure that an audio CD is placed in the drive. This test fails if the block driver does not support reading data in M:S:F format.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6022: Read MSF Audio track to file in release directory</TD>
+<TD width=50%>Verifies that the audio read from an audio CD is correct. When the test runs, a raw pulse code modulation (PCM) audio file named CdtrackX.pcm is created in the release directory of the development workstation. You can convert the CdtrackX.pcm file to a different audio format and play the audio back on the development workstation to verify the quality of the audio. This test is skipped if the track specified using the <CODE>&#0150;t</CODE> command-line option does not exist on the CD or is not in M:S:F format. Make sure that an audio CD is placed in the drive. This test is also skipped if the release directory is unreachable. This test fails if the block driver does not support reading data in M:S:F format.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>6101: Make image of CD media</TD>
+<TD width=50%>Creates an image of the media that is loaded in the drive and saves the file containing the image in the release directory on the development workstation. You can specify the name of the image file using the <code class="ce">&#0150;i</code> command-line option. This test executes until it eventually fails or until 328220 sectors are read. If the <code class="ce">&#0150;v</code> option is specified, then a maximum number of 3725375 sectors are read. This test is skipped if the release directory is unreachable.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This test library can have one or more optional command-line entries to change the behavior of the test. To specify one or more optional command-line entries to the test library, you must use the <CODE>&#0150;c</CODE> command-line option. This option forces Tux to pass the specified string into the test library.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cdconcd-romtest.htm">CD/DVD-ROM Block Driver Test</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20the%20CD%2FDVD-ROM%20Block%20Driver%20Test&nbsp;(ctconrunningcddvd-romblockdrivertest.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

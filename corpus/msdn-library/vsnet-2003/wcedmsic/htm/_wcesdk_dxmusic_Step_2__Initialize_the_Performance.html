@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 2: Initialize the Performance</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 2: Initialize the Performance"/>
+<MSHelp:RLTitle Title="Step 2: Initialize the Performance"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_2__Initialize_the_Performance"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, initializing (Tutorial 3)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_2__Initialize_the_Performance"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690674">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_2__initialize_the_performance"></A>Step 2: Initialize the Performance</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The DirectMusic performance is set up in the <B>InitializeGame</B> function in Donuts.cpp.</P>
+
+<P>First the application queries the registry to obtain the search path for the DirectX sample music files, by calling the <B>GetSearchPath</B> function. Then it creates COM objects for the composer and the performance, as follows.</P>
+
+<PRE class="code">CoInitialize(NULL);
+ 
+if ( !SUCCEEDED(::CoCreateInstance(
+        CLSID_DirectMusicComposer,
+        NULL,
+        CLSCTX_INPROC, 
+        IID_IDirectMusicComposer,
+        (void**)&amp;gpComposer
+)))
+{
+    return CleanupAndExit("Could not create a composer object");
+}
+ 
+if ( !SUCCEEDED( CoCreateInstance( CLSID_DirectMusicPerformance, 
+        NULL, 
+        CLSCTX_INPROC, 
+        IID_IDirectMusicPerformance,
+        (void**)&amp;gpPerformance )))
+{
+    return CleanupAndExit("Could not create a performance object");
+}</PRE>
+
+<P>The application then initializes the performance by calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__Init" TABINDEX="0">IDirectMusicPerformance::Init</MSHelp:link>, which creates a DirectMusic object that can be used to create and activate its ports. Depending on whether or not DirectSound is being used for other sound effects, the call either attaches the existing DirectSound object to the performance by passing in <I>lpDS</I> or creates one by passing in NULL.</P>
+
+<PRE class="code">#ifdef USE_DSOUND
+    if( !SUCCEEDED(gpPerformance-&gt;Init(&amp;gpDirectMusic, 
+           lpDS, hWndMain)))
+    {
+        return CleanupAndExit("Could not initialize the performance");
+    }
+#else
+    if( !SUCCEEDED(gpPerformance-&gt;Init(&amp;gpDirectMusic, 
+            NULL, hWndMain)))
+    {
+        return CleanupAndExit("Could not initialize the performance");
+    }
+#endif
+ </PRE>
+
+<P>The application now gets the default port, creates an instance of it with one channel group, and retrieves its capabilities.</P>
+
+<PRE class="code">IDirectMusicPort* pPort = NULL;
+DMUS_PORTPARAMS dmos;
+DMUS_PORTCAPS dmpc;
+GUID guidSynthGUID;
+HRESULT hr = S_OK;
+
+if ( !SUCCEEDED(gpDirectMusic-&gt;GetDefaultPort(&amp;guidSynthGUID)))
+{
+    return CleanupAndExit("Could not GetDefaultPort on IDirectMusic");
+}
+ 
+ZeroMemory(&amp;dmos, sizeof(dmos));
+dmos.dwSize = sizeof(DMUS_PORTPARAMS);
+dmos.dwChannelGroups = 1;
+dmos.dwValidParams = DMUS_PORTPARAMS_CHANNELGROUPS;
+ 
+if( !SUCCEEDED(gpDirectMusic-&gt;CreatePort(guidSynthGUID,
+            &amp;dmos,
+            &amp;pPort,
+            NULL)))
+{
+    return CleanupAndExit("Could not CreatePort on IDirectMusic");
+}
+ 
+ZeroMemory(&amp;dmpc, sizeof(dmpc));
+dmpc.dwSize = sizeof(DMUS_PORTCAPS);
+ 
+if( !SUCCEEDED(pPort-&gt;GetCaps(&amp;dmpc)))
+{
+    if (pPort) pPort-&gt;Release();
+    return CleanupAndExit("Could not GetCaps on IDirectMusicPort");
+}
+ </PRE>
+
+<P>The behavior of the application now varies depending on whether _SOFTWARE_SYNTH_ is defined. If it is, a synthesizer with DLS capabilities is wanted, so the application checks for the DMUS_PC_DLS capabilities flag on the default port. If it fails to find that flag, it goes on to free the default port and enumerate available ports until if finds an output port that has the DMUS_PC_DLS capability. Finally, it creates an instance of that port.</P>
+
+<PRE class="code">if ((dmpc.dwClass != DMUS_PC_OUTPUTCLASS) 
+        || !(dmpc.dwFlags &amp; DMUS_PC_DLS))
+{
+    pPort-&gt;Release();
+    pPort = NULL;
+}
+ 
+if (!pPort)
+{
+    for (DWORD index = 0; hr == S_OK; index++)
+    {
+        ZeroMemory(&amp;dmpc, sizeof(dmpc));
+        dmpc.dwSize = sizeof(DMUS_PORTCAPS);
+ 
+        hr = gpDirectMusic-&gt;EnumPort(index, &amp;dmpc);
+        if(hr == S_OK)
+        {
+            if ( (dmpc.dwClass == DMUS_PC_OUTPUTCLASS) &amp;&amp; 
+                 (dmpc.dwFlags &amp; DMUS_PC_DLS) )
+            {
+                CopyMemory(&amp;guidSynthGUID, &amp;dmpc.guidPort,
+                        sizeof(GUID));
+ 
+                ZeroMemory(&amp;dmos, sizeof(dmos));
+                dmos.dwSize = sizeof(DMUS_PORTPARAMS);
+                dmos.dwChannelGroups = 1;
+                dmos.dwValidParams = DMUS_PORTPARAMS_CHANNELGROUPS;
+ 
+                hr = gpDirectMusic-&gt;CreatePort(guidSynthGUID, 
+                        &amp;dmos, &amp;pPort, NULL);
+                break;
+            }
+        }
+    }
+    if (hr != S_OK)
+    {
+        if (pPort) pPort-&gt;Release();
+        return CleanupAndExit("Could not initialize the Synth port");
+    }
+}
+ </PRE>
+
+<P>If, on the other hand, _SOFTWARE_SYNTH_ is not defined, a legacy hardware port is wanted, and the application goes on to enumerate ports until it finds the MIDI mapper. (That code is omitted here.) </P>
+
+<P>Now the port is activated and attached to the performance.</P>
+
+<PRE class="code">pPort-&gt;Activate(TRUE);
+gpPerformance-&gt;AddPort(pPort);</PRE>
+
+<P>The next call maps PChannels 0-15 to the first group of MIDI channels on the port. Note that this step is necessary because the application did not pass NULL to AddPort.</P>
+
+<PRE class="code">gpPerformance-&gt;AssignPChannelBlock(0, pPort, 1);</PRE>
+
+<P>The original reference to the port can now be released. This call does not remove the port from the performance.</P>
+
+<PRE class="code">if (pPort) pPort-&gt;Release();</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_3__load_the_music_elements.htm">Step 3: Load the Music Elements</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%202:%20Initialize%20the%20Performance&nbsp;(_wcesdk_dxmusic_step_2__initialize_the_performance.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

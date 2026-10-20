@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Multiple Screen Driver Support</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Multiple Screen Driver Support"/>
+<MSHelp:RLTitle Title="Multiple Screen Driver Support"/>
+<MSHelp:Keyword Index="A" Term="cxconEnablingMultipleScreens"/>
+<MSHelp:Keyword Index="K" Term="display drivers, multiple screen support"/>
+<MSHelp:Keyword Index="K" Term="enabling, multiple screens on display drivers"/>
+<MSHelp:Keyword Index="K" Term="multiple screens, enabling on display devices"/>
+<MSHelp:Keyword Index="A" Term="cxconEnablingMultipleScreens"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690055">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconenablingmultiplescreens"></A>Multiple Screen Driver Support</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE provides support for connecting multiple screens to a Windows CE-based device. Multiple screens allow applications to make use of multiple display devices at the same time. You may use multiple screens as one large combined screen. When you use multiple screens as one large screen, you create more screen space for applications. This extra space is useful when you need to maximize your onscreen workspace, or when performing tasks in desktop publishing, Web development, or video editing.</P>
+
+<P>The following examples show how to implement a driver that supports multiple screens. The examples are based on the sample ATI driver. This is the only sample driver provided that supports multiple screens. %_WINCEROOT%\Public\Common\OAK\Drivers\Display\ATI\ATI.cpp contains the source code for the sample driver.</P>
+
+<P>To implement a driver that supports multiple monitors, implement <B>GetGPEPerCard</B> in your driver.</P>
+
+<P>This is a new function specific to multiple screen implementations. The parameter <I>iCard,</I> which is being passed, is the index of the card. Zero-based indexing is used. For example, if you have two cards, the operating system (OS) will pass the integer 1 to indicate the second card. The function returns a pointer to the structure for that particular card. The OS needs this to correctly draw on that particular screen.</P>
+
+<P>For the OS to know that it has a pointer to the function for referencing a particular card, be sure that when you implement <A HREF="_wceddk_drvenabledriver.htm">DrvEnableDriver</A>, you implement it as shown in the following code sample and pass the correct card pointer.</P>
+
+<PRE class="code">BOOL  APIENTRY  DrvEnableDriver(ULONG iEngineVersion,
+                                ULONG cj,
+                                DRVENABLEDATA *pded,
+                                PENGCALLBACKS pEngCallbacks)
+{
+     pfnGetGPEPerCard = GetGPEPerCard;
+     return GPEEnableDriver(iEngineVersion, cj, pded, pEngCallbacks);
+}</PRE>
+
+<P>Because you have multiple cards, you also need to create an array of GPE structures, one for each card. At beginning of %_WINCEROOT%\Public\Common\OAK\Drivers\Display\ATI\Ati.cpp, the following code example creates an array of GPE structures of MONITORS_MAX. MONITORS_MAX cannot be greater than 4.</P>
+
+<PRE class="code">static  GPE  *pGPE = (GPE *)NULL;
+
+//create a GPE array
+static  GPE  *pATI[MONITORS_MAX] = {NULL};
+
+//variable that states the total monitors in the system
+static  int  cMonitors = 0;</PRE>
+
+<P>Next, enumerate all display devices on the system that this driver supports. In the example, the driver checks the registry for instance information to determine how many displays are present. For each one that the driver finds, the driver must initial and assign the pointer to the GPE data structure. The following code example appears in the ATI example.</P>
+
+<PRE class="code">// look for all the monitors we are supposed to support
+    for(gdwMonitors = 0; gdwMonitors &lt; gdwMonitorsExpected &amp;&amp; fOk == TRUE; gdwMonitors++) {
+        HKEY hkInstance;
+        DDKWINDOWINFO dwi;
+        DDKPCIINFO dpi;
+        TCHAR szInstance[256];
+        
+        // read the registry to get our PCI instance information
+        wsprintf(szInstance, _T("%s%u"), gszBaseInstance, gdwMonitors + 1);
+        dwStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, szInstance, 0, 0, &amp;hkInstance);
+        if(dwStatus == ERROR_SUCCESS) {
+            dwi.cbSize = sizeof(dwi);
+            dwStatus = DDKReg_GetWindowInfo(hkInstance, &amp;dwi);
+            if(dwStatus == ERROR_SUCCESS) {
+                dpi.cbSize = sizeof(dpi);
+                dwStatus = DDKReg_GetPciInfo(hkInstance, &amp;dpi);
+            }
+            RegCloseKey(hkInstance);
+        }
+        
+        // check the registry information
+        if(dwStatus == ERROR_SUCCESS) {
+            if((dpi.dwWhichIds &amp; (PCIIDM_VENDORID | PCIIDM_CLASS | PCIIDM_SUBCLASS)) != (PCIIDM_VENDORID | PCIIDM_CLASS | PCIIDM_SUBCLASS)) {
+                dwStatus = ERROR_INVALID_DATA;
+            } else if(dpi.idVals[PCIID_VENDORID] != PCI_VENDOR_ATI 
+                || dpi.idVals[PCIID_CLASS] != PCI_CLASS_DISPLAY 
+                || (dpi.idVals[PCIID_SUBCLASS] != PCI_SUBCLASS_DISPLAY &amp;&amp; dpi.idVals[PCIID_SUBCLASS] != 0x80)) {
+                dwStatus = ERROR_INVALID_DATA;
+            } else if(dwi.dwNumMemWindows != 2) {
+                dwStatus = ERROR_INVALID_DATA;
+            }
+        }
+        
+        // did we find the device?
+        if (dwStatus != ERROR_SUCCESS) {
+            // Couldn't find an MQ200 card, what to do now?
+            RETAILMSG (1, ((L"ATI card instance %d not found at '%s'\r\n"), gdwMonitors + 1, szInstance));
+            fOk = FALSE;
+        } else {
+            TCHAR        szResolution[16],szResString[16];
+            wsprintf(szResString, TEXT("%s%i"), TEXT("RESOLUTION"), gdwMonitors);
+            dwSize = sizeof(szResolution);
+            dwStatus = RegQueryValueEx(hkGDI, szResString, NULL, &amp;dwType, (LPBYTE)szResolution, &amp;dwSize);
+            if(dwStatus == ERROR_SUCCESS &amp;&amp; dwType == REG_SZ)    {
+                pATI[gdwMonitors] = new ATI(&amp;dwi,Bpp,szResolution);
+            } else {
+                pATI[gdwMonitors] = new ATI(&amp;dwi,Bpp, NULL);
+            }
+        }
+    }</PRE>
+
+<P>The following function is useful because you may modify it to support single and multiple monitors as shown in the example that follows. Use this function for single monitor support. You must implement this function for any Windows CE&#0150;based display driver.</P>
+
+<PRE class="code">// Main entry point for a GPE-compliant driver
+GPE   *GetGPE()
+{
+   if (!pGPE)
+   {
+      if (!EnableAllCard())
+         return NULL;
+      pGPE = (GPE *)pATI[0];
+   }
+   return   pGPE;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondisplaydriverarchitecture.htm">Display Driver Architecture</A></P>
+
+<P><A HREF="cxcondisplaydriveradvancedtopics.htm">Display Driver Extension</A></P>
+
+<P><A HREF="cxcondisplaydriverresources.htm">Display Driver Samples</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Multiple%20Screen%20Driver%20Support&nbsp;(cxconenablingmultiplescreens.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

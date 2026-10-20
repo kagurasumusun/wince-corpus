@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListBox::VKeyToItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_clistbox_vkeytoitem"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_clistbox_vkeytoitem"></A>CListBox::VKeyToItem</H1>
+
+<P>This method is called by the framework when the parent window of the list box receives a WM_VKEYTOITEM message from the list box.</P>
+
+<PRE class=syntax><B>virtual int VKeyToItem(
+UINT </B><I>nKey</I><B>,
+UINT </B><I>nIndex</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nKey</I></DT>
+
+<DD>Specifies the virtual key code of the key the user pressed. For a list of standard virtual key codes, see Winuser.h</DD>
+
+<DT><I>nIndex</I></DT>
+
+<DD>Specifies the current position of the list-box caret.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Returns &#0150;2 for no further action, &#0150;1 for default action, or a nonnegative number to specify an index of a list box item on which to perform the default action for the keystroke.</P>
+
+<H4>Remarks</H4>
+
+<P>The WM_VKEYTOITEM message is sent by the list box when it receives a WM_KEYDOWN message, but only if the list box meets both of the following:
+
+<UL type=disc>
+	<LI>Has the LBS_WANTKEYBOARDINPUT style set.</LI>
+
+	<LI>Has at least one item.</LI>
+</UL>
+
+<P>You should never call this function yourself. Override this function to provide your own custom handling of keyboard messages.</P>
+
+<P>You must return a value to tell the framework what action your override performed. A return value of &#0150;2 indicates that the application handled all aspects of selecting the item and requires no further action by the list box. Before returning &#0150;2, you could set the selection or move the caret or both. To set the selection, use <A HREF="clistbox_38.htm"><B>SetCurSel</B></A> or <A HREF="clistbox_44.htm"><B>SetSel</B></A>. To move the caret, use <A HREF="clistbox_36.htm"><B>SetCaretIndex</B></A>.</P>
+
+<P>A return value of &#0150;1 indicates that the list box should perform the default action in response to the keystroke.The default implementation returns &#0150;1.</P>
+
+<P>A return value of zero or greater specifies the index of an item in the list box and indicates that the list box should perform the default action for the keystroke on the given item.</P>
+
+<H4>Example</H4>
+
+<PRE>// Due to an OS limitation VKeyToItem currently does not work since the
+// listbox does not send a WM_VKEYTOITEM message to its parent. To get
+// this method to work, the listbox has to physically trap the WM_KEYDOWN // message (through a message map in a derived class) and send a
+// WM_VKEYTOITEM message to its parent as shown in the following code:
+// CMyListBox is my derived listbox class
+BEGIN_MESSAGE_MAP (CMyListBox, CListBox)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// message map entry to trap key press
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON_MESSAGE(WM_KEYDOWN, MyKeyDown)
+END_MESSAGE_MAP()
+
+LRESULT CMyListBox::MyKeyDown(WPARAM wParam, LPARAM lParam)
+{
+&nbsp;&nbsp;&nbsp;// Send a WM_VKEYTOITEM to my parent so that my VKeyToItem() method &nbsp;&nbsp;&nbsp;// will be fired.
+&nbsp;&nbsp;&nbsp;GetOwner() -&gt;SendMessage(WM_VKEYTOITEM, wParam, (LPARAM)GetSafeHwnd());
+&nbsp;&nbsp;&nbsp;return 0;
+}
+
+// CMyListBox is my list box derived from CListBox. This
+// example moves the caret down one item on the down key and up one item
+// on the up key. The list box control was created with the following
+// code:
+//&nbsp;&nbsp;pmyListBox-&gt;Create(
+//&nbsp;&nbsp;&nbsp;&nbsp;WS_CHILD|WS_VISIBLE|WS_BORDER|WS_HSCROLL|WS_VSCROLL|
+//&nbsp;&nbsp;&nbsp;&nbsp;LBS_SORT|LBS_MULTIPLESEL,
+//&nbsp;&nbsp;&nbsp;&nbsp;CRect(10,10,200,200), pParentWnd, 1);
+//
+int CMyListBox::VKeyToItem(UINT nKey, UINT nIndex)
+{
+&nbsp;&nbsp;// On key up, move the caret up one item.
+&nbsp;&nbsp;if ((nKey == VK_UP) &amp;&amp; (nIndex &gt; 0))
+&nbsp;&nbsp;&nbsp;&nbsp;SetCaretIndex(nIndex-1);
+
+&nbsp;&nbsp;// On key down, move the caret down one item.
+&nbsp;&nbsp;else if ((nKey == VK_DOWN) &amp;&amp; (nIndex &lt; GetCount()))
+&nbsp;&nbsp;&nbsp;&nbsp;SetCaretIndex(nIndex+1);
+&nbsp;&nbsp;
+&nbsp;&nbsp;// Do not perform any default processing.
+&nbsp;&nbsp;return &#0150;2;
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="clistbox_4.htm"><B>CListBox::CharToItem</B></A>, <A HREF="clistbox_38.htm"><B>CListBox::SetCurSel</B></A>, <A HREF="clistbox_44.htm"><B>CListBox::SetSel</B></A>, <A HREF="clistbox_36.htm"><B>CListBox::SetCaretIndex</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::CreateCompatibleDC</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CDC::CreateCompatibleDC"/>
+<MSHelp:RLTitle Title="CDC::CreateCompatibleDC"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDCcolcolCreateCompatibleDC"/>
+<MSHelp:Keyword Index="K" Term="CreateCompatibleDC method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDCcolcolCreateCompatibleDC"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cdc.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710069">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcdccolcolcreatecompatibledc"></A>CDC::CreateCompatibleDC</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method creates a memory device context that is compatible with the device specified by the pointer, <I>pDC</I>.</P>
+
+<PRE class="syntax"><B>BOOL CreateCompatibleDC( 
+CDC* </B><I>pDC</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Pointer to a device context. If <I>pDC</I> is <B>NULL</B>, the function creates a memory device context that is compatible with the system display.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A memory device context is a block of memory that represents a display surface. It can be used to prepare images in memory before copying them to the actual device surface of the compatible device.</P>
+
+<P>When a memory device context is created, the GDI automatically selects a 1 x 1 monochrome stock bitmap for it. GDI output functions can be used with a memory device context only if a bitmap is created and selected for that context.</P>
+
+<P>This function can only be used to create compatible device contexts for devices that support raster operations. See the <B>CDC::BitBlt</B> method for information regarding bit-block transfers between device contexts. To determine whether a device context supports raster operations, see the <B>RC_BITBLT</B> raster capability in the method <B>CDC::GetDeviceCaps</B>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// This OnDraw() handler loads a bitmap from system resources, centers 
+// it in the view, and uses BitBlt to paint the bitmap bits.
+
+void CBlat2View::OnDraw(CDC* pDC)
+{
+  CBlat2Doc* pDoc = GetDocument();
+  ASSERT_VALID(pDoc);
+
+  // Load IDB_BITMAP1 from the resources.
+  CBitmap bmp;
+  if (bmp.LoadBitmap(IDB_BITMAP1))
+  {
+    // Get the size of the bitmap.
+    BITMAP bmpInfo;
+    bmp.GetBitmap(&amp;bmpInfo);
+
+    // Create an in-memory device context compatible with the
+    // display device context that is used to paint.
+    CDC dcMemory;
+    dcMemory.CreateCompatibleDC(pDC);
+
+    // Select the bitmap into the in-memory device context.
+    CBitmap* pOldBitmap = dcMemory.SelectObject(&amp;bmp);
+
+    // Find a center point for the bitmap in the client area.
+    CRect rect;
+    GetClientRect(&amp;rect);
+    int nX = rect.left + (rect.Width() - bmpInfo.bmWidth) / 2;
+    int nY = rect.top + (rect.Height() - bmpInfo.bmHeight) / 2;
+
+    // Copy the bits from the in-memory device context to the on-
+    // screen device context to do the painting. Use the computed center 
+    // point for the target offset.
+    pDC-&gt;BitBlt(nX, nY, bmpInfo.bmWidth, bmpInfo.bmHeight, &amp;dcMemory, 
+      0, 0, SRCCOPY);
+
+    dcMemory.SelectObject(pOldBitmap);
+  }
+  else
+    TRACE0("ERROR: Where is IDB_BITMAP1?\n");
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcdccolcolcdc.htm"><B>CDC::CDC</B></A>, <A HREF="aflrfcdccolcolgetdevicecaps.htm"><B>CDC::GetDeviceCaps</B></A>, <A HREF="aflrfcdccolcolbitblt.htm"><B>CDC::BitBlt</B></A>, <A HREF="aflrfcdccolcoldeletedc.htm"><B>CDC::DeleteDC</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710069', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_Sledge_Running_the_Test"/>
+<MSHelp:Keyword Index="K" Term="Sledge test (DDTK), running"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: sledge.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddtk_sledge_running_the_test"></A>Running the Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following command line shows the syntax for running Sledge.exe in client mode, where <I>host_name</I> is the server host machine.</P>
+
+<PRE class="code">sledge -c "tcp 2 5; packets-per-conn 100; serv-hostname <I>host_name</I>; go"</PRE>
+
+<P>When run in client mode, Sledge.exe goes through a specified number of cycles. In each cycle, it creates a specified number of connections and, for each successful connection, creates a send thread and a receive thread. The send thread goes through a specified number of iterations. In each iteration, the send thread creates a randomly-sized packet within the bounds of the specified minimum and maximum packet length and sends the packet to the other end of the connection. The receive thread goes through a specified number of iterations. In each iteration, the receive thread optionally sleeps for a specified amount of time, receives a packet, and then checks the validity of the packet received by comparing length and checksum information computed by the send thread.</P>
+
+<P>The following command line shows the syntax for running Sledge.exe in server mode.</P>
+
+<PRE class="code">sledge -c "serv-tcp on; serv-recv-len 100; go"</PRE>
+
+<P>When run in server mode, Sledge.exe creates master server threads &#0151; one each for TCP/IP, IrDA and IrCOMM. The TCP/IP and IrDA master server threads wait for connections. When a connection is made, the master server threads launch a worker server thread to receive and send data to the other end of the connection. The IrCOMM master server thread also acts as the worker server thread that receives and sends data to the other end of the connection. This implies that several TCP/IP and IrDA connections may be supported by the server side of Sledge.exe at the same time, but only one IrCOMM connection may be supported.</P>
+
+<P>In addition to the send thread, receive thread, master server thread, and worker server thread, Sledge.exe has a display thread and an optional hatchet thread. The display thread periodically displays the current statistics of the test as it is running. The hatchet thread, if turned on, periodically looks for clients that have sent more than half of their total data and closes their socket.</P>
+
+<P>When running Sledge.exe over TCP/IP, verify that the machines on which you are running the client and server instances are on the same TCP/IP network and can communicate with each other. Run the server instance of Sledge.exe on one machine and the client instance of Sledge.exe on the other machine.</P>
+
+<P>When running Sledge.exe over IrDA/IrCOMM, verify that the machines on which you are running the client and server instances are connected to each other by an IR link. Run the server instance of Sledge.exe on one machine and the client instance of Sledge.exe on the other machine.</P>
+
+<P>The following table shows the general test case parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Parameter</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>-f</B> <I>script_filename</I></TD>
+<TD width=50%>Loads the script file. To load file over CESH on Windows CE, add the ppsh: prefix.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>-c</B> <I>script_commands</I></TD>
+<TD width=50%>Specifies a list of script commands separated by semicolons.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>-l</B> <I>name</I></TD>
+<TD width=50%>Specifies the name of the CNetQaLog object. This affects the log filename when logging to a file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>-o</B> <I>options</I></TD>
+<TD width=50%>Specifies the logging method(s) to use. The options are listed below; lower case indicates optional method; upper case indicates required method:
+<UL type="disc">
+	<LI>b or B
+<P>Log to the debugger
+</li>
+
+	<LI>k or K
+<P>Log to Kato
+</li>
+
+	<LI>p or P
+<P>Log to a file over CESH (Windows CE only)
+</li>
+
+	<LI>f or F
+<P>Log to a local file
+</li>
+
+	<LI>c or C 
+<P>Log to the console
+</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>-s</B> <I>server_name</I></TD>
+<TD width=50%>Specifies the CNetQaLog server name, which is only required for Kato.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the script language commands.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Command</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>tcp</B> <I>cycles</I> <I>connections</I> </TD>
+<TD width=50%>Client command. Specifies the number of TCP cycles the client instance of Sledge.exe goes through and the number of TCP connections it makes in each cycle. Default: 0 cycles, 0 connections.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>irsock</B> <I>cycles connections</I> </TD>
+<TD width=50%>Client command. Specifies the number of IrDA cycles the client instance of Sledge.exe goes through and the number of IrDA connections it makes in each cycle. Default: 0 cycles, 0 connections.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ircomm</B> <I>cycles connections</I></TD>
+<TD width=50%>Client command. Specifies the number of IrCOMM cycles the client instance of Sledge.exe goes through and the number of IrCOMM connections it makes in each cycle. Default: 0 cycles, 0 connections.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>packets-per-conn</B> <I>packets</I></TD>
+<TD width=50%>Client command. Specifies how many packets the client send thread should send for each connection. Range: 1&#0150;1000.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>packet-len</B> <I>min max</I> </TD>
+<TD width=50%>Client command. Specifies the range of the packet size that the client should randomly select from. Default: 1, 2048.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>serv-hostname</B> <I>hostname</I> </TD>
+<TD width=50%>Client command. Specifies the name of the host machine running a server instance of Sledge.exe. Default: "".</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>serv-hostaddr</B> <I>n.n.n.n</I></TD>
+<TD width=50%>Client command. Specifies the IP address of the host machine running a server instance of Sledge.exe. This is useful only for data transfers involving TCP/IP. Default: 127.0.0.1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>in-flight-closes</B> [on | off]</TD>
+<TD width=50%>Client command. When turned on, a hatchet thread is created that asynchronously closes client sockets when the client is in the middle of data transfer. Default: off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>above-normal</B> [on | off]</TD>
+<TD width=50%>Client command. When turned on, the send and receive threads are created at ABOVE_NORMAL priority. Default: off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>serv-tcp</B> [on | off] </TD>
+<TD width=50%>Server command. When turned on, a TCP/IP master server thread will wait for incoming TCP/IP connections. Default: off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>serv-irsock</B> [on | off] </TD>
+<TD width=50%>Server command. When turned on, an IrDA master server thread will wait for incoming IrDA connections. Default: off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>serv-ircomm</B> [on | off] </TD>
+<TD width=50%>Server command. When turned on, an IrCOMM master server thread will wait for an incoming IrCOMM connection. Default: off.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>serv-recv-len</B> <I>buffer_size</I> </TD>
+<TD width=50%>Server command. Specifies the size of the buffer, in bytes, used to receive and send the data at the server. Default: 64. Range: 1&#0150;2048.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>discover</B></TD>
+<TD width=50%>Server command. Causes Sledge.exe to discover/enumerate IR devices.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>ircomm-port</B> COM<I>port_number</I>:</TD>
+<TD width=50%>Client/Server command. Specifies the COM port number on this machine to read/write data. This is useful only for data transfers involving IrCOMM. Default: COM3:. Range: COM1:&#0150;COM9:.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>msg-mask</B> [add | del] [info | conn | send | recv]</TD>
+<TD width=50%>Client/Server command. Allows the user to select or unselect the type of debug messages that are outputted during a test. These types relate to general information (info), connection (conn), sending of data (send) and receiving of data (recv).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>sleepy-recvs</B> <I>percent</I> </TD>
+<TD width=50%>Client/Server command. Specifies the percentage of Winsock recv calls (for TCP/IP or IrDA) or serial ReadFile calls (for IrCOMM) preceded by a thread sleep for 5 seconds. Default: 0. Range: 0&#0150;100.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>go</B></TD>
+<TD width=50%>Client/Server command. Starts the execution of the test. The rest of the script is ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>quit</B></TD>
+<TD width=50%>Client/Server command. Causes Sledge.exe to terminate.</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20the%20Test&nbsp;(_wceddtk_sledge_running_the_test.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

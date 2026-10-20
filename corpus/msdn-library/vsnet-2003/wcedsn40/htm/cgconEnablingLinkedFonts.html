@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling Linked Fonts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling Linked Fonts"/>
+<MSHelp:RLTitle Title="Enabling Linked Fonts"/>
+<MSHelp:Keyword Index="A" Term="cgconEnablingLinkedFonts"/>
+<MSHelp:Keyword Index="K" Term="enabling, linked fonts"/>
+<MSHelp:Keyword Index="K" Term="fonts, enabling linked"/>
+<MSHelp:Keyword Index="K" Term="UI, enabling linked fonts"/>
+<MSHelp:Keyword Index="K" Term="user interface, enabling linked fonts"/>
+<MSHelp:Keyword Index="A" Term="cgconEnablingLinkedFonts"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_custm.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748657">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconenablinglinkedfonts"></A>Enabling Linked Fonts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE provides a font linking capability so that you can link one or more TrueType fonts to another TrueType font. Font linking is typically used to enable Roman fonts to display non-Roman characters. Windows CE provides font linking in the MGTT component.</P>
+
+<P>To enable font linking, configure the <B>FontLinkMethods</B> entry under the <B>HKEY_LOCAL_MACHINE\System\Gdi </B>registry key. You can use the <B>FontLinkMethods</B> entry to enable cell height adjustment. When enabled, the rasterizer ignores internal leading when calculating the cell height of the linked font. Internal leading is commonly used for Roman fonts to allow accent marks to be placed within the interline spacing. Kanji fonts do not use internal leading. By not including internal leading in the realization of the linked font, the font is rendered from one to several point sizes smaller.</P>
+
+<P>The following example shows the <B>FontLinkMethods</B> entry.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE\SYSTEM\GDI
+    <B>"</B>FontLinkMethods<B>"</B>=dword:<I>n</I></PRE>
+
+<P>Where the value for <I>n</I> can be <B>1</B>, <B>2</B>, or <B>3</B>, as defined in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=10%>Value</TH>
+<TH width=90%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%><B>1</B></TD>
+<TD width=90%>Enables cell height adjustment for fonts that are created with a <B>LOGFONT</B> <I>lfHeight</I> greater than 0. The adjustment for cell height will most typically be warranted for this category of fonts. This setting is enabled in the Web Pad configuration of the Platform Builder for Japanese devices.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%><B>2</B></TD>
+<TD width=90%>Enables cell height adjustment for fonts that are created with a <B>LOGFONT</B> <I>lfHeight</I> less than 0. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%><B>3</B></TD>
+<TD width=90%>Enables cell height adjustment for fonts that are created with a <B>LOGFONT</B> <I>lfHeight</I> either greater than 0 or less than 0. </TD>
+</TR>
+</table></div>
+
+<P>You can map linked fonts to base fonts by configuring the <B>HKEY_LOCAL_MACHINE\Software\Microsoft\FontLink\SystemLink </B>registry key. The following example shows how to link Tahoma, the base font, to MS Gothic, the linked font, by providing the path to the linked font .ttf file and the linked font name.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE\Software\Microsoft\FontLink\SystemLink
+    "Tahoma"="\\Windows\\msgothic.ttc,,l,r ,oƒSƒVƒbƒN"</PRE>
+
+<P>When using font linking, you can define one or more Unicode characters that should be obtained from the linked font, even if they are present in the base font. You can define these skipped characters by using the <B>HKEY_LOCAL_MACHINE\Software\Microsoft\FontLink\SkipTable</B> registry key. This registry key is read only when the OS boots. </P>
+
+<P>The following example shows that, even though there is a character in Tahoma at Unicode character 005c, the character in the linked font will be used instead.</P>
+
+<PRE class="code"><B>"</B>Tahoma<B>"</B>=<B>"</B>005c, 00a5, 007e, 0391-03c9, 2026, 2116, 221a, 25a0-25ff<B>"</B></PRE>
+
+<P>For bold fonts, the graphics device interface (GDI) determines whether to simulate bold, using the base font only as a reference. If you use a bold font to write a string, and the base font is bold in the .ttf file, but the linked font is not, text in the linked font does not display as bold. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="ceconFontLinking" TABINDEX="0">Font Linking</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Enabling%20Linked%20Fonts&nbsp;(cgconenablinglinkedfonts.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

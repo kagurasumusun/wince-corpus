@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using MFC as an Application Framework</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_documents.2c_.views.2c_.and_the_framework"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_using_mfc_as_an_application_framework"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_using_mfc_as_an_application_framework"></A><SUP></SUP>Using MFC as an Application Framework</H1>
+
+<P>Work with the MFC framework is based largely on a few major classes. Some classes encapsulate a large portion of the Win32 application programming interface (API). Other classes encapsulate application concepts such as documents, views, and the application itself. Still others encapsulate OLE features and ODBC and DAO data-access functionality.</P>
+
+<P>For example, the C++ class <B>CWnd</B> contains a member variable of type <B>HWND</B>, and the member functions of the class encapsulate calls to Win32 functions that take <B>HWND</B> as a parameter. The class member functions typically have the same name as the Win32 function they encapsulate.</P>
+
+
+
+<P><B><A NAME="_wcemfc_documents.2c_.views.2c_.and_the_framework"></A>Documents, Views, and the Framework</B></P>
+
+<P>At the heart of the MFC framework are the concepts of document and view. A document is a data object with which the user interacts in an editing session. It is created by the New or Open command on the File menu and is typically saved in a file. Do not confuse standard MFC documents, derived from class <B>CDocument</B>, with OLE compound documents. A view is a window object through which the user interacts with a document. </P>
+
+<P>The key objects in a running application are:
+
+<UL type=disc>
+	<LI>The document
+<P>Your document class, derived from <B>CDocument</B>, specifies the data of your application.
+
+<P>If you want OLE functionality in your application, derive your document class from <B>COleDocument</B> or one of its derived classes, depending on the type of functionality you need.
+</LI>
+
+	<LI>The view
+<P>Your view class, derived from <B>CView</B>, is the user's window on the data. The view class controls how the user sees the data of your document and interacts with it. In some cases, you may want a document to have multiple views of the data.
+
+<P>If you need scrolling, derive from <B>CScrollView</B>. If your view has a user interface that is laid out in a dialog-template resource, derive from <B>CFormView</B>. For simple text data, use or derive from <B>CEditView</B>. Also available are classes <B>CTreeView</B> and <B>CListView</B>. (<B>CRichEditView</B> is not available in MFC for Windows CE 3.0.)
+</LI>
+
+	<LI>The frame windows
+<P>Views are displayed inside document frame windows. In an SDI application (MDI applications are not supported in Windows CE), the document frame window is also the main frame window for the application. The derived main frame-window class specifies the styles and other characteristics of the frame windows that contain your views. If you need to customize frame windows, derive from <B>CFrameWnd </B>to customize the document frame window.
+</LI>
+
+	<LI>The document template
+<P>A document template coordinates the creation of documents, views, and frame windows. A particular document-template class, derived from class <B>CDocTemplate</B>, creates and manages all open documents of one type. Applications that support more than one type of document have multiple document templates. Use class <B>CSingleDocTemplate</B>.
+</LI>
+
+	<LI>The application object
+<P>Your application class, derived from <B>CWinApp</B>, controls all the objects above and specifies application behavior such as initialization and cleanup. The sole application object creates and manages the document templates for any document types the application supports.
+</LI>
+
+	<LI>Thread objects
+<P>If your application creates separate threads of execution&#0151;for example, to perform calculations in the background&#0151;you'll use classes derived from <B>CWinThread</B>. <B>CWinApp </B>itself is derived from <B>CWinThread</B> and represents the primary thread of execution (or the main process) in your application. You can also use MFC in secondary threads.
+</LI>
+</UL>
+
+<P>In a running application, these objects cooperatively respond to user actions, bound together by commands and other messages. A single application object manages one or more document templates. Each document template creates and manages one or more documents. The user views and manipulates a document through a view contained inside a frame window. The following figure shows the relationships among these objects.</P>
+
+<P><IMG SRC="vc386v1.gif" ALT="" BORDER=0></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

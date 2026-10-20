@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListCtrl::GetItemRect</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_clistctrl_getitemrect"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_clistctrl_getitemrect"></A>CListCtrl::GetItemRect</H1>
+
+<P>This method retrieves the bounding rectangle for all or part of an item in the current view.</P>
+
+<PRE class=syntax><B>BOOL GetItemRect(
+int </B><I>nItem</I><B>,
+LPRECT </B><I>lpRect</I><B>,
+UINT </B><I>nCode</I><B> )
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nItem</I></DT>
+
+<DD>Specifies the index of the item whose position is to be retrieved.</DD>
+
+<DT><I>lpRect</I></DT>
+
+<DD>Address of a <A HREF="struct_23.htm"><B>RECT</B></A> structure that receives the bounding rectangle. </DD>
+
+<DT><I>nCode</I></DT>
+
+<DD>Specifies the portion of the list view item for which to retrieve the bounding rectangle. It can be one of these values:
+
+<UL type=disc>
+	<LI>LVIR_BOUNDS&nbsp;&nbsp;&nbsp;Returns the bounding rectangle of the entire item, including the icon and label.</LI>
+
+	<LI>LVIR_ICON&nbsp;&nbsp;&nbsp;Returns the bounding rectangle of the icon or small icon.</LI>
+
+	<LI>LVIR_LABEL&nbsp;&nbsp;&nbsp;Returns the bounding rectangle of the item text.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// OnClick in the handler for the NM_CLICK notification
+void CMyListCtrl::OnClick(NMHDR* pNMHDR, LRESULT* pResult)
+{
+   // Get the current mouse location and convert it to client
+   // coordinates.
+   DWORD pos = GetMessagePos();
+   CPoint pt(LOWORD(pos), HIWORD(pos));
+   ScreenToClient(&amp;pt);
+
+   // Get indexes of the first and last visible items in
+   // the listview control.
+   int index = GetTopIndex();
+   int last_visible_index = index + GetCountPerPage();
+   if (last_visible_index &gt; GetItemCount())
+       last_visible_index = GetItemCount();
+
+   // Loop until the number of visible items has been reached.
+   while (index &lt;= last_visible_index)
+   {
+       // Get the bounding rectangle of an item. If the mouse
+       // location is within the bounding rectangle of the item,
+       // you know you have found the item that was being clicked.
+       CRect r;
+       GetItemRect(index, &amp;r, LVIR_BOUNDS);
+       if (r.PtInRect(pt))
+           {
+               UINT flag = LVIS_SELECTED | LVIS_FOCUSED;
+               SetItemState(index, flag, flag);
+               break;
+          }
+
+       // Get the next item in listview control.
+       index++;
+   }
+
+   *pResult = 0;
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="clistctr_28.htm"><B>CListCtrl::GetItemPosition</B></A>, <A HREF="clistctr_62.htm"><B>CListCtrl::SetItemPosition</B></A>, <A HREF="clistctr_34.htm"><B>CListCtrl::GetOrigin</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>UNIT_AllocateLocalPlugCB</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="UNIT_AllocateLocalPlugCB"/>
+<MSHelp:RLTitle Title="UNIT_AllocateLocalPlugCB"/>
+<MSHelp:Keyword Index="A" Term="cxrefUNIT_AllocateLocalPlugCB"/>
+<MSHelp:Keyword Index="K" Term="UNIT_AllocateLocalPlugCB"/>
+<MSHelp:Keyword Index="A" Term="cxrefUNIT_AllocateLocalPlugCB"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: 1394_ufd_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758879">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefunit_allocatelocalplugcb"></A>UNIT_AllocateLocalPlugCB</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function must be provided by the subunit driver. It is called by the unit filter driver when an outside node has requested that a subunit allocate and connect itself to a local serial bus plug.</P>
+
+<PRE class="syntax"><B>NTSTATUS (*UNIT_AllocateLocalPlugCB)(</B>
+<B>PVOID </B><I>Context</I><B>, </B>
+<B>ULONG </B><I>SubunitPlugID</I><B>,</B>
+<B>ULONG </B><I>Direction</I><B>,</B>
+<B>UNIT_MediaType </B><I>MediaType</I><B>,</B>
+<B>ULONG </B><I>MaximumThroughput</I><B>,</B>
+<B>ULONG *</B><I>PlugNumber</I><B>,</B>
+<B>HANDLE *</B><I>Plug</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Context</I></DT>
+
+<DD>[in] An opaque value that the subunit driver provided when utilizing the UNIT_CMD_REGISTER_SUBUNIT command from the subunit.</dd>
+
+<DT><I>SubunitPlugID</I></DT>
+
+<DD>[in] Defines the subunit-specific plug identifier. This is not to be confused with a unit or serial bus plug. This differentiates between different Subunit plugs. STREAM_SUBUNIT_PLUG_ID_Any can be used to indicate that any available subunit plug be utilized.</dd>
+
+<DT><I>Direction</I></DT>
+
+<DD>[in] Defines whether the subunit intends to utilize the plug as an input plug, UNIT_PLUG_Direction_Input, or an output plug, UNIT_PLUG_Direction_Output. </dd>
+
+<DT><I>MediaType</I></DT>
+
+<DD>[in] Defines the digital media type that the subunit can receive, for an input plug, or transmit, for an output plug. Must be from the following list, or be STREAM_MediaType_Default, in which case the subunit chooses one of the following media types:
+
+<UL type="disc">
+	<LI>STREAM_MediaType_MPEG</li>
+
+	<LI>STREAM_MediaType_MPEG_TimeShifted</li>
+
+	<LI>STREAM_MediaType_DSS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+
+	<LI>STREAM_MediaType_DSS_TimeShifted</li>
+
+	<LI>STREAM_MediaType_Audio_AM824</li>
+
+	<LI>STREAM_MediaType_Audio_24x4Pack</li>
+
+	<LI>STREAM_MediaType_Audio_32fp</li>
+
+	<LI>STREAM_MediaType_DV_SD_625_50Hz</li>
+
+	<LI>STREAM_MediaType_DV_SD_525_60Hz</li>
+
+	<LI>STREAM_MediaType_DV_SDL_625_50Hz</li>
+
+	<LI>STREAM_MediaType_DV_SDL_525_60Hz</li>
+
+	<LI>STREAM_MediaType_DV_HD_1250_50Hz</li>
+
+	<LI>STREAM_MediaType_DV_HD_1125_60Hz</li>
+</UL>
+</dd>
+
+<DT><I>MaximumThroughput</I></DT>
+
+<DD>[in] The maximum number of bits that this plug should ever attempt to transmit per second. This applies to output plugs only, and can be ignored for input plugs. If this value is 0 and the plug is an output plug, the subunit driver should determine what the appropriate maximum throughput value is to use.</dd>
+
+<DT><I>PlugNumber</I></DT>
+
+<DD>[out] This parameter should be completed after the function finishes successfully with the plug number allocated. If successful, the subunit should complete the <B>ULONG</B> pointed to by this argument with the number of the serial bus plug to which it is connected.</dd>
+
+<DT><I>Plug</I></DT>
+
+<DD>[out] This parameter should be completes after the function successfully finishes with the handle of the plug allocated. If successful, the subunit should complete the <B>HANDLE</B> pointed to by this argument with the plug handle of the serial bus plug that was allocated.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation was successful, the subunit returns STATUS_SUCCESS. Otherwise, an appropriate error code should be returned. Any error code will cause the request from the external device to be rejected.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is provided to permit the system to be able to process incoming CONNECT_AV unit commands. These commands are directed at the unit, but can refer to individual subunits. When that is the case, the subunit must be responsible for acting, and this callback is provided for that instance.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>Avc_unit.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefunit_freelocalplugcb.htm">UNIT_FreeLocalPlugCB</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;UNIT_AllocateLocalPlugCB&nbsp;(cxrefunit_allocatelocalplugcb.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

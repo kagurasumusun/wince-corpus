@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>File System Filters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="File System Filters"/>
+<MSHelp:RLTitle Title="File System Filters"/>
+<MSHelp:Keyword Index="A" Term="cmconFileSystemFilters"/>
+<MSHelp:Keyword Index="K" Term="DLLs, file system filters"/>
+<MSHelp:Keyword Index="K" Term="file system filters, development of"/>
+<MSHelp:Keyword Index="K" Term="filtering, file system filters"/>
+<MSHelp:Keyword Index="A" Term="cmconFileSystemFilters"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: fsfilters_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconfilesystemfilters"></A>File System Filters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A file system filter is a dynamic-link library (DLL) that exports file system entry points. These entry points map to the standard file system functions, such as <MSHelp:link keywords="cerefCreateFile" TABINDEX="0">CreateFile</MSHelp:link> and <MSHelp:link keywords="cerefCreateDirectory" TABINDEX="0">CreateDirectory</MSHelp:link>. Because file system filters sit on top of the file system and intercept file system calls, you can use this mechanism to encrypt, compress, or virus scan any fsdmgr loaded file system. Multiple filters can exist on any fsdmgr loaded file system performing any combination of file manipulation before the file system sees the call.</P>
+
+<P>File system filters are lightweight file system drivers (FSDs), except file system filters expose <MSHelp:link keywords="cerefFSD_HookVolume" TABINDEX="0">FSD_HookVolume</MSHelp:link> and <MSHelp:link keywords="cerefFSD_UnhookVolume" TABINDEX="0">FSD_UnhookVolume</MSHelp:link>. FSDs expose <MSHelp:link keywords="cerefFSD_MountDisk" TABINDEX="0">FSD_MountDisk</MSHelp:link> and <MSHelp:link keywords="cerefFSD_UnmountDisk" TABINDEX="0">FSD_UnmountDisk</MSHelp:link>. For more information on file system drivers, see <MSHelp:link keywords="cgconCreatingFSDs" TABINDEX="0">Creating FSDs</MSHelp:link>.</P>
+
+<P>The FSD Manager loads FSDs and file system filters.</P>
+
+<P>To build a file system filter list, search the following registry paths: 
+
+<UL type="disc">
+	<LI><B>HKEY_LOCAL_MACHINE\System\StorageManager\AutoLoad\<I>FileSystem</I>\Filters</B>
+<P>- or -
+</li>
+
+	<LI><B>HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\<I>ProfileName</I>\<I>FileSystem</I>\Filters</B></li>
+
+	<LI><B>HKEY_LOCAL_MACHINE\System\StorageManager\<I>FileSystem</I>\Filters</B></li>
+
+	<LI><B>HKEY_LOCAL_MACHINE\System\StorageManager\Filters</B></li>
+</UL>
+
+<P><B><I>FileSystem</I></B> is the name of the file system in the registry. Possible values are <B>FATFS</B>, <B>UDFS</B>, <B>RELFSD</B>, and so on.</P>
+
+<P><B><I>ProfileName</I></B> is the name of the profile. <B>AutoLoad</B> is a special profile. You can load file system filters after loading FSDs with the <B>AutoLoad</B> key. By supplying the AutoLoad key and the name of the file system, FileSys.exe loads the installable file system.</P>
+
+<P>If there is a file system filter in <B>HKEY_LOCAL_MACHINE\System\StorageManager\AutoLoad\<I>FileSystem</I>\Filters</B> or <B>HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\<I>ProfileName</I>\<I>FileSystem</I>\Filters</B>, then all occurrences of the file system loaded under the profile get the filter.</P>
+
+<P>If there is a file system filter in <B>HKEY_LOCAL_MACHINE\System\StorageManager\<I>FileSystem</I>\Filters</B>, then all occurrences of the file system get the filter.</P>
+
+<P>If there is a file system filter in <B>HKEY_LOCAL_MACHINE\System\StorageManager\Filters</B>, then all file systems get the filter.</P>
+
+<P>To set up a file system filter using any of the above registry keys, append your <B><I>FilterName</I></B>, <B>DLL</B> value, and <B>Order</B> value to the <B>Filters</B> key as shown in the following example.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\...\Filters\<I>FilterName</I>]
+    "dll"="filter.dll"
+    "Order"=dword:x</PRE>
+
+<P>The file system filter stack is then built using all combinations of the registry paths. The order of the file system filter stack is determined by <B>Order</B>. If the order is not specified, the order is undefined.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconfilesystemfiltersamples.htm">File System Filter Samples</A></P>
+
+<P><A HREF="cxconstoragemanager.htm">Storage Manager</A></P>
+
+<P><A HREF="cmconpartitiondriver.htm">Partition Driver</A></P>
+
+<P><A HREF="cxconpartitionmanager.htm">Partition Manager</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;File%20System%20Filters&nbsp;(cmconfilesystemfilters.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

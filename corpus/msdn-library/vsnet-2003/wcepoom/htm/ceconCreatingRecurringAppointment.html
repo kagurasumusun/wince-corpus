@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Recurring Appointment</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Recurring Appointment"/>
+<MSHelp:RLTitle Title="Creating a Recurring Appointment"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingRecurringAppointment"/>
+<MSHelp:Keyword Index="K" Term="Pocket Outlook, creating recurring appointments (code example)"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingRecurringAppointment"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: poom_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760720">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconcreatingrecurringappointment"></A>Creating a Recurring Appointment</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following C++ code example shows you to create a recurring appointment. This appointment will occur every Monday at 10:00 AM. We assume we have already gotten an <B>Application</B> object and logged on.</P>
+
+<PRE class="code">IAppointment *pAppt;
+IRecurrencePattern *pRec;
+SYSTEMTIME st;
+DATE date;
+
+// Call CreateItem to create an item directly from the Application object.
+polApp-&gt;CreateItem (olAppointmentItem, (IDispatch**)&amp;pAppt);
+
+// Convert Monday, 4/5/99 at 10:00 am to a DATE
+memset (&amp;st, 0, sizeof (SYSTEMTIME));
+st.wMonth = 4;
+st.wDay   = 5;
+st.wYear  = 1999;
+st.wHour  = 10;
+
+// Note the use of the SystemTimeToVariantTime method in the 
+// Application object. Because it is not defined on Palm-size
+// PC version 1.0, this is necessary for the code to compile for
+// that platform. If you will not be compiling this code on that
+// platform, call SystemTimeToVariantTime directly.
+polApp-&gt;SystemTimeToVariantTime (&amp;st, &amp;date);
+
+// Set the subject and the start date to 10:00 am
+pAppt-&gt;put_Subject (TEXT ("Recurring Appointment"));
+pAppt-&gt;put_Start (date);
+
+// Now, set the RecurrencePattern
+pAppt-&gt;GetRecurrencePattern (&amp;pRec);
+pRec-&gt;put_RecurrenceType (olRecursWeekly);
+pRec-&gt;put_DayOfWeekMask (olMonday);
+pRec-&gt;put_NoEndDate (VARIANT_TRUE);
+
+// And save the appointment
+pAppt-&gt;Save ();
+
+// Release objects
+pRec-&gt;Release ();
+pAppt-&gt;Release ();</PRE>
+
+<P>The following Visual Basic code does the same thing.</P>
+
+<PRE class="code">' olAppointmentItem is replaced with 1
+Set pAppt = polApp.CreateItem (1)
+pAppt.Subject = "Recurring Appointment"
+pAppt.Start = #4/5/1999 10:00 AM#
+
+' olRecursWeekly is replaced with 1 and olMonday is replaced with 2.
+Set pRec = pAppt.GetRecurrencePattern
+pRec.RecurrenceType = 1
+pRec.DayOfWeekMask = 2
+pRec.NoEndDate = True
+' Save the appointment
+pAppt.Save</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20a%20Recurring%20Appointment&nbsp;(ceconcreatingrecurringappointment.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

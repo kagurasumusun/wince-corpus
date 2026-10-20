@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 3: Looping Through Data</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 3: Looping Through Data"/>
+<MSHelp:RLTitle Title="Step 3: Looping Through Data"/>
+<MSHelp:Keyword Index="A" Term="cetutStep3LoopingThroughData"/>
+<MSHelp:Keyword Index="A" Term="cetutStep3LoopingThroughData"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: xslpg01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821082">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cetutstep3loopingthroughdata"></A>Step 3: Looping Through Data</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The sales data consists of three regions (West Coast, Central, and East Coast) with four quarters per region.</P>
+
+<PRE class="code">&lt;data&gt;
+   &lt;region&gt;
+      &lt;name&gt;West Coast&lt;/name&gt;
+      &lt;quarter number="1" books_sold="24000"/&gt;
+      &lt;quarter number="2" books_sold="38600"/&gt;
+      &lt;quarter number="3" books_sold="44030"/&gt;
+      &lt;quarter number="4" books_sold="21000"/&gt;
+   &lt;/region&gt;
+   &lt;region&gt;
+      &lt;name&gt;Central&lt;/name&gt;
+      &lt;quarter number="1" books_sold="11000"/&gt;
+      &lt;quarter number="2" books_sold="16080"/&gt;
+      &lt;quarter number="3" books_sold="25000"/&gt;
+      &lt;quarter number="4" books_sold="29000"/&gt;
+   &lt;/region&gt;
+   &lt;region&gt;
+      &lt;name&gt;East Coast&lt;/name&gt;
+      &lt;quarter number="1" books_sold="27000"/&gt;
+      &lt;quarter number="2" books_sold="31400"/&gt;
+      &lt;quarter number="3" books_sold="40100"/&gt;
+      &lt;quarter number="4" books_sold="30000"/&gt;
+   &lt;/region&gt;
+&lt;/data&gt;</PRE>
+
+<P>It would be cumbersome to handle this data using the pattern matching method described in Step 2 of the Tutorial. Fortunately, XSLT allows us to step through this data, formatting as you go. Each of the regions can be considered a data structure. They start and end with the same tag and contain identical types of information, although the data itself varies. Using XSLT, you can apply a format for every instance of a data structure, while only having to specify the formatting information once. In this example, you will also show how you can use XSLT to summarize data.</P>
+
+<P class="labelproc"><B>To total the sales for each region and display the total on the page</B>
+
+<OL type="1">
+	<LI>Open <B>Transform.xsl</B>.</li>
+
+	<LI>Locate the following code.
+<PRE class="code">      &lt;/BODY&gt;
+    &lt;/HTML&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</PRE>
+</li>
+
+	<LI>Use the <B>Copy</B> and <B>Paste</B> commands to place the following text directly above the code you found in the preceding step in this procedure.
+<PRE class="code">&lt;!--Step 3--&gt;
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Region\Quarter&lt;/th&gt;
+    &lt;xsl:for-each select="//data/region[1]/quarter"&gt;
+      &lt;th&gt;Q&lt;xsl:value-of select="@number"/&gt;&lt;/th&gt;
+    &lt;/xsl:for-each&gt;
+    &lt;th&gt;Total&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;xsl:for-each select="//data/region"&gt;
+    &lt;tr&gt;
+      &lt;th style="text-align:left"&gt;&lt;xsl:value-of select="name"/&gt;&lt;/th&gt;
+      &lt;xsl:for-each select="quarter"&gt;
+        &lt;td style="text-align:right"&gt;
+          &lt;xsl:value-of select="format-number(@books_sold,'###,###')"/&gt;
+        &lt;/td&gt;
+      &lt;/xsl:for-each&gt;
+      &lt;td style="text-align:right;font-weight:bold;"&gt;
+        &lt;!-- Total Goes here --&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/table&gt;</PRE>
+</li>
+
+	<LI>Save and close <B>Transform.xsl</B>.</li>
+
+	<LI>To view the regional sales in Internet Explorer, open <B>Sales.xml</B>.
+<P>The new portion of the sales report should look like this:
+
+<P class="fig1"><IMG SRC="xsltut01.gif" ALT="" BORDER=0>
+</li>
+</OL>
+
+<H2 class="dtH2">How It Works</H2>
+
+<P>Some of this code contains select statements and is familiar from Step 2 of the Tutorial. However, you are doing something new here. Look at the line &lt;xsl:for-each select="//data/region[1]/quarter&gt;. The first part, xsl:for-each, tells the parser to do something every time it finds a pattern. The text <B>select=</B>"//data/region[1]/quarter" tells the parser which pattern to look for. The next line, &lt;td&gt;Q&lt;xsl:value-of select="@number"/&gt;&lt;/th&gt;, tells the parser to look inside the &lt;quarter&gt; tag it selected just before, and get the value of number=. Because you used a for-each select command, this will be performed for every &lt;quarter&gt; tag in the XML. The end result is a table with a list of quarters along the top.</P>
+
+<H3 class="dtH3">Adding a Totals Column</H3>
+
+<P class="labelproc"><B>To use XML and XSL to calculate total sales</B>
+
+<OL type="1">
+	<LI>Open <B>Transform.xsl</B> in your HTML editor.</li>
+
+	<LI>Delete the following text.
+<PRE class="code">&lt;!-- Total Goes Here --&gt;.</PRE>
+</li>
+
+	<LI>Replace with the following text.
+<PRE class="code">&lt;xsl:value-of select="format-number(sum(quarter/@books_sold),'###,###')"/&gt;</PRE>
+</li>
+
+	<LI>Save and close <B>Transform.xsl</B>.</li>
+
+	<LI>To view the totals in Internet Explorer, open <B>Sales.xml</B>.
+<P>There should now be a column that displays the total sales for each region:
+
+<P class="fig1"><IMG SRC="xsltut02.gif" ALT="" BORDER=0>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>You can use the <code class="ce">format-number()</code> command to add a comma after the third significant digit, as shown here.</BLOCKQUOTE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cetutstep4addingconditionalstatements.htm">Step 4: Adding Conditional Statements</A></P>
+
+<P><A HREF="cetutstep2matchingpatterns.htm">Step 2: Matching Patterns</A></P>
+
+<P><A HREF="cecongettingstartedwithxslttutorial.htm">Tutorial: Getting Started with XSLT</A></P>
+
+<P><A HREF="ceconexploringxsltcapabilities.htm">Exploring XSLT Capabilities</A></P>
+
+<P><A HREF="ceconxsltdevelopersguide.htm">XSLT Developer Guide</A></P>
+
+<BLOCKQUOTE class="dtBlock">
+</BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%203:%20Looping%20Through%20Data&nbsp;(cetutstep3loopingthroughdata.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Accelerating Line Drawing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Accelerating Line Drawing"/>
+<MSHelp:RLTitle Title="Accelerating Line Drawing"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Accelerating_Line_Drawing"/>
+<MSHelp:Keyword Index="K" Term="Accelerating Line Drawing"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_accelerating_line_drawing"></A>Accelerating Line Drawing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE 2.0 and later include support for accelerating line drawing. The levels of accelerated line drawing are largely the same as for accelerated blit operations. The discussion of <A HREF="_wceddk_accelerating_bit_block_transfers.htm">accelerating bit block transfers</A> in the previous sections is relevant for line drawing as well, except that the emulation library provided in the Platform Builder does not provide software-accelerated line drawing. Developers can add software-accelerated line drawing functions, if necessary.</P>
+
+<P>Display drivers route line drawing to the GPE, to custom software acceleration routines, or directly to the hardware. The following code example from the ATI display driver sample shows how these methods are invoked. This source code is very similar in design to the acceleration processing performed for blit operations.</P>
+
+<PRE class="code">SCODE ATI::Line(GPELineParms *pLineParms, EGPEPhase phase)
+{
+    if (phase == gpeSingle || phase == gpePrepare) {
+        DispPerfStart (ROP_LINE);
+        pLineParms-&gt;pLine = EmulatedLine;
+        if (((ATISurf*)(pLineParms-&gt;pDst))-&gt;InVideoMemory() &amp;&amp;
+            pLineParms-&gt;mix == 0x0d0d) 
+        {
+            pLineParms-&gt;pLine = (SCODE (GPE::*)(struct GPELineParms *))
+            AcceleratedSolidLine;
+        }
+        else if (phase == gpeComplete) 
+        {
+            DispPerfEnd (0);
+        }
+    return S_OK;
+}</PRE>
+
+<P>Line drawing begins with a call to the driver's <B>Line</B> function. For improved performance, the driver's <B>Line</B> function can examine the characteristics of the line drawing and the associated surfaces to determine whether an accelerated form of line drawing is appropriate. The default line drawing function is set to the <B>EmulatedLine</B> function of the GPE. The driver checks for a destination surface in video memory and checks the line drawing parameters. If the parameters are valid for acceleration, the line drawing function is set to the driver's <B>AcceleratedSolidLine</B> function.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Accelerating%20Line%20Drawing&nbsp;(_wceddk_accelerating_line_drawing.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

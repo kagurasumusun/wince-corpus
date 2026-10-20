@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DSDM_SETVOLUMEPAN</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DSDM_SETVOLUMEPAN"/>
+<MSHelp:RLTitle Title="DSDM_SETVOLUMEPAN"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_DSDM_SETVOLUMEPAN"/>
+<MSHelp:Keyword Index="K" Term="DSDM_SETVOLUMEPAN"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_DSDM_SETVOLUMEPAN"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dsound_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674097">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_dsdm_setvolumepan"></A>DSDM_SETVOLUMEPAN</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This message sets the volume and pan of the sound buffer to the value specified by the <B>IVolume</B> member of the <B>SDVOLUMEPAN</B> structure.</P>
+
+<PRE class="syntax"><B>typedef struct {</B>
+<B>  DWORD   </B><I>dwMsg</I><B>;</B>
+<B>  DWORD   </B><I>dwInstance</I><B>;</B>
+<B>  LONG    </B><I>lVolume</I><B>;</B>
+<B>  LONG    </B><I>lPan</I><B>;</B>
+<B>} DSDMP_SETVOLUMEPAN;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwMsg</B></DT>
+
+<DD>Equals DSDM_SETVOLUMEPAN.</dd>
+
+<DT><B>dwInstance</B></DT>
+
+<DD>DirectSoundBuffer instance data.</dd>
+
+<DT><B>lVolume</B></DT>
+
+<DD>The new volume setting in decibels.</dd>
+
+<DT><B>lPan</B></DT>
+
+<DD>The new pan setting in linear form.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns DS_OK if successful, or one of the following error values otherwise.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Error value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DSERR_INVALIDCALL</TD>
+<TD width=60%>This call is not valid for the current state of this object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>DSERR_INVALIDPARAM</TD>
+<TD width=60%>An invalid parameter was passed to the returning function.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>DirectSound only calls this method if the sound buffer object was created with the DSBCAPS_CTRLVOLUME flag, the DSBCAPS_CTRLPAN flag, or both. If the sound device cannot support these controls, the driver should fail the DSDM_CREATEBUFFER call whenever those control flags are specified. </P>
+
+<P>The DirectSound API specifies volume in hundredths of decibels (dB), where 0 is the original volume of the stream. Positive decibels correspond to amplification, and negative decibels correspond to attenuation. The decibel (dB) scale corresponds to the logarithmic hearing characteristics of the ear, positive decibels. An attenuation of 10 dB makes a buffer sound half as loud, an attenuation of 20 dB makes a buffer sound one quarter as loud. DirectSound volumes range from 0 dB, no volume adjustment, to -10000 dB. Amplification is not currently supported. </P>
+
+<P>The DirectSound API also specifies pan in hundredths of dB, in the range of -10000 to 10000. Zero is the neutral value; a pan of 0 means that both channels are at full volume). At any other setting, one of the channels is at full volume and the other is attenuated. For example, a pan of -2173 means that the left channel is at full volume and the right channel is attenuated by 21.73 dB. Similarly, a pan of 870 means that the left channel is attenuated by 8.7 decibels (dB) and the right channel is at full volume. A pan of -10000 means that the right channel is silent and a pan of 10000 means that the left channel is silent.</P>
+
+<P>Regardless of whether the driver supports volume control, this function should return DS_OK if the requested volume is the same as the current volume.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>Dsdriver.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefdirectsounddrivermessages.htm">DirectSound Driver Messages</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DSDM_SETVOLUMEPAN&nbsp;(_wceddk_dsdm_setvolumepan.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

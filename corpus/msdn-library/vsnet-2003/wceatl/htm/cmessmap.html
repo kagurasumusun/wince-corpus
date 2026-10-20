@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMessageMap</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_cmessagemap"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_cmessagemap"></A>CMessageMap</H1>
+
+<P>This abstract base class allows message maps in an object to be accessed by another object. An object must be derived from <B>CMessageMap</B> to expose its message maps.</P>
+
+<P>ATL for Windows CE uses <B>CMessageMap</B> to support contained windows and dynamic message map chaining. </P>
+
+<PRE class=syntax><B>class ATL_NO_VTABLE CMessageMap</B><I> </I></PRE>
+
+<H4>Remarks</H4>
+
+<P>The following example shows how the contained window is declared, and since the class contains a <A HREF="ccontain.htm"><B>CContainedWindow</B></A> object it is shown deriving from <B>CMessageMap</B>. Finally, through <A HREF="cccontrl.htm"><B>CComControl</B></A>, the <B>CAtlEdit</B> class automatically derives from <B>CMessageMap</B>.</P>
+
+<PRE>class CAtlEdit : public CComControl&lt;CAtlEdit&gt;, ...
+               // CComControl derives from CWindowImpl,
+               // which derives from CMessageMap
+{
+public:
+   // Declare a contained window data member.
+   CContainedWindow m_EditCtrl;
+
+   // Initialize the contained window:
+   // 1. Pass "EDIT" to specify that the contained
+   //    window should be based on the standard
+   //    Windows Edit box
+   // 2. Pass 'this' pointer to specify that CAtlEdit
+   //    contains the message map to be used for the
+   //    contained window's message processing.
+   // 3. Pass the identifier of the message map. In
+   //    this case, '1' identifies the message map
+   //    declared with ALT_MSG_MAP(1).
+   CAtlEdit() : m_EditCtrl(_T("EDIT"), this, 1)
+   {
+      m_bWindowOnly = TRUE;
+   }
+
+   // Declare the default message map.
+   BEGIN_MSG_MAP(CAtlEdit)
+      MESSAGE_HANDLER(WM_PAINT, OnPaint)
+      ...
+   // Declare an alternate message map,
+   // identified by '1'.
+   ALT_MSG_MAP(1)
+      MESSAGE_HANDLER(WM_CHAR, OnChar)
+   END_MSG_MAP()
+
+   ...
+};
+</PRE>
+
+<P>Because the contained window, <B>m_EditCtrl</B>, will use a message map in the containing class, <B>CAtlEdit</B> derives from <B>CMessageMap</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlwin.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdynamic.htm"><B>CDynamicChain</B></A>, <A HREF="atlapi_26.htm"><B>BEGIN_MSG_MAP</B></A>, <A HREF="atlapi_2.htm"><B>ALT_MSG_MAP</B></A><B> </B></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxCheckMemory</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afxcheckmemory"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_afxcheckmemory"></A>AfxCheckMemory&nbsp;&nbsp;</H1>
+
+<P>This function validates the free memory pool and prints error messages as required. If the function detects no memory corruption, it prints nothing.</P>
+
+<PRE class=syntax><B>BOOL</B> <B>AfxCheckMemory(</B> <B>);</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if no memory errors; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>All memory blocks currently allocated on the heap are checked, including those allocated by <B>new</B> but not those allocated by direct calls to underlying memory allocators, such as the <B>malloc</B> function or the <B>LocalAlloc</B> Windows CE function. If any block is found to be corrupted, a message is printed to the debugger output.</P>
+
+<P>If you include the line</P>
+
+<PRE>#define new DEBUG_NEW
+</PRE>
+
+<P>in a program module, then subsequent calls to <B>AfxCheckMemory</B> show the filename and line number where the memory was allocated.</P>
+
+<P class=indent><span class=blue><B>Note</B></span>&nbsp;&nbsp;&nbsp;If your module contains one or more implementations of serializable classes, then you must put the <B>#define</B> line after the last <B>IMPLEMENT_SERIAL</B> macro call.</P>
+
+<P class=indent>This function works only in the Debug version of MFC.</P>
+
+<H4>Example</H4>
+
+<PRE>// example for AfxCheckMemory
+CAge* pcage = new CAge( 21 );  // CAge is derived from CObject.
+Age* page = new Age( 22 );     // Age is NOT derived from CObject.
+*(((char*) pcage) &#0150;1) = 99;   // Corrupt preceding guard byte
+*(((char*) page) &#0150;1) = 99;    // Corrupt preceding guard byte
+AfxCheckMemory();
+</PRE>
+
+<P>The results from the program are as follows:</P>
+
+<PRE>memory check error at $0067495F = $63, should be $FD
+DAMAGE: before Non-Object block at $00674960
+Non-Object allocated at file test02.cxx(48)
+Non-Object located at $00674960 is 2 bytes long
+memory check error at $00674905 = $63, should be $FD
+DAMAGE: before Object block at $00674906
+Object allocated at file test02.cxx(47)
+Object located at $00674906 is 6 bytes long
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

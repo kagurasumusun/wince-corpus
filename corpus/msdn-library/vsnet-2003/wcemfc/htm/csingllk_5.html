@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CSingleLock::Unlock</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_csinglelock_unlock"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_csinglelock_unlock"></A>CSingleLock::Unlock</H1>
+
+<P>This method releases the synchronization object owned by <B>CSingleLock</B>. This method is called by the destructor for the <B>CSingleLock </B>class. If you need to release more than one access count of a semaphore, use the second implementation of <B>Unlock</B> and specify the number of accesses to release.</P>
+
+<PRE class=syntax><B>BOOL Unlock( );</B><I> </I>
+
+<B>BOOL Unlock(
+LONG </B><I>lCount</I><B>,
+LPLONG </B><I>lPrevCount</I><B> = NULL );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lCount</I></DT>
+
+<DD>Specifies the number of accesses to release. Must be greater than 0. If the specified amount would cause the count of the object to exceed its maximum, the count is not changed and the function returns <B>FALSE</B>.</DD>
+
+<DT><I>lPrevCount</I></DT>
+
+<DD>Points to a variable to receive the previous count of the synchronization object. If <B>NULL</B>, the previous count is not returned.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function was successful; otherwise, it is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// m_CritSection is a data member (of type CCriticalSection)
+// of an existing class that implements the resource being shared.
+
+// Relate the synchronization object (m_CritSection) with
+// our CSingleLock object.
+CSingleLock singleLock(&amp;m_CritSection);
+singleLock.Lock();  // Attempt to lock the shared resource
+if (singleLock.IsLocked())  // Resource has been locked
+{
+//...use the shared resource...
+
+// Now that we are finished,
+// unlock the resource for others.
+singleLock.Unlock();
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxmt.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

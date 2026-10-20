@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RNDIS Concepts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="RNDIS Concepts"/>
+<MSHelp:RLTitle Title="RNDIS Concepts"/>
+<MSHelp:Keyword Index="A" Term="cxrefRNDISConceptsDefinitions"/>
+<MSHelp:Keyword Index="K" Term="devices, RNDIS device states"/>
+<MSHelp:Keyword Index="K" Term="RNDIS, host requirements and device states"/>
+<MSHelp:Keyword Index="A" Term="cxrefRNDISConceptsDefinitions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758223">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefrndisconceptsdefinitions"></A>RNDIS Concepts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>RNDIS compliance places requirements on the communication channel and lower-layer drivers that are used to communicate between the host and the RNDIS device. </P>
+
+<P>The following table provides a brief description of RNDIS requirements on the host.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>RNDIS concept</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Control Channel </TD>
+<TD width=50%>The control channel must be reliable and ensure sequenced delivery. It is used for all communication except for the transmission of network data packets. All required control messages, except <A HREF="cxtskremote_ndis_halt_msg.htm">REMOTE_NDIS_HALT_MSG</A> and <A HREF="cxtskremote_ndis_indicate_status_msg.htm">REMOTE_NDIS_INDICATE_STATUS_MSG</A>, are request and response exchanges initiated by the host. The device must respond within the timeout period as specified for each bus. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Data Channel </TD>
+<TD width=50%>The data channel is used exclusively for the transmission of network data packets. It may consist of multiple sub channels (for example, for varying quality of service) as defined for the appropriate bus. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Initialization and Teardown </TD>
+<TD width=50%>The control and data channels are initialized and set up as specified for the appropriate bus. The host sends a <A HREF="cxtskremote_ndis_initialize_msg.htm">REMOTE_NDIS_INITIALIZE_MSG</A> message to the RNDIS device. The RNDIS device provides information about its type, supported medium, and version in the response message <A HREF="cxtskremote_ndis_initialize_cmplt.htm">REMOTE_NDIS_INITIALIZE_CMPLT</A>. <BR>
+Either the host or the RNDIS device can tear down the communication channel through the <A HREF="cxtskremote_ndis_halt_msg.htm">REMOTE_NDIS_HALT_MSG</A> message. All outstanding requests and packets are discarded on receipt of this message. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Halt </TD>
+<TD width=50%>At any time that the device is in the rndis-initialized or rndis-data-initialized state, the host computer may terminate the RNDIS functionality of the device by sending <B>REMOTE_NDIS_HALT_MSG</B> to the device. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Resetting the Communication Channel </TD>
+<TD width=50%>The communication channel is reset when an error, such as message timeout, occurs. <BR>
+The host may initiate a reset at any time when the device is in the rndis-initialized state by sending the message <A HREF="cxtskremote_ndis_reset_msg.htm">REMOTE_NDIS_RESET_MSG</A> to the device. The device must send a response message when it has completed the reset. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Flow Control </TD>
+<TD width=50%>The RNDIS device may need to exercise flow control to prevent the host from overflowing its data buffers with packets. Any flow control provisions or requirements are bus specific. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Numeric Byte Ordering </TD>
+<TD width=50%>All numeric values in RNDIS messages must be coded in little-endian format (least significant byte first). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS Message Encapsulation </TD>
+<TD width=50%>There is no RNDIS specification for the way NDIS messages are encapsulated in native bus messages or primitives. </TD>
+</TR>
+</table></div>
+
+<P>In the sense that any handles continue to be valid after a reset, any reset is a soft reset. The RNDIS device discards all outstanding requests and packets as part of the reset process. The remote device might reset some of its hardware components, but keeps the communication channel intact. </P>
+
+<P>If the RNDIS device performs a reboot, this event is equivalent to "Remove" followed by "Add" plug-and-play events. The host NDIS miniport driver will be halted and removed, and a new instance will be added and started. All bus-level and RNDIS initialization will be re-executed. A RNDIS device may reboot itself in the event of a critical device failure. </P>
+
+<P>The following table shows the device states possible for RNDIS devices.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Device state</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Rndis-uninitialized state</TD>
+<TD width=50%>Following bus-level initialization, the device is said to be in the rndis-uninitialized state.
+<P>If the device receives a <A HREF="cxtskremote_ndis_halt_msg.htm">REMOTE_NDIS_HALT_MSG</A>, a bus-level disconnects, or a hard-reset at any time, it forces the device to the rndis-uninitialized state. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Rndis-initialized state</TD>
+<TD width=50%>After the device receives a <A HREF="cxtskremote_ndis_initialize_msg.htm">REMOTE_NDIS_INITIALIZE_MSG</A> and responds with a <A HREF="cxtskremote_ndis_initialize_cmplt.htm">REMOTE_NDIS_INITIALIZE_CMPLT</A> with a status of RNDIS_STATUS_SUCCESS, the device enters the rndis-initialized state. 
+<P>If the device is in the rndis-data-initialized state when it receives a <A HREF="cxtskremote_ndis_set_msg.htm">REMOTE_NDIS_SET_MSG</A> specifying a zero filter value for <A HREF="cxtskoid_gen_current_packet_filter.htm">OID_GEN_CURRENT_PACKET_FILTER</A>, this event forces the device back to the rndis-initialized state. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Rndis-data-initialized state</TD>
+<TD width=50%>If the device receives a <A HREF="cxtskremote_ndis_set_msg.htm">REMOTE_NDIS_SET_MSG</A> that specifies a non-zero filter value for <A HREF="cxtskoid_gen_current_packet_filter.htm">OID_GEN_CURRENT_PACKET_FILTER</A>, the device enters the rndis-data-initialized state. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconrndis.htm">RNDIS</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;RNDIS%20Concepts&nbsp;(cxrefrndisconceptsdefinitions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

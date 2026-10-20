@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpLexicon::GetGenerationChange</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpLexicon::GetGenerationChange"/>
+<MSHelp:RLTitle Title="ISpLexicon::GetGenerationChange"/>
+<MSHelp:Keyword Index="A" Term="cerefISpLexiconGetGenerationChange"/>
+<MSHelp:Keyword Index="K" Term="ISpLexicon, GetGenerationChange"/>
+<MSHelp:Keyword Index="A" Term="cerefISpLexiconGetGenerationChange"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_lexicon.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822329">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisplexicongetgenerationchange"></A>ISpLexicon::GetGenerationChange</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpLexicon::GetGenerationChange</B> passes back a list of words which have changed between the current and a specified generation.</P>
+
+<PRE class="syntax"><B>HRESULT GetGenerationChange(</B>
+<B>DWORD </B><I>dwFlags</I><B>,</B>
+<B>DWORD *</B><I>pdwGeneration</I><B>,</B>
+<B>SPWORDLIST *</B><I>pWordList</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] The lexicon category of type <A HREF="cerefsplexicontype.htm">SPLEXICONTYPE</A>. Currently it must be zero for the SpLexicon (container lexicon) object, and must be the correct flag for the type of an SpUnCompressedLexicon object (either eLEXTYPE_USER or eLEXTYPE_APP).</dd>
+
+<DT><I>pdwGeneration</I> </DT>
+
+<DD>[in, out] The generation identifier of client when passed in. The current generation identifier is passed back on successful completion of the call. </dd>
+
+<DT><I>pWordList</I> </DT>
+
+<DD>[in, out] The buffer containing the word list and its related information. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>S_OK</TD>
+<TD width=50%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SP_LEX_NOTHING_TO_SYNC </TD>
+<TD width=50%>Nothing changed because the passed in generation identifier. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPERR_LEX_VERY_OUT_OF_SYNC </TD>
+<TD width=50%>There are too many changes because the passed in generation identifier, so that a change history is not available. It could also be returned after installation/uninstallation of an application lexicon. Use <A HREF="cerefisplexicongetwords.htm">ISpLexicon::GetWords</A> if GetGenerationChange returns SPERR_LEX_VERY_OUT_OF_SYNC to regenerate an entire list of words based on the current generation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_POINTER </TD>
+<TD width=50%><I>pdwGeneration</I> or pWordList is not a valid write pointer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_INVALIDARG </TD>
+<TD width=50%><I>dwFlags</I> is invalid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPERR_UNINITIALIZED </TD>
+<TD width=50%>Interface has not been initialized. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_OUTOFMEMORY </TD>
+<TD width=50%>Exceeded available memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>FAILED(hr) </TD>
+<TD width=50%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>ISpLexicon::GetGenerationChange</B> and <A HREF="cerefisplexicongetgeneration.htm">ISpLexicon::GetGeneration</A> can be used when an application wants to determine what it has done to the lexicon over a given period of time (for example, to back out changes it has made due to a user cancel). To do this, the application would call <B>ISpLexicon::GetGeneration</B> before it starts modifying the lexicon and store that generation identifier. Later, when the application must determine the words in the lexicon it has modified, it should call <B>ISpLexicon::GetGenerationChanges</B> with the stored identifier. This can only be done for small changes past a certain point, SPERR_LEX_VERY_OUT_OF_SYNC will be returned and the change history is not available from the original generation.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following is an example of <B>GetGenerationChange</B>.</P>
+
+<PRE class="code">for (;;)
+{
+hr = pISpLexicon-&gt;GetGenerationChange(eLEXTYPE_USER, &amp;m_dwGeneration, &amp;spwordlist);
+// If, for example, a new application lexicon was added, rebuild from scratch.
+if (hr == SPERR_LEX_VERY_OUT_OF_SYNC)
+{
+Rebuild(); // Call GetWords
+}
+else if (FAILED(hr))
+{
+DealWithOtherErrors();
+}
+else
+{
+// Loop thru the changed words, and their new pronunciations
+for (SPWORD *pword = spwordlist.pFirstWord;
+pword != NULL;
+pword = pword-&gt;pNextWord)
+{
+for (SPWORDPRON pwordpron = pword-&gt;pFirstWordPron;
+pwordpron != NULL;
+pwordpron = pwordpron-&gt;pNextWordPron)
+{
+if(pword-&gt;eWordType == eWORDTYPE_ADDED)
+{
+AddPronunciationToEngineDataStructures(
+pword-&gt;pszWord,
+pwordpron-&gt;ePartOfSpeech,
+pwordpron-&gt;pszPronIPA);
+}
+else // pword-&gt;eWordType == eWORDTYPE_DELETED
+{
+RemovePronunciationFromEngineDataStructures(
+pword-&gt;pszWord,
+pwordpron-&gt;ePartOfSpeech,
+pwordpron-&gt;pszPronIPA);
+}
+}
+}
+}
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpLexicon::GetGenerationChange&nbsp;(cerefisplexicongetgenerationchange.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPOlItems::SetColumns</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IPOlItems::SetColumns"/>
+<MSHelp:RLTitle Title="IPOlItems::SetColumns"/>
+<MSHelp:Keyword Index="A" Term="cerefIPOlItemsSetColumns"/>
+<MSHelp:Keyword Index="K" Term="IPOlItems, SetColumns"/>
+<MSHelp:Keyword Index="A" Term="cerefIPOlItemsSetColumns"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: poom_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760910">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefipolitemssetcolumns"></A>IPOlItems::SetColumns</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method lets you retrieve Contacts more quickly by specifying only those properties you want to retrieve. The specified properties are set to their current values, and all other properties are set to NULL.</P>
+
+<P>This method applies only to collections of Contacts.</P>
+
+<PRE class="syntax"><B>HRESULT SetColumns(</B>
+<B>BSTR</B> <I>Columns</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Columns</I></DT>
+
+<DD>[in] A string with the columns you want to retrieve. For example, to retrieve <B>FileAs</B> and <B>BusinessTelephoneNumber</B>, specify "FileAs,BusinessTelephoneNumber".</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>S_OK indicates the string was parsed correctly. If an error occurs, the appropriate <B>HRESULT</B> is returned.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Use this method when you want to quickly examine just one or two fields. For example, to examine the <B>FileAs</B> and <B>BusinessTelephoneNumber</B> properties of all Contacts, call <B>SetColumns</B> as follows.</P>
+
+<PRE class="code">pContacts-&gt;SetColumns ("FileAs, BusinessTelephoneNumber")</PRE>
+
+<P>Then when you use the <B>IPOutlookItemCollection</B> interface method <B>Item</B> to get a contact, it will have only these two properties set.</P>
+
+<P>When using <B>SetColumns</B>, you cannot modify the contacts found with the columns set. Use it when you need to examine or use only a few properties, but need to modify few or none of them.</P>
+
+<P>To modify a contact, you can use <A HREF="cerefipoutlookappgetitemfromoid.htm">IPOutlookApp::GetItemFromOid</A> to get the contact and modify it. (<B>Oid</B> and <B>Application</B> are special properties still available after you call <B>SetColumns</B>.) Alternatively, you can use a second Contact Items collection pointer that has not had <B>SetColumns</B> called on it, and use the <B>Item</B> method on it to get the Contact and modify it.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to set columns and get a contact.</P>
+
+<PRE class="code">void FindContact (IPOutlookItemCollection *pContacts)
+{
+IPOutlookApp *pApplication;
+IPOlItems *pContacts2;
+IContact *pContact;
+long lOid;
+
+pContacts-&gt;QueryInterface (IID_IPOlItems, (LPVOID*)&amp;pContacts2);
+pContacts2-&gt;SetColumns (TEXT ("CompanyName"));
+
+// Put all the companies you have into a list
+int numItems;
+pContacts2-&gt;get_Count (&amp;numItems);
+for (i = 1; i &lt;= numItems; i++)
+{
+// Read the contact
+pContacts2-&gt;Item (i, (IDispatch**)&amp;pContact);
+
+// Use or manipulate the company name in some way...
+// For example, if the company name is Hotmail, change to MSN.
+if (IsCompanyHotmail (pContact))  {
+   pContact-&gt;get_Application (&amp;pApplication);
+   pContact-&gt;get_Oid (&amp;lOid);
+   pApplication-&gt;GetItemFromOid (lOid, (IDispatch**)&amp;pContact);
+   pContact-&gt;put_Company (TEXT("MSN"));
+   }
+}
+\\ Release objects
+pApplication-&gt;Release ();
+pContacts2-&gt;Release ();
+pContact-&gt;Release ();
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Pimstore.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefipolitemsiunknown.htm">IPOlItems</A>, <A HREF="cerefipoutlookitemcollectioniunknown.htm">IPOutlookItemCollection</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IPOlItems::SetColumns&nbsp;(cerefipolitemssetcolumns.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bluetooth HCI Transport Layer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Bluetooth HCI Transport Layer"/>
+<MSHelp:RLTitle Title="Bluetooth HCI Transport Layer"/>
+<MSHelp:Keyword Index="A" Term="cxconBluetoothHCITransportLayer"/>
+<MSHelp:Keyword Index="K" Term="Bluetooth, HCI transport layer"/>
+<MSHelp:Keyword Index="A" Term="cxconBluetoothHCITransportLayer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: bluetooth_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756486">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconbluetoothhcitransportlayer"></A>Bluetooth HCI Transport Layer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The HCI Transport is designed to abstract and simplify physical communication between the Bluetooth stack and the controller. This set of modules implement UART, COM, or USB transports as defined by respective parts of the <I>Bluetooth Core Specification</I>.</P>
+
+<P>A transport only implements a few functions; schematically, <B>Open</B>, <B>Read</B>, <B>Write</B>, <B>Close</B> and two for bookkeeping; <B>Read</B> and <B>Write</B> are blocking. The Bluetooth stack uses these functions to send Bluetooth commands and data packets, and receive data packets and events.</P>
+
+<P>This interface is defined by Bt_hcip.h. Annotated excerpts from this file are included below.</P>
+
+<P>When the Bluetooth stack initializes, it calls the <A HREF="cxrefhci_setcallback.htm">HCI_SetCallback</A> function of the HCI Transport interface. It passes a callback that is used by HCI transport layer to indicate insertion or removal of hardware.</P>
+
+<P>The stack can also call the <A HREF="cxrefhci_starthardware.htm">HCI_StartHardware</A> and <A HREF="cxrefhci_stophardware.htm">HCI_StopHardware</A> functions to make the physical layer simulate an ejection or insertion of a controller, whether it is removable or not.</P>
+
+<PRE class="code">enum HCI_EVENT {
+   DEVICE_UP,
+   DEVICE_DOWN,
+   DEVICE_ERROR
+};
+typedef int (*HCI_TransportCallback) (HCI_EVENT eEvent, void *pEvent);
+int HCI_SetCallback (HCI_TransportCallback pfCallback);
+int HCI_StartHardware (void);
+int HCI_StopHardware (void);</PRE>
+
+<P>When an insertion is signaled, the stack calls the <A HREF="cxrefhci_openconnection.htm">HCI_OpenConnection</A> function. If it returns TRUE, the transport is considered to be active.</P>
+
+<P>When <B>HCI_OpenConnection</B> returns TRUE, the Bluetooth stack calls the <A HREF="cxrefhci_readhciparameters.htm">HCI_ReadHciParameters</A> function.</P>
+
+<P>In the <A HREF="cxrefhci_parameters.htm">HCI_PARAMETERS</A> structure passed as an argument, it fills out only the size and version field. The transport driver must ensure that the version of the stack matches the version of the transport driver exactly.</P>
+
+<P>The HCI transport is responsible for filling the <B>HCI_PARAMETERS</B> structure completely. Important members of this structure indicate minimum buffers required for incoming packets, and maximum buffers allowed for outgoing packets, as well as the version of the Bluetooth hardware.</P>
+
+<PRE class="code">#define HCI_INTERFACE_VERSION_1_0       0x00010000
+#define HCI_HARDWARE_VERSION_V_1_0_A    0
+#define HCI_HARDWARE_VERSION_V_1_0_B    1
+#define HCI_HARDWARE_VERSION_V_1_1      2
+#define HCI_DEFAULT_WRITE_TIMEOUT       15000
+#define HCI_FLAGS_NORESET               0x00000001
+#define HCI_FLAGS_NOLOCALNAME           0x00000002
+#define HCI_FLAGS_NOROLESWITCH          0x00000004
+//
+// Note:
+//   iMaxSize parameters MUST fit the biggest HCI command
+//     (HCI_RemoteNameRequest as of this writing is 257 bytes,
+//      see also bt_ddi.h::HCI_MAX_COMMAND_LENGTH)
+//   iReadBufferHeader and iWriteBufferHeader MUST be 4-bytes aligned
+//
+typedef struct __hci_parameters {
+   unsigned int   uiSize;              // structure size
+   unsigned int   fInterfaceVersion;   // interface version
+   int   iMaxSizeRead;                 // Max size of read packet
+                                       // (not including headers and 
+                                       // trailers)
+   int   iMaxSizeWrite;                // Max size of write packet
+                                       // (not including headers and 
+                                       // trailers)
+   int   iReadBufferHeader;            // Hint : read may contain up to
+                                       //as much transport header bytes
+   int   iReadBufferTrailer;           // Hint : read may contain up to
+                                       // as much transport trailer bytes
+   int   iWriteBufferHeader;           // Number of bytes to preallocate
+                                       // for transport header
+   int   iWriteBufferTrailer;        // Number of bytes to preallocate
+                                     // for transport trailer
+   int   uiFlags;                    // Flags
+   int   fHardwareVersion;           // Bluetooth specification version of      
+                                     // hardware
+   unsigned int   uiResetDelay;      // milliseconds : delay next command
+                                     // after reset by this much
+   unsigned int   uiWriteTimeout;    // milliseconds : abort if card
+                                     // does not respond in this time
+                                     // (use the default above)
+} HCI_PARAMETERS;
+
+int HCI_ReadHciParameters (HCI_PARAMETERS  *pParms);</PRE>
+
+<P>The HCI then goes into a read loop on one thread calling the <A HREF="cxrefhci_readpacket.htm">HCI_ReadPacket</A> function.</P>
+
+<P>The buffers are exchanged using the following form.</P>
+
+<PRE class="code">struct BD_BUFFER {
+   int                 cSize;
+   int                 cStart;
+   int                 cEnd;
+   BD_BUFFER_FREE      pFree;
+   int                 fMustCopy;
+   unsigned char      *pBuffer;
+};</PRE>
+
+<P>Of interest to HCI transport here are only three members: 
+
+<UL type="disc">
+	<LI><B>cSize</B>,<I> </I>which<I> </I>defines the size of <B>pBuffer</B></li>
+
+	<LI><B>cStart</B>, which is the offset of valid information in <B>pBuffer</B></li>
+
+	<LI><B>cEnd</B>, which is the end of valid information in <B>pBuffer</B></li>
+</UL>
+
+<P><A HREF="cxrefhci_readpacket.htm">HCI_ReadPacket</A> is given a buffer in which <B>cSize</B> is not smaller than the one requested in the <A HREF="cxrefhci_readhciparameters.htm">HCI_ReadHciParameters</A> response. <B>cStart</B> is set to 0 and <B>cEnd</B> is set to be equal to <B>cSize</B>. Before <B>HCI_ReadPacket</B> returns, it is allowed to use this buffer however it pleases. On return, the data between <B>cStart</B> and <B>cEnd</B> MUST contain a valid Bluetooth HCI packet.</P>
+
+<P>The <A HREF="cxrefhci_writepacket.htm">HCI_WritePacket</A> function is given a buffer where <B>cStart</B> is set to the beginning of the HCI packet. The spaces between 0 and <B>cStart</B> and between <B>cEnd</B> and <B>cSize</B> will be big enough to accommodate the transport header and trailer as requested by <B>HCI_ReadHciParameters</B>. <B>HCI_WritePacket</B> can use these spaces to put its own information in it.</P>
+
+<P>The packet type is returned in *<I>peType</I> and can be DATA_PACKET_ACL, DATA_PACKET_SCO or EVENT_PACKET.</P>
+
+<P>If communication with the Bluetooth controller fails because of hardware failure or the controller has been ejected from the device, <B>HCI_ReadPacket</B> must fail with a 0 return code. The HCI layer will then shut itself down until indicated by the transport layer that the hardware is available using the callback.</P>
+
+<PRE class="code">//   HCI_ReadPacket MUST return 4-bytes aligned cStart in its buffer
+//   HCI_ReadPacket and HCI_WritePacket WILL change cStart and cEnd of the
+//   buffer, but WILL NOT change any other data.
+enum HCI_TYPE {
+   COMMAND_PACKET  = 1,
+   DATA_PACKET_ACL = 2,
+   DATA_PACKET_SCO = 3,
+   EVENT_PACKET    = 4,
+   ETYPE_FINISH    = 5
+};
+int HCI_ReadPacket (HCI_TYPE *peType, BD_BUFFER *pInBuffer);
+int HCI_WritePacket (HCI_TYPE eType, BD_BUFFER *pOutBuffer);</PRE>
+
+<P>When the HCI wants to close communication to the Bluetooth controller, it issues an <A HREF="cxrefhci_closeconnection.htm">HCI_CloseConnection</A> command. The HCI must then unblock and fail the pending <B>HCI_ReadPacket</B> call and shut down communications with the Bluetooth controller.</P>
+
+<P>The HCI transport is not allowed to issue any commands that affect the state of the Bluetooth controller on its own, such as <B>Reset</B>, except in the context of the <A HREF="cxrefhci_openconnection.htm">HCI_OpenConnection</A> function.</P>
+
+<P>HCI Transports are currently provided only for BSCP, UART, NOKIA and USB protocols. Other hardware support is supplied by the OEM. Sample device drivers for the provided protocols, mentioned above, can be found in %_WINCEROOT%\Public\Common\Oak\Drivers\Bluetooth\Transports.</P>
+
+<P>A universal driver is also provided. This driver acts as an intermediary between a real protocol driver and the Bluetooth stack. It detects insertion of PCMCIA and USB cards and thunks HCI transport interface calls to the right driver. This driver is described in detail in %_WINCEROOT%\Public\Common\Oak\Drivers\Bluetooth\Transports\UNIV.</P>
+
+<P>The following topics discuss the HCI transport layer in more detail:
+
+<UL type="disc">
+	<LI><A HREF="cxconhcitransportlayerdrivercreation.htm">Standard HCI Transport Layer</A></li>
+
+	<LI><A HREF="cxcontransportlayerdriverreferences.htm">Transport Layer Driver References</A></li>
+
+	<LI><A HREF="cxconbluetoothtransportlayerdriversamples.htm">Bluetooth Transport Layer Driver Samples</A></li>
+</UL>
+
+<P>A reference is also provided to help you take advantage of all the functionality offered by the HCI transport layer. For more information about the Bluetooth enumerations, functions, and structures, see the topics in the Bluetooth HCI Transport Layer Reference node.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconbluetoothhcitransportdriver.htm">Bluetooth HCI Transport Driver</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Bluetooth%20HCI%20Transport%20Layer&nbsp;(cxconbluetoothhcitransportlayer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

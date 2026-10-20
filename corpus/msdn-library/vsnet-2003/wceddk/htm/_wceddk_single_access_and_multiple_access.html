@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Single Access and Multiple Access</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Single Access and Multiple Access"/>
+<MSHelp:RLTitle Title="Single Access and Multiple Access"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Single_Access_and_Multiple_Access"/>
+<MSHelp:Keyword Index="K" Term="single and multiple access"/>
+<MSHelp:Keyword Index="K" Term="stream interface drivers, single and multiple access"/>
+<MSHelp:Keyword Index="K" Term="access, single and multiple"/>
+<MSHelp:Keyword Index="K" Term="multiple and single access"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: stream.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_single_access_and_multiple_access"></A>Single Access and Multiple Access</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Because peripheral devices are exposed to applications as special files when you create a stream interface driver, you provide the implementation of such a file. Therefore, consider whether it is practical, based on the capabilities of the device that your driver serves, to enable multiple applications to have simultaneous access to the special file. That is, consider whether your driver can have multiple open file handles on its device. A stream interface driver can implement either single access or multiple access by using the <I>hOpenContext</I> parameter that Windows CE passes to all file I/O functions.</P>
+
+<P>To enable multiple access, each call to the <A HREF="_wceddk_xxx_open.htm"><B><I>XXX_Open</I></B></A> function should return a different value for <I>hOpenContext</I>. The device driver must track which return values from <B><I>XXX</I>_Open</B> are in use. Subsequent calls by Windows CE to <A HREF="_wceddk_xxx_close.htm"><B><I>XXX_Close</I></B></A>, <A HREF="_wceddk_xxx_read.htm"><B><I>XXX_Read</I></B></A>, <A HREF="_wceddk_xxx_write.htm"><B><I>XXX_Write</I></B></A>, <A HREF="_wceddk_xxx_seek.htm"><B><I>XXX_Seek</I></B></A>, and <A HREF="_wceddk_xxx_iocontrol.htm"><B><I>XXX_IOControl</I></B></A> pass these values back to the device driver, enabling the driver to identify which internal data structures to manipulate.</P>
+
+<P>To enforce single access, only the first call to <B><I>XXX</I>_Open</B> should return a valid <I>hOpenContext</I> value. As long as this value remains valid, which is until Windows CE calls <B><I>XXX</I>_Close</B> for the value, subsequent calls to <B><I>XXX</I>_Open</B> should return NULL to the calling application to indicate failure.</P>
+
+<P>Note that the Windows CE implementation of the Telephony API (TAPI) requires that serial port devices support multiple access. OEMs who are using any of Microsoft's serial port MDD implementations gain this functionality automatically. OEMs who write their own serial port MDD layers, or who opt to implement monolithic serial port drivers, must implement multiple access for themselves in order to support TAPI.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Single%20Access%20and%20Multiple%20Access&nbsp;(_wceddk_single_access_and_multiple_access.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Ethernet Boot Loader Code</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Ethernet Boot Loader Code"/>
+<MSHelp:RLTitle Title="Implementing the Ethernet Boot Loader Code"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingEthernetBootLoaderCode"/>
+<MSHelp:Keyword Index="K" Term="Ethernet, implementing boot loader code"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingEthernetBootLoaderCode"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: bootloader.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749247">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconimplementingethernetbootloadercode"></A>Implementing the Ethernet Boot Loader Code</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Typically, an Ethernet connection is used to download OS image files to the target device. The Ethernet boot loader communicates with Platform Builder running on the development workstation to download OS images and configure debugging services. An Ethernet connection provides faster image transfer and better integration with the Windows CE Ethernet debugging services.</P>
+
+<P>When you download the contents of a ROM image into RAM or flash memory on the target device, Windows CE treats the region of memory into which the image is loaded as ROM. This saves you from burning a new ROM each time you need to test a new image, while allowing you to emulate the ROM-based environment.</P>
+
+<P>An Ethernet boot loader uses the following procedure to download an OS image:
+
+<OL type="1">
+	<LI>The boot loader formats and sends a broadcast Ethernet debugging BOOTME packet. The format of the packet is defined in %_WINCEROOT%\Public\Common\Oak\Inc\Ethdbg.h. This packet informs Platform Builder of the target device availability and contains the target device IP address and name. Platform Builder uses this information to initiate the download of the OS image.</li>
+
+	<LI>A Trivial File Transfer Protocol (TFTP) is initiated to transfer the OS image to the target device. This step is skipped if the user elects not to download an image; for example, if the target device boots with an OS image that has been previously written to flash memory.</li>
+
+	<LI>When the download is completed, the debug tool in control sends an Ethernet debugging JUMPIMG packet. The format of the packet is defined in %_WINCEROOT%\Public\Common\Oak\Inc\Ethdbg.h. The packet instructs the boot loader to jump to the loaded OS image and contains configuration information for the Ethernet debugging services. Depending on the implementation, the boot loader may pass this configuration information along to the OAL in a shared memory section. This is necessary to configure the Ethernet debugging services.</li>
+</OL>
+
+<P>Platform Builder provides Eboot.lib, a Help library, to assist you in writing Ethernet boot loaders. Eboot.lib is located in %_WINCEROOT%\Public\Common\Oak\Drivers\Ethdbg\Eboot and contains the following platform-independent routines:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Routines</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DHCP routines</TD>
+<TD width=67%>Used to obtain a dynamic IP address at boot time from a DHCP server.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>TFTP routines</TD>
+<TD width=67%>Used to download an OS image to a target device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Ethernet debugging routines</TD>
+<TD width=67%>Used to assist in formatting the Ethernet debugging messages that are used to communicate.</TD>
+</TR>
+</table></div>
+
+<P>Platform Builder includes the BLCOMMON library, which is a common infrastructure that can be reused by all boot loaders. For a description of the functions in the new BLCOMMON infrastructure, see the source and header files in %_WINCEROOT%\Public\Common\Oak\Drivers\Ethdbg\Blcommon\Blcommon.c and %_WINCEROOT%\Public\Common\Oak\Inc\Blcommon.h, respectively. The following process describes the flow of control with this infrastructure:
+
+<OL type="1">
+	<LI>During the platform boot process, the startup code in the OEM adaptation layer (OAL) calls the platform-independent <A HREF="cgrefbootloadermain.htm">BootloaderMain</A> function. </li>
+
+	<LI><B>BootloaderMain</B> initializes the platform, chooses, and initializes the download transport by calling a set of control flow functions. </li>
+
+	<LI>The boot loader starts downloading the image to the target device using a set of download-related and Flash-related functions. During the download process, the boot loader may want to implement functions to show download progress.</li>
+
+	<LI>Once the download is completed, the boot loader starts the OS by calling the <A HREF="cgrefoemlaunch.htm">OEMLaunch</A> function, which jumps to the OS entry point. </li>
+</OL>
+
+<P>For more information about the control flow, download, and Flash functions, see <A HREF="cgconblcommoncodelibrary.htm">BLCOMMON Code Library</A>.</P>
+
+<P>The easiest way to start developing your boot loader code is to begin with and reuse existing sample sources provided in Platform Builder. Platform Builder provides sample boot loader code for each development platform that is supported out of the box. The boot loader code is available as part of the BSP for that platform and is typically located in the %_WINCEROOT%\Platform<I>\&lt;PLATNAME&gt;</I>\Eboot directory. For a list of all the BSPs supported in Platform Builder, see <MSHelp:link keywords="cmconProvidedBoardSupportPackages" TABINDEX="0">Supported Board Support Packages</MSHelp:link>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>All the sample boot loaders in the Platform Builder BSPs have been developed to primarily use the Ethernet port for downloading OS images. However, you can use alternative methods in your boot loader for downloading OS images, as long as the OS images are installed in a quick and reliable manner. </BLOCKQUOTE>
+
+<P>At a minimum, you will still be required to modify a reference boot loader to properly initialize your board. You need to write only platform-specific and CPU-specific code modules for the boot loader. These modules initialize the CPU, the serial port, and the Ethernet adapter for the target device. </P>
+
+<P>For simplicity and to maximize code reuse, the boot loader typically uses the same routines that are implemented in the OAL kernel source code for CPU and board-level initialization, including PCI, serial UARTs, and Ethernet controllers. A debug serial port is an I/O channel that is used for debugging a device driver or target device. This is different from the normal serial port code, which is implemented in driver form in Serial.dll. </P>
+
+<P>The following table summarizes the boot loader elements that you must implement.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Element</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM startup code</TD>
+<TD width=67%>The OEM-specific startup routine that initializes the kernel. It jumps to the main entry point implemented in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\Main.c. 
+<P>This code is implemented in the %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\CPU-specific\ directory in either Init.s or Init.src (Fwp2.s for ARM), depending on your microprocessor.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Kernel startup code</TD>
+<TD width=67%>A minimal version of the normal kernel startup code for the boot loader, which is mainly used to initialize the cache. This code is implemented in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\CPU-specific\Oemboot.c.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM platform initialization code</TD>
+<TD width=67%>The OEM-specific code can include functionality such as displaying a splash screen or checking switches to allow alternate entry to diagnostic code or to the firmware monitor. A splash screen is an initial screen that is displayed by interactive software, which usually contains a logo, version information, author credits, or a copyright notice.
+<P>This code is implemented in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\CPU-specific\Oemboot.c.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following table summarizes the boot loader elements that you should implement if you want to download your OS.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Element</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Image download code</TD>
+<TD width=67%>Downloads an OS image using the download transport. The code to support an Ethernet-based download is implemented in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\Ethdown.c.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Ethernet I/O code</TD>
+<TD width=67%>Downloads an OS image using an Ethernet connection. For a sample code, see %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\Ethdown.c.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Debug serial I/O code</TD>
+<TD width=67%>These are routines that read and write data to the debug serial port. To simplify development of the debug serial port support I/O code, use a standard (16550-compatible or similar) universal asynchronous receiver transmitter (UART) on the target device. The boot loader uses the same debug serial port routines that are implemented in the OAL.
+<P>This code is implemented in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Kernel\Hal\Debug.c and can be reused. For more information, see <A HREF="cgconenablingdebugserialport.htm">Enabling the Debug Serial Port</A>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Flash write code (optional)</TD>
+<TD width=67%>These are routines that write data to flash memory. This code is necessary for your boot loader to support downloading and flashing the image into nonvolatile storage for later use.
+<P>This code is implemented in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\Ethdown.c.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Firmware monitor (optional)</TD>
+<TD width=67%>These are routines that provide debugging support, such as dumping memory contents or disassembling code. Once the boot loader is functioning properly, you can perform basic debugging by sending firmware monitor commands to the debug serial monitor port.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconethernetbootloader.htm">Ethernet Boot Loader</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20the%20Ethernet%20Boot%20Loader%20Code&nbsp;(cgconimplementingethernetbootloadercode.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

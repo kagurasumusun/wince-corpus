@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Keys for Removable Display Adapters</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Keys for Removable Display Adapters"/>
+<MSHelp:RLTitle Title="Registry Keys for Removable Display Adapters"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Registry_Keys_for_Removable_Display_Adapters"/>
+<MSHelp:Keyword Index="K" Term="display adapters, removable"/>
+<MSHelp:Keyword Index="K" Term="display drivers, registry keys"/>
+<MSHelp:Keyword Index="K" Term="registry keys for display drivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_registry_keys_for_removable_display_adapters"></A>Registry Keys for Removable Display Adapters</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When a secondary display adapter is provided on removable hardware, such as a PC Card, the display driver is typically implemented as two drivers: a native driver that exposes the native DDI and a stream interface driver that exposes the stream interfaces. The stream driver must initialize the registry with the keys that allow it to be detected and loaded. When the PC Card is inserted, the Device Manager initiates a detection sequence to determine which driver should service the card. If the PC Card has a Plug and Play identifier, it is used to determine which driver to load. Otherwise, the Device Manager tries the detection functions for all the PC Card drivers that are installed on the system until one of them reports that it recognizes the PC Card. Once the correct driver is located, the Device Manager loads the driver whose name is provided as the registry key along with the detection function that succeeded in detecting the PC Card. The following example shows how the Device Manager then loads the driver, registers its special device file name, and calls the driver's <I>XXX</I><B>_Init</B> function.</P>
+
+<PRE class="code"> [HKEY_LOCAL_MACHINE\Drivers\PCMCIA\VoyagerVGA]
+    Dll="VOYAGER.DLL"
+    Prefix="VGA"
+    Index=Dword:1
+
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect\60]
+    Dll="VOYAGER.DLL"
+    Entry="DetectVGA"</PRE>
+
+<P>Pocket PowerPoint needs additional registry keys in order to use secondary display adapters. During initialization, the driver should update the <B>HKEY_LOCAL_MACHINE\Drivers\Display\Active</B> key with the information that is appropriate for its driver. This includes information about the native driver .dll name, as well as Buffer and Tap information. For removable display adapters, this initialization should take place when the adapter is connected to the system and the Device Manager calls the stream driver's <I>XXX</I><B>_Init</B> function. The following example shows how this is done.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\Display\Active\Voyager]
+    Dll="PCARDVGA.DLL"
+    BufferMode=Dword:0
+    Tapmode=Dword:0</PRE>
+
+<P>The following table shows the four available values for <B>BufferMode</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmNotShared</B></TD>
+<TD width=67%>There is no common frame buffer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmTopHalf</B></TD>
+<TD width=67%>The top half of the secondary display is also shown on the system's built-in LCD display.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmSquashed</B></TD>
+<TD width=67%>A scaled-down version of the secondary display is also shown on the system's built-in LCD display.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmOff</B></TD>
+<TD width=67%>The system's built-in display is turned off while the driver is active.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the three available values for <B>Tapmode</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>tmNone</B></TD>
+<TD width=67%>The display driver performs no conversion of any tap coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>tmScaled</B></TD>
+<TD width=67%>The display driver scales tap coordinates to match the secondary display's resolution.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>tmUndefined</B></TD>
+<TD width=67%>The display driver always reports tap coordinates of (0,0) but still reports tap events.</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20Keys%20for%20Removable%20Display%20Adapters&nbsp;(_wceddk_registry_keys_for_removable_display_adapters.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

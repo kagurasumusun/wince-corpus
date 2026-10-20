@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPCloseSocket</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPCloseSocket"/>
+<MSHelp:RLTitle Title="WSPCloseSocket"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPCloseSocket"/>
+<MSHelp:Keyword Index="K" Term="WSPCloseSocket"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPCloseSocket"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715154">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwspclosesocket"></A>WSPCloseSocket</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function closes a socket.</P>
+
+<PRE class="syntax"><B>int WSPCloseSocket(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying a socket.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>WSPCloseSocket</B> returns zero. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code is available in <I>lpErrno</I>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Error value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENETDOWN</TD>
+<TD width=63%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAEINPROGRESS</TD>
+<TD width=63%>Blocking Windows Sockets call is in progress, or the service provider is still processing a callback function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAENOTSOCK</TD>
+<TD width=63%>Descriptor is not a socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>WSAEWOULDBLOCK</TD>
+<TD width=63%>Socket is marked as nonblocking and SO_LINGER is set to a nonzero time-out value.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function closes a socket. More precisely, it releases the socket descriptor <I>s</I>, so further references to <I>s</I> should fail with the error WSAENOTSOCK. If this is the last reference to an underlying socket, the associated naming information and queued data are discarded. Any blocking or asynchronous calls pending on the socket (issued by any thread in this process) are canceled without posting any notification messages. Any pending overlapped operations issued by any thread in this process are also canceled. Whatever completion action was specified for these overlapped operations is performed (for example, event, completion routine, or completion port). In this case, the pending overlapped operations fail with the error status WSA_OPERATION_ABORTED. FD_CLOSE will not be posted after <B>WSPCloseSocket</B> is called.</P>
+
+<P><B>WSPClosesocket</B> behaves in the following manner:
+
+<UL type="disc">
+	<LI>If SO_DONTLINGER is enabled (the default setting), <B>WSPCloseSocket</B> returns immediately and connection is gracefully closed in the background.</li>
+
+	<LI>If SO_LINGER is enabled with a zero time-out, <B>WSPCloseSocket</B> returns immediately and the connection is reset/terminated.
+<P>- or -
+</li>
+
+	<LI>If SO_LINGER is enabled with a nonzero time-out with a blocking socket, <B>WSPCloseSocket </B>blocks until all data is sent or the time-out expires.</li>
+
+	<LI>If SO_LINGER is enabled with a nonzero time-out with a nonblocking socket, <B>WSPCloseSocket </B>returns immediately, thus indicating failure.</li>
+</UL>
+
+<P>The semantics of <B>WSPCloseSocket</B> are affected by the socket options SO_LINGER and SO_DONTLINGER as follows.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Option</TH>
+<TH width=19%>Interval</TH>
+<TH width=26%>Type of close</TH>
+<TH width=26%>Wait for close?</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_DONTLINGER</TD>
+<TD width=19%>Do not care</TD>
+<TD width=26%>Graceful</TD>
+<TD width=26%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_LINGER</TD>
+<TD width=19%>Zero</TD>
+<TD width=26%>Hard</TD>
+<TD width=26%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_LINGER</TD>
+<TD width=19%>Nonzero</TD>
+<TD width=26%>Graceful</TD>
+<TD width=26%>Yes</TD>
+</TR>
+</table></div>
+
+<P>If SO_LINGER is set (that is, the <I>l_onoff</I> member of the linger structure is nonzero) and the time-out interval, <I>l_linger,</I> is zero, <B>WSPClosesocket</B> is not blocked even if queued data has not yet been sent or acknowledged. This is called a hard or abortive close, because the socket's virtual circuit is reset immediately, and any unsent data is lost. Any <A HREF="cerefwsprecv.htm">WSPRecv</A> call on the remote side of the circuit will fail with WSAECONNRESET.</P>
+
+<P>If SO_LINGER is set with a nonzero time-out interval on a blocking socket, the <B>WSPClosesocket</B> call blocks on a blocking socket until the remaining data has been sent or until the time-out expires. This is called a graceful disconnect. If the time-out expires before all data has been sent, the service provider should terminate the connection before <B>WSPClosesocket</B> returns.</P>
+
+<P>Enabling SO_LINGER with a nonzero time-out interval on a nonblocking socket is not recommended. In this case, the call to <B>WSPClosesocket</B> will fail with an error of WSAEWOULDBLOCK if the close operation cannot be completed immediately. If <B>WSPClosesocket</B> fails with WSAEWOULDBLOCK, the socket handle is still valid and a disconnect is not initiated. </P>
+
+<P>The Windows Sockets SPI client <I>must</I> call <B>WSPClosesocket</B> again to close the socket, although <B>WSPClosesocket</B> can continue to fail unless the Windows Sockets SPI client acts in one of the following ways:
+
+<UL type="disc">
+	<LI>Disables SO_DONTLINGER. </li>
+
+	<LI>Enables SO_LINGER with a zero time-out. </li>
+
+	<LI>Calls <A HREF="cerefwspshutdown.htm">WSPShutdown</A> to initiate closure.</li>
+</UL>
+
+<P>If SO_DONTLINGER is set on a stream socket (that is, the <I>l_onoff</I> member of the linger structure is zero), the <B>WSPClosesocket</B> call will return immediately and does not get WSAEWOULDBLOCK, whether the socket is blocking or nonblocking. However, any data queued for transmission will be sent if possible before the underlying socket is closed. This is called a graceful disconnect and is the default behavior. </P>
+
+<P>Note that in this case the Windows Sockets provider is allowed to retain any resources associated with the socket until such time as the graceful disconnect has completed or the provider terminates the connection due to an inability to complete the operation in a provider-determined amount of time. This can affect Windows Sockets clients that expect to use all available sockets. This is the default behavior; SO_DONTLINGER is set by default.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwspaccept.htm">WSPAccept</A>, <A HREF="cerefwspsocket.htm">WSPSocket</A>, <A HREF="cerefwspioctl.htm">WSPIoctl</A>, <A HREF="cerefwspsetsockopt.htm">WSPSetSockOpt</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSPCloseSocket&nbsp;(cerefwspclosesocket.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

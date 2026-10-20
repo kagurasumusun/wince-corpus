@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPDuplicateSocket</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPDuplicateSocket"/>
+<MSHelp:RLTitle Title="WSPDuplicateSocket"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPDuplicateSocket"/>
+<MSHelp:Keyword Index="K" Term="WSPDuplicateSocket"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPDuplicateSocket"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715157">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwspduplicatesocket"></A>WSPDuplicateSocket</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function returns a structure that can be used to create a new socket descriptor for a shared socket.</P>
+
+<PRE class="syntax"><B>int WSPDuplicateSocket(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>DWORD </B><I>dwProcessId</I><B>,</B>
+<B>LPWSAPROTOCOL_INFOW </B><I>lpProtocolInfo</I><B>,</B>
+<B>LPINT </B><I>lpErrno</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Specifies the local socket descriptor.</dd>
+
+<DT><I>dwProcessId</I></DT>
+
+<DD>[in] Specifies the identifier of the target process for which the shared socket will be used.</dd>
+
+<DT><I>lpProtocolInfo</I></DT>
+
+<DD>[out] Pointer to a buffer allocated by the client that is large enough to contain a <B>WSAPROTOCOL_INFOW</B> structure. The service provider copies the protocol information structure contents to this buffer.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function always returns SOCKET_ERROR and sets lpErrno to WSASYSCALLFAILURE on Windows CE.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A source process calls <A HREF="#cerefwspduplicatesocket">WSPDuplicateSocket</A> to obtain a special <B>WSAPROTOCOL_INFOW</B> structure. It uses some interprocess communications (IPC) mechanism to pass the contents of this structure to a target process, which in turn uses it in a call to <A HREF="cerefwspsocket.htm">WSPSocket</A> to obtain a descriptor for the duplicated socket. Note that the special <B>WSAPROTOCOL_INFOW</B> structure can only be used once by the target process.</P>
+
+<P>It is the service provider's responsibility to perform whatever operations are needed in the source process context and to create a <B>WSAPROTOCOL_INFOW</B> structure that will be recognized when it subsequently appears as a parameter to <B>WSPSocket</B> in the target process context. The provider must then return a socket descriptor that references a common underlying socket. The <B>dwProviderReserved</B> member of the <B>WSAPROTOCOL_INFOW</B> structure is available for the service provider's use and can be used to store any useful context information, including a duplicated handle.</P>
+
+<P>When new socket descriptors are allocated, IFS providers must call <A HREF="cerefwpumodifyifshandle.htm">WPUModifyIFSHandle</A> and non-IFS providers must call <A HREF="cerefwpucreatesockethandle.htm">WPUCreateSocketHandle</A>.</P>
+
+<P>One possible scenario for establishing and using a shared socket in a handoff mode is illustrated in the following.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Source process</TH>
+<TH width=8%>IPC</TH>
+<TH width=46%>Destination process</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>1) <A HREF="cerefwspsocket.htm">WSPSocket</A>, <A HREF="cerefwspconnect.htm">WSPConnect</A>.</TD>
+<TD width=8%> </TD>
+<TD width=46%> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>2) Requests target process identifier.</TD>
+<TD width=8%>&nbsp;</TD>
+<TD width=46%> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%> </TD>
+<TD width=8%> </TD>
+<TD width=46%>3) Receives process identifier request and respond.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>4) Receives process identifier.</TD>
+<TD width=8%>&nbsp;</TD>
+<TD width=46%> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>5) Calls <B>WSPDuplicateSocket</B> to get a special <B>WSAPROTOCOL_INFOW</B> structure.</TD>
+<TD width=8%> </TD>
+<TD width=46%> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>6) Sends <B>WSAPROTOCOL_INFOW</B> structure to target.</TD>
+<TD width=8%> </TD>
+<TD width=46%> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%> </TD>
+<TD width=8%>&nbsp;</TD>
+<TD width=46%>7) Receives <B>WSAPROTOCOL_INFOW</B> structure.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%> </TD>
+<TD width=8%> </TD>
+<TD width=46%>8) Calls <B>WSPSocket</B> to create shared socket descriptor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>10) <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A></TD>
+<TD width=8%> </TD>
+<TD width=46%>9) Uses shared socket for data exchange.</TD>
+</TR>
+</table></div>
+
+<P>The descriptors that reference a shared socket can be used independently as far as I/O is concerned. However, the Windows Sockets interface does not implement any type of access control, so it is up to the processes involved to coordinate their operations on a shared socket. A typical use for shared sockets is to have one process that is responsible for creating sockets and establishing connections, hand off sockets to other processes that are responsible for information exchange.</P>
+
+<P>Because what are duplicated are the socket descriptors and not the underlying socket, all the states associated with a socket are held in common across all the descriptors. For example a <A HREF="cerefwspsetsockopt.htm">WSPSetSockOpt</A> operation performed using one descriptor is subsequently visible using a <A HREF="cerefwspgetsockopt.htm">WSPGetSockOpt</A> from any or all descriptors. A process can call <B>WSPClosesocket</B> on a duplicated socket and the descriptor will become de-allocated. The underlying socket, however, will remain open until <B>WSPClosesocket</B> is called by the last remaining descriptor.</P>
+
+<P>Notification on shared sockets is subject to the usual constraints of <A HREF="cerefwspeventselect.htm">WSPEventSelect</A>. Issuing either of these calls using any of the shared descriptors cancels any previous event registration for the socket, regardless of which descriptor was used to make that registration. Thus, for example, a shared socket cannot deliver FD_READ events to process A and FD_WRITE events to process B. For situations when such tight coordination is required, it is suggested that developers use threads instead of separate processes.</P>
+
+<P>A layered service provider supplies an implementation of this function, but it is also a client of this function if and when it calls <B>WSPDuplicateSocket</B> of the next layer in the protocol chain. Some special considerations apply to this function's <I>lpProtocolInfo</I> parameter as it is propagated down through the layers of the protocol chain.</P>
+
+<P>If the next layer in the protocol chain is another layer then when the next layer's <B>WSPDuplicateSocket</B> is called, this layer must pass to the next layer a <I>lpProtocolInfo</I> that references the same unmodified <B>WSAPROTOCOL_INFOW</B> structure with the same unmodified chain information. However, if the next layer is the base protocol (that is, the last element in the chain), this layer performs a substitution when calling the base provider's <B>WSPDuplicateSocket</B>. In this case, the base provider's <B>WSAPROTOCOL_INFOW</B> structure should be referenced by the <I>lpProtocolInfo</I> parameter.</P>
+
+<P>One vital benefit of this policy is that base service providers do not have to be aware of protocol chains. This same policy applies when propagating a <B>WSAPROTOCOL_INFOW</B> structure through a layered sequence of other functions such as <A HREF="cerefwspaddresstostring.htm">WSPAddressToString</A>, <A HREF="cerefwspstartup.htm">WSPStartup</A>, <A HREF="cerefwspsocket.htm">WSPSocket</A>, or <A HREF="cerefwspstringtoaddress.htm">WSPStringToAddress</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwpucreatesockethandle.htm">WPUCreateSocketHandle</A>, <A HREF="cerefwpumodifyifshandle.htm">WPUModifyIFSHandle</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSPDuplicateSocket&nbsp;(cerefwspduplicatesocket.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

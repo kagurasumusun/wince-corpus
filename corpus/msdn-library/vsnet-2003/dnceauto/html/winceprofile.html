@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Performance and Profiling Tools in Windows CE for Automotive</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Performance and Profiling Tools in Windows CE for Automotive"/>
+<MSHelp:RLTitle Title="Performance and Profiling Tools in Windows CE for Automotive"/>
+<MSHelp:Keyword Index="A" Term="winceprofile"/>
+<MSHelp:Keyword Index="K" Term="Windows CE for Automotive 3.0, performance and profiling tools"/>
+<MSHelp:Keyword Index="K" Term="Windows CE for Automotive 3.5, performance and profiling tools"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn the features and use of the performance and profiling tools provided by Windows CE for Automotive version 3.0 and version 3.5."><meta name="keywords" content="Windows CE for Automotive version 3.0, Windows CE for Automotive version 3.5, performance tools, profiling tools, System Analysis Tools, DDTK tests, Display Performance tool, Driver Development Test Kit tests,"><META name="rtfFileName" content="winceprofile.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Date" CONTENT="2002-07-01">
+<META NAME="msdnID" CONTENT="_832803">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;for&nbsp;Automotive&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="winceprofile"></A>Performance and Profiling Tools in Windows CE for Automotive</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>July 2002 </P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE for Automotive versions 3.0 and 3.5 </P>
+
+<P><B>Summary</B>: Learn the features and use of the performance and profiling tools provided by Windows CE for Automotive version 3.0 and version 3.5. (6 printed pages) </P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#winceprofile_intro">Introduction</A> <BR>
+<A HREF="#winceprofile_buildingblocks">Some Building Blocks</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#winceprofile_whattools">What Are the Tools?</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#winceprofile_whentools">Notes on When to Use the Tools</A></P>
+
+<H2 class="dtH1"><A NAME="winceprofile_intro"></A>Introduction</H2>
+
+<P>This article provides a brief survey of the various performance and profiling tools available in Microsoft&#174; Windows&#174; CE for Automotive version 3.0 and version 3.5. These tools are primarily the ones provided by Windows CE 3.0 and the Windows CE 3.0 Add-On Pack. The Help documentation provided in Windows CE 3.0 contains topics that describe the features and use of the tools. This article introduces the tools, provides some notes regarding their use, and refers the reader to topics in the Help documentation that provide details on each tool.</P>
+
+<H2 class="dtH1"><A NAME="winceprofile_buildingblocks"></A>Some Building Blocks</H2>
+
+<P>The <B>QueryPerformanceCounter</B> and <B>QueryPerformanceFrequency</B> functions are two important building blocks for the performance and profiling tools. A number of the tools that are mentioned in the following paragraphs rely heavily on these two functions.</P>
+
+<P>The <B>QueryPerformanceCounter</B> function retrieves the current value of an OEM-provided high-resolution performance counter, and <B>QueryPerformanceFrequency</B> retrieves the frequency of that counter. </P>
+
+<P>Platform Builder provides a default implementation of these functions. These default implementations can be replaced by OEM implementations. In some cases, the OEM implements the <B>QueryPerformanceCounter</B> function by using <B>GetTickCount</B>. In these cases, a call to the <B>QueryPerformanceCounter</B> function returns the value represented by <B>GetTickCount</B>, and <B>QueryPerformanceFrequency</B> returns 1,000, which means 1,000 ticks per second.</P>
+
+<P>The default implementations of these functions can be replaced by defining a custom, high-resolution timer function based on the target device's CPU. The custom high-resolution timer functions must be implemented in the OEM adaptation layer (OAL) code and then be exposed to the kernel.</P>
+
+<P>To expose high-resolution timer functions to the kernel, the kernel provides the global variable function pointer: <I>pQueryPerformanceCounter</I> and <I>pQueryPerformanceFrequency</I>.</P>
+
+<P>The OEM initializes these pointers in the <B>OEMInit </B>routine. In <B>OEMInit</B>, the OEM would initialize <I>pQueryPerformanceCounter</I> and <I>pQueryPerformanceFrequency</I> to point to equivalent private functions such as <B>OEMQueryPerformanceCounter</B> and <B>OEMQueryPerformanceFrequency</B>. These OAL implementations would retrieve the high-resolution timers.</P>
+
+<H3 class="dtH1"><A NAME="winceprofile_whattools"></A>What Are the Tools?</H3>
+
+<P>The performance and profiling tools available in Windows CE for Automotive version 3.0 and version 3.5 can be divided into three classes:
+
+<UL type="disc">
+	<LI>System Analysis Tools</li>
+
+	<LI>DDTK Tests</li>
+
+	<LI>Display Performance</li>
+</UL>
+
+<P><A HREF="#winceprofile_system">System Analysis Tools</A> enable an OEM to display detailed information about their Windows CE target platform on their development workstation.</P>
+
+<P>The <A HREF="#winceprofile_ddtk">Driver Development Test Kit</A> (DDTK) contains several tests that provide OEMs with benchmarking information and insight into the real-time performance of their target device running the Windows CE operating system.</P>
+
+<P><A HREF="#winceprofile_display">Display Performance</A> is a tool to profile the display driver.</P>
+
+<H4 class="dtH1"><A NAME="winceprofile_system"></A>System Analysis Tools</H4>
+
+<P>System Analysis Tools enable OEMs to display detailed information about their Windows CE target platform on a development workstation. <A HREF="#winceprofile_kernel">Kernel Tracker</A>, <A HREF="#winceprofile_remote">Remote Performance Monitor</A>, and the <A HREF="#winceprofile_monte">Monte Carlo Statistical Profiler</A> make up the system analysis tools and are described in the following paragraphs.</P>
+
+<P><B><A NAME="winceprofile_kernel"></A>Kernel Tracker</B></P>
+
+<P>Kernel Tracker is a graphical tool that provides a visual representation of a target Windows CE system on a development workstation. Kernel Tracker enables the user to view thread interactions, internal dependencies, and system state information in a quasi-real-time environment. Kernel Tracker includes the following features:
+
+<UL type="disc">
+	<LI>Run-time display of process and thread interactions.</li>
+
+	<LI>Tools for searching for events, threads, and processes.</li>
+
+	<LI>Allows viewing and analyzing of the system log.</li>
+
+	<LI>Graphical representations of 49 discreet events in five different categories.</li>
+</UL>
+
+<P>The Platform Builder Help documentation for Kernel Tracker provides a good description of the tool, along with step&#0150;by&#0150;step instructions for enabling Kernel Tracker on an OEM's device, and a tutorial. You can find the description in the Help documentation available in the Platform Builder version 3.0 IDE at Platform Builder Library-&gt;System Analysis Tools-&gt;Kernel Tracker.</P>
+
+<P><B><A NAME="winceprofile_remote"></A>Remote Performance Monitor</B></P>
+
+<P>The Remote Performance Monitor (CEPerfMon) is a graphical tool for measuring the performance of a remote Windows CE system. You can view the behavior of performance objects, such as processors, memory, threads, and processes.</P>
+
+<P>Each performance object gets an associated set of performance counters that provide information about device usage, queue lengths, delays, and information used to measure throughput and internal congestion. CEPerfMon provides charting, alerting, and reporting capabilities that reflect both current activity and ongoing logging. You can open, browse, and chart log files later.</P>
+
+<P>While Kernel Tracker enables an OEM to graphically view relationships between events, the Remote Performance Monitor provides the OEM with the ability to focus on the performance data specific to an object.</P>
+
+<P>The Platform Builder Help documentation provides an excellent help topic on the Remote Performance Monitor that includes a detailed description of the tool, along with step&#0150;by&#0150;step instructions on enabling remote performance monitoring on the OEM's device, and a tutorial. You can find the topic in the Help documentation available in the Platform Builder version 3.0 IDE at Platform Builder Library-&gt;System Analysis Tools-&gt;Remote Performance Monitor.</P>
+
+<P><B><A NAME="winceprofile_monte"></A>Monte Carlo Statistical Profiler</B></P>
+
+<P>Windows CE supports three profiling techniques to measure operating system performance on a targeted platform. Monte Carlo is one of the three techniques. The Monte Carlo Statistical Profiler can determine which functions the device is spending the greatest amount of time in.</P>
+
+<P>For details on how to instrument your target device to use this profiling technique, use the Help documentation in the Platform Builder version 3.0 IDE. You can find information on the Monte Carlo Statistical Profiler at Platform Builder Library-&gt;Operating System Development-&gt;Customizing a Platform-&gt;Profiling a Platform.</P>
+
+<H4 class="dtH1"><A NAME="winceprofile_ddtk"></A>DDTK tests</H4>
+
+<P>The Driver Development Test Kit (DDTK) provides a suite of tests to assist OEMs in testing the port of their drivers to the Windows CE operating system. Several of these tests provide the OEM benchmarking and real-time performance information about their target device while running the Windows CE operating system. These tests are: 
+
+<UL type="disc">
+	<LI><B>Interrupt Latency Timing test</B>
+<P>The Interrupt Latency Timing test (I1timing.exe) is used to benchmark the real&#0150;time performance of the Windows CE operating system on a custom hardware platform.
+</li>
+
+	<LI><B>OSBench test</B>
+<P>The Operating System Benchmark test (OSBench.exe) is used to benchmark the time required for the kernel to perform key operations, such as thread switching and event synchronization.
+</li>
+
+	<LI><B>QA Interrupt Latency Timing test</B>
+<P>The QA Interrupt Latency Timing test (Qailtiming.exe) is used to benchmark and verify that the real&#0150;time performance of the Windows CE operating system is unaffected by various thread activities, thread creation, and the virtual memory manager.
+</li>
+</UL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>These test binaries and tools have been verified with the supported CPU and hardware reference platforms of Microsoft Windows CE Platform Builder. Because Microsoft tested each DDTK test on a Maxall build, it is recommended that the OEM use a Maxall build when running each DDTK test.</BLOCKQUOTE>
+
+<H4 class="dtH1"><A NAME="winceprofile_display"></A>Display Performance</H4>
+
+<P>Platform Builder includes a sample profiling tool to profile the performance of a display driver. The tool is called DispPerf. The display driver writer can use DispPerf to profile the performance of a display driver.</P>
+
+<P>DispPerf builds a table of profiled Raster Operation (ROP) codes. For each ROP code profiled, that table lists the frequency count, elapsed time in microseconds, and average elapsed time in microseconds for ROPs handled by:
+
+<UL type="disc">
+	<LI>The default GPE emulation</li>
+
+	<LI>The software emulation library</li>
+
+	<LI>The hardware accelerations</li>
+</UL>
+
+<H3 class="dtH1"><A NAME="winceprofile_whentools"></A>Notes on When to Use the Tools</H3>
+
+<P>Kernel Tracker is good for a graphical view of "what happens and when it happens" on the system. That is, it helps OEMs determine what events occur in relation to other events. </P>
+
+<P>For example, let's say that you are an OEM debugging a serial driver for a wireless modem. The modem is a PCMCIA&#0150;type device. You experience the following problem: in retail mode, you notice that a few bytes are dropped when the driver reads data from the modem. In debug mode, you notice that the driver drips more bytes. You also notice that the modem runs find on other comparable devices running Windows CE, such as a Pocket PC.</P>
+
+<P>The basic question that you would like answered is, "What is the CPU doing instead of retrieving data from the UART?"</P>
+
+<P>Since you are the OEM, you have access to the OAL for the hardware. So, you would:
+
+<OL type="1">
+	<LI>Add a user-defined Kernel Tracker message when overflow is detected in the UART.</li>
+
+	<LI>Add a user-defined Kernel Tracker message around flow control on/off in the driver.</li>
+
+	<LI>Run your tests on Kernel Tracker-enabled kernel, tracking the user-defined messages as well as interrupts and thread scheduling.</li>
+
+	<LI>Once that the tests are complete, look through the CeLog using Kernel Tracker for the overflow events.</li>
+
+	<LI>Look at what immediately precedes these events. You'll probably see one of the following:
+<UL type="disc">
+	<LI>A higher priority interrupt firing for an extended period.</li>
+
+	<LI>A higher priority thread running (higher than the PCMCIA interrupt thread).</li>
+
+	<LI>A priority inversion or other resource conflict.</li>
+</UL>
+</li>
+</OL>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Although Kernel Tracker is a great viewer of the data in CeLog, you as an OEM are not limited to Kernel Tracker as your only viewer. You also have the option of creating your own viewer that presents a different slice of the data. Use the CeLog.h for a definition of the composition of the CeLog file.</BLOCKQUOTE>
+
+<P>Let's say that you are concerned about the real&#0150;time performance of your system. One of the things that you could do would be to benchmark the interrupt service routine (ISR) and interrupt service thread (IST) latencies&#151;the time for the Windows CE OS to respond to interrupts. To do this, you would use the Interrupt Latency Timing test.</P>
+
+<P>You might also want to verify that the real&#0150;time performance is unaffected by various types of system operations. You would use the QA Interrupt Latency Timing test for this type of verification.</P>
+
+<P>Let's say that you wanted to understand the system overhead involved key operations, such as thread switching and event synchronization. And you would like to compare these on your device when running XIP from flash or simply running out of RAM. And maybe you are evaluating multiple processors. OSBench would be a good tool to use to collect the benchmark data.</P>
+
+<P>If you are interested in enhancing the performance of an object under your control, you might want to look at the Remote Performance Monitor. With it, you can focus in on the performance of just that object, and then take measurements as you make modifications to validate that your changes are, in fact, enhancing the performance of that object. Keep in mind that an enhancement to the performance of one object does not necessarily translate into enhanced overall system performance.</P>
+
+<P>If you are attempting to enhance the performance of your display subsystem, you may find the DispPerf tool very helpful. A display driver can have a significant effect on the overall performance of a Windows CE device. Tuning the display driver is an iterative process. You will find:
+
+<UL type="disc">
+	<LI>It is more valuable to tune the driver for the applications designed to run on the device than tuning the driver in a vacuum.</li>
+
+	<LI>That tuning is an iterative process of:
+<UL type="disc">
+	<LI>Running the system with DispPerf</li>
+
+	<LI>Analyzing the results</li>
+
+	<LI>Tweaking the driver</li>
+
+	<LI>Repeat until you have the desired performance</li>
+</UL>
+</li>
+</UL>
+
+<P class="label"><B>About Windows CE for Automotive</B></P>
+
+<P>Microsoft Windows CE for Automotive is an operating system built on Windows CE technology to make possible new categories of in-car computers that are capable of safely providing drivers and passengers with hands-free communication, access to personalized information on the Internet, the ability to summon emergency services and roadside assistance, and an array of convenience and entertainment applications. Windows CE for Automotive is an open platform that allows developers to quickly create powerful in-car computing solutions. It offers flexibility and choice of computing platforms, hardware peripherals, and software components, as well as a large community of developers familiar with Windows CE development practices.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_832803', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

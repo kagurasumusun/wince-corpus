@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFile::Open</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cfile_open"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cfile_open"></A><SUP></SUP>CFile::Open</H1>
+
+<P>This method is used in conjunction with the default <B>CFile</B> constructor as a safe method for opening a file where a failure is a normal, expected condition.</P>
+
+<PRE class=syntax><B>virtual BOOL Open( </B><I>
+</I><B>LPCTSTR </B><I>lpszFileName</I><B>,
+UINT </B><I>nOpenFlags</I><B>,
+CFileException* </B><I>pError</I><B> = NULL);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszFileName</I></DT>
+
+<DD>Specifies a string that is the path to the desired file. The path can be relative, absolute, or a network name (UNC).</DD>
+
+<DT><I>nOpenFlags</I></DT>
+
+<DD>Specifies a <B>UINT</B> that defines the sharing and access mode in the file. It specifies the action to take when opening the file. You can combine options by using the bitwise-OR ( <B>|</B> ) operator. One access permission and one share option are required; the <B>modeCreate</B> and <B>modeNoInherit</B> modes are optional. See the <A HREF="cfile_2.htm"><B>CFile</B></A> constructor for a list of mode options.</DD>
+
+<DT><I>pError</I></DT>
+
+<DD>Specifies a pointer to an existing file-exception object that receives the status of a failed operation.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the open was successful; otherwise, it is zero. The <I>pError</I> parameter is meaningful only if zero is returned.</P>
+
+<H4>Remarks</H4>
+
+<P>Although the <B>CFile</B> constructor will throw an exception in an error condition, <B>Open</B> will return <B>FALSE</B> for error conditions. <B>Open</B> can still initialize a <A HREF="cfileex.htm"><B>CFileException</B></A> object to describe the error, however. If you do not supply the <I>pError</I> parameter, or if you pass <B>NULL</B> for <I>pError</I>, <B>Open</B> will return <B>FALSE</B> and not throw a <B>CFileException</B>. If you pass a pointer to an existing <B>CFileException</B>, and <B>Open</B> encounters an error, the function will fill it with information describing that error. Neither case will cause <B>Open</B> to throw an exception.</P>
+
+<P>The following table describes the possible results of <B>Open</B>.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=21%><I><BR>
+pError</I></TH>
+<TH width=27%><BR>
+Error encountered?</TH>
+<TH width=24%><BR>
+Return value</TH>
+<TH width=28%>CFileException content</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>NULL</B></TD>
+<TD width=27%>No</TD>
+<TD width=24%><B>TRUE</B></TD>
+<TD width=28%>n/a</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>ptr to <B>CFileException</B></TD>
+<TD width=27%>No</TD>
+<TD width=24%><B>TRUE</B></TD>
+<TD width=28%>unchanged</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>NULL</B></TD>
+<TD width=27%>Yes</TD>
+<TD width=24%><B>FALSE</B></TD>
+<TD width=28%>n/a</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>ptr to <B>CFileException</B></TD>
+<TD width=27%>Yes</TD>
+<TD width=24%><B>FALSE</B></TD>
+<TD width=28%>initialized to describe error</TD>
+</TR>
+</TABLE><BR>
+
+<P>Under Windows NT, if the file <I>lpszFileName</I> exists and is hidden, and if <I>nOpenFlags</I> includes <B>CFile::modeCreate</B> but is not OR-ed with <B>CFile::modeNoTruncate</B>, <B>Open</B> fails. Under Windows 98 and later, the call succeeds and creates a new file that is not hidden.</P>
+
+<H4>Example</H4>
+
+<PRE>// Example for the CFile::Open method.
+CFile f;
+CFileException e;
+TCHAR* pFileName = _T("test.dat");
+if( !f.Open( pFileName, CFile::modeCreate | CFile::modeWrite, &amp;e ) )
+&nbsp;&nbsp;{
+#ifdef _DEBUG
+&nbsp;&nbsp;afxDump &lt;&lt; "File could not be opened " &lt;&lt; e.m_cause &lt;&lt; "\n";
+#endif
+&nbsp;&nbsp;}
+
+// A second example for the CFile::Open method.
+// This console program uses CFile to copy binary files.
+
+#include &lt;afx.h&gt;
+#include &lt;afxwin.h&gt;
+#include &lt;iostream&gt;
+
+using namespace std;
+
+CWinApp theApp;
+
+int main(int argc, char *argv[])
+{
+   if (!AfxWinInit(GetModuleHandle(NULL), NULL, GetCommandLine(), 0))
+   {
+      cout &lt;&lt; "panic: MFC could not initialize!" &lt;&lt; endl;
+      return 1;
+   }
+
+   // Constructing these file objects does not open them.
+
+   CFile sourceFile;
+   CFile destFile;
+
+   // Check that there are a reasonable number of arguments.
+
+   if (argc != 3)
+   {
+      cout &lt;&lt; "usage: " &lt;&lt; argv[0];
+      cout &lt;&lt; " &lt;source&gt; &lt;dest&gt;" &lt;&lt; endl;
+      cout &lt;&lt; endl;
+      return 1;
+   }
+
+   // Using a CFileException object to get error information.
+
+   CFileException ex;
+
+   // Open the source file for reading.
+
+   if (!sourceFile.Open(argv[1],
+      CFile::modeRead | CFile::shareDenyWrite, &amp;ex))
+   {
+      // Complain if an error happened.
+      // There is no reason to delete the ex object.
+
+      TCHAR szError[1024];
+      ex.GetErrorMessage(szError, 1024);
+      cout &lt;&lt; "Could not open source file: ";
+      cout &lt;&lt; szError;
+      return 1;
+   }
+   else
+   {
+      if (!destFile.Open(argv[2], CFile::modeWrite |
+            CFile::shareExclusive | CFile::modeCreate, &amp;ex))
+      {
+         TCHAR szError[1024];
+         ex.GetErrorMessage(szError, 1024);
+         cout &lt;&lt; "Could not open source file: ";
+         cout &lt;&lt; szError;
+
+         sourceFile.Close();
+         return 1;
+      }
+
+      BYTE buffer[4096];
+      DWORD dwRead;
+
+      // Read in 4096-byte blocks,
+      // remember how many bytes were actually read,
+      // and try to write that many out. This loop ends
+      // when there are no more bytes to read.
+
+      do
+      {
+         dwRead = sourceFile.Read(buffer, 4096);
+         destFile.Write(buffer, dwRead);
+      }
+      while (dwRead &gt; 0);
+
+      // Close both files.
+
+      destFile.Close();
+      sourceFile.Close();
+   }
+
+   return 0;
+}
+</PRE>
+
+<P>You can use the <B>Cfile::Open</B> method to open files in the Windows CE object store.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cfile_2.htm"><B>CFile::CFile</B></A>, <A HREF="cfile_4.htm"><B>CFile::Close</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

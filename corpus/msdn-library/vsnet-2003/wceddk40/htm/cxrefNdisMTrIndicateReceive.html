@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMTrIndicateReceive</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMTrIndicateReceive"/>
+<MSHelp:RLTitle Title="NdisMTrIndicateReceive"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisMTrIndicateReceive"/>
+<MSHelp:Keyword Index="K" Term="NdisMTrIndicateReceive"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisMTrIndicateReceive"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_746414">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndismtrindicatereceive"></A>NdisMTrIndicateReceive</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function notifies NDIS that a Token Ring packet, or some initial lookahead portion of the packet, has arrived so NDIS can forward the packet to bound protocols.</P>
+
+<PRE class="syntax"><B>VOID NdisMTrIndicateReceive(</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportReceiveContext</I><B>,</B>
+<B>IN PVOID</B> <I>HeaderBuffer</I><B>,</B>
+<B>IN UINT</B> <I>HeaderBufferSize</I><B>,</B>
+<B>IN PVOID</B> <I>LookaheadBuffer</I><B>,</B>
+<B>IN UINT</B> <I>LookaheadBufferSize</I><B>,</B>
+<B>IN UINT</B> <I>PacketSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle originally input to <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>MiniportReceiveContext</I></DT>
+
+<DD>[in] Specifies a context handle supplied by the caller. NDIS returns this handle as an input parameter to the <A HREF="cxrefminiporttransferdata.htm">MiniportTransferData</A> function if it is called. The miniport can use the context area designated by this handle to determine which packet is being received on which NIC.</dd>
+
+<DT><I>HeaderBuffer</I></DT>
+
+<DD>[in] Specifies the base virtual address of the buffered packet header.</dd>
+
+<DT><I>HeaderBufferSize</I></DT>
+
+<DD>[in] Specifies the size in bytes of the packet header.</dd>
+
+<DT><I>LookaheadBuffer</I></DT>
+
+<DD>[in] Specifies the base virtual address of a buffer containing the initial <I>LookaheadBufferSize</I> bytes of the data in the packet.</dd>
+
+<DT><I>LookaheadBufferSize</I></DT>
+
+<DD>[in] Specifies the size in bytes of the lookahead buffer. This value must be at least as large as the smaller of the lookahead size set when MiniportSetInformationcxrefMiniportSetInformation was called with OID_GEN_CURRENT_LOOKAHEADcxtskOID, or the packet itself. When the packet is smaller than the lookahead size, the lookahead buffer contains the entire frame.
+
+<P>A miniport can (and should) set <I>LookaheadBufferSize</I> to something larger than the minimum required if sufficient received data is available on its NIC.
+</dd>
+
+<DT><I>PacketSize</I></DT>
+
+<DD>[in] Specifies the size in bytes of the received packet data. This value does not include the <I>HeaderBufferSize</I>.
+
+<P>When <I>PacketSize</I> is larger than <I>LookaheadBufferSize</I>, a protocol driver call to <A HREF="cxtskndistransferdata.htm">NdisTransferData</A> causes a subsequent call to the <B>MiniportTransferData</B> function, which transfers the remaining data in the packet.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A miniport calls <B>NdisMTrIndicateReceive</B> if it designates its NIC as of type <B>NdisMedium802_5</B> in response to the OID_GEN_MEDIA_IN_USE query, unless the miniport indicates receives with <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>.</P>
+
+<P>When a miniport calls <B>NdisMTrIndicateReceive</B>, NDIS passes a pointer to the header of the packet and a pointer to some or all of the data in the packet to the <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function of bound protocol drivers. Each protocol that receives the indication can do the following:
+
+<OL type="1">
+	<LI>Inspect the header and data in the packet to decide whether the indication is of interest to the protocol's clients.</li>
+
+	<LI>If it is, copy as much of the header or data as is visible into protocol-allocated memory with <A HREF="_wceddk_ndismovememory.htm">NdisMoveMemory</A>.</li>
+
+	<LI>Get the remaining data, if any, for the indication by allocating a packet descriptor with sufficient chained buffer descriptors and calling <B>NdisTransferData</B>. The call to <B>NdisTransferData</B> causes the NIC driver's <B>MiniportTransferData</B> function to copy the data into the protocol-supplied packet.</li>
+</OL>
+
+<P>For any protocol driver that receives an indication through <B>NdisMTrIndicateReceive</B>, the <I>HeaderBuffer</I> and <I>LookaheadBuffer</I> addresses are valid only during the current call to its <B>ProtocolReceive</B> function, and these buffers are read-only. A protocol driver cannot retain a pointer to the indicated packet with these associated buffers nor can it retain any pointers to these buffers for later use. Any data that a protocol driver needs from such a packet must be copied and saved during the receive indication.</P>
+
+<P>The data in the header is the same as that received on the NIC. A miniport driver need not remove any headers or trailers from the data its NIC receives.</P>
+
+<P>The transmitting driver adds padding to any packet that is too short for the requirements of the medium. The receiving miniport can include such padding in the data and length it subsequently indicates. Each bound protocol is responsible for detecting any such padding and ignoring it.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndis.dll</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="cxrefminiporttransferdata.htm">MiniportTransferData</A>, <A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A>, <A HREF="cxrefndismtrindicatereceivecomplete.htm">NdisMTrIndicateReceiveComplete</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndismovememory.htm">NdisMoveMemory</A>, <A HREF="cxtskndistransferdata.htm">NdisTransferData</A>, <A HREF="cxtskoid_gen_current_lookahead.htm">OID_GEN_CURRENT_LOOKAHEAD</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisMTrIndicateReceive&nbsp;(cxrefndismtrindicatereceive.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

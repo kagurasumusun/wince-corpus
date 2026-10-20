@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CToolBarCtrl: Handling Customization Notifications</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ctoolbarctrl_handling_customization_notifications"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ctoolbarctrl_handling_customization_notifications"></A>CToolBarCtrl: Handling Customization Notifications</H1>
+
+<P>A Windows CE toolbar common control has built-in customization features, including a system-defined customization dialog box, which allow the user to insert, delete, or rearrange toolbar buttons. The application determines whether the customization features are available and controls the extent to which the user can customize the toolbar.</P>
+
+<P>You can make these customization features available to the user by giving the toolbar the CCS_ADJUSTABLE style. The customization features allow the user to drag a button to a new position or to remove a button by dragging it off the toolbar. In addition, the user can double-click the toolbar to display the <B>Customize Toolbar</B> dialog box, which allows the user to add, delete, and rearrange toolbar buttons. The application can display the dialog box by using the <B>Customize</B> method.</P>
+
+<P>The toolbar control sends notification messages to the parent window at each step in the customization process. If the user holds the SHIFT key down and begins dragging a button, the toolbar automatically handles the drag operation. The toolbar sends the TBN_QUERYDELETE notification message to the parent window to determine whether the button may be deleted. The drag operation ends if the parent window returns <B>FALSE</B>. Otherwise, the toolbar captures mouse input and waits for the user to release the mouse button. </P>
+
+<P>When the user releases the mouse button, the toolbar control determines the location of the mouse cursor. If the cursor is outside the toolbar, the button is deleted. If the cursor is on another toolbar button, the toolbar sends the TBN_QUERYINSERT notification message to the parent window to determine if a button may be inserted to the left of the given button. The button is inserted if the parent window returns <B>TRUE</B>; otherwise, it is not. The toolbar sends the TBN_TOOLBARCHANGE notification message to signal the end of the drag operation.</P>
+
+<P>If the user begins a drag operation without holding down the SHIFT key, the toolbar control sends the TBN_BEGINDRAG notification message to the owner window. An application that implements its own button-dragging code can use this message as a signal to begin a drag operation. The toolbar sends the TBN_ENDDRAG notification message to signal the end of the drag operation. </P>
+
+<P>A toolbar control sends notification messages when the user customizes a toolbar by using the <B>Customize Toolbar</B> dialog box. The toolbar sends the TBN_BEGINADJUST notification message after the user double-clicks the toolbar, but before the dialog box is created. Next, the toolbar begins sending a series of TBN_QUERYINSERT notification messages to determine whether the toolbar allows buttons to be inserted. When the parent window returns <B>TRUE</B>, the toolbar stops sending TBN_QUERYINSERT notification messages. If the parent window does not return <B>TRUE</B> for any button, the toolbar destroys the dialog box. </P>
+
+<P>Next, the toolbar control determines if any buttons may be deleted from the toolbar by sending one TBN_QUERYDELETE notification message for each button in the toolbar. The parent window returns <B>TRUE</B> to indicate that a button may be deleted; otherwise, it returns <B>FALSE</B>. The toolbar adds all toolbar buttons to the dialog box, but grays those that may not be deleted. </P>
+
+<P>Whenever the toolbar control needs information about a button in the <B>Customize</B> <B>Toolbar</B> dialog box, it sends the TBN_GETBUTTONINFO notification message, specifying the index of the button for which it needs information and the address of a TBNOTIFY structure. The parent window must fill the structure with the relevant information. </P>
+
+<P>The <B>Customize Toolbar</B> dialog box includes a <B>Help</B> button and a <B>Reset</B> button. When the user chooses the Help button, the toolbar control sends the TBN_CUSTHELP notification message. The parent window should respond by displaying help information. The dialog box sends the TBN_RESET notification message when the user selects the <B>Reset</B> button. This message signals that the toolbar is about to reinitialize the dialog box. </P>
+
+<P>These messages are all WM_NOTIFY messages, and they can be handled in your owner window by adding message-map entries of the following form to the message map of your owner window:</P>
+
+<PRE class=syntax><B>ON_NOTIFY(</B> <I>wNotifyCode</I><B>,</B> <I>idControl</I><B>,</B> <I>memberFxn</I> <B>)</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>wNotifyCode</I></DT>
+
+<DD>Notification message identifier code, such as TBN_BEGINADJUST.</DD>
+
+<DT><I>idControl</I></DT>
+
+<DD>The identifier of the control sending the notification.</DD>
+
+<DT><I>memberFxn</I></DT>
+
+<DD>The method to be called when this notification is received.</DD>
+</DL>
+
+<P>Your method would be declared with the following prototype:</P>
+
+<PRE class=syntax><B>afx_msg</B> <B>void</B> <I>memberFxn</I><B>(</B> <B>NMHDR</B> * <I>pNotifyStruct</I><B>,</B> <B>LRESULT</B> <B>*</B> <I>result</I> <B>);</B></PRE>
+
+<P>If the notification message handler returns a value, it should put it in the <B>LRESULT</B> pointed to by <I>result</I>.</P>
+
+<P>For each message, <I>pNotifyStruct</I> points to either an <B>NMHDR</B> structure or a <B>TBNOTIFY</B> structure. These structures are described below:</P>
+
+<P>The <B>NMHDR</B> structure contains the following members:</P>
+
+<PRE>typedef struct tagNMHDR {
+HWND hwndFrom;  // handle of control sending message
+UINT idFrom;// identifier of control sending message
+UINT code;  // notification code; see below
+} NMHDR;
+</PRE>
+
+<DL>
+<DT><I>hwndFrom</I></DT>
+
+<DD>Specifies the window handle of the control that is sending the notification. To convert this handle to a <B>CWnd</B> pointer, use <A HREF="cwnd_30.htm"><B>CWnd::FromHandle</B></A>.</DD>
+
+<DT><I>idFrom</I></DT>
+
+<DD>Specifies the identifier of the control sending the notification.</DD>
+
+<DT><I>code</I></DT>
+
+<DD>Specifies the notification code. This member can be a value specific to a control type, such as TBN_BEGINADJUST or TTN_NEEDTEXT, or it can be one of the common notification values listed below:
+
+<UL type=disc>
+	<LI>NM_CLICK&nbsp;&nbsp;&nbsp;The user has clicked the left mouse button within the control.</LI>
+
+	<LI>NM_DBLCLK&nbsp;&nbsp;&nbsp;The user has double-clicked the left mouse button within the control.</LI>
+
+	<LI>NM_KILLFOCUS&nbsp;&nbsp;&nbsp;The control has lost the input focus.</LI>
+
+	<LI>NM_OUTOFMEMORY&nbsp;&nbsp;&nbsp;The control could not complete an operation because there is not enough memory available. </LI>
+
+	<LI>NM_RCLICK&nbsp;&nbsp;&nbsp;The user has clicked the right mouse button within the control.</LI>
+
+	<LI>NM_RDBLCLK&nbsp;&nbsp;&nbsp;The user has double-clicked the right mouse button within the control.</LI>
+
+	<LI>NM_RETURN&nbsp;&nbsp;&nbsp;The control has the input focus, and the user has pressed the ENTER key.</LI>
+
+	<LI>NM_SETFOCUS&nbsp;&nbsp;&nbsp;The control has received the input focus.</LI>
+</UL>
+</DD>
+</DL>
+
+<P>The <B>TBNOTIFY</B> structure contains the following members:</P>
+
+<PRE>typedef struct {
+NMHDR hdr; // information common to all WM_NOTIFY messages
+int iItem; // index of button associated with notification
+TBBUTTON tbButton; // info about button associated with notification
+int cchText;   // count of characters in button text
+LPSTR lpszText;// address of button text
+} TBNOTIFY, FAR* LPTBNOTIFY;
+</PRE>
+
+<DL>
+<DT><I>hdr</I></DT>
+
+<DD>Specifies the information common to all WM_NOTIFY messages.</DD>
+
+<DT><I>iItem</I></DT>
+
+<DD>Specifies the index of button associated with notification.</DD>
+
+<DT><I>tbButton</I></DT>
+
+<DD><B>TBBUTTON</B> structure that contains information about the toolbar button associated with the notification.</DD>
+
+<DT><I>cchText</I></DT>
+
+<DD>Specifies the count of characters in button text.</DD>
+
+<DT><I>lpszText</I></DT>
+
+<DD>Specifies the pointer to button text.</DD>
+</DL>
+
+<P>The notifications the toolbar sends are as follows:
+
+<UL type=disc>
+	<LI>TBN_BEGINADJUST&nbsp;&nbsp;&nbsp;Sent when the user begins customizing a toolbar control. The pointer points to an <B>NMHDR</B> structure that contains information about the notification. The handler does not need to return any specific value.</LI>
+
+	<LI>TBN_BEGINDRAG&nbsp;&nbsp;&nbsp;Sent when the user begins dragging a button in a toolbar control. The pointer points to a <B>TBNOTIFY</B> structure. The <I>iItem</I> member contains the zero-based index of the button being dragged. The handler does not need to return any specific value.</LI>
+
+	<LI>TBN_CUSTHELP&nbsp;&nbsp;&nbsp;Sent when the user chooses the Help button in the Customize Toolbar dialog box. No return value. The pointer points to an <B>NMHDR</B> structure that contains information about the notification message. The handler does not need to return any specific value.</LI>
+
+	<LI>TBN_ENDADJUST&nbsp;&nbsp;&nbsp;Sent when the user stops customizing a toolbar control. The pointer points to an <B>NMHDR</B> structure that contains information about the notification message. The handler does not need to return any specific value.</LI>
+
+	<LI>TBN_ENDDRAG&nbsp;&nbsp;&nbsp;Sent when the user stops dragging a button in a toolbar control. The pointer points to a <B>TBNOTIFY</B> structure. The <I>iItem</I> member contains the zero-based index of the button being dragged. The handler does not need to return any specific value.</LI>
+
+	<LI>TBN_GETBUTTONINFO&nbsp;&nbsp;&nbsp;Sent when the user is customizing a toolbar control. The toolbar uses this notification message to retrieve information needed by the Customize Toolbar dialog box. The pointer points to a <B>TBNOTIFY</B> structure. The <I>iItem</I> member specifies the zero-based index of a button. The <I>pszText</I> and <I>cchText</I> members specify the address and length, in characters, of the current button text. An application should fill the structure with information about the button. Return <B>TRUE</B> if button information was copied to the structure, or <B>FALSE</B> otherwise.</LI>
+
+	<LI>TBN_QUERYDELETE&nbsp;&nbsp;&nbsp;Sent while the user is customizing a toolbar to determine whether a button may be deleted from a toolbar control. The pointer points to a <B>TBNOTIFY</B> structure. The <I>iItem</I> member contains the zero-based index of the button to be deleted. Return <B>TRUE</B> to allow the button to be deleted or <B>FALSE</B> to prevent the button from being deleted.</LI>
+
+	<LI>TBN_QUERYINSERT&nbsp;&nbsp;&nbsp;Sent while the user is customizing a toolbar control to determine whether a button may be inserted to the left of the given button. The pointer points to a <B>TBNOTIFY</B> structure. The <I>iItem</I> member contains the zero-based index of the button to be inserted. Return <B>TRUE</B> to allow a button to be inserted in front of the given button or <B>FALSE</B> to prevent the button from being inserted.</LI>
+
+	<LI>TBN_RESET&nbsp;&nbsp;&nbsp;Sent when the user resets the content of the Customize Toolbar dialog box. The pointer points to an <B>NMHDR</B> structure that contains information about the notification message. The handler does not need to return any specific value.</LI>
+
+	<LI>TBN_TOOLBARCHANGE&nbsp;&nbsp;&nbsp;Sent after the user has customized a toolbar control. The pointer points to an <B>NMHDR</B> structure that contains information about the notification message. The handler does not need to return any specific value.</LI>
+</UL>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

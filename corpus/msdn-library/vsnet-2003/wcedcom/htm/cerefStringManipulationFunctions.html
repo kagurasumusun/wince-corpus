@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>String Manipulation Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="String Manipulation Functions"/>
+<MSHelp:RLTitle Title="String Manipulation Functions"/>
+<MSHelp:Keyword Index="A" Term="cerefStringManipulationFunctions"/>
+<MSHelp:Keyword Index="K" Term="COM, string manipulation functions"/>
+<MSHelp:Keyword Index="K" Term="DCOM, string manipulation functions"/>
+<MSHelp:Keyword Index="A" Term="cerefStringManipulationFunctions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: com_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747873">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefstringmanipulationfunctions"></A>String Manipulation Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To handle strings that are allocated by one component and freed by another, Automation defines a special set of functions. These functions use the following data type.</P>
+
+<PRE class="code">typedef OLECHAR * BSTR;</PRE>
+
+<P>These strings are zero-terminated and in most cases they can be treated like OLECHAR* strings. However, you can query a BSTR for its length rather than scan it, therefore it can contain embedded null characters. The length is stored as a 32-bit integer at the memory location preceding the data in the string. Instead of reading this location directly, applications should use the string manipulation functions to access the length of a BSTR. </P>
+
+<P>In 32-bit OLE, BSTRs use Unicode like all other strings in 32-bit OLE. In 16-bit OLE, BSTRs use ANSI. Win32 provides the <MSHelp:link keywords="cerefMultiByteToWideChar" TABINDEX="0">MultiByteToWideChar</MSHelp:link> and <MSHelp:link keywords="cerefWideCharToMultiByte" TABINDEX="0">WideCharToMultiByte</MSHelp:link> functions to convert ANSI strings to Unicode and Unicode strings to ANSI.</P>
+
+<P>In situations where a BSTR will not be translated from ANSI to Unicode, or vice versa, you can use BSTRs to pass binary data. However, the preferred method of passing binary data is to use a SAFEARRAY of VT_UI1.</P>
+
+<P>Automation may cache the space allocated for BSTRs. This speeds up the <A HREF="cerefsysallocstring.htm">SysAllocString</A>/<A HREF="cerefsysfreestring.htm">SysFreeString</A> sequence. However, this may also cause the <A HREF="cerefimallocspy.htm">IMallocSpy</A> interface to assign leaks to the wrong memory user because it is not aware of the caching done by Automation. </P>
+
+<P>For example, if the application allocates a BSTR and frees it, the free block of memory is put into the BSTR cache by Automation. If the application then allocates another BSTR, it can get the free block from the cache. If the second BSTR allocation is not freed, <B>IMallocSpy</B> will attribute the leak to the first allocation of the BSTR. You can determine the correct source of the leak (the second allocation) by disabling the BSTR caching using the debug version of Oleaut32.dll and by setting the environment variable OANOCACHE=1 before running the application.</P>
+
+<P>A null pointer is a valid value for a BSTR variable. By convention, it is always treated the same as a pointer to a BSTR that contains zero characters. Also by convention, calls to functions that take a BSTR reference parameter must pass either a null pointer or a pointer to an allocated BSTR. If the implementation of a function that takes a BSTR reference parameter assigns a new BSTR to the parameter, it must free the previously referenced BSTR.</P>
+
+<P>The following table shows the string manipulation functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>String manipulation function</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysallocstring.htm">SysAllocString</A></TD>
+<TD width=59%>Creates and initializes a string. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysallocstringbytelen.htm">SysAllocStringByteLen</A></TD>
+<TD width=59%>Creates a zero-terminated string of a specified length (32-bit only). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysallocstringlen.htm">SysAllocStringLen</A></TD>
+<TD width=59%>Creates a string of a specified length. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysfreestring.htm">SysFreeString</A></TD>
+<TD width=59%>Frees a previously created string. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysreallocstring.htm">SysReAllocString</A></TD>
+<TD width=59%>Changes the size and value of a string. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysreallocstringlen.htm">SysReAllocStringLen</A></TD>
+<TD width=59%>Changes the size of an existing string. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysstringbytelen.htm">SysStringByteLen</A></TD>
+<TD width=59%>Returns the length of a string in bytes (32-bit only). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefsysstringlen.htm">SysStringLen</A></TD>
+<TD width=59%>Returns the length of a string.</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;String%20Manipulation%20Functions&nbsp;(cerefstringmanipulationfunctions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

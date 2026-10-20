@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Loading an Object from a File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Loading an Object from a File"/>
+<MSHelp:RLTitle Title="Loading an Object from a File"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Loading_an_Object_from_a_File"/>
+<MSHelp:Keyword Index="K" Term="loaders%2C DirectMusic, loading objects from files"/>
+<MSHelp:Keyword Index="K" Term="objects, DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Loading_an_Object_from_a_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680647">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_loading_an_object_from_a_file"></A>Loading an Object from a File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To load an object, first obtain the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader" TABINDEX="0">IDirectMusicLoader</MSHelp:link> interface, as in the following code example.</P>
+
+<PRE class="code">IDirectMusicLoader* m_pLoader;
+ 
+CoInitialize(NULL);
+HRESULT hr = CoCreateInstance(
+    CLSID_DMLoader,
+    NULL,
+    CLSCTX_INPROC, 
+    IID_IDirectMusicLoader,
+    (void**)&amp;m_pLoader);</PRE>
+
+<P>Then, describe the object, and call the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link> method to load it and obtain the desired interface.</P>
+
+<P>The following code example loads a style from disk and returns a pointer to it in the variable addressed by the parameter.</P>
+
+<PRE class="code">void myLoadStyle(
+    IDirectMusicStyle **ppIStyle)
+{
+    IDirectMusicLoader *pILoader;        // Loader interface
+ 
+/* Normally you would create the loader once and use it for the
+   duration of the application. This reduces overhead and takes
+   advantage of the loader's ability to cache objects. However,
+   this example creates it dynamically and throws it
+   away once the style is loaded. */
+ 
+    CoCreateInstance(
+            CLSID_DirectMusicLoader,NULL,
+            CLSCTX_INPROC,
+            IID_IDirectMusicLoader,
+            (void **) &amp;pILoader);
+ 
+    if (pILoader)
+    {
+        DMUS_OBJECTDESC Desc;
+ 
+        // Start by initializing Desc with the file name and 
+        // class GUID for the style object.
+ 
+        wcscpy(Desc.wszFileName,L"c:\\mymusic\\funky\\polka.sty");
+        Desc.guidClass = CLSID_DirectMusicStyle; 
+        Desc.dwSize = sizeof (DMUS_OBJECTDESC);
+        Desc.dwValidData = DMUS_OBJ_CLASS | 
+                           DMUS_OBJ_FILENAME | 
+                           DMUS_OBJ_FULLPATH;
+ 
+        pILoader-&gt;GetObject(&amp;Desc, IID_IDirectMusicStyle,
+                (void **) ppIStyle);
+        pILoader-&gt;Release();
+    }
+}</PRE>
+
+<P>This code example identifies the file by a full path name and indicates this by setting the DMUS_OBJ_FULLPATH flag. If you have previously set the search directory, you can use the short name of the file without full path information. For an example, see <A HREF="_wcesdk_dxmusic_setting_the_loader_s_search_directory.htm">Setting the Loader's Search Directory</A>.</P>
+
+<P>To identify the particular file object being sought, fill in at least one of the <B>wszName</B>, <B>guidObject</B>, and <B>wszFileName</B> members of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_OBJECTDESC" TABINDEX="0">DMUS_OBJECTDESC</MSHelp:link> structure, and set the corresponding flag or flags in the <B>dwValidData</B> member. If you identify the file by <B>wszName</B> or <B>guidObject</B>, but not by <B>wszFileName</B>, you must first call the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__ScanDirectory" TABINDEX="0">IDirectMusicLoader::ScanDirectory</MSHelp:link> method to make the GUIDs and names in the current directory available. For more information, see <A HREF="_wcesdk_dxmusic_scanning_a_directory_for_objects.htm">Scanning a Directory for Objects</A> and see <A HREF="_wcesdk_dxmusic_loading_an_object_from_a_resource.htm">Loading an Object from a Resource</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Loading%20an%20Object%20from%20a%20File&nbsp;(_wcesdk_dxmusic_loading_an_object_from_a_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

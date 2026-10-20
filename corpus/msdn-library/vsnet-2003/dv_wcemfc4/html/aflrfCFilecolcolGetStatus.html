@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFile::GetStatus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CFile::GetStatus"/>
+<MSHelp:RLTitle Title="CFile::GetStatus"/>
+<MSHelp:Keyword Index="A" Term="aflrfCFilecolcolGetStatus"/>
+<MSHelp:Keyword Index="K" Term="GetStatus method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCFilecolcolGetStatus"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cfile.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710364">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcfilecolcolgetstatus"></A>CFile::GetStatus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves the status of an open file.</P>
+
+<P>The first implementation of <B>GetStatus</B> retrieves the status of the open file associated with this <B>CFile</B> object. It does not insert a value into the <B>m_szFullName</B> data member.</P>
+
+<P>The static implementation gets the status of the named file and copies the file name to <B>m_szFullName</B>. This method obtains the file status from the directory entry without actually opening the file. It is useful for testing the existence and access rights of a file.</P>
+
+<PRE class="syntax"><B>BOOL GetStatus( </B><I>
+</I><B>CFileStatus&amp; </B><I>rStatus</I><B> ) 
+const;
+</B>
+<B>static BOOL PASCAL GetStatus( </B><I>
+</I><B>LPCTSTR </B><I>lpszFileName</I><B>, 
+CFileStatus&amp; </B><I>rStatus</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>rStatus</I></DT>
+
+<DD>Specifies a reference to a user-supplied <B>CFileStatus</B> structure that receives the status information. The <B>CFileStatus</B> structure has the following fields:
+
+<UL type="disc">
+	<LI><B>CTime m_ctime</B>&nbsp;&nbsp;&nbsp;The date and time the file was created.</li>
+
+	<LI><B>CTime m_mtime</B>&nbsp;&nbsp;&nbsp;The date and time the file was last modified.</li>
+
+	<LI><B>CTime m_atime</B>&nbsp;&nbsp;&nbsp;The date and time the file was last accessed for reading.</li>
+
+	<LI><B>LONG m_size</B>&nbsp;&nbsp;&nbsp;The logical size of the file in bytes, as reported by the DIR command.</li>
+
+	<LI><B>BYTE m_attribute</B>&nbsp;&nbsp;&nbsp;The attribute byte of the file.</li>
+
+	<LI><B>TCHAR m_szFullName[_MAX_PATH]</B>&nbsp;&nbsp;&nbsp;The absolute filename in the Windows character set.</li>
+</UL>
+</dd>
+
+<DT><I>lpszFileName</I></DT>
+
+<DD>Specifies a string in the Windows character set that is the path to the desired file. The path can be relative or absolute, but cannot contain a network name.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P><B>TRUE</B> if the status information for the specified file is successfully obtained; otherwise, it is <B>FALSE</B>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>m_attribute</B> is the file attribute. The Microsoft Foundation Classes for Windows CE provide an <B>enum</B> type attribute so that you can specify attributes symbolically:</P>
+
+<PRE class="code">enum Attribute {
+   normal =    0x00,
+   readOnly =  0x01,
+   hidden =    0x02,
+   system =    0x04,
+   volume =    0x08,
+   directory = 0x10,
+   archive =   0x20
+   };</PRE>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Example for the CFile::GetStatus method.
+CFileStatus status;
+extern CFile cfile;
+if( cfile.GetStatus( status ) )    // A virtual member function.
+  {
+    #ifdef _DEBUG
+      afxDump &lt;&lt; "File size = " &lt;&lt; status.m_size &lt;&lt; "\n";
+    #endif
+  }
+TCHAR* pFileName = _T("test.dat");
+if( CFile::GetStatus( pFileName, status ) )   // A static function.
+  {
+    #ifdef _DEBUG
+      afxDump &lt;&lt; "Full file name = " &lt;&lt; status.m_szFullName &lt;&lt; "\n";
+    #endif
+  }</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afx.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcfilecolcolsetstatus.htm"><B>CFile::SetStatus</B></A>, <A HREF="aflrfctime.htm"><B>CTime</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710364', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

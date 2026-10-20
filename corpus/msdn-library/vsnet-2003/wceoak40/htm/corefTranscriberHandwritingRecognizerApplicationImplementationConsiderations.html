@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Transcriber Handwriting Recognizer Application Implementation Considerations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Transcriber Handwriting Recognizer Application Implementation Considerations"/>
+<MSHelp:RLTitle Title="Transcriber Handwriting Recognizer Application Implementation Considerations"/>
+<MSHelp:Keyword Index="A" Term="corefTranscriberHandwritingRecognizerApplicationImplementationConsiderations"/>
+<MSHelp:Keyword Index="K" Term="Transcriber Handwriting Recognizer, implementation considerations"/>
+<MSHelp:Keyword Index="A" Term="corefTranscriberHandwritingRecognizerApplicationImplementationConsiderations"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: transcriber_oak_intro.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757462">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="coreftranscriberhandwritingrecognizerapplicationimplementationconsiderations"></A>Transcriber Handwriting Recognizer Application Implementation Considerations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can include the Transcriber Handwriting Recognizer Application in your platform by choosing this feature from the Catalog or by setting an environment variable. The following table shows the environmental variable that enables the Transcriber Handwriting Recognizer Application feature. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Environment variable</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>SYSGEN_TRANSCRIBER</TD>
+<TD width=56%>When this variable is set, the Transcriber Handwriting Recognizer Application is included in the OS image.
+<P>When this variable is not set, the Transcriber Handwriting Recognizer Application is excluded from the image.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>When you include the Transcriber Handwriting Recognizer Application in your platform, your touch driver must include the following entry points:
+
+<UL type="disc">
+	<LI><B>TouchReset</B></li>
+
+	<LI><B>TouchRegisterWindow</B></li>
+
+	<LI><B>TouchUnregisterWindow</B></li>
+
+	<LI><B>TouchSetValue</B></li>
+
+	<LI><B>TouchGetValue</B></li>
+
+	<LI><B>TouchCreateEvent</B></li>
+
+	<LI><B>TouchGetFocusWnd</B></li>
+
+	<LI><B>TouchGetLastTouchFocusWnd</B></li>
+
+	<LI><B>TouchGetQueuePtr</B></li>
+</UL>
+
+<P>The %_WINCEROOT%\Public\Common\Oak\Inc\Touch.def file provides an example of how to include these entry points.</P>
+
+<P>You also need to make sure that the touch driver that you use meets the following requirements:
+
+<UL type="disc">
+	<LI>It provides enough ink to maintain a sustained average ink rate of 100 points per second. You can use the InkSamp.exe sample application to determine this rate.
+<P>The driver must sustain this rate for satisfactory performance. A driver that provides an ink rate of 100 points per second for 0.5 seconds and then provides an ink rate of 0 points per second for the following 0.5 seconds loses 0.5 seconds of handwriting and does not perform well enough to provide a satisfactory experience for the user of the Transcriber Handwriting Recognizer Application. You can use the InkSamp2.exe sample application to determine if the amount of time between points is more than expected for the number of points retrieved by <MSHelp:link keywords="_wcesdk_GetMouseMovePoints" TABINDEX="0">GetMouseMovePoints</MSHelp:link>. If this amount of time is larger than expected, the average ink rate varies over time and is not sustained.
+</li>
+
+	<LI>It should not allow any skips where points of ink separated by large distances. You can use the InkSamp2.exe sample application to test whether the driver allows skips. The driver should not allow skips of more than 5 pixels.</li>
+
+	<LI>It should not allow large gaps of time without any points of ink. You can use the InkSamp2.exe sample application to test whether the driver allows such gaps. The InkSamp2.exe sample application includes a timer that checks for points at 0.1 second intervals. The driver should not allow any intervals without points.</li>
+</UL>
+
+<P>In practice, occasional small ink skips or lags can occur. The platform developer is responsible for ensuring that the driver and hardware perform well enough to support the Transcriber Handwriting Recognizer Application before including it, by using the InkSamp.exe and InkSamp2.exe sample applications. Providing a touch driver that meets these requirements ensures that the accuracy of handwriting recognition is high enough to provide a satisfactory experience for the user.</P>
+
+<P>When you use the InkSamp.exe and InkSamp2.exe sample applications to test the performance of the touch screen driver for handwriting recognition, you should perform the following actions:
+
+<UL type="disc">
+	<LI>Draw circles. If straight lines or chords appear instead of circular arcs, the driver is not registering enough points in some areas and is connecting points separated by a distance with straight lines. When this behavior occurs, the InkSamp2.exe sample application should register skips.</li>
+
+	<LI>Enter some handwritten text. The ink should look like the text that you wrote if the Transcriber Handwriting Recognizer Application recognizes the text accurately. Entering handwritten text is a better test than entering printed text.</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Transcriber%20Handwriting%20Recognizer%20Application%20Implementation%20Considerations&nbsp;(coreftranscriberhandwritingrecognizerapplicationimplementationconsiderations.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

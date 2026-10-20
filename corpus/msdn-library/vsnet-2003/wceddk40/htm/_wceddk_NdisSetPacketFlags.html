@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisSetPacketFlags</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisSetPacketFlags"/>
+<MSHelp:RLTitle Title="NdisSetPacketFlags"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisSetPacketFlags"/>
+<MSHelp:Keyword Index="K" Term="NdisSetPacketFlags"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673345">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndissetpacketflags"></A>NdisSetPacketFlags</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function sets caller-determined and medium-specific information in the flags of a given packet descriptor.</P>
+
+<PRE class="syntax"><B>VOID NdisSetPacketFlags(</B>
+<B>PNDIS_PACKET </B><I>Packet</I><B>,</B>
+<B>UINT </B><I>Flags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Packet</I></DT>
+
+<DD>[in] Pointer to the packet descriptor in which the flags should be set.</dd>
+
+<DT><I>Flags</I></DT>
+
+<DD>[in] Specifies the value to be set in the flags, which are in the private portion of the packet descriptor reserved for use by NDIS.
+
+<P>For protocols, the format of this value<B> </B>is specific to the medium that the underlying driver selected when the protocol called the <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A> function to set up the binding.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Setting the flags in a packet descriptor allows a protocol driver to pass information, usually about a send request, that is not included in the packet data.</P>
+
+<P>A protocol driver usually calls this function to set the flags in packets sent on any medium that transmits data in an expedited manner. Some types of media include flag information in the packet header contained in buffers chained to the send packet. When a protocol driver is bound to an underlying driver for these types of media, a call to this function is unnecessary.</P>
+
+<P>When a bound protocol calls this function, an underlying driver's <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A> function can read these flags only by calling the <A HREF="_wceddk_ndisgetpacketflags.htm">NdisGetPacketFlags</A> function. For underlying drivers that have <A HREF="cxrefminiportsend.htm">MiniportSend</A> functions, a call to <B>NdisGetPacketFlags</B> is unnecessary because the flags are passed as an input parameter to the <B>MiniportSend</B> function.</P>
+
+<P>All packet descriptors allocated with <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A> are 0-initialized, including the flags. If the value returned by <B>NdisGetPacketFlags</B> is 0, the underlying driver can assume that the packet has no protocol-set flag information.</P>
+
+<P>However, protocols can supply far more media-specific information, such as the packet priority, in the out-of-band data block associated with each packet descriptor than a call to this function with a single packet allows.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndis_set_packet_media_specific_info.htm">NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</A>, <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A>, <A HREF="_wceddk_ndisgetpacketflags.htm">NdisGetPacketFlags</A>, <A HREF="cxrefminiportsend.htm">MiniportSend</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisSetPacketFlags&nbsp;(_wceddk_ndissetpacketflags.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

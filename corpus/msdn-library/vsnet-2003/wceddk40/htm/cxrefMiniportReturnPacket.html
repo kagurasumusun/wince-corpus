@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportReturnPacket</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportReturnPacket"/>
+<MSHelp:RLTitle Title="MiniportReturnPacket"/>
+<MSHelp:Keyword Index="A" Term="cxrefMiniportReturnPacket"/>
+<MSHelp:Keyword Index="K" Term="MiniportReturnPacket"/>
+<MSHelp:Keyword Index="A" Term="cxrefMiniportReturnPacket"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_upper_edge_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756564">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefminiportreturnpacket"></A>MiniportReturnPacket</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is a required function in drivers that indicate receives with <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>.</P>
+
+<PRE class="syntax"><B>VOID</B> <B>MiniportReturnPacket(</B>
+<B>NDIS_HANDLE</B> <I>MiniportAdapterContext</I><B>,</B>
+<B>PNDIS_PACKET</B> <I>Packet</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterContext</I></DT>
+
+<DD>[in] Specifies the handle to a miniport-allocated context area in which the driver maintains per-network adapter state, set up by <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>Packet</I></DT>
+
+<DD>[in] Points to a packet descriptor being returned to the miniport, which previously indicated a packet array that contained this pointer.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Drivers of bus master DMA network adapters that support multipacket receives and network adapter drivers that supply media-specific information, such as packet priorities, with their indications must have <B>MiniportReturnPacket</B> functions. NDIS intermediate drivers that bind themselves to such a network adapter driver also must have <B>MiniportReturnPacket</B> functions.</P>
+
+<P>Any packet with associated NDIS_PACKET_OOB_DATA in which the <B>Status</B> is set to NDIS_STATUS_PENDING on return from <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> will be returned to <B>MiniportReturnPacket</B>. When all bound protocols have called <A HREF="_wceddk_ndisreturnpackets.htm">NdisReturnPackets</A> as many times as necessary to release their references to the originally indicated packet array, NDIS returns pended packets from the array to the <B>MiniportReturnPacket</B> function of the driver that originally allocated the packet array.</P>
+
+<P>Usually, <B>MiniportReturnPacket</B> prepares such a returned packet to be used in a subsequent receive indication. Although <B>MiniportReturnPacket</B> could return the buffer descriptors chained to the packet to buffer pool and the packet descriptor itself to packet pool, it is far more efficient to reuse returned descriptors.</P>
+
+<P><B>MiniportReturnPacket</B> must call <B>NdisUnchainBufferAt<I>XXX</I></B> as many times as necessary to save the pointers to all chained buffer descriptors before it calls <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A>. Otherwise, <B>MiniportReturnPacket</B> cannot recover the buffer descriptors the driver originally chained to the packet for the indication.</P>
+
+<P><B>MiniportReturnPacket</B> also can call <A HREF="_wceddk_ndiszeromemory.htm">NdisZeroMemory</A> with the pointer returned by NDIS_OOB_DATA_FROM_PACKET to prepare the packet’s associated out-of-band block for reuse.</P>
+
+<P>If a particular buffer descriptor was shortened to match the size of an indicated range of data, <B>MiniportReturnPacket</B> should call <A HREF="_wceddk_ndisadjustbufferlength.htm">NdisAdjustBufferLength</A> with that buffer descriptor to restore its mapping of the network adapter’s receive buffer range.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Externs.h</TD>
+<TD width=16%>Externs.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="_wceddk_ndisadjustbufferlength.htm">NdisAdjustBufferLength</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A>, <A HREF="_wceddk_ndisreturnpackets.htm">NdisReturnPackets</A>, <A HREF="_wceddk_ndiszeromemory.htm">NdisZeroMemory</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MiniportReturnPacket&nbsp;(cxrefminiportreturnpacket.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

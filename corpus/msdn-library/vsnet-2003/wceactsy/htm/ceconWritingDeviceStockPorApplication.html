@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing the Device StockPor Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Writing the Device StockPor Application"/>
+<MSHelp:RLTitle Title="Writing the Device StockPor Application"/>
+<MSHelp:Keyword Index="A" Term="ceconWritingDeviceStockPorApplication"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, StockPor sample application"/>
+<MSHelp:Keyword Index="K" Term="samples, ActiveSync StockPor"/>
+<MSHelp:Keyword Index="A" Term="ceconWritingDeviceStockPorApplication"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: activesync_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759355">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconwritingdevicestockporapplication"></A>Writing the Device StockPor Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The user interface for this device application is the same as that on the desktop application and it shares much of the code with the desktop application in stockpor.cpp.</P>
+
+<P>The portfolio data is stored in a database of type DBTYPE_STOCKPOR (defined as 21238). The database has the name "\StockPor.DB". Each stock is stored as a record in the database with the following properties.</P>
+
+<PRE class="code">// property tags used in the stock record
+#define  HHPR_FLAGS      PROP_TAG (PEGVT_UI2,      0x8200)
+#define  HHPR_SYMBOL     PROP_TAG (PEGVT_LPWSTR,   0x8201)
+#define  HHPR_COMPANY    PROP_TAG (PEGVT_LPWSTR,   0x8202)
+#define  HHPR_PRICE      PROP_TAG (PEGVT_LPWSTR,   0x8203)
+#define  HHPR_PUR_DATE   PROP_TAG (PEGVT_LPWSTR,   0x8204)
+#define  HHPR_PUR_PRICE  PROP_TAG (PEGVT_LPWSTR,   0x8205)
+#define  HHPR_GAIN_LOSS  PROP_TAG (PEGVT_LPWSTR,   0x8206)
+#define  HHPR_UP_TIME    PROP_TAG (PEGVT_FILETIME, 0x8207)</PRE>
+
+<P>The HHPR_FLAGS is a special property that the application shares with the ActiveSync provider. It is a combination of the following flags.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Flag</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>SF_CHANGED1</TD>
+<TD width=73%>Record has not been synched with first PC partner, must be valued at 1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>SF_CHANGED2</TD>
+<TD width=73%>Record has not been synched with second PC partner, must be valued at 2.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>SF_CHG_IN_SYNC</TD>
+<TD width=73%>This object is changed again during sync.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>SF_UPDATE_VIEW</TD>
+<TD width=73%>The record is changed by the synchronization and the view needs updating.</TD>
+</TR>
+</table></div>
+
+<P>The device application is coordinated with its ActiveSync provider in the following ways.
+
+<UL type="disc">
+	<LI>They share the same database. Unlike the desktop application, there is no need for a mutex to protect the database, because database APIs in Windows&nbsp;CE are guaranteed to be atomic.</li>
+
+	<LI>Each time the user changes a record using the application, the application turns on the SF_CHANGED1 and SF_CHANGED2 flags, so the ActiveSync provider can pick up the changes.</li>
+
+	<LI>Each time the ActiveSync provider updates a record, it sets the SF_UPDATE_VIEW flag so the application knows to update the contents displayed in the user interface.</li>
+
+	<LI>The ActiveSync provider is informed of any changes to the database records. The ActiveSync service manager calls the ObjectNotify function automatically whenever there is a change or deletion to the database records.</li>
+
+	<LI>The ActiveSync provider sends the application a WM_DATA_CHANGED message after any synchronization that changed the database.</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Writing%20the%20Device%20StockPor%20Application&nbsp;(ceconwritingdevicestockporapplication.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

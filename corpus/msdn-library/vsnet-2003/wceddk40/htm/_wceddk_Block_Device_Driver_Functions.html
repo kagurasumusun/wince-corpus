@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Block Driver Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Block Driver Interface"/>
+<MSHelp:RLTitle Title="Block Driver Interface"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Block_Device_Driver_Functions"/>
+<MSHelp:Keyword Index="K" Term="block device drivers, interface"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Block_Device_Driver_Functions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: block_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_672730">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_block_device_driver_functions"></A>Block Driver Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Block device drivers should expose the stream interface functions. For more information on the stream interface, see <A HREF="cxconstreaminterfacedrivers.htm">Stream Interface Drivers</A>.</P>
+
+<P>The prefix "DSK_" is customary for block devices, which often include disk drives and other mass storage media. However, block drivers can have any legal device file name prefix. For more information on device file name prefixes, see <A HREF="cxcondevicefilenames.htm">Device File Names</A> Prefixes. The reference entries for the functions listed above describe the sample implementations of these functions. You can modify the semantics of these functions, but not the syntax, to suit the capabilities of your device.</P>
+
+<P>In addition to the exposing the stream interface, the block device driver must also expose certain other functions. The following table shows the other functions that a block driver must expose.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B><I>MyDriverEntry</I></B></TD>
+<TD width=50%><B><I>MyDriverEntry</I></B> is a placeholder for the actual name of your DLL's entry point. After the Device Manager calls <MSHelp:link keywords="_wcesdk_Win32_LoadLibrary" TABINDEX="0">LoadLibrary</MSHelp:link> to map the DLL, the system calls <B><I>MyDriverEntry</I></B>. For more information on the Device Manager, see <A HREF="cxcondevicemanager.htm">Device Manager</A>. This function performs any initialization tasks that are necessary for the block device driver. On successful return from <B><I>MyDriverEntry</I></B>, the Device Manager associates the driver's stream interface functions with a special device file name so that applications can access the device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B><I>MyDriver</I>Detectdisk</B></TD>
+<TD width=50%>The entry point for the block device driver's detection routine. This routine should work like a typical detection function for the stream interface. If you call this function when there is a connection between a block device and your target device, then the function should return TRUE or FALSE based on whether it can control the block device.</TD>
+</TR>
+</table></div>
+
+<P>Block device drivers must respond to the I/O control codes shown in the following tables to interface properly with the FAT file system.</P>
+
+<P>The following table shows the block device I/O control codes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>I/O control code</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_format_media.htm">IOCTL_DISK_FORMAT_MEDIA</A></TD>
+<TD width=59%>Formats at a low level or reformats the block device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_get_storageid.htm">IOCTL_DISK_GET_STORAGEID</A></TD>
+<TD width=59%>Retrieves the identifier associated with a storage device. These identifiers are device dependent.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_getinfo.htm">IOCTL_DISK_GETINFO</A></TD>
+<TD width=59%>Retrieves information about the block device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_getname.htm">IOCTL_DISK_GETNAME</A></TD>
+<TD width=59%>Retrieves the name that the file system drivers should use as the block device's folder.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_read.htm">IOCTL_DISK_READ</A></TD>
+<TD width=59%>Reads data from the block device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_setinfo.htm">IOCTL_DISK_SETINFO</A></TD>
+<TD width=59%>Sets information about the block device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="_wceddk_ioctl_disk_write.htm">IOCTL_DISK_WRITE</A></TD>
+<TD width=59%>Writes data to the block device.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconsampleblockdevicedrivers.htm">Block Driver Samples</A></P>
+
+<P><A HREF="cxconregistrykeysforblockdrivers.htm">Block Driver Registry Settings</A></P>
+
+<P><A HREF="cxconblockdrivermanager.htm">Block Driver Manager</A> </P>
+
+<P><A HREF="_wceddk_block_device_drivers_for_flash_memory_devices.htm">Resident Flash Array</A> </P>
+
+<P><A HREF="_wceddk_block_device_systems.htm">Block Device File Systems</A> </P>
+
+<P><A HREF="_wceddk_loading_and_unloading_a_file_system.htm">File System Loading and Unloading</A> </P>
+
+<P><A HREF="_wceddk_loading_block_device_drivers.htm">Block Driver Loading</A> </P>
+
+<P><A HREF="_wceddk_installing_a_block_device_driver.htm">Block Driver Installation</A> </P>
+
+<P><A HREF="_wceddk_detecting_a_block_device.htm">Block Driver Detection</A> </P>
+
+<P><A HREF="_wceddk_accessing_a_block_device.htm">Block Driver Accessing</A> </P>
+
+<P><A HREF="cxconblockdriverpower-cycleprocessing.htm">Block Driver Power-Cycle Processing</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Block%20Driver%20Interface&nbsp;(_wceddk_block_device_driver_functions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

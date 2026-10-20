@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows CE Console Debug Shell Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows CE Console Debug Shell Tool"/>
+<MSHelp:RLTitle Title="Windows CE Console Debug Shell Tool"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Windows_CE_Console_Debug_Shell_Tool"/>
+<MSHelp:Keyword Index="K" Term="binary format files, downloading"/>
+<MSHelp:Keyword Index="K" Term="Cesh.exe, feature description"/>
+<MSHelp:Keyword Index="K" Term="command-line tools, Windows CE Build Console Debug Shell tool"/>
+<MSHelp:Keyword Index="K" Term="tools, Windows CE Console Debug Shell tool"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Windows_CE_Console_Debug_Shell_Tool"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tools.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_677586">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_windows_ce_console_debug_shell_tool"></A>Windows CE Console Debug Shell Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Windows CE Console Debug Shell tool (Cesh.exe) downloads raw binary format (.rbf) files to a target device. </P>
+
+<P>Shell.exe is the device-side executable. Messages are sent to Shell.exe on the device by adding commands to the Fsauxin file in %_FLATRELEASEDIR%. Shell.exe periodically polls this file and executes the commands it finds. The <A HREF="pbconppfs.htm">PPFS Service</A> allows any file in %_FLATRELEASEDIR% to be accessed from the device.</P>
+
+<P>The following table shows the Cesh.exe features installed on the development workstation during Platform Builder installation.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Feature</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Cesh.exe</TD>
+<TD width=82%>Downloads binary files from the development workstation to the target device by using a parallel or serial port connection.
+<P>The file is in %_WINCEROOT%\Public\Common\Oak\Bin\i386.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Cesh.exe registry entries</TD>
+<TD width=82%>Specifies profiles for Cesh.exe and the parallel download service.
+<P>The Cesh.exe registry entries are in <B>[HKEY_LOCAL_MACHINE]\SYSTEM\CurrentControlSet\Services\ppsh</B>. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Edbg.dll</TD>
+<TD width=82%>Provides an interface to the Windows Sockets API (Winsock) for all Ethernet services on the development workstation in order to control the target device through an Ethernet connection. This version must match the version for Cesh.exe.
+<P>The file is located in %_CEPBDir%\Cepb\Bin.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Ppshell.sys</TD>
+<TD width=82%>Supports Cesh.exe and the parallel port connection.
+<P>The file is installed into %Systemroot\System32\Drivers by the Ppshell.vbs installation script.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>Use of the following Cesh.exe functions depends on the connection being used by the development workstation and target device. </P>
+
+<PRE class="syntax">Cesh [-s] [-p <I>Profile</I>] [-log] [-a "NK <I>Args</I>"]
+[-com{1 | 2 | 3 | 4}] 
+[{-wf .<I>BinInputFile</I> | -wp .<I>RbfInputFile</I>} |
+{-we | -we128 | -we256 .<I>RbfInputFile</I>] 
+{-re128 | -re256 .<I>RbfInputFile </I>
+ [-test] [<I>InputFile</I>] [-b] [-h] [-?]
+</PRE>
+
+<H4 class="dtH4">Arguments</H4>
+
+<DL>
+<DT><B>-s</B></DT>
+
+<DD>Causes Cesh.exe to use fewer microprocessor resources. This option is slower, but it creates a more reliable connection if other applications or other instances of Cesh.exe are running on the development workstation.</dd>
+
+<DT><B>-p</B> <I>Profile</I></DT>
+
+<DD>Specifies a registry profile to use. The default profile is <B>Default</B>. For example, when downloading to a target device over the default parallel port, use <B>CEPC_LPT1</B> for <I>Profile</I>.</dd>
+
+<DT><B>-log</B></DT>
+
+<DD>Generates a log of file server calls in Nk.log.</dd>
+
+<DT><B>-a "NK</B> <I>Args</I><B>"</B></DT>
+
+<DD>Passes a parameter string, <I>Args</I>, to the kernel at initialization time.</dd>
+
+<DT><B>-com</B>{<B>1</B> | <B>2 </B>|<B> 3 </B>|<B> 4</B>}</DT>
+
+<DD>Specifies the serial port connection that is used by Cesh.exe. </dd>
+
+<DT><B>-test</B></DT>
+
+<DD>Reads a byte from and writes a byte to the parallel port.</dd>
+
+<DT><I>InputFile</I></DT>
+
+<DD>Specifies a particular type of file &#0151; for example, an absolute binary data format file (.abx) file &#0151; to download to the target device. If a file is not specified, the default file (Nk.bin) is used. </dd>
+
+<DT><B>-b</B></DT>
+
+<DD>Boots without the bidirectional link.</dd>
+
+<DT><B>-h </B>or <B>-?</B></DT>
+
+<DD>Displays Cesh.exe command syntax.</dd>
+</DL>
+
+<H4 class="dtH4">Error Messages</H4>
+
+<DL>
+<DT>ppsh: Eprom Programming: error setting EEPROM polarity</DT>
+
+<DD>After the initial startup of Cesh.exe, the following message may appear on the development workstation:
+
+<PRE class="code">dwReadDebounceCount 3
+dwWriteDebounceCount 3
+IO Delay 0
+Flags 0
+Assuming 256kbit EPROM size (from RBF file size of 149134).
+Setting Serial EEPROM polarity.
+ppsh: Eprom Programming: error setting EPROM polarity.</PRE>
+
+
+<P>To resolve this error, end Cesh.exe; then, restart it.
+</dd>
+
+<DT>No Cesh.exe debug shell prompt (<code class="ce">Windows CE&gt;</code>) appears</DT>
+
+<DD>If the Cesh.exe prompt (<code class="ce">Windows CE&gt;</code>) does not appear after downloading and running the OS image, verify that the Shell.exe and ToolHelp.dll files are included in the OS image or are present in %_FLATRELEASEDIR%. These files must exist in order for Cesh.exe to start.</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to use Cesh.exe to write Test.bin to flash memory on a target device. In addition, all file server calls are copied to Nk.log. </P>
+
+<PRE class="code">Cesh -log -wf test.bin</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Cesh.exe acts as virtual ROM when executing binary files on the target device. Because Windows CE includes demand-paging features, do not delete, rename, or alter binary files or applications that Cesh.exe is using. Specifically, avoid rebuilding projects or executable files while Cesh.exe runs.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbconplatformdebuggingtesting.htm">Platform Debugging and Testing</A></P>
+
+<P><A HREF="_wcepb_windows_ce_build_environment_tool.htm">Windows CE Build Environment Tool</A></P>
+
+<P><A HREF="pbconppfs.htm">PPFS Service</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Windows%20CE%20Console%20Debug%20Shell%20Tool&nbsp;(_wcepb_windows_ce_console_debug_shell_tool.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

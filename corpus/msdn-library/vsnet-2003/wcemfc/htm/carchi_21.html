@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::WriteClass</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_carchive_writeclass"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_carchive_writeclass"></A>CArchive::WriteClass</H1>
+
+<P>This method stores the version and class information of a base class during serialization of the derived class.</P>
+
+<PRE class=syntax><B>void WriteClass(
+const CRuntimeClass* </B><I>pClassRef</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pClassRef</I></DT>
+
+<DD>A pointer to the <B>CRuntimeClass</B> structure that corresponds to the class reference requested.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>WriteClass</B> writes a reference to the <B>CRuntimeClass</B> for the base class to the <B>CArchive</B>. Use <B>CArchive::ReadClass</B> to retrieve the reference.</P>
+
+<P><B>WriteClass</B> verifies that the archived class information is compatible with your run-time class. If it is not compatible, <B>WriteClass</B> throws a <B>CArchiveException</B>. </P>
+
+<P>Your run-time class must use <B>DECLARE_SERIAL</B> and <B>IMPLEMENT_SERIAL</B>; otherwise, <B>WriteClass</B> throws a <B>CNotSupportedException</B>.</P>
+
+<P>You can use <B>SerializeClass</B> instead of <B>WriteClass</B>, which handles reading and writing of the class reference.</P>
+
+<H4>Example</H4>
+
+<PRE>CFile myFile("myfile.dat", CFile::modeCreate | CFile::modeReadWrite);
+
+// Create a storing archive.
+CArchive arStore(&amp;myFile, CArchive::store);
+
+// Store the class CAge in the archive.
+arStore.WriteClass( RUNTIME_CLASS(CAge) );
+
+// Close the storing archive.
+arStore.Close();
+
+// Create a loading archive.
+myFile.SeekToBegin();
+CArchive arLoad(&amp;myFile, CArchive::load);
+
+// Load a class from the archive.
+CRuntimeClass* pClass = arLoad.ReadClass( );
+if (!pClass-&gt;IsDerivedFrom(RUNTIME_CLASS(CAge)))
+&nbsp;&nbsp;&nbsp;&nbsp;arLoad.Abort();
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="carchi_13.htm"><B>CArchive::ReadClass</B></A>, <A HREF="carchi_7.htm"><B>CArchive::GetObjectSchema</B></A>, <A HREF="carchi_18.htm"><B>CArchive::SetObjectSchema</B></A>, <A HREF="carchi_16.htm"><B>CArchive::SerializeClass</B></A>, <A HREF="carchiex.htm"><B>CArchiveException</B></A>, <A HREF="cnosupex.htm"><B>CNotSupportedException</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

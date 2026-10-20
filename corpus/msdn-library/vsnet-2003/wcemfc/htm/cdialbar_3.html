@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDialogBar::Create</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdialogbar_create"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdialogbar_create"></A>CDialogBar::Create</H1>
+
+<P>This method loads the dialog-box resource template specified by <I>lpszTemplateName</I> or <I>nIDTemplate</I>, creates the dialog-bar window, sets its style, and associates it with the <B>CDialogBar</B> object.</P>
+
+<PRE class=syntax><B>BOOL Create(
+ CWnd* </B><I>pParentWnd</I><B>,
+ LPCTSTR </B><I>lpszTemplateName</I><B>,
+ UINT </B><I>nStyle</I><B>,
+ UINT </B><I>nID</I><B> );
+</B>
+<B>BOOL Create(
+ CWnd* </B><I>pParentWnd</I><B>,
+ UINT </B><I>nIDTemplate</I><B>,
+ UINT </B><I>nStyle</I><B>,
+ UINT </B><I>nID</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pParentWnd</I></DT>
+
+<DD>A pointer to the parent <B>CWnd</B> object.</DD>
+
+<DT><I>lpszTemplateName</I></DT>
+
+<DD>A pointer to the name of the dialog-box resource template of the <B>CDialogBar</B> object.</DD>
+
+<DT><I>nStyle</I></DT>
+
+<DD>The alignment style of the dialog bar. The following styles are supported:
+
+<UL type=disc>
+	<LI>CBRS_TOP&nbsp;&nbsp;&nbsp;Control bar is at the top of the frame window. </LI>
+
+	<LI>CBRS_BOTTOM&nbsp;&nbsp;&nbsp;Control bar is at the bottom of the frame window.</LI>
+
+	<LI>CBRS_NOALIGN&nbsp;&nbsp;&nbsp;Control bar is not repositioned when the parent is resized.</LI>
+
+	<LI>CBRS_LEFT&nbsp;&nbsp;&nbsp;Control bar is at the left of the frame window.</LI>
+
+	<LI>CBRS_RIGHT&nbsp;&nbsp;&nbsp;Control bar is at the right of the frame window.</LI>
+</UL>
+</DD>
+
+<DT><I>nID</I></DT>
+
+<DD>The control ID of the dialog bar.</DD>
+
+<DT><I>nIDTemplate</I></DT>
+
+<DD>The resource ID of the dialog-box template of the <B>CDialogBar</B> object.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>If you specify the CBRS_TOP or CBRS_BOTTOM alignment style, the width of the dialog bar is that of the frame window and its height is that of the resource specified by <I>nIDTemplate</I>. If you specify the CBRS_LEFT or CBRS_RIGHT alignment style, the height of the dialog bar is that of the frame window and its width is that of the resource specified by <I>nIDTemplate</I>.</P>
+
+<H4>Example</H4>
+
+<PRE>// Mainfrm.h.
+
+class CMainFrame : public CFrameWnd
+{
+// Constructor.
+public:
+&nbsp;&nbsp;CMainFrame();
+&nbsp;&nbsp;virtual ~CMainFrame();
+
+protected:  // Control bar embedded members.
+&nbsp;&nbsp;CDialogBar  m_wndDlgBar;
+
+&nbsp;&nbsp;// Other data members and methods.
+
+&nbsp;&nbsp;DECLARE_MESSAGE_MAP()
+};
+
+
+// Mainfrm.cpp.
+
+#include "MainFrm.h"
+
+/////////////////////////////////////////////////////
+
+int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+&nbsp;&nbsp;if (CFrameWnd::OnCreate(lpCreateStruct) == &#0150;1)
+&nbsp;&nbsp;&nbsp;&nbsp;return &#0150;1;
+
+&nbsp;&nbsp;EnableDocking(CBRS_ALIGN_ANY);
+
+&nbsp;&nbsp;// IDD_VIEWSELECT - Resource ID of the dialog
+&nbsp;&nbsp;// template. This dialog template should be created
+&nbsp;&nbsp;// with  the  style  WS_CHILD and no other style.
+&nbsp;&nbsp;// The template must not have the style WS_VISIBLE.
+
+&nbsp;&nbsp;if (!m_wndDlgBar.Create(this, IDD_VIEWSELECT,
+&nbsp;&nbsp;&nbsp;&nbsp;CBRS_LEFT|CBRS_TOOLTIPS|CBRS_FLYBY, IDD_VIEWSELECT))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE0("Failed to create DlgBar\n");
+&nbsp;&nbsp;&nbsp;&nbsp;return &#0150;1;      // Fail to create.
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;return 0;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxext.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

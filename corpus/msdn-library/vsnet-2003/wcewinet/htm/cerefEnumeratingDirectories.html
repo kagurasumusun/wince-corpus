@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enumerating Directories</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enumerating Directories"/>
+<MSHelp:RLTitle Title="Enumerating Directories"/>
+<MSHelp:Keyword Index="A" Term="cerefEnumeratingDirectories"/>
+<MSHelp:Keyword Index="K" Term="directories, enumerating on FTP servers"/>
+<MSHelp:Keyword Index="K" Term="FTP server, enumerating directories on"/>
+<MSHelp:Keyword Index="K" Term="WinInet, enumerating directories"/>
+<MSHelp:Keyword Index="A" Term="cerefEnumeratingDirectories"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: wininet_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759175">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefenumeratingdirectories"></A>Enumerating Directories</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Enumeration of a directory on an ftp server requires the creation of a handle by <A HREF="cerefftpfindfirstfile.htm">FtpFindFirstFile</A>. This handle is a branch of the ftp session handle created by <A HREF="cerefinternetconnect.htm">InternetConnect</A>. <B>FtpFindFirstFile</B> locates the first file or directory on the server and returns it in a <MSHelp:link keywords="cerefWIN32_FIND_DATA" TABINDEX="0">WIN32_FIND_DATA</MSHelp:link> structure. Use <A HREF="cerefinternetfindnextfile.htm">InternetFindNextFile</A> until it returns ERROR_NO_MORE_FILES. This method finds all subsequent files and directories on the server.</P>
+
+<P>To determine if the file retrieved by <B>FtpFindFirstFile</B> or <B>InternetFindNextFile</B> is a directory, check the <B>dwFileAttributes</B> member of the <B>WIN32_FIND_DATA</B> structure to see if it is equal to FILE_ATTRIBUTE_DIRECTORY.</P>
+
+<P>If the application makes changes on the <B>ftp</B> server or if the <B>ftp</B> server changes frequently, the INTERNET_FLAG_NO_CACHE_WRITE and INTERNET_FLAG_RELOAD flags should be set in <B>FtpFindFirstFile</B>. These flags ensure that the directory information being retrieved from the <B>ftp</B> server is current. </P>
+
+<P>After the application completes the directory enumeration, the application must make a call to <A HREF="cerefinternetclosehandle.htm">InternetCloseHandle</A> on the handle created by <B>FtpFindFirstFile</B>. Until that handle is closed, the application cannot call <B>FtpFindFirstFile</B> again on the session handle created by <B>InternetConnect</B>. If a call to <B>FtpFindFirstFile</B> is made on the same session handle before the previous call to the same function is closed, the function fails, returning ERROR_FTP_TRANSFER_IN_PROGRESS.</P>
+
+<P>The following example shows how to obtain a handle to the first file in the directory, enumerate the files, and close the handle.</P>
+
+<PRE class="code">int WINAPI DisplayDir(HWND hX, DWORD dwFlags)
+{
+    WIN32_FIND_DATA pDirInfo;
+    HINTERNET hDir;
+    DWORD dError;
+    char DirList[MAX_PATH];
+    DWORD dwTemp=MAX_PATH;
+    LPDWORD temp =&amp;dwTemp;
+    LPVOID lpOption;
+    DWORD dwSize;
+    LPDWORD lpdwSize = &amp;dwSize;
+
+SendDlgItemMessage(hX,IDC_FTPList,LB_RESETCONTENT,0,0);
+    if ( !(hDir = FtpFindFirstFile (hSecondary, TEXT ("*.*"), &amp;pDirInfo,
+        dwFlags, 0) ))
+        if (GetLastError()  == ERROR_NO_MORE_FILES) 
+        {
+            MessageBox(hX,"There are no files here!!!","Display Dir",MB_OK);
+            InternetCloseHandle(hDir);
+            return 1;
+        }
+        else 
+        {
+            ErrorOut (hX, GetLastError (), "FindFirst error: ");
+            InternetCloseHandle(hDir);
+            return 0;
+        }
+
+        sprintf(DirList, pDirInfo.cFileName);
+        if (pDirInfo.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
+            strcat(DirList," &lt;DIR&gt; ");
+    
+        SendDlgItemMessage(hX,IDC_FTPList,LB_ADDSTRING,0,(LPARAM)DirList);
+
+    dError = NO_ERROR;
+    do
+    {
+         if (!InternetFindNextFile (hDir, &amp;pDirInfo))
+         {
+             dError = GetLastError();
+             if ( dError == ERROR_NO_MORE_FILES ) 
+             {
+                 InternetCloseHandle(hDir);
+                 return 1;
+             }
+             else
+             {
+                 ErrorOut (hX,GetLastError(), "InternetFindNextFile");
+                 InternetCloseHandle(hDir);
+                 return 0;
+             }
+         }
+         else
+         {
+            sprintf(DirList, pDirInfo.cFileName);
+            if (pDirInfo.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
+                strcat(DirList," &lt;DIR&gt; ");    
+            SendDlgItemMessage(hX,IDC_FTPList,LB_ADDSTRING,0,
+                (LPARAM)DirList);
+         }
+    }
+    while ( TRUE);
+
+    if (!InternetCloseHandle(hDir) )
+    {
+        InternetCloseHandle(hDir);
+        ErrorOut (hX,GetLastError(), "InternetCloseHandle error");
+        return 0;
+    }
+    else
+        return 1;
+
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Enumerating%20Directories&nbsp;(cerefenumeratingdirectories.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

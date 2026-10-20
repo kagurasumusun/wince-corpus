@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpRecognizer::SetInput</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpRecognizer::SetInput"/>
+<MSHelp:RLTitle Title="ISpRecognizer::SetInput"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecognizerSetInput"/>
+<MSHelp:Keyword Index="K" Term="ISpRecognizer, SetInput"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecognizerSetInput"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822463">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisprecognizersetinput"></A>ISpRecognizer::SetInput</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpRecognizer::SetInput</B> is used to specify which input stream the SR engine should use.</P>
+
+<P>This method can be used to switch the input for the recognizer to a wave input stream, a different soundcard device, or to a custom audio object. The pUnkInput parameter can be a pointer to an object token representing an audio input device; or to an actual object implementing <A HREF="cerefispstreamformat.htm">ISpStreamFormat</A>.</P>
+
+<PRE class="syntax"><B>HRESULT SetInput(</B>
+<B>IUnknown *</B><I>pUnkInput</I><B>,</B>
+<B>BOOL </B><I>fAllowFormatChanges</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pUnkInput</I> </DT>
+
+<DD>[in] The stream object token. See Remarks section </dd>
+
+<DT><I>fAllowFormatChanges</I> </DT>
+
+<DD>[in] Boolean indicating whether SAPI should try to change the input stream format to the engine's preferred format. This method can typically be set to TRUE, however, when doing both speech recognition and speech output at the same time some soundcards may require that both input and output are in the same audio format. Setting this to FALSE prevents the audio format on the input device being changed. Instead SAPI will try to convert the audio format itself to something the SR engine can use. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The input stream object will implement IStream, <A HREF="cerefispstreamformat.htm">ISpStreamFormat</A>, and <A HREF="cerefispaudio.htm">ISpAudio</A> for real-time streams. Applications should NOT use methods on these interfaces that actually change the state of the audio device or read data from it at the same time that the stream is being used by SAPI. For example, reading data from the application with IStream::Read will prevent the correct data from being passed to the SR engine. Altering the state of the audio by using <A HREF="cerefispaudiosetstate.htm">ISpAudio::SetState</A> will put the audio device into an unexpected state and may cause errors. All control of the audio is done by SAPI.</P>
+
+<P>When using the InProc recognizer, SAPI does not automatically setup the audio input. You must be call ISpRecognizer::SetInput with a non-null pUnkInput to setup and start the audio input stream. Until ISpRecognizer::SetInput is called, methods such as <A HREF="cerefisprecogrammarsetrulestate.htm">ISpRecoGrammar::SetRuleState</A> will return success code SP_STREAM_UNITIALIZED, but actual recognition will not start.</P>
+
+<P>When using the shared recognizer this, SAPI does automatically setup the audio input. However, you can call ISpRecognizer::SetInput with NULL as the pUnkInput parameter to force the recognizer to re-check the default audio input and re-set up the audio input (for example, the default audio input object changes while recognizing, and you would like to use the new audio input).</P>
+
+<P>If the engine is currently processing audio, this call will fail with SPERR_ENGINE_BUSY.</P>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>S_OK </TD>
+<TD width=52%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>E_INVALIDARG </TD>
+<TD width=52%><I>pUnkInput</I> is invalid or not a stream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>SPERR_ENGINE_BUSY </TD>
+<TD width=52%>The current method cannot be performed while the engine is currently processing audio. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>FAILED(hr) </TD>
+<TD width=52%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of <B>ISpRecognizer::SetInput</B>.</P>
+
+<PRE class="code">// setup the inproc recognizer audio input with an audio input object token
+// get the default audio input token
+hr = SpGetDefaultTokenFromCategoryId(SPCAT_AUDIOIN, &amp;cpObjectToken);
+// Check hr
+// set the audio input to our token
+hr = cpRecognizer-&gt;SetInput(cpObjectToken, TRUE);
+// Check hr
+// setup the inproc recognizer audio input with an audio input object
+// create the default audio input object
+hr = SpCreateDefaultObjectFromCategoryId(SPCAT_AUDIOIN, &amp;cpAudio);
+// Check hr
+// set the audio input to our object
+hr = cpRecognizer-&gt;SetInput(cpAudio, TRUE);
+// Check hr
+// ask the shared recognizer to re-check the default audio input token
+hr = cpRecognizer-&gt;SetInput(NULL, TRUE);
+// Check hr - if SPERR_ENGINE_BUSY, then retry later</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpRecognizer::SetInput&nbsp;(cerefisprecognizersetinput.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

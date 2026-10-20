@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoRegisterPSClsid</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CoRegisterPSClsid"/>
+<MSHelp:RLTitle Title="CoRegisterPSClsid"/>
+<MSHelp:Keyword Index="A" Term="cerefCoRegisterPSClsid"/>
+<MSHelp:Keyword Index="K" Term="CoRegisterPSClsid"/>
+<MSHelp:Keyword Index="A" Term="cerefCoRegisterPSClsid"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747917">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcoregisterpsclsid"></A>CoRegisterPSClsid</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function enables a downloaded DLL to register its custom interfaces within its running process so that the marshaling code will be able to marshal those interfaces.</P>
+
+<PRE class="syntax"><B>WINOLEAPI CoRegisterPSCLsid(</B>
+<B>REFIID </B><I>riid</I><B>,</B>
+<B>REFCLSID </B><I>rclsid</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>riid</I></DT>
+
+<DD>[in] Points to the IID of the interface to be registered.</dd>
+
+<DT><I>rclsid</I></DT>
+
+<DD>[in] Points to the CLSID of the DLL that contains the proxy/stub code for the custom interface specified by <I>riid</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The custom interface was successfully registered.</dd>
+
+<DT>E_INVALIDARG</DT>
+
+<DD>One of the parameters is invalid.</dd>
+
+<DT>E_OUTOFMEMORY</DT>
+
+<DD>There is insufficient memory to complete this operation.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Normally the code responsible for marshaling an interface pointer into the current running process reads the HKEY_CLASSES_ROOT\Interfaces section of the registry to obtain the CLSID of the DLL containing the ProxyStub code to be loaded. To obtain the ProxyStub CLSIDs for an existing interface, the code calls the <A HREF="cerefcogetpsclsid.htm">CoGetPSClsid</A> function.</P>
+
+<P>In some cases, however, it may be desirable or necessary for an in-process handler or in-process server to make its custom interfaces available without writing to the registry. A DLL downloaded across a network may not even have permission to access the local registry, and because the code originated on another machine, the user, for security purposes, may want to run it in a restricted environment. Or a DLL may have custom interfaces that it uses to talk to a remote server and may also include the ProxyStub code for those interfaces. In such cases, a DLL needs an alternative way to register its interfaces. <B>CoRegisterPSClsid</B>, used in conjunction with <A HREF="cerefcoregisterclassobject.htm">CoRegisterClassObject</A>, provides that alternative.</P>
+
+<P>A DLL would normally call <B>CoRegisterPSClsid</B> as shown in the following code fragment.</P>
+
+<PRE class="code">HRESULT RegisterMyCustomInterface(DWORD *pdwRegistrationKey)
+{
+    HRESULT hr = CoRegisterClassObject(CLSID_MyProxyStubClsid,
+        pIPSFactoryBuffer,
+        CLSCTX_INPROC_SERVER,
+        REGCLS_MULTIPLEUSE
+        pdwRegistrationKey);
+    if(SUCCEEDED)(hr))
+    {
+        hr = CoRegisterPSClsid(IID_MyCustomInterface, CLSID_MyProxyStubClsid);
+    }
+ 
+    return hr;
+}</PRE>
+
+<P>To determine whether the platform supports this function, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>Objbase.h</TD>
+<TD width=20%>Ole32.lib</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CoRegisterPSClsid&nbsp;(cerefcoregisterpsclsid.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

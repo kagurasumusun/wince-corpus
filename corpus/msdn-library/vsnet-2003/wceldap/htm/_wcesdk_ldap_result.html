@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ldap_result</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ldap_result"/>
+<MSHelp:RLTitle Title="ldap_result"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ldap_result"/>
+<MSHelp:Keyword Index="K" Term="ldap_result"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ldap_result"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ldap_ref.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_667806">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_ldap_result"></A>ldap_result</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function obtains the result of an asynchronous operation.</P>
+
+<PRE class="syntax"><B>ULONG ldap_result(</B>
+<B>LDAP *</B><I>ld</I><B>,</B>
+<B>ULONG</B> <I>msgid</I><B>,</B>
+<B>ULONG</B> <I>all</I><B>,</B>
+<B>LDAP_TIMEVAL *</B><I>timeout</I><B>,</B>
+<B>LDAPMessage **</B><I>res</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ld </I></DT>
+
+<DD>[in] Session handle.</dd>
+
+<DT><I>msgid </I></DT>
+
+<DD>[in] Message identifier of the operation, or the constant LDAP_RES_ANY if any result is desired.</dd>
+
+<DT><I>all </I></DT>
+
+<DD>[in] Specifies how many messages will be retrieved in a single call to <B>ldap_result</B>. This parameter only has meaning for search results. Pass the constant LDAP_MSG_ONE (0x00) to retrieve one message at a time. Pass LDAP_MSG_ALL (0x01) to request that all results of a search be received before returning all results in a single chain. Pass LDAP_MSG_RECEIVED (0x02) to indicate that all results retrieved so far should be returned in the result chain.</dd>
+
+<DT><I>timeout </I></DT>
+
+<DD>[out] A time-out specifying how long to wait (in seconds) for results to be returned. A NULL value causes <B>ldap_result</B> to block until results are available. A time-out value of 0 seconds specifies a polling behavior.</dd>
+
+<DT><I>res </I></DT>
+
+<DD>[out] Contains the results of the operation.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the function succeeds, it returns one of the following values to indicate the type of the first result in the <I>res</I> parameter.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=100%>Return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_ADD </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_BIND </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_COMPARE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_DELETE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_EXTENDED </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_MODDN </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_MODIFY </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_SEARCH_ENTRY </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_SEARCH_REFERENCE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>LDAP_RES_SEARCH_RESULT </TD>
+</TR>
+</table></div>
+
+<P>If the time-out expires, the function returns 0. </P>
+
+<P>If the function fails, it returns &#0150;1 and sets the session error parameters in the LDAP data structure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>ldap_result</B> function retrieves the result of a previous, asynchronously initiated operation. Note that, depending on the way it is called, <B>ldap_result</B> may actually return a list or "chain" of messages.</P>
+
+<P>For connectionless LDAP, you must pass both an LDAP connection handle and a message identifier to ensure that you get the correct results. The LDAP run time continues to send the request until it receives a response.</P>
+
+<P>In a multithreading environment, calls to <B>ldap_result</B> are thread-safe.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>Winldap.h</TD>
+<TD width=15%>Winldap.h</TD>
+<TD width=20%>Wldap32.lib</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ldap_result&nbsp;(_wcesdk_ldap_result.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

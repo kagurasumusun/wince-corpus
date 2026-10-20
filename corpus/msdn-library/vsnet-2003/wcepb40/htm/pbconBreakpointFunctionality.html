@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Breakpoint Functionality</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Breakpoint Functionality"/>
+<MSHelp:RLTitle Title="Breakpoint Functionality"/>
+<MSHelp:Keyword Index="A" Term="pbconBreakpointFunctionality"/>
+<MSHelp:Keyword Index="K" Term="breakpoints, eXDI"/>
+<MSHelp:Keyword Index="K" Term="eXDI hardware-assisted debugging, breakpoint functionality"/>
+<MSHelp:Keyword Index="A" Term="pbconBreakpointFunctionality"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: exdi_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749888">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="pbconbreakpointfunctionality"></A>Breakpoint Functionality</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The eXDI component should encapsulate its own inner functionality, including breakpoint instantiation details. For example, it should sanitize the memory it presents to its clients. It should not show its managed software breakpoint trap instructions, only the underlying instructions. In the case of embedded breakpoints, eXDI should not sanitize the memory presented. The sanitization should function in read/write and virtual/physical memory.</P>
+
+<P>The driver should attempt to handle all areas of all breakpoints, in a compromise with efficiency. In the case where two or more breakpoints overlap areas they cover, this rule still applies. The driver can save resources by merging several virtual breakpoints into a single physical breakpoint when possible. For example, if two breakpoints are identical, the eXDI driver should instantiate one instance of the breakpoint. If the first data breakpoint is specifying a break on "Read byte at address 0x0050010", and a second data breakpoint specifies a break on "Write byte at address 0x0050010", then while both are enabled, a single "Any byte access at address 0x0050010" data breakpoint can be instantiated.</P>
+
+<P>More aggressive resource-friendly algorithms can also be used, such as setting a breakpoint that covers more than the union of several virtual breakpoints. The user should be able to deactivate that algorithm to avoid slow-down due to false triggers, an important characteristic for real-time systems.</P>
+
+<P>Hardware code breakpoints and data breakpoints should survive as long as possible, even through discarding virtual memory or resetting the target. Software breakpoints do not have guaranteed life duration. If the target is stopped at an address containing a breakpoint, and a restart is requested, the target should not start running. It should remain at the same location and report a halt notification for a breakpoint. That means that eXDI does not support breakpoint step over and reset. The client owning the breakpoint must handle step over and reset.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_pbexdi_breakpoints.htm">Breakpoints</A></P>
+
+<P><A HREF="_pbexdi_extended_debugging_interface.htm">Extended Debugging Interface</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Breakpoint%20Functionality&nbsp;(pbconbreakpointfunctionality.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

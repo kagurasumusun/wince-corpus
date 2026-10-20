@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Installable ISRs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Installable ISRs"/>
+<MSHelp:RLTitle Title="Installable ISRs"/>
+<MSHelp:Keyword Index="A" Term="cmconInstallableISRs"/>
+<MSHelp:Keyword Index="K" Term="installable ISRs, overview"/>
+<MSHelp:Keyword Index="K" Term="interrupts, installable ISRs"/>
+<MSHelp:Keyword Index="K" Term="ISRs, installable"/>
+<MSHelp:Keyword Index="K" Term="kernel, installable ISRs"/>
+<MSHelp:Keyword Index="A" Term="cmconInstallableISRs"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_kern.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_755495">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconinstallableisrs"></A>Installable ISRs</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An installable interrupt service routine (ISR) is an ISR that can be installed and allowed to hook an interrupt after the kernel is built. Traditionally, if an interrupt had to be hooked to service some event, the code had to be built into the kernel when it was originally built. If a new device was inserted into a PCI bus for example, the code to handle the interrupt request (IRQ) would need to already be in the kernel; otherwise, the IRQ could not be hooked. OEMs could have planned for some expansion and built an OEM adaptation layer (OAL) that accommodated various devices in a flexible way. However, if an unknown device was inserted into the board support package (BSP), there would be a high likelihood that you would not be able to access it.</P>
+
+<P>An OEM only needs to plan what IRQ will be exposed to an ISR that is not built into the kernel. When an ISR is installed, there are two required steps:
+
+<OL type="1">
+	<LI>The driver DLL is basically the same as any driver DLL that creates an interrupt service thread (IST) and waits for it to be triggered. To install the ISR DLL, call the <MSHelp:link keywords="cmrefLoadIntChainHandler" TABINDEX="0">LoadIntChainHandler</MSHelp:link> function, which will load the ISR DLL into the kernel's address space and initialize it. This function also forces the kernel to create a list of installed ISRs that want to handle a particular interrupt.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The installable ISR DLL must either be in the <MSHelp:link keywords="_wcepb_FILES_Section" TABINDEX="0">FILES section</MSHelp:link> with no fixups or in the <MSHelp:link keywords="_wcepb_MODULES_Section" TABINDEX="0">MODULES section</MSHelp:link> with the kernel flag, K, set for kernel-style fixups.</BLOCKQUOTE>
+</li>
+
+	<LI>The ISR DLL is a stripped down DLL that can be loaded by the kernel and used to service an IRQ. Like a traditional ISR, an installed ISR returns a SYSINTR_* value that triggers a waiting IST in the driver DLL.</li>
+</OL>
+
+<P>Once both steps have been completed, it is up to the OEM to forward any IRQs to the installed ISRs. The OEM is still the first call that the kernel makes if an OEM has hooked an IRQ by calling <A HREF="cmrefhookinterrupt.htm">HookInterrupt</A>. The OEM can handle any IRQs they want in the traditional ISRs that are built into the kernel. The OEM must still plan if it wants an IRQ to be handled by an installed ISR. Any IRQ that the OEM enables to be handled by an installed ISQ will be triggered by a call to <MSHelp:link keywords="cmrefNKCallIntChain" TABINDEX="0">NKCallIntChain</MSHelp:link>. When the kernel is called and passed an interrupt value from the OEM, it looks for all the installed ISRs that have registered for the same value. Then, based on a first in, first out (FIFO) ordering, it goes through the list until the first ISR in the list returns a value other than SYSINTR_CHAIN. Once a non-SYSINTR_CHAIN value is returned, the kernel will stop calling any additional installed ISRs and return this value to the caller of <B>NKCallIntChain</B>. If the entire list is processed and ISR does not handle the IRQ, the <B>NKCallIntChain</B> function will return SYSINTR_CHAIN. If the return value from <B>NKCallIntChain</B> is not SYSINTR_CHAIN, the OEM should disable the interrupt and return the SYSINTR_* value to the kernel. If the value returned is SYSINTR_CHAIN, the OEM should return SYSINTR_NOP to the kernel and leave the interrupt enabled.</P>
+
+<P>The generic installable ISR sample code is located in %_WINCEROOT%\Public\Common\Oak\Drivers\GIISR. The generic installable ISR needs to export the following functions:
+
+<UL type="disc">
+	<LI><A HREF="cmrefisrhandler.htm">ISRHandler</A></li>
+
+	<LI><MSHelp:link keywords="cmrefCreateInstance" TABINDEX="0">CreateInstance</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefIOControl" TABINDEX="0">IOControl</MSHelp:link></li>
+</UL>
+
+<P>The following I/O control codes are specific to the driver:
+
+<UL type="disc">
+	<LI>IOCTL_GIISR_INFO</li>
+
+	<LI>IOCTL_GIISR_PORTVALUE</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconloader.htm">Loader</A></P>
+
+<P><MSHelp:link keywords="cgconImplementingISR" TABINDEX="0">Implementing an ISR</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cxconInstallableISRs" TABINDEX="0">Installable ISRs with Drivers</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Installable%20ISRs&nbsp;(cmconinstallableisrs.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

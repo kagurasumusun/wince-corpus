@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Screen Savers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Screen Savers"/>
+<MSHelp:RLTitle Title="Screen Savers"/>
+<MSHelp:Keyword Index="A" Term="cmconScreenSavers"/>
+<MSHelp:Keyword Index="K" Term="screen savers, Thin Client support of"/>
+<MSHelp:Keyword Index="A" Term="cmconScreenSavers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: thinclient.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760413">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconscreensavers"></A>Screen Savers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Windows Thin Client Shell supports screen savers. If you want the shell to load a screen saver after a specified period of time, then you must include the dynamic-link library (DLL) of the screen saver in your image. Screen-saver support also requires that the registry be properly configured. The following registry key shows the required settings for Windows Thin Client.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power]
+    "BattPowerOff"=DWORD:0
+    "ExtPowerOff"=DWORD:0
+    "ScreenPowerOff"=DWORD:300</PRE>
+
+<P>The <B>ScreenPowerOff</B> registry entry specifies the amount of time, in seconds, that must elapse with no user input before the shell starts the screen saver. To prevent the network from resetting the no-activity timer, the following registry setting must be entered.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\CXport]
+    "NoIdleTimerReset"=DWORD:1</PRE>
+
+<P>When the user presses the CTRL+ALT+END key combination, the Windows Thin Client Shell brings the shell UI to the foreground. To configure this key combination, set the following registry entries.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD]
+    "DriverName"="Kbdmouse.dll"
+    "CalVKey"=DWORD:0
+    "ContLessVKey"=DWORD:0
+    "ContMoreVKey"=DWORD:0
+    "TaskManVKey"=DWORD:23</PRE>
+
+<P>The registry subkey <B>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WBT\Shell</B> for the thin client shell is used to configure the screen saver. This subkey has two named values, ScreenSaver and ScreenSaverEnabled as described below.
+
+<UL type="disc">
+	<LI><B>ScreenSaver (REG_SZ)</B>
+<P>The <B>ScreenSaver</B> entry specifies the DLL to load when starting the screen saver. This entry can only be made at build time. 
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WBT\Shell] 
+    "ScreenSaver"="&lt;screen saver DLL&gt;"
+    "ScreenSaverEnable"=dword:1</PRE>
+
+<P>Three screen savers are included with the Windows-based Terminal user interface source: SSFloat (ssfloat.dll), SSBlank (ssblank.dll), SSTile (sstile.dll). However, only one can be included as the screen saver. To include one of these screen savers, list the name of the desired screen saver in the RDP_MODULES environment variable (%_PROJECTROOT%\Oak\Misc\Cesysgen.bat).
+</li>
+
+	<LI><B>ScreenSaverEnable (REG_DWORD)</B>
+<P>The <B>ScreenSaverEnable</B> entry specifies whether to enable the screen saver. If <B>ScreenSaverEnable</B> is equal to 0, then the screen saver is not enabled. If <B>ScreenSaverEnable</B> is greater than 0, then the screen saver is enabled. Thiscan be changed dynamically, because the shell queries this registry every time that it receives a <B>WM_POWERBROADCAST</B> message. If <B>ScreenSaverEnable</B> is set, then the shell attempts to load the specified screen saver.
+
+<P>You must configure the registry. The following code example shows how to configure the registry.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power]
+    "BattPowerOff"=DWORD:0
+    "ExtPowerOff"=DWORD:0
+    "ScreenPowerOff"=DWORD:&lt;screen-saver timeout (in seconds)&gt;</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconthinclientimplementationconsiderations.htm">Thin Client Implementation Considerations</A></P>
+
+<P><A HREF="cmconhotkeys.htm">Hot Keys</A></P>
+
+<P><A HREF="cmcondefaultclient.htm">Default Client</A></P>
+
+<P><A HREF="cmconsetupwizardpropertiessheets.htm">Setup Wizard and Properties Sheets</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Screen%20Savers&nbsp;(cmconscreensavers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

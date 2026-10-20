@@ -1,0 +1,123 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ParentCatalog (Column)</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="ParentCatalog (Column)"/>
+<MSHelp:RLTitle Title="ParentCatalog (Column)"/>
+<MSHelp:Keyword Index="A" Term="ado31ref_34"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce31_parentcatalog_column_"></A><SUP></SUP>ParentCatalog (Column)</H1>
+
+<P>Specifies the parent catalog of a table or column to provide access to provider-specific properties.</P>
+
+<H4>Syntax</H4>
+
+<P>None</P>
+
+<H4>Parameters </H4>
+
+<P>None</P>
+
+<H4>Return Values </H4>
+
+<P>Sets and returns a <B>Catalog</B> object. Setting <B>ParentCatalog</B> to an open <B>Catalog</B> allows access to provider-specific properties prior to appending a table or column to a <B>Catalog</B> collection.</P>
+
+<H4>Remarks</H4>
+
+<P>Some data providers allow provider-specific property values to be written only at creation (when a table or column is appended to its <B>Catalog</B> collection). To access these properties before appending these objects to a <B>Catalog</B>, specify the <B>Catalog</B> in the <B>ParentCatalog</B> property first.</P>
+
+<P>An error occurs when the table or column is appended to a different <B>Catalog</B> than the <B>ParentCatalog</B>.</P>
+
+<H4>Example</H4>
+
+<P>The following code demonstrates how to append a table to a catalog.</P>
+
+<PRE>Dim m_cat, m_col, tbl, col, strConn, stTableName, stColumnName, stExp, stAct
+
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_cat = CreateObject("adoxce.catalog.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_col = CreateObject("adoxce.column.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set tbl = CreateObject("adoxce.table.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set col = CreateObject("adoxce.column.3.1")
+
+&nbsp;&nbsp;&nbsp;&nbsp;strConn = "provider=microsoft.jet.oledb.4.0;data source=temp.mdb;"
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.ActiveConnection = strConn
+
+&nbsp;&nbsp;&nbsp;&nbsp;stTableName = "ColAppScen18"
+&nbsp;&nbsp;&nbsp;&nbsp;If adox_ExistsTable(m_cat, stTableName)
+
+m_cat.Tables.Delete stTableName
+&nbsp;&nbsp;&nbsp;&nbsp;End If
+
+&nbsp;&nbsp;&nbsp;&nbsp;tbl.Name = stTableName
+
+&nbsp;&nbsp;&nbsp;&nbsp;stColumnName = "Column1"
+&nbsp;&nbsp;&nbsp;&nbsp;m_col.Name = stColumnName
+&nbsp;&nbsp;&nbsp;&nbsp;m_col.Type = adSmallInt
+
+&nbsp;&nbsp;&nbsp;&nbsp;tbl.Columns.Append m_col
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables.Append tbl
+
+&nbsp;&nbsp;&nbsp;&nbsp;'Create a new column
+&nbsp;&nbsp;&nbsp;&nbsp;col.Name = "Column2"
+&nbsp;&nbsp;&nbsp;&nbsp;col.Type = adSmallInt
+
+&nbsp;&nbsp;&nbsp;&nbsp;'Set parentcatalog
+&nbsp;&nbsp;&nbsp;&nbsp;col.ParentCatalog = m_cat
+
+&nbsp;&nbsp;&nbsp;&nbsp;col.Properties.Refresh
+
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables(stTableName).Columns.Append col
+
+&nbsp;&nbsp;&nbsp;&nbsp;stExp = "Column2"
+&nbsp;&nbsp;&nbsp;&nbsp;stAct = m_cat.Tables(stTableName).Columns(1).Name
+
+&nbsp;&nbsp;&nbsp;&nbsp;'Cleanup, set all objects to Nothing.
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables.Delete stTableName
+&nbsp;&nbsp;&nbsp;&nbsp;Set tbl = Nothing
+&nbsp;&nbsp;&nbsp;&nbsp;Set col = Nothing
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_cat = Nothing
+
+End Sub
+
+Function adox_ExistsTable(cat, stName)
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;Dim bFound, tbl
+
+&nbsp;&nbsp;&nbsp;&nbsp;bFound = False
+&nbsp;&nbsp;&nbsp;&nbsp;For Each tbl In cat.Tables
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If UCase(tbl.Name) = UCase(stName) Then
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bFound = True
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Exit For
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End If
+&nbsp;&nbsp;&nbsp;&nbsp;Next
+
+&nbsp;&nbsp;&nbsp;&nbsp;adox_ExistsTable = bFound
+
+End Function
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

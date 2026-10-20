@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisSetPacketCancelId</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisSetPacketCancelId"/>
+<MSHelp:RLTitle Title="NdisSetPacketCancelId"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisSetPacketCancelId"/>
+<MSHelp:Keyword Index="K" Term="NdisSetPacketCancelId"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisSetPacketCancelId"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_692771">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndissetpacketcancelid"></A>NdisSetPacketCancelId</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>NdisSetPacketCancelId </B>marks a packet with a cancellation identifier that a driver can later use to cancel the pending transmission of the packet. </P>
+
+<PRE class="syntax"><B>VOID NdisSetPacketCancelId(</B>
+<B>IN PNDIS_PACKET</B>  <I>Packet</I><B>,</B>
+<B>IN ULONG_PTR</B>  <I>CancelId</I>
+<B>); </B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Packet </I></DT>
+
+<DD>Points to an <A HREF="cxconndis_packet.htm">NDIS_PACKET</A> structure that is the descriptor for a packet. </dd>
+
+<DT><I>CancelId </I></DT>
+
+<DD>A cancellation identifier. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A protocol driver or intermediate driver can call the <B>NdisSetPacketCancelId</B> function for each packet that it passes to lower-level drivers for transmission. The <B>NdisSetPacketCancelId</B> function marks the specified packet with a cancellation identifier. </P>
+
+<P>To cancel the pending transmission of a marked packet, a protocol or intermediate driver passes the packet's cancellation identifier to <A HREF="_wceddk_ndiscancelsendpackets.htm">NdisCancelSendPackets</A>. The caller of <B>NdisSetPacketCancelId</B> should therefore store the assigned cancellation identifier internally so that it can pass it, as necessary, to <B>NdisCancelSendPackets</B>. A driver can also obtain a packet's cancellation identifier by calling <A HREF="cxrefndisgetpacketcancelid.htm">NdisGetPacketCancelId</A>.</P>
+
+<P>An intermediate driver should not modify the cancellation identifier of packets that it passes to a lower-level driver. However, an intermediate driver can set a cancellation identifier for packets that it originates.</P>
+
+<P>Before assigning cancellation identifiers to packets, a driver should call <A HREF="_wceddk_ndisgeneratepartialcancelid.htm">NdisGeneratePartialCancelId</A> to obtain the high-order byte of each cancellation identifier that it assigns. This ensures that the driver does not duplicate cancellation identifiers assigned by other drivers in the system. <B>NdisGeneratePartialCancelId</B> is typically called once from the <A HREF="cxrefinitializationofndisprotocoldrivers.htm">Initialization of NDIS Protocol Drivers</A> routines; however, a protocol or intermediate driver can obtain more than one partial cancellation identifier by calling <B>NdisGeneratePartialCancelId</B> more than once. </P>
+
+<P>A protocol driver or intermediate driver might assign cancellation identifiers to packets as follows: 
+
+<UL type="disc">
+	<LI>The driver could mark all packets sent over a connection with the same cancellation identifier. </li>
+
+	<LI>The driver could mark each packet with a unique cancellation identifier. </li>
+
+	<LI>The driver could mark all packets within a subgroup of packets (for example, packets sent on behalf of a single client) with a unique identifier. </li>
+</UL>
+
+<P>If a driver marks all packets with the same cancellation identifier, it can cancel all pending packet transmissions from an adapter with a single call to <B>NdisCancelSendPackets</B>. If a driver marks each packet with a unique cancellation identifier, it can cancel the pending transmission of individual packets from an adapter by calling <B>NdisCancelSendPackets</B> once for each packet. If a driver marks all packets within a subgroup of packets with a unique identifier, it can cancel all pending transmissions of packets within that subgroup with a single call to <B>NdisCancelSendPackets</B>.</P>
+
+<P>After aborting the pending transmission of a packet, the underlying miniport calls the <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A> or <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A> function to return the packet descriptor and a completion status of NDIS_STATUS_ABORTED to the protocol or intermediate driver that requested the transmission. NDIS, in turn, calls the protocol or intermediate driver's <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A> function. </P>
+
+<P>In its <B>ProtocolSendComplete</B> function, a protocol driver can call <B>NdisSetPacketCancelId</B> with <I>CancelId</I> set to NULL. This prevents the packet from inadvertently being used again with a stale cancellation identifier.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconminiportcancelsendpackets.htm">MiniportCancelSendPackets</A>, <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="_wceddk_ndisallocatepacketpool.htm">NdisAllocatePacketPool</A>, <A HREF="_wceddk_ndisallocatepacketpoolex.htm">NdisAllocatePacketPoolEx</A>, <A HREF="_wceddk_ndiscancelsendpackets.htm">NdisCancelSendPackets</A>, <A HREF="_wceddk_ndisgeneratepartialcancelid.htm">NdisGeneratePartialCancelId</A>, <A HREF="cxrefndisgetpacketcancelid.htm">NdisGetPacketCancelId</A>, <A HREF="cxconndis_packet.htm">NDIS_PACKET</A>, <A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A>, <A HREF="cxrefndismwansendcomplete.htm">NdisMWanSendComplete</A>, <A HREF="cxrefprotocolsendcomplete.htm">ProtocolSendComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisSetPacketCancelId&nbsp;(cxrefndissetpacketcancelid.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

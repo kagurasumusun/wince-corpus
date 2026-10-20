@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>URL Moniker Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="URL Moniker Implementation"/>
+<MSHelp:RLTitle Title="IPersistStream URL Moniker Implementation"/>
+<MSHelp:Keyword Index="A" Term="cerefIPersistStreamURLMonikerImplementation"/>
+<MSHelp:Keyword Index="K" Term="IPersistStream, implementation"/>
+<MSHelp:Keyword Index="A" Term="cerefIPersistStreamURLMonikerImplementation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748491">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefipersiststreamurlmonikerimplementation"></A>IPersistStream URL Moniker Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The URL moniker implementation of <B>IPersistStream</B> is found on an URL moniker object, which supports <A HREF="cerefiunknown.htm">IUnknown</A>, <B>IAsyncMoniker</B> Interface, and <A HREF="cerefimonikeriunknown.htm">IMoniker</A>. The <B>IMoniker</B> interface inherits its definition from <B>IPersistStream</B> and thus, the URL moniker also provides an implementation of <B>IPersistStream</B> as part of its implementation of <B>IMoniker</B>.</P>
+
+<P>The <B>IAsyncMoniker</B> interface on an URL moniker is simply <B>IUnknown</B> (there are no additional methods); it is used to allow clients to determine if a moniker supports asynchronous binding. To get a pointer to the <B>IMoniker</B> interface on this object, call the <B>CreateURLMoniker</B> function. Then, to get a pointer to <B>IPersistStream</B>, call the <B>QueryInterface</B> method.</P>
+
+<P><B>IPersistStream</B>, in addition to inheriting its definition from <B>IUnknown</B>, also inherits the single method of <B>IPersist</B>, <B>GetClassID</B>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>The current URL Moniker implementation of <B>IMoniker</B> does not support asynchronous storage. Future implementations will do so.</BLOCKQUOTE>
+
+<H4 class="dtH4">When to Use</H4>
+
+<P>Call <B>IPersistStream</B> to have the moniker manage its persistent storage.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<DL>
+<DT><A HREF="cerefipersistgetclassid.htm">IPersistStream::GetClassID</A> </DT>
+
+<DD>Returns CLSID_StdURLMoniker. </dd>
+
+<DT><A HREF="cerefipersiststreamisdirty.htm">IPersistStream::IsDirty</A> </DT>
+
+<DD>Returns S_OK if the Moniker has changed since it was last saved (<B>IPersistStream::Save</B> with <I>fClearDirty</I>==TRUE), S_FALSE otherwise. </dd>
+
+<DT><A HREF="cerefipersiststreamload.htm">IPersistStream::Load</A> </DT>
+
+<DD>Initializes an URL moniker from data within a stream, usually stored there previously using its <B>IPersistStream::Save</B> (through <A HREF="cerefolesavetostream.htm">OleSaveToStream</A> or <B>OleSaveToStreamEx</B>). The binary format of the URL Moniker is its URL string in Unicode (may be a full or partial URL string, see <B>CreateURLMoniker</B> for details). This is represented as a ULONG (32-bit) count of characters followed by that many Unicode characters. </dd>
+
+<DT><A HREF="cerefipersiststreamsave.htm">IPersistStream::Save</A> </DT>
+
+<DD>Saves an URL moniker to a stream. The binary format of URL Moniker is its URL string in Unicode (may be a full or partial URL string, see <B>CreateURLMoniker</B> for details). This is represented as a ULONG (32-bit) count of characters followed by that many Unicode characters. </dd>
+
+<DT><A HREF="cerefipersiststreamgetsizemax.htm">IPersistStream::GetSizeMax</A> </DT>
+
+<DD>Returns the maximum number of bytes in the stream that will be required by a subsequent call to <B>IPersistStream::Save</B>. This value is SIZEOF(ULONG)==4 plus SIZEOF(WCHAR)*n where n is the length of the full or partial URL string including the NULL terminator. </dd>
+</DL>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefolesavetostream.htm">OleSaveToStream</A>, <A HREF="cerefiunknown.htm">IUnknown</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;URL%20Moniker%20Implementation&nbsp;(cerefipersiststreamurlmonikerimplementation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

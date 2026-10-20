@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWinApp::OnIdle</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwinapp_onidle"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cwinapp_onidle"></A>CWinApp::OnIdle</H1>
+
+<P>This method is called by the framework in the default message loop when the message queue in the application is empty. Override this method to perform idle-time processing. Use your override to call your own background idle-handler tasks.</P>
+
+<PRE class=syntax><B>virtual BOOL OnIdle(
+LONG </B><I>lCount</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lCount</I></DT>
+
+<DD>Specifies a counter incremented each time <B>OnIdle</B> is called when the message queue in the application is empty. This count is reset to zero each time a new message is processed. You can use the <I>lCount</I> parameter to determine the relative length of time the application has been idle without processing a message.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero to receive more idle processing time; zero if no more idle time is needed.</P>
+
+<H4>Remarks</H4>
+
+<P>Override this method to perform idle-time processing. <B>OnIdle</B> is called in the default message loop when the message queue in the application is empty. Use your override to call your own background idle-handler tasks.</P>
+
+<P><B>OnIdle</B> should return 0 to indicate that no idle processing time is required. The <I>lCount</I> parameter is incremented each time <B>OnIdle</B> is called when the message  queue is empty and resets to 0 each time a new message is processed. You can call your different idle routines based on this count.</P>
+
+<P>The following summarizes idle loop processing:
+
+<OL>
+	<LI>If the message loop in the Microsoft Foundation Class Library checks the message queue and finds no pending messages, it calls <CODE>OnIdle</CODE> for the application object and supplies 0 as the <I>lCount</I> argument.</LI>
+
+	<LI><CODE>OnIdle</CODE> performs some processing and returns a nonzero value to indicate it should be called again to do further processing.</LI>
+
+	<LI>The message loop checks the message queue again. If no messages are pending, it calls <CODE>OnIdle</CODE> again, incrementing the <I>lCount</I> argument.</LI>
+
+	<LI>Eventually, <CODE>OnIdle</CODE> finishes processing all its idle tasks and returns 0. This tells the message loop to stop calling <CODE>OnIdle</CODE> until the next message is received from the message queue, at which point the idle cycle restarts with the argument set to zero.</LI>
+</OL>
+
+<P>Do not perform lengthy tasks during <B>OnIdle</B> because your application cannot process user input until <B>OnIdle</B> returns.</P>
+
+<P>The default implementation of <B>OnIdle</B> updates command user-interface objects such as menu items and toolbar buttons, and it performs internal data structure cleanup. Therefore, if you override <B>OnIdle</B>, you must call <B>CWinApp::OnIdle</B> with the <I>lCount</I> in your overridden version. First call all base-class idle processing, that is, until the base class <B>OnIdle</B> returns 0. If you need to perform work before the base-class processing completes, review the base-class implementation to select the proper <I>lCount</I> during which to do your work.</P>
+
+<P>If you do not want <B>OnIdle</B> to be called whenever a message is retrieved from the message queue, you can override the <A HREF="cwinthrd_8.htm"><B>CWinThread::IsIdleMessage</B></A>. If an application has set a very short timer, or if the system is sending the WM_SYSTIMER message, then <B>OnIdle</B> will be called repeatedly, and degrade performance.</P>
+
+<H4>Example</H4>
+
+<P>The following two examples show how to use <B>OnIdle</B>. The first example processes two idle tasks using the <I>lCount</I> argument to prioritize the tasks. The first task is high priority, and you should do it whenever possible. The second task is less important and should be done only when there is a long pause in user input. Note the call to the base-class version of <B>OnIdle</B>. The second example manages a group of idle tasks with different priorities.</P>
+
+<PRE>BOOL CMyApp::OnIdle(LONG lCount)
+{
+    BOOL bMore = CWinApp::OnIdle(lCount);
+
+    if (lCount == 0)
+    {
+    TRACE("App idle for short period of time\n");
+    bMore = TRUE;
+    }
+    else if (lCount == 10)
+    {
+    TRACE("App idle for longer amount of time\n");
+        bMore = TRUE;
+    }
+    else if (lCount == 100)
+    {
+        TRACE("App idle for even longer amount of time\n");
+        bMore = TRUE;
+    }
+    else if (lCount == 1000)
+    {
+        TRACE("App idle for quite a long period of time\n");
+     // bMore is not set to TRUE, no longer need idle.
+     // IMPORTANT: bMore is not set to FALSE since CWinApp::OnIdle may
+     // have more idle tasks to complete.
+    }
+
+    return bMore;
+     // Return TRUE as long as there is any more idle tasks.
+}
+</PRE>
+
+<H4>Second Example</H4>
+
+<PRE>// In this example, four idle loop tasks are given various
+// opportunities to run:
+// Task1 is always given a chance to run during idle time, provided
+//   that no message has queued up while the framework was processing
+//   its own idle loop tasks (at lCount levels 0 and 1).
+// Task2 is given a chance to run only if Task1 has already run,
+//   provided that no message has queued up while Task1 was running.
+// Task3 and Task4 are given a chance to run only if both Task1 and
+//   Task2 have already run, and no message has queued up in the mean
+//   time.  If Task3 gets its chance to run, then Task4 always gets
+//   a chance to run immediately after Task3.
+
+BOOL CMyApp::OnIdle(LONG lCount)
+{
+   // In this example, as in most applications, you should let the
+   // base class CWinApp::OnIdle complete its processing before you
+   // attempt any additional idle loop processing.
+   if (CWinApp::OnIdle(lCount))
+      return TRUE;
+
+   // The base class CWinApp::OnIdle reserves the lCount values 0
+   // and 1 for the framework's own idle processing.   If you wish to
+   // share idle processing time at a peer level with the framework,
+   // then replace the above if-statement with a straight call to
+   // CWinApp::OnIdle; and then add a case statement for lCount value
+   // 0 and/or 1. Study the base class implementation first to
+   // understand how your idle loop tasks will compete with the
+   // framework's idle loop processing.
+
+   switch (lCount)
+   {
+      case 2:
+         Task1();
+         return TRUE; // Next time give Task2 a chance.
+      case 3:
+         Task2();
+         return TRUE; // Next time give Task3 and Task4 a chance.
+      case 4:
+         Task3();
+         Task4();
+         return FALSE; // Cycle through the idle loop tasks again.
+   }
+   return FALSE;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DSP Unit Registers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DSP Unit Registers"/>
+<MSHelp:RLTitle Title="DSP Unit Registers"/>
+<MSHelp:Keyword Index="A" Term="ccrefDSPRegisters"/>
+<MSHelp:Keyword Index="K" Term="DSP registers, SH3-DSP series assembler"/>
+<MSHelp:Keyword Index="K" Term="DSP Unit Registers"/>
+<MSHelp:Keyword Index="K" Term="Hitachi SH3-DSP series assembler, registers"/>
+<MSHelp:Keyword Index="K" Term="registers, SH3-DSP series assembler"/>
+<MSHelp:Keyword Index="K" Term="SH3-DSP series assembler, registers"/>
+<MSHelp:Keyword Index="A" Term="ccrefDSPRegisters"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dspshasm.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720184">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccrefdspregisters"></A>DSP Unit Registers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The SH3-DSP 7729 has eight data registers and one control register. With the exception of registers <B>A1</B> and <B>A0</B>, the data registers are 32-bit width. Registers <B>A0</B> and <B>A1</B> also include eight guard bits in fields <B>A0G</B> and <B>A1G</B>, giving them a total width of 40 bits.</P>
+
+<P>The following list shows the three kinds of operation that access the DSP data registers:
+
+<UL type="disc">
+	<LI>DSP data processing
+<P>When a DSP fixed-point data operation uses <B>A0</B> or <B>A1</B> as the source register, it uses the guard bits 39&#0150;32. When it uses <B>A0</B> or <B>A1</B> as the destination register, guard bits 39&#0150;32 are valid. When a DSP fixed-point data operation uses a DSP register other than <B>A0</B> or <B>A1</B> as the source register, it sign-extends the source value to bits 39&#0150;32. When it uses one of these registers as the destination register, it discards bits 39&#0150;32 of the result.
+</li>
+
+	<LI>X or Y data transfer operation, <B>MOVX.W</B> and <B>MOVY.W</B>. 
+<P>This operation accesses the X and Y memories through the 16-bit X and Y data buses. The register to be loaded or stored by this operation always includes the upper 16 bits, bits 31&#0150;16. <B>X0</B> or <B>X1</B> can be the destination of an X memory load and <B>Y0</B> or <B>Y1</B> can be the destination of a Y memory load, but no other register can be the destination register in this operation. When data is read into the upper 16 bits of a register, the lower 16 bits of the register, bits 0-15, are automatically cleared. <B>A0</B> and <B>A1</B> can be stored in the X or Y memory by this operation, but no other registers can be stored.
+</li>
+
+	<LI>Single-data transfer instruction, <B>MOVS.W</B> or <B>MOVS.L</B>. 
+<P>These instructions access any memory location through the LDB. All DSP registers connect to the LDB and can be the source or destination register of the data transfer. These instructions have word and longword access modes. In word mode, registers to be loaded or stored by this instruction make up the upper 16 bits for DSP registers except <B>A0G</B> and <B>A1G</B>. When data is loaded into a register other than <B>A0G</B> and <B>A1G</B> in word mode, the lower half of the register is cleared. When <B>A0</B> or <B>A1</B> is used, the data is sign-extended to bits 39&#0150;32 and the lower half is cleared. When <B>A0G</B> or <B>A1G</B> is the destination register in word mode, data is loaded into an 8-bit register, but <B>A0</B> and <B>A1</B> are not cleared. In longword mode, when the destination register is <B>A0</B> or <B>A1</B>, it is sign-extended to bits 39&#0150;32.
+</li>
+</UL>
+
+<P>The DSP unit has one control register, the DSP status register (<B>DSR</B>). <B>DSR</B> holds the status of DSP data operation results such as zero, negative, and so on, and has a DC bit which is similar to the T bit in the CPU. The DC bit indicates one of the status flags. A DSP data processing instruction controls its execution based on the DC bit. This control affects only the operations in the DSP unit; it controls the update of DSP registers only. It cannot control operations in the CPU, such as address register updating and load/store operations. Control bits <B>CS [2:0]</B> specify the condition to be reflected in the DC bit.</P>
+
+<P>Unconditional DSP type data operations, except <B>PMULS</B>, <B>MOVX</B>, <B>MOVY</B> and <B>MOVS</B>, update the condition flags and DC bit, but no CPU instructions, including MAC instructions, update the DC bit. In addition, conditional DSP type instructions do NOT update DSR.</P>
+
+<P>The following table describes the DSP bits.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Bits</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>31&#0150;8 <BR>
+Reserved bits </TD>
+<TD width=72%>0: Always read as 0; always use 0 as the write value</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>7<BR>
+Signed greater-than bit (GT)</TD>
+<TD width=72%>Indicates that the operation result is positive, except 0, or that operand 1 is greater than operand 2 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>6<BR>
+Zero bit (Z)</TD>
+<TD width=72%>Indicates that the operation result is zero (0), or that operand 1 is equal to operand 2 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>5<BR>
+Negative bit (N)</TD>
+<TD width=72%>Indicates that the operation result is negative, or that operand 1 is smaller than operand 2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>4<BR>
+Overflow bit (V)</TD>
+<TD width=72%>Indicates that the operation result has overflowed</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>3&#0150;1<BR>
+Condition Select bits (CS)</TD>
+<TD width=72%>Designates the mode for selecting the operation result status to be set in the DC bit. Do not set these bits to 110 or 111.
+<UL type="disc">
+	<LI>000:Carry/borrow mode</li>
+
+	<LI>001: Negative value mode</li>
+
+	<LI>010: Zero mode</li>
+
+	<LI>011: Overflow mode</li>
+
+	<LI>100: Signed greater mode</li>
+
+	<LI>101: Signed greater than or equal to mode</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>0<BR>
+DSP Condition bit (DC)</TD>
+<TD width=72%>Sets the status of the operation result in the mode designated by the CS bits 
+<UL type="disc">
+	<LI>0: False. Designated mode status has not occurred</li>
+
+	<LI>1: Designated mode status has occurred</li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<P>SH3-DSP assigns DSR system register, and provides the following load/store instructions:
+
+<UL type="disc">
+	<LI><B>STS DSR,Rn;</B></li>
+
+	<LI><B>STS.L DSR,@-Rn;</B></li>
+
+	<LI><B>LDS.L @Rn+,DSR;</B></li>
+
+	<LI><B>LDS Rn,DSR;</B></li>
+</UL>
+
+<P>When an STS instruction reads DSR, the upper bits are all zero.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccconsh-3dspregisters.htm">SH3-DSP Registers</A></P>
+
+<P><A HREF="ccrefgeneralregisters.htm">SH3-DSP General Registers</A></P>
+
+<P><A HREF="ccconsh3-dspstatusregister.htm">SH3-DSP Status Registers</A></P>
+
+<P><A HREF="ccconsh3-dspcontrolregisters.htm">SH3-DSP Control Registers</A></P>
+
+<P><A HREF="ccconrsremecontrolregisters.htm">RS, RE, and ME Control Registers</A></P>
+
+<P><A HREF="ccconsh3-dspsystemregisters.htm">SH3-DSP System Registers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DSP%20Unit%20Registers&nbsp;(ccrefdspregisters.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

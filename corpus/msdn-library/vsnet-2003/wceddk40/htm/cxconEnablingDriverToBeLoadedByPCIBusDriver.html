@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Driver Loading with the PCI Bus Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Driver Loading with the PCI Bus Driver"/>
+<MSHelp:RLTitle Title="Driver Loading with the PCI Bus Driver"/>
+<MSHelp:Keyword Index="A" Term="cxconEnablingDriverToBeLoadedByPCIBusDriver"/>
+<MSHelp:Keyword Index="K" Term="buses, driver loading with PCI bus driver"/>
+<MSHelp:Keyword Index="K" Term="device drivers, loading with PCI bus driver"/>
+<MSHelp:Keyword Index="K" Term="drivers, loading with PCI bus driver"/>
+<MSHelp:Keyword Index="K" Term="loading, drivers with PCI bus"/>
+<MSHelp:Keyword Index="K" Term="PCI bus drivers, driver loading"/>
+<MSHelp:Keyword Index="A" Term="cxconEnablingDriverToBeLoadedByPCIBusDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751304">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconenablingdrivertobeloadedbypcibusdriver"></A>Driver Loading with the PCI Bus Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The PCI bus driver is responsible for enumerating the PCI bus and then loading device drivers for any of the devices it finds.</P>
+
+<P>The PCI bus driver first enumerates the PCI bus by scanning for devices and enumerating the resources required by the devices. These resources include memory base addresses, I/O base addresses and IRQ numbers. A configuration routine provided by the driver can be used at this point to configure non-PCI compliant resources as well as extension ROM resources. The PCI bus driver assigns resources to each of the devices and then a second enumeration pass is run to match the devices with registry entries found under the <B>PCI\Template</B> key. The PCI bus driver also looks for matches under the <B>PCI\Instance</B> key to look for exact matches, see <A HREF="cxcondevicedriverloadingprocess.htm">Device Driver Loading Process</A> for details. The device is matched to a registry entry by applying a best-fit algorithm to the registry entries shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Entry</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>Class</B></TD>
+<TD width=65%>Identifies the basic function of a device, for example, a mass storage controller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>SubClass</B></TD>
+<TD width=65%>Identifies a specific sub-class of basic function, for example, an IDE controller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>ProgIF</B></TD>
+<TD width=65%>Identifies a register-specific programming interface, for example, USB OHCI or USB UHCI.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>VendorID</B></TD>
+<TD width=65%>Identifies the manufacturer of the device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>DeviceID</B></TD>
+<TD width=65%>Identifies the type of device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>SubsystemVendorID</B></TD>
+<TD width=65%>Identifies the vendor of a card or subsystem that uses a device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>SubsystemID</B></TD>
+<TD width=65%>Identifies the type of card or subsystem that uses a device.</TD>
+</TR>
+</table></div>
+
+<P>The identifiers are listed in order of increasing specificity. When matching a found device with a registry entry, all of the values that are listed in the registry must match the found device. For example, a driver that works with all 16550-compatible serial controllers would list the values shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Entry</TH>
+<TH width=65%>Descriptions</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>Class</B></TD>
+<TD width=65%>The value for simple communications controllers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>SubClass</B></TD>
+<TD width=65%>The value for serial.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>ProgIF</B></TD>
+<TD width=65%>The value for 16550-compatible serial controllers.</TD>
+</TR>
+</table></div>
+
+<P>If a particular serial driver were tailored to a particular vendor's device, then the <B>VendorID</B> and <B>DeviceID</B> values would be listed as well. The registry entry for this driver would only match a device that contains the exact same <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B> and <B>DeviceID</B>. The <B>VendorID</B>, <B>DeviceID</B>, <B>SubsystemVendorID</B> and <B>SubsystemID</B> can have a list of values associated so the driver can be matched with a subset of cards. If lists are used, they must all be of the same length.</P>
+
+<P>Once a match is found, the template information is copied over to a <B>PCI\Instance</B> key, along with the additional resource information such as <B>MemBase</B>, <B>MemLen</B>, <B>IoBase</B>, <B>IoLen</B> and <B>Irq</B>. An IRQ to SYSINTR mapping is requested at this time from the OAL, and the SYSINTR is written out the registry instance key <B>SysIntr</B>.</P>
+
+<P>At this point, the driver is loaded with its newly created instance key. The driver now has all of its configuration information contained in the registry, so it no longer needs to enumerate the bus to discover its corresponding device.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconenablingdrivertobeloadedbypcibusdriverexample.htm">Driver Loading with the PCI Bus Driver Example</A></P>
+
+<P><A HREF="cxconenablingpcibusdriverinstallableisrsonplatform.htm">PCI Device Support</A></P>
+
+<P><A HREF="cxconinstallableisrs.htm">Installable ISRs with Drivers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Driver%20Loading%20with%20the%20PCI%20Bus%20Driver&nbsp;(cxconenablingdrivertobeloadedbypcibusdriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

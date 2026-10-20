@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DriverEntry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DriverEntry"/>
+<MSHelp:RLTitle Title="DriverEntry"/>
+<MSHelp:Keyword Index="A" Term="cxtskDriverEntryOfNDISMiniportDrivers"/>
+<MSHelp:Keyword Index="K" Term="DriverEntry"/>
+<MSHelp:Keyword Index="A" Term="cxtskDriverEntryOfNDISMiniportDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_upper_edge_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_755606">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxtskdriverentryofndisminiportdrivers"></A>DriverEntry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>DriverEntry</B> is a required function that the system calls first in any NDIS driver. </P>
+
+<PRE class="syntax"><B>NDIS_STATUS</B> <B>DriverEntry(</B>
+<B>IN</B> <B>PVOID</B>  <I>Argument1</I><B>,</B>
+<B>IN</B> <B>PVOID</B>  <I>Argument2</I> 
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Argument1 </I></DT>
+
+<DD>Points to a system-supplied parameter. </dd>
+
+<DT><I>Argument2 </I></DT>
+
+<DD>Points to a second system-supplied parameter. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P><B>DriverEntry</B> returns the value returned by <A HREF="_wceddk_ndismregisterminiport.htm">NdisMRegisterMiniport</A> or <A HREF="_wceddk_ndisimregisterlayeredminiport.htm">NdisIMRegisterLayeredMiniport</A>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>NDIS miniports and intermediate drivers carry out two basic tasks in their <B>DriverEntry</B> functions: 
+
+<OL type="1">
+	<LI>Call <A HREF="_wceddk_ndisminitializewrapper.htm">NdisMInitializeWrapper</A> to notify the NDIS library that the driver is about to register itself as a miniport. 
+<P>NDIS sets up the state it needs to track the driver and returns an <I>NdisWrapperHandle</I>, which the driver saves for subsequent calls to <B>Ndis<I>Xxx</I></B> configuration and initialization functions. 
+</li>
+
+	<LI>Fill in an <B>NDISXX_MINIPORT_CHARCTERISTICS</B> structure with the appropriate version numbers and the entry points for driver-supplied <B>Miniport<I>Xxx</I></B> functions and, then, call <B>NdisMRegisterMiniport</B> or <B>NdisIMRegisterLayeredMiniport</B>. 
+<P>Usually, NIC drivers call <B>NdisMRegisterMiniport</B>, as do intermediate drivers that export only a set of <B>Miniport<I>Xxx</I></B> functions. Usually, NDIS intermediate drivers call <B>NdisIMRegisterLayeredMiniport</B>, which effectively defers the initialization of such a driver's virtual NIC until the driver calls <A HREF="_wceddk_ndisiminitializedeviceinstance.htm">NdisIMInitializeDeviceInstance</A> from its <A HREF="cxrefprotocolbindadapter.htm">ProtocolBindAdapter</A> function. 
+</li>
+</OL>
+
+<P><B>DriverEntry</B> can allocate the <B>NDIS<I>XX</I>_MINIPORT_CHARACTERISTICS</B> structure on the stack since the NDIS library copies the relevant information to its own storage. <B>DriverEntry</B> should clear the memory for this structure with <A HREF="_wceddk_ndiszeromemory.htm">NdisZeroMemory</A> before setting any driver-supplied values in its members. The current <B>MajorNdisVersion</B> is 0x05, and the current <B>MinorNdisVersion</B> is 0x00. In each <B>XxxHandler</B> member of the characteristics structure, <B>DriverEntry</B> must set the name of a driver-supplied <B>Miniport<I>Xxx</I></B> function, or the member must be NULL. </P>
+
+<P>Calling <B>NdisMRegisterMiniport</B> causes the driver's MiniportInitialize function to run in the context of <B>NdisMRegisterMiniport</B>. Calling <B>NdisIMRegisterLayeredMiniport</B> defers the call to MiniportInitialize until the driver calls <B>NdisIMInitializeDeviceInstance</B>. </P>
+
+<P>Drivers that call <B>NdisMRegisterMiniport</B> must be prepared for an immediate call to their <B>MiniportInitialize</B> functions. Such a driver must have sufficient installation and configuration information stored in the registry or available from calls to an <B>Ndis</B><I>Xxx</I> bus-type-specific configuration function to set up any NIC-specific resources the driver will need to carry out network I/O operations. </P>
+
+<P>Drivers that call <B>NdisIMRegisterLayeredMiniport</B> defer the call to their <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> functions to another driver-supplied function that makes a call to <B>NdisIMInitializeDeviceInstance</B>. NDIS intermediate drivers usually register a <B>ProtocolBindAdapter</B> function and call <B>NdisIMRegisterLayeredMiniport</B> so that NDIS will call the <B>ProtocolBindAdapter</B> function after all underlying NIC drivers have initialized. This strategy gives such an NDIS intermediate driver, which makes the call to <B>NdisIMInitializeDeviceInstance</B> from <B>ProtocolBindAdapter</B>, the advantage of having its <B>MiniportInitialize</B> function configure driver-allocated resources for the intermediate's virtual NIC to the features of the underlying NIC driver to which the intermediate has already bound itself. </P>
+
+<P>If <B>NdisMRegisterMiniport</B> or <B>NdisIMRegisterLayeredMiniport</B> does not return NDIS_STATUS_SUCCESS, <B>DriverEntry</B> must release any resources it allocated, such as memory to hold the <I>NdisWrapperHandle</I>, and must call <B>NdisTerminateWrapper</B> before it returns control. The driver will not be loaded if this occurs. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="_wceddk_ndisiminitializedeviceinstance.htm">NdisIMInitializeDeviceInstance</A>, <A HREF="_wceddk_ndisimregisterlayeredminiport.htm">NdisIMRegisterLayeredMiniport</A>, <A HREF="_wceddk_ndisminitializewrapper.htm">NdisMInitializeWrapper</A>, <A HREF="_wceddk_ndismregisterminiport.htm">NdisMRegisterMiniport</A>, <A HREF="_wceddk_ndisterminatewrapper.htm">NdisTerminateWrapper</A>, <A HREF="_wceddk_ndiszeromemory.htm">NdisZeroMemory</A>, <A HREF="cxrefprotocolbindadapter.htm">ProtocolBindAdapter</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DriverEntry&nbsp;(cxtskdriverentryofndisminiportdrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

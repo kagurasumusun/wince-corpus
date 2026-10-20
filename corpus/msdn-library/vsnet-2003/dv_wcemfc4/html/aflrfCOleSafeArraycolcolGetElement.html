@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleSafeArray::GetElement</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COleSafeArray::GetElement"/>
+<MSHelp:RLTitle Title="COleSafeArray::GetElement"/>
+<MSHelp:Keyword Index="A" Term="aflrfCOleSafeArraycolcolGetElement"/>
+<MSHelp:Keyword Index="K" Term="GetElement method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCOleSafeArraycolcolGetElement"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="csafeary.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_696844">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcolesafearraycolcolgetelement"></A>COleSafeArray::GetElement</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves a single element of the safe array.</P>
+
+<PRE class="syntax"><B>void GetElement( 
+long* </B><I>rgIndices</I><B>, 
+void* </B><I>pvData</I><B> );</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>rgIndices</I></DT>
+
+<DD>Specifies a pointer to an array of indexes for each dimension of the array. </dd>
+
+<DT><I>pvData</I></DT>
+
+<DD>Specifies a pointer to the location to place the element of the array.</dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>This method automatically calls the windows functions <B>SafeArrayLock</B> and <B>SafeArrayUnlock</B> before and after retrieving the element. If the data element is a string, object, or variant, the function copies the element in the correct way. The parameter <I>pvData</I> should point to a large enough buffer to contain the element.</P>
+
+<P>On error, the function throws a <A HREF="aflrfcmemoryexception.htm"><B>CMemoryException</B></A> or <A HREF="aflrfcoleexception.htm"><B>COleException</B></A>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// sa is of type COleSafeArray with two dimensions.
+COleSafeArray sa;
+
+// Determine upper bounds for both dimensions.
+long lNumRows;
+long lNumCols;
+sa.GetUBound(1, &amp;lNumRows);
+sa.GetUBound(2, &amp;lNumCols);
+
+// Display the elements in the SAFEARRAY.
+long index[2];
+VARIANT val;
+
+// Determine upper bounds for both dimensions.
+long r, c;
+sa.GetLBound(1, &amp;r);
+sa.GetLBound(2, &amp;c);
+
+for(;r &lt;= lNumRows; r++ )
+{
+&nbsp;&nbsp;for(; c &lt;= lNumCols; c++ )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;index[0]=r;
+&nbsp;&nbsp;&nbsp;&nbsp;index[1]=c;
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Retrieve each element of the safearray.
+&nbsp;&nbsp;&nbsp;&nbsp;sa.GetElement(index, &amp;val);
+
+&nbsp;&nbsp;&nbsp;&nbsp;switch(val.vt)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;case VT_R8:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%1.2f\n", val.dblVal);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;&nbsp;&nbsp;case VT_BSTR:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%s\n",(CString)val.bstrVal);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;...
+
+&nbsp;&nbsp;&nbsp;&nbsp;case VT_EMPTY:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRACE("&lt;empty&gt;\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcolesafearraycolcolputelement.htm"><B>COleSafeArray::PutElement</B></A>, <B>SafeArrayGetElement</B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_696844', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

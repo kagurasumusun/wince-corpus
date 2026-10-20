@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Transport Layer Driver References</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Transport Layer Driver References"/>
+<MSHelp:RLTitle Title="Transport Layer Driver References"/>
+<MSHelp:Keyword Index="A" Term="cxconTransportLayerDriverReferences"/>
+<MSHelp:Keyword Index="A" Term="cxconTransportLayerDriverReferences"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: bluetooth_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751298">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcontransportlayerdriverreferences"></A>Transport Layer Driver References</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table shows the functions used to write your own transport layer driver on Windows CE.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Function</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_openconnection.htm">HCI_OpenConnection</A></TD>
+<TD width=59%>This function is used to set up, initialize, and establish a connection to the hardware.
+<P>It returns TRUE when a connection to the hardware is successfully established.</P>
+
+<P>This is a blocking function.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_readhciparameters.htm">HCI_ReadHciParameters</A></TD>
+<TD width=59%>This function returns the following information about the hardware: version, maximum packet size, and timeout.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_readpacket.htm">HCI_ReadPacket</A></TD>
+<TD width=59%>This function allocates an empty buffer (where the size is requested during <B>HCI_ReadHciParameters</B> time) and fills this with an incoming packet, if any.
+<P>This function returns with a packet type and error condition.</P>
+
+<P>This is a blocking function. It blocks while doing a read. If an error is returned, the Bluetooth protocol stack will be shut down.</P>
+
+<P>This function must unblock and return an error if <B>HCI_CloseConnection</B> is called.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_writepacket.htm">HCI_WritePacket</A></TD>
+<TD width=59%>This function allocates an empty buffer with pre-allocated spaces for packet headers and trailers, which are requested by <B>HCI_ReadHciParameters</B>.
+<P>The <B>HCI_WritePacket</B> function blocks while writing the packet. It returns the packet type and buffer. If an error is returned, the stack will be shut down.</P>
+
+<P>This function must unblock and return an error if <B>HCI_CloseConnection</B> is called.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_closeconnection.htm">HCI_CloseConnection</A></TD>
+<TD width=59%>Calling this function will unblock reads and writes, un-initialize the hardware, and free up any allocated resources including buffers. If a driver is in DLL, it may be unloaded when this function returns.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_setcallback.htm">HCI_SetCallback</A></TD>
+<TD width=59%>If hardware removal or insertion is detected, the transport calls the function provided by the upper layer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_starthardware.htm">HCI_StartHardware</A></TD>
+<TD width=59%>This function calls the callback provided by the stack to simulate hardware insertion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cxrefhci_stophardware.htm">HCI_StopHardware</A></TD>
+<TD width=59%>This function calls the callback provided by the stack to simulate hardware removal.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Data Transfers</H4>
+
+<P>To avoid data copying, the protocol stack uses two static buffers: one for read and the other for write. These buffers are given to the <B>HCI_ReadPacket</B> and <B>HCI_WritePacket</B> functions, respectively.</P>
+
+<P>The data transfer structure is organized in such a way that headers can be easily pre-allocated on the way down or stripped on the way up.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconbluetoothhcitransportlayer.htm">Bluetooth HCI Transport Layer</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Transport%20Layer%20Driver%20References&nbsp;(cxcontransportlayerdriverreferences.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

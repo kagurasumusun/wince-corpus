@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Troubleshooting: Debugging a Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Troubleshooting: Debugging a Driver"/>
+<MSHelp:RLTitle Title="Troubleshooting: Debugging a Driver"/>
+<MSHelp:Keyword Index="A" Term="cxtbsTroubleshootingDebuggingDriver"/>
+<MSHelp:Keyword Index="K" Term="device drivers, troubleshooting debugging a device driver"/>
+<MSHelp:Keyword Index="K" Term="drivers, troubleshooting debugging a device driver"/>
+<MSHelp:Keyword Index="K" Term="troubleshooting, debugging a device driver"/>
+<MSHelp:Keyword Index="A" Term="cxtbsTroubleshootingDebuggingDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: drivertrouble.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_815620">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxtbstroubleshootingdebuggingdriver"></A>Troubleshooting: Debugging a Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table shows problems you may encounter in the process of debugging your driver.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Problem</TH>
+<TH width=50%>Possible solution</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You want to debug or run specific modules, but you do not want to include them or cannot include them in your image. </TD>
+<TD width=50%>Establish a debug connection to your platform, and place the modules in the %_FLATRELEASEDIR% on your host machine.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You are not receiving output from a serial port on your target device.</TD>
+<TD width=50%>Ensure that you have the correct connection setting. The following list shows the correct connection settings:
+<UL type="disc">
+	<LI>Typically 38400 bits per second. For more information on receiving messages from the serial port on your target device, see <MSHelp:link keywords="pbconConfiguringHyperTerminalToReceiveMessages" TABINDEX="0">Configuring HyperTerminal for BSPs</MSHelp:link>.</li>
+
+	<LI>8 data bits.</li>
+
+	<LI>No parity.</li>
+
+	<LI>1 stop bit.</li>
+
+	<LI>No flow control.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You cannot set breakpoints.</TD>
+<TD width=50%>Ensure that your .dll, .pdb, and .map files are in the release directory for your project.
+<P>For more information on release directories, see <A HREF="cxtbstroubleshootingbuildingdriver.htm">Troubleshooting: Building a Driver</A>.</P>
+
+<P>You can set a breakpoint by modifying the executed code. Breakpoints insert an invalid instruction, and the debugger takes control. You cannot debug a .dll or .exe that is executing out of flash memory or ROM unless you perform one of the following tasks:
+
+<UL type="disc">
+	<LI>Force your code to execute out or RAM. One of the ways to do this is to add the compress flag to the section for your module in the .bib file. The system will automatically uncompress your module into RAM before executing its instructions. For more information on .bib files, see <MSHelp:link keywords="_wcepb_Binary_Image_Builder_File" TABINDEX="0">Binary Image Builder File</MSHelp:link>.</li>
+
+	<LI>You can move the module to the FILES section of your .bib file. For more information on the FILES section of a .bib file, see <MSHelp:link keywords="_wcepb_FILES_Section" TABINDEX="0">FILES Section</MSHelp:link>.</li>
+
+	<LI>If you have Target Control enabled, you can leave the module out of the image and it will be downloaded from the %_FLATRELEASEDIR% automatically. For more information on Target Control, see <MSHelp:link keywords="pburfAdvancedTargetControlCESHDialogBox" TABINDEX="0">CE Target Control (CESH) Dialog Box</MSHelp:link>.</li>
+
+	<LI>If hardware debugging support is available for your target device, such as through a JTAG probe, you may be able to debug ROM-based modules without copying them to RAM.</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Your breakpoints are not recognized.</TD>
+<TD width=50%>Ensure that the OS image is in a break state. If you have a connection to your target device, and your OS image is running, from the <B>Debug</B> menu choose <B>Break</B>. Then you can set breakpoints. You can also set breakpoints before downloading your OS image to the target device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Your breakpoints are still not recognized.</TD>
+<TD width=50%>Insert the <MSHelp:link keywords="_wcesdk_win32_DebugBreak" TABINDEX="0">DebugBreak</MSHelp:link> macro in your source code where you would like execution to stop. This causes a breakpoint exception to occur in the current process so that the calling thread can signal the debugger no matter what.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>You want debug messages from system DLLs.</TD>
+<TD width=50%>From the <B>Target</B> menu, choose <B>Debug Zones</B>. This shows you a list of the currently loaded DLLs. Choose the DLL that you want to debug, and then a list of debug zones will appear. Select the debug zones that you want to activate. The debug tab in the output window displays the debug messages.
+<P>You can set debug zones under the <B>HKEY_CURRENT_USER\Pegasus\Zones</B> registry key on the development workstation.</P>
+
+<P>You can also set debug zones under the <B>HKEY_LOCAL_MACHINE\DebugZones</B> registry key on the target device. This will work even if you have not enabled Target Control. Either of these mechanisms allow you to set default values for the debug zones so you can retrieve debug information when the module is loaded for the first time. If you have access to the source code, you can edit the <B>ulZoneMask</B> value in the <B>dpCurSettings</B> data structure contained in the module, and then recompile the source code.</P>
+
+<P>For more information, see <MSHelp:link keywords="_wcepb_Registering_Debug_Zones" TABINDEX="0">Debug Zone Registration</MSHelp:link>.</P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtbstroubleshootingdevicedriver.htm">Troubleshooting a Device Driver</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Troubleshooting:%20Debugging%20a%20Driver&nbsp;(cxtbstroubleshootingdebuggingdriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

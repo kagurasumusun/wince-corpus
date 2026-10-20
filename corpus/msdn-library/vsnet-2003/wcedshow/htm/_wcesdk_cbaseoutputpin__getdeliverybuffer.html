@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseOutputPin::GetDeliveryBuffer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CBaseOutputPin::GetDeliveryBuffer"/>
+<MSHelp:RLTitle Title="CBaseOutputPin::GetDeliveryBuffer"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseoutputpin__getdeliverybuffer"/>
+<MSHelp:Keyword Index="K" Term="CBaseOutputPin, GetDeliveryBuffer"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseoutputpin__getdeliverybuffer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxshow_classes1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_670629">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_cbaseoutputpin__getdeliverybuffer"></A>CBaseOutputPin::GetDeliveryBuffer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Retrieves an <A HREF="_wcesdk_imediasample_interface.htm">IMediaSample</A> buffer suitable for passing across the connection. </P>
+
+<PRE class="syntax"><B>virtual HRESULT GetDeliveryBuffer(</B>
+<B>IMediaSample **</B><I>ppSample</I><B>,</B>
+<B>REFERENCE_TIME *</B><I>pStartTime</I><B>,</B>
+<B>REFERENCE_TIME *</B><I>pEndTime</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppSample </I></DT>
+
+<DD><A HREF="_wcesdk_imediasample_interface.htm">IMediaSample</A> buffer to be provided. </dd>
+
+<DT><I>pStartTime </I></DT>
+
+<DD>Start time of the media sample (optional and can be NULL). </dd>
+
+<DT><I>pEndTime </I></DT>
+
+<DD>Stop time of the media sample (optional and can be NULL). </dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>The following flags are supported. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>AM_GBF_NOTASYNCPOINT </TD>
+<TD width=56%>Dynamic format changes are not allowed on this buffer because it is not a key frame. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>AM_GBF_PREVFRAMESKIPPED </TD>
+<TD width=56%>Buffer returned will not be filled with data contiguous with any previous data sent. </TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns E_NOINTERFACE if an allocator is not found; otherwise, returns the value returned from calling the <A HREF="_wcesdk_imemallocator__getbuffer.htm">IMemAllocator::GetBuffer</A> method. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The pin object must lock itself before calling this member function; otherwise, the filter graph could disconnect this pin from the input pin midway through the process. If the filter has no worker threads, the lock is best applied on the <A HREF="_wcesdk_imeminputpin__receive.htm">IMemInputPin::Receive</A> call; otherwise, it should be done when the worker thread is ready to deliver the sample. </P>
+
+<P>This call can block; therefore, to avoid deadlocking with an <A HREF="_wcesdk_imediafilter__stop.htm">IMediaFilter::Stop</A> command, a two-tier locking scheme (such as that implemented in <A HREF="_wcesdk_ctransformfilter_class.htm">CTransformFilter</A>) is required. Only the second-level lock is acquired here. The <A HREF="_wcesdk_ibasefilter_interface.htm">IBaseFilter</A> base class implementation of <B>IMediaFilter::Stop</B> first gets the first-level lock and then calls <A HREF="_wcesdk_imemallocator__decommit.htm">IMemAllocator::Decommit</A> on the allocator. This has the effect of making <B>GetDeliveryBuffer</B> return with a failure code. The <A HREF="_wcesdk_cbasefilter__stop.htm">Stop</A> member function then gets the second-level lock and completes the command by calling <A HREF="_wcesdk_cbaseoutputpin__inactive.htm">Inactive</A> for this pin. </P>
+
+<P>No lock is needed when calling <B>CBaseOutputPin::GetDeliveryBuffer</B> when passing on samples using a worker thread. In this case, the <A HREF="_wcesdk_cbasefilter__stop.htm">CBaseFilter::Stop</A> base class implementation acquires its filter-level lock and just calls <A HREF="_wcesdk_imemallocator__decommit.htm">IMemAllocator::Decommit</A> on the allocator, at which point the worker thread is freed up to listen for a command to stop. </P>
+
+<P>You must release the sample yourself after this function. If the connected input pin needs to hold on to the sample beyond the function, it will add the reference for the sample itself through <MSHelp:link keywords="cerefIunknownAddRef" TABINDEX="0">IUnknown::AddRef</MSHelp:link>. You must release this one and call <B>CBaseOutputPin::GetDeliveryBuffer</B> for the next. (You cannot reuse it directly.) </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P>DirectShow applications and DirectShow filters have different include file and link library requirements. See <A HREF="_cxconsettingupbuildenvironment.htm">Setting Up the Build Environment</A> for more information. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CBaseOutputPin::GetDeliveryBuffer&nbsp;(_wcesdk_cbaseoutputpin__getdeliverybuffer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

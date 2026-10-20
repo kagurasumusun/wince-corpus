@@ -1,0 +1,430 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Developing Custom Controls in C# with Smart Device Extensions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Developing Custom Controls in C# with Smart Device Extensions"/>
+<MSHelp:RLTitle Title="Developing Custom Controls in C# with Smart Device Extensions"/>
+<MSHelp:Keyword Index="A" Term="customctrlssde"/>
+<MSHelp:Keyword Index="K" Term="custom controls"/>
+<MSHelp:Keyword Index="K" Term="embedded device applications"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Visual Studio .NET, Smart Device Extensions"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenet"/>
+<MSHelp:Attr Name="Product" Value="Smart Device Extensions"/>
+<MSHelp:Attr Name="ProductVers" Value="kbSmartDeviceExtensions"/>
+<MSHelp:Attr Name="ProductVers" Value="kbvsnet"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="Controls"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbControls"/>
+<MSHelp:Attr Name="Technology" Value="kbemulator"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbemulator"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn how to create custom controls with the Smart Device Extensions for Microsoft Visual Studio .NET (SDE)."><meta name="keywords" content="Smart Device Extensions for Microsoft Visual Studio .NET, embedded device applications, custom controls"><META name="rtfFileName" content="customctrlssde.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Chris Tacke">
+<META NAME="Date" CONTENT="2002-07-01">
+<META NAME="msdnID" CONTENT="_832185">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="customctrlssde"></A>Developing Custom Controls in C# with Smart Device Extensions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Chris Tacke, Windows Embedded MVP<BR>
+Applied Data Systems</P>
+
+<P>July 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Smart Device Extensions for Microsoft Visual Studio&#174; .NET</P>
+
+<P><B>Summary: </B>Learn how to create custom controls with the Smart Device Extensions for Microsoft Visual Studio .NET (SDE). (12 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#customctrlssde_introduction">Introduction</A><A HREF="#customctrlssde_problem"><CODE><BR>
+</CODE>The Problem</A><CODE><BR>
+</CODE><A HREF="#customctrlssde_objectmodel">The Object Model</A><A HREF="#customctrlssde_customconnector"><CODE><BR>
+</CODE>Building the Custom Connector</A></P>
+
+<H2 class="dtH1"><A NAME="customctrlssde_introduction"></A>Introduction</H2>
+
+<P>The Smart Device Extensions for Microsoft Visual Studio .NET (SDE) provide a nice assortment of basic controls for use in applications. Unfortunately, the extremely broad spectrum of embedded device applications makes it almost certain that at some point a developer will be left wanting, and at that point you essentially have two choices: either re-architect your application to use the available controls or roll your own custom control.</P>
+
+<P>The first version of SDE does not have support for design time custom controls, which means that in order to use them, you have to manually write the code that puts them on your forms and sets their size and properties. It just takes a little extra work and a willingness to accept that there is no Form Design Support for custom controls.</P>
+
+<H2 class="dtH1"><A NAME="customctrlssde_problem"></A>The Problem</H2>
+
+<P>Recently I was creating class libraries for Visual Studio .NET that wrap the functionality of a lot of our hardware. It is much simpler for a managed code developer to use a class library to access on-board microcontrollers and Microsoft Windows CE ports by using a class library that does all of the P/Invoking and resource management for them. The class library I was working on is for I/O on our Graphics Master, exposing the ability to read from and write to pins on two separate headers.</P>
+
+<P>I wanted a test and sample application that easily allows the user to set or read a digital I/O state as well as read analog I/Os through a reasonably nice graphical interface. I wanted something that looked like a header on a schematic or like the physical plug on the board. Since I was working with two physically different-sized headers, I needed either multiple controls, or preferably, a control that I could define the size of. Not surprisingly, the SDE does not have the control I wanted in the toolbox.</P>
+
+<P>I could have used a large collection of Labels, CheckBoxes, PictureBoxes, and TextBoxes, but I thought that it would be an ugly substitute. Let's look at writing our own control.</P>
+
+<H2 class="dtH1"><A NAME="customctrlssde_objectmodel"></A>The Object Model</H2>
+
+<P>The first task is to decide on an overall object model. What "pieces" will we need, how will these pieces fit together and how will they interact with each other as well as their environment?</P>
+
+<P class="fig"><CODE><IMG SRC="customctrlssde_fig1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. My concept of the Connector control</B></P>
+
+<P>We should create a connector that contains a variable-sized collection of pins to allow for the different-sized headers. Each pin should have to have an identifying label that can either be left or right of the displayed "pin", depending on whether it is an even or an odd pin. Each pin can also be either a digital or an analog I/O, so each needs to have an individual value that can range from zero to 0xFFFF. It would be nice to be able to tell at a glance the type and value of each pin, so some color will be necessary. Of course not all pins in a header are usable for I/O, so we need to be able to disable some of them, and to top it off, we want the pins to be interactive, so when we tap one, it can do something like change state.</P>
+
+<P>Figure 1 is a good paper model of what the control should look like on the screen.</P>
+
+<P>Based on these requirements, we come up with an object model like the one shown in Figure 2.</P>
+
+<P class="fig"><CODE><IMG SRC="customctrlssde_fig2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. Control Object Model</B></P>
+
+<P>The overall idea is that we will have a Connector base class, from which we can derive several other custom Connector classes. The Connector will contain a Pins class, which will simply expose a ListArray of Pin objects with an indexer by deriving from CollectionBase.</P>
+
+<H3 class="dtH1">Implementing the Pin Object</H3>
+
+<P>Since the workhorse of the control is the Pin object, let's start with it. The Pin object is going to handle most of the display properties of the control and handle user interaction. Once we can successfully create, display, and interact with a single pin on a form, building a connector to group them together will be simple.</P>
+
+<P>The Pin object has four properties that we must set when the object is created. The default constructor sets each of them, but additional constructors can also be used to allow the creator to pass in non-default values.</P>
+
+<P>The most important property is the Alignment. This property determines the positioning of the text and the pin when the object is drawn, but more importantly, when the property is set, is creates and positions rectangles that will be used for drawing both the pin and the text. The use of these Rectangles will be covered later in the OnDraw explanation.</P>
+
+<P>Listing 1 shows the code for the base constructor and the Alignment<B> </B>property. We are using constants for defined offsets and borders around out pin subcomponents, but these could easily become additional properties of the control as well.</P>
+
+<P class="label"><B>Listing 1. The Pin Constructor and Alignment Property</B></P>
+
+<PRE class="code">public Pin()
+{
+  showValue = false;
+  pinValue = 0;
+  type = PinType.Digital;
+  Alignment = PinAlignment.PinOnRight;
+}
+public PinAlignment Alignment
+{ // determines where the pin rectangle is placed
+  set
+  {
+    align = value;
+    if(value == PinAlignment.PinOnRight)
+    {
+      this.pinBorder = new Rectangle(
+        this.ClientRectangle.Width - (pinSize.Width + 10),
+        1,
+        pinSize.Width + 9,
+        this.ClientRectangle.Height - 2);
+        this.pinBounds = new Rectangle(
+        this.ClientRectangle.Width - (pinSize.Width + 5),
+        ((this.ClientRectangle.Height -
+        pinSize.Height) / 2) + 1,
+        pinSize.Width,
+        pinSize.Height);
+        this.textBounds = new Rectangle(
+        5,
+        5,
+        this.ClientRectangle.Width - (pinSize.Width + 10),
+        20);
+    }
+    else
+    {
+      this.pinBorder = new Rectangle(
+        1,
+        1,
+        pinSize.Width + 9,
+        this.ClientRectangle.Height - 2);
+        this.pinBounds = new Rectangle(
+        6,
+        this.ClientRectangle.Height - (pinSize.Height + 4),
+        pinSize.Width,
+        pinSize.Height);
+        this.textBounds = new Rectangle(
+        pinSize.Width + 10,
+        5,
+        this.ClientRectangle.Width - (pinSize.Width + 10),
+        20);
+    }
+    this.Invalidate();
+  }
+  get
+  {
+    return align;
+  }
+}
+</PRE>
+
+<P>Since the Pin object is not going to provide much user interaction or customizability, the heart of the pin is the drawing routine OnDraw that we will override so we can draw the entire pin ourselves.</P>
+
+<P>Each pin will be drawn in three pieces: the pin itself will be a circle (unless it is Pin 1, in which case it will be a square), we will draw a border rectangle around the pin, and then we will have an area either to the left or right of the pin where the pin's text will be drawn.</P>
+
+<P>To draw a pin, first we determine what color we will be using for the circle representing the actual pin. If the pin is disabled, we will color it gray. If it is enabled, then we determine what type it is. We'll color analog pins green, and we'll color digital pins either blue if they're low (off), or orange if they're high (on).</P>
+
+<P>Next we draw the actual pin using FillEllipse for all pins except when the PinNumber = 1, in which case we draw using FillRectangle. By drawing into a rectangle (pinBounds) instead of onto the control's bounds, we are able to set the pin's location (left or right) when the pin is created, and from that point on we can draw without being concerned with the pin placement.</P>
+
+<P>Next we draw the label, which, depending on the ShowValue property, will either be the pin's text or the pin's value.</P>
+
+<P>We use a similar tactic for drawing the text as we did the pin itself, but this time we must calculate both horizontal and vertical offsets because the DrawText method doesn't allow for a <I>TextAlign</I> parameter in the Microsoft .NET Compact Framework.</P>
+
+<P>Finally, we clean up the Brush object we used manually by calling its Dispose method.</P>
+
+<P>The entire OnDraw routine is shown in Listing 2.</P>
+
+<P class="label"><B>Listing 2. The OnDraw() Method</B></P>
+
+<PRE class="code">protected override void OnPaint(PaintEventArgs pe)
+{
+  Brush b;
+        // determine the Pin color
+  if(this.Enabled)
+  {
+    if(type == PinType.Digital)
+    {
+      // digital pins have different on/off color
+      b = new System.Drawing.SolidBrush(
+      this.Value == 0 ? (digitalOffColor) : (digitalOnColor));
+    }
+    else
+    {
+      // analog pin
+      b = new System.Drawing.SolidBrush(analogColor);
+    }
+  }
+  else
+  {
+    // disabled pin
+    b = new System.Drawing.SolidBrush(disabledColor);
+  }
+  // draw the pin
+  if(this.PinNumber == 1)
+    pe.Graphics.FillRectangle(b, pinBounds);
+  else
+    pe.Graphics.FillEllipse(b, pinBounds);
+  // draw a border Rectangle around the pin
+  pe.Graphics.DrawRectangle(new Pen(Color.Black), pinBorder);
+  // draw the text centered in the text bound
+  string drawstring;
+  // are we showing the Text or Value?
+  if(showValue)
+    drawstring = Convert.ToString(this.Value);
+  else
+    drawstring = this.Text;
+
+  // determine the actual string size
+  SizeF fs = pe.Graphics.MeasureString(
+        drawstring,
+        new Font(FontFamily.GenericMonospace, 8f,
+                 FontStyle.Regular));
+  // draw the string
+  pe.Graphics.DrawString(
+      drawstring,
+      new Font(FontFamily.GenericMonospace, 8f,
+      FontStyle.Regular),
+      new SolidBrush((showValue ? analogColor : Color.Black)),
+      textBounds.X + (textBounds.Width - fs.ToSize().Width) / 2,
+      textBounds.Y + (textBounds.Height - fs.ToSize().Height) /
+                 2);
+  // clean up the Brush
+  b.Dispose();
+  }
+}
+</PRE>
+
+<P>The final step to building the Pin class is to add the Click handler. For our Pin class, we'll use a custom EventArg so that we can pass both the pin's text and number to the event handler. To create a custom EventArg, we simply create a class that derives from the EventArgs class:</P>
+
+<PRE class="code">public class PinClickEventArgs : EventArgs
+{
+  // a PinClick passes the Pin Number and the Pin's Text
+  public int number;
+  public string text;
+  public PinClickEventArgs(int PinNumber, string PinText)
+  {
+    number = PinNumber;
+    text = PinText;
+  }
+}
+</PRE>
+
+<P>Next we add a delegate to our namespace:</P>
+
+<PRE class="code">public delegate void PinClickHandler(Pin source, PinClickEventArgs args);
+</PRE>
+
+<P>Now we need to add code to determine when a click occurs, and then raise an event. For our Pin class, we'll define a click logically as when we have both a MouseDown and a MouseUp event inside the pin's border rectangle&#151;so if the user taps the text portion of a pin, the Click event will not fire, but if they tap the area that represents the actual pin, it will.</P>
+
+<P>First we need a public PinClickHandler<B> </B>event, defined like this:</P>
+
+<PRE class="code">public event PinClickHandler PinClick;
+</PRE>
+
+<P>We also need a private Boolean variable that we'll set when the MouseDown<B> </B>event occurs, indicating that we are in mid-click. We will then check that variable on the MouseUp<B> </B>event to see if both events occurred in successive order:</P>
+
+<PRE class="code">bool midClick;
+</PRE>
+
+<P>Next we need to add the two event handlers for MouseDown<B> </B>and MouseUp, which are shown in Listing 3.</P>
+
+<P class="label"><B>Listing 3. Event Handlers for Implementing the PinClick event</B></P>
+
+<PRE class="code">private void PinMouseDown(object sender, MouseEventArgs e)
+{
+  if(!this.Enabled)
+    return;
+
+  // if the user clicked in the "pin" rectangle, start a click process
+  midClick = pinBorder.Contains(e.X, e.Y);
+}
+private void PinMouseUp(object sender, MouseEventArgs e)
+{
+  // if we had a mousedown and then up inside the "pin" rectangle,
+  // fire a click
+  if((midClick) &amp;&amp; (pinBorder.Contains(e.X, e.Y)))
+  {
+    if(PinClick != null)
+      PinClick(this, new PinClickEventArgs(
+               this.PinNumber, this.Text));
+  }
+}
+</PRE>
+
+<P>And lastly we need to implement the event handler for each pin. The pin base constructor is a good place to add these hooks and we can do so by simply adding the following code to our constructor:</P>
+
+<PRE class="code">this.MouseDown += new MouseEventHandler(PinMouseDown);
+this.MouseUp += new MouseEventHandler(PinMouseUp);
+</PRE>
+
+<H3 class="dtH1">Implementing the Pins Class</H3>
+
+<P>Once we have the Pin class, we can create a Pins class that derives from CollectionBase. The purpose of this class is to provide an indexer so we can easily add, remove and manipulate Pin classes within a collection.</P>
+
+<P class="label"><B>Listing 4. The Pins Class</B></P>
+
+<PRE class="code">public class Pins : CollectionBase
+{
+  public void Add(Pin PinToAdd)
+  {
+    List.Add(PinToAdd);
+  }
+  public void Remove(Pin PinToRemove)
+  {
+    List.Remove(PinToRemove);
+  }
+  // Indexer for Pins
+  public Pin this[byte Index]
+  {
+    get
+    {
+      return (Pin)List[Index];
+    }
+    set
+    {
+      List[Index] = value;
+    }
+  }
+  public Pins(){}
+}
+</PRE>
+
+<H3 class="dtH1">Implementing the Connector Class</H3>
+
+<P>Now that we've got a Pins class, we need to build a Connector class, which will be a simple wrapper class that holds a Pins class, marshals the PinClick<B> </B>events between each pin and the connector container, and has a constructor for the number of pins on the connector. Listing 5 shows the entire Connector class.</P>
+
+<P class="label"><B>Listing 5. The Connector Class</B></P>
+
+<PRE class="code">public class Connector : System.Windows.Forms.Control
+{
+  public event PinClickHandler PinClick;
+  protected Pins pins;
+  byte pincount;
+  public Connector(byte TotalPins)
+  {
+    pins = new Pins();
+    pincount = TotalPins;
+    InitializeComponent();
+  }
+  private void InitializeComponent()
+  {
+    for(int i = 0 ; i &lt; pincount ; i++)
+    {
+      Pin p = new Pin(PinType.Digital,
+            (PinAlignment)((i + 1) % 2), 0);
+      p.PinClick += new PinClickHandler(OnPinClick);
+      p.PinNumber = i + 1;
+      p.Text = Convert.ToString(i);
+      p.Top = (i / 2) * p.Height;
+      p.Left = (i % 2) * p.Width;
+      this.Pins.Add(p);
+      this.Controls.Add(p);
+    }
+    this.Width = Pins[0].Width * 2;
+    this.Height = Pins[0].Height * this.Pins.Count / 2;
+  }
+  public Pins Pins
+  {
+    set
+    {
+      pins = value;
+    }
+    get
+    {
+      return pins;
+    }
+  }
+  private void OnPinClick(Pin sender, PinClickEventArgs e)
+  {
+    // pass on the event
+    if(PinClick != null)
+    {
+      PinClick(sender, e);
+      if(sender.Type == PinType.Digital)
+        sender.Value = sender.Value == 0 ? 1 : 0;
+      else
+        sender.DisplayValue = !sender.DisplayValue;
+    }
+  }
+  protected override void Dispose( bool disposing )
+  {
+    base.Dispose( disposing );
+  }
+}
+</PRE>
+
+<P>The Connector's InitializeComponent method is where all of the contained Pin classes get created and added to the connector's controls and where the connector itself is sized. InitializeComponent is also the method that will eventually be used by the Form Designer to display our connector.</P>
+
+<H2 class="dtH1"><A NAME="customctrlssde_customconnector"></A>Building a Custom Connector</H2>
+
+<P>The Connector class itself is simple and does not modify any default pin settings. However, we can now build a custom connector and modify individual pins (for example making some analog or disabled) by deriving a new class from the Connector class.</P>
+
+<P>In the sample application I created two connectors for the Applied Data Systems' Graphics Master board, one for J2 and one for J7. The constructors set the pin types as well as the pin text based on the connector. Figure 2 is a screen shot of the sample application with both a J2 and J7 on the Form.</P>
+
+<P class="fig"><CODE><IMG SRC="customctrlssde_fig3.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 3. Form using two Connector objects</B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_832185', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting Up a View Matrix</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Setting Up a View Matrix"/>
+<MSHelp:RLTitle Title="Setting Up a View Matrix"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Setting_Up_a_View_Matrix"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts2_understand.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680317">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_setting_up_a_view_matrix"></A>Setting Up a View Matrix</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <A HREF="_wcesdk_dx3d_d3dxmatrixlookatlh.htm">D3DXMatrixLookAtLH</A> helper function creates a view matrix based on the camera location and a look-at point. They use the <A HREF="_wcesdk_dx3d_d3dxvec3cross.htm">D3DXVec3Cross</A>, <A HREF="_wcesdk_dx3d_d3dxvec3dot.htm">D3DXVec3Dot</A>, <A HREF="_wcesdk_dx3d_d3dxvec3normalize.htm">D3DXVec3Normalize</A>, and <A HREF="_wcesdk_dx3d_d3dxvec3subtract.htm">D3DXVec3Subtract</A> helper functions.</P>
+
+<P>The following code example, illustrates the <B>D3DXMatrixLookAtLH</B> function.</P>
+
+<PRE class="code">D3DXMATRIX* WINAPI D3DXMatrixLookAtLH
+    ( D3DXMATRIX *pOut, const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt,
+      const D3DXVECTOR3 *pUp )
+{
+#if DBG
+    if(!pOut || !pEye || !pAt || !pUp)
+        return NULL;
+#endif
+
+    D3DXVECTOR3 XAxis, YAxis, ZAxis;
+
+    // Get the z basis vector, which points straight ahead; the
+    // difference from the eye point to the look-at point. This is the 
+    // direction of the gaze (+z).
+    D3DXVec3Subtract(&amp;ZAxis, pAt, pEye);
+
+    // Normalize the z basis vector.
+    D3DXVec3Normalize(&amp;ZAxis, &amp;ZAxis);
+
+    // Compute the orthogonal axes from the cross product of the gaze 
+    // and the pUp vector.
+    D3DXVec3Cross(&amp;XAxis, pUp, &amp;ZAxis);
+    D3DXVec3Normalize(&amp;XAxis, &amp;XAxis);
+    D3DXVec3Cross(&amp;YAxis, &amp;ZAxis, &amp;XAxis);
+
+    // Start building the matrix. The first three rows contain the 
+    // basis vectors used to rotate the view to point at the look-at 
+    // point. The fourth row contains the translation values. 
+    // Rotations are still about the eyepoint.
+    pOut-&gt;_11 = XAxis.x;
+    pOut-&gt;_21 = XAxis.y;
+    pOut-&gt;_31 = XAxis.z;
+    pOut-&gt;_41 = -D3DXVec3Dot(&amp;XAxis, pEye);
+
+    pOut-&gt;_12 = YAxis.x;
+    pOut-&gt;_22 = YAxis.y;
+    pOut-&gt;_32 = YAxis.z;
+    pOut-&gt;_42 = -D3DXVec3Dot(&amp;YAxis, pEye);
+
+    pOut-&gt;_13 = ZAxis.x;
+    pOut-&gt;_23 = ZAxis.y;
+    pOut-&gt;_33 = ZAxis.z;
+    pOut-&gt;_43 = -D3DXVec3Dot(&amp;ZAxis, pEye);
+
+    pOut-&gt;_14 = 0.0f;
+    pOut-&gt;_24 = 0.0f;
+    pOut-&gt;_34 = 0.0f;
+    pOut-&gt;_44 = 1.0f;
+
+    return pOut;
+}</PRE>
+
+<P>As with the world transformation, you call the <A HREF="_wcesdk_dx3d_idirect3ddevice8__settransform.htm">IDirect3DDevice8::SetTransform</A> method to set the view transformation, specifying the D3DTS_VIEW flag in the first parameter. For more information, see <A HREF="_wcesdk_dx3d_setting_transformations.htm">Setting Transformations</A>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Performance Optimization Note&nbsp;</B>&nbsp;&nbsp;Microsoft&reg; Direct3D&reg; uses the world and view matrices that you set to configure several internal data structures. Each time you set a new world or view matrix, the system recalculates the associated internal structures. Setting these matrices frequently &#0151; for example, 20,000 times per frame &#0151; is computationally expensive. You can minimize the number of required calculations by concatenating your world and view matrices into a world-view matrix that you set as the world matrix, and then setting the view matrix to the identity. Keep cached copies of individual world and view matrices that you can modify, concatenate, and reset the world matrix as needed. For clarity, Direct3D samples rarely employ this optimization.</BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Setting%20Up%20a%20View%20Matrix&nbsp;(_wcesdk_dx3d_setting_up_a_view_matrix.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Property Sheets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using Property Sheets"/>
+<MSHelp:RLTitle Title="Using Property Sheets"/>
+<MSHelp:Keyword Index="A" Term="aftasUsingPropertySheets"/>
+<MSHelp:Keyword Index="K" Term="property sheets (MFC), using"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="develop.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709649">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aftasusingpropertysheets"></A>Using Property Sheets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>To use a property sheet in your application, complete the following steps.</P>
+
+<P class="labelproc"><B>To add a property sheet to an application</B>
+
+<OL type="1">
+	<LI>Create a dialog template resource for each property page. Keep in mind that the user may be switching from one page to another, so lay out each page as consistently as possible.
+<P>The dialog templates for all pages do not have to be the same size. The framework uses the size of the largest page to determine how much space to allocate in the property sheet for the property pages.
+
+<P>When you create the dialog template resource for a property page, you must specify the following styles in the Dialog Properties property sheet:
+
+<UL type="disc">
+	<LI>Set the <B>Caption </B>edit box on the <B>General </B>page to the text you want to appear in the tab for this page.</li>
+
+	<LI>Set the <B>Style </B>list box on the <B>Styles </B>page to <B>Child</B>.</li>
+
+	<LI>Set the <B>Border </B>list box on the <B>Styles </B>page to <B>Thin</B>.</li>
+
+	<LI>Ensure that the <B>Titlebar </B>check box on the <B>Styles </B>page is selected.</li>
+
+	<LI>Ensure that the <B>Disabled </B>check box on the <B>More Styles</B> page is selected.</li>
+</UL>
+</li>
+
+	<LI>Use ClassWizard to create a <B>CPropertyPage</B>-derived class corresponding to each property page dialog template. To do this, choose <B>ClassWizard </B>from the <B>View </B>menu while the focus is on a particular property page dialog box. Choose <B>CPropertyPage</B> as the base class in ClassWizard.</li>
+
+	<LI>Using ClassWizard, create member variables to hold the values for this property page. The process for adding member variables to a property page is exactly the same as adding member variables to a dialog box, because a property page is a specialized dialog box.</li>
+
+	<LI>Construct a <B>CPropertySheet</B> object in your source code. Usually, you construct the <B>CPropertySheet</B> object in the handler for the command that displays the property sheet. This object represents the entire property sheet. If you create a modal property sheet with the <B>DoModal </B>function, the framework supplies three command buttons by default: OK, Cancel, and Apply. The framework creates no command buttons for modeless property sheets created with the Create function. You do not need to derive a class from <B>CPropertySheet</B> unless you want to either add other controls (such as a preview window) or display a modeless property sheet. This step is necessary for modeless property sheets because they do not contain any default controls that could be used to close the property sheet.</li>
+
+	<LI>For each page to be added to the property sheet, do the following:
+<UL type="disc">
+	<LI>Construct one object for each <B>CPropertyPage</B>-derived class that you created using ClassWizard earlier in this process.</li>
+
+	<LI>Call <B>CPropertySheet::AddPage</B> for each page.</li>
+</UL>
+
+<P>Typically, the object that creates the <B>CPropertySheet</B> also creates the <B>CPropertyPage</B> objects in this step. However, if you implement a <B>CPropertySheet</B>-derived class, you can embed the <B>CPropertyPage</B> objects in the <B>CPropertySheet</B> object and call <B>AddPage</B> for each page from the <B>CPropertySheet</B>-derived class constructor. <B>AddPage</B> adds the <B>CPropertyPage</B> object to the property sheet’s list of pages but does not actually create the window for that page. Therefore, it is not necessary to wait until creation of the property sheet window to call <B>AddPage</B>; you can call <B>AddPage</B> from the property sheet’s constructor.
+
+<P>By default, if a property sheet has more tabs than will fit in a single row of the property sheet, the tabs will stack in multiple rows. To disable stacking, call <B>CPropertySheet::EnableStackedTabs</B> with the parameter set to <B>FALSE</B>. You must call <B>EnableStackedTabs</B> when you create the property sheet. 
+</li>
+
+	<LI>Call <B>CPropertySheet::DoModal</B> or <B>CPropertySheet::Create</B> to display the property sheet. Call <B>DoModal</B> to create a property sheet as a modal dialog box. Call <B>Create</B> to create the property sheet as a modeless dialog box.</li>
+
+	<LI>Exchange data between property pages and the owner of the property sheet. See <A HREF="afconexchangingdata.htm">Exchanging Data</A>.</li>
+</OL>
+
+<P>For an example of how to use property sheets, see the MFC sample <A HREF="afsampropdlg.htm">PROPDLG</A>.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709649', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

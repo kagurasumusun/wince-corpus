@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing Combine/Replace; Removing Duplicate Objects</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing Combine/Replace; Removing Duplicate Objects"/>
+<MSHelp:RLTitle Title="Implementing Combine/Replace; Removing Duplicate Objects"/>
+<MSHelp:Keyword Index="A" Term="ceconImplementingCombineReplaceRemovingDuplicateObjects"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, implementing Combine/Replace"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, removing duplicate objects"/>
+<MSHelp:Keyword Index="A" Term="ceconImplementingCombineReplaceRemovingDuplicateObjects"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: activesync_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759478">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconimplementingcombinereplaceremovingduplicateobjects"></A>Implementing Combine/Replace; Removing Duplicate Objects</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Whenever the ActiveSync manager loses the mapping between desktop and device objects, it must prompt the user to either combine the desktop and device data, or to replace the device data with the desktop data. The following list covers causes that might make Combine/Replace necessary:
+
+<UL type="disc">
+	<LI>The user synchronizes a device with existing data for the first time.</li>
+
+	<LI>The user deletes the device profile and reconnects the device to recreate a new partnership.</li>
+
+	<LI>The user chooses a desktop store different from the one used in the last synchronization.</li>
+
+	<LI>The user restores the device data from a backup file.</li>
+
+	<LI>The user performs a Replace operation on one desktop computer, then synchronizes the device with a second desktop computer.</li>
+
+	<LI>The persistent handles file is lost or corrupt.</li>
+</UL>
+
+<P>If the user chooses Combine, all objects on the device and the desktop will be marked as changed.</P>
+
+<P>If the user chooses Replace, all objects on the device are marked deleted and all desktop objects are marked changed.</P>
+
+<P>During the subsequent synchronization, all changed items are kept, all deleted objects removed.</P>
+
+<P>ActiveSync manager sets RSF_COMBINE in <B>REPLSETUP::dwFlags</B> when each object is to be synchronized. However, if the user cancels the synchronization or disconnects the device during the first synchronization, even<B> </B>though the process can continue properly<B> </B>in a subsequent synchronization, this flag will not be set again.</P>
+
+<P>Choosing Combine often creates duplicate objects. It is highly recommend that an ActiveSync provider implement the <B>IReplStore::RemoveDuplicates</B> method. Following synchronization, the ActiveSync provider should use this function to find duplicate objects in the desktop store and prompt the user to remove them.</P>
+
+<P>Once duplicate objects are found and removed, the ActiveSync provider can return control to ActiveSync manager, which in turn starts the enumeration of the store. It determines which desktop objects are to be deleted and sends commands to the device to remove the corresponding device objects.</P>
+
+<P>A better implementation would avoid duplicating objects in the first place. This is possible if an ActiveSync provider has an efficient way to check when a device object is identical to an existing desktop object. When data for a device object arrives at the desktop, <B>IReplObjHandler::SetPacket</B> is called. If the device object is identical to an existing desktop object the ActiveSync provider can discard the packets without creating a duplicate object.</P>
+
+<P>The provider also needs to tell the ActiveSync manager which desktop object the device object duplicated. It should set the RSF_DUPLICATED_OBJECT flag in the <B>REPLSETUP</B> structure that is passed to the <B>IReplObjHandler::Reset</B> method. Do not use the structure passed in <B>IReplObjHandler::Setup</B>. The provider should also set <B>REPLSETUP::hItem</B> to be the handle for the desktop object. All these operations are necessary so that ActiveSync manager can establish a mapping between the device and desktop objects.</P>
+
+<H2 class="dtH2">Setting Synchronization Options</H2>
+
+<P>The ActiveSync Options feature lets users select a service provider and configure provider-specific options.</P>
+
+<P>There is no standard user interface for setting options. The ActiveSync manager calls <B>IReplStore::ActivateDialog</B> so the ActiveSync provider can provide its own user interface. There are no requirements or limitations on the user interface &#0151; the developer is free to implement it in any way. If the ActiveSync provider does not support an option dialog, it should return E_NOTIMPL from <B>IReplStore::ActivateDialog</B>.</P>
+
+<P>An ActiveSync provider should call <B>IReplNotify::GetWindow</B> to get a window handle that can be used as parent window of the dialog box or message box in which provider options will be displayed.</P>
+
+<P>If the user changes an option that requires the ActiveSync provider to be reloaded (for example, changing the data store to be synchronized), <B>IReplStore::ActivateDialog</B> can return RERR_UNLOAD. ActiveSync then sets this provider in an error state. Synchronization for this provider will not proceed until the user disconnects and reconnects the device.</P>
+
+<P>If the user cancels the <B>Options</B> dialog box, <B>IReplStore::ActivateDialog</B> should return RERR_CANCEL.</P>
+
+<P>An ActiveSync provider can save its options in the registry or in the HREPLFLD handle. If saved in a HREPLFLD handle, the ActiveSync provider can set default option values in <B>IReplStore::GetFolderInfo</B>, where a new HREPLFLD needs to be created only if the pointer pointed at by phFolder is NULL. If the pointer is not NULL, the options are already loaded from the persistent ActiveSync data file.</P>
+
+<P>If the device is not yet connected when the user clicks on Options, <B>IReplStore::Initialize</B> might not be called as the first method into the store. The ActiveSync provider needs to make sure <B>IReplStore::GetStoreInfo</B> does not return an error even when <B>IReplStore::Initialize</B> has not yet been called. A number of methods can be called before <B>IReplStore::Initialize</B>; you should be sure each of these methods works properly, whether or not <B>Initialize</B> has been called.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20Combine%2FReplace;%20Removing%20Duplicate%20Objects&nbsp;(ceconimplementingcombinereplaceremovingduplicateobjects.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

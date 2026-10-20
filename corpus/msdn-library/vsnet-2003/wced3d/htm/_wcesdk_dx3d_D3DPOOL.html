@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DPOOL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DPOOL"/>
+<MSHelp:RLTitle Title="D3DPOOL"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_D3DPOOL"/>
+<MSHelp:Keyword Index="K" Term="D3DPOOL"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_D3DPOOL"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dx3d_enums.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_669280">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_d3dpool"></A>D3DPOOL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This enumeration defines the memory class that holds a resource's buffers. </P>
+
+<PRE class="syntax"><B>typedef enum _D3DPOOL {</B>
+<B>    D3DPOOL_DEFAULT                </B><I> = 0</I><B>,</B>
+<B>    D3DPOOL_MANAGED                </B><I> = 1</I><B>,</B>
+<B>    D3DPOOL_SYSTEMMEM              </B><I> = 2</I><B>,</B>
+<B>    D3DPOOL_FORCE_DWORD             </B><I>= 0x7fffffff</I>
+<B>} D3DPOOL;</B></PRE>
+
+<H4 class="dtH4">Constants</H4>
+
+<DL>
+<DT>D3DPOOL_DEFAULT</DT>
+
+<DD>Resources are placed in the memory pool most appropriate for the set of usages requested for the given resource. This is usually video memory, including both local video memory and AGP memory. The D3DPOOL_DEFAULT pool is separate from D3DPOOL_MANAGED and D3DPOOL_SYTEMMEM, and it specifies that the resource is placed in the preferred memory for device access. Note that D3DPOOL_DEFAULT never indicates that either D3DPOOL_MANAGED or D3DPOOL_SYSTEMMEM should be chosen as the memory pool type for this resource. Textures placed in the D3DPOOL_DEFAULT pool cannot be locked and are therefore not directly accessible. Instead, you must use functions such as <A HREF="_wcesdk_dx3d_idirect3ddevice8__copyrects.htm">IDirect3Ddevice8::CopyRects</A> and <A HREF="_wcesdk_dx3d_idirect3ddevice8__updatetexture.htm">IDirect3dDevice8::UpdateTexture</A>. D3DPOOL_MANAGED is probably a better choice than D3DPOOL_DEFAULT for most applications. Note that some textures created in driver proprietary pixel formats, unknown to the Direct3D runtime, can be locked. Also note that &#0151; unlike textures &#0151; swapchain back-buffers, render targets, vertex buffers, and index buffers can be locked.
+
+<P>When a device is lost, resources created using D3DPOOL_DEFAULT must be released before calling <A HREF="_wcesdk_dx3d_idirect3ddevice8__reset.htm">IDirect3DDevice8::Reset</A>. See <MSHelp:link keywords="_wcesdk_dx3d_Lost_Devices" TABINDEX="0">Lost Devices</MSHelp:link> for more information.
+</dd>
+
+<DT>D3DPOOL_MANAGED</DT>
+
+<DD>Resources are copied automatically to device-accessible memory as needed. Managed resources are backed by system memory and do not need to be recreated when a device is lost. See <MSHelp:link keywords="_wcesdk_dx3d_Managing_Resources" TABINDEX="0">Managing Resources</MSHelp:link> for more information. Managed resources can be locked. Only the system-memory copy is directly modified. Direct3D copies your changes to driver-accessible memory as needed.</dd>
+
+<DT>D3DPOOL_SYSTEMMEM</DT>
+
+<DD>Memory that is not typically accessible by the 3-D device. Consumes system RAM but does not reduce pageable RAM. These resources do not need to be recreated when a device is lost. Resources in this pool can be locked and can be used as the source for a <A HREF="_wcesdk_dx3d_idirect3ddevice8__copyrects.htm">IDirect3DDevice8::CopyRects</A> or <A HREF="_wcesdk_dx3d_idirect3ddevice8__updatetexture.htm">IDirect3DDevice8::UpdateTexture</A> operation to a memory resource created with D3DPOOL_DEFAULT.</dd>
+
+<DT>D3DPOOL_FORCE_DWORD</DT>
+
+<DD>Forces this enumeration to compile to 32 bits in size. This value is not used.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Pools cannot be mixed for different objects contained within one resource (mip levels in a mipmap), and once a pool is chosen it cannot be changed.</P>
+
+<P>Applications should use D3DPOOL_MANAGED for most static resources because this saves the application from having to deal with lost devices. (Managed resources are restored by the runtime.) This is especially beneficial for UMA systems. Dynamic texture resources can also be a good match for D3DPOOL_MANAGED, in spite of the high frequency at which they change. Other dynamic resources are not a good match for D3DPOOL_MANAGED. In fact, index buffers and vertex buffers cannot be created using D3DPOOL_MANAGED together with D3DUSAGE_DYNAMIC.</P>
+
+<P>For dynamic textures, it is sometimes desirable to use a pair of video memory and system memory textures, allocating the video memory using D3DPOOL_DEFAULT and the system memory using D3DPOOL_SYSTEMMEM. You can lock and modify the bits of the system memory texture using a locking method. Then you can update the video memory texture using <A HREF="_wcesdk_dx3d_idirect3ddevice8__updatetexture.htm">IDirect3DDevice8::UpdateTexture</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=31%>Versions</TH>
+<TH width=27%>Declared in</TH>
+<TH width=15%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=31%>.NET 4.0 and later</TD>
+<TD width=27%>D3d8types.h</TD>
+<TD width=15%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_dx3d_idirect3ddevice8__createindexbuffer.htm">IDirect3DDevice8::CreateIndexBuffer</A>, <A HREF="_wcesdk_dx3d_idirect3ddevice8__createtexture.htm">IDirect3DDevice8::CreateTexture</A>, <A HREF="_wcesdk_dx3d_idirect3ddevice8__createvertexbuffer.htm">IDirect3DDevice8::CreateVertexBuffer</A>, <A HREF="_wcesdk_dx3d_idirect3ddevice8__updatetexture.htm">IDirect3DDevice8::UpdateTexture</A>, <A HREF="_wcesdk_dx3d_d3dindexbuffer_desc.htm">D3DINDEXBUFFER_DESC</A>, <A HREF="_wcesdk_dx3d_d3dsurface_desc.htm">D3DSURFACE_DESC</A>, <A HREF="_wcesdk_dx3d_d3dvertexbuffer_desc.htm">D3DVERTEXBUFFER_DESC</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DPOOL&nbsp;(_wcesdk_dx3d_d3dpool.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

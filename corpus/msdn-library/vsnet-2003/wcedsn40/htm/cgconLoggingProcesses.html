@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing Process Logging</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing Process Logging"/>
+<MSHelp:RLTitle Title="Implementing Process Logging"/>
+<MSHelp:Keyword Index="A" Term="cgconLoggingProcesses"/>
+<MSHelp:Keyword Index="K" Term="logging, processes"/>
+<MSHelp:Keyword Index="K" Term="processes, logging"/>
+<MSHelp:Keyword Index="A" Term="cgconLoggingProcesses"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748563">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconloggingprocesses"></A>Implementing Process Logging</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Process logging is a technique that monitors the threads and processes running on a target device. You can use process logging while debugging your OS to determine which parts of the OS run the most often. </P>
+
+<P class="labelproc"><B>To implement process logging for your OS</B>
+
+<OL type="1">
+	<LI>Implement the logging functions in the OAL. The following table shows the logging functions that can be implemented in the OAL to support the logging feature. These functions are called by the kernel in response to the events that they are expected to catch. Note that the actual function name can be of your own choosing but must contain the same parameters. In step 2, you assign a callback pointer to the function implementation.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Function</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefLogProcessCreate" TABINDEX="0">LogProcessCreate</MSHelp:link></TD>
+<TD width=64%>Logs information when a process is created.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefLogProcessDelete" TABINDEX="0">LogProcessDelete</MSHelp:link></TD>
+<TD width=64%>Logs information when a process is terminated.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefLogThreadCreate" TABINDEX="0">LogThreadCreate</MSHelp:link></TD>
+<TD width=64%>Logs information when a thread is created.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefLogThreadDelete" TABINDEX="0">LogThreadDelete</MSHelp:link></TD>
+<TD width=64%>Logs information when a thread is terminated.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefLogThreadSwitch" TABINDEX="0">LogThreadSwitch</MSHelp:link></TD>
+<TD width=64%>Logs information when a thread is scheduled to run.</TD>
+</TR>
+</table></div>
+
+<P>To assist in the implementation process, Windows CE includes scheduling log functions that provide the names and addresses of processes and threads in your OS. You can use these functions to implement the logging functions. The following table shows the scheduling log functions. 
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Function</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefSchedLogGetProcessName" TABINDEX="0">SchedLogGetProcessName</MSHelp:link></TD>
+<TD width=64%>Retrieves the name of a process.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefSchedLogGetThreadProgramCounter" TABINDEX="0">SchedLogGetThreadProgramCounter</MSHelp:link></TD>
+<TD width=64%>Returns the application counter, module, and function names of a thread.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Implement the <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> function so that each global variable shown in the following table points to its associated function <div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Variable</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefpLogThreadCreate" TABINDEX="0">pLogThreadCreate</MSHelp:link></TD>
+<TD width=64%>Points to <MSHelp:link keywords="cmrefLogThreadCreate" TABINDEX="0">LogThreadCreate</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefpLogThreadDelete" TABINDEX="0">pLogThreadDelete</MSHelp:link></TD>
+<TD width=64%>Points to <MSHelp:link keywords="cmrefLogThreadDelete" TABINDEX="0">LogThreadDelete</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefpLogProcessCreate" TABINDEX="0">pLogProcessCreate</MSHelp:link></TD>
+<TD width=64%>Points to <MSHelp:link keywords="cmrefLogProcessCreate" TABINDEX="0">LogProcessCreate</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefpLogProcessDelete" TABINDEX="0">pLogProcessDelete</MSHelp:link></TD>
+<TD width=64%>Points to <MSHelp:link keywords="cmrefLogProcessDelete" TABINDEX="0">LogProcessDelete</MSHelp:link>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><MSHelp:link keywords="cmrefpLogThreadSwitch" TABINDEX="0">pLogThreadSwitch</MSHelp:link></TD>
+<TD width=64%>Points to <MSHelp:link keywords="cmrefLogThreadSwitch" TABINDEX="0">LogThreadSwitch</MSHelp:link>.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Set the SCHEDLOG environment variable and then build the platform.
+<P>This will include the SchedLog.lib library in your OS image. 
+</li>
+</OL>
+
+<P><A HREF="cmrefoeminit.htm">OEMInit</A> must be set up to point to the global variables to your logging functions. After starting, SchedLog.lib uses the pointers to the logging functions to perform the logging tasks.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcompletingoal.htm">Completing an OAL</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20Process%20Logging&nbsp;(cgconloggingprocesses.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

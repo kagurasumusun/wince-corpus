@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 2: Initializing Direct3D</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 2: Initializing Direct3D"/>
+<MSHelp:RLTitle Title="Step 2: Initializing Direct3D"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Step_2_Initializing_Direct3D"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: dx3d_concepts6_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680280">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_step_2_initializing_direct3d"></A>Step 2: Initializing Direct3D</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The CreateDevice sample project performs Microsoft&reg; Direct3D&reg; initialization in the <B>InitD3D</B> application-defined function called from <B>WinMain</B> after the window is created. After you create an application window, you are ready to initialize the Direct3D object that you will use to render the scene. This process includes creating a Direct3D object, setting the presentation parameters, and finally creating the Direct3D device.</P>
+
+<P>After creating a Direct3D object, you can use the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3D8__CreateDevice" TABINDEX="0">IDirect3D8::CreateDevice</MSHelp:link> method to create a Direct3D device. You can also use the Direct3D object to enumerate devices, types, modes, and so on. The code fragment below creates a Direct3D object with the <MSHelp:link keywords="_wcesdk_dx3d_Direct3DCreate8" TABINDEX="0">Direct3DCreate8</MSHelp:link> function.</P>
+
+<PRE class="code">if( NULL == ( g_pD3D = Direct3DCreate8( D3D_SDK_VERSION ) ) )
+    return E_FAIL;</PRE>
+
+<P>The only parameter passed to <B>Direct3DCreate8</B> should always be D3D_SDK_VERSION. This informs Direct3D that the correct header files are being used. This value is incremented whenever a header or other change would require applications to be rebuilt. If the version does not match, <B>Direct3DCreate8</B> will fail.</P>
+
+<P>The next step is to retrieve the current display mode by using the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3D8__GetAdapterDisplayMode" TABINDEX="0">IDirect3D8::GetAdapterDisplayMode</MSHelp:link> method as shown in the following code fragment.</P>
+
+<PRE class="code">D3DDISPLAYMODE d3ddm;
+if( FAILED( g_pD3D-&gt;GetAdapterDisplayMode( D3DADAPTER_DEFAULT, &amp;d3ddm ) ) )
+    return E_FAIL;</PRE>
+
+<P>The <B>Format</B> member of the <MSHelp:link keywords="_wcesdk_dx3d_D3DDISPLAYMODE" TABINDEX="0">D3DDISPLAYMODE</MSHelp:link> structure will be used when creating the Direct3D device. To run in windowed mode, the <B>Format</B> member is used to create a back buffer that matches the adapter's current mode.</P>
+
+<P>By filling in the fields of the <MSHelp:link keywords="_wcesdk_dx3d_D3DPRESENT_PARAMETERS" TABINDEX="0">D3DPRESENT_PARAMETERS</MSHelp:link> you can specify how you want your 3-D application to behave. The CreateDevice sample project sets its <B>Windowed</B> member to TRUE, its <B>SwapEffect</B><I> </I>member to D3DSWAPEFFECT_DISCARD, and its <B>BackBufferFormat</B> member to <B>d3ddm.Format</B>.</P>
+
+<PRE class="code">D3DPRESENT_PARAMETERS d3dpp; 
+ZeroMemory( &amp;d3dpp, sizeof(d3dpp) );
+d3dpp.Windowed   = TRUE;
+d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+d3dpp.BackBufferFormat = d3ddm.Format;</PRE>
+
+<P>The final step is to use the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3D8__CreateDevice" TABINDEX="0">IDirect3D8::CreateDevice</MSHelp:link> method to create the Direct3D device, as illustrated in the following code example. </P>
+
+<PRE class="code">if( FAILED( g_pD3D-&gt;CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+                                  D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+                                  &amp;d3dpp, &amp;g_pd3dDevice ) ) )</PRE>
+
+<P>The preceding code sample creates the device with the default adapter by using the D3DADAPTER_DEFAULT flag. In most cases, the system will have only a single adapter, unless it has multiple graphics hardware cards installed. Indicate that you prefer a hardware device over a software device by specifying D3DDEVTYPE_HAL for the <I>DeviceType</I> parameter. This code sample uses D3DCREATE_SOFTWARE_VERTEXPROCESSING to tell the system to use software vertex processing. Note that if you tell the system to use hardware vertex processing by specifying D3DCREATE_HARDWARE_VERTEXPROCESSING, you will see a significant performance gain on video cards that support hardware vertex processing.</P>
+
+<P>Now that the Direct3D has been initialized, the next step is to ensure that you have a mechanism to process system messages, as described in <A HREF="_wcesdk_dx3d_step_3_handling_system_messages.htm">Step 3: Handling System Messages</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%202:%20Initializing%20Direct3D&nbsp;(_wcesdk_dx3d_step_2_initializing_direct3d.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

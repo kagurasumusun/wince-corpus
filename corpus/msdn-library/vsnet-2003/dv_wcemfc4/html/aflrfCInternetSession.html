@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CInternetSession</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CInternetSession"/>
+<MSHelp:RLTitle Title="CInternetSession"/>
+<MSHelp:Keyword Index="A" Term="aflrfCInternetSession"/>
+<MSHelp:Keyword Index="K" Term="CInternetSession class"/>
+<MSHelp:Keyword Index="A" Term="aflrfCInternetSession"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cinetses.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_695910">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcinternetsession"></A>CInternetSession</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This class creates and initializes one or more simultaneous Internet sessions and, if necessary, describes your connection to a proxy server. If your Internet connection must be maintained for the duration of an application, you can create a <B>CInternetSession</B> member of the class <A HREF="aflrfcwinapp.htm"><B>CWinApp</B></A>.</P>
+
+<P>Once you have established an Internet session, you can call <A HREF="aflrfcinternetsessioncolcolopenurl.htm"><B>OpenURL</B></A>. <B>CInternetSession</B> then parses the URL for you by calling the global function <A HREF="aflrfafxparseurl.htm"><B>AfxParseURL</B></A>. Regardless of its protocol type, <B>CInternetSession</B> interprets the URL and manages it for you. It can handle requests for local files identified with the URL resource, file://. <B>OpenURL</B> will return a pointer to a <A HREF="aflrfcstdiofile.htm"><B>CStdioFile</B></A> object if the name you pass it is a local file. </P>
+
+<P>If you open a URL on an Internet server using <B>OpenURL</B>, you can read information from the site. If you want to perform service-specific actions on files located on a server, such as HTTP, you must establish the appropriate connection with that server. To open a particular kind of connection directly to a particular service, use the following method:
+
+<UL type="disc">
+	<LI><B>GetHttpConnection</B> to open a connection to an HTTP service.</li>
+</UL>
+
+<P><A HREF="aflrfcinternetsessioncolcolqueryoption.htm"><B>QueryOption</B></A> and <A HREF="aflrfcinternetsessioncolcolsetoption.htm"><B>SetOption</B></A> allow you to set the query options of your session, such as time-out values, number of retries, and so on. </P>
+
+<P>During an Internet session, a transaction such as a search or data download can take appreciable time. The user might want to continue working, or might want to have status information about the progress of the transaction. To handle this problem, <B>CInternetSession</B> provides for searches and data transfer to occur asychronously, allowing the user to perform other tasks while waiting for the transfer to complete. If you want to provide the user with status information, or if you want to handle any operations asynchronously, three conditions must be set:
+
+<UL type="disc">
+	<LI>In the constructor, <I>dwFlags</I> must include INTERNET_FLAG_ASYNC.</li>
+
+	<LI>In the constructor, <I>dwContext</I> must be set to a nonzero value.</li>
+
+	<LI>You must establish a call back function by calling <A HREF="aflrfcinternetsessioncolcolenablestatuscallback.htm"><B>EnableStatusCallback</B></A></li>
+</UL>
+
+<P>Use the overridable method <A HREF="aflrfcinternetsessioncolcolonstatuscallback.htm"><B>OnStatusCallback</B></A> to get status information on asynchronous retrieval. To use this overridable method, you must derive your own class from <B>CInternetSession</B>.</P>
+
+<P><B>CInternetSession</B> will throw an <A HREF="aflrfafxthrownotsupportedexception.htm"><B>AfxThrowNotSupportedException</B></A> for unsupported service types. Only the HTTP and FILE service types are currently supported.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>MFC for Windows CE supports the following<B> </B>methods of the <B>CInternetSession</B> class differently than the standard MFC:
+
+<UL type="disc">
+	<LI><A HREF="aflrfcinternetsessioncolcolsetoption.htm"><B>CInternetSession::SetOption</B></A></li>
+</UL>
+
+<P>In MFC for Windows CE, the <I>dwFlags</I> parameter of the <B>CInternetSession</B> constructor must be zero. In addition, the <B>CInternetSession</B> constructor does not support the INTERNET_FLAG_DONT_CACHE flag for the <I>dwAccessType </I>parameter<I>.</I></P>
+
+<P>In MFC for Windows CE, the <I>dwFlags</I> parameter of the <B>OpenURL</B> method does not support all of the flags in MFC that it does in standard MFC. In addition, the <I>dwFlags</I> parameter must include the INTERNET_FLAG_TRANSFER_ASCII flag or the INTERNET_FLAG_TRANSFER_BINARY flag, but not both.</P>
+
+<P>Since MFC for Windows CE does not support FTP or gopher connections, it does not support the following desktop methods:
+
+<UL type="disc">
+	<LI><B>CInternetSession::GetFTPConnection</B></li>
+
+	<LI><B>CInternetSession::GetGopherConnection</B></li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.10 and later<BR>
+<B>Header file:</B> Declared in Afxinet.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfinternetservicesclasses.htm">Internet Services Classes</A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_695910', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

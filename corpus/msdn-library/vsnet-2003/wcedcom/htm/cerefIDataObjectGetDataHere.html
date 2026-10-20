@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDataObject::GetDataHere</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDataObject::GetDataHere"/>
+<MSHelp:RLTitle Title="IDataObject::GetDataHere"/>
+<MSHelp:Keyword Index="A" Term="cerefIDataObjectGetDataHere"/>
+<MSHelp:Keyword Index="K" Term="IDataObject::GetDataHere"/>
+<MSHelp:Keyword Index="A" Term="cerefIDataObjectGetDataHere"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756310">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefidataobjectgetdatahere"></A>IDataObject::GetDataHere</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method is called by a data consumer to obtain data from a source data object. This method differs from the <A HREF="cerefidataobjectgetdata.htm">GetData</A> method in that the caller must allocate and free the specified storage medium.</P>
+
+<PRE class="syntax"><B>HRESULT GetDataHere(</B>
+<B>FORMATETC *</B><I>pFormatetc</I><B>,</B>  
+<B>STGMEDIUM *</B><I>pmedium</I>  
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pFormatetc </I></DT>
+
+<DD>[in] Pointer to the <A HREF="cerefformatetc.htm">FORMATETC</A> structure that defines the format, medium, and target device to use when passing the data. Only one medium can be specified in TYMED, and only the following TYMED values are valid: TYMED_STORAGE, TYMED_STREAM, TYMED_HGLOBAL, and TYMED_FILE. </dd>
+
+<DT><I>pmedium </I></DT>
+
+<DD>[in, out] Pointer to the <B>STGMEDIUM</B> structure that defines the storage medium containing the data being transferred. The medium must be allocated by the caller and filled in by <B>IDataObject::GetDataHere</B>. The caller must also free the medium. The implementation of this method must always supply a value of NULL for the <B>punkForRelease</B> member of the <B>STGMEDIUM</B> structure to which this parameter points. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method supports the standard return values E_INVALIDARG, E_UNEXPECTED, and E_OUTOFMEMORY, as well as the following values: 
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>Data was successfully retrieved and placed in the storage medium provided. </dd>
+
+<DT>DV_E_LINDEX </DT>
+
+<DD>Invalid value for <B>lindex</B>; currently, only -1 is supported. </dd>
+
+<DT>DV_E_FORMATETC </DT>
+
+<DD>Invalid value for <I>pFormatetc</I>. </dd>
+
+<DT>DV_E_TYMED </DT>
+
+<DD>Invalid <B>tymed</B> value. </dd>
+
+<DT>DV_E_DVASPECT </DT>
+
+<DD>Invalid <B>dwAspect</B> value. </dd>
+
+<DT>OLE_E_NOTRUNNING </DT>
+
+<DD>The object application is not running. </dd>
+
+<DT>STG_E_MEDIUMFULL </DT>
+
+<DD>The medium provided by the caller is not large enough to contain the data. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>IDataObject::GetDataHere</B> method is similar to <B>IDataObject::GetData</B>, except that the caller must both allocate and free the medium specified in <I>pmedium</I>. <B>GetDataHere</B> renders the data described in a <B>FORMATETC</B> structure and copies the data into that caller-provided <B>STGMEDIUM</B> structure. For example, if the medium is TYMED_HGLOBAL, this method cannot resize the medium or allocate a new <I>hGlobal</I>.</P>
+
+<P>Some media are not appropriate in a call to <B>GetDataHere</B>, including GDI types such as metafiles. The <B>GetDataHere</B> method cannot put data into a caller-provided metafile. In general, the only storage media it is necessary to support in this method are TYMED_ISTORAGE, TYMED_ISTREAM, and TYMED_FILE. </P>
+
+<P>When the transfer medium is a stream, OLE makes assumptions about where the data is being returned and the position of the stream's seek pointer. In a <B>GetData</B> call, the data returned is from stream position zero through just before the current seek pointer of the stream (that is, the position on exit). For <B>GetDataHere</B>, the data returned is from the stream position on entry through just before the position on exit. </P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Objidl.h</TD>
+<TD width=15%>Objidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefidataobjectgetdata.htm">IDataObject::GetData</A>, <A HREF="cerefformatetc.htm">FORMATETC</A>, <A HREF="cerefstgmedium.htm">STGMEDIUM</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDataObject::GetDataHere&nbsp;(cerefidataobjectgetdatahere.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

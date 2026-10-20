@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Application"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Application"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRApplication"/>
+<MSHelp:Keyword Index="K" Term="applications, using 1394 virtual VCR drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRApplication"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_vvcr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759083">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconieee1394virtualvcrapplication"></A>IEEE 1394 Virtual VCR Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Any application utilizing the virtual VCR driver will want to manage several issues. The following list shows the issues during initialization:
+
+<UL type="disc">
+	<LI>Utilize <A HREF="cxrefioctl_vvcr_query_state.htm">IOCTL_VVCR_QUERY_STATE</A> to determine which predefined plugs exist and what their handles are.</li>
+
+	<LI>Using the media type definition from IOCTL_VVCR_QUERY_STATE, determine what the appropriate streaming frame size is for the type by utilizing IOCTL_STREAM_GET_MEDIA_SIZE.</li>
+
+	<LI>For each plug returned by <A HREF="cxrefioctl_vvcr_query_state.htm">IOCTL_VVCR_QUERY_STATE</A>, using the direction and handle values, initiate streaming sessions against the plugs. The plugs from IOCTL_VVCR_QUERY_STATE are considered remote plugs in the context of <A HREF="cxrefioctl_stream_start_recv_session.htm">IOCTL_STREAM_START_RECV_SESSION</A> or <A HREF="cxrefioctl_stream_start_xmit_session.htm">IOCTL_STREAM_START_XMIT_SESSION</A>.</li>
+
+	<LI>Initiate an appropriate streaming buffering system for the application. Buffer streaming should be handled through the streaming filter driver using <A HREF="cxrefioctl_stream_attach_buffer.htm">IOCTL_STREAM_ATTACH_BUFFER</A>, <A HREF="cxrefioctl_stream_detach_buffer.htm">IOCTL_STREAM_DETACH_BUFFER</A>, and <A HREF="cxrefioctl_stream_query_buffer_state.htm">IOCTL_STREAM_QUERY_BUFFER_STATE</A>.</li>
+</UL>
+
+<P>The following list shows the issues during regular processing:
+
+<UL type="disc">
+	<LI>Keep at least one <A HREF="cxrefioctl_vvcr_event.htm">IOCTL_VVCR_EVENT</A> command always issued asynchronously to handle incoming events from the virtual VCR driver.</li>
+
+	<LI>If IOCTL_VVCR_EVENT notifies the application of a play, wind, or record request, internally change state and begin streaming to your output plug, if one was located in the results from IOCTL_VVCR_QUERY_STATE, streaming from your input plug, if one was located in the results form IOCTL_VVCR_QUERY_STATE, cease all streaming, or move the applications emulated tape by rewinding it, fast forwarding it, and so on.</li>
+
+	<LI>If IOCTL_VVCR_EVENT returns a plug state change event that introduces an unknown plug, as opposed to one previously known about from IOCTL_VVCR_QUERY_STATE, issue an IOCTL_VVCR_QUERY_STATE to determine any remaining details about that plug, and process it in whatever way desired.</li>
+
+	<LI>If IOCTL_VVCR_EVENT notifies the application of a request to scan to a different tape location, VVCR_EVENT_AbsoluteTrackNumber, VVCR_EVENT_TimeCode, VVCR_EVENT_RelativeTimeCounter, move the applications emulated tape appropriately.</li>
+
+	<LI>Regularly use <A HREF="cxrefioctl_vvcr_set_mechanism_position.htm">IOCTL_VVCR_SET_MECHANISM_POSITION</A> to update the driver on the current position of the emulated tape.</li>
+
+	<LI>Use <A HREF="cxrefioctl_vvcr_set_mechanism_state.htm">IOCTL_VVCR_SET_MECHANISM_STATE</A> whenever the application's emulated mechanism moves from state to state. From stopped to playing, or playing to rewinding, and so on.</li>
+
+	<LI>Ensure that while streaming, that whatever medium the application uses as permanent storage can handle the necessary throughput for the appropriate stream. During internal testing of this type of code, it was determined than many types of storage, particular types of hard drives with varying DMA characteristics, and file systems are incapable of managing the correct amount of sustained throughput, resulting in either overflow while recording, where incoming data was dropped as the hard drive could not write it fast enough, or underflow while playing, where the hard drive could not keep up and provide data fast enough to be transmitted on time.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394virtualvcrdrivers.htm">IEEE 1394 Virtual VCR Drivers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Virtual%20VCR%20Application&nbsp;(cxconieee1394virtualvcrapplication.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

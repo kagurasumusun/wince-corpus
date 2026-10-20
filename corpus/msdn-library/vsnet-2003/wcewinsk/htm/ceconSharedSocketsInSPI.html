@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Shared Sockets in the SPI</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Shared Sockets in the SPI"/>
+<MSHelp:RLTitle Title="Shared Sockets in the SPI"/>
+<MSHelp:Keyword Index="A" Term="ceconSharedSocketsInSPI"/>
+<MSHelp:Keyword Index="K" Term="descriptors, Winsock 2.2 SPI shared sockets"/>
+<MSHelp:Keyword Index="K" Term="shared sockets, Winsock 2.2 SPI"/>
+<MSHelp:Keyword Index="K" Term="Winsock 2.2 SPI, shared sockets"/>
+<MSHelp:Keyword Index="A" Term="ceconSharedSocketsInSPI"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: winsock2spi_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715697">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconsharedsocketsinspi"></A>Shared Sockets in the SPI</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Socket sharing between processes in Windows Sockets is implemented as follows. A source process calls <A HREF="cerefwspduplicatesocket.htm">WSPDuplicateSocket</A> to obtain a special <B>WSAPROTOCOL_INFOW</B> structure. It uses some interprocess communications (IPC) mechanism to pass the contents of this structure to a target process. The target process then uses the <B>WSAPROTOCOL_INFOW</B> structure in a call to <A HREF="cerefwspsocket.htm">WSPSocket</A>. The socket descriptor returned by this function will be an additional socket descriptor to an underlying socket, which thus becomes shared. </P>
+
+<P>It is the service provider's responsibility to perform whatever operations are needed in the source process context and to create a <B>WSAPROTOCOL_INFOW</B> structure that will be recognized when it subsequently appears as a parameter to <B>WSPSocket</B> in the target process. The <I>dwProviderReserved</I> parameter of the <B>WSAPROTOCOL_INFOW</B> structure is available for the service provider's use, and may be used to store any useful context information, including a duplicated handle. </P>
+
+<P>This mechanism is designed to be appropriate for both single-threaded Windows versions, such as Windows 3.1, and pre-emptive multithreaded Windows versions, such as Windows 95, Windows NT, and Windows&nbsp;2000. Note that sockets may be shared amongst threads in a given process without using the <A HREF="cerefwspduplicatesocket.htm">WSPDuplicateSocket</A> function, because a socket descriptor is valid in all of a process threads. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconwelcometowindowssockets2spi.htm">Winsock Service Provider Interface (SPI)</A></P>
+
+<P><A HREF="ceconmultiplehandlestosinglesocket.htm">Multiple Handles to a Single Socket</A></P>
+
+<P><A HREF="ceconreferencecounting.htm">Reference Counting</A></P>
+
+<P><A HREF="ceconprecedenceguidelines.htm">Precedence Guidelines</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Shared%20Sockets%20in%20the%20SPI&nbsp;(ceconsharedsocketsinspi.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Memory Initialization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Memory Initialization"/>
+<MSHelp:RLTitle Title="Memory Initialization"/>
+<MSHelp:Keyword Index="A" Term="cgconMemoryOperations"/>
+<MSHelp:Keyword Index="K" Term="memory, OAL memory operations"/>
+<MSHelp:Keyword Index="K" Term="OAL, memory operations"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, memory operations"/>
+<MSHelp:Keyword Index="A" Term="cgconMemoryOperations"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760680">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconmemoryoperations"></A>Memory Initialization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The kernel initializes any <MSHelp:link keywords="cmconMultipleXIPRegions" TABINDEX="0">Multiple XIP Regions</MSHelp:link> by reading <A HREF="cgrefoemromchain.htm">OEMRomChain</A>. The kernel checks RAM to determine if this is a cold boot or warm rest. </P>
+
+<P>If this is a cold boot, the following actions take place:
+
+<UL type="disc">
+	<LI>A debug string is sent. The following example code shows the debug string:
+<PRE class="code">"Old or invalid version stamp in kernel structures - starting clean!"</PRE>
+</li>
+
+	<LI>The kernel memory structures are set up to indicate a cold boot.
+<P>Filesys.exe will use this information later to determine if the object store is a cold or warm boot.
+</li>
+
+	<LI>Kernel calls <A HREF="cmrefoemgetextensiondram.htm">OEMGetExtensionDRAM</A>.
+<P>The kernel calls to determine if there is a second, noncontiguous memory section available to the kernel.
+</li>
+
+	<LI>If <A HREF="cmrefpnkenumextensiondram.htm">pNKEnumExtensionDRAM</A> is assigned a function pointer then this function is called, and not <B>OEMGetExtensionRAM</B> to add up to 16 memory sections.
+<P>The kernel can only address 512 MB of memory.
+</li>
+
+	<LI>Calculate the amount of memory that will be allocated to the object store.
+<P>This is first done by using the information in Config.bib called <MSHelp:link keywords="_wcepb_FSRAMPERCENT" TABINDEX="0">FSRAMPERCENT</MSHelp:link>.
+</li>
+
+	<LI><A HREF="cgrefpoemcalcfspages.htm">pOEMCalcFSPages</A> is called to provide an opportunity to override this value based upon information gathered at boot time.
+<P>Memory is divided between the program space and the object store and the object store can only be allocated a total of 256 MB of memory.
+</li>
+</UL>
+
+<P>If this is a warm boot the following events occur:
+
+<UL type="disc">
+	<LI>The previous memory configuration is used.</li>
+
+	<LI><MSHelp:link keywords="cmrefCacheSync" TABINDEX="0">CacheSync</MSHelp:link>(0).</li>
+
+	<LI>Zeros memory.</li>
+
+	<LI>Zero only the amount of memory specified by the OEM in <A HREF="cgrefdwoemcleanpages.htm">dwOEMCleanPages</A>.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcreatingstartupfunction.htm">Creating the StartUp Function</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Memory%20Initialization&nbsp;(cgconmemoryoperations.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

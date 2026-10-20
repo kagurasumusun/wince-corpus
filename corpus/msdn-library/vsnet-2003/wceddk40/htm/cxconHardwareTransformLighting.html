@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Hardware Transform and Lighting</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Hardware Transform and Lighting"/>
+<MSHelp:RLTitle Title="Hardware Transform and Lighting"/>
+<MSHelp:Keyword Index="A" Term="cxconHardwareTransformLighting"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="hardware, Direct3D hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="lighting%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="transformation%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="A" Term="cxconHardwareTransformLighting"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664980">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconhardwaretransformlighting"></A>Hardware Transform and Lighting</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Hardware acceleration of geometry operations, such as lighting and transformation, has been enabled in Windows CE .NET through the <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> DDI. At the API level, devices that support vertex operations in hardware will be enumerated separately from those that do rasterization only.</P>
+
+<P>The existing caps structures have been extended to indicate features that may be present on a hardware-accelerated transform device. For example, the number of supported light sources is set with the <B>dwNumLights</B> member of the <A HREF="cxrefd3dlightingcaps.htm">D3DLIGHTINGCAPS</A> structure that is reported with the <A HREF="cxrefd3ddevicedesc_v1.htm">D3DDEVICEDESC_V1</A> structure. </P>
+
+<P>Other flags of note are listed in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Flag</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>D3DDEVCAPS_CANBLTSYSTONONLOCAL</TD>
+<TD width=54%>The device supports a texture blit from system memory to nonlocal video memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>D3DDEVCAPS_DRAWPRIMITIVES2EX</TD>
+<TD width=54%>The driver is T&amp;L-compliant by supporting extended <B>D3dDrawPrimitives2</B> capabilities.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>D3DDEVCAPS_HWRASTERIZATION</TD>
+<TD width=54%>The device has hardware acceleration for rasterization.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>D3DDEVCAPS_HWTRANSFORMANDLIGHT</TD>
+<TD width=54%>The device can support both hardware transform and lighting in hardware.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>D3DDEVCAPS_SEPARATETEXTUREMEMORIES</TD>
+<TD width=54%>The device is texturing from separate memory pools.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>D3DTRANSFORMCAPS_CLIP</TD>
+<TD width=54%>The hardware can clip while transforming.</TD>
+</TR>
+</table></div>
+
+<P>Because the feature sets of hardware geometry accelerators may differ (such as the number of light sources supported), the caps structures indicate which subset of geometry operations this device performs. Zero is a valid value for the number of light sources supported, indicating that the hardware does transformations only. </P>
+
+<P>Only vertices that include a vertex normal are properly lit; for vertices that do not contain a normal, a dot product of 0 is employed in all lighting calculations. </P>
+
+<P>All the key state and data structures used by the software implementation of the geometry pipeline are made available at the DDI level. Some display cards will implement only lighting in hardware, and do transformation and clipping on the host processor. </P>
+
+<P>The following render state types pertain only to devices that accelerate transform and lighting:
+
+<UL type="disc">
+	<LI>D3DRENDERSTATE_AMBIENT</li>
+
+	<LI>D3DRENDERSTATE_AMBIENTMATERIALSOURCE</li>
+
+	<LI>D3DRENDERSTATE_CLIPPING</li>
+
+	<LI>D3DRENDERSTATE_CLIPPLANEENABLE</li>
+
+	<LI>D3DRENDERSTATE_COLORVERTEX</li>
+
+	<LI>D3DRENDERSTATE_DIFFUSEMATERIALSOURCE</li>
+
+	<LI>D3DRENDERSTATE_EMISSIVEMATERIALSOURCE</li>
+
+	<LI>D3DRENDERSTATE_EXTENTS</li>
+
+	<LI>D3DRENDERSTATE_FOGVERTEXMODE</li>
+
+	<LI>D3DRENDERSTATE_LIGHTING</li>
+
+	<LI>D3DRENDERSTATE_LOCALVIEWER</li>
+
+	<LI>D3DRENDERSTATE_NORMALIZENORMALS</li>
+
+	<LI>D3DRENDERSTATE_SPECULARMATERIALSOURCE</li>
+
+	<LI>D3DRENDERSTATE_VERTEXBLEND</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconadvanceddirect3ddrivertopics.htm">Advanced Direct3D Driver Topics</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Hardware%20Transform%20and%20Lighting&nbsp;(cxconhardwaretransformlighting.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

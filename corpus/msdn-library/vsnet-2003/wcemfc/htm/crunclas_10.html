@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CRuntimeClass::m_pfnGetBaseClass</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cruntimeclass_m_pfngetbaseclass"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cruntimeclass_m_pfngetbaseclass"></A>CRuntimeClass::m_pfnGetBaseClass</H1>
+
+<P>If your application uses the MFC library as a shared DLL, this data member points to a method that returns the <B>CRuntimeClass</B> structure of the base class.</P>
+
+<P>If your application statically links to the MFC for Windows CE library, see <A HREF="crunclas_8.htm"><B>m_pBaseClass</B></A>.</P>
+
+<PRE class=syntax><B>CRuntimeClass* (PASCAL*</B> <I>m_pfnGetBaseClass</I><B>)(</B> <B>)</B><I> </I></PRE>
+
+<H4>Example</H4>
+
+<PRE>// This example creates an object from the run-time class. It only
+// creates objects derived from CWnd.
+
+// We only want to create an object derived from CWnd.
+if (!pClass-&gt;IsDerivedFrom(RUNTIME_CLASS(CWnd)))
+{
+&nbsp;&nbsp;TRACE(_T("Error; Object %s is not derived from CWnd\n"));
+&nbsp;&nbsp;return;
+}
+
+// Get a pointer to the base class CRuntimeClass.
+#ifdef _AFXDLL
+&nbsp;&nbsp;CRuntimeClass* pBaseClass = pClass-&gt;m_pfnGetBaseClass();
+#else
+&nbsp;&nbsp;CRuntimeClass* pBaseClass = pClass-&gt;m_pBaseClass;
+#endif
+ASSERT(pBaseClass != NULL);
+
+TRACE(_T("Creating object %s derived from %s, with object size %d
+&nbsp;&nbsp;and schema %d\n"), pClass-&gt;m_lpszClassName,
+&nbsp;&nbsp;pBaseClass-&gt;m_lpszClassName, pClass-&gt;m_nObjectSize,
+&nbsp;&nbsp;pClass-&gt;m_wSchema);
+
+// Create the object.
+CObject* pObject = pClass-&gt;CreateObject();
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Drawing in a View</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Drawing in a View"/>
+<MSHelp:RLTitle Title="Drawing in a View"/>
+<MSHelp:Keyword Index="A" Term="afgrfDrawinginaView"/>
+<MSHelp:Keyword Index="K" Term="drawing in views (MFC)"/>
+<MSHelp:Keyword Index="K" Term="views (MFC), drawing in"/>
+<MSHelp:Keyword Index="A" Term="afgrfDrawinginaView"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="develop.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709639">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="afgrfdrawinginaview"></A>Drawing in a View</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>Nearly all drawing in your application occurs in the <B>OnDraw</B> member function of the view. You must override <B>OnDraw</B> in your view class (except for mouse drawing). Your <B>OnDraw</B> override: 
+
+<OL type="1">
+	<LI>Gets data by calling the document member functions you provide.</li>
+
+	<LI>Displays the data by calling member functions of a device-context object that the framework passes to <B>OnDraw</B>. </li>
+</OL>
+
+<P>When data in a document changes in some way, the view must be redrawn to reflect the changes. Typically, this happens when the user makes a change through a view on the document. In this case, the view calls the <B>UpdateAllViews</B> member function of the document to notify all views on the same document to update themselves. <B>UpdateAllViews</B> calls the <B>OnUpdate</B> member function of each view. The default implementation of <B>OnUpdate</B> invalidates the entire client area of the view. You can override <B>OnUpdate</B> to invalidate only those regions of the client area that map to the modified portions of the document.</P>
+
+<P>The <B>UpdateAllViews</B> member function of class <B>CDocument</B> and the <B>OnUpdate</B> member function of class <B>CView</B> let you pass information describing what parts of the document were modified. This "hint" mechanism lets you limit the area that the view must redraw. <B>OnUpdate</B> takes two "hint" arguments. The first, <I>lHint</I>, of type <B>LPARAM</B>, lets you pass any data you like, while the second, <I>pHint</I>, of type <B>CObject</B>*, lets you pass a pointer to any object derived from <B>CObject</B>. </P>
+
+<P>When a view becomes invalid, Windows sends it a WM_PAINT message. The <B>OnPaint</B> handler function of the view responds to the message by creating a device-context object of class <B>CPaintDC</B> and calls the <B>OnDraw</B> member function of the view. You do not normally have to write an overriding <B>OnPaint</B> handler function.</P>
+
+<P>A device context is a Windows data structure that contains information about the drawing attributes of a device such as a display or a printer. All drawing calls are made through a device-context object. For drawing on the screen, <B>OnDraw</B> is passed a <B>CPaintDC</B> object. For drawing on a printer, it is passed a <B>CDC</B> object set up for the current printer. </P>
+
+<P>Your code for drawing in the view first retrieves a pointer to the document, then makes drawing calls through the device context. The following simple <B>OnDraw</B> example illustrates the process:</P>
+
+<PRE class="code">void CMyView::OnDraw( CDC* pDC )
+{
+    CMyDoc* pDoc = GetDocument();
+    CString s = pDoc-&gt;GetData();   // Returns a CString
+    CRect rect;
+
+    GetClientRect( &amp;rect );
+    pDC-&gt;SetTextAlign( TA_BASELINE | TA_CENTER );
+    pDC-&gt;TextOut( rect.right / 2, rect.bottom / 2, 
+                  s, s.GetLength() );
+}</PRE>
+
+<P>In this example, you would define the <B>GetData</B> function as a member of your derived document class.</P>
+
+<P>The example prints whatever string it gets from the document, centered in the view. If the <B>OnDraw</B> call is for screen drawing, the <B>CDC</B> object passed in <I>pDC</I> is a <B>CPaintDC</B> whose constructor has already called <B>BeginPaint</B>. Calls to drawing functions are made through the device-context pointer.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709639', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Debug Zone Registration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Debug Zone Registration"/>
+<MSHelp:RLTitle Title="Debug Zone Registration"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Registering_Debug_Zones"/>
+<MSHelp:Keyword Index="K" Term="applications, debug zone registration"/>
+<MSHelp:Keyword Index="K" Term="debug zones, registering"/>
+<MSHelp:Keyword Index="K" Term="debugging, debug zone registration"/>
+<MSHelp:Keyword Index="K" Term="registering, debug zones"/>
+<MSHelp:Keyword Index="K" Term="registers, registering debug zones"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Registering_Debug_Zones"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: debugging_platform.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_676608">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_registering_debug_zones"></A>Debug Zone Registration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>After declaring the <B>DBGPARAM</B> structure, call the <B>DEBUGREGISTER</B> macro to register the structure with the debugging subsystem. The syntax for this macro is <B>DEBUGREGISTER(</B><I>hMod </I>| <B>NULL)</B>. If you are debugging a .dll file, call <B>DEBUGREGISTER</B> with the module name. If you are debugging an .exe file, call <B>DEBUGREGISTER </B>with <B>NULL</B>. </P>
+
+<P>The <B>DEBUGREGISTER</B> macro calls <B>RegisterDbgZones</B>. On the development workstation, <B>RegisterDbgZones</B> reads the registry key <B>HKEY_CURRENT_USER\Pegasus\Zones</B> and searches for the module name, specified in the <B>DBGPARAM</B> macro. If the key exists, <B>RegisterDbgZones</B> calls <B>SetDbgZone</B>, which uses the stored debug zone mask to update the debug zone name in the <B>DBGPARAM</B> macro.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You can also set the initial debug zones of a specific module by modifying the registry of the target device. The OS checks the registry of the target device for values that can override the default value of the zone mask. Specifically, the OS checks the <B>HKEY_LOCAL_MACHINE\DebugZones</B> registry key on the target device for a registry value with the name of the debug zone and a <B>DWORD</B> value equal to a zone mask. When you set the registry value on the target device, use the same registry value that you use on the development workstation. If you set the registry value in the registries of both the development workstation and the target device, the value on the development workstation takes precedence over the value on the target device. The OS queries the value on the target device when the development workstation cannot be reached or when the registry on the development workstation does not contain a value for the module.</BLOCKQUOTE>
+
+<P>In the following code example, the application's header file includes an <B>ifdef</B>-<B>else</B>-<B>endif</B> conditional block to define for both retail and debug build conditions. This block associates the previously defined debug zones with their corresponding macro names to be used with the <B>DEBUGMSG</B> conditional macro in the source code.</P>
+
+<PRE class="code">#ifdef DEBUG
+// These macros are used as the first arg to DEBUGMSG.
+  #define ZONE_INIT       DEBUGZONE(ZONEID_INIT)
+  #define ZONE_SECOND     DEBUGZONE(ZONEID_SECOND)
+  #define ZONE_EXCEPT     DEBUGZONE(ZONEID_EXCEPT)
+  .
+  .
+  .
+  #define ZONE_ERROR      DEBUGZONE(ZONEID_ERROR)
+#else
+  // For release configurations, these conditionals are always 0.
+  #define ZONE_INIT       0
+  #define ZONE_SECOND     0
+  #define ZONE_EXCEPT     0
+  .
+  .
+  .
+  #define ZONE_ERROR      0
+
+#endif</PRE>
+
+<P>The following code example shows how to register the <B>DBGPARAM</B> structure and define the <B>DEBUGMSG</B> and <B>RETAILMSG</B> macros:</P>
+
+<PRE class="code">// First, register with the debug subsystem.  For a process, the 
+// parameter is NULL.  For a DLL, the parameter is hModule.
+DEBUGREGISTER(NULL);
+
+// This message shows up in debug configurations only, if ZONE_INIT is turned on.
+DEBUGMSG (ZONE_INIT, (TEXT("DBGSAMP1 starting 1\n")));
+
+// This message shows up in both debug and release configurations.
+RETAILMSG(1, (TEXT("DBGSAMP1 starting 2\n")));
+</PRE>
+
+<P>The following code example shows another example of using debug zones.</P>
+
+<PRE class="code">// Declare a DBGPARAM structure and give names to all used zones.
+DBGPARAM dpCurSettings = { L"foodll", {
+  L"Info",      L"Validate",    L"bar",      L"random",
+  L"Undefined",  L"Undefined",  L"Undefined",  L"Undefined",
+  L"Undefined",  L"Undefined",  L"Undefined",  L"Undefined",
+  L"Undefined",  L"Undefined",  L"Undefined",  L"Undefined" },
+  0x00000000 };
+
+// Associate bits with a zone. These should correlate 
+// to the order of the text strings (zone names) above.
+#define ZONE_INFO    DEBUGZONE(0)
+#define ZONE_VALIDATE  DEBUGZONE(1)
+#define ZONE_BAR      DEBUGZONE(2)
+#define ZONE_RANDOM    DEBUGZONE(3)
+
+// Register : Assume that this is a DLL.
+// A process would do the same in its libmain.
+BOOL DllEntry (HANDLE hinstDLL, DWORD fdwReason, LPVOID lpv) {
+  if ( fdwReason == DLL_PROCESS_ATTACH ) {
+    DEBUGREGISTER(hinstDLL);
+  }
+...
+}
+
+// Use the defined zone in debug messages.
+DEBUGMSG (ZONE_INFO, (TEXT("This is a sample message.")));
+
+// or use a zone as a Boolean operator to turn execution of some code on and off.
+if (ZONE_VALIDATE) {
+  // validate data ...</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_debugging_an_application.htm">Application Debugging</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Debug%20Zone%20Registration&nbsp;(_wcepb_registering_debug_zones.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

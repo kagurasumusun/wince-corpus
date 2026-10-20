@@ -1,0 +1,899 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building XML Web Services in Native Code for Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building XML Web Services in Native Code for Windows CE .NET"/>
+<MSHelp:RLTitle Title="Building XML Web Services in Native Code for Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="buildxml"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, native code"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, XML Web Services"/>
+<MSHelp:Keyword Index="K" Term="XML Web Services, building for Windows CE .NET"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenet"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="kbSOAP"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbSOAP"/>
+<MSHelp:Attr Name="Technology" Value="WebServices"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbWebServices"/>
+<MSHelp:Attr Name="Technology" Value="XML"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbXML"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn how to build an XML Web Service for WindowsCE .NET using native code."><meta name="keywords" content="Windwos CE .NET, XML Web Service, Simple Object Access Porotcol (SOAP), SOAP, Web Services Description Language (WSDL), WSDL, Web Services Meta Language (WSML), WSML, native code"><META name="rtfFileName" content="buildxml.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Mike Hall, Chris Gray">
+<META NAME="Date" CONTENT="2002-09-13">
+<META NAME="msdnID" CONTENT="_836439">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="buildxml"></A>Building XML Web Services in Native Code for Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Mike Hall<BR>
+Microsoft Corporation</P>
+
+<P>September 2002</P>
+
+<P>Applies To:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;XML Web Services<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Simple Object Access Protocol<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Web Services Description Language<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Web Services Meta Language</P>
+
+<P><B>Summary:</B> Learn how to build an XML Web Service for Windows&nbsp;CE .NET using native code. (27 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#buildxml_topic1">Introduction</A> <BR>
+<A HREF="#buildxml_topic2">Windows CE and SOAP</A> <BR>
+<A HREF="#buildxml_topic3">Implementing XML Web Services</A> <BR>
+<A HREF="#buildxml_topic4">Conclusion</A> <BR>
+<A HREF="#buildxml_topic5">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="buildxml_topic1"></A>Introduction</H2>
+
+<P>Web Services are created using a set of industry standard protocols, which include SOAP, Hypertext Transfer Protocol (HTTP), Web Services Description Language (WSDL), and Extensible Markup Language (XML) that make it easy for systems to communicate without prior knowledge of each other. This, in many respects, is very similar to the way in which the Internet works today. Take a Web browser as an example. A Web browser does not need have information about the operating system being used by an Internet server; the client and server both use the same underlying HTTP protocol. The Web browser experience is all about presentation of data from a remote system whereas XML Web Services are about how arbitrary computing systems talk to each other based on an open set of protocols, which can be implemented on any device, any operating system, any language, and any object model. XML Web Services therefore allow for broad interoperability regardless of the underlying technologies. Web Services also provide a loosely coupled programming model; rather than a distributed object model using complex runtimes at each end, Web Services use a message-based system. If you post a message and the system at the other end is up and running, then it will get back to you.</P>
+
+<P>Stand-alone, monolithic applications are difficult to customize or extend. The use of Component Object Model (COM)/DCOM and other distributed object technologies made customization and extension of applications simpler but also carries its own problems. Configuring DCOM to run across firewalls, for example, can be an interesting exercise. Embedded systems are becoming smarter and are increasingly shipping with network connectivity. This being the case, it would be extremely useful to have the ability to remotely configure or monitor an embedded device, have an embedded system integrate with other systems on a local network, or have the global networking infrastructure known as the Internet. Web Services use HTTP for communication, the lowest common denominator of communication technologies for Internet-based devices. This makes it simple to create a Web service client or server running on Microsoft&#174; Windows&#174;<CODE>&nbsp;</CODE>CE .NET.</P>
+
+<P>This paper describes the tools and technologies used to build an XML Web Service for Windows&nbsp;CE .NET&#151;the examples used in this paper are created by using native code, generated with Microsoft eMbedded Visual C++&#174; 4.0.</P>
+
+<P>Windows&nbsp;CE .NET does not support the creation of XML Web Services by using the .NET Compact Framework. The only option for creating XML Web Services for Windows&nbsp;CE .NET is to use native code. Applications written by using the .NET Compact Framework can, however, consume XML Web Services.</P>
+
+<H2 class="dtH1"><A NAME="buildxml_topic2"></A>Windows CE and SOAP</H2>
+
+<P>Before you get started with a description of the process of building a platform which supports XML Web Services, it may be useful to take a look at the Windows&nbsp;CE .NET components which are required to support XML Web Services, and the way in which XML Web Services are supported on Windows&nbsp;CE .NET.</P>
+
+<H3 class="dtH1">Required Components</H3>
+
+<P>In order to support XML Web Services, your Windows&nbsp;CE .NET project must contain the following components: HTTPD server, COM (in process), SOAP Server, and optionally Active Template Library (ATL). The samples used in this paper will be using ATL. Note that Windows&nbsp;CE .NET can support XML Web Services in devices that have a user interface and also on headless devices. Adding support for XML Web Services may be an interesting option for remotely configuring or querying a device. The following table shows the size of the required components.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Component</TH>
+<TH width=73%>Size</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>XML/HTTP</TD>
+<TD width=73%>15 KB (this is pulled in by the SOAP Server component</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>COM (inproc)</TD>
+<TD width=73%>111 KB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>SOAP Server</TD>
+<TD width=73%>270 KB&#151;this includes HTTPD server and XML/HTTP</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>ATL</TD>
+<TD width=73%>44 KB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>HTTPD Server</TD>
+<TD width=73%>61KB&#151;this is pulled in by the SOAP Server component</TD>
+</TR>
+</table></div>
+
+<H3 class="dtH1">Windows CE .NET&#151;SOAP Support</H3>
+
+<P>Windows&nbsp;CE .NET includes SOAP Toolkit version 2.2 functionality, which is directly equivalent to the functionality in the Windows Desktop SOAP Toolkit 2.2. For more information about the Windows Desktop SOAP Toolkit and Web Services in general, refer to the MSDN <A HREF="http://msdn.microsoft.com/library/default.asp?url=/nhp/Default.asp?contentid=28000442">Web Services</A> Web site.</P>
+
+<P>The compatibility between the desktop SOAP toolkit and Windows&nbsp;CE .NET support for SOAP makes it possible to develop and test SOAP servers on the desktop, and then port the code with minimal changes to Windows&nbsp;CE .NET. For the purposes of this document, we will be building the SOAP server code using eMbedded Visual C++ 4.0.</P>
+
+<P>The SOAP server is simply a COM object, perhaps created by using the ATL COM AppWizard within eMbedded Visual C++ 4.0. There is some additional information needed to correctly invoke the functions exposed by the COM object and to return an appropriate XML packet to the client application, which is handled by the Windows&nbsp;CE .NET SOAP Server. The server component can be found in the following location within the Platform Builder Catalog: Applications and Services Development | SOAP Toolkit | Server.</P>
+
+<P>You can use the Platform Builder dependency viewer to determine which additional components are needed by the SOAP Server on our platform, which include HTTPD, XML, and in-process COM. By selecting the SOAP Server component from the catalog, the required components will be added to your platform.</P>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig01.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1.</B></P>
+
+<P>There are a number of components involved in making a call from a Microsoft Visual C#&#8482; Visual Studio&#174; .NET application. Go through the process so that you understand how to go from the client application to the COM object running on Windows&nbsp;CE .NET and back again to the C# client application. XML Web Services and SOAP requests typically use HTTP as their transport. Start from the client application making the HTTP POST.</P>
+
+<P>The client application makes an HTTP POST to the Windows&nbsp;CE .NET HTTPD Web Server. The HTTP packet will contain the name and location of the server side WSDL file. You can clearly see this by setting a breakpoint in some of the Windows&nbsp;CE .NET shared source. Take a look at <B>Applications and Services Development | SOAP Toolkit | Server | Directory for SOAP ISAPI | SOAPISAP.CPP</B> in your project workspace (note that you must have a shared source installed to open this file), set a breakpoint in the function <B>ProcessRequest</B>, line 646, then, using the watch window, take a look at the variable pECB-&gt;lpszPathTranslated. In this case, it contains the following: <code class="ce">\windows\www\wwwpub\MyWebService.wsdl</code></P>
+
+<P>There must be a mapping between the incoming HTTP POST and the SOAP Server components, which is handled by the HTTPD Server, Script Map, and registry entries. Take a look in the Windows&nbsp;CE .NET device registry at HKLM\Comm\HTTPD\ScriptMap. You will notice two entries (see the image below), one for WSDL and one for WSML. Both are linked to SOAPISAP.DLL. This is the DLL that is responsible for unpacking the incoming XML packet and verifying the content of the 'function call' parameters, invoking the correct COM object (hence the need for the Inprocess COM component in your platform), calling the appropriate COM object function, and creating the XML packet to be sent back to the client application.</P>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig02.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2.</B></P>
+
+<H3 class="dtH1">Web Services Description Language (WSDL) files</H3>
+
+<P>The Web Services Description Language (WSDL) is an XML-based language for describing the network services offered by the server. You use WSDL to create a file that identifies the services provided by the server and the set of operations within each service that the server supports. For each of the operations, the WSDL file also describes the message format that the client must follow in requesting an operation.</P>
+
+<P>The WSDL document is like a contract between the client and server. The server is designed to provide certain services only if the client sends a properly formatted SOAP request message.</P>
+
+<P>To illustrate, suppose a WSDL file defines a service called <B>StockQuoteService</B>, which describes operations such as <B>GetLastTradePrice</B>, <B>GetLowestPriceOfTheDay</B>, and <B>GetHighestPriceOfTheDay</B>. You place this WSDL file on the server. A client who wishes to send a SOAP request to this service obtains a copy of this WSDL file from the server, the client then uses the information in this file to format a SOAP request message. The client sends this request to the server. The server executes the requested operation and sends the resulting stock price back to the client as a SOAP response message.</P>
+
+<H3 class="dtH1">Web Services Meta Language (WSML) files</H3>
+
+<P>In addition to creating a WSDL file describing the services and operations on the server, you also must create a Web Services Meta Language (WSML) file on the server.</P>
+
+<P>A WSML file provides information that maps the operations of a service (as described in the WSDL file) to specific methods in the COM object. The WSML file determines which COM object to load in order to service the request for each operation. It should be noted that the object state is not maintained between successive operation invocations that map to method calls on the same object.</P>
+
+<P>Here is a sample WSML file in which we can clearly see the PROGID for the COM object "MyWebService.TempSvr.1", the mapping between the functions, and the appropriate Dispatch ID. The <B>callIndex</B> attribute provides the parameter number (first parameter is "1", second parameter is "2", and so on). A callIndex value of "-1" identifies the parameter as the return parameter.</P>
+
+<PRE class="code">&lt;?xml version='1.0' encoding='UTF-8' ?&gt; 
+ &lt;!-- Generated 07/22/02 by Microsoft SOAP Toolkit WSDL File Generator,
+Version 1.02.814.0 --&gt; 
+&lt;servicemapping name='MyWebService'&gt;
+  &lt;service name='MyWebService'&gt;
+    &lt;using PROGID='MyWebService.TempSvr.1' cachable='0' ID='TempSvrObject'
+/&gt;
+    &lt;port name='TempSvrSoapPort'&gt;
+      &lt;operation name='GetString'&gt;
+        &lt;execute uses='TempSvrObject' method='GetString' dispID='2'&gt;
+          &lt;parameter callIndex='-1' name='retval' elementName='Result' /&gt;
+        &lt;/execute&gt;
+      &lt;/operation&gt;
+      &lt;operation name='GetInt'&gt;
+        &lt;execute uses='TempSvrObject' method='GetInt' dispID='1'&gt;
+          &lt;parameter callIndex='-1' name='retval' elementName='Result' /&gt;
+        &lt;/execute&gt;
+      &lt;/operation&gt;
+    &lt;/port&gt;
+  &lt;/service&gt;
+&lt;/servicemapping&gt;
+</PRE>
+
+<P>That completes the process. You build a Windows&nbsp;CE .NET operating system image, which contains support for HTTPD, SOAP Server, XML, ATL, and inproc COM objects. We use the eMbedded Visual C++ 4.0 ATL/COM AppWizard to create a COM object, which contains the functions we want to expose from our Web Service. You generate the appropriate WSDL and WSML files (more on how to do this later in the article). You also must register your COM object. This can be done at runtime or by including the appropriate registry entries into our operating system image at build time. You also must include the WSDL and WSML files in your operating system image.</P>
+
+<P>In the following section, take a look at how to build the ATL/COM object, how to generate the WSDL and WSML files and how to put everything together to call the Web Service from a C# Visual Studio .NET application.</P>
+
+<H2 class="dtH1"><A NAME="buildxml_topic3"></A>Implementing XML Web Services</H2>
+
+<P>There are a number of steps involved in putting the solution together, which are as follows:
+
+<OL type="1">
+	<LI>Build a Windows&nbsp;CE .NET operating system image that contains the appropriate components.</li>
+
+	<LI>Export a Software Development Kit in order to use eMbedded Visual C++ 4.0 to create an ATL/COM object.</li>
+
+	<LI>Use eMbedded Visual C++ to create our ATL/COM object.</li>
+
+	<LI>Generate the WSDL and WSML files.</li>
+
+	<LI>Register the ATL/COM object on the Windows&nbsp;CE .NET device and upload the WSDL and WSML files.</li>
+
+	<LI>Create the C# Visual Studio .NET application to consume our Web Service.</li>
+</OL>
+
+<P>In this example, you will be using the Windows&nbsp;CE .NET 4.1 Emulator as your target. The steps within this document are also valid for other reference platforms.</P>
+
+<H3 class="dtH1">Building the Windows&nbsp;CE .NET Operating System Image</H3>
+
+<P>For this paper, you will be using the <I>Internet Appliance</I> configuration and the Windows&nbsp;CE .NET 4.1 Emulator as your target reference platform. Targeting another reference platform requires only minor adjustments to the steps outlined in this document.</P>
+
+<P>Here are the steps needed to create the initial platform:
+
+<OL type="1">
+	<LI>Launch the Platform Builder application.</li>
+
+	<LI>On the <B>File</B> menu, click <B>New Platform</B>.</li>
+
+	<LI>In the <B>New Platform Wizard</B>, click <B>Next</B>.</li>
+
+	<LI>From the list of available BSPs, select <B>Emulator X86</B>, and then click <B>Next</B>.</li>
+
+	<LI>From the list of available platform configurations, select <B>Internet Appliance</B>.</li>
+
+	<LI>In the <B>Platform Name</B> box, type <B>XMLWS</B> as the name for your platform, and then click <B>Next</B>.</li>
+
+	<LI>In the list of Internet Appliance Device variants, select <B>Internet Appliance</B>, and then click <B>Next</B>.</li>
+
+	<LI>On the Application &amp; Media<B> </B>page, only select <B>Internet Browser</B>, disable all other options (note that any of the features can be added, using the component catalog), and then click <B>Next</B>.</li>
+
+	<LI>On the Networking &amp; Communications<B> </B>page, clear <B>Personal Area Network (PAN) | Bluetooth</B> (note that this can be added at any time, using the component catalog), and then click <B>Next</B>.</li>
+
+	<LI>On the Congratulations page, click <B>Done</B> to close the <B>New Platform Wizard</B>.</li>
+
+	<LI>On the <B>Build</B> menu, click <B>Set Active Configuration</B>.</li>
+
+	<LI>From the list of platform configurations, select <B>XMLWS</B>&#151;<B>Emulator: X86 Win32 (WCE emulator) Debug</B>, and then click <B>OK</B>.
+<P>At this point, the Windows&nbsp;CE .NET operating system could be built and downloaded to the emulator. There are some additional components to add which will add support for the SOAP server, Web Server, COM, XML, and ATL.
+</li>
+
+	<LI>Using the Windows&nbsp;CE .NET catalog, add the following components to the platform:
+<UL type="disc">
+	<LI>Display Based Devices | Applications &amp; Services Development | Active Template Library</li>
+
+	<LI>Display Based Devices | Applications &amp; Services Development | Component Services (COM and DCOM) | Component Object Model (choose 1) | COM</li>
+
+	<LI>Display Based Devices | Applications &amp; Services Development | SOAP Toolkit | Server
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>Adding the SOAP Server will display a Security Warning&#151;this indicates that additional work may be required to secure your device.</BLOCKQUOTE>
+</li>
+
+	<LI>Display Based Devices | Applications &amp; Services Development | XML | MSXML 3.0 (Choose 1) | XML HTTP</li>
+
+	<LI>Display Based Devices | Communication Services and Networking | Servers | Web Server (HTTPD)</li>
+</UL>
+</li>
+</OL>
+
+<P>You also need a way to register our ATL/COM object after it has been downloaded to the appropriate folder. Windows&nbsp;CE .NET ships with a handy sample 'RegSvr32', and an associated Platform Builder Project (PBP) file, which is located in the following folder: C:\WINCE410\PUBLIC\DCOM\SDK\SAMPLES\REGSVR.
+
+<OL type="1">
+	<LI>In Platform Builder, on the <B>Project</B> menu, point to <B>Insert</B> and click <B>Existing Project</B>.</li>
+
+	<LI>Using the File Open dialog box, browse to the C:\WINCE410\PUBLIC\DCOM\SDK\SAMPLES\REGSVR folder.</li>
+
+	<LI>Select <B>RegSvr32.pbp</B>, and click <B>OK</B>.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>The Platform Builder Project file (PBP) contains support for all Windows&nbsp;CE .NET supported processors/ Adding this component to a project which only uses the Windows&nbsp;CE .NET emulator will display a message box informing you that some of the configurations supported by this application will be disabled.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P>RegSvr32 simply calls LoadLibrary( ), GetProcAddress( ) on DllRegisterServer, which is exposed from the ATL/COM object, and then FreeLibrary( ), you could write your own code to register COM objects during initialization of the platform.</P>
+
+<P>You are now ready to build the platform.
+
+<OL type="1">
+	<LI>On the <B>Build</B> menu, click <B>Build Platform</B>.
+<P>The Windows&nbsp;CE .NET 4.1 emulator supports both incoming and outgoing network connections (inbound connection support is a feature which is new to Windows&nbsp;CE .NET 4.1). The default emulator option is to support only outbound connections. You must configure the emulator 'Virtual Switch' before you can test out the XML Web Service.
+</li>
+
+	<LI>In Platform Builder, on the <B>Target</B> menu, click <B>Configure Remote Connection</B>.</li>
+
+	<LI>Select <B>Emulator for the Download and Kernel Transport services</B>.</li>
+
+	<LI>Under <B>Emulator Download Service</B>, click <B>Configure</B>.
+<P>The <B>Configure Emulator Download Service</B> dialog box will be displayed, which provides the ability to configure a number of options for the emulator including screen resolution, color depth, the amount of memory available to the emulator, desktop pass-through options for serial and parallel ports, and how the Ethernet connection will operate. There are three options: Disabled (no Ethernet support), NAT (outgoing only), which can be used to make connections from the emulator to Web servers, or other remote devices, and Virtual Switch, which provides both inbound and outgoing connections to the emulator. This is ideal for testing out our XML Web Service because the connection to the emulator will originate from an external source (in this case, the desktop Visual Studio .NET application).
+</li>
+
+	<LI>Select <B>Virtual Switch</B> for the Ethernet Communication option.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>You may have multiple IP addresses, including your physical NIC, and any VPN or RAS/Dial-up connections&#151;select your NIC IP address.</BLOCKQUOTE>
+</li>
+
+	<LI>To close the <B>Configure Emulator Download Service </B>dialog box, click <B>OK</B>.</li>
+
+	<LI>To close the <B>Configure Remote Connection</B> dialog box, click <B>OK</B>.</li>
+</OL>
+
+<P>After the operating system image is built, you can test the Windows&nbsp;CE .NET Web Server to confirm that this was included into the operating system image and also take the opportunity to note the IP address used by the Windows&nbsp;CE .NET emulator.
+
+<OL type="1">
+	<LI>In Platform Builder, on the <B>Target </B>menu, click<B> Download/Initialize</B>. This will download the Windows&nbsp;CE .NET operating system to the emulator.</li>
+
+	<LI>You will be prompted with a <B>KITL Security Warning</B>. The emulator runs an installable file system driver, called RelFSD, which creates a folder within the emulator called \Release. This folder maps directly to the contents of your projects build output folder (known as the FLATRELEASEDIR). This is a nice feature because you can drop files or applications into your desktops FLATRELEASEDIR and have these picked up by the emulator. Click <B>OK</B> to enable the shared folder, or click <B>Cancel</B> to disable the shared folder.</li>
+
+	<LI>After the emulator is booted, double-click the networking icon on the Windows&nbsp;CE .NET emulator's task bar. This will display the following dialog box:
+<P class="fig1"><IMG SRC="buildxmlfig03.gif" ALT="" BORDER=0>
+
+<P class="label"><B>Figure 3.</B>
+</li>
+</OL>
+
+<P>The dialog box clearly shows the IP address of the Windows&nbsp;CE .NET emulator session. In the following example, this is displayed as 192.168.0.48. Make a note of your IP address as you will be using this later.
+
+<OL type="1">
+	<LI>In the <B>IP Information</B> dialog box within the emulator, click <B>Close</B>. You only need to make note of the emulators IP address once. (Note that you could also set the name of the device using the <code class="ce">HKEY_LOCAL_MACHINE\Ident</code> registry key and refer to the device by name rather than IP address.) </li>
+
+	<LI>You can now test the Windows&nbsp;CE .NET Web server from your desktop Microsoft Internet Explorer&#151;run Internet Explorer on your desktop PC, browse to the IP address that you captured from the Windows&nbsp;CE .NET emulators IP information dialog box, for example (http://192.168.0.48). You should see a Web page similar to the following displayed in your Internet browser. Displaying this Web page proves that the Web Server is running and that the inbound connections are working.
+<P class="fig1"><IMG SRC="buildxmlfig04.gif" ALT="" BORDER=0>
+
+<P class="label"><B>Figure 4.</B>
+</li>
+</OL>
+
+<H3 class="dtH1">Exporting a Software Development Kit</H3>
+
+<P>At this point, you have a running Windows&nbsp;CE .NET operating system image. The next step is to create the ATL/COM object before you can use eMbedded Visual C++ to build and download the ATL/COM object you need to export a Software Development Kit from Platform Builder.</P>
+
+<P>The Software Development Kit (SDK) contains the header files and libraries that define the functions supported by our Windows&nbsp;CE .NET platform and the communication transport used to communicate with the platform. Note that an SDK can only be exported after the platform has been built.</P>
+
+<P>Exporting a Software Development Kit is handled in two stages: configuration and export. After it is exported, the SDK must be installed. The platform is called XMLWS (XML WebService). The SDK-creation process will generate an .MSI file in the following folder: C:\wince410\public\XMLWS\SDK (this is project dependent). If you are using another project name, then the SDK will be in the Project\SDK folder. This SDK could be shipped to both internal and external customers. Each could start writing applications for the platform even before final hardware has been created. This is especially compelling if you are building a project that targets emulation.</P>
+
+<P>Here are the steps needed to export the Software Development Kit:
+
+<OL type="1">
+	<LI>In Platform Builder, on the <B>Platform</B> menu, click <B>Configure SDK</B>.</li>
+
+	<LI>On the <B>Export SDK Wizard</B>, click <B>Next</B>.</li>
+
+	<LI>On the Product Properties<B> </B>page, enter the product name as <B>XMLWS</B> (this is how the platform will be identified in eMbedded Visual C++), also add your name, or company name to the <B>Manufacturer name</B> field.</li>
+
+	<LI>Click<B> Next</B>.</li>
+
+	<LI>On the Development Languages<B> </B>page, select <B>eMbedded Visual C++ 4.0 support</B>, and enable support for <B>ATL for Windows&nbsp;CE applications, MFC for Windows&nbsp;CE Applications</B>,<B> </B>and<B> MFC for Windows&nbsp;CE ActiveX</B>&#174;<B> Controls</B> (note that this is also the page that you would use to select support for the .NET Compact Framework).</li>
+
+	<LI>Click<B> Next</B>.</li>
+
+	<LI>On the Congratulations page, click <B>Done</B>.</li>
+</OL>
+
+<P>Configuration of the SDK is now complete. You can further customize the SDK by clicking<B> Configure SDK </B>on the<B> Platform </B>menu<B> </B>a second time.
+
+<OL type="1">
+	<LI>To build the Software Development Kit, on the <B>Platform </B>menu, click<B> Build SDK</B>.</li>
+
+	<LI>After the SDK is built, use Windows Explorer to browse to C:\wince410\public\XMLWS\SDK. </li>
+
+	<LI>Run the <B>XMLWS_SDK.MSI </B>file.</li>
+</OL>
+
+<P>You are now ready to create the ATL/COM component.</P>
+
+<H3 class="dtH1">Using eMbedded Visual C++ to Create the ATL/COM Object</H3>
+
+<P>The real advantage of the compatibility between the desktop SOAP toolkit and the Windows&nbsp;CE .NET SOAP toolkit is that you can easily write and test my ATL/COM objects on the desktop and the move these over to Windows&nbsp;CE .NET. Alternatively, to think of this in a slightly different way, you can create for the desktop and get Windows&nbsp;CE .NET XML Web Services for very little additional work. Note that the Windows&nbsp;CE .NET SOAP toolkit is integrated with Windows&nbsp;CE .NET. There is no need to download any additional tools or SDKs.</P>
+
+<P>Now you are ready to build the ATL/COM object. You create and build this by using eMbedded Visual C++ 4.0. The steps involved in building the ATL/COM object should be familiar to anyone who has already been through this process on the desktop.</P>
+
+<P>Here is how to build the ATL/COM object.
+
+<OL type="1">
+	<LI>Launch eMbedded Visual C++ 4.0.</li>
+
+	<LI>On the <B>File</B> menu, click<B> New</B>.</li>
+
+	<LI>Click the <B>Project </B>tab and click <B>WCE ATL COM AppWizard</B>.</li>
+
+	<LI>Type <B>MyWebService</B> in the <B>Project name </B>box. The example project will be built to C:\Demo\MyWebService. This may differ to the output folder being used on your development PC.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>This is typically C:\Program Files\Microsoft eMbedded C++<B> </B>4.0\Common\EVC\MyProjects\MyWebService for a default install of eMbedded Visual C++.</BLOCKQUOTE>
+</li>
+
+	<LI>Ensure that <B>Win32 (WCE Emulator)</B> is selected in the <B>CPUs</B> list box and click <B>OK</B>.</li>
+</OL>
+
+<P class="fig"><IMG SRC="buildxmlfig05.gif" ALT="" BORDER=0></P>
+
+<P class="label"><B>Figure 5.</B></P>
+
+<P>There is only one step to the ATL/COM AppWizard, which is where you choose whether to create a DLL (in process COM object), or Executable (used with DCOM), and whether your project supports MFC. In this case, you do not need MFC, and you will create a DLL.
+
+<OL type="1">
+	<LI>In the <B>WCE ATL COM AppWizard</B>&#151;<B>Step 1 of 1</B> dialog box, click <B>Dynamic Link Library (DLL)</B> and make sure that <B>Support MFC</B> is cleared.</li>
+
+	<LI>Click <B>Finish</B>.</li>
+</OL>
+
+<P class="fig"><IMG SRC="buildxmlfig06.gif" ALT="" BORDER=0></P>
+
+<P class="label"><B>Figure 6.</B></P>
+
+<P>After the initial project has been created, you can then insert an ATL Object. This will expose the functions from your Web Service.
+
+<OL type="1">
+	<LI>On the <B>Insert</B> menu, click <B>New ATL Object</B>.</li>
+
+	<LI>Under <B>Category</B>, click <B>Objects</B>. Under <B>Objects</B>, click <B>Next</B>.</li>
+</OL>
+
+<P class="fig"><IMG SRC="buildxmlfig07.gif" ALT="" BORDER=0></P>
+
+<P class="label"><B>Figure 7.</B></P>
+
+<P>You can now set the properties for the ATL Object. This includes the class (.CPP) and header file (.H) names, the ProgID. and so forth.
+
+<UL type="disc">
+	<LI>In the <B>ATL Object Wizard Properties</B> dialog box, enter <B>CEWebSvr</B> in the <B>Short Name</B> edit control. The additional fields will automatically be filled out when setting the short name.</li>
+</UL>
+
+<P>You will notice that the ATL Object Wizard Properties dialog box contains two tabs. The first (default) shows the C++ and COM class names; whereas, ProgID, the second page of the dialog box, allows you to set the Threading Model and Interface type (Dual or Custom).</P>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig08.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 8.</B></P>
+
+<P>The eMbedded Visual C++ ATL/COM AppWizard defaults to Single threaded&#151;we need to change this to Free Threaded&#151;if we continue and build the COM Object as single threaded we will get an error from the SOAP Server stating that the COM object could not be created.
+
+<OL type="1">
+	<LI>In the <B>ATL Object Wizard Properties</B> dialog box, click the <B>Attributes</B> tab.</li>
+
+	<LI>Under <B>Threading Model</B>, click <B>Free</B>.</li>
+
+	<LI>Click <B>OK</B>.</li>
+</OL>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig09.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 9.</B></P>
+
+<P>At this point, you can build, deploy, and test the ATL/COM object. The ATL/COM object will build without warnings or errors and can be registered on the Windows&nbsp;CE .NET device. No functions have been exposed at this time, so the object is not that useful. Before building and registering the object, there is one project setting that should be changed.
+
+<OL type="1">
+	<LI>In <B>eMbedded Visual C++</B>, on the <B>Project</B> menu, click <B>Settings</B>.</li>
+
+	<LI>In the <B>Project Settings</B> dialog box, click the <B>MIDL</B> tab.</li>
+
+	<LI>Clear the <B>MkTypLib compatible</B> check box. This is only needed if you are having problems with a specific .ODL file.</li>
+
+	<LI>Click <B>OK</B>.</li>
+</OL>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig10.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 10.</B></P>
+
+<P>For the purposes of this paper, add two functions to the COM object, one that returns an Integer (GetInt) and one that returns a string (GetString). The SOAP toolkit documentation explains how to work with more complex types.</P>
+
+<P>Adding functions to our COM Object is simple.
+
+<OL type="1">
+	<LI>Right-click the <B>ICEWebSvr</B> item in the project workspace.</li>
+
+	<LI>A shortcut menu appears.</li>
+
+	<LI>Select <B>Add Method</B> on the shortcut menu.</li>
+</OL>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig11.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 11.</B></P>
+
+<P>In this case, add a function that returns an integer. This could be the number of running processes, an item from the registry, or the number of candy bars packed during the last hour on a manufacturing system.</P>
+
+<P>The <B>Add Method to Interface</B> dialog box appears.
+
+<OL type="1">
+	<LI>In the <B>Add Method to Interface</B> dialog box, type <B>GetInt</B> in the <B>Method Name</B> box.</li>
+
+	<LI>In the <B>Parameters</B> box, type <B>[out, retval] int *pInteger</B>.</li>
+
+	<LI>Click <B>OK</B>.</li>
+</OL>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig12.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 12.</B></P>
+
+<P>This will add the function definition to the project, by default calling the function will return an HRESULT of S_OK to show that the function completed successfully. Some code must be added to the function for an integer to be returned.</P>
+
+<P>You will now add the <B>GetString</B> function to the project.
+
+<OL type="1">
+	<LI>Right-click the <B>ICEWebSvr</B> item in the project workspace.</li>
+
+	<LI>A shortcut menu appears, which provides a number of options.</li>
+
+	<LI>Select <B>Add Method</B> on the shortcut menu.</li>
+
+	<LI>In the <B>Add Method to Interface</B> dialog box, type <B>GetString</B> in the <B>Method Name</B> box.</li>
+
+	<LI>Type <B>[out, retval] BSTR *pStr</B></li>
+
+	<LI>Click <B>OK</B>.</li>
+</OL>
+
+<P>The functions <B>GetInt</B> and <B>GetString</B> can be seen within the project workspace image that follows.</P>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig13.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 13.</B></P>
+
+<P>In order to add code to each of the functions, double-click the function name within the project workspace.</P>
+
+<P>The following code should be added for the <B>GetInt</B> function.</P>
+
+<PRE class="code">STDMETHODIMP CCEWebSvr::GetInt(int *piInteger)
+{
+   *piInteger=5;
+
+   return S_OK;
+}
+</PRE>
+
+<P>The following code should be added for the <B>GetString</B> function.</P>
+
+<PRE class="code">STDMETHODIMP CCEWebSvr::GetString(BSTR *pStr)
+{
+   CComBSTR m_ReturnString;
+
+   m_ReturnString=L"This is a String";
+   *pStr=m_ReturnString.Copy( );
+
+   return S_OK;
+}
+</PRE>
+
+<P>You can now build and deploy the ATL/COM object (DLL) to the emulation device. By default, the communications transport used by eMbedded Visual C++ is TCP/IP and Manual Server. Because there is already a Windows&nbsp;CE .NET image running and a connection to the emulator from Platform Builder, you can 'piggy back' this connection from eMbedded Visual C++.
+
+<OL type="1">
+	<LI>In <B>eMbedded Visual C++</B>, on the <B>Tools</B> menu, click <B>Configure Platform Manager</B>.</li>
+
+	<LI><B>Locate</B> and <B>expand XMLWS</B> in the list of available devices (see below)&#151;note that this is only listed because a Software Development Kit (SDK) was created and installed.</li>
+</OL>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig14.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 14.</B>
+
+<OL type="1">
+	<LI>Select the <B>XMLWS Emulator</B> and click <B>Properties</B>.</li>
+
+	<LI>Select <B>KITL Transport for Windows&nbsp;CE</B> for the <B>Transport.</B></li>
+
+	<LI>Select <B>CESH Server for Windows&nbsp;CE</B> (see below).</li>
+</OL>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig15.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 15.</B>
+
+<OL type="1">
+	<LI>To close the <B>Device Properties</B> dialog box, click <B>OK</B>.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>You may be prompted with a message box stating that the transport has not been tested. Click <B>OK</B> to continue.</BLOCKQUOTE>
+</li>
+
+	<LI>To close the <B>Windows&nbsp;CE Platform Manager Configuration </B>dialog box, click <B>OK</B>.</li>
+</OL>
+
+<P>Before building the ATL/COM object, ensure that eMbedded Visual C++ is configured to deploy to the correct device (otherwise you may download to the Standard SDK platform).
+
+<UL type="disc">
+	<LI>Ensure that the eMbedded Visual C++ Build toolbar is showing the following (left to right):
+<UL type="disc">
+	<LI>MyWebService</li>
+
+	<LI>XMLWS</li>
+
+	<LI>Microsoft Win32&#174; (WCE emulator) Debug</li>
+
+	<LI>XMLWS Emulator</li>
+</UL>
+</li>
+</UL>
+
+<P>Build and download to the emulator and confirm that there are no errors or warnings during the build process. The output file MyWebService.dll will be downloaded and registered to the following folder: \Windows\MyWebService.dll. In order to use this COM object as an XML Web Service, you must move the DLL to the \Windows\WWW\WWWPub folder, and re-register the DLL (this is where RegSvr32 comes in). This will be covered later in the document.</P>
+
+<H3 class="dtH1">Generating the WSML/WSDL Files</H3>
+
+<P>The SOAP toolkit for Windows&nbsp;CE .NET 4.1 ships with a tool called wsdlstb_ce.exe. This tool creates the WSDL and WSML files for our COM object. wsdlstb_ce.exe can be found in the following folder (assuming you have Windows&nbsp;CE .NET 4.1 installed)&#151;C:\WINCE410\PUBLIC\COMMON\OAK\BIN\I386.</P>
+
+<P>To have the correct path configured to use this tool, go to a command prompt from your Platform Builder workspace.
+
+<OL type="1">
+	<LI>In Platform Builder, on the <B>Build</B> menu, select <B>Open Build Release Directory</B>.</li>
+
+	<LI>Select the folder containing your ATL/COM Object. In this case, it is <B>C:\Demo\MyWebService\emulatorDbg</B>. </li>
+</OL>
+
+<P>You are now ready to run the wsdlstb_ce tool.</P>
+
+<P>The tool takes a number of command line parameters, as follows.</P>
+
+<P>wsdlstb_ce -I &lt;Exposed Class&gt; -P &lt;Class GUID&gt; &lt;ProgID&gt; &lt;Dll Name&gt; &lt;WebServer address and location of WSDL on the server&gt; &lt;name of WSDL file&gt;</P>
+
+<P>The parameters for generating the appropriate WSDL and WSML for "MyWebService" would be as follows (note that the GUID will be different for your build of "MyWebService").
+
+<UL type="disc">
+	<LI>-I CEWebSvr</li>
+
+	<LI>-P {CB51D94E-0348-4D39-87EF-CFF90C39C21F} (note this is the GUID from my build of the project, by definition your GUID will be different) </li>
+
+	<LI>MyWebService.CEWebSvr.1</li>
+
+	<LI>MyWebService.dll</li>
+
+	<LI>http://192.168.0.15/MyWebService.wsdl (note that the IP address for this emulator session may not match the IP address you have for your emulator session) </li>
+
+	<LI>MyWebService.wsdl</li>
+</UL>
+
+<P>All of the information needed to construct the command line can be found in the MyWebService.RGS file, which can be located in the project workspace, under <B>Resource Files</B>.</P>
+
+<P>Here is how an .RGS file may look, this is the .RGS file for the MyWebService ATL/COM object&#151;the Exposed Class, GUID, and ProgID are highlighted in the RGS file.</P>
+
+<PRE class="code">HKCR
+{
+   MyWebService.CEWebSvr.1 = s '<B>CEWebSvr</B> Class'
+   {
+      CLSID = s '{<B>E802DEB0-DA35-41E4-8850-9151A58D339A</B>}'
+   }
+   MyWebService.CEWebSvr = s 'CEWebSvr Class'
+   {
+      CLSID = s '{E802DEB0-DA35-41E4-8850-9151A58D339A}'
+      CurVer = s 'MyWebService.CEWebSvr.1'
+   }
+   NoRemove CLSID
+   {
+      ForceRemove {E802DEB0-DA35-41E4-8850-9151A58D339A} = s 'CEWebSvr 
+        Class'
+      {
+         ProgID = s '<B>MyWebService.CEWebSvr.1</B>'
+         VersionIndependentProgID = s 'MyWebService.CEWebSvr'
+         ForceRemove 'Programmable'
+         InprocServer32 = s '%MODULE%'
+         {
+            val ThreadingModel = s 'Free'
+         }
+         'TypeLib' = s '{A4696BFA-BB78-4C54-8100-902716D35BCB}'
+      }
+   }
+}
+</PRE>
+
+<P>Here is MyWebService.WSML. You can clearly see the ProgID MyWebService.CEWebSvr.1. This is used by the SOAP Server to load the correct ATL/COM object. The function calls are exposed by method and dispID.</P>
+
+<PRE class="code">&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+ &lt;!-- Generated 07/23/02 by Microsoft SOAP Toolkit WSDL File Generator,
+   Version 1.02.814.0 --&gt;
+&lt;servicemapping name='MyWebService'&gt;
+  &lt;service name='MyWebService'&gt;
+    &lt;using PROGID='<B>MyWebService.CEWebSvr.1</B>' cachable='0'
+      ID='CEWebSvrObject' /&gt;
+    &lt;port name='CEWebSvrSoapPort'&gt;
+      &lt;operation name='GetInt'&gt;
+        &lt;execute uses='CEWebSvrObject' method='GetInt' dispID='2'&gt;
+          &lt;parameter callIndex='-1' name='retval' elementName='Result' /&gt;
+        &lt;/execute&gt;
+      &lt;/operation&gt;
+      &lt;operation name='GetString'&gt;
+        &lt;execute uses='CEWebSvrObject' method='GetString' dispID='1'&gt;
+          &lt;parameter callIndex='-1' name='retval' elementName='Result' /&gt;
+        &lt;/execute&gt;
+      &lt;/operation&gt;
+    &lt;/port&gt;
+  &lt;/service&gt;
+&lt;/servicemapping&gt;
+</PRE>
+
+<P>Here is the WSML file that exposes the two functions, GetInt and GetString, and the location of the WSDL file on the server.</P>
+
+<PRE class="code">&lt;?xml version='1.0' encoding='UTF-8' ?&gt; 
+ &lt;!-- Generated 07/23/02 by Microsoft SOAP Toolkit WSDL File Generator,
+   Version 1.02.814.0 --&gt;
+&lt;definitions  name ='MyWebService'   targetNamespace =
+'http://tempuri.org/wsdl/'
+    xmlns:wsdlns='http://tempuri.org/wsdl/'
+    xmlns:typens='http://tempuri.org/type'
+    xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+    xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+    xmlns:stk='http://schemas.microsoft.com/soap-toolkit/wsdl-extension'
+    xmlns='http://schemas.xmlsoap.org/wsdl/'&gt;
+  &lt;types&gt;
+    &lt;schema targetNamespace='http://tempuri.org/type'
+      xmlns='http://www.w3.org/2001/XMLSchema'
+      xmlns:SOAP-ENC='http://schemas.xmlsoap.org/soap/encoding/'
+      xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+      elementFormDefault='qualified'&gt;
+    &lt;/schema&gt;
+  &lt;/types&gt;
+  &lt;message name=<B>'<code><b class="cfe">CEWebSvr.GetInt</b></code>'</B>&gt;
+  &lt;/message&gt;
+  &lt;message name='CEWebSvr.GetIntResponse'&gt;
+    &lt;part name='Result' type='xsd:int'/&gt;
+  &lt;/message&gt;
+  &lt;message name=<B>'<code><b class="cfe">CEWebSvr.GetString</b></code>'</B>&gt;
+  &lt;/message&gt;
+  &lt;message name='CEWebSvr.GetStringResponse'&gt;
+    &lt;part name='Result' type='xsd:string'/&gt;
+  &lt;/message&gt;
+  &lt;portType name='CEWebSvrSoapPort'&gt;
+    &lt;operation name='GetInt' parameterOrder=''&gt;
+      &lt;input message='wsdlns:CEWebSvr.GetInt' /&gt;
+      &lt;output message='wsdlns:CEWebSvr.GetIntResponse' /&gt;
+    &lt;/operation&gt;
+    &lt;operation name='GetString' parameterOrder=''&gt;
+      &lt;input message='wsdlns:CEWebSvr.GetString' /&gt;
+      &lt;output message='wsdlns:CEWebSvr.GetStringResponse' /&gt;
+    &lt;/operation&gt;
+  &lt;/portType&gt;
+  &lt;binding name='CEWebSvrSoapBinding' type='wsdlns:CEWebSvrSoapPort' &gt;
+    &lt;stk:binding preferredEncoding='UTF-8'/&gt;
+    &lt;soap:binding style='rpc'
+      transport='http://schemas.xmlsoap.org/soap/http' /&gt;
+    &lt;operation name='GetInt' &gt;
+      &lt;soap:operation
+        soapAction='http://tempuri.org/action/CEWebSvr.GetInt' /&gt;
+      &lt;input&gt;
+        &lt;soap:body use='encoded' namespace='http://tempuri.org/message/'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' /&gt;
+      &lt;/input&gt;
+      &lt;output&gt;
+        &lt;soap:body use='encoded' namespace='http://tempuri.org/message/'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' /&gt;
+      &lt;/output&gt;
+    &lt;/operation&gt;
+    &lt;operation name='GetString' &gt;
+      &lt;soap:operation 
+        soapAction='http://tempuri.org/action/CEWebSvr.GetString' /&gt;
+      &lt;input&gt;
+        &lt;soap:body use='encoded' namespace='http://tempuri.org/message/'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' /&gt;
+      &lt;/input&gt;
+      &lt;output&gt;
+        &lt;soap:body use='encoded' namespace='http://tempuri.org/message/'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' /&gt;
+      &lt;/output&gt;
+    &lt;/operation&gt;
+  &lt;/binding&gt;
+  &lt;service name='MyWebService' &gt;
+    &lt;port name='CEWebSvrSoapPort' binding='wsdlns:CEWebSvrSoapBinding' &gt;
+      &lt;soap:address location='<B>http://192.168.0.15/MyWebService.wsdl</B>' /&gt;
+    &lt;/port&gt;
+  &lt;/service&gt;
+&lt;/definitions&gt;
+</PRE>
+
+<H3 class="dtH1">Registering the ATL/COM Object and Uploading the WSML/WSDL Files</H3>
+
+<P>You now have all the pieces in place&#151;the ATL/COM object, exposing two functions, GetInt and GetString, the WSDL file which is used to define the functions our XML Web Service exposes, and the WSML file which creates the mapping between the incoming request and the functions exposed from our COM object. You need to place all the files into the appropriate folder on the Windows&nbsp;CE .NET Web Server, re-register the ATL/COM object (so it points at the correct location), and you are finished.</P>
+
+<P>We can use the Windows&nbsp;CE .NET Remote File Viewer to upload the WSML, WSDL, and DLL files to the Windows&nbsp;CE .NET Emulator.
+
+<OL type="1">
+	<LI>In Platform Builder, on the <B>Tools </B>menu, click<B> Remote File Viewer</B>.</li>
+
+	<LI>Connect to the <B>XMLWS Emulator</B> (note that you could also connect to Windows&nbsp;CE .NET Default Device&#151;this is always the last downloaded operating system image).</li>
+
+	<LI>In the Remote File Viewer, browse to <B>XMLWS Emulator | Windows | WWW | WWWPUB</B>.</li>
+
+	<LI>On the <B>File</B> menu, click<B> Export File </B>(this will upload a file from your desktop to the \Windows\www\wwwpub folder).</li>
+
+	<LI>Use the <B>Open File </B>dialog box to locate your project workspace (for example, <B>C:\Demo\MyWebService\emulatorDbg</B>). </li>
+
+	<LI>Select <B>MyWebService.dll </B>and click <B>Open</B>.</li>
+
+	<LI>Repeat for <B>MyWebService.wsdl</B> and <B>MyWebService.wsml</B>.</li>
+
+	<LI>Close the Remote File Viewer.</li>
+</OL>
+
+<P>You now must register MyWebService.dll so that the registry points to the correct location.
+
+<OL type="1">
+	<LI>Switch to the Windows&nbsp;CE .NET Emulator.</li>
+
+	<LI>On the <B>Start </B>menu, click<B> Run</B>, type<B> cmd</B> and press <B>ENTER</B>.</li>
+
+	<LI>At the Command Prompt, type <B>cd \windows\www\wwwpub</B> and press <B>ENTER</B>. This will change the current directory to be the Web Server directory.</li>
+
+	<LI>You can confirm that the DLL, WSDL, and WSML files are in this folder by using the <B>dir </B>command. You should see the three files you uploaded and the Web server default Web page, Default.htm.</li>
+
+	<LI>Now register the DLL. At the command prompt, type <B><CODE>\</CODE>windows\regsvr32 \windows\www\wwwpub\mywebservice.dll </B>and press <B>ENTER</B>.</li>
+</OL>
+
+<P>The ATL/COM object is now registered. You can use the remote registry editor to confirm the path to our DLL, and you can also use the Platform Builder Debug Output window to confirm that the DLL has been registered correctly. The following is the output from running regsvr32 on MyWebService.dll.</P>
+
+<PRE class="code">101920 PID:62d914ca TID:62d910aa 0x82e3fb4c: &gt;&gt;&gt; Loading module
+mywebservice.dll at address 0x01EB0000-0x01EC0000
+Loaded symbols for 
+'C:\WINCE410\PUBLIC\XMLWS\RELDIR\EMULATOR_X86DEBUG\MYWEBSERVICE.DLL'
+ 101950 PID:62d914ca TID:62d910aa 0x82e3fb4c: &gt;&gt;&gt; Loading module 
+atlce400.dll at address 0x03810000-0x0381F000 (RW data at 0x01F76000-
+0x01F76910)
+Loaded symbols for 
+  'C:\WINCE410\PUBLIC\XMLWS\RELDIR\EMULATOR_X86DEBUG\ATLCE400.DLL'
+<code><b class="cfe"> 102020 PID:62d914ca TID:62d910aa DllRegisterServer</b></code>
+<code><b class="cfe"> 102030 PID:62d914ca TID:62d910aa  in \windows\www\wwwpub\mywebservice.dll </b></code>
+<code><b class="cfe">   succeeded.</b></code>
+ 102030 PID:62d914ca TID:62d910aa 0x82e3fb4c: &lt;&lt;&lt; Unloading module 
+atlce400.dll at address 0x03810000-0x0381F000 (RW data at 0x01F76000-
+0x01F76910)
+Unloaded symbols for 
+'C:\WINCE410\PUBLIC\XMLWS\RELDIR\EMULATOR_X86DEBUG\ATLCE400.DLL'
+ 102050 PID:62d914ca TID:62d910aa 0x82e3fb4c: &lt;&lt;&lt; Unloading module 
+regsvr32.EXE at address 0x18010000-0x18016000
+Unloaded symbols for 
+  'C:\WINCE410\PUBLIC\XMLWS\RELDIR\EMULATOR_X86DEBUG\REGSVR32.EXE'
+ 102060 PID:62d914ca TID:62d910aa 0x82e3fb4c: &lt;&lt;&lt; Unloading module 
+mywebservice.dll at address 0x01EB0000-0x01EC0000
+Unloaded symbols for 
+'C:\WINCE410\PUBLIC\XMLWS\RELDIR\EMULATOR_X86DEBUG\MYWEBSERVICE.DLL'
+</PRE>
+
+<P>The creation and registration of the Windows&nbsp;CE .NET XML Web Service is now complete. The next step is to test the Web Service from a desktop Visual Studio .NET application written in C#.</P>
+
+<H3 class="dtH1">Testing the Web Service Using a C# Visual Studio .NET Application</H3>
+
+<P>Writing a C# application that consumes a Web Service is extremely simple. In this example, you will consume the Web Service that is running on the Windows&nbsp;CE .NET 4.1 Emulator.
+
+<OL type="1">
+	<LI>Start Visual Studio .NET.</li>
+
+	<LI>Create a new Microsoft Visual C#&#153; project of type Windows Application.</li>
+
+	<LI>Add a Button, and two Text Boxes (edit controls), textBox1, and textBox2 to the projects form.</li>
+
+	<LI>On the <B>Project</B> menu, click <B>Add Web Reference</B>. This will prompt for the location of a WSDL file, which is located on the Windows&nbsp;CE .NET Web Server. Enter the IP address and name of your WSDL File. In this case, the location is as follows: <code class="ce">http://192.168.0.147/mywebservice.wsdl</code></li>
+
+	<LI>Click <B>Add Reference</B>.<B> </B>This will add a Web reference 'WebReference1' to the C# project. You can now reference the Web Service through this Web Reference in the C# project.</li>
+
+	<LI>Add the following code to the button handler of your project. Double-click the button to switch to Code view within Visual Studio .NET.
+<PRE class="code">WebReference1.MyWebService Foo = new WebReference1.MyWebService( );
+textBox1.Text=Foo.GetInt( ).ToString( );
+textBox2.Text=Foo.GetString( );
+</PRE>
+</li>
+</OL>
+
+<P>Here is how the C# application looks when running&#151;the button has already been clicked. You can see the return values from the XML Web Service being shown in the two edit controls.</P>
+
+<P class="fig"><CODE><IMG SRC="buildxmlfig16.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 16.</B></P>
+
+<H2 class="dtH1"><A NAME="buildxml_topic4"></A>Conclusion</H2>
+
+<P>Web Services offer a new platform for building distributed systems. The basic premise is to adapt the loosely coupled programming model at the heart of traditional browser-based Web applications to other sorts of applications. Building XML Web Services for Windows&nbsp;CE .NET using native code is fast and simple. The XML Web Services can be consumed by Visual Studio .NET client applications running on a Windows XP Desktop PC or by other applications that support SOAP. XML Web Services can be used to monitor or control a Windows&nbsp;CE .NET device, or to expose a specific set of features and functions. There are a number of resources available to assist with the development of XML Web Services, which are listed at the end of this article.</P>
+
+<H2 class="dtH1"><A NAME="buildxml_topic5"></A>For More Information</H2>
+
+<P>For the latest information about Windows&nbsp;CE .NET, please visit the <A href="http://msdn.microsoft.com//windows/embedded/">Microsoft Windows Embedded</A> Web site.</P>
+
+<P>The online documentation and context-sensitive Help included with Windows&nbsp;CE .NET also provide comprehensive background information and instructions for using Windows&nbsp;CE .NET.</P>
+
+<H3 class="dtH1">To Access the Online Documentation for Windows&nbsp;CE .NET</H3>
+
+<OL type="1">
+	<LI>Start Platform Builder.</li>
+
+	<LI>To view the documentation, click the <B>Contents</B> tab on the <B>Help</B> menu. </li>
+</OL>
+
+<P>You can also visit the <MSHelp:link keywords="pb_start" TABINDEX="0">product documentation</MSHelp:link> for Windows&nbsp;CE .NET.</P>
+
+<H3 class="dtH1">Further Information</H3>
+
+<P><A href="http://msdn.microsoft.com/webservices/">XML Web Services Developer Center</A></P>
+
+<P><A href="http://msdn.microsoft.com/downloads/sample.asp?url=/msdn-files/027/001/948/msdncompositedoc.xml">Microsoft SOAP Toolkit</A></P>
+
+<P><A href="http://msdn.microsoft.com//mspress/books/19.asp">Inside COM</A>&#151;ISBN: 1-57231-349-8</P>
+
+<P><A HREF="http://www.mrbunny.com/mbgtax.html">Mr. Bunny's Guide to ActiveX</A>&#151;ISBN: 0-201-48536-2</P>
+
+<P><A HREF="http://www.wiseowl.com/published/atl_internals.aspx">ATL Internals</A>&#151;ISBN: 0-201-69589-8</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_836439', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

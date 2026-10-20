@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample RAPI Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sample RAPI Application"/>
+<MSHelp:RLTitle Title="Sample RAPI Application"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Sample_RAPI_Application"/>
+<MSHelp:Keyword Index="K" Term="samples, RAPI application"/>
+<MSHelp:Keyword Index="K" Term="applications, RAPI sample"/>
+<MSHelp:Keyword Index="K" Term="RAPI, sample application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+</xml>
+<!--Filename: connect.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_sample_rapi_application"></A>Sample RAPI Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following code example shows how to initialize the RAPI client, make calls, and handle errors. </P>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;tchar.h&gt;
+#include &lt;rapi.h&gt;
+
+void PrintDirectory (LPWSTR lpszPath, UINT Indent)
+{
+  DWORD dwFoundCount;
+  LPCE_FIND_DATA findDataArray;
+  WCHAR szSearchPath[MAX_PATH];
+
+  wcscpy (szSearchPath, lpszPath);
+  wcscat (szSearchPath, L"*");
+
+  if(!CeFindAllFiles (szSearchPath,
+                      FAF_ATTRIBUTES | FAF_NAME,
+                      &amp;dwFoundCount,
+                      &amp;findDataArray))
+  {
+    _tprintf (TEXT("*** CeFindAllFiles failed. ***\n"));
+    return;
+  }
+
+  if (!dwFoundCount)
+    return;
+
+  for (UINT i = 0; i &lt; dwFoundCount; i++)
+  {
+    for (UINT indCount = 0; indCount &lt; Indent; indCount++)
+      _tprintf( TEXT("  "));
+
+    if (findDataArray[i].dwFileAttributes &amp; FILE_ATTRIBUTE_DIRECTORY)
+    {
+      wprintf ( L"[%s]\n", findDataArray[i].cFileName);
+
+      WCHAR szNewPath[MAX_PATH];
+
+      wcscpy (szNewPath, lpszPath);
+      wcscat (szNewPath, findDataArray[i].cFileName);
+      wcscat (szNewPath, L"\\");
+
+      PrintDirectory (szNewPath, Indent + 1);
+    }
+    else
+      wprintf (L"%s\n", findDataArray[i].cFileName);
+  }
+
+  if (findDataArray)
+    RapiFreeBuffer (findDataArray);
+}
+
+void main()
+{
+  HRESULT hRapiResult;
+
+  _tprintf (TEXT("Connecting to Windows CE..."));
+
+  hRapiResult = CeRapiInit ();
+
+  if (FAILED(hRapiResult))
+  {
+    _tprintf (TEXT("Failed\n"));
+    return;
+  }
+
+  _tprintf (TEXT("Success\n"));
+
+  PrintDirectory (L"\\", 0);
+
+  CeRapiUninit ();
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, March 26, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sample%20RAPI%20Application&nbsp;(_wcesdk_sample_rapi_application.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

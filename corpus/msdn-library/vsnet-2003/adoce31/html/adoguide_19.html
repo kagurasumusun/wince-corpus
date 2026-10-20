@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ADOCE Programming Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="ADOCE Programming Interface"/>
+<MSHelp:RLTitle Title="ADOCE Programming Interface"/>
+<MSHelp:Keyword Index="A" Term="adoguide_19"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceadoce_adoce_programming_interface"></A><SUP></SUP>ADOCE Programming Interface</H1>
+
+<P>A simple application programming interface (API) is provided to enable automated filtering of database files between a desktop computer and a device. The API consists of two functions, <B>DesktopToDevice</B> for importing database files, and <B>DeviceToDesktop</B> for exporting database files. <B>DesktopToDevice</B> filters Microsoft Access (.mdb) database files or ODBC data sources to ADOCE database files (.cdb). <B>DeviceToDesktop</B> filters ADOCE database files to Microsoft Access database files or ODBC data sources. For more information on how to use the API functions, see <A HREF="ado30ref_80.htm">ADOCE Application Programming Interface</A></P>
+
+<H4>DesktopToDevice</H4>
+
+<P>The <B>DesktopToDevice</B> function enables you to programmatically convert .mdb files to ADOCE tables. The behavior of <B>DesktopToDevice</B> parallels that of the <B>Import from Database to Mobile Device</B> dialog box, except that the user-choice dialog boxes do not appear. All progress bars appear, showing the transfer status. An error return does not cause the log file to automatically display. Instead, an error value, HRESULT, is returned by the function. The calling application can then take appropriate action.</P>
+
+<P>The following code example shows a simple application that copies a subset of the Northwind database to the device without synchronization enabled. When the changes are commited to the database, the new data overwrites the existing Northwind tables. In the code example shown below the Employees table is sent as a read-only table (marked with ! to indicate the table is read-only), while the Products table can be updated.</P>
+
+<PRE>Declare Function DESKTOPTODEVICE Lib "c:\program files\windows ce services\adofiltr.dll" _
+(ByVal desktoplocn As String, _
+        ByVal tablelist As String, _
+        ByVal sync As Boolean, _
+        ByVal overwrite As Integer, _
+        ByVal devicelocn As String) As Long
+
+result = DESKTOPTODEVICE("c:\mydbs\nwind.mdb", _
+"!Employees..Products.ID.Name.Quantity..", False, True, "")
+If result &lt;&gt; 0 Then MsgBox "An error occurred transferring the data"
+</PRE>
+
+<H4>DeviceToDesktop</H4>
+
+<P>The <B>DeviceToDesktop</B> function allows you to programmatically convert ADOCE tables to .mdb files.The behavior of <B>DeviceToDesktop</B> parallels that of the <B>Export from Mobile Device to Database </B>dialog box, except that the user-choice dialog boxes do not appear. An error return does not cause the log file to automatically display. In the case of an error, the error value HRESULT is returned by the function and the calling application takes the appropriate action. In contrast to the <B>DesktopToDevice</B> function, there is no way to specify which fields are converted. All fields in a table are converted by default.</P>
+
+<P>The following code example shows a simple application that copies a subset of the Northwind database to the device with no synchronization, while overwriting any existing Northwind tables. The Employees and Products tables are sent in their entirety.</P>
+
+<PRE>Declare Function DEVICETODESKTOP Lib "c:\program files\windows ce services\adofiltr.dll" _
+(ByVal desktoplocn As String, _
+        ByVal tablelist As String, _
+        ByVal sync As Boolean, _
+        ByVal overwrite As Integer, _
+        ByVal devicelocn As String) As Long
+
+result = DESKTOPTODEVICE("c:\mydbs\nwind.mdb", _
+"!Employees..Products..", False, True, "")
+If result &lt;&gt; 0 Then MsgBox "An error occurred transferring the data"
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

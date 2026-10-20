@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CView::OnPrepareDC</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cview_onpreparedc"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cview_onpreparedc"></A>CView::OnPrepareDC</H1>
+
+<P>This method is called by the framework before the <B>OnDraw</B> method is called for screen display and before the <A HREF="cview_12.htm"><B>OnPrint</B></A> method is called for each page during printing or print preview.. </P>
+
+<PRE class=syntax><B>virtual void OnPrepareDC(
+CDC* </B><I>pDC</I><B>,
+CPrintInfo* </B><I>pInfo</I><B> = NULL );</B><I>
+</I>
+<B>virtual void OnPrepareDC(
+CDC* </B><I>pDC</I><B>,
+const void* </B><I>pUnused</I><B> = NULL );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Points to the device context to be used for rendering an image of the document.</DD>
+
+<DT><I>pInfo</I></DT>
+
+<DD>Points to a <A HREF="cprtinfo.htm"><B>CPrintInfo</B></A> structure that describes the current print job if <B>OnPrepareDC</B> is being called for printing or print preview; the <B>m_nCurPage</B> member specifies the page about to be printed. This parameter is <B>NULL</B> if <B>OnPrepareDC</B> is being called for screen display.</DD>
+
+<DT><I>pUnused</I></DT>
+
+<DD>(Dummy argument)</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The second implementation above is available for platforms that do not support printing, such as the Palm-size PC and Pocket PC.</P>
+
+<P>The default implementation of this method does nothing if the function is called for screen display. However, this method is overridden in derived classes, such as <A HREF="cscrolvw.htm"><B>CScrollView</B></A>, to adjust attributes of the device context; consequently, you should always call the base class implementation at the beginning of your override. </P>
+
+<P>If the method is called for printing, the default implementation examines the page information stored in the <I>pInfo</I> parameter. If the length of the document has not been specified, <B>OnPrepareDC</B> assumes the document to be one page long and stops the print loop after one page has been printed. The method stops the print loop by setting the <B>m_bContinuePrinting</B> member of the structure to <B>FALSE</B>.</P>
+
+<P>Override <B>OnPrepareDC</B> for any of the following reasons:
+
+<UL type=disc>
+	<LI>To adjust attributes of the device context as needed for the specified page. For example, if you need to set the mapping mode or other characteristics of the device context, do so in this method. </LI>
+
+	<LI>To perform print-time pagination. Normally you specify the length of the document when printing begins, using the <A HREF="cview_11.htm"><B>OnPreparePrinting</B></A> method. However, if you do not know in advance how long the document is (for example, when printing an undetermined number of records from a database), override <B>OnPrepareDC</B> to test for the end of the document while it is being printed. When there is no more of the document to be printed, set the <B>m_bContinuePrinting</B> member of the <B>CPrintInfo</B> structure to <B>FALSE</B>. </LI>
+
+	<LI>To send escape codes to the printer on a page-by-page basis. To send escape codes from <B>OnPrepareDC</B>, call the <B>Escape</B> method of the <I>pDC</I> parameter.</LI>
+</UL>
+
+<P>Call the base class version of <B>OnPrepareDC</B> at the beginning of your override.</P>
+
+<H4>Example</H4>
+
+<PRE>void CMyView::OnPrepareDC (CDC* pDC, CPrintInfo* pInfo)
+{
+&nbsp;&nbsp;CView::OnPrepareDC(pDC, pInfo);
+
+&nbsp;&nbsp;// If we are printing, set the mapmode and the window
+&nbsp;&nbsp;// extent properly, then set viewport extent. Use the
+&nbsp;&nbsp;// SetViewportOrg method in the CDC class to
+&nbsp;&nbsp;// move the viewport origin to the center of the view.
+&nbsp;&nbsp;
+&nbsp;&nbsp;if(pDC-&gt;IsPrinting()) // Is the DC a printer DC.
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CRect rect;
+&nbsp;&nbsp;&nbsp;&nbsp;GetClientRect (&amp;rect);
+
+&nbsp;&nbsp;&nbsp;&nbsp;int oldMapMode = pDC-&gt;SetMapMode(MM_ISOTROPIC);
+&nbsp;&nbsp;&nbsp;&nbsp;CSize ptOldWinExt = pDC-&gt;SetWindowExt(1000, 1000);
+&nbsp;&nbsp;&nbsp;&nbsp;ASSERT( ptOldWinExt.cx != 0 &amp;&amp; ptOldWinExt.cy != 0 );
+&nbsp;&nbsp;&nbsp;&nbsp;CSize ptOldViewportExt = pDC-&gt;SetViewportExt(rect.Width(),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -rect.Height());
+&nbsp;&nbsp;&nbsp;&nbsp;ASSERT( ptOldViewportExt.cx != 0 &amp;&amp; ptOldViewportExt.cy != 0 );
+&nbsp;&nbsp;&nbsp;&nbsp;CPoint ptOldOrigin = pDC-&gt;SetViewportOrg(rect.Width()/2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rect.Height()/2);
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cview_7.htm"><B>CView::OnDraw</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Texture Format List</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Texture Format List"/>
+<MSHelp:RLTitle Title="Texture Format List"/>
+<MSHelp:Keyword Index="A" Term="cxconTheTextureFormatList"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, texture management"/>
+<MSHelp:Keyword Index="K" Term="texture%2C Direct3D, texture format list"/>
+<MSHelp:Keyword Index="A" Term="cxconTheTextureFormatList"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715345">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconthetextureformatlist"></A>Texture Format List</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>DirectX 8.0 introduces a new mechanism for describing pixel formats. In previous versions of DirectDraw and Direct3D pixel formats were described by a data structure (<MSHelp:link keywords="_wcesdk_DDPIXELFORMAT_ddraw" TABINDEX="0">DDPIXELFORMAT</MSHelp:link>) which contained information about the number of bits per color channel and bit masks for each color channel (along with flags and size field). Pixel formats in DirectX 8.0 are simple <B>DWORD</B>s that identify a particular pixel format and are compatible with FOURCC codes (Direct3D pixel formats are simply FOURCC codes with all but the least significant bytes being zero).</P>
+
+<P>The <B>DDPIXELFORMAT</B> data structure is no longer exposed through API level interfaces. However, it is still used at the DDI level. Specifically, the driver still reports its supported texture formats through a texture format array that consists of surface descriptions with their embedded <B>DDPIXELFORMAT</B> data structures. However, the embedded pixel format structures can now be used to report new style pixel formats. To specify a new style pixel format using the <B>DDPIXELFORMAT</B> data structure, set the <B>dwFlags</B> field of the structure to the value DDPF_D3DFORMAT and store the new pixel format identifier in the <B>dwFourCC</B> field. In addition, certain other new fields have been added to <B>DDPIXELFORMAT</B> (the new fields have been added as members of unions with existing fields so the size of the data structure is the same). These fields include: <B>dwOperations</B>, <B>dwPrivateFormatBitCount</B>, and <B>wFlipMSTypes</B> and <B>wBltMSTypes</B>.</P>
+
+<P>A DirectX 8.0 DDI compliant driver should continue to report DX7 style surface formats through the standard mechanisms, that is, the texture format list reported in the global driver data structure (<A HREF="cxrefd3dhal_globaldriverdata.htm">D3DHAL_GLOBALDRIVERDATA</A>) and the Z/Stencil list reported in response to a GUID_ZPixelFormats from <A HREF="_dxce_ddhal_getdriverinfo.htm">GetDriverInfo</A>. However, the driver should also report all of its supported surface formats through the new DirectX 8.0 DDI mechanism described below.</P>
+
+<P>DirectX 8.0 DDI style surface formats are reported using <B>GetDriverInfo2</B>. Two <B>GetDriverInfo2</B> query types are used by the runtime to query for surface formats from the driver. D3DGDI2_TYPE_GETFORMATCOUNT is used to request the number of DirectX 8.0 style surface formats supported by the driver. D3DGDI2_TYPE_GETFORMAT is used to query for a particular surface format from the driver. </P>
+
+<P>To handle the D3DGDI2_TYPE_GETFORMATCOUNT, the driver must store the number of DirectX 8.0 DDI style surface formats that it supports in the <B>dwFormatCount</B> field of the <B>DD_GETFORMATCOUNTDATA</B>.</P>
+
+<P>When the runtime has received the number of supported formats from the driver, it will then query for each surface format in turn with <B>GetDriverInfo2</B> queries of type D3DGDI2_TYPE_GETFORMAT. The data structure pointed to by the <B>lpvData</B> field of the <A HREF="_dxce_ddhal_ddhal_getdriverinfodata.htm">DDHAL_GETDRIVERINFODATA</A> data structure is, in this case, <B>DD_GETFORMATDATA</B>.</P>
+
+<P>The DirectX 8.0 runtime scans the texture format list reported by the driver examining the <B>dwFlags</B> fields of each pixel format. If any of the texture formats have <B>dwFlags</B> set to DDPF_D3DFORMAT, then the runtime identifies this texture format list as DX8 style and will filter all texture formats whose pixel format is not flagged as DDPF_D3DFORMAT. Furthermore, a DX7 runtime will filter any texture format that does have DDPF_D3DFORMAT set. Therefore, a driver supporting the DX8 DDI can return a texture format list that contains two entries for each supported format, one specified in the old style and one in the new. DX8 runtimes will use the formats specified in the new style and DX7 runtimes will use the formats specified in the old style.</P>
+
+<P>All supported surface formats, such as textures, depth or stencil buffers, or render targets, should be reported through the <B>GetDriverInfo2</B> mechanism. The runtime will ignore the texture and Z/Stencil formats returned through legacy mechanisms (<A HREF="cxrefd3dhal_globaldriverdata.htm">D3DHAL_GLOBALDRIVERDATA</A> and GUID_ZPixelFormats). No attempt will be made to map these formats to DX8 style formats for DirectX 8.0 drivers. However, legacy formats will be mapped to the new style for legacy, DirectX 7.0 or earlier drivers. Therefore, a driver must report all supported surface formats through the DirectX 8.0 DDI. Furthermore, as legacy runtimes will not map new style surface formats to old style formats it is essential that the driver continue to report DirectX 7.0 style surface and Z/Stencil formats through the legacy mechanism.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectx80ddisupport.htm">DirectX 8.0 DDI Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Texture%20Format%20List&nbsp;(cxconthetextureformatlist.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

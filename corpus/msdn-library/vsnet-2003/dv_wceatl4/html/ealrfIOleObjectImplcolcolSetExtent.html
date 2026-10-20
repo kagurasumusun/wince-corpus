@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleObjectImpl::SetExtent</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOleObjectImpl::SetExtent"/>
+<MSHelp:RLTitle Title="IOleObjectImpl::SetExtent"/>
+<MSHelp:Keyword Index="A" Term="ealrfIOleObjectImplcolcolSetExtent"/>
+<MSHelp:Keyword Index="K" Term="SetExtent method"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_IOleObjectImpl_SetExtent"/>
+<MSHelp:Keyword Index="A" Term="ealrfIOleObjectImplcolcolSetExtent"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ioobj.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_706896">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfioleobjectimplcolcolsetextent"></A>IOleObjectImpl::SetExtent</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method sets the extent of the control display area.</P>
+
+<PRE class="syntax"><B>STDMETHOD SetExtent( 
+DWORD </B><I>dwDrawAspect</I><B>,</B> <B>
+SIZEL </B><I>*psizel</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwDrawAspect</I></DT>
+
+<DD>[in] <B>DWORD</B> that describes which form, or aspect, of an object is to be displayed. The container of the object obtains this value from the enumeration DVASPECT. The most common aspect is DVASPECT_CONTENT, which specifies a full rendering of the object within its container. An object can also be rendered as an icon, a thumbnail version for display in a browsing tool, or a print version, which displays the object as it would be rendered using the <B>File Print</B> command.</dd>
+
+<DT><I>*psizel</I></DT>
+
+<DD>[in] Pointer to the size limit for the object.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A container calls <B>IOleObjectImpl::SetExtent</B> when it needs to dictate to an embedded object the size at which it will be displayed. Often, this call occurs in response to an end user resizing the object window. Upon receiving the call, the object, if possible, should recompose itself gracefully to fit the new window.</P>
+
+<P>Whenever possible, a container seeks to display an object at its finest resolution, sometimes called the <I>native size</I> of the object. All objects, however, have a default display size specified by their applications, and in the absence of other constraints, this is the size they will use to display themselves. Since an object knows this optimum size better than does the container, the latter normally requests that size from a running object by calling <B>IOleObjectImpl::GetExtent</B>. Only in cases where the container cannot accommodate the value returned by the object does it override the preference of the object by calling <B>IOleObjectImpl::SetExtent</B>.</P>
+
+<P>If the control class data member <A HREF="ealrfccomcontrolcolcolmusbautosize.htm"><B>m_bAutoSize</B></A> is <B>TRUE</B>, this method returns <B>E_FAIL</B> because the control cannot be resized. Otherwise, <B>SetExtent</B> stores the value pointed to by <I>psizel</I> in the control class data member <A HREF="ealrfccomcontrolcolcolmussizeextent.htm"><B>m_sizeExtent</B></A>. This value is in <B>HIMETRIC</B> units (0.01 millimeter per unit). </P>
+
+<P>If the control class data member <A HREF="ealrfccomcontrolcolcolmusbresizenatural.htm"><B>m_bResizeNatural</B></A> is <B>TRUE</B>, <B>SetExtent</B> also stores the value pointed to by <I>psizel</I> in the control class data member <A HREF="ealrfccomcontrolcolcolmussizenatural.htm"><B>m_sizeNatural</B></A>. </P>
+
+<P>If the control class data member <A HREF="ealrfccomcontrolcolcolmusbrecomposeonresize.htm"><B>m_bRecomposeOnResize</B></A> is <B>TRUE</B>, <B>SetExtent</B> calls <B>SendOnDataChange</B> and <B>SendOnViewChange</B> to notify all advisory sinks registered with the advise holder that the control size has changed. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlctl.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfioleobjectimplcolcolgetextent.htm"><B>IOleObjectImpl::GetExtent</B></A>, <A HREF="ealrfccomcontrolcolcolsendondatachange.htm"><B>CComControl::SendOnDataChange</B></A>, <A HREF="ealrfccomcontrolcolcolsendonviewchange.htm"><B>CComControl::SendOnViewChange</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_706896', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

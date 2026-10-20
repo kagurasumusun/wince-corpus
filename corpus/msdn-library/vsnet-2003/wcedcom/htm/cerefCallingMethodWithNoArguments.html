@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Calling a Method With No Arguments</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Calling a Method With No Arguments"/>
+<MSHelp:RLTitle Title="Calling a Method With No Arguments"/>
+<MSHelp:Keyword Index="A" Term="cerefCallingMethodWithNoArguments"/>
+<MSHelp:Keyword Index="A" Term="cerefCallingMethodWithNoArguments"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: automation_interfaces1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747632">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcallingmethodwithnoarguments"></A>Calling a Method With No Arguments</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The simplest use of <B>Invoke</B> is to call a method that does not have any parameters. You only need to pass the DISPID of the method, a LCID, the DISPATCH_METHOD flag, and an empty <B>DISPPARAMS</B> structure. For example:</P>
+
+<PRE class="code">HRESULT hresult;
+IUnknown FAR* punk;
+IDispatch FAR* pdisp = (IDispatch FAR*)NULL;
+OLECHAR FAR* szMember = "Simple";
+DISPID dispid;
+DISPPARAMS dispparamsNoArgs = {NULL, NULL, 0, 0};
+
+hresult = CoCreateInstance(CLSID_CMyObject, NULL, CLSCTX_SERVER,
+IID_Unknown, (void FAR* FAR*)&amp;punk);
+
+hresult = punk-&gt;QueryInterface(IID_IDispatch,
+(void FAR* FAR*)&amp;pdisp);
+
+hresult = pdisp-&gt;GetIDsOfNames(IID_NULL, &amp;szMember, 1,
+LOCALE_USER_DEFAULT, &amp;dispid);
+
+hresult = pdisp-&gt;Invoke(
+dispid,
+IID_NULL,
+LOCALE_USER_DEFAULT,
+DISPATCH_METHOD,
+&amp;dispparamsNoArgs, NULL, NULL, NULL);</PRE>
+
+<P>The example invokes a method named <B>Simple</B> on an object of the class CMyObject. First, it calls <B>CoCreateInstance</B>, which instantiates the object and returns a pointer to the object's <B>IUnknown</B> interface (punk). Next, it calls <B>QueryInterface</B>, receiving a pointer to the object's <B>IDispatch</B> interface (<I>pdisp</I>). It then uses <I>pdisp </I>to call the object's <B>GetIDsOfNames</B> function, passing the string <B>Simple</B> in <I>szMember </I>to get the DISPID for the <B>Simple</B> method. With the DISPID for <B>Simple</B> in <I>dispid</I>, it calls <B>Invoke</B> to invoke the method, specifying DISPATCH_METHOD for the <I>wFlags</I><CODE> </CODE>parameter and using the system default locale.</P>
+
+<P>To further simplify the code, the example declares a <B>DISPPARAMS</B> structure named <I>dispparamsNoArgs</I> that is<I> </I>appropriate to an <B>Invoke</B> call with no parameters.</P>
+
+<P>Because the <B>Simple</B> method does not take any parameters and does not return a result, the <I>puArgErr</I> and <I>pVarResult</I> parameters are NULL. In addition, the example passes NULL for <I>pExcepInfo</I>, that indicates that it is not prepared to handle exceptions and will handle only <B>HRESULT</B> errors.</P>
+
+<P>Most methods, however, take one or more parameters. To invoke these methods, the <B>DISPPARAMS</B> structure should be filled in, as described in <A HREF="cerefpassingparameters.htm">Passing Parameters</A>.</P>
+
+<P>Automation defines special DISPIDs for invoking an object's <B>Value</B> property (the default), and the members _<B>NewEnum</B>, and <B>Evaluate</B>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Calling%20a%20Method%20With%20No%20Arguments&nbsp;(cerefcallingmethodwithnoarguments.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

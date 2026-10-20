@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 3: Specify Message Types</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 3: Specify Message Types"/>
+<MSHelp:RLTitle Title="Step 3: Specify Message Types"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_3__Specify_Message_Types"/>
+<MSHelp:Keyword Index="K" Term="messages, DirectMusic (Tutorial 2)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_3__Specify_Message_Types"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690669">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_3__specify_message_types"></A>Step 3: Specify Message Types</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The CEchoTool class needs to define all the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool" TABINDEX="0">IDirectMusicTool</MSHelp:link> methods. But because it does not need to perform any work in <B>Init</B> or <B>Flush</B>, it simply returns E_NOTIMPL from those methods. </P>
+
+<P>The following methods are used to specify what messages will get passed to the tool for processing:
+
+<UL type="disc">
+	<LI><B>GetMsgDeliveryType</B> specifies when messages should be passed to the tool &#0151; as soon as they are available, at the exact time they are stamped for, or just in time to be processed and put in the port buffer. These three delivery types are represented respectively by the DMUS_PMSGF_TOOL_IMMEDIATE, DMUS_PMSGF_TOOL_ATTIME, and DMUS_PMSGF_TOOL_QUEUE flags in the <B>dwFlags</B> member of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PMSG" TABINDEX="0">DMUS_PMSG</MSHelp:link> structure.</li>
+
+	<LI><B>GetMediaTypes</B> establishes what type of messages should be passed to the tool, based on the content of the message. CEchoTool processes only music notes and patch changes, so it will accept MIDI short messages, music note messages, and DirectMusic patch messages. These messages are identified by flags of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PMSGT_TYPES" TABINDEX="0">DMUS_PMSGT_TYPES</MSHelp:link> enumerated type in the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PMSG" TABINDEX="0">DMUS_PMSG</MSHelp:link> message structure.</li>
+
+	<LI><B>GetMediaTypeArraySize</B> returns the number of elements in the media type array. </li>
+</UL>
+
+<P>CEchoTool implements these methods in the following sample code.</P>
+
+<PRE class="code">HRESULT STDMETHODCALLTYPE CEchoTool::GetMsgDeliveryType(
+        DWORD* pdwDeliveryType )
+{
+    // This tool wants messages immediately.
+    // This is the default, so returning E_NOTIMPL
+    // would work. The other method is to specifically
+    // set *pdwDeliveryType to the delivery type,
+// DMUS_PMSGF_TOOL_IMMEDIATE, DMUS_PMSGF_TOOL_QUEUE, 
+// or DMUS_PMSGF_TOOL_ATTIME.
+ 
+    *pdwDeliveryType = DMUS_PMSGF_TOOL_IMMEDIATE;
+  return S_OK;
+}
+ 
+HRESULT STDMETHODCALLTYPE CEchoTool::GetMediaTypeArraySize(
+        DWORD* pdwNumElements)
+{
+  *pdwNumElements = 3;
+  return S_OK;
+}
+ 
+HRESULT STDMETHODCALLTYPE CEchoTool::GetMediaTypes(
+        DWORD** padwMediaTypes, 
+        DWORD dwNumElements)
+{
+  if (dwNumElements == 3)
+  {
+    (*padwMediaTypes)[0] = DMUS_PMSGT_NOTE;
+    (*padwMediaTypes)[1] = DMUS_PMSGT_MIDI;
+    (*padwMediaTypes)[2] = DMUS_PMSGT_PATCH;
+    return S_OK;
+  }
+  else
+  {
+    // This should never happen.
+    return E_FAIL;
+  }
+}</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_4__define_the_processpmsg_method.htm">Step 4: Define the ProcessPMsg Method</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%203:%20Specify%20Message%20Types&nbsp;(_wcesdk_dxmusic_step_3__specify_message_types.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

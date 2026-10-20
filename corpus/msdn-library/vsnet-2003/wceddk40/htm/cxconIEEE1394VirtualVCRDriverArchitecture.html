@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Driver Architecture"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRDriverArchitecture"/>
+<MSHelp:Keyword Index="K" Term="1394 virtual VCR drivers, architecture"/>
+<MSHelp:Keyword Index="K" Term="architecture, IEEE 1394 virtual VCR drivers"/>
+<MSHelp:Keyword Index="K" Term="IEEE 1394 virtual VCR drivers, architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRDriverArchitecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_vvcr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759082">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconieee1394virtualvcrdriverarchitecture"></A>IEEE 1394 Virtual VCR Driver Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The virtual VCR driver depends on having some permanent plugs allocated for it at startup. It makes use of the optional <A HREF="cxrefioctl_unit_process_registry_plugs.htm">IOCTL_UNIT_PROCESS_REGISTRY_PLUGS</A> functionality to have these plugs defined in the registry. The sample definitions, as listed in Common.reg, are shown in the following registry example.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}\0000\Plugs\0]
+; MPEG, Output Plug, 26Mpbs peak
+    "MediaType"=dword:0
+    "Direction"=dword:2
+    "SubunitPlugID"=dword:0
+    "MaximumThroughput"=dword:18cba80
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}\0000\Plugs\1]
+; MPEG, Input Plug
+    "MediaType"=dword:0
+    "SubunitPlugID"=dword:0
+    "Direction"=dword:1</PRE>
+
+<P>The <B>{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}</B> name refers to the GUID assigned to the virtual VCR device in Avc_vvcr.h. The <B>0000</B> name refers to the WDM instance of that driver. For virtual subunits, you rarely want more than a single instance, so this is typically just <B>0000</B>. The actual entries below this point follow to the definitions described in <A HREF="cxconieee1394unitfilterdrivers.htm">AV/C Unit Filter Driver</A>.</P>
+
+<P>A virtual subunit is not required to have permanent plugs defined. If the Virtual Subunit is not required to be compatible with some legacy hardware, for example, hardware that either presumes serial bus plug 0 or only looks for plugs when it recognizes the virtual subunit, typically following a IEEE 1394 bus reset, then the virtual subunit can effectively depend on receiving callbacks from the unit filter driver when external devices ask for subunit plug and serial bus plug associations. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394virtualvcrapplication.htm">IEEE 1394 Virtual VCR Application</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Virtual%20VCR%20Driver%20Architecture&nbsp;(cxconieee1394virtualvcrdriverarchitecture.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

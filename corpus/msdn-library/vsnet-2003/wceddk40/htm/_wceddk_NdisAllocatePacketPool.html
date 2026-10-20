@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAllocatePacketPool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisAllocatePacketPool"/>
+<MSHelp:RLTitle Title="NdisAllocatePacketPool"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisAllocatePacketPool"/>
+<MSHelp:Keyword Index="K" Term="NdisAllocatePacketPool"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisAllocatePacketPool"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673233">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndisallocatepacketpool"></A>NdisAllocatePacketPool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function allocates and initializes a block of storage for a pool of packet descriptors.</P>
+
+<PRE class="syntax"><B>VOID NdisAllocatePacketPool(</B>
+<B>PNDIS_STATUS</B> <I>Status</I><B>,</B>
+<B>PNDIS_HANDLE</B> <I>PoolHandle</I><B>,</B>
+<B>UINT</B> <I>NumberOfDescriptors</I><B>,</B>
+<B>UINT</B> <I>ProtocolReservedLength</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>[out] Pointer to a caller-supplied variable in which this function returns the status of the packet pool allocation. </dd>
+
+<DT><I>PoolHandle</I></DT>
+
+<DD>[out] Handle to the packet pool. This handle is a required parameter to the NDIS packet functions that the driver calls subsequently.</dd>
+
+<DT><I>NumberOfDescriptors</I></DT>
+
+<DD>[in] Specifies the number of packet descriptors that the pool should contain.</dd>
+
+<DT><I>ProtocolReservedLength</I></DT>
+
+<DD>[in] Specifies the number of bytes to be allocated for the <I>ProtocolReserved</I> array of each packet descriptor. For packet descriptors that are to be used in receive indications, this parameter can be at most 16 bytes.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the possible return values for this function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NDIS_STATUS_SUCCESS</TD>
+<TD width=63%>The driver can make calls to the <A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A> function when it needs packet descriptors to make indications up to higher-level drivers or to send packets down to lower-level drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>NDIS_STATUS_RESOURCES</TD>
+<TD width=63%>The attempt to allocate a packet pool failed, possibly due to a shortage of memory. However, the caller might attempt to decrease the <I>NumberOfDescriptors</I> parameter and call again immediately.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The caller should save the handle returned by this function. Usually, the driver next calls the <B>NdisAllocatePacket</B> function one or more times with this handle to allocate a set of packet descriptors. The <I>NumberofDescriptors</I> specified in the call to this function is the effective limit on how many times the driver can call <B>NdisAllocatePacket</B> before it must call the <A HREF="_wceddk_ndisfreepacket.htm">NdisFreePacket</A> function to return a packet descriptor to the free list for the packet pool.</P>
+
+<P>Because packets sent or indicated are returned to the allocating driver, it can reuse each packet descriptor after calling the <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A> function and setting it up again with a chain of buffer descriptors, or the driver can call the <B>NdisFreePacket</B> function to return that packet to the free list. Reinitializing and reusing packets allocated from the packet pool is far faster than freeing and reallocating them. Before a driver calls <B>NdisReinitializePacket</B> with a packet descriptor, it must save the pointers to buffer descriptors that are chained to the packet descriptor, because <B>NdisReinitializePacket</B> sets the head of the buffer chain to NULL.</P>
+
+<P>When the driver no longer needs the packet pool, it calls the <A HREF="_wceddk_ndisfreepacketpool.htm">NdisFreePacketPool</A> function to release the packet pool storage.</P>
+
+<P>The driver must release any spin lock that it is holding before calling this function.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndisallocatepacket.htm">NdisAllocatePacket</A>, <A HREF="_wceddk_ndisfreepacket.htm">NdisFreePacket</A>, <A HREF="_wceddk_ndisfreepacketpool.htm">NdisFreePacketPool</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndisreinitializepacket.htm">NdisReinitializePacket</A>, <A HREF="_wceddk_ndisunchainbufferatback.htm">NdisUnchainBufferAtBack</A>, <A HREF="_wceddk_ndisunchainbufferatfront.htm">NdisUnchainBufferAtFront</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisAllocatePacketPool&nbsp;(_wceddk_ndisallocatepacketpool.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

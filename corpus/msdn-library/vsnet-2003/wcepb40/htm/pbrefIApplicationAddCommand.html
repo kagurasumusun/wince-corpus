@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IApplication::AddCommand</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IApplication::AddCommand"/>
+<MSHelp:RLTitle Title="IApplication::AddCommand"/>
+<MSHelp:Keyword Index="A" Term="pbrefIApplicationAddCommand"/>
+<MSHelp:Keyword Index="K" Term="IApplication, AddCommand"/>
+<MSHelp:Keyword Index="A" Term="pbrefIApplicationAddCommand"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: addin_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_819270">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="pbrefiapplicationaddcommand"></A>IApplication::AddCommand</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method adds a command defined by an add-in.</P>
+
+<PRE class="syntax"><B>THIS_ BSTR</B> <I>szCmdName</I><B>,</B>
+<B>BSTR</B> <I>szMethodName</I><B>,</B>
+<B>long</B> <I>nBitmapOffset</I><B>,</B>
+<B>long</B> <I>dwCookie</I><B>,</B>
+<B>VARIANT_BOOL FAR *pbResult</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>szCmdName</I></DT>
+
+<DD>[in]The collection of substrings that give the command identifiers, separated by a newline character ('\n'). The following table shows the substrings in proper order.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=11%>Order</TH>
+<TH width=33%>Substring</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=11%>1</TD>
+<TD width=33%>Name of the command </TD>
+<TD width=56%>The command you want to add. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=11%>2</TD>
+<TD width=33%>Text displayed on the toolbar button for the command </TD>
+<TD width=56%>The text that goes on a toolbar button.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=11%>3</TD>
+<TD width=33%>Status bar string </TD>
+<TD width=56%>The string displayed on the status bar or in the <B>Customize</B> dialog box when the user selects this command.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=11%>4</TD>
+<TD width=33%>Tooltip string </TD>
+<TD width=56%>The string displayed in the tool tip when the user holds the mouse pointer over the toolbar button assigned to the command.</TD>
+</TR>
+</table></div>
+
+
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note</B>&nbsp;&nbsp;&nbsp;Even if the add-in does not provide a toolbar button for a command, the add-in must provide all four substrings, because users can create toolbar buttons for commands added by add-ins.</BLOCKQUOTE>
+</dd>
+
+<DT><I>szMethodName</I></DT>
+
+<DD>[in] The method exposed by the add-in to implement the command.</dd>
+
+<DT><I>nBitmapOffset</I></DT>
+
+<DD>[in] The zero-based index into the medium and large command bar button bitmaps for this button image. For example, 0 (zero) represents the first image, 1 represents the second image, and so on. If the add-in does not provide a default image for toolbar buttons assigned to this command, the value of <I>nBitmapOffset </I>is -1.</dd>
+
+<DT><I>dwCookie</I></DT>
+
+<DD>[in] The identifier of the add-in. The IDE passes this value to the add-in through the add-in <A HREF="pbrefidsaddinonconnection.htm">IDSAddIn::OnConnection</A> method.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the return values for the <B>AddCommand</B> method.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>TRUE</TD>
+<TD width=50%>The command was added.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>FALSE</TD>
+<TD width=50%>The command was not added because its name conflicted with the name of an existing command. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Only add-ins can call the <B>AddCommand</B> method. VBScript macros cannot.</P>
+
+<P>If the command name string supplied in <I>szCmdName</I> conflicts with an existing command, the IDE returns <B>FALSE</B>, keeps the existing command, and does not add this command. To prevent conflicts with existing commands, the add-in should prefix this command with the name of the add-in.</P>
+
+<P>The following example shows the code automatically generated when you create an add-in using the Visual Studio Add-in Wizard:</P>
+
+<PRE class="code">VARIANT_BOOL bRet;
+pApplication-&gt;AddCommand(bszCmdString, bszMethod, 0, m_dwCookie, &amp;bRet);
+if (bRet == VARIANT_FALSE)
+{
+ &nbsp; *OnConnection = VARIANT_FALSE;
+ &nbsp; return S_OK;
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>Appauto.h</TD>
+<TD width=15%>Appdefs.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_macros.htm">Macros and Add-ins</A>, <A HREF="pbrefnewcommandstoolbarbuttons.htm">New Commands and Toolbar Buttons</A>, <A HREF="pbrefiapplicationaddcommandbarbutton.htm">IApplication::AddCommandBarButton</A>, <A HREF="pbrefiapplicationenablemodeless.htm">IApplication::EnableModeless</A>, <A HREF="pbrefiapplicationsetaddininfo.htm">IApplication::SetAddInInfo</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IApplication::AddCommand&nbsp;(pbrefiapplicationaddcommand.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

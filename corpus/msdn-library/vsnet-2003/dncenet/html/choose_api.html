@@ -1,0 +1,504 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Choosing a Windows Embedded API: Win32 vs. the .NET Compact Framework</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Choosing a Windows Embedded API: Win32 vs. the .NET Compact Framework"/>
+<MSHelp:RLTitle Title="Choosing a Windows Embedded API: Win32 vs. the .NET Compact Framework"/>
+<MSHelp:Keyword Index="A" Term="choose_api"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="Status" Value="New"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content=" This article continues the analysis from another article, Application Development Landscape for Windows CE .NET, where three Windows CE APIs were compared: Win32, MFC, and the .NET Compact Framework."><meta name="keywords" content="Windows Embedded API, Win32, application programming interface"><META name="rtfFileName" content="choose_api.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Date" CONTENT="2002-10-01">
+<META NAME="msdnID" CONTENT="_838171">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="choose_api"></A>Choosing a Windows Embedded API: Win32 vs. the .NET Compact Framework</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Written by:<BR>
+Paul Yao, Windows Embedded MVP<BR>
+<A HREF="http://www.paulyao.com/">The Paul Yao Company</A> </P>
+
+<P>September 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Win32&#174;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft .NET Compact Framework<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Windows&#174; CE 3.0<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Windows CE .NET<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Embedded Visual Tools 3.0/4.0<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Embedded Visual C++&#174; 3.0/4.0<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Embedded Visual Basic&#174;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Visual Studio&#174; .NET<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft ASP.NET Mobile Controls<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft ADO.NET</P>
+
+<P><B>Contents</B></P>
+
+<P><A HREF="#choose_api_topic1">Development Tools</A><BR>
+<A HREF="#choose_api_topic2">Win32 - The Assembly Language of Windows</A><BR>
+<A HREF="#choose_api_topic3">.NET Compact Framework - "Rapid Application Development"</A><BR>
+<A HREF="#choose_api_topic4">Connecting Win32 and .NET Compact Framework Code</A><BR>
+<A HREF="#choose_api_topic5">Conclusion</A></P>
+
+<P><B>Summary:</B> This article continues the analysis from another article, <MSHelp:link keywords="apdvlscape" TABINDEX="0">Application Development Landscape for Windows CE .NET</MSHelp:link>, where three Windows CE APIs were compared: Win32, MFC, and the .NET Compact Framework. This article focuses on two of these APIs&#151;Win32 and the .NET Compact Framework &#151;to provide details on selecting an API for specific programming tasks. The choice of API ultimately dictates the choice of development tool: Embedded Visual C++ 3.0/4.0 or Visual Studio .NET. (14 printed pages)</P>
+
+<P>An important piece of planning any development project is deciding which application program interface (API) to use. Picking an API is a very important task. You are making a decision that will affect every other aspect of your project. In developing embedded applications, the issue is whether to use the Microsoft&#174; Windows&#174; 32-Bit API (Win32&#174;) or the Microsoft .NET Compact Framework. </P>
+
+<P>The choice is not that hard to make. Most software will either use Win32 alone, or use a blend of Win32 for low-level code and the .NET Compact Framework for high-level code. For a detailed description of the features of both APIs, see <MSHelp:link keywords="apdvlscape" TABINDEX="0">Application Development Landscape for Windows CE .NET</MSHelp:link></P>
+
+<P>Win32 is the core API of Microsoft Windows CE. If the operating system supports a feature, it must by definition be supported in Win32. For headless devices, your only choice is Win32. For certain kinds of operating system extensions, again, your only choice is Win32. If you want something that will be portable to a wide range of Windows CE platforms, such as a device driver, using Win32 makes a lot of sense.</P>
+
+<P>Win32 and the .NET Compact Framework are each portable in their own way. The .NET Compact Framework has binary portability, so that a single executable file can run on different CPUs, such as StrongARM, XScale, MIPS, SH3, SH4, and so on. But the .NET Compact Framework is not supported on some Windows CE devices, notably those that have no display screen. Even some display-based devices do not support enough of the required Win32 API to support the .NET Compact Framework.</P>
+
+<P>The Win32 API, on the other hand, does not have binary portability. For example, if you are using the Win32 API to build an application to run on two platforms, MIPS and SH3, you must ship two executable files. Instead, Win32 has source-code portability, so you use the same source code to build those two executable files. Win32 will be present on a Windows CE system even if the .NET Compact Framework cannot be supported. This makes Win32 the best choice for low-level components that must run on many different configurations of Windows CE.</P>
+
+<P>The .NET Compact Framework provides the ability to build a dialog-style user interface by using one of two languages: C# (in the C family of languages) or Microsoft Visual Basic&#174; .NET (in the Visual Basic family of languages). You can also build traditional graphical user inferface (GUI) applications that are not dialog-box style by processing input and drawing onto the application's main window (called a "form" in .NET). There is great support for database management in the .NET Compact Framework, especially for Microsoft SQL Server&#8482; CE. There is also great support for creating in-memory databases, otherwise known as DataSet and DataTable, by using Microsoft ADO.NET. And if you want to manipulate eXtensible Markup Language (XML) data, or create a Web Service client, you will find a lot to help you out in the .NET Compact Framework.</P>
+
+<P>The rest of this article digs deeper into the subject of when to use Win32 and when to use the .NET Compact Framework.</P>
+
+<H2 class="dtH1"><A NAME="choose_api_topic1"></A>Development Tools</H2>
+
+<P>When you pick an API, you automatically pick the development tool to access the API. The following table summarizes four application development tools for Windows CE and the platforms and APIs they support for Microsoft Windows CE-based development.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Development Tool</TH>
+<TH width=33%>Platform</TH>
+<TH width=34%>API</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Embedded Visual C++ (part of Embedded Visual Tools 3.0)</TD>
+<TD width=33%>All Windows CE 3.0-based platforms, including:
+<UL type="disc">
+	<LI>Pocket PC</li>
+
+	<LI>Pocket PC 2002*</li>
+
+	<LI>Smartphone 2002*</li>
+</UL>
+</TD>
+<TD width=34%>
+<UL type="disc">
+	<LI>Win32</li>
+
+	<LI>MFC</li>
+
+	<LI>ATL</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Embedded Visual Basic (part of Embedded Visual Tools 3.0)</TD>
+<TD width=33%>All Windows CE 3.0-based platforms</TD>
+<TD width=34%>Embedded Visual Basic</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Embedded Visual C++ 4.0</TD>
+<TD width=33%>Windows CE .NET-based platforms</TD>
+<TD width=34%>
+<UL type="disc">
+	<LI>Win32</li>
+
+	<LI>MFC</li>
+
+	<LI>ATL</li>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Visual Studio .NET 2003</TD>
+<TD width=33%>
+<UL type="disc">
+	<LI>Pocket PC</li>
+
+	<LI>Pocket PC 2002*</li>
+
+	<LI>Windows CE .NET-based platforms</li>
+</UL>
+</TD>
+<TD width=34%>
+<UL type="disc">
+	<LI>.NET Compact Framework</li>
+
+	<LI>ASP.NET Mobile Controls</li>
+</UL>
+</TD>
+</TR>
+</table></div>
+
+<P class="fineprint">* Separate SDK download required.</p>
+<P>To build Win32 applications or dynamic link libraries (DLLs), you can use Microsoft Embedded Visual C++&#174; (eVC++) version 3.0, for Windows CE 3.0-based platforms, or version 4.0, for Windows CE .NET-based platforms. If you want to build for both versions of Windows CE, use Embedded Visual C++ version 3.0. You won't lose many features, except support for C++ exceptions, which are only supported in eVC++ 4.0.</P>
+
+<P>To build a .NET Compact Framework application, you will need Microsoft Visual Studio&#174; .NET 2003. A useful feature of this environment is that you can drag-and-drop controls from a toolbox onto a form, then click on elements in the form to add code behind the controls. Built-in IntelliSense shows you the properties, methods, and events that are supported for each control. Programmers who have worked with Visual Basic, either on the desktop or as Embedded Visual Basic, will find much that is familiar in the development environment.</P>
+
+<P>Microsoft announced in the fall of 2001 that the available features of Embedded Visual Basic (eVB) would be frozen with the set available in version 3.0. Also, eVB will not be ported to new CPUs, such as XScale, as those become available. Programmers who want to continue working with the Basic language should plan to work with the .NET Compact Framework, which supports the Visual Basic .NET programming language. It also provides a drag-and-drop development environment that will be very familiar to eVB developers.</P>
+
+<P>A .NET Compact Framework application can call Win32 dynamic link libraries, including the system's core library, COREDLL.DLL, by using a feature called "Platform Invoke." This is just one of several mechanisms that can be used to interoperate between the two APIs.</P>
+
+<H2 class="dtH1"><A NAME="choose_api_topic2"></A>Win32&#151;The Assembly Language of Windows</H2>
+
+<P>The Win32 API is the core programming interface for Windows CE. In the early 1990s, Microsoft announced that its two core strategic technologies were Win32 and the Component Object Model (COM). The Win32 API is supported on all Windows operating systems, including 16-bit systems (Microsoft Windows 95, Windows 98, and Windows Millennium Edition) and 32-bit systems (Microsoft Windows NT&#174;, Windows 2000, and Windows XP).</P>
+
+<P>Windows CE was the first Microsoft operating system to use the Win32 API for both device drivers and applications. Sixteen-bit Windows systems use the Virtual (VxD) drivers at their lowest layer, and 32-bit Windows systems have a proprietary kernel-mode API that is decidedly <I>not</I> Win32. Therefore, Windows CE is more deeply connected to Win32 than any other Microsoft operating system.</P>
+
+<P>Win32 has been referred to as the "assembly language of Windows," because it is a very low-level API with very primitive functions. Just as multiple machine language instructions are needed to accomplish even the simplest task, multiple Win32 function calls are often needed to do real work. This is, however, the API that all other APIs and development tools ultimately rely on to get things done.</P>
+
+<P>In the context of the .NET Framework, Win32 code is referred to as "unmanaged code." This is because the Common Language Runtime does not manage the memory, or guarantee the security and type-safety, of Win32 code. .NET code, by contrast, is called "managed code" because all these features and more are provided by the .NET runtime. Understanding the distinction between managed and unmanaged code is key to understanding the difference between these two APIs.</P>
+
+<H3 class="dtH1">When to Use Win32</H3>
+
+<P>The Win32 API provides the ability to create low-level components, like device drivers and DLLs that extend the operating system. Win32 can also be used for applications that must run on headless (HLBASE-derived) Windows CE .NET platforms. Here are some basic features of Win32 that make it the best choice, or the only available choice, for certain applications:
+
+<UL type="disc">
+	<LI>Fastest executables</li>
+
+	<LI>Best real-time support</li>
+
+	<LI>Source code (inter-platform) portability</li>
+
+	<LI>Ability to wrap COM for access by .NET Compact Framework applications</li>
+
+	<LI>Ability to create device drivers</li>
+
+	<LI>Ability to create control panel applets</li>
+
+	<LI>Support for custom user-interface skins</li>
+
+	<LI>Support for security extensions</li>
+
+	<LI>Ability to build Simple Object Access Protocol (SOAP) Web Servers</li>
+
+	<LI>Support for Pocket PC shell extensions</li>
+
+	<LI>Ability to use existing Win32 code</li>
+</UL>
+
+<H4 class="dtH1">Fastest executables</H4>
+
+<P>Win32 provides the fastest executables. Part of the reason is that Win32 executables ship as native machine instructions. .NET Compact Framework executables, by contrast, ship as Microsoft Intermediate Language/Common Intermediate Language (MSIL/CIL), which must be converted to native code. This conversion takes time, and you cannot anticipate when it might occur.</P>
+
+<P>The IL-to-native conversion takes place when a page of code is decompressed from the object store and/or read-only memory (ROM) and moved to program memory. This conversion is only needed when the code is brought into program memory, so after that the code can be executed with no further conversion required, as long as it is not deleted by the system memory manager.</P>
+
+<P>Another aspect of .NET Compact Framework code that can cause delays is the Garbage Collector. The Garbage Collector moves objects on the heap as part of its operation. Any managed thread that is running in a process might need to access one or more object on the heap, so to prevent this, all threads are halted. There is no question that the Garbage Collector provides a valuable service, but there is no way to schedule or control when it will run. This means that the execution of managed code might be inconsistent.</P>
+
+<H4 class="dtH1">Best real-time support</H4>
+
+<P>The recommendation to use Win32 for real-time support is related to its support of the fastest executables. At its core, real-time processing demands both a correct algorithm and a timely algorithm. Real-time handling is used for data collection, as well as control for devices as varied as robots in a manufacturing arena or mice and keyboards used for input.</P>
+
+<P>Real-time support means more than just doing things as fast as possible. Windows CE real-time support provides a guarantee of consistency for the highest-priority thread in the system and for the highest-priority interrupt handler. Windows CE supports 256 thread priorities though the <code class="ce">CeSetThreadPriority</code> function. It also provides the ability to manipulate the scheduling quantum of individual threads with the <code class="ce">CeSetThreadQuantum</code> function.</P>
+
+<P>As described earlier, the Garbage Collector requires all managed threads to halt. But threads running in native code can continue running even when the Garbage Collector is running. If such threads return to managed code while the Garbage Collector is running, they are blocked until the Garbage Collector is finished. This means that you can feel confident that a Win32 thread running native code can co-exist peacefully with managed code.</P>
+
+<H4 class="dtH1">Source code (inter-platform) portability</H4>
+
+<P>Both Win32 and .NET Compact Framework applications provide a degree of portability: Win32 provides source-code portability, and the .NET Compact Framework provides binary portability. Win32 portability serves you when you want some source code to run on a wide range of Windows CE platforms, even on platforms without the .NET Compact Framework runtime. The limitations on Win32 executables is that they rely on having the necessary Win32 functions and are CPU-dependent.</P>
+
+<P>Windows CE is a highly configurable operating system. This means that the set of Win32 functions supported on one platform might not match the set of Win32 functions on a second platform. Even when using the Win32 API, getting the portability to a broad range of platforms requires some diligence.</P>
+
+<P>A set of functions corresponding to the "Tiny Kernel" configuration in Platform Builder are guaranteed to be on every Windows CE platform. (This was called MINKERN in earlier versions of the Platform Builder.) Among the features supported are the following kernel services:
+
+<UL type="disc">
+	<LI>Module functions (LoadLibrary, FreeLibrary, GetProcAddress)</li>
+
+	<LI>Thread functions (CreateThread, Sleep, and so on)</li>
+
+	<LI>Synchronization functions (critical sections, mutexes, semaphores)</li>
+
+	<LI>File I/O functions</li>
+
+	<LI>Registry functions</li>
+
+	<LI>Memory allocation functions (VirtualAlloc, HeapCreate, LocalAlloc, and so on)</li>
+
+	<LI>C-runtime string functions (wcscpy, wcslen, and so on)</li>
+
+	<LI>Point-to-point queue functions (for example, CreateMsgQueue)</li>
+
+	<LI>Serial communications support (SetCommMask, GetCommState, and so on)</li>
+</UL>
+
+<P class="normal">The Windows CE .NET Platform Builder defines a Standard SDK component, which, when added to a platform, includes a baseline set of operating system features. Intended only for display-based systems&#151;those built on the Internet Appliance Base Files (IABASE) core&#151;this baseline defines a core set of features to make it easier to write components that can run on a wide range of Windows CE .NET-based platforms. For details, see the.Standard SDK for Windows CE .NET.</P>
+
+<H4 class="dtH1">Ability to wrap COM for access by .NET Compact Framework applications</H4>
+
+<P>While the desktop .NET Framework has support for interoperability with the Component Object Model (COM), the .NET Compact Framework has no such support. You must build a Win32 DLL with a set of wrapper functions around any Win32 ActiveX&#174;/COM library that you want to use.</P>
+
+<P>The success of this approach depends on the kind of component you are trying to call. For components with little or no user interface, this support should work well. Here are some of the Windows CE system services that come packaged with one or more COM components:
+
+<UL type="disc">
+	<LI>Pocket Outlook&#174; Object Model (POOM)</li>
+
+	<LI>DirectX&#174; Multimedia API, including Direct3D&#174; (3-dimensional drawing), ActiveMovie&#174;, DirectMusic&#174;, and DirectPlay&#174;</li>
+
+	<LI>Mail API (MAPI)</li>
+
+	<LI>Object Exchange (OBEX)</li>
+
+	<LI>OLE Database API (OLEDB)</li>
+
+	<LI>Simple Object Access Protocol (SOAP)</li>
+
+	<LI>Pocket Internet Explorer Web viewer window</li>
+
+	<LI>Bluetooth API</li>
+
+	<LI>Internet Explorer 5.5 add-ins</li>
+
+	<LI>Universal Plug and Play (UPnP)</li>
+
+	<LI>Access structured-storage files</li>
+
+	<LI>Access COM automation servers</li>
+</UL>
+
+<H4 class="dtH1">Ability to create device drivers</H4>
+
+<P>All device drivers should be written using Win32. Some of the reasons have already been mentioned: size, speed, real-time support, and portability to the broadest range of platforms.</P>
+
+<P>The other, architectural, reason is that device drivers are always dynamic link libraries built with C-callable exported functions. The .NET Compact Framework does not support the creation of this kind of DLL, although you can build .NET-compatible DLLs.</P>
+
+<P>This is the first item in the list that falls into the category of "operating system extensions." All such operating system extensions are dynamic link libraries, and as such you will implement all of them by using Win32.</P>
+
+<H4 class="dtH1">Ability to create control panel applets</H4>
+
+<P>You have the ability to add new icons to the Control Panel in Windows CE, just as you do on the desktop. This provides a centralized place for users to find and change system settings, and is particularly important for otherwise invisible services and device drivers that are installed on a system.</P>
+
+<P>A control panel applet is a Win32 DLL that exports a function named <code class="ce">CplApplet</code>. These are loaded, and the associated dialog boxes are displayed, by the Control Panel as needed. Platform Builder provides source code for the Control Panel, along with the source code for several example control panel applets, at \WINCE400\public\WCESHELLFE\OAK\CTLPNL\CPLMAIN.</P>
+
+<H4 class="dtH1">Custom user-interface skin</H4>
+
+<P>Windows CE .NET provides the ability to change the user-interface skin of the operating system. This is similar to the concept of owner-draw controls, by which a Win32 program can change the appearance of various controls like push buttons, status bars, header controls, ListView controls, and the Tab control. (The desktop supports other owner-drawn items, like the Listbox, that are not supported in Windows CE.) An owner-draw push button, for example, can display a bitmap of a fish, an animated sequence, or any other graphic image desired by the creator. Windows CE .NET provides, in short, full control over the appearance of a control.</P>
+
+<P>The user-interface skin gives a platform developer the ability to make the same types of changes in the non-client areas of windows that owner-draw controls provide for the client areas. A skin lets you change system colors, the tiny widget bitmaps for scroll bar arrows, check boxes, radio buttons, and other small system images. You can also change the look of most of the system controls.</P>
+
+<P>Windows CE .NET ships with two standard skins: a Windows 95 look and a Windows XP look. When building a custom platform, you can modify these to make your platform look quite distinct and different from other Windows CE-based platforms.</P>
+
+<P>This feature is enabled by modifying a set of C++ source files that are built at platform creation time and merged into the Graphics, Windowing, and Events Subsystem (GWES). Only Win32, then, can be used to build user-interface skins.</P>
+
+<P>If you want to build a custom shell, the approach discussed above is to add a new skin to an existing shell. Another alternative is to write a shell from scratch. The key benefit you gain here is more control over what the user can see and do. Platform Builder for Windows CE .NET contains a sample shell in the following location: .\Public\wceshellfe\Oak\Taskman.</P>
+
+<H4 class="dtH1">Support for security extensions</H4>
+
+<P>Windows CE has had support for secure network communications since version 2.0. This support includes Secure Socket Layer (SSL), the encryption API (CRYPT32.DLL), and X.509 digital certificates. Windows CE .NET adds support for the Security Support Provider Interface (SSPI), a feature first seen in Windows 2000. An SSPI is a Win32 DLL that exports a single function named InitSecurityInterfaceW. </P>
+
+<P>Two security providers are available for Windows CE .NET: LAN Manager and Kerberos. By using SSPI, you could add your own proprietary, custom security mechanism to a Windows CE .NET-based platform.</P>
+
+<P>On the subject of security, it is worth pointing out that .NET Compact Framework executables are arguably less secure than Win32 executables for proprietary algorithms. One reason is that tools like the IL Disassembler, ILDASM.EXE, allow anyone to dump the machine instructions to your modules. This can also be done for Win32 modules, but .NET binaries contain metadata which provides the names of properties, methods, and events, among others, to outside eyes. One way to combat unwanted disclosure of technical details is to use a tool, which some call an obfuscator, that changes the metadata to make it less intelligible. Developers who are concerned about hiding proprietary information will no doubt want to dig deeper into the issue of whether Win32 or the .NET Compact Framework provides the level of protection required.</P>
+
+<H4 class="dtH1">Ability to build SOAP Web Servers </H4>
+
+<P>Web Services provide the ability to call a function across a network, whether the network is an intranet or the Internet. This represents the next step in the evolution of distributed computing. To support this, the .NET Compact Framework has the ability to create Web Service clients. In other words, a .NET Compact Framework application can declare and call functions that reside on a SOAP-compliant Web Server. This includes not just ASP .NET-based Web Servers, but any server that supports the industry-standard SOAP protocol.</P>
+
+<P>While the .NET Compact Framework allows you to create Web Service <I>clients</I>, it does not provide support for building Web Service <I>servers</I>. You can, however, host a Web Server on Windows CE .NET. Doing so involves using the SOAP 2.0 toolkit that ships with Platform Builder, and building the necessary COM objects, which themselves are Win32 DLLs, to make your Web Service available.</P>
+
+<H4 class="dtH1">Support for Pocket PC shell extensions</H4>
+
+<P>The Pocket PC shell allows for some refinements, all of which must be implemented with Win32. This includes the Today screen, custom Software Input Panel (SIP) modules, and others.</P>
+
+<H4 class="dtH1">Ability to use existing Win32 code</H4>
+
+<P>If you have code that is working in Win32, you should keep that code in Win32. Unless you have some overriding need to port your code to the .NET Compact Framework, you are better off keeping that code as Win32 code. Someone once suggested 10x as a guideline&#151;unless you get ten times the benefit from a new technology, you should continue using the older technology.</P>
+
+<P>You might need to package existing Win32 code in a way that is accessible from the .NET Compact Framework. The end of this article summarizes the supported mechanisms for Win32-to-.NET Compact Framework interoperability.</P>
+
+<H2 class="dtH1"><A NAME="choose_api_topic3"></A>.NET Compact Framework&#151;"Rapid Application Development"</H2>
+
+<P>Whereas Win32 is good at creating low-level code for device and operating-system support, the .NET Compact Framework is good for interacting at a high level. It is best suited for building an application with a user interface that collects data, stores it in a local database, and, from time to time, forwards that data to a server-based database.</P>
+
+<P>As mentioned earlier, Win32 code is referred to as unmanaged code, and .NET code is called managed code. The term "managed code" refers to the fact that the Common Language Runtime (CLR), which might also be called the "code manager," provides several assurances for such code: 
+
+<UL type="disc">
+	<LI>Managed code cannot have bad pointers. </li>
+
+	<LI>Managed code cannot create memory leaks. </li>
+
+	<LI>Managed code supports strong type-safety.</li>
+</UL>
+
+<P>A key benefit of managed code is that certain common errors that plague Win32 programmers are handled for you by the managed development environment.</P>
+
+<H3 class="dtH1">When to Use .NET Compact Framework</H3>
+
+<P>Here are some situations in which it makes sense to use the .NET Compact Framework. The following sections discuss these in detail.
+
+<UL type="disc">
+	<LI>Using platforms that have the .NET Compact Framework</li>
+
+	<LI>Building user interfaces</li>
+
+	<LI>Building custom controls</li>
+
+	<LI>Achieving binary portability to multiple CPUs</li>
+
+	<LI>Building Web Service clients</li>
+
+	<LI>Building data-intensive and database-intensive applications</li>
+
+	<LI>Building XML-intensive applications</li>
+
+	<LI>Using existing .NET Framework code</li>
+</UL>
+
+<H4 class="dtH1">Using platforms with the .NET Compact Framework</H4>
+
+<P>To be able to run .NET Compact Framework applications, platforms must support the .NET Compact Framework runtime. The .NET Compact Framework requires a minimum of Windows CE .NET (Windows CE version 4.1 for the released version of the .NET Compact Framework), with two exceptions: Microsoft Pocket PC and Microsoft Pocket PC 2002, both of which run Windows CE version 3.0, support the .NET Compact Framework. .NET Compact Framework support for Microsoft Smartphone is also expected in early 2003.</P>
+
+<P>A second requirement for running .NET Compact Framework applications is that platforms must support a sufficient subset of the Win32 API, the foundation on which the .NET Compact Framework was built. The set of Win32 APIs that are required to support .NET Compact Framework must be present. .NET Compact Framework cannot run on headless Windows CE .NET-based platforms, which include Tiny Kernel, Media Appliance, and Residential Gateway. To run the .NET Compact Framework, a Windows CE .NET platform must have a display screen&#151;that is, it must be an IABASE-based platform. </P>
+
+<P>The easiest way for platform developers to ensure support is to include the .NET Compact Framework binaries. At present, the Compact Framework binaries are in beta, and as such cannot be incorporated into a Windows CE .NET-based platform. After the .NET Compact Framework is released, platform developers can include the .NET Compact Framework binaries with the Windows CE .NET operating system image itself.</P>
+
+<H4 class="dtH1">Building user interfaces</H4>
+
+<P>The .NET Compact Framework does a very good job of building a user interface. The Visual Studio .NET Forms Designer allows you to drag and drop controls from the toolbox onto a form. The Properties window helps identify supported events and properties for the various controls, all from a straightforward user interface. Programmers who are used to building applications for the desktop .NET Framework will find many similarities. </P>
+
+<P>But there are differences. Although 28 of the 35 desktop controls are supported in the .NET Compact Framework, each control has been refined to meet the size and performance requirements of Windows CE. For this reason, a subset of the desktop Properties, Methods, and Events (PMEs) are supported in the .NET Compact Framework controls. The specific set of PMEs depends on the specific class. For the base Control class, 27 of 76 properties, 35 of 182 methods, and 17 of 58 events are supported. The biggest impact will be on code that you write on the desktop and wish to port to the .NET Compact Framework.</P>
+
+<P>Nonetheless, you will find a very capable set of controls, including such favorites as the DataGrid and the TreeView control, that GUI programmers are accustomed to using. </P>
+
+<H4 class="dtH1">Building custom controls</H4>
+
+<P>Building custom controls is related to building a user interface. The .NET Compact Framework ships with 28 custom controls, including all of the standard ones that Windows users expect: text editing windows (TextBox), push buttons (Button), and various controls to display lists (ComboBox, ListBox, and ListView).</P>
+
+<P>If, however, these built-in controls do not provide the support you need, you can build custom controls. one of the most common approaches involves inheriting from the base control class named Control, and adding custom support for your own properties, events, and methods.</P>
+
+<H4 class="dtH1">Achieving binary portability to multiple CPUs</H4>
+
+<P>On a platform with .NET Compact Framework, a single .NET Compact Framework executable file will run on multiple CPUs. The key benefit here is that it simplifies the setup process when targeting platforms that support multiple CPUs. This will be particularly helpful for .NET Compact Framework libraries with custom controls and other useful, multi-platform widgets.</P>
+
+<H4 class="dtH1">Building Web Service clients</H4>
+
+<P>One of the great strengths of the desktop .NET Framework as well as the .NET Compact Framework is the ease of creating Web Service clients. A Web Service client allows a network function call to be performed. It represents the next step forward in the long evolution of distributed computing technologies that include Remote Procedure Calls (RPCs) and the Distributed Component Object Model (DCOM).</P>
+
+<P>A Web Service provides function-call semantics to information that resides on a Web Server. Web Servers have traditionally served up reams and reams of HTML, which is a human-readable tag language, but Web Services use the XML tag language, which is more of a machine-readable markup language. Web Services use the set of XML that is specified in the Simple Object Access Protocol (SOAP). The use of this industry-standard protocol means that .NET Compact Framework applications can access Web Services from a broad, heterogeneous set of Web Server vendors. Support for Web Services adds yet another option to the distributed, wireless, "always-connected" model of computing.</P>
+
+<H4 class="dtH1">Building data-intensive and Database-intensive applications</H4>
+
+<P>Another reason to use the .NET Compact Framework is to take advantage of the great data handling and database support it provides. On the data handling front, the .NET Compact Framework has the Garbage Collector to handle cleanup. Memory leaks and the resulting heap overflows are much less likely with the .NET Compact Framework, owing to the Garbage Collector.</P>
+
+<P>Like other class libraries, the .NET Compact Framework has container classes to help with your data-handling chores. You can choose between arrays, lists, hash tables, dictionaries, queues, and stacks. Each of these helps you organize and sort through a wide range of in-memory data objects. Win32, by contrast, has no built-in container classes.</P>
+
+<P>The .NET Compact Framework supports binding data to controls. This is the ability to insure synchronization between a user-interface control, like a TextBox control, and the data source. Data binding lets you set once and forget, without having to continually worry about initializing controls when they first appear, and harvesting changes when a control is about to be destroyed. </P>
+
+<P>And finally, there is ADO.NET. ADO.NET provides both local and remote data access. Local data access involves working with a database in a local file system and manipulating data sets in memory. Remote data access involves accessing remote databases, such as one hosted in SQL Server 2000, from a platform. Both are supported by the .NET Compact Framework. Among the data providers that are shipped with the .NET Compact Framework are ones that support access to SQL Server CE, and also to server-based SQL Server.</P>
+
+<H4 class="dtH1">Building XML-intensive applications</H4>
+
+<P>The underlying storage format of ADO.NET is XML, so if you use the ADO.NET services you are using XML. But if you are doing other things that require XML support, such as exchanging XML-based text documents, parsing XML data that has been queried from a database, or packaging complex transactions to send over Web Services, the .NET Compact Framework has a rich set of XML services to help you.</P>
+
+<H4 class="dtH1">Using existing .NET Framework code</H4>
+
+<P>Another reason to adopt the .NET Compact Framework is if you have desktop .NET Framework code. The .NET Compact Framework is a rich subset of the desktop .NET Framework, and the key elements are the same, including namespaces, classes, method names, property names, and data types.</P>
+
+<P>What you will find, however, is that the .NET Compact Framework is a much smaller library than the desktop .NET Framework. Comparing just the binary files, the desktop .NET Framework is approximately 30 megabytes, while the .NET Compact Framework is 1.5 megabytes. It represents a subset of the desktop .NET Framework that is finely tuned for both size and performance.</P>
+
+<H2 class="dtH1"><A NAME="choose_api_topic4"></A>Connecting Win32 and .NET Compact Framework Code</H2>
+
+<P>If you take the approach that I suggest&#151;mixing .NET Compact Framework and Win32 code&#151;you need to how to connect the two types of code together. This satisfies a broad design goal of .NET: interoperability. In the terminology of .NET, Win32 code is unmanaged code because the .NET Common Language Runtime (CLR) execution engine does not manage Win32 code. It does not collect garbage, handle exceptions, provide security, or have access to any metadata for Win32 code. By contrast, the CLR does all these things, and more, for managed code.</P>
+
+<H3 class="dtH1">Calling Win32 Functions</H3>
+
+<P>The .NET Compact Framework supports a subset of the interoperability of the desktop .NET Framework. In particular, you can make function calls into Win32 DLLs, but you cannot call COM interfaces (a feature known as COM Interop).</P>
+
+<P>The ability to call Win32 DLLs is known as "Platform Invoke." Platform Invoke involves adding a declaration to a function in a .NET Compact Framework class. For example, here is a declaration that lets you call the <code class="ce">MessageBox</code> function in the system's COREDLL.DLL library. (The 'W' at the end of the function in this declaration indicates that strings in this function accept the "Wide"&#151;meaning Unicode&#151;character set.)</P>
+
+<PRE class="code">[C#]
+[System.Runtime.InteropServices.DllImport("coredll.dll")]
+public static extern int MessageBoxW(int hWnd, String text, 
+    String caption, uint type);
+[VB.NET]
+&lt;System.Runtime.InteropServices.DllImport("coredll.dll", _
+    SetLastError:=False)&gt; _
+    Public Shared Function MessageBoxW(ByVal hWnd As Integer, _
+        ByVal txt As String, ByVal caption As String, _
+        ByVal Typ As Integer) As Integer
+    End Function
+</PRE>
+
+<P>Now, you can call the function as if it were a regular .NET Compact Framework function. Here are examples of calling this function from both C# and VB.NET:</P>
+
+<PRE class="code">[VB.NET]
+MessageBoxW(0, "Calling from VB.NET", "Platform Invoke", 0)
+[C#]
+MessageBoxW(0, "Calling from C#", "Platform Invoke", 0);
+</PRE>
+
+<P>As this example shows, you do not need to build your own Win32 DLLs&#151;the system provides many DLLs and many functions in each DLL that you can call. If you decide that you want to build your own DLLs, you should keep a few points in mind:
+
+<OL type="1">
+	<LI>Only EXPORTED functions can be accessed. To export a function you can either:
+<OL type="a">
+	<LI>Use an EXPORTS statement in a module definition (.DEF) file, or </li>
+
+	<LI>Use the __declspec(dllexport) compiler keyword.</li>
+</OL>
+</li>
+
+	<LI>Be sure to disable C++ function name mangling; otherwise you will not be able to find your function. The easiest way to do this involves using the extern "C" keyword (see example, below). Use a tool like DEPENDS.EXE to check that your DLL exports all the functions that need exporting.</li>
+
+	<LI>Select the __stdcall calling convention, which is the default used by the .NET Compact Framework to call into Win32 functions (see example, below). This limits your functions to a fixed number of parameters, but in doing so it pushes the work of stack cleanup into the called function, resulting in smaller, faster code. (To get support for a variable number of parameters, use the __cdecl keyword, and then modify the .NET Compact Framework function declaration to match.)</li>
+</OL>
+
+<P>Here is an example of these three points implemented in <code class="ce">MyMessageBox</code>, my version of the Win32 <code class="ce">MessageBox</code> function:</P>
+
+<PRE class="code">extern "C" __declspec(dllexport)
+int __stdcall 
+MyMessageBox(HWND hwnd, WCHAR * pMsg, WCHAR *pCaption, int type)
+{
+    return MessageBoxW(hwnd, pMsg, pCaption, type);
+}
+</PRE>
+
+<P>This simple example shows how you can pass simple data types&#151;integers and strings&#151;from the .NET Compact Framework into Win32. You can also pass other data types, in particular structures, from .NET Compact Framework code into Win32.</P>
+
+<P>.NET Compact Framework interoperability only supports calls into Win32 libraries. It does not support calls from Win32 into the .NET Compact Framework. But you can communicate between Win32 and .NET Compact Framework using a mechanism that is familiar to Win32 programmers: windowing messages.</P>
+
+<H3 class="dtH1">MessageWindow</H3>
+
+<P>The .NET Compact Framework team created the <code class="ce">MessageWindow</code> class, which resides in the <code class="ce">Microsoft.WindowsCE.Forms </code>namespace, as a way to communicate between Win32 code and .NET Compact Framework code. <code class="ce">MessageWindow</code> is a wrapper around a Win32 window. Any Win32 program can send a Win32 message to this object using regular Win32 message-sending functions&#151;<code class="ce">PostMessage</code> or <code class="ce">SendMessage</code>.</P>
+
+<P>A .NET Compact Framework program that uses <code class="ce">MessageWindow</code> must create a window procedure. Unlike a regular Win32 window procedure, the one you create for <code class="ce">MessageWindow</code> resides in the .NET Compact Framework application or library. After a window has been created, the .NET Compact Framework must send the window handle to the Win32 code. This can be accomplished either by using a Platform Invoke function call, or by sending a message to another Win32 window.</P>
+
+<P><code class="ce">MessageWindow</code> lets a Win32 application pass three 32-bit values to a .NET Compact Framework application: the message value, a wParam, and an lParam. For some purposes, this might be enough. </P>
+
+<H2 class="dtH1"><A NAME="choose_api_topic5"></A>Conclusion</H2>
+
+<P>Windows CE .NET supports the Win32 API, and it will support the .NET Compact Framework as soon as it is released. In some situations&#151;for low-level driver code, operating system extensions, legacy code, or headless services&#151;using the Win32 API makes sense. In most other cases, a combination of .NET Compact Framework code and Win32 will serve you well. Stretch the .NET Compact Framework as far as it will take you, then use the Platform Invoke and MessageWindow support when you need the help of the underlying Win32 libraries.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_838171', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

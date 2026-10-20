@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Processing User Input</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Processing User Input"/>
+<MSHelp:RLTitle Title="Processing User Input"/>
+<MSHelp:Keyword Index="A" Term="ceconProcessingUserInput"/>
+<MSHelp:Keyword Index="K" Term="handwriting recognition, processing user input"/>
+<MSHelp:Keyword Index="K" Term="recognition, processing user input"/>
+<MSHelp:Keyword Index="K" Term="user input, character recognition processing"/>
+<MSHelp:Keyword Index="A" Term="ceconProcessingUserInput"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: handwriting_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_742661">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconprocessinguserinput"></A>Processing User Input</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To begin each session of input recognition with a clean HRC, use the context from a pre-established HRC as a template. Each time that you need a new HRC, pass the handle of the previous HRC object to the recognition engine, excluding any previous ink data. This procedure enables your application to save processing time by not having to recreate common HRC parameters that are used repeatedly in your application, such as <A HREF="cerefhwxguide.htm">HWXGUIDE</A> structures and alphabet codes.</P>
+
+<P>The process of character recognition begins when the input panel IM sends a call to the <A HREF="cerefhwxinput.htm">HwxInput</A> function. This function adds ink to the HRC object to provide the <B>STROKEINFO</B> structure with the count of stylus stroke points that are generated. The <A HREF="cerefhwxprocess.htm">HwxProcess</A> function passes the HRC to the recognition engine where the stroke data is processed, based on predetermined character-recognition parameters. When the user finishes entering stroke data, your application calls the <A HREF="cerefhwxendinput.htm">HwxEndInput</A> function to tell the recognition engine that no additional ink will be added to the HRC.</P>
+
+<P>To improve the performance of the process of character recognition, pass the context for the previous character to the recognition engine through the <A HREF="cerefhwxsetcontext.htm">HwxSetContext</A> function. If this function is not called, the recognition engine assumes that no previous context is available. <B>HwxSetContext</B> is called before <B>HwxProcess</B>. <B>HwxProcess</B> processes the ink that is received by the HRC to perform the recognition. Full character recognition occurs only after the <B>HwxEndInput</B> function is called. Results of the recognition are returned by the <A HREF="cerefhwxgetresults.htm">HwxGetResults</A> function.</P>
+
+<P><B>HwxGetResults</B> simplifies the task of recognizing characters and glyphs that are drawn within the boundaries of the defined box by responding with character alternatives on a per-box basis in one call. The following code example shows how to set the results for 10 boxes at a time, with 5 alternatives for each box.</P>
+
+<PRE class="code">HANDLE hMem = GlobalAlloc( GHND, 10 * (sizeof( BOXRESULTS )
+       + (5-1) * sizeof( SYV )) );
+LPBOXRESULTS rgBoxR = (LPBOXRESULTS)GlobalLock( hMem );
+UINT indx = 0;
+Do 
+{
+   int iRes = HwxGetResults( hrc, 5, indx, 10, rgBoxR); 
+      . 
+      .      // Check for errors and use rgBoxR 
+      . 
+   indx += (UINT)iRes; 
+} 
+while (iRes == 10);</PRE>
+
+<P>After all input, processing, recognition, and output have been completed, destroy the active HRC by calling the <A HREF="ceconhwxdestroy.htm">HwxDestroy</A> function.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconhandwritingrecognition.htm">Handwriting Recognition</A></P>
+
+<P><A HREF="ceconrecognizinghand-drawncharacter.htm">Recognizing a Hand-Drawn Character</A></P>
+
+<P><MSHelp:link keywords="_wcesdk_Processing_User_Input_with_Alternatives" TABINDEX="0">Processing User Input with Alternatives</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Processing%20User%20Input&nbsp;(ceconprocessinguserinput.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

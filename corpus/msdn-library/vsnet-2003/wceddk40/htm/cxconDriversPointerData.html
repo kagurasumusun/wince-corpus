@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Drivers and Pointer Data</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Drivers and Pointer Data"/>
+<MSHelp:RLTitle Title="Drivers and Pointer Data"/>
+<MSHelp:Keyword Index="A" Term="cxconDriversPointerData"/>
+<MSHelp:Keyword Index="K" Term="drivers, pointer data"/>
+<MSHelp:Keyword Index="K" Term="pointer data, with drivers"/>
+<MSHelp:Keyword Index="K" Term="pointers, with drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconDriversPointerData"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_820320">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondriverspointerdata"></A>Drivers and Pointer Data</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The OS manages pointers passed directly as parameters. Drivers must map all pointers contained in structures. <MSHelp:link keywords="cerefDeviceIoControl" TABINDEX="0">DeviceIoControl</MSHelp:link> buffers are often structures that contain data; some of these structures may be pointers. To map a pointer contained in a structure, call <MSHelp:link keywords="cmrefMapPtrToProcess" TABINDEX="0">MapPtrToProcess</MSHelp:link>. Set the first parameter to the pointer, and the second parameter to <MSHelp:link keywords="cmrefGetOwnerProcess" TABINDEX="0">GetOwnerProcess</MSHelp:link>. </P>
+
+<P>Windows CE&#0150;based device drivers run in one of the system process address spaces. This architecture affects your device driver development projects whenever you wish to share chained data structures between an application and a device driver. </P>
+
+<P>The device driver gains access to the data in the address space of an application by calling <B>MapPtrToProcess</B>. The following list shows in detail how a driver gains access to memory in the address space of an application; this process is not required when you pass a simple pointer to a device driver. It is required only when you pass a pointer to a pointer, as might occur with a linked list.
+
+<OL type="1">
+	<LI>Application mapped into slot 0.</li>
+
+	<LI>Application calls <B>DeviceIoControl</B>.</li>
+
+	<LI>Device Manager mapped into Slot 0.</li>
+
+	<LI>Device Manager sets permissions to application space.</li>
+
+	<LI>Device Manager calls <A HREF="_wceddk_xxx_iocontrol.htm">XXX_IOControl</A>.</li>
+
+	<LI>Driver calls <B>MapPtrToProcess</B>.</li>
+
+	<LI>Driver returns from <B>XXX_IOControl</B>.</li>
+
+	<LI>Device Manager resets permissions to application space.</li>
+
+	<LI>Application mapped into slot 0.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconmemorymanagement.htm">Memory Management</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Drivers%20and%20Pointer%20Data&nbsp;(cxcondriverspointerdata.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

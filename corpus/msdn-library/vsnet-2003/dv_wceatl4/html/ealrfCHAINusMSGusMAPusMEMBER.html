@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CHAIN_MSG_MAP_MEMBER</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CHAIN_MSG_MAP_MEMBER"/>
+<MSHelp:RLTitle Title="CHAIN_MSG_MAP_MEMBER"/>
+<MSHelp:Keyword Index="A" Term="ealrfCHAINusMSGusMAPusMEMBER"/>
+<MSHelp:Keyword Index="K" Term="CHAIN_MSG_MAP_MEMBER macro"/>
+<MSHelp:Keyword Index="A" Term="ealrfCHAINusMSGusMAPusMEMBER"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="atlapi.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_705824">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfchainusmsgusmapusmember"></A>CHAIN_MSG_MAP_MEMBER</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>Defines an entry in a message map. <B>CHAIN_MSG_MAP_MEMBER</B> directs messages to the default message map of a data member, declared with <B>BEGIN_MSG_MAP</B>. To direct messages to an alternate message map of a data member, declared with <B>ALT_MSG_MAP</B>, use <B>CHAIN_MSG_MAP_ALT_MEMBER</B>.</P>
+
+<PRE class="syntax"><B>CHAIN_MSG_MAP_MEMBER( 
+</B><I>theChainMember</I><B>)</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>theChainMember</I></DT>
+
+<DD>[in] The name of the data member containing the message map.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>For example:</P>
+
+<PRE class="code">class CMyClass : ...
+{
+public:
+  CMyContainedClass m_obj;
+
+  BEGIN_MSG_MAP(CMyClass)
+     MESSAGE_HANDLER(WM_PAINT, OnPaint)
+     // chain to default message map of m_obj
+     CHAIN_MSG_MAP_MEMBER(m_obj)
+  ALT_MSG_MAP(1)
+     // chain to default message map of m_obj
+     CHAIN_MSG_MAP(m_obj)
+  ALT_MSG_MAP(2)
+     MESSAGE_HANDLER(WM_CHAR, OnChar)
+     // chain to alternate message map of m_obj
+     CHAIN_MSG_MAP_ALT(m_obj, 1)
+  END_MSG_MAP()
+
+};</PRE>
+
+<P>This example illustrates the following:
+
+<UL type="disc">
+	<LI>If a window procedure is using the default message map of<code class="ce"> </code><B>CMyClass</B> and <B>OnPaint </B>does not handle a message, the message is directed to the default message map of <code class="ce">m_obj</code> for processing.</li>
+
+	<LI>If a window procedure is using the first alternate message map in <B>CMyClass</B>, all messages are directed to the default message map of m_obj.</li>
+
+	<LI>If a window procedure is using the second alternate message map of<B> CMyClass</B> and <B>OnChar</B> does not handle a message, the message is directed to the specified alternate message map of <B>m_obj</B>. Class <B>CMyContainedClass</B> must have declared this message map with ALT_MSG_MAP(1).</li>
+</UL>
+
+<P>Always begin a message map with <B>BEGIN_MSG_MAP</B>. You can then declare subsequent alternate message maps with <B>ALT_MSG_MAP</B>. The <B>END_MSG_MAP</B> macro marks the end of the message map. Every message map must have exactly one instance of <B>BEGIN_MSG_MAP</B> and <B>END_MSG_MAP</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfchainusmsgusmap.htm"><B>CHAIN_MSG_MAP</B></A>, <A HREF="ealrfchainusmsgusmapusdynamic.htm"><B>CHAIN_MSG_MAP_DYNAMIC</B></A>, <A HREF="ealrfmessageushandler.htm"><B>MESSAGE_HANDLER</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_705824', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

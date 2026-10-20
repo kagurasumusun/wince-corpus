@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Screen Rotation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Screen Rotation"/>
+<MSHelp:RLTitle Title="Screen Rotation"/>
+<MSHelp:Keyword Index="A" Term="cxconScreenRotation"/>
+<MSHelp:Keyword Index="K" Term="display drivers, screen rotation"/>
+<MSHelp:Keyword Index="K" Term="screen rotation, display driver functions"/>
+<MSHelp:Keyword Index="K" Term="screens, enabling screen rotation"/>
+<MSHelp:Keyword Index="A" Term="cxconScreenRotation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753502">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconscreenrotation"></A>Screen Rotation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Single screen devices support screen rotation. The functionality is built into the GDI in GWES. The Desktop and the Shell respond to screen rotation. The RFlat sample driver in %_WINCEROOT%\Public\Common\OAK\Drivers\Display\RFlat supports screen rotation, as do the Geode/MediaGx driver in %_WINCEROOT%\Public\Common\OAK\CSP\i486\Geode\GXvideo and the Assabet LCD driver in %_WINCEROOT%\Platform\SA11X0BD\Drivers\Display\SA_LCD2. To enable screen rotation, link with GPERotate.lib and EmulRotate.lib. The entry point is RGPEFlat.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you use the <code class="ce">/D</code> switch to specify the display mode with LoadCEPC.exe, you cannot use the DDI_FLAT driver.</BLOCKQUOTE>
+
+<P>For the VGA flat driver, the <B>RGPEFlat</B> class is derived from the <B>GPERotate</B> class.</P>
+
+<P>The following table shows the display driver functions for the <B>RGPEFlat</B> class.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Function</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>NumModes</B></TD>
+<TD width=64%>Called from <B>DrvGetModes</B>, it returns 1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>SetMode</B></TD>
+<TD width=64%>Called from <B>DrvEnablePDEV</B> and creates a palette based on bpp.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>InVBlank</B></TD>
+<TD width=64%>Determines if the CRT is in the middle of a vertical blank when the electron beam is off and traversing from the lower right corner to the upper left. During this interval page flipping, animation can be performed to avoid tearing the image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>SetPalette</B></TD>
+<TD width=64%>Called from <B>DrvSetPalette</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>GetModeInfo</B></TD>
+<TD width=64%>Called from <B>DrvGetModes</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>SetPointerShape</B></TD>
+<TD width=64%>Called from <B>DrvSetPointerShape</B> and <B>DrvSetPointerShape</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>MovePointer</B></TD>
+<TD width=64%>Called from <B>DrvMovePointer</B> calls this function, <B>DrvSetPointerShape</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>WaitForNotBusy</B></TD>
+<TD width=64%>Called from <B>EmulatedBltRotate</B> in the <B>GPERotate</B> class.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>IsBusy</B></TD>
+<TD width=64%>Determines if the display controller is busy or whether it is available to take another command.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>GetPhysicalVideoMemory</B></TD>
+<TD width=64%>Used by DDHAL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>Line</B></TD>
+<TD width=64%>Called from <B>DrvStrokePath</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>BltPrepare</B></TD>
+<TD width=64%>Called from <B>DrvFillpath</B> <B>DrvAnyBlt</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>BltComplete</B></TD>
+<TD width=64%>Called from <B>DrvFillpath</B> <B>DrvAnyBlt</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>GetGraphicsCaps</B></TD>
+<TD width=64%>Called from <B>DrvEnablePDEV</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>DrvEscape</B></TD>
+<TD width=64%>Called from <B>DrvEscape</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>WrappedEmulatedLine</B></TD>
+<TD width=64%>Wrapper function around the emulated line drawing function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>CursorOn</B></TD>
+<TD width=64%>Turns on the hardware cursor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>CursorOff</B></TD>
+<TD width=64%>Turns off the hardware cursor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>GetRotateModeFromReg</B></TD>
+<TD width=64%><B>RGPEFlat</B> constructor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>SetRotateParams</B></TD>
+<TD width=64%><B>RGPEFlat</B> constructor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>DynRotate</B></TD>
+<TD width=64%><B>DrvEscape</B> in flat driver.</TD>
+</TR>
+</table></div>
+
+<P>The following shows the functions in the <B>GPESurfRotate</B> class.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Function</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>SetRotation</B></TD>
+<TD width=64%>Called in the display driver whenever the display angle has changed. The driver calls this function to reset some member variables in the <B>GPESurfaceRotate</B> instance.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>RotatePathData</B></TD>
+<TD width=64%>This is a helper function in <B>GPESurfaceRotate</B> used in <B>DrvStrokePath</B>. It rotates the coordinates of the whole <B>PATHOBJ</B> so the lines can be drawn as not rotated.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>RotatePathdataBack</B></TD>
+<TD width=64%>This is a helper function in <B>GPESurfaceRotate</B> used in <B>DrvStrokePath</B>. This restores the <B>PATHOBJ</B> data after drawing all the lines.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>RotateRectl</B></TD>
+<TD width=64%>This is a helper function in <B>GPESurfaceRotate</B>. It is called during a physical drawing and the rectangle needs to be in the real physical orientation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>RotateRectlBack</B></TD>
+<TD width=64%>This is a helper function in <B>GPESurfaceRotate</B>. It restores the rectangle coordinates after drawing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>GetPtr</B></TD>
+<TD width=64%>This is a helper function in <B>GPESurfaceRotate</B>. It passes the pixel coordinates based on the screen the user views, and it returns a pointer to the corresponding place in video memory.</TD>
+</TR>
+</table></div>
+
+<P>The <B>GPERotate</B> class is derived from GPE. <B>GPERotate</B> includes the following members.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Member</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>m_iRotate</B></TD>
+<TD width=64%>The current rotation angle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>m_nScreenWidthSave</B></TD>
+<TD width=64%>The physical screen width when the screen is not rotated. It is used to calculate the coordinate transformation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>m_nScreenHeightSave</B></TD>
+<TD width=64%>The physical screen height. It is used to calculate the coordinate transformation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>RotateRectl</B></TD>
+<TD width=64%>Helper function in <B>GPERotate</B> to do rectangle coordinate transformation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>RotateRectlBack</B></TD>
+<TD width=64%>Helper function in <B>GPERotate</B>. It restores the rectangle coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%><B>EmulatedBltRotate</B></TD>
+<TD width=64%>This function blits in place of <B>EmulatedBlt</B> when the screen is rotated.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondisplaydriverregistrysettings.htm">Display Driver Registry Settings</A></P>
+
+<P><A HREF="_wceddk_display_driver_escape_codes.htm">Display Driver Escape Codes</A></P>
+
+<P><A HREF="cxcondisplaydriverarchitecture.htm">Display Driver Architecture</A></P>
+
+<P><A HREF="cxcondisplaydriveradvancedtopics.htm">Display Driver Extension</A></P>
+
+<P><A HREF="cxcondisplaydriverresources.htm">Display Driver Samples</A></P>
+
+<P><MSHelp:link keywords="_wcepb_Loadcepc_exe_Boot_Loader_Usage" TABINDEX="0">Loadcepc.exe Boot Loader Usage</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Screen%20Rotation&nbsp;(cxconscreenrotation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

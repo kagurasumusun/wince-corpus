@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>The Connection Process: A Summary</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="The Connection Process: A Summary"/>
+<MSHelp:RLTitle Title="The Connection Process: A Summary"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_the_connection_process__a_summary"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dshow.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_dshow_the_connection_process__a_summary"></A>The Connection Process: A Summary</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When one filter's output pin is called by the filter graph manager to connect to an input pin of a second filter, the <MSHelp:link keywords="_wcesdk_IPin__Connect" TABINDEX="0"><B>IPin::Connect</B></MSHelp:link> method is called. This, in turn, calls <MSHelp:link keywords="_wcesdk_cbaseoutputpin__checkconnect" TABINDEX="0"><B>CBaseOutputPin::CheckConnect</B></MSHelp:link> to obtain interfaces from the connected pin and <MSHelp:link keywords="_wcesdk_cbasepin__agreemediatype" TABINDEX="0"><B>CBasePin::AgreeMediaType</B></MSHelp:link> to find a common media type. </P>
+
+<P><B>AgreeMediaType</B> calls <MSHelp:link keywords="_wcesdk_cbasepin__trymediatypes" TABINDEX="0"><B>CBasePin::TryMediaTypes</B></MSHelp:link>, which uses media type enumerators to query the pins for preferred media types. <MSHelp:link keywords="_wcesdk_ienummediatypes_interface" TABINDEX="0"><B>IEnumMediaTypes</B></MSHelp:link> is an interface on the connected input pin that <B>TryMediaTypes</B> uses first. The base classes use <B>IEnumMediaTypes</B> to repeatedly call a <MSHelp:link keywords="_wcesdk_cbasepin_class" TABINDEX="0"><B>CBasePin</B></MSHelp:link> member function called <MSHelp:link keywords="_wcesdk_cbasepin__getmediatype" TABINDEX="0"><B>GetMediaTyp</B>e</MSHelp:link> for each media type in the list. You use this member function in your input and output pin classes to return the media types that your pin prefers. </P>
+
+<P><B>TryMediaTypes</B> calls the output pin's <MSHelp:link keywords="_wcesdk_cbasepin__CheckMediaType" TABINDEX="0"><B>CheckMediaType</B></MSHelp:link> member function with each input type returned. You must use <B>CheckMediaType</B> to verify whether this type is acceptable. If no media types are found (for example <B>GetMediaType</B> might not even be used on the connected input pin, or might return an unacceptable media type), then <B>AgreeMediaType</B> obtains a media type enumerator for the output pin and tries each of these in turn. Again, the <B>GetMediaType</B> member function of the derived output pin is called for each type. In this case, it can determine media types by inquiring about any existing connection established by the filter's input pin. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;The%20Connection%20Process:%20A%20Summary&nbsp;(_dxce_dshow_the_connection_process__a_summary.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

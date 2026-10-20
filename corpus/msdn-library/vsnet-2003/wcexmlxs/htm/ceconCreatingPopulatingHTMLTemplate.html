@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating and Populating an HTML Template</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating and Populating an HTML Template"/>
+<MSHelp:RLTitle Title="Creating and Populating an HTML Template"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingPopulatingHTMLTemplate"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingPopulatingHTMLTemplate"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xslpg01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801920">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconcreatingpopulatinghtmltemplate"></A>Creating and Populating an HTML Template</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can use XSLT to merge simple regular XML data with an HTML template for display. Consider the following example.</P>
+
+<PRE class="code">&lt;?xml version="1.0"?&gt;
+&lt;portfolio xmlns:dt="urn:schemas-microsoft-com:datatypes"&gt;
+  &lt;stock exchange="nyse"&gt;
+    &lt;name&gt;zacx corp&lt;/name&gt;
+    &lt;symbol&gt;ZCXM&lt;/symbol&gt;
+    &lt;price dt:dt="number"&gt;28.875&lt;/price&gt;
+  &lt;/stock&gt;
+  &lt;stock exchange="nasdaq"&gt;
+    &lt;name&gt;zaffymat inc&lt;/name&gt;
+    &lt;symbol&gt;ZFFX&lt;/symbol&gt;
+    &lt;price dt:dt="number"&gt;92.250&lt;/price&gt;
+  &lt;/stock&gt;
+  &lt;stock exchange="nasdaq"&gt;
+    &lt;name&gt;zysmergy inc&lt;/name&gt;
+    &lt;symbol&gt;ZYSZ&lt;/symbol&gt;
+    &lt;price dt:dt="number"&gt;20.313&lt;/price&gt;
+  &lt;/stock&gt;
+&lt;/portfolio&gt;</PRE>
+
+<P>The structure of this sample data is repetitive and regular &#0151; the stock element structure is repeated several times with the same child elements. For this example, the stock information will be displayed in a table with a stock in each row, and cells containing the name, symbol, and price. First create a template of HTML elements to display such a table.</P>
+
+<PRE class="code">&lt;HTML&gt;
+  &lt;BODY&gt;
+    &lt;TABLE BORDER="2"&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;Symbol&lt;/TD&gt;
+        &lt;TD&gt;Name&lt;/TD&gt;
+        &lt;TD&gt;Price&lt;/TD&gt;
+      &lt;/TR&gt;
+      &lt;!-- repeat the following row for each stock --&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;&lt;!-- symbol goes here --&gt;&lt;/TD&gt;
+        &lt;TD&gt;&lt;!-- name goes here --&gt;&lt;/TD&gt;
+        &lt;TD&gt;&lt;!-- price goes here --&gt;&lt;/TD&gt;
+      &lt;/TR&gt;
+    &lt;/TABLE&gt;
+  &lt;/BODY&gt;
+&lt;/HTML&gt;</PRE>
+
+<P>To populate this template with data from the XML file, you can manually replace the comments with data from the XML file, which is essentially the process that the XSLT performs. Elements from the XSLT namespace are used to locate data in the XML file, and insert it into the HTML template.</P>
+
+<PRE class="code">&lt;HTML&gt;
+  &lt;BODY&gt;
+    &lt;TABLE BORDER="2"&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;Symbol&lt;/TD&gt;
+        &lt;TD&gt;Name&lt;/TD&gt;
+        &lt;TD&gt;Price&lt;/TD&gt;
+      &lt;/TR&gt;
+      <B>&lt;xsl:for-each select="portfolio/stock"&gt;</B>
+        &lt;TR&gt;
+          &lt;TD&gt;<B>&lt;xsl:value-of select="symbol"/&gt;</B>&lt;/TD&gt;
+          &lt;TD&gt;<B>&lt;xsl:value-of select="name"/&gt;</B>&lt;/TD&gt;
+          &lt;TD&gt;<B>&lt;xsl:value-of select="price"/&gt;</B>&lt;/TD&gt;
+        &lt;/TR&gt;
+      <B>&lt;/xsl:for-each&gt;</B>
+    &lt;/TABLE&gt;
+  &lt;/BODY&gt;
+&lt;/HTML&gt;</PRE>
+
+<P>The &lt;xsl:for-each&gt; element locates a set of elements in the XML data ("stock" elements inside the "portfolio" element) and repeats a portion of the template for each one. Because this sample contains three stock elements, three rows will be created.</P>
+
+<P>The <B>select</B> attribute describes how to find a set of elements in the source document. The syntax for this attribute is called a <I>pattern</I>, and works much like navigating a file system hierarchy where a forward slash (/) selects subdirectories relative to the current directory. In an XSLT style sheet, the navigation starts at the current node and drills down into the XML data hierarchy, selecting all the nodes that match the pattern. In this case the pattern "portfolio/stock" starts at the document root and drills down through the "portfolio" element to select the three "stock" children.</P>
+
+<P>For many style sheets, the use of element names and the / operator is sufficiently powerful to perform the desired transformation. Details of other XSLT operations are described in <A HREF="ceconintroductiontosyntaxofxpath.htm">Introduction to the Syntax of XPath</A>.</P>
+
+<P>Within the &lt;xsl:for-each&gt; element, you can further drill down to select children of each "stock" element. The &lt;xsl:value-of&gt; element selects a specific child and then inserts the text content of that child into the template. The patterns inside the <B>&lt;</B>xsl:value-of<B>&gt;</B> element's <B>select</B> attribute do not require starting at the document root again but are relative to the element selected in the &lt;xsl:for-each&gt; element.</P>
+
+<P>The preceding template can be made into a complete XSLT style sheet by placing it in an XML file and enclosing it within the &lt;xsl:stylesheet&gt; element.</P>
+
+<PRE class="code"><B>&lt;?xml version='1.0'?&gt;
+</B>&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;HTML&gt;
+      &lt;BODY&gt;
+        &lt;TABLE BORDER="2"&gt;
+          &lt;TR&gt;
+            &lt;TD&gt;Symbol&lt;/TD&gt;
+            &lt;TD&gt;Name&lt;/TD&gt;
+            &lt;TD&gt;Price&lt;/TD&gt;
+          &lt;/TR&gt;
+          &lt;xsl:for-each select="portfolio/stock"&gt;
+            &lt;TR&gt;
+              &lt;TD&gt;&lt;xsl:value-of select="symbol"/&gt;&lt;/TD&gt;
+              &lt;TD&gt;&lt;xsl:value-of select="name"/&gt;&lt;/TD&gt;
+              &lt;TD&gt;&lt;xsl:value-of select="price"/&gt;&lt;/TD&gt;
+            &lt;/TR&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/TABLE&gt;
+      &lt;/BODY&gt;
+    &lt;/HTML&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</PRE>
+
+<P>Because a style sheet is an XML file itself, the file begins with the recommended XML declaration. The <CODE>&lt;xsl:stylesheet&gt;</CODE> element indicates that this document is a style sheet file, and provides a location for declaring the XSLT name space. Microsoft Internet Explorer for Windows CE .NET supports the XSL name space URL <B>http://www.w3.org/TR/WD-xsl</B>. The current MSXML for Windows CE .NET supports both the XSL namespace URL <B>http://www.w3.org/TR/WD-xsl</B> and the XSLT name space URL <B>http://www.w3.org/1999/XSL/Transform</B>.</P>
+
+<P>You also must wrap the template with <B>&lt;</B>xsl:template match="/"<B>&gt;</B> to indicate that this template corresponds to the root (/) of the XML source document. For more information, see <A HREF="ceconadvancedxsltfeatures.htm">Advanced XSLT Features</A>.</P>
+
+<P>The entire file, including the HTML that comprises the template, must be well-formed. For more information about authoring or converting to well-formed HTML, see <A HREF="ceconauthoringwell-formedhtml.htm">Authoring Well-Formed HTML</A>.</P>
+
+<P>You must add a processing instruction to the XML file to indicate that a style sheet is to be used. In the preceding example, if the name of the style sheet file is "stock.xsl", you would then add &lt;?xml-stylesheet type="text/xsl" href="stock.xsl"?&gt; to the XML document, immediately following the &lt;?xml version="1.0"?&gt; processing instruction.</P>
+
+<P>The end result of running the portfolio document through the style sheet is as follows.</P>
+
+<PRE class="code">&lt;HTML&gt;
+  &lt;BODY&gt;
+    &lt;TABLE BORDER="2"&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;Symbol&lt;/TD&gt;
+        &lt;TD&gt;Name&lt;/TD&gt;
+        &lt;TD&gt;Price&lt;/TD&gt;
+      &lt;/TR&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;ZCXM&lt;/TD&gt;
+        &lt;TD&gt;zacx corp&lt;/TD&gt;
+        &lt;TD&gt;28.875&lt;/TD&gt;
+      &lt;/TR&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;ZFFX&lt;/TD&gt;
+        &lt;TD&gt;zaffymat inc&lt;/TD&gt;
+        &lt;TD&gt;92.250&lt;/TD&gt;
+      &lt;/TR&gt;
+      &lt;TR&gt;
+        &lt;TD&gt;ZYSZ&lt;/TD&gt;
+        &lt;TD&gt;zysmergy inc&lt;/TD&gt;
+        &lt;TD&gt;20.313&lt;/TD&gt;
+      &lt;/TR&gt;
+    &lt;/TABLE&gt;
+  &lt;/BODY&gt;
+&lt;/HTML&gt;</PRE>
+
+<P>This result illustrates how the basic transformation mechanism combines a template (defined in the style sheet) with data from the source document to create a final result.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20and%20Populating%20an%20HTML%20Template&nbsp;(ceconcreatingpopulatinghtmltemplate.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

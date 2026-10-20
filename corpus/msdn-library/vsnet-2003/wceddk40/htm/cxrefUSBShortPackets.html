@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>USB Short Packets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="USB Short Packets"/>
+<MSHelp:RLTitle Title="USB Short Packets"/>
+<MSHelp:Keyword Index="A" Term="cxrefUSBShortPackets"/>
+<MSHelp:Keyword Index="K" Term="packets, USB short"/>
+<MSHelp:Keyword Index="K" Term="RNDIS, USB short packets"/>
+<MSHelp:Keyword Index="K" Term="USB, short packets"/>
+<MSHelp:Keyword Index="A" Term="cxrefUSBShortPackets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide3.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758249">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefusbshortpackets"></A>USB Short Packets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>USB passes data over the wire in the form of USB packets, which should not be confused with NDIS or networking packets. The maximum length of a USB packet to or from a USB endpoint is limited to the value of the <I>wMaxPacketSize</I> field of the endpoint's descriptor. For bulk pipes, the maximum packet size is 64 bytes. Due to constraints of certain USB host controllers, there is a penalty associated with using short USB packets (for example, those of less then 64 bytes, when streaming data).</P>
+
+<P>To work around this limitation, RNDIS USB devices may append zero-byte padding to data messages so that a short packet will not occur (within the constraints of the <I>MaxTransferSize</I> field of <A HREF="cxtskremote_ndis_initialize_msg.htm">REMOTE_NDIS_INITIALIZE_MSG</A>). The <I>MessageLength</I> field of the final <A HREF="cxtskremote_ndis_packet_msg.htm">REMOTE_NDIS_PACKET_MSG</A> does not include these appended padding bytes.</P>
+
+<P>If the device has transmitted its last available <B>REMOTE_NDIS_PACKET_MSG</B> (so no more are left in the device's queue), then it is acceptable to send a short USB packet.</P>
+
+<P>If the last <B>REMOTE_NDIS_PACKET_MSG</B> of a device-send RNDIS data message (without any zero-byte padding) ends with a USB packet whose length is exactly the wMaxPacketSize for that endpoint, then the device may send an additional one-byte zero packet as an appended part of the transfer. Some device implementations are simplified by this allowance.</P>
+
+<P>Similarly, some device-side USB chipsets do not detect the end of a received USB transfer that ends with a USB packet whose length is the wMaxPacketSize for that endpoint. For this reason, the host must append a one-byte zero packet to a data transfer that otherwise would have a length that is a multiple of the wMaxPacketSize of the receiving endpoint. USB RNDIS devices must tolerate the appended byte. The MessageLength field of the final <B>REMOTE_NDIS_PACKET_MSG</B> does not include this appended byte.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtskremote_ndis_initialize_msg.htm">REMOTE_NDIS_INITIALIZE_MSG</A></P>
+
+<P><A HREF="cxtskremote_ndis_packet_msg.htm">REMOTE_NDIS_PACKET_MSG</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;USB%20Short%20Packets&nbsp;(cxrefusbshortpackets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

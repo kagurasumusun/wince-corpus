@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFont::CreateFont</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cfont_createfont"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cfont_createfont"></A><SUP></SUP>CFont::CreateFont</H1>
+
+<P>This method initializes a <B>CFont</B> object with the specified characteristics. The font can subsequently be selected as the font for any device context.</P>
+
+<PRE class=syntax><B>BOOL CreateFont(
+int </B><I>nHeight</I><B>,
+int </B><I>nWidth</I><B>,
+int </B><I>nEscapement</I><B>,
+int </B><I>nOrientation</I><B>,
+int </B><I>nWeight</I><B>,
+BYTE </B><I>bItalic</I><B>,
+BYTE </B><I>bUnderline</I><B>,
+BYTE</B><I> cStrikeOut</I><B>,
+BYTE </B><I>nCharSet</I><B>,
+BYTE </B><I>nOutPrecision</I><B>,
+BYTE </B><I>nClipPrecision</I><B>,
+BYTE </B><I>nQuality</I><B>,
+BYTE </B><I>nPitchAndFamily</I><B>,
+LPCTSTR </B><I>lpszFacename</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nHeight</I></DT>
+
+<DD>Specifies the desired height, in logical units, of the font. See the <I>lfHeight</I> member of the <B>LOGFONT</B> structure. The absolute value of <I>nHeight</I> must not exceed 16,384 device units after it is converted. For all height comparisons, the font mapper looks for the largest font that does not exceed the requested size or the smallest font if all the fonts exceed the requested size.</DD>
+
+<DT><I>nWidth</I></DT>
+
+<DD>Specifies the average width, in logical units, of characters in the font. If <I>nWidth</I> is zero, the aspect ratio of the device will be matched against the digitization aspect ratio of the available fonts to find the closest match, which is determined by the absolute value of the difference.</DD>
+
+<DT><I>nEscapement</I></DT>
+
+<DD>Specifies the angle, in 0.1-degree units, between the escapement vector and the x-axis of the display surface. The escapement vector is the line through the origins of the first and last characters on a line. The angle is measured counterclockwise from the x-axis. See the <I>lfEscapement</I> member in the <B>LOGFONT</B> structure.</DD>
+
+<DT><I>nOrientation</I></DT>
+
+<DD>Specifies the angle, in 0.1-degree units, between the baseline of a character and the x-axis. The angle is measured counterclockwise from the x-axis for coordinate systems in which the y-direction is down and clockwise from the x-axis for coordinate systems in which the y-direction is up.</DD>
+
+<DT><I>nWeight</I></DT>
+
+<DD>Specifies the font weight, in inked pixels per 1000. See the <I>lfWeight</I> member in the <B>LOGFONT</B> structure for more information. The described values are approximate; the actual appearance depends on the typeface. Some fonts have only FW_NORMAL, FW_REGULAR, and FW_BOLD weights. If FW_DONTCARE is specified, a default weight is used.</DD>
+
+<DT><I>bItalic</I></DT>
+
+<DD>Specifies whether the font is italic.</DD>
+
+<DT><I>bUnderline</I></DT>
+
+<DD>Specifies whether the font is underlined.</DD>
+
+<DT><I>cStrikeOut</I></DT>
+
+<DD>Specifies whether characters in the font are struck out. Specifies a strikeout font if set to a nonzero value.</DD>
+
+<DT><I>nCharSet</I></DT>
+
+<DD>Specifies the character set for the font. See the <I>lfCharSet</I> member in the <B>LOGFONT</B> structure for a list of values.
+
+<P>The OEM character set is system-dependent.
+
+
+<P>Fonts with other character sets may exist in the system. An application that uses a font with an unknown character set must not attempt to translate or interpret strings that are to be rendered with that font. Instead, the strings should be passed directly to the output device driver.
+
+
+<P>The font mapper does not use the <B>DEFAULT_CHARSET</B> value. An application can use this value to allow the name and size of a font to fully describe the logical font. If a font with the specified name does not exist, a font from any character set can be substituted for the specified font. To avoid unexpected results, applications should use the <B>DEFAULT_CHARSET</B> value sparingly.
+</DD>
+
+<DT><I>nOutPrecision</I></DT>
+
+<DD>Specifies the desired output precision. The output precision defines how closely the output must match the requested height, width, character orientation, escapement, and pitch of the font. See the <I>lfOutPrecision</I> member in the <B>LOGFONT</B> structure for a list of values and more information.</DD>
+
+<DT><I>nClipPrecision</I></DT>
+
+<DD>Specifies the desired clipping precision. The clipping precision defines how to clip characters that are partially outside the clipping region. See the <I>lfClipPrecision</I> member in the <B>LOGFONT</B> structure for a list of values.
+
+<P>To use an embedded read-only font, an application must specify <B>CLIP_ENCAPSULATE</B>.
+
+
+<P>To achieve consistent rotation of device, TrueType, and vector fonts, an application can use the OR operator to combine the CLIP_LH_ANGLES value with any of the other <I>nClipPrecision</I> values. If the CLIP_LH_ANGLES bit is set, the rotation for all fonts depends on whether the orientation of the coordinate system is left-handed or right-handed. See the description of the <I>nOrientation</I> parameter for more information about the orientation of coordinate systems. If CLIP_LH_ANGLES is not set, device fonts always rotate counterclockwise, but the rotation of other fonts is dependent on the orientation of the coordinate system.
+</DD>
+
+<DT><I>nQuality</I></DT>
+
+<DD>Specifies the output quality for the font, which defines how carefully the GDI must attempt to match the logical-font attributes to those of an actual physical font. See the <I>lfQuality</I> member in the <B>LOGFONT</B> structure for a list of values.</DD>
+
+<DT><I>nPitchAndFamily</I></DT>
+
+<DD>Specifies the pitch and family of the font. See the <I>lfPitchAndFamily</I> member in the <B>LOGFONT</B> structure for a list of values and more information.</DD>
+
+<DT><I>lpszFacename</I></DT>
+
+<DD>A <B>CString</B> or pointer to a null-terminated string that specifies the typeface name of the font. The length of this string must not exceed 30 characters. The Windows CE <B>EnumFontFamilies</B> function can be used to enumerate all currently available fonts. If <I>lpszFacename</I> is <B>NULL</B>, the GDI uses a device-independent typeface.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>CreateFont</B> method does not create a new Windows CE GDI font. It merely selects the closest match from the fonts available in the GDI pool of physical fonts. </P>
+
+<P>Applications can use the default settings for most of these parameters when creating a logical font. The parameters that should always be given specific values are <I>nHeight</I> and <I>lpszFacename</I>. If <I>nHeight</I> and <I>lpszFacename</I> are not set by the application, the logical font that is created is device-dependent.</P>
+
+<P>When you finish with the <B>CFont</B> object created by the <B>CreateFont</B> function, first select the font out of the device context, and then delete the <B>CFont</B> object.</P>
+
+<H4>Example</H4>
+
+<PRE>// This code fragment shows how to create a font object,
+// select the font object into a DC (device context) for text
+// drawing, and finally delete the font object.
+
+// Initializes a CFont object with the specified characteristics.
+CFont font;
+VERIFY(font.CreateFont(
+   12,                        // nHeight
+   0,                         // nWidth
+   0,                         // nEscapement
+   0,                         // nOrientation
+   FW_NORMAL,                 // nWeight
+   FALSE,                     // bItalic
+   FALSE,                     // bUnderline
+   0,                         // cStrikeOut
+   ANSI_CHARSET,              // nCharSet
+   OUT_DEFAULT_PRECIS,        // nOutPrecision
+   CLIP_DEFAULT_PRECIS,       // nClipPrecision
+   DEFAULT_QUALITY,           // nQuality
+   DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
+   _T("Arial")));                 // lpszFacename
+
+// Use the font which you just created.
+CClientDC dc(this);
+CFont* def_font = dc.SelectObject(&amp;font);
+dc.ExtTextOut(5, 5, ETO_OPAQUE, NULL, _T("Hello"), NULL);
+dc.SelectObject(def_font);
+
+// Finished with the font, now delete the font object.
+font.DeleteObject();
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cfont_4.htm"><B>CFont::CreateFontIndirect</B></A>, <A HREF="cfont_5.htm"><B>CFont::CreatePointFont</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SPH Time Stamp and the IEEE 1394 Streaming Filter Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SPH Time Stamp and the IEEE 1394 Streaming Filter Driver"/>
+<MSHelp:RLTitle Title="SPH Time Stamp and the IEEE 1394 Streaming Filter Driver"/>
+<MSHelp:Keyword Index="A" Term="cxconSPHTimeStampIEEE1394StreamingFilterDriver"/>
+<MSHelp:Keyword Index="K" Term="SPH time stamps, IEEE 1394 streaming filter drivers and"/>
+<MSHelp:Keyword Index="A" Term="cxconSPHTimeStampIEEE1394StreamingFilterDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_avcstream.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758646">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconsphtimestampieee1394streamingfilterdriver"></A>SPH Time Stamp and the IEEE 1394 Streaming Filter Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A 4-byte (32 bit) header precedes each 188-byte transport packet in data queued to the streaming filter driver. This header is referred to in <I>IEC-61883-4</I> as the source packet header (SPH). This value indicates when, in time, the individual packet is to be processed on the receiver, and also guides the IEEE 1394 stack into determining when the packet should be transmitted. This time stamp exists both in MPEG-2 transport stream data received from the streaming filter driver and in data sent to the streaming filter driver for transmission.</P>
+
+<P>When receiving data, you may interpret this time stamp as desired, depending on your particular MPEG architecture and buffer management. When transmitting, however, you must provide this data accurately. Accuracy is extremely important, because this data is intimately tied to the PCR values encoded within an MPEG-2 transport stream.</P>
+
+<P>The appropriate guide to the details of the SPH value is the <I>IEC standard 61883, part 4 (IEC-61883-4)</I>. The following table shows how the SPH values are defined.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Bits</TH>
+<TH width=33%>Range</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>0 to 11</TD>
+<TD width=33%>0 through 3071</TD>
+<TD width=34%>IEEE 1394 cycle offset</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>12 to 24</TD>
+<TD width=33%>0 through 7999</TD>
+<TD width=34%>IEEE 1394 cycle number</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>25 to 31</TD>
+<TD width=33%>Optional encoded with the lowest seven bits of a seconds counter. This data is neither required nor used in transmission.</TD>
+<TD width=34%>Not used</TD>
+</TR>
+</table></div>
+
+<P>The primary IEEE 1394 cycle clock is incremented at a rate of 24.576 megahertz (MHz). Each tick of that clock causes the cycle-offset clock to increment. Each time this clock wraps from 3071 back around to 0, the cycle number is incremented. Thus, the cycle number field is updated at a rate of 1/8,000 of a second, and the cycle offset is 1/3,072 of that time. </P>
+
+<P>For transmission, you can obtain appropriate SPH values either from a previously captured stream, which is a stream read from the driver sent from a device that properly defined the values, or through other means. It is possible to generate generally accurate SPH values from the PCRs in a transport stream.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394streamingfilterdriverdifferencesinmediatypes.htm">IEEE 1394 Streaming Filter Driver Differences in Media Types</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SPH%20Time%20Stamp%20and%20the%20IEEE%201394%20Streaming%20Filter%20Driver&nbsp;(cxconsphtimestampieee1394streamingfilterdriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

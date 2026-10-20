@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DVASPECT2</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DVASPECT2"/>
+<MSHelp:RLTitle Title="DVASPECT2"/>
+<MSHelp:Keyword Index="A" Term="cerefDVASPECT2"/>
+<MSHelp:Keyword Index="K" Term="DVASPECT2"/>
+<MSHelp:Keyword Index="A" Term="cerefDVASPECT2"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_enumerations.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756451">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefdvaspect2"></A>DVASPECT2</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>These enumeration values are used in <A HREF="cerefiviewobjectdraw.htm">IViewObject::Draw</A> to specify new drawing aspects used to optimize the drawing process.</P>
+
+<PRE class="syntax"><B>typedef enum tagDVASPECT2 { </B>
+<B>  DVASPECT_OPAQUE         = 16, </B>
+<B>  DVASPECT_TRANSPARENT    = 32 </B>
+<B>} DVASPECT2;</B></PRE>
+
+<H4 class="dtH4">Elements</H4>
+
+<DL>
+<DT>DVASPECT_OPAQUE </DT>
+
+<DD>Represents the opaque, easy-to-clip parts of an object. Objects may or may not support this aspect. </dd>
+
+<DT>DVASPECT_TRANSPARENT </DT>
+
+<DD>Represents the transparent or irregular parts of on object, typically parts that are expensive or impossible to clip out. Objects may or may not support this aspect. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To support drawing optimizations to reduce flicker, an object needs to be able to draw and return the following information about three separate aspects of itself: 
+
+<DL>
+<DT>DVASPECT_CONTENT </DT>
+
+<DD>Same as before. Specifies the entire content of an object. All objects should support this aspect. </dd>
+
+<DT>DVASPECT_OPAQUE </DT>
+
+<DD>Represents the opaque, easy-to-clip parts of an object. Objects may or may not support this aspect. </dd>
+
+<DT>DVASPECT_TRANSPARENT </DT>
+
+<DD>Represents the transparent or irregular parts of on object, typically parts that are expensive or impossible to clip out. Objects may or may not support this aspect. </dd>
+</DL>
+
+<P>The container can determine which of these drawing aspects an object supports by calling the new method <A HREF="cerefiviewobjectexgetviewstatus.htm">IViewObjectEx::GetViewStatus</A>. Individual bits return information about which aspects are supported. If an object does not support the <A HREF="cerefiviewobjectex.htm">IViewObjectEx</A> interface, it is assumed to support only DVASPECT_CONTENT.</P>
+
+<P>Depending on which aspects are supported, the container can ask the object to draw itself during the front-to-back pass only, the back-to-front pass only, or both. The following cases are possible: 
+
+<UL type="disc">
+	<LI>Objects supporting only DVASPECT_CONTENT should be drawn during the back-to-front pass, with all opaque parts of any overlapping object clipped out. Because all objects should support this aspect, a container not concerned about flickering &#0151; maybe because it is drawing in an off-screen bitmap &#0151; can opt to draw all objects that way and skip the front-to-back pass. </li>
+
+	<LI>Objects supporting DVASPECT_OPAQUE may be asked to draw this aspect during the front-to-back pass. The container is responsible for clipping out the object's opaque regions (returned by <B>IViewObjectEx::GetRegion</B>) before painting any further object behind it. </li>
+
+	<LI>Objects supporting DVASPECT_TRANSPARENT may be asked to draw this aspect during the back-to-front pass. The container is responsible for clipping out opaque parts of overlapping objects before letting an object draw this aspect. </li>
+</UL>
+
+<P>Even when DVASPECT_OPAQUE and DVASPECT_TRANSPARENT are supported, the container is free to use these aspects or not. In particular, if it is painting in an off-screen bitmap and consequently is unconcerned about flicker, the container can use DVASPECT_CONTENT and a one-pass drawing only. However, in a two-pass drawing, if the container uses DVASPECT_OPAQUE during the front-to-back pass, it must use DVASPECT_TRANSPARENT during the back-to-front pass to complete the rendering of the object.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Ocidl.h</TD>
+<TD width=15%>Ocidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefiviewobjectex.htm">IViewObjectEx</A>, <A HREF="cerefiviewobjectdraw.htm">IViewObject::Draw</A>, <A HREF="cerefiviewobjectexgetviewstatus.htm">IViewObjectEx::GetViewStatus</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DVASPECT2&nbsp;(cerefdvaspect2.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

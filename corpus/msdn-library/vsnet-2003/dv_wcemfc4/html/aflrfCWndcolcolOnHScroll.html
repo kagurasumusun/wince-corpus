@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::OnHScroll</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::OnHScroll"/>
+<MSHelp:RLTitle Title="CWnd::OnHScroll"/>
+<MSHelp:Keyword Index="A" Term="aflrfCWndcolcolOnHScroll"/>
+<MSHelp:Keyword Index="K" Term="OnHScroll method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCWndcolcolOnHScroll"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cwnd.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697545">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcwndcolcolonhscroll"></A>CWnd::OnHScroll</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework when the user clicks a window horizontal scroll bar. The SB_THUMBTRACK scroll-bar code typically is used by applications that give some feedback while the scroll box is being dragged. </P>
+
+<PRE class="syntax"><B>afx_msg void OnHScroll( 
+UINT </B><I>nSBCode</I><B>, 
+UINT </B><I>nPos</I><B>, 
+CScrollBar* </B><I>pScrollBar</I> <B>);</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>nSBCode</I></DT>
+
+<DD>Specifies a scroll-bar code that indicates the scrolling request of the user. This parameter can be one of the following:
+
+<UL type="disc">
+	<LI>SB_LEFT&nbsp;&nbsp;&nbsp;Scroll to far left.</li>
+
+	<LI>SB_ENDSCROLL&nbsp;&nbsp;&nbsp;End scroll.</li>
+
+	<LI>SB_LINELEFT&nbsp;&nbsp;&nbsp;Scroll left.</li>
+
+	<LI>SB_LINERIGHT&nbsp;&nbsp;&nbsp;Scroll right.</li>
+
+	<LI>SB_PAGELEFT&nbsp;&nbsp;&nbsp;Scroll one page left.</li>
+
+	<LI>SB_PAGERIGHT&nbsp;&nbsp;&nbsp;Scroll one page right.</li>
+
+	<LI>SB_RIGHT&nbsp;&nbsp;&nbsp;Scroll to far right.</li>
+
+	<LI>SB_THUMBPOSITION&nbsp;&nbsp;&nbsp;Scroll to absolute position. The current position is specified by the nPos parameter.</li>
+
+	<LI>SB_THUMBTRACK&nbsp;&nbsp;&nbsp;Drag scroll box to specified position. The current position is specified by the <I>nPos</I> parameter.</li>
+</UL>
+</dd>
+
+<DT><I>nPos</I></DT>
+
+<DD>Specifies the scroll-box position if the scroll-bar code is SB_THUMBPOSITION or SB_THUMBTRACK; otherwise, it is not used. Depending on the initial scroll range, <I>nPos</I> may be negative and should be cast to an <B>int</B> if necessary.</dd>
+
+<DT><I>pScrollBar</I></DT>
+
+<DD>If the scroll message came from a scroll-bar control, contains a pointer to the control. If the user clicked a window scroll bar, this parameter is <B>NULL</B>. The pointer may be temporary and should not be stored for later use.</dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>If an application scrolls the contents controlled by the scroll bar, it must also reset the position of the scroll box with the <B>CWnd::SetScrollPos</B> method.</P>
+
+<P>This method is called by the framework to allow your application to handle a Windows CE message. The parameters passed to your method reflect the parameters received by the framework when the message was received. If you call the base-class implementation of this method, that implementation will use the parameters originally passed with the message and not the parameters you supply to the method.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void CMyView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+{
+&nbsp;&nbsp;// Get the minimum and maximum scroll-bar positions.
+&nbsp;&nbsp;int minpos;
+&nbsp;&nbsp;int maxpos;
+&nbsp;&nbsp;pScrollBar-&gt;GetScrollRange(&amp;minpos, &amp;maxpos); 
+&nbsp;&nbsp;maxpos = pScrollBar-&gt;GetScrollLimit();
+
+&nbsp;&nbsp;// Get the current position of scroll box.
+&nbsp;&nbsp;int curpos = pScrollBar-&gt;GetScrollPos();
+
+&nbsp;&nbsp;// Determine the new position of scroll box.
+&nbsp;&nbsp;switch (nSBCode)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;case SB_LEFT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll to far left.
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = minpos;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_RIGHT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll to far right.
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = maxpos;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_ENDSCROLL:&nbsp;&nbsp;// End scroll.
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_LINELEFT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll left.
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &gt; minpos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curpos--;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_LINERIGHT:&nbsp;&nbsp;// Scroll right.
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &lt; maxpos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curpos++;
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_PAGELEFT:&nbsp;&nbsp; // Scroll one page left.
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the page size. 
+&nbsp;&nbsp;&nbsp;&nbsp;SCROLLINFO&nbsp;&nbsp;info;
+&nbsp;&nbsp;&nbsp;&nbsp;pScrollBar-&gt;GetScrollInfo(&amp;info, SIF_ALL);
+&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &gt; minpos)
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = max(minpos, curpos - (int) info.nPage);
+&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_PAGERIGHT:&nbsp;&nbsp;&nbsp;&nbsp;// Scroll one page right.
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the page size. 
+&nbsp;&nbsp;&nbsp;&nbsp;SCROLLINFO&nbsp;&nbsp;info;
+&nbsp;&nbsp;&nbsp;&nbsp;pScrollBar-&gt;GetScrollInfo(&amp;info, SIF_ALL);
+
+&nbsp;&nbsp;&nbsp;&nbsp;if (curpos &lt; maxpos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curpos = min(maxpos, curpos + (int) info.nPage);
+&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_THUMBPOSITION: // Scroll to absolute position. nPos is the position
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = nPos;      // of the scroll box at the end of the drag 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// operation.
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;case SB_THUMBTRACK:   // Drag scroll box to specified position. nPos is 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// the
+&nbsp;&nbsp;&nbsp;&nbsp;curpos = nPos;     // position that the scroll box has been dragged 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// to.
+&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Set the new position of the thumb (scroll box).
+&nbsp;&nbsp;pScrollBar-&gt;SetScrollPos(curpos);
+
+&nbsp;&nbsp;CView::OnHScroll(nSBCode, nPos, pScrollBar);
+}</PRE>
+
+<P class="label"><B>Requirements</B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcwndcolcolsetscrollpos.htm"><B>CWnd::SetScrollPos</B></A>, WM_VSCROLL</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697545', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

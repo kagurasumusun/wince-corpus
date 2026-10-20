@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CTreeCtrl::InsertItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ctreectrl_insertitem"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ctreectrl_insertitem"></A>CTreeCtrl::InsertItem</H1>
+
+<P>This method inserts a new item in a tree view control.</P>
+
+<PRE class=syntax><B>HTREEITEM InsertItem(
+LPTVINSERTSTRUCT </B><I>lpInsertStruct</I> <B>);</B>
+
+<B>HTREEITEM InsertItem(
+UINT </B><I>nMask</I><B>,
+LPCTSTR </B><I>lpszItem</I><B>,
+int </B><I>nImage</I><B>,
+int </B><I>nSelectedImage</I><B>,
+UINT </B><I>nState</I><B>,
+UINT </B><I>nStateMask</I><B>,
+LPARAM </B><I>lParam</I><B>,
+HTREEITEM </B><I>hParent</I><B>,
+HTREEITEM </B><I>hInsertAfter</I> <B>);</B>
+
+<B>HTREEITEM InsertItem(
+LPCTSTR </B><I>lpszItem</I><B>,
+HTREEITEM </B><I>hParent</I><B> = TVI_ROOT,
+HTREEITEM </B><I>hInsertAfter</I><B> = TVI_LAST );</B>
+
+<B>HTREEITEM InsertItem(
+LPCTSTR </B><I>lpszItem</I><B>,
+int </B><I>nImage</I><B>,
+int </B><I>nSelectedImage</I><B>,
+HTREEITEM </B><I>hParent</I><B> = TVI_ROOT,
+HTREEITEM </B><I>hInsertAfter</I><B> = TVI_LAST );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpInsertStruct</I></DT>
+
+<DD>Specifies a pointer to a <B>TVINSERTSTRUCT</B> that specifies the attributes of the tree view item to be inserted.</DD>
+
+<DT><I>nMask</I></DT>
+
+<DD>Specifies the integer specifying which attributes to set. See the <B>TVITEM</B> structure.</DD>
+
+<DT><I>lpszItem</I></DT>
+
+<DD>Specifies the address of a string containing the text of the item.</DD>
+
+<DT><I>nImage</I></DT>
+
+<DD>Specifies the index of the image for the item in the image list of the tree view control.</DD>
+
+<DT><I>nSelectedImage</I></DT>
+
+<DD>Specifies the index of the item’s selected image in the image list of the tree view control.</DD>
+
+<DT><I>nState</I></DT>
+
+<DD>Specifies values for the states of the item. See Tree View Control Item States for a list of appropriate states.</DD>
+
+<DT><I>nStateMask</I></DT>
+
+<DD>Specifies which states are to be set. See the <B>TVITEM</B> structure.</DD>
+
+<DT><I>lParam</I></DT>
+
+<DD>Specifies a 32-bit application-specific value associated with the item.</DD>
+
+<DT><I>hParent</I></DT>
+
+<DD>Specifies the handle of the parent of the inserted item.</DD>
+
+<DT><I>hInsertAfter</I></DT>
+
+<DD>Specifies the handle of the item after which the new item is to be inserted.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Handle of the new item if it is successful; otherwise, it is <B>NULL</B>.</P>
+
+<H4>Example</H4>
+
+<PRE>// Gain a pointer to our tree control
+
+CTreeCtrl* pCtrl = (CTreeCtrl*) GetDlgItem(IDC_TREE1);
+ASSERT(pCtrl != NULL);
+
+// Insert a root item using the structure. We must
+// initialize a TVINSERTSTRUCT structure and pass its
+// address to the call.
+
+TVINSERTSTRUCT tvInsert;
+tvInsert.hParent = NULL;
+tvInsert.hInsertAfter = NULL;
+tvInsert.item.mask = TVIF_TEXT;
+tvInsert.item.pszText = _T("United States");
+
+HTREEITEM hCountry = pCtrl-&gt;InsertItem(&amp;tvInsert);
+
+// Insert subitems of that root. Pennsylvania is
+// a state in the United States, so its item will be a child
+// of the United States item. We  will not set any image or states,
+// so we supply only the TVIF_TEXT mask flag. This
+// override provides nearly complete control over the
+// insertion operation without the tedium of initializing
+// a structure. If you are going to add lots of items
+// to a tree, you might prefer the structure override
+// as it affords you a performance win by allowing you
+// to initialize some fields of the structure only once,
+// outside of your insertion loop.
+
+HTREEITEM hPA = pCtrl-&gt;InsertItem(TVIF_TEXT,
+&nbsp;&nbsp;_T("Pennsylvania"), 0, 0, 0, 0, 0, hCountry, NULL);
+
+// Insert the "Washington" item and assure that it is
+// inserted after the "Pennsylvania" item. This override is
+// more appropriate for conveniently inserting items with
+// images.
+
+HTREEITEM hWA = pCtrl-&gt;InsertItem(_T("Washington"),
+&nbsp;&nbsp;0, 0, hCountry, hPA);
+
+// We will add some cities under each of the states.
+// The override used here is most appropriate
+// for inserting text-only items.
+
+pCtrl-&gt;InsertItem(_T("Pittsburgh"), hPA, TVI_SORT);
+pCtrl-&gt;InsertItem(_T("Harrisburg"), hPA, TVI_SORT);
+pCtrl-&gt;InsertItem(_T("Altoona"), hPA, TVI_SORT);
+
+pCtrl-&gt;InsertItem(_T("Seattle"), hWA, TVI_SORT);
+pCtrl-&gt;InsertItem(_T("Kalaloch"), hWA, TVI_SORT);
+pCtrl-&gt;InsertItem(_T("Yakima"), hWA, TVI_SORT);
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ctreectl_6.htm"><B>CTreeCtrl::DeleteItem</B></A>, <A HREF="ctreectl_32.htm"><B>CTreeCtrl::HitTest</B></A>, <A HREF="ctreectl_36.htm"><B>CTreeCtrl::SelectDropTarget</B></A>, <A HREF="ctreectl_17.htm"><B>CTreeCtrl::GetItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

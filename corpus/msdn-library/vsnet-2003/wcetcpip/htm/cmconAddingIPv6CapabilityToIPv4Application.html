@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding IPv6 Capability to an IPv4 Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Adding IPv6 Capability to an IPv4 Application"/>
+<MSHelp:RLTitle Title="Adding IPv6 Capability to an IPv4 Application"/>
+<MSHelp:Keyword Index="A" Term="cmconAddingIPv6CapabilityToIPv4Application"/>
+<MSHelp:Keyword Index="K" Term="converting, IPv4 application to IPv6"/>
+<MSHelp:Keyword Index="K" Term="IPv6, converting an IPv4 application"/>
+<MSHelp:Keyword Index="K" Term="samples, IPv6 support"/>
+<MSHelp:Keyword Index="A" Term="cmconAddingIPv6CapabilityToIPv4Application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tcpip_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_819360">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconaddingipv6capabilitytoipv4application"></A>Adding IPv6 Capability to an IPv4 Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can add IPv6 capability to your Microsoft Windows application while still retaining IPv4 functionality. You do this by porting the IPv4 application to one that works with IPv4 and IPv6. </P>
+
+<P>The document titled IPv6 Guide for Windows Sockets Applications at this <A HREF="http://go.microsoft.com/fwlink/?linkid=4726">Microsoft Web site</A> contains complete, working examples of a simple Windows Sockets application that has been modified to support both IPv6 and IPv4. </P>
+
+<P>The following table shows the major things to consider when porting.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Element to consider</TH>
+<TH width=71%>Consideration</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Data Structures</TD>
+<TD width=71%>Because the size of an IPv6 address is much larger than an IPv4 address, you must ensure that your application defines properly sized data structures. You must change structures that are hard-coded to handle the size of an IPv4 address.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Functions</TD>
+<TD width=71%>You must ensure all functions support IPv6 addresses. The checkv4 utility identifies functions that do not support IPv6 addresses.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Most Windows Sockets (Winsock) 2.2 functions support IPv6 addresses. </BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>Hard Coded IPv4 Addresses</TD>
+<TD width=71%>Avoid hardcoding addresses. You must modify code that uses hard coded addresses or literal strings with code that works with both IPv4 and IPv6.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>User Interface </TD>
+<TD width=71%>In general, due to the length of IPv6 addresses, you should use address names in the UI instead of 128-bit addresses.
+<P>Consider the variability in the size of an IPv6 address when porting an application. For more information, see <A HREF="cmconipv6addressspace.htm">Internet Protocol version 6 Addressing</A> and <A HREF="cmconipv6addresses.htm">IPv6 Addresses</A>.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>You can use the Checkv4 utility in the build release directory command window in Platform Builder to identify code in your application that may be sensitive to porting. The Checkv4.exe<B> </B>utility documentation includes tips on the order in which to address IPv6-enabling issues (the order in which to approach the porting process in your applications). The utility recommends how to resolve the sensitivity. For information about using the Checkv4 utility to port an application, see <A HREF="cmconportingipv4applicationtoipv6.htm">Porting an IPv4 Application to IPv6</A>.</P>
+
+<H4 class="dtH4">Best Practices</H4>
+
+<UL type="disc">
+	<LI>To ensure that structures are properly sized, and that your functions handle both IPv4 and IPv6, you must change functions and structures as shown in the following table.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Change from</TH>
+<TH width=70%>Change to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>GetAdaptersInfo</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefGetAdaptersAddresses" TABINDEX="0">GetAdaptersAddresses</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>gethostbyaddr</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefGetaddrinfo" TABINDEX="0">getaddrinfo</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>gethostbyname</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefGetnameinfo" TABINDEX="0">getnameinfo</MSHelp:link> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>gethostname </B></TD>
+<TD width=70%><MSHelp:link keywords="cerefGetaddrinfo" TABINDEX="0">getaddrinfo</MSHelp:link> or <MSHelp:link keywords="cerefGetnameinfo" TABINDEX="0">getnameinfo</MSHelp:link> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>inet_addr</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefSOCKADDR_STORAGE" TABINDEX="0">SOCKADDR_STORAGE</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>inet_ntoa</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefSOCKADDR_STORAGE" TABINDEX="0">SOCKADDR_STORAGE</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>IP_ADAPTER_INFO</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefIP_ADAPTER_ADDRESSES" TABINDEX="0">IP_ADAPTER_ADDRESSES</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>SOCKADDR</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefSOCKADDR_STORAGE" TABINDEX="0">SOCKADDR_STORAGE</MSHelp:link></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>SOCKADDR_IN</B></TD>
+<TD width=70%><MSHelp:link keywords="cerefSOCKADDR_STORAGE" TABINDEX="0">SOCKADDR_STORAGE</MSHelp:link></TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>When using the <B>getaddrinfo</B> function, the application must perform name resolution before it opens the socket. For example, for IPv4, you could open the socket, then perform name resolution, and finally connect to the interface. For IPv6, you must always perform the name resolution first. </li>
+
+	<LI>Decide whether to use names or number-based IPv6 addresses. If you use names, consider using naming conventions for the user interface and for use in error checking.</li>
+
+	<LI>Ensure fields in the user interface are sufficient length to display IPv6 addresses. For maximum IPv6 address string length, see <B>INET_ADDRSTRLEN</B> in ws2tcpip.h.</li>
+
+	<LI>Consider whether the information provided for IPv4 is appropriate for IPv6.</li>
+
+	<LI>The capability to specify an IP address should depend on whether IPv4 is in use or if IPv6 is available.</li>
+
+	<LI>Thoroughly search and test the code for literal strings.</li>
+</UL>
+
+<H4 class="dtH4">Code Examples</H4>
+
+<P>The following code example for an IPv6 server shows how to use the <B>SOCKADDR_STORAGE</B> structure, which handles both IPv4 and IPv6 addresses.</P>
+
+<PRE class="code">#include &lt;winsock2.h&gt;
+#include &lt;ws2tcpip.h&gt;
+#include &lt;windows.h&gt;
+#include &lt;tchar.h&gt;
+
+#define DEFAULT_FAMILY      PF_INET6
+#define DEFAULT_SOCKTYPE   SOCK_STREAM
+#define DEFAULT_PORT      "1234";
+
+int _tmain (int argc, TCHAR* argv[])
+{
+   SOCKET sock, SockServ[FD_SETSIZE];
+   int nFamily = DEFAULT_FAMILY;
+   int nSockType = DEFAULT_SOCKTYPE;
+   char *szPort = DEFAULT_PORT;
+   TCHAR szOutput[256];
+   SOCKADDR_STORAGE ssRemoteAddr;
+   int i, nNumSocks, cbRemoteAddrSize;
+   WSADATA wsaData;
+   ADDRINFO Hints, *AddrInfo, *AI;
+   fd_set fdSockSet;
+
+   if(WSAStartup(MAKEWORD(2,2), &amp;wsaData))
+   {
+      // WSAStartup failed
+      return 1;
+   }
+
+   memset(&amp;Hints, 0, sizeof(Hints));
+   Hints.ai_family = nFamily;
+   Hints.ai_socktype = nSockType;
+   Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
+
+   if(getaddrinfo(NULL, szPort, &amp;Hints, &amp;AddrInfo))
+      return 1;
+
+   i = 0;
+   for(AI = AddrInfo; AI != NULL; AI = AI-&gt;ai_next) 
+   {
+      if (i == FD_SETSIZE) 
+      {
+         // getaddrinfo returned more addresses than we could use
+         break;
+      }
+
+      if((AI-&gt;ai_family == PF_INET) || (AI-&gt;ai_family == PF_INET6)) // only want PF_INET or PF_INET6
+      {
+         SockServ[i] = socket(AI-&gt;ai_family, AI-&gt;ai_socktype, AI-&gt;ai_protocol);
+         if (SockServ[i] != INVALID_SOCKET)
+         {
+            if (bind(SockServ[i], AI-&gt;ai_addr, AI-&gt;ai_addrlen) == SOCKET_ERROR)
+               closesocket(SockServ[i]);
+            else 
+            {
+               if(nSockType == SOCK_STREAM)
+               {
+                  if (listen(SockServ[i], 5) == SOCKET_ERROR)
+                     closesocket(SockServ[i]);
+                  else
+                     i++;   // TCP serv socket setup successfully
+               }
+               else
+                  i++; // UDP serv socket setup successfully
+            }
+         }
+      }
+   }
+   
+   freeaddrinfo(AddrInfo);
+   
+   if (i == 0) 
+   {
+      // unable to serve on any address
+      return 1;
+   }
+
+   nNumSocks = i;
+
+   FD_ZERO(&amp;fdSockSet);
+
+   for (i = 0; i &lt; nNumSocks; i++)   // want to check all available sockets
+      FD_SET(SockServ[i], &amp;fdSockSet);
+
+   if (select(nNumSocks, &amp;fdSockSet, 0, 0, NULL) == SOCKET_ERROR)
+   {
+      // select() failed
+      return 1;
+   }
+
+   for (i = 0; i &lt; nNumSocks; i++)   // check which socket is ready to process
+   {
+      if (FD_ISSET(SockServ[i], &amp;fdSockSet))   // proceed for connected socket
+      {
+         FD_CLR(SockServ[i], &amp;fdSockSet);
+         if(nSockType == SOCK_STREAM)
+         {
+            cbRemoteAddrSize = sizeof(ssRemoteAddr);
+            sock = accept(SockServ[i], (SOCKADDR*)&amp;ssRemoteAddr, &amp;cbRemoteAddrSize);
+            if(sock == INVALID_SOCKET) 
+            {
+               // accept() failed
+               return 1;
+            }
+
+            char szClientName[128];
+            if (getnameinfo((SOCKADDR*)&amp;ssRemoteAddr, cbRemoteAddrSize,
+               szClientName, sizeof(szClientName), NULL, 0, NI_NUMERICHOST) != 0)
+               strcpy(szClientName, "");
+            _stprintf(szOutput, TEXT("Accepted TCP connection from client %hs\r\n"), szClientName);
+            OutputDebugString(szOutput);
+         }
+         else
+            sock = SockServ[i];
+
+         break;      // Only need one socket
+      }
+   }
+
+   for(i = 0; i &lt; nNumSocks; i++)
+      closesocket(SockServ[i]);
+
+   shutdown(sock, SD_BOTH);
+   closesocket(sock);
+
+   WSACleanup();
+
+   return 0;
+}</PRE>
+
+<P>The following code example shows using the <B>getaddrinfo</B> function, which handles both IPv4 and IPv6 addresses.</P>
+
+<PRE class="code">SOCKET
+OpenAndConnect(char *ServerName, char *PortName, int SocketType)
+{
+    SOCKET ConnSocket;
+    ADDRINFO *AI;
+
+    if (getaddrinfo(ServerName, PortName, NULL, &amp;AddrInfo) != 0) {
+        return INVALID_SOCKET;
+    }
+
+    ConnSocket = socket(AI-&gt;ai_family, SocketType, 0);
+    if (ConnSocket == INVALID_SOCKET) {
+        return INVALID_SOCKET;
+    }
+
+    if (connect(ConnSocket, AI-&gt;ai_addr, AI-&gt;ai_addrlen) == SOCKET_ERROR) {
+        closesocket(ConnSocket);
+        return INVALID_SOCKET;
+    }
+
+    return ConnSocket;
+}</PRE>
+
+<P>The following code example shows the proper sequence for performing name resolution, and then opening a socket.</P>
+
+<PRE class="code">memset(&amp;Hints, 0, sizeof(Hints));
+    Hints.ai_family = Family;
+    Hints.ai_socktype = SocketType;
+    RetVal = getaddrinfo(Server, Port, &amp;Hints, &amp;AddrInfo);
+    if (RetVal != 0) {
+        fprintf(stderr, "Cannot resolve address [%s] and port [%s], error %d: %s\n",
+                Server, Port, RetVal, gai_strerror(RetVal));
+        WSACleanup();
+        return -1;
+    }
+
+    //
+    // Try each address getaddrinfo returned, until we find one to which
+    // we can sucessfully connect.
+    //
+    for (AI = AddrInfo; AI != NULL; AI = AI-&gt;ai_next) {
+
+        // Open a socket with the correct address family for this address.
+        ConnSocket = socket(AI-&gt;ai_family, AI-&gt;ai_socktype, AI-&gt;ai_protocol);
+        if (ConnSocket == INVALID_SOCKET) {
+            fprintf(stderr,"Error Opening socket, error %d: %s\n",
+                    WSAGetLastError(), DecodeError(WSAGetLastError()));
+            continue;
+        }</PRE>
+
+<P>For more information, see the document titled IPv6 Guide for Windows Sockets Applications at this <A HREF="http://go.microsoft.com/fwlink/?linkid=4726">Microsoft Web site</A>. </P>
+
+<P>For a step-by-step procedure on how to port an IPv4 application to IPv6, see <A HREF="cmconportingipv4applicationtoipv6.htm">Porting an IPv4 Application to IPv6</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Adding%20IPv6%20Capability%20to%20an%20IPv4%20Application&nbsp;(cmconaddingipv6capabilitytoipv4application.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

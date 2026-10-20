@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Face and Vertex Normal Vectors</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Face and Vertex Normal Vectors"/>
+<MSHelp:RLTitle Title="Face and Vertex Normal Vectors"/>
+<MSHelp:Keyword Index="A" Term="_cxconFaceVertexNormalVectors"/>
+<MSHelp:Keyword Index="K" Term="face normal vectors%2C Direct3D shading"/>
+<MSHelp:Keyword Index="K" Term="shading, Direct3D face and vertex normal vectors"/>
+<MSHelp:Keyword Index="K" Term="vertex normal vectors%2C Direct3D shading"/>
+<MSHelp:Keyword Index="A" Term="_cxconFaceVertexNormalVectors"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts1_intro.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758157">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_cxconfacevertexnormalvectors"></A>Face and Vertex Normal Vectors</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Each face in a mesh has a positive perpendicular normal vector. The vector's direction is determined by the order in which the vertices are defined and by whether the coordinate system is right-handed or left-handed. The face normal points away from the front side of the face. In Microsoft&reg; Direct3D&reg;, only the front of a face is visible. A front face is one in which vertices are defined in clockwise order. You can set a render state to change this default behavior so that both the front and back faces of a polygon can be visible.</P>
+
+<P class="fig"><IMG SRC="dx3d-nrmlvect.gif" ALT="" BORDER=0></P>
+
+<P>Any face that is not a front face is a back face. Direct3D does not always render back faces; therefore, back faces are said to be culled. You can change the culling mode to render back faces if you want. See <A HREF="_wcesdk_dx3d_culling_state.htm">Culling State</A> for more information.</P>
+
+<P>Direct3D applications do not need to specify face normals; the system calculates them automatically when they are needed. The system uses face normals in the flat shading mode. In the Gouraud shading mode, Direct3D uses the vertex normal. It also uses the vertex normal for controlling lighting and texturing effects. </P>
+
+<P class="fig"><IMG SRC="dx3d-vertnrml.gif" ALT="" BORDER=0></P>
+
+<P>When applying Gouraud shading to a polygon, Direct3D uses the vertex normals to calculate the angle between the light source and the surface. It calculates intensities for the vertices and interpolates them for every point across all the primitive's surfaces. Direct3D calculates the light intensity value by using the angle. The greater the angle, the less light is shining on the surface.</P>
+
+<P>If you are creating an object that is flat, set the vertex normals to point perpendicular to the surface, as shown in the following illustration. A flat surface composed of two triangles is defined.</P>
+
+<P class="fig"><IMG SRC="dx3d-flatvert.gif" ALT="" BORDER=0></P>
+
+<P>It is more likely, however, that your object is made up of triangle strips and the triangles are not coplanar. One simple way to achieve smooth shading across all the triangles in the strip is to first calculate the surface normal vector for each polygonal face with which the vertex is associated. The vertex normal can be set to make an equal angle with each surface normal. However, this method might not be efficient enough for complex primitives.</P>
+
+<P>This method is illustrated by the following figure, which shows two surfaces, S1 and S2 seen edge-on from above. The normal vectors for S1 and S2 are shown in blue. The vertex normal vector is shown in red. The angle that the vertex normal vector makes with the surface normal of S1 is the same as the angle between the vertex normal and the surface normal of S2. When these two surfaces are lit and shaded with Gouraud shading, the result is a smoothly shaded, smoothly rounded edge between them.</P>
+
+<P class="fig"><IMG SRC="dx3d-gvert.gif" ALT="" BORDER=0></P>
+
+<P>If the vertex normal leans toward one of the faces with which it is associated, it causes the light intensity to increase or decrease for points on that surface, depending on the angle it makes with the light source. An example is shown in the following figure. Again, these surfaces are seen edge-on. The vertex normal leans toward S1, causing it to have a smaller angle with the light source than if the vertex normal had equal angles with the surface normals.</P>
+
+<P class="fig"><IMG SRC="dx3d-gvert2.gif" ALT="" BORDER=0></P>
+
+<P>You can use Gouraud shading to display some objects in a 3-D scene with sharp edges. To do so, duplicate the vertex normal vectors at any intersection of faces where a sharp edge is required, as shown in the following illustration.</P>
+
+<P class="fig"><IMG SRC="dx3d-shade1.gif" ALT="" BORDER=0></P>
+
+<P>If you use the DrawPrimitive methods to render your scene, define the object with sharp edges as a triangle list, rather than a triangle strip. When you define an object as a triangle strip, Direct3D treats it as a single polygon composed of multiple triangular faces. Gouraud shading is applied both across each face of the polygon and between adjacent faces. The result is an object that is smoothly shaded from face to face. Because a triangle list is a polygon composed of a series of disjoint triangular faces, Direct3D applies Gouraud shading across each face of the polygon. However, it is not applied from face to face. If two or more triangles of a triangle list are adjacent, they appear to have a sharp edge between them.</P>
+
+<P>Another alternative is to change to flat shading when rendering objects with sharp edges. This is computationally the most efficient method, but it may result in objects in the scene that are not rendered as realistically as the objects that are Gouraud-shaded.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Face%20and%20Vertex%20Normal%20Vectors&nbsp;(_cxconfacevertexnormalvectors.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

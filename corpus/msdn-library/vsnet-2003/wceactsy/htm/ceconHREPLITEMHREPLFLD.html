@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HREPLITEM and HREPLFLD</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HREPLITEM and HREPLFLD"/>
+<MSHelp:RLTitle Title="HREPLITEM and HREPLFLD"/>
+<MSHelp:Keyword Index="A" Term="ceconHREPLITEMHREPLFLD"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, HREPLITEM and HREPLFLD"/>
+<MSHelp:Keyword Index="K" Term="HREPLFLD"/>
+<MSHelp:Keyword Index="K" Term="HREPLITEM"/>
+<MSHelp:Keyword Index="A" Term="ceconHREPLITEMHREPLFLD"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: activesync_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759357">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconhreplitemhreplfld"></A>HREPLITEM and HREPLFLD</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The HREPLITEM handle, a 32-bit number created by the ActiveSync provider, uniquely identifies one object. Whenever the service manager needs information about an object, it calls <B>IReplStore</B> or <B>IReplObjHandler</B> methods, passing the object's HREPLITEM handle.</P>
+
+<P>HREPLITEM is typically a pointer to an internal structure or a class instance. In the StockPor ActiveSync provider, it is a pointer to a CItem instance, which contains a 32-bit object ID and a time stamp for the last modification made to the object. Calling <B>IReplStore::FindNextItem</B> or <B>IReplStore::BytesToObject</B> always creates a new HREPLITEM handle for the newly enumerated item or the item recreated from the byte sequence.</P>
+
+<P>Because HREPLITEM contains an object ID, the ActiveSync provider can determine whether two handles represent the same object. If HREPLITEM also contains a change number or time stamp, the ActiveSync provider can determine which of two handles represents the more-recent version of an object.</P>
+
+<P>There must be an ordered relationship between handles representing different objects. The sample-code implementation of <B>IReplStore::CompareItem</B> compares object IDs. It returns 1 if the first handle is bigger than the second, &#0150;1 if the first is less than the second one and 0 if two are equal. Because <B>IReplStore::CompareItem</B> is called frequently, it must be implemented efficiently. Ordered handles allow the ActiveSync server manager to use a binary search, rather than having to check every item in the table of handles.</P>
+
+<P>The ActiveSync provider does not have to synchronize all objects of a given type. Using selection criteria, it can choose which ones are to be synchronized &#0151; appointments that occur within the next three weeks, for example.</P>
+
+<P>Selection is implemented through <B>IReplStore::IsItemReplicated</B>. The ActiveSync provider can use the data in the HREPLITEM handle, or open the object and read related data so the selector can be applied.</P>
+
+<P>If the object is not to be replicated, the ActiveSync provider returns FALSE. The ActiveSync manager issues commands to delete all non-replicated objects on the device. The corresponding objects on the desktop are not touched.</P>
+
+<P><B>HREPLFLD</B> is a handle to an object type, often called a folder. In the StockPor ActiveSync provider, HREPLFLD is implemented as a pointer to an instance of the CFolder class. Because the StockPor ActiveSync provider supports synchronization of just one object type, only a single instance of the class needs to be created in <B>IReplStore::GetFolderInfo</B>.</P>
+
+<P>The ActiveSync manager knows nothing about the contents of the handle. When the handle is not longer needed, ActiveSync calls <B>IReplStore::FreeObject</B> to give the ActiveSync provider a chance to free whatever resources are used by the handle. If ActiveSync needs to copy the data from one handle to another handle representing the same object, it calls <B>IReplStore::CopyObject</B>. ActiveSync needs to periodically confirm that the handle still represents an valid &#0151; undeleted &#0151; object, so it calls <B>IReplStore::IsValidObject</B>.</P>
+
+<P>Data stored in <B>HREPLITEM</B> and <B>HREPLFLD</B> handles is automatically saved to a persistent file created and maintained by ActiveSync. An ActiveSync provider implements <B>IReplStore::ObjectToBytes</B> to serialize (convert to a byte stream) <B>HREPLITEM</B> and <B>HREPLFLD</B> handles, and <B>IReplStore::BytesToObject</B> to deserialize (convert back to a handle) the same byte sequence.</P>
+
+<P>The persistent file is read immediately after a device is connected, so that all handles used in the previous synchronization can be recreated. Upon device disconnection, ActiveSync converts each handle back into a series of bytes and writes all handle data into the persistent file.</P>
+
+<P>ActiveSync manager keeps a unique data file for each device partnership, and makes sure the correct file is loaded for the connected device. This process is transparent to the ActiveSync provider.</P>
+
+<H2 class="dtH2">Store Information and Store Identifiers</H2>
+
+<P>An ActiveSync provider must be able to determine if the store it synchronizes now is the same store used in last synchronization. If it is different, mapping between desktops and device objects must be re-established using Combine/Replace. <I>Combine</I> combines all desktop and device objects. <I>Replace</I> replaces device objects with desktop objects. Combine can create duplicate objects, which an ActiveSync provider should be able to detect and remove. See <A HREF="ceconimplementingcombinereplaceremovingduplicateobjects.htm">Implementing Combine/Replace; Removing Duplicate Objects</A> for other cases where Combine/Replace is required.</P>
+
+<P>ActiveSync calls <B>IReplStore::GetStoreInfo</B> to retrieve information about a store, including the store identifier. This store ID can be any size and the complete ID is stored in the persisted ActiveSync data file. Immediately after the device is connected, the ActiveSync manager reads this ID and passes it to <B>IReplStore::CompareStoreIDs</B>. An ActiveSync provider must be able to tell if the current store ID matches the one loaded from the ActiveSync file (which identifies the store used in previous synchronization).</P>
+
+<P>The structure <B>STOREINFO</B> is passed to <B>IReplStore::GetStoreInfo</B>. The structure is defined as follows.</P>
+
+<PRE class="code">typedef struct tagStoreInfo
+{
+   UINT    cbStruct;           // structure size in bytes
+   UINT    uFlags;             // miscellaneous flags; see SCF_ definitions
+   TCHAR   szProgId [256];     // program ID name of the store object
+   TCHAR   szStoreDesc [200];  // description of the store
+   UINT    uTimerRes;          // enumeration interval in microseconds
+   UINT    cbMaxStoreId;       // maximum size of store ID
+   UINT    cbStoreId;          // actual  size of store ID
+   LPBYTE  lpbStoreId;         // pointer to store ID
+} STOREINFO, *PSTOREINFO;</PRE>
+
+<P>If <B>IReplStore::CompareStoreIDs</B> returns a value other than 0, the ActiveSync provider discards the persisted replication handles because they are assumed to be no longer valid. ActiveSync then prompts the user to decide whether information on the device should be integrated with the new store or discarded in favor of the new data.</P>
+
+<P>The <B>STOREINFO</B> structure returned by the provider also controls the method ActiveSync uses to determine when the desktop store is changed. ActiveSync providers that support real-time change notification through the <B>IReplNotify</B> callback interface should set the SCF_SIMULATE_RTS bit in <B>STOREINFO::uFlags</B>.</P>
+
+<P>ActiveSync providers that do not support real-time change notification should set <B>STOREINFO::uTimerRes</B> for the desired behavior. If uTimerRes is 0, the ActiveSync manager starts enumeration when the ActiveSync status window is activated by the user, or immediately before synchronization. If the uTimerRes <I>value</I> is non-zero, the ActiveSync manager automatically starts enumeration every <I>value</I> microseconds.</P>
+
+<P>To get back a variable-size store ID, the ActiveSync manager calls <B>IReplStore::GetStoreInfo</B> first with <B>STOREINFO::cbMaxStoreId</B> set to 0. The ActiveSync provider should set the required size for a store ID in STOREINFO<B>::cbStoreId</B> and return E_OUTOFMEMORY. The ActiveSync service manager then allocates memory and passes the pointer in <B>STOREINFO::lpbStoreId</B>, which is used by the ActiveSync provider to save the store ID.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;HREPLITEM%20and%20HREPLFLD&nbsp;(ceconhreplitemhreplfld.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

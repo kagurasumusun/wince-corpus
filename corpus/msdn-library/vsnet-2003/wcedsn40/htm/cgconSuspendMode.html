@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Suspend Mode</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Suspend Mode"/>
+<MSHelp:RLTitle Title="Suspend Mode"/>
+<MSHelp:Keyword Index="A" Term="cgconSuspendMode"/>
+<MSHelp:Keyword Index="K" Term="suspend mode"/>
+<MSHelp:Keyword Index="A" Term="cgconSuspendMode"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757263">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconsuspendmode"></A>Suspend Mode</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When a device is asked to suspend, it is being asked to remain powered to the point that RAM is in a self-refresh state where an interrupt can wake the device. The suspend process can occur in three ways:
+
+<UL type="disc">
+	<LI>The keyboard driver issues a VK_OFF to GWES. This eventually causes <A HREF="cgrefgwespoweroffsystem.htm">GwesPowerOffSystem</A><B> </B>to be called.</li>
+
+	<LI>The OEM can call <B>GwesPowerOffSystem</B> directly.</li>
+
+	<LI>The OEM can use the functionality of <B>GwesPowerOffSystem</B>.</li>
+</UL>
+
+<P>The <B>GwesPowerOff</B> function performs key operations before a device can suspend.</P>
+
+<P class="labelproc"><B>To suspend a device</B>
+
+<OL type="1">
+	<LI>Notify the Taskbar that the device is being suspended.
+<P>Post the WM_POWERBROADCAST message with the flag PBT_APMSUSPEND. Only the registered Taskbar will get this message.
+</li>
+
+	<LI>Abort calibration if the calibration screen is up and in one of the following states:
+<UL type="disc">
+	<LI>Waiting at cross hairs.</li>
+
+	<LI>If calibration was waiting at confirmation.</li>
+</UL>
+</li>
+
+	<LI>Turn off window message queues, stopping the processing of messages.</li>
+
+	<LI>Determine if the Startup UI screen needs to displayed on resume.</li>
+
+	<LI>Save video RAM to system RAM is necessary to preserve state on resume.</li>
+
+	<LI>Call <MSHelp:link keywords="cxrefSetSystemPowerState" TABINDEX="0">SetSystemPowerState</MSHelp:link> with the arguments (NULL, POWER_STATE_SUSPEND, POWER_FORCE). This calls into the power manager that coordinates the rest of the suspend operation. At this point, <B>GwesPowerOff</B> is not completed until the system resumes.</li>
+
+	<LI>Power manager performs the following actions:
+<UL type="disc">
+	<LI>Calls <A HREF="cgreffilesystempowerfunction.htm">FileSystemPowerFunction</A>(FSNOTIFY_POWER_OFF) to power off file system drivers.</li>
+
+	<LI>Calls <A HREF="cgrefpoweroffsystem.htm">PowerOffSystem</A></li>
+
+	<LI>Calls <MSHelp:link keywords="_wcesdk_Win32_Sleep" TABINDEX="0">Sleep</MSHelp:link>(0) to allow the kernel scheduler to run and perform the final suspend process.</li>
+</UL>
+</li>
+
+	<LI>The kernel performs the following final steps to suspend:
+<UL type="disc">
+	<LI>Power off GWES process</li>
+
+	<LI>Power off Filesys.exe</li>
+
+	<LI>If this is an SHx processors, call <A HREF="cmrefoemflushcache.htm">OEMFlushCache</A></li>
+
+	<LI>Call <A HREF="cmrefoempoweroff.htm">OEMPowerOff</A></li>
+</UL>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconkernelstates.htm">Kernel States</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Suspend%20Mode&nbsp;(cgconsuspendmode.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>User Management</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="User Management"/>
+<MSHelp:RLTitle Title="User Management"/>
+<MSHelp:Keyword Index="A" Term="cgconUserManagement"/>
+<MSHelp:Keyword Index="A" Term="cgconUserManagement"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_file.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821307">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconusermanagement"></A>User Management</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>User profiles make it possible to allow several users to access a device, keeping their individual preferences and settings separate. Only one user can be logged on at a time.</P>
+
+<P>To log a new user in, use the <A HREF="cmrefsetcurrentuser.htm">SetCurrentUser</A> API. <B>SetCurrentUser</B> will log out the previous user, if any, and log in the new user. Note that <B>SetCurrentUser</B> simply switches the user registry. It does not communicate a user login to system processes, drivers, or services. It also does not shut down non-system applications. There is currently no mechanism to reset system processes with a new user's settings. So, in most cases a device reset is required to boot with the new user's settings.</P>
+
+<P>Additionally, since the OEM's startup UI, which requests the user's name and password, is started after some system drivers and services that read a user's preferences, such as the screen input panel (SIP) keyboard, those drivers and services require some user to be logged in on boot. If those drivers and services are in use, the OEM will need to specify a default user to be logged in during the boot. The device will start with that user's settings, and when the startup UI calls <B>SetCurrentUser</B>, the user will be authenticated and fully logged in.</P>
+
+<P><B>SetCurrentUser</B> also authenticates the user by passing a buffer of opaque user data, such as a password, to the security subsystem. That buffer is used internally by APIs such as <MSHelp:link keywords="cerefCryptProtectData" TABINDEX="0">CryptProtectData</MSHelp:link> to protect a user's secret data. To change the user's opaque data buffer, for instance to change their password, use the <A HREF="cmrefsetuserdata.htm">SetUserData</A> API.</P>
+
+<P>To find out which user is currently logged in, call <A HREF="cgrefgetusernameex.htm">GetUserNameEx</A> with the NameWindowsCeLocal name format. This function will return the user name that was passed to <B>SetCurrentUser</B>.</P>
+
+<P>Each user is given a separate user profile directory into which applications can put user-specific files and data. To retrieve the location of the current user's profile directory, call <MSHelp:link keywords="cerefSHGetSpecialFolderLocation" TABINDEX="0">SHGetSpecialFolderLocation</MSHelp:link> or <MSHelp:link keywords="cerefSHGetSpecialFolderPath" TABINDEX="0">SHGetSpecialFolderPath</MSHelp:link> with the CSIDL_PROFILE identifier.</P>
+
+<P>There may be other passwords in the system. Do not confuse the current user's password with the system password, which is controlled by the <MSHelp:link keywords="cmrefSetPassword" TABINDEX="0">SetPassword</MSHelp:link>, <MSHelp:link keywords="cmrefCheckPassword" TABINDEX="0">CheckPassword</MSHelp:link>, <MSHelp:link keywords="pbrefSetPasswordStatus" TABINDEX="0">SetPasswordStatus</MSHelp:link>, and <MSHelp:link keywords="pbrefGetPasswordStatus" TABINDEX="0">GetPasswordStatus</MSHelp:link> APIs. The system password applies to the entire system and is independent of the current user logged in. Network passwords are another example of passwords that are independent of the current user.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconuserprofiledesign.htm">User Profiles</A></P>
+
+<P><A HREF="cgconenablinguserprofiles.htm">User Profile Setup</A></P>
+
+<P><A HREF="cgconuserprofilestorage.htm">User Profile Storage</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;User%20Management&nbsp;(cgconusermanagement.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

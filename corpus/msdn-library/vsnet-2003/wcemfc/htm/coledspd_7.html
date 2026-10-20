@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleDispatchDriver::InvokeHelper</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_coledispatchdriver_invokehelper"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_coledispatchdriver_invokehelper"></A>COleDispatchDriver::InvokeHelper</H1>
+
+<P>This method calls the object method or property specified by <I>dwDispID</I>, in the context specified by <I>wFlags</I>. The <I>pbParamInfo</I> parameter specifies the types of the parameters passed to the method or property. The variable list of arguments is represented by <B>...</B> in the syntax declaration.</P>
+
+<PRE class=syntax><B>void InvokeHelper(
+DISPID </B><I>dwDispID</I><B>,
+WORD </B><I>wFlags</I><B>,
+VARTYPE </B><I>vtRet</I><B>,
+void* </B><I>pvRet</I><B>,
+const BYTE* </B><I>pbParamInfo</I><B>, …);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwDispID</I></DT>
+
+<DD>Identifies the method or property to be invoked. This value is usually supplied by ClassWizard.</DD>
+
+<DT><I>wFlags</I></DT>
+
+<DD>Specifies the flags describing the context of the call to <B>IDispatch::Invoke</B>.</DD>
+
+<DT><I>vtRet</I></DT>
+
+<DD>Specifies the type of the return value. For possible values, see the Remarks section.</DD>
+
+<DT><I>pvRet</I></DT>
+
+<DD>Specifies the address of the variable that will receive the property value or return value. It must match the type specified by <I>vtRet</I>.</DD>
+
+<DT><I>pbParamInfo</I></DT>
+
+<DD>Specifies a pointer to a null-terminated string of bytes specifying the types of the parameters following <I>pbParamInfo</I>.</DD>
+
+<DT><I>...</I></DT>
+
+<DD>Specifies the variable list of parameters, of types specified in <I>pbParamInfo</I>.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Possible values for the <I>vtRet</I> argument are taken from the <B>VARENUM</B> enumeration. Possible values are as follows:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>Symbol</TH>
+<TH width=66%>Return Type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_EMPTY</B></TD>
+<TD width=66%><B>Void</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_I2</B></TD>
+<TD width=66%><B>Short</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_I4</B></TD>
+<TD width=66%><B>Long</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_R4</B></TD>
+<TD width=66%><B>Float</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_R8</B></TD>
+<TD width=66%><B>Double</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_CY</B></TD>
+<TD width=66%><B>CY</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_DATE</B></TD>
+<TD width=66%><B>DATE</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_BSTR</B></TD>
+<TD width=66%><B>BSTR</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_DISPATCH</B></TD>
+<TD width=66%><B>LPDISPATCH</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_ERROR</B></TD>
+<TD width=66%><B>SCODE</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_BOOL</B></TD>
+<TD width=66%><B>BOOL</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_VARIANT</B></TD>
+<TD width=66%><B>VARIANT</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>VT_UNKNOWN</B></TD>
+<TD width=66%><B>LPUNKNOWN</B></TD>
+</TR>
+</TABLE><BR>
+
+<P>The <I>pbParamInfo</I> argument is a space-separated list of <B>VTS_</B> constants. One or more of these values, separated by spaces (not commas), specifies the parameter list of the function. Possible values are listed with the <B>EVENT_CUSTOM</B> macro.</P>
+
+<P>This function converts the parameters to <B>VARIANTARG</B> values, then invokes the <B>IDispatch::Invoke</B> method. If the call to <B>Invoke</B> fails, this function throws an exception. If the <B>SCODE</B> (status code) returned by <B>IDispatch::Invoke</B> is <B>DISP_E_EXCEPTION</B>, this function throws a <A HREF="coleexcp.htm"><B>COleException</B></A> object; otherwise, it throws a <A HREF="coledspx.htm"><B>COleDispatchException</B></A>.</P>
+
+<H4>Example</H4>
+
+<PRE>void CTestView::OnBatterylife()
+{
+&nbsp;&nbsp;COleDispatchDriver disp;
+&nbsp;&nbsp;COleException *e = new COleException;
+&nbsp;&nbsp;
+&nbsp;&nbsp;try {
+&nbsp;&nbsp;&nbsp;&nbsp;// Create instance of Microsoft System Information Control
+&nbsp;&nbsp;&nbsp;&nbsp;// by using ProgID.
+&nbsp;&nbsp;&nbsp;&nbsp;if (disp.CreateDispatch("SYSINFO.Sysinfo.1", e))
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Call BatteryLifePercent.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;short nBatteryLifePercent;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disp.InvokeHelper(0x03, DISPATCH_PROPERTYGET, VT_I2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void*)&amp;nBatteryLifePercent, NULL);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (nBatteryLifePercent == 255)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Battery Life % unknown");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CString cStr;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr.Format("Battery Life is at %d%%",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nBatteryLifePercent);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(cStr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw e;
+
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;//Catch control-specific exceptions.
+&nbsp;&nbsp; catch (COleDispatchException * e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CString cStr;
+
+&nbsp;&nbsp;&nbsp;&nbsp;if (!e-&gt;m_strSource.IsEmpty())
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr = e-&gt;m_strSource + " - ";
+&nbsp;&nbsp;&nbsp;&nbsp;if (!e-&gt;m_strDescription.IsEmpty())
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr += e-&gt;m_strDescription;
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr += "unknown error";
+
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(cStr, MB_OK,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(e-&gt;m_strHelpFile.IsEmpty())? 0:e-&gt;m_dwHelpContext);
+
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;//Catch all MFC exceptions, including COleExceptions.
+&nbsp;&nbsp;// OS exceptions will not be caught.
+&nbsp;&nbsp; catch (CException *e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%s(%d): OLE Execption caught: SCODE = %x",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__FILE__, __LINE__, COleException::Process(e));
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="coledspd_6.htm"><B>COleDispatchDriver::GetProperty</B></A>, <A HREF="coledspd_9.htm"><B>COleDispatchDriver::SetProperty</B></A>, <A HREF="coleexcp.htm"><B>COleException</B></A>, <A HREF="coledspx.htm"><B>COleDispatchException</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

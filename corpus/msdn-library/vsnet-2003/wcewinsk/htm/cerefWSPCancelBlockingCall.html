@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPCancelBlockingCall</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPCancelBlockingCall"/>
+<MSHelp:RLTitle Title="WSPCancelBlockingCall"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPCancelBlockingCall"/>
+<MSHelp:Keyword Index="K" Term="WSPCancelBlockingCall"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPCancelBlockingCall"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731226">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwspcancelblockingcall"></A>WSPCancelBlockingCall</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function cancels a blocking call that is currently in progress.</P>
+
+<PRE class="syntax"><B>int WSPCancelBlockingCall(</B>
+<B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function always returns SOCKET_ERROR in Windows CE and sets <I>lpErrno</I> to WSASYSCALLFAILURE.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Error value</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAENETDOWN</TD>
+<TD width=69%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEINVAL</TD>
+<TD width=69%>Indicates there is no outstanding blocking call.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function cancels any outstanding blocking operation for this thread. It is typically used in the following two situations:
+
+<UL type="disc">
+	<LI>A Windows Sockets SPI client is processing a message that has been received while a service provider is implementing pseudo blocking. In this case, <B>WSAIsBlocking</B> will be true.</li>
+
+	<LI>A blocking call is in progress and the Windows Sockets service provider has called back to the Windows Sockets SPI client's blocking hook function (through the callback function retrieved from <A HREF="cerefwpuqueryblockingcallback.htm">WPUQueryBlockingCallback</A>), which in turn is invoking this function. Such a situation might arise, for instance, in implementing a Cancel option for an operation that requires an extended time to complete.</li>
+</UL>
+
+<P>In each case, the original blocking call will terminate as soon as possible with the error WSAEINTR. (In the first instance the termination will <I>not</I> take place until Windows message scheduling has caused control to revert back to the pseudo blocking routine in Windows Sockets. In the second instance, the blocking call will be terminated as soon as the blocking hook function completes.)</P>
+
+<P>In the case of a blocking <A HREF="cerefwspconnect.htm">WSPConnect</A> operation, Windows Sockets will terminate the blocking call as soon as possible, but it cannot be possible for the socket resources to be released until the connection has completed (and then been reset) or timed out. This is likely to be noticeable only if the Windows Sockets SPI client immediately tries to open a new socket (if no sockets are available), or to connect to the same peer through a <B>WSPConnect</B> call.</P>
+
+<P>Canceling a <A HREF="cerefwspaccept.htm">WSPAccept</A> or a <A HREF="cerefwspselect.htm">WSPSelect</A> call does not adversely impact the sockets passed to these calls. Only the particular call fails; any operation that was legal before the cancel is legal after the cancel, and the state of the socket is not affected in any way.</P>
+
+<P>Canceling any operation other than <B>WSPAccept</B> and <B>WSPSelect</B> can leave the socket in an indeterminate state. If a Windows Sockets SPI client cancels a blocking operation on a socket, the only operation the Windows Sockets SPI client will be able to perform on the socket is a call to <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A>, although other operations can work on some Windows Sockets service providers. If a Windows Sockets SPI client requires maximum portability, it must be careful not to depend on performing operations after a cancel operation. A Windows Sockets SPI client can reset the connection by setting the time-out on SO_LINGER to zero and calling <B>WSPCloseSocket</B>.</P>
+
+<P>If a cancel operation compromised the integrity of a <B>SOCK_STREAM</B>'s data stream in any way, the Windows Sockets provider will reset the connection and fail all future operations other than <B>WSPCloseSocket</B> with WSAECONNABORTED.</P>
+
+<P>It is acceptable for <B>WSPCancelBlockingCall</B> to return successfully if the blocking network operation completes prior to being canceled. In this case, the blocking operation will return successfully as if <B>WSPCancelBlockingCall</B> had never been called. The only way for the Windows Sockets SPI client to know with certainty that an operation was actually canceled is to check for a return code of WSAEINTR from the blocking call.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwpuqueryblockingcallback.htm">WPUQueryBlockingCallback</A>, <A HREF="cerefwspconnect.htm">WSPConnect</A>, <A HREF="_wcesdk_wsaaccept.htm">WSAAccept</A>, <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSPCancelBlockingCall&nbsp;(cerefwspcancelblockingcall.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

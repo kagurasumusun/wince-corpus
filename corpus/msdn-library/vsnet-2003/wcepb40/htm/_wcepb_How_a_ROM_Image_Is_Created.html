@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ROM Image Creation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ROM Image Creation"/>
+<MSHelp:RLTitle Title="ROM Image Creation"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_How_a_ROM_Image_Is_Created"/>
+<MSHelp:Keyword Index="K" Term="command-line tools, Make Binary Image tool"/>
+<MSHelp:Keyword Index="K" Term="Make Binary Image tool, ROM image creation"/>
+<MSHelp:Keyword Index="K" Term="Makeimg.exe, ROM image creation"/>
+<MSHelp:Keyword Index="K" Term="OS images, creating ROM images"/>
+<MSHelp:Keyword Index="K" Term="ROM images, creating"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_How_a_ROM_Image_Is_Created"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tools.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_677579">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_how_a_rom_image_is_created"></A>ROM Image Creation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>ROM contains uncompressed files that execute in place (XIP), including the system executables and DLLs. These files start at the beginning of a page boundary. ROM also contains miscellaneous files that are used by these applications, such as fonts, waveform audio files (.wav), and bitmaps.</P>
+
+<P>Files are divided into sections and placed into ROM. The following table shows these sections.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>ROM section </TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>.text</B></TD>
+<TD width=82%>Code</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>.rsrc</B></TD>
+<TD width=82%>Resource data</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>.data</B></TD>
+<TD width=82%>Data</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>.pdata</B></TD>
+<TD width=82%>Debugging and exception processing information for each function in the code section</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>.CRT</B></TD>
+<TD width=82%>Special section &#0151; C++ construct</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%><B>.KDATA</B></TD>
+<TD width=82%>Special section &#0151; present in the kernel (Nk.exe) only</TD>
+</TR>
+</table></div>
+
+<P>Most miscellaneous files are compressed (with the exception of a few fonts). Code and read-only sections for the executables and DLLs are uncompressed to enable XIP. The read-write sections are compressed because they are destined for RAM, where they will be uncompressed as needed.</P>
+
+<P>To save space, many small data sections, referred to as <B>Filler</B> sections (miscellaneous files and compressed read-write sections), are placed into <I>holes</I> in memory. A hole is the space remaining on the last page after a code or read-only memory section is placed in ROM. Because the size and number of executables and DLLs contained in ROM affects the size of the available holes, the ability to identify <B>Filler</B> sections is significant.</P>
+
+<P>You can see exactly how the files are placed in ROM by inspecting the output of Romimage.exe. The numbers in the following code examples were obtained from the log files for Romimage.exe.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Whenever Romimage.exe detects overlapped records, it fails and displays an error message.</BLOCKQUOTE>
+
+<P>The following code example shows the first few lines of output from a typical Romimage.exe session, which lists the program banner, the page size, and the beginning of the <B>MODULES Section</B>.</P>
+
+<PRE class="code">Windows CE ROM Image Builder v4.0 Copyright (c) 1995-2001 Microsoft Corporation
+
+Copying f:\...\x86\debug\kernkitlprof.exe to f:\...\x86\debug\nk.exe for debugger
+Copying f:\...\x86\debug\com_card.dll to f:\...\x86\debug\serial.dll for debugger
+Copying f:\...\x86\debug\i82365.dll to f:\...\x86\debug\pcmcia.dll for debugger
+Copying f:\...\x86\debug\kbd8042xtmsengus1.dll to f:\...\x86\debug\kbdmouse.dll for debugger
+ 
+MODULES Section
+Module       Section  Start     Length  psize   vsize   Filler
+------------ -------- --------- ------- ------- ------- ------
+nk.exe       .text    8c600400h  116736  116736  116268
+nk.exe       .pdata   8c61cc00h    4096    4096    3864
+coredll.dll  .text    8c61dc00h  119808  119296  118987
+coredll.dll  .rsrc    8c63b000h    1024    1024     528
+...
+</PRE>
+
+<P>The first entry in the <B>MODULES Section</B>, <B>nk.exe</B>, has a size of 116,268 = 0x1c62c bytes. This actual size is rounded up to the next 1,024-byte page boundary (116,736 = 0x1c800) and placed in ROM. This leaves a hole of 468 bytes available for miscellaneous files. Similarly, a hole of 496 bytes is available at address 0x8c63b210, at the end of the last page that contains the Coredll.dll <B>.rsrc</B> section.</P>
+
+<P>The following code example shows how, after placing all the <B>.text</B> (code) sections, Romimage.exe begins placing the data sections that are smaller than a page into these holes.</P>
+
+<PRE class="code">Module       Section  Start     Length  psize   vsize   Filler
+------------ -------- --------- ------- ------- ------- ------
+...
+coredll.dll  .data    8c61ca2ch       4       4     200 FILLER
+coredll.dll  .pdata   8cb32800h    4868    4866    8064
+filesys.exe  .data    8cb33b04h   12236   12234   21376
+device.exe   .pdata   8c63b210h     341     341     424 FILLER
+fatfs.dll    .data    8c659c84h     366     366     504 FILLER
+fatfs.dll    .pdata   8cb3ce0ch    1324    1322    1624
+shell.exe    .data    8cb3d338h    1608    1605    2864
+filesys.exe  .pdata   8cb36ad0h    2152    2149    2640
+gwes.exe     .data    8cb37338h   10796   10794   17828
+gwes.exe     .pdata   8cb39d64h   12456   12456   15768
+device.exe   .data    8c61ca30h     213     213     276 FILLER
+shell.exe    .pdata   8c61cb05h     183     183     208 FILLER
+...
+</PRE>
+
+<P>The first <B>.data</B> section for Coredll.dll is 4 bytes and is placed at the first available hole, 0x8c600400 + 0x1c62c = 0x8c61ca2c. It uses 4 bytes, moving the next filler address to 0x8c61ca30, thus shrinking the hole to 464 bytes. </P>
+
+<P>The next <B>.data</B> section that is smaller than a page is for Device.exe and requires 213 = 0xd5 bytes, which is also small enough to fit into the remaining space in this first hole. When it is placed there, the address changes to 0x8c61cb05, thus shrinking the hole to 251 bytes. </P>
+
+<PRE class="code">device.exe   .data    8c61ca30h     213     213     276 FILLER</PRE>
+
+<P>The <B>.pdata</B> section for Device.exe, 341 bytes, is larger than the remaining space in this hole, so it is placed into another hole. This hole follows the last page of the Coredll.dll <B>rsrc</B> section, starting at 0x8c63b210. </P>
+
+<PRE class="code">device.exe   .pdata   8c63b210h     341     341     424 FILLER</PRE>
+
+<P>Shell.exe (183 bytes) is the next <B>.data</B> or <B>.pdata</B> section that is smaller than the remaining size of 251 bytes in the first hole. The <B>.pdata</B> section for the Debug shell (Shell.exe) is placed in the first hole at that next available address, 0x8c61cb05. </P>
+
+<PRE class="code">shell.exe    .pdata   8c61cb05h     183     183     208 FILLER</PRE>
+
+<P>Romimage.exe continues placing the small data sections into holes until all the sections have been placed. The Romimage.exe report lists any remaining holes. The following Romimage.exe report example lists the unfilled ROM holes:</P>
+
+<PRE class="code">Unfilled ROM Holes (Address,Length):
+8c9cfbf8h       8 8caef3f8h       8 8cb253f8h       8 8cb2bff8h       8 
+8c769bf9h       7 8c8d4ffah       6 8c8f37fah       6 8c98dffah       6 
+8cb16ffah       6 8cb1d7fah       6 8cb327fah       6 8c61dbfbh       5 
+8c6e6ffbh       5 8c763ffbh       5 8c855ffbh       5 8c935bfbh       5 
+8c9877fbh       5 8c7537fch       4 8c765bfch       4 8c7bcffch       4 
+8c7d3bfch       4 8c80dbfch       4 8c82f3fch       4 8c8f27fch       4 
+8c938ffch       4 8c9c17fch       4 8c9e23fch       4 8ca6e7fch       4 
+8cacfbfch       4 8cb20bfch       4 8c61cbfdh       3 8c659ffdh       3 
+8c6e13fdh       3 8c6e23fdh       3 8c6e87fdh       3 8c6ee7fdh       3 
+8c63b3feh       2 8c74fffeh       2 8c785ffeh       2 8c7b8ffeh       2 
+8c7c23feh       2 8c9717feh       2 8c99d7feh       2 8cb09ffeh       2 
+8cb227feh       2 8c63afffh       1 8c65a3ffh       1 8c6ea7ffh       1 
+8c788fffh       1 8c793fffh       1 8c9727ffh       1 8c9a8bffh       1 
+8ca83bffh       1 8cacf7ffh       1 8cb047ffh       1 8cb0bfffh       1 
+</PRE>
+
+<P>The number of executables and DLLs contained in ROM can change between different configurations. This can affect the total amount of memory required.</P>
+
+<P>To determine ROM use by each module, calculate the sum of all sections listed in the Romimage.exe output for that module—excluding those sections that are listed as <B>Filler</B>. Because the filler is inserted into the available holes, it does not increase the memory requirement for that module.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ROM%20Image%20Creation&nbsp;(_wcepb_how_a_rom_image_is_created.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

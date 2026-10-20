@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpRecoContext::SetAudioOptions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpRecoContext::SetAudioOptions"/>
+<MSHelp:RLTitle Title="ISpRecoContext::SetAudioOptions"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextSetAudioOptions"/>
+<MSHelp:Keyword Index="K" Term="ISpRecoContext, SetAudioOptions"/>
+<MSHelp:Keyword Index="A" Term="cerefISpRecoContextSetAudioOptions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_application_level_speech_recognition.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822445">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisprecocontextsetaudiooptions"></A>ISpRecoContext::SetAudioOptions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpRecoContext::SetAudioOptions</B> sets the audio options for result objects from this recognition context. This method also enables or disables the retention of audio with result objects and can change the retained audio format.</P>
+
+<P>By default, SAPI does not retain recognition audio.</P>
+
+<P>By default, when an audio format is not specified, the audio will be retained in the same format as the SR engine used to perform the recognition.</P>
+
+<PRE class="syntax"><B>HRESULT SetAudioOptions(</B>
+<B>SPAUDIOOPTIONS </B><I>Options</I><B>,</B>
+<B>const GUID *</B><I>pAudioFormatId</I><B>,</B>
+<B>const WAVEFORMATEX *</B><I>pWaveFormatEx</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Options</I> </DT>
+
+<DD>[in] Flag of type SPAUDIOOPTIONS indicating the option. It must be one of the following: 
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SPAO_NONE </TD>
+<TD width=71%>Do not retain audio for results. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SPAO_RETAIN_AUDIO </TD>
+<TD width=71%>Retain audio for all future results. </TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pAudioFormatId</I> </DT>
+
+<DD>[in] The audio stream format id [of type GUID]. Usually this value is SPDFID_WaveFormatEx. If this value is NULL, the retained audio format will not be changed. You can reset the retained audio format to the SR engine's recognition format by setting this value to GUID_NULL and <I>pWaveFormatEx</I> to NULL. </dd>
+
+<DT><I>pWaveFormatEx</I> </DT>
+
+<DD>[in] The audio stream wave format [of type <A HREF="cerefwaveformatex.htm">WAVEFORMATEX</A>X]. This is only valid if *pAudioFormatId == SPFID_WaveFormatEx. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If you specify a <B>WAVEFORMATEX</B>-based retained audio format, but the SR engine and the audio input stream agree on a non-<B>WAVEFORMATEX</B>-based audio input format (for example, custom audio object/format), <B>ISpRecoContext::SetAudioOptions</B> will return successfully, but the audio will not be retained.</P>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>S_OK </TD>
+<TD width=56%>Function completed successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>E_INVALIDARG </TD>
+<TD width=56%>Options is not one of the correct types, or the specified audio format is not valid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>FAILED(hr) </TD>
+<TD width=56%>Appropriate error message. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of <B>ISpRecoContext::SetAudioOptions</B>.</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+// start retained audio settings with default format (such as SR engine recognition format)
+hr = cpRecoContext-&gt;SetAudioOptions(SPAO_RETAIN_AUDIO, NULL, NULL);
+// Check hr
+// deactivate retained audio settings
+hr = cpRecoContext-&gt;SetAudioOptions(SPAO_NONE, NULL, NULL);
+// Check hr
+// change the retained audio format to 11 kHz, 16-bit Stereo
+// use the stream format helper to fill the WAVEFORMATEX structure
+CSpStreamFormat sfRetained(SPSF_24kHz16BitStereo, &amp;hr);
+// Check hr
+// change the settings to the selected stream format
+hr = cpRecoContext-&gt;SetAudioOptions(SPAO_RETAIN_AUDIO,
+&amp;sfRetained.FormatId(), sfRetained.WaveFormatExPtr());
+// Check hr</PRE>
+
+<H4 class="dtH4">Development Helpers</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Helper Enumerations and Functions </TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%><A HREF="cerefspstreamformat.htm">SPSTREAMFORMAT</A></TD>
+<TD width=53%>SAPI supported stream formats.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CSpStreamFormat</TD>
+<TD width=53%>Class for managing SAPI supported stream formats and <B>WAVEFORMATEX</B> structures.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapi.idl</TD>
+<TD width=18%>Sapi.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpRecoContext::SetAudioOptions&nbsp;(cerefisprecocontextsetaudiooptions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

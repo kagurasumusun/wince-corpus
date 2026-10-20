@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fseek</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fseek"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_fseek.htm", "fseek")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_fseek"></A>fseek</H1>
+
+<P>Moves the file pointer to a specified location.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fseek</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>int fseek( FILE</B> *<I>stream</I>, <B>long</B> <I>offset</I>, <B>int</B> <I>origin</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Pointer to FILE structure</dd>
+
+<DT><I>offset</I></DT>
+
+<DD>Number of bytes from origin</dd>
+
+<DT><I>origin</I></DT>
+
+<DD>Initial position</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>If successful, <B>fseek</B> returns 0. Otherwise, it returns a nonzero value. On devices incapable of seeking, the return value is undefined.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>fseek</B> function moves the file pointer (if any) associated with stream to a new location that is offset bytes from origin. The next operation on the stream takes place at the new location. On a stream open for update, the next operation can be either a read or a write. The argument origin must be one of the following constants, defined in Stdio.h:
+
+<DL>
+<DT>SEEK_CUR</DT>
+
+<DD>Current position of file pointer</dd>
+
+<DT>SEEK_END</DT>
+
+<DD>End of file</dd>
+
+<DT>SEEK_SET</DT>
+
+<DD>Beginning of file</dd>
+</DL>
+
+<P>You can use <B>fseek</B> to reposition the pointer anywhere in a file. The pointer can also be positioned beyond the end of the file. <B>fseek</B> clears the end-of-file indicator and negates the effect of any prior <B>ungetc</B> calls against stream.</P>
+
+<P>When a file is opened for appending data, the current file position is determined by the last I/O operation, not by where the next write would occur. If no I/O operation has yet occurred on a file opened for appending, the file position is the start of the file. </P>
+
+<P>For streams opened in text mode, <B>fseek</B> has limited use, because carriage return&#0151;linefeed translations can cause <B>fseek</B> to produce unexpected results. The only <B>fseek</B> operations guaranteed to work on streams opened in text mode are:
+
+<UL type="disc">
+	<LI>Seeking with an offset of 0 relative to any of the origin values.</li>
+
+	<LI>Seeking from the beginning of the file with an offset value returned from a call to <B>ftell</B>.</li>
+</UL>
+
+<P>Also in text mode, CTRL+Z is interpreted as an end-of-file character on input. In files opened for reading/writing, <B>fopen</B> and all related routines check for a CTRL+Z at the end of the file and remove it if possible. This is done because using <B>fseek</B> and <B>ftell</B> to move within a file that ends with a CTRL+Z may cause <B>fseek</B> to behave improperly near the end of the file. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FSEEK.C: This program opens the file FSEEK.OUT and
+ * moves the pointer to the file's beginning.
+ */
+
+#include &lt;stdio.h&gt;
+
+void main( void )
+{
+   FILE *stream;
+   char line[81];
+   int  result;
+
+   stream = fopen( "fseek.out", "w+" );
+   if( stream == NULL )
+      printf( "The file fseek.out was not opened\n" );
+   else
+   {
+      fprintf( stream, "The fseek begins here: "
+                       "This is the file 'fseek.out'.\n" );
+      result = fseek( stream, 23L, SEEK_SET);
+      if( result )
+         printf( "Fseek failed" );
+      else
+      {
+         printf( "File pointer is set to middle of first line.\n" );
+         fgets( line, 80, stream );
+         printf( "%s", line );
+
+      }
+      fclose( stream );
+   }
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">File pointer is set to middle of first line.
+This is the file 'fseek.out'.</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_ftell.htm"><B>ftell</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

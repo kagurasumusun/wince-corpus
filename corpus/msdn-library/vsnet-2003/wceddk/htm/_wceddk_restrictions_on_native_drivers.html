@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Restrictions on Native Device Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Restrictions on Native Device Drivers"/>
+<MSHelp:RLTitle Title="Restrictions on Native Device Drivers"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Restrictions_on_Native_Drivers"/>
+<MSHelp:Keyword Index="K" Term="native device drivers, restrictions on"/>
+<MSHelp:Keyword Index="K" Term="Win32 API, native device driver restrictions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: native.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_restrictions_on_native_drivers"></A>Restrictions on Native Device Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Device driver code runs with user-level access. With one exception, driver code can call Microsoft&reg; Win32&reg; APIs and access any resources available to user-level processes. For the most part, though, device drivers need only a limited number of simple APIs. Drivers do occasionally perform more complex tasks, such as creating threads or windows. For example, on many Windows CE&#0150;based platforms, the battery driver presents a dialog box to users when the batteries drop below a threshold voltage on order to notify users to replace the batteries.</P>
+
+<P>The only time that a driver cannot call Win32 APIs is when the driver processes a notification that the Windows CE-based platform is powering off or on. With one exception, the device driver must not perform any system calls while processing these notifications. To avoid these problems, restrict the device driver to the following actions when processing power off or power on notifications:
+
+<UL type="disc">
+	<LI>Saving or restoring the device state to or from preallocated storage</li>
+
+	<LI>Issuing any commands to the hardware pertinent to powering on or off</li>
+
+	<LI>Modifying memory within the driver to note that it has been shut down, usually by setting a flag variable.</li>
+</UL>
+
+<P>During power-on notification, the driver may call the <B>SetInterruptEvent</B> function to generate an artificial interrupt event. A typical scenario is for the power on routine to set a global flag representing a power on event, and call <B>SetInterruptEvent</B>. Once the power on sequence is complete, the IST would be triggered by the artificial interrupt, and would then detect the global flag and performs any power on processing that requires system calls. For examples of using <B>SetInterruptEvent</B>, see the <B>HWPowerOn</B> and <B>HWGetIntrType</B> functions in the P2io.c file.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Restrictions%20on%20Native%20Device%20Drivers&nbsp;(_wceddk_restrictions_on_native_drivers.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirectMusicPerformance::SendPMsg</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDirectMusicPerformance::SendPMsg"/>
+<MSHelp:RLTitle Title="IDirectMusicPerformance::SendPMsg"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicPerformance__SendPMsg"/>
+<MSHelp:Keyword Index="K" Term="IDirectMusicPerformance, SendPMsg"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicPerformance__SendPMsg"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxmusic_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_687771">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_idirectmusicperformance__sendpmsg"></A>IDirectMusicPerformance::SendPMsg</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method sends a performance message. This method is called by tracks when they are played. It might also be called by a tool to inject new data into a performance.</P>
+
+<PRE class="syntax"><B>HRESULT SendPMsg(</B>
+<B>DMUS_PMSG *</B><I>pPMSG</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pPMSG</I></DT>
+
+<DD>Message allocated by <A HREF="_wcesdk_dxmusic_idirectmusicperformance__allocpmsg.htm">IDirectMusicPerformance::AllocPMsg</A>. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method succeeds, the return value is S_OK.</P>
+
+<P>If it fails, the method can return one of the following error values:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_dmus_e_no_master_clock">DMUS_E_NO_MASTER_CLOCK</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_dmus_e_already_sent">DMUS_E_ALREADY_SENT</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_invalidarg">E_INVALIDARG</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_pointer">E_POINTER</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>dwFlag<I>s</I> </B>member (see <A HREF="_wcesdk_dxmusic_dmus_pmsg.htm">DMUS_PMSG</A>) must contain either DMUS_PMSGF_MUSICTIME or DMUS_PMSGF_REFTIME, depending on the time stamp in either <B>rtTime</B> or <B>mtTime</B>. The <B>dwFlags</B> member should also contain the appropriate delivery type &#0151; DMUS_PMSGF_TOOL_QUEUE, DMUS_PMSGF_TOOL_ATTIME, or DMUS_PMSGF_TOOL_IMMEDIATE &#0151; depending on the type of message. If none is selected, DMUS_PMSGF_TOOL_IMMEDIATE is used by default.</P>
+
+<P>If the time of the message is set to 0 and the <B>dwFlags</B> member contains DMUS_PMSGF_REFTIME, it is assumed that this message is cued to go out immediately</P>
+
+<P>In most cases, the <A HREF="_wcesdk_dxmusic_idirectmusicgraph__stamppmsg.htm">IDirectMusicGraph::StampPMsg</A> method should be called on the message before <B>SendPMsg</B> is called. However, when sending a message directly to the main output tool, this step can be skipped. If you want the message to pass only through the performance graph, obtain the <A HREF="_wcesdk_dxmusic_idirectmusicgraph.htm">IDirectMusicGraph</A> interface by calling <B>IDirectMusicPerformance::QueryInterface</B>. Otherwise, obtain it by calling <B>IDirectMusicSegment::QueryInterface</B>. Do not attempt to obtain the interface by calling <A HREF="_wcesdk_dxmusic_idirectmusicperformance__getgraph.htm">IDirectMusicPerformance::GetGraph</A> or <A HREF="_wcesdk_dxmusic_idirectmusicsegment__getgraph.htm">IDirectMusicSegment::GetGraph</A>; these methods return a pointer to the graph object, rather than to the implementation of the <B>IDirectMusicGraph</B> interface on the performance or segment.</P>
+
+<P>Normally, the performance frees the message after it has been processed. For more information, see the Remarks for <A HREF="_wcesdk_dxmusic_idirectmusicperformance__freepmsg.htm">IDirectMusicPerformance::FreePMsg</A>.</P>
+
+<P>The follow code example shows how to allocate and send a system-exclusive message and a tempo message.</P>
+
+<PRE class="code">/* Assume that pPerformance is a valid IDirectMusicPerformance
+   pointer and that mtTime is an initialized MUSIC_TIME 
+   variable. */
+ 
+IDirectMusicGraph* pGraph;
+ 
+/# Get the graph pointer from the performance. If you wanted the 
+   message to go through a segment graph, you would 
+   QueryInterface a segment object instead. */
+ 
+if ( SUCCEEDED( pPerformance-&gt;QueryInterface(
+        IID_IDirectMusicGraph, (void**)&amp;pGraph )))
+ {
+    // Allocate a DMUS_SYSEX_PMSG of the appropriate size,
+    // and read the system-exclusive data into it.
+ 
+    DMUS_SYSEX_PMSG* pSysEx;
+ 
+    if ( SUCCEEDED( pPerformance-&gt;AllocPMsg(
+            sizeof(DMUS_SYSEX_PMSG) + m_dwSysExLength,
+            (DMUS_PMSG**)&amp;pSysEx )))
+    {
+        // All fields are initialized to 0 from the 
+        // AllocPMsg method.
+        // Assume that m_pbSysExData is a pointer to an array 
+        // containing data of length m_dwSysExLength.
+ 
+        memcpy( pSysEx-&gt;abData, m_pbSysExData, m_dwSysExLength );
+        pSysEx-&gt;dwSize = sizeof(DMUS_SYSEX_PMSG);
+        pSysEx-&gt;dwLen = dwSysExLength;
+        pSysEx-&gt;mtTime = mtTime;
+        pSysEx-&gt;dwFlags = DMUS_PMSGF_MUSICTIME;
+        pSysEx-&gt;dwType = DMUS_PMSGT_SYSEX;
+ 
+        pGraph-&gt;StampPMsg( (DMUS_PMSG*)pSysEx );
+        if (FAILED(pPerformance-&gt;SendPMsg( (DMUS_PMSG*)pSysEx )))
+        {
+            pPerformance-&gt;FreePMsg( (DMUS_PMSG*)pSysEx );
+        }
+    }
+ 
+    // Change the tempo at time mtTime to 120 bpm.
+ 
+    DMUS_TEMPO_PMSG* pTempo;
+ 
+    if( SUCCEEDED( pPerformance-&gt;AllocPMsg(
+            sizeof(DMUS_TEMPO_PMSG),
+            (DMUS_PMSG**)&amp;pTempo )))
+    {
+        pTempo-&gt;dwSize = sizeof(DMUS_TEMPO_PMSG);
+        pTempo-&gt;dblTempo = 120;
+        pTempo-&gt;mtTime = mtTime;
+        pTempo-&gt;dwFlags = DMUS_PMSGF_MUSICTIME;
+        pTempo-&gt;dwType = DMUS_PMSGT_TEMPO;
+        pGraph-&gt;StampPMsg( (DMUS_PMSG*)pTempo );
+        if (FAILED(pPerformance-&gt;SendPMsg( (DMUS_PMSG*)pTempo )))
+        {
+            pPerformance-&gt;FreePMsg( (DMUS_PMSG*)pTempo );
+        }
+    }
+ 
+    pGraph-&gt;Release();
+}</PRE>
+
+<P>The next code example shows a function that sends a note message associated with the track identified by <I>dwTrackID</I>. The virtual track ID should be 0 if the message is not being generated from a DirectMusicTrack object.</P>
+
+<PRE class="code">HRESULT CreateNotePMsg(IDirectMusicPerformance* pPerformance,
+        MUSIC_TIME mtTime, DWORD dwTrackID) 
+{
+ 
+    // Allocate a Note PMessage.
+    DMUS_NOTE_PMSG* pNote = NULL;
+    HRESULT hr = pPerformance-&gt;AllocPMsg( sizeof(DMUS_NOTE_PMSG),
+            (DMUS_PMSG**) &amp;pNote);
+    if (FAILED(hr)) return hr;
+ 
+    pNote-&gt;dwSize = sizeof(DMUS_NOTE_PMSG); // Size of a Note PMessage
+    pNote-&gt;rtTime = 0;                      // Ignored
+    pNote-&gt;mtTime = mtTime;                 // When to play the note
+    pNote-&gt;dwFlags = DMUS_PMSGF_MUSICTIME;  // Use the mtTime field.
+    pNote-&gt;dwPChannel = 5;                  // Play on PChannel 5.
+    pNote-&gt;dwVirtualTrackID = dwTrackID;    // Track ID from parameter.
+ 
+    // The following two fields should be set to NULL when a 
+    // message is initially sent. They will be updated in
+    // IDirectMusicGraph::StampPMsg.
+    pNote-&gt;pTool = NULL;
+    pNote-&gt;pGraph = NULL;
+    pNote-&gt;dwType = DMUS_PMSGT_NOTE;
+    pNote-&gt;dwVoiceID = 0;           // For DirectX 6.1, always 0
+    pNote-&gt;dwGroupID = 0xFFFFFFFF;  // All track groups
+    pNote-&gt;punkUser = NULL;         // Always NULL
+ 
+    // Get the current time signature from the performance
+    // to compute measure and beat information.
+    DMUS_TIMESIGNATURE TimeSig;
+    MUSIC_TIME mtNext;
+    hr = pPerformance-&gt;GetParam(GUID_TimeSignature, 0xFFFFFFFF,
+            0, mtTime, &amp;mtNext, &amp;TimeSig);
+    if (FAILED(hr)) return hr;
+ 
+    // Recompute TimeSig.mtTime to have the value expected 
+    // by pPerformance-&gt;TimeToRhythm.
+    TimeSig.mtTime += mtTime;
+ 
+    // Get the current chord from the performance 
+    // to create a note value.
+    DMUS_CHORD_KEY Chord;
+    hr = pPerformance-&gt;GetParam(GUID_ChordParam, 0xFFFFFFFF, 0,
+            mtTime, &amp;mtNext, &amp;Chord);
+    if (FAILED(hr)) return hr;
+ 
+    // Create a note with octave 5, chord tone 2 (fifth), scale 
+    // offset 1 (=&gt; sixth), and no accidentals.
+    WORD wMusicValue = 0x5210;
+ 
+    // Use DMUS_PLAYMODE_PEDALPOINT as your play mode
+    // in pPerformance-&gt;MusicToMIDI.
+    BYTE bPlayModeFlags = DMUS_PLAYMODE_PEDALPOINT;
+ 
+    // Fill in the fields specific to DMUS_NOTE_PMSG.
+    pNote-&gt;wMusicValue = wMusicValue;
+    hr = pPerformance-&gt;MusicToMIDI(
+        wMusicValue,
+        &amp;Chord,
+        bPlayModeFlags,
+        0,
+        &amp;(pNote-&gt;bMidiValue));
+    if (FAILED(hr)) return hr;
+ 
+    hr = pPerformance-&gt;TimeToRhythm(
+        TimeSig.mtTime,
+        &amp;TimeSig,
+        &amp;(pNote-&gt;wMeasure),
+        &amp;(pNote-&gt;bBeat),
+        &amp;(pNote-&gt;bGrid),
+        &amp;(pNote-&gt;nOffset));
+    if (FAILED(hr)) return hr;
+ 
+    pNote-&gt;mtDuration = DMUS_PPQ;       // Quarter note duration
+    pNote-&gt;bVelocity = 120;             // MIDI velocity (0 to 127)
+    pNote-&gt;bFlags = DMUS_NOTEF_NOTEON;  // Always set to this value.
+    pNote-&gt;bTimeRange = 250;            // Randomize start time a lot.
+    pNote-&gt;bDurRange = 5;               // Randomize duration a little.
+    pNote-&gt;bVelRange = 0;               // Do not randomize velocity.
+    pNote-&gt;bPlayModeFlags = bPlayModeFlags;
+    pNote-&gt;bSubChordLevel = 0;          // Note uses subchord level 0.
+    pNote-&gt;cTranspose = 0;              // No transposition
+ 
+    // Stamp the message with the performance graph.
+    IDirectMusicGraph* pGraph;
+    hr = pPerformance-&gt;QueryInterface( IID_IDirectMusicGraph,
+            (void**)&amp;pGraph );
+    if (FAILED(hr)) return hr;
+ 
+    pGraph-&gt;StampPMsg( (DMUS_PMSG*)pNote );
+    pGraph-&gt;Release();
+
+    // Finally, send the message.
+    hr = pPerformance-&gt;SendPMsg( (DMUS_PMSG*)pNote);
+    if (FAILED(hr))
+    {
+        pPerformance-&gt;FreePMsg( (DMUS_PMSG*)pNote);
+        return hr;
+    }
+    
+    return S_OK;
+ 
+}</PRE>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=21%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=19%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=21%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>Dmusici.h</TD>
+<TD width=19%>Dmusic.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_dxmusic_messages.htm">Messages</A>, <MSHelp:link keywords="_wcesdk_dxmusic_DirectMusic_Messages" TABINDEX="0">DirectMusic Messages</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_DirectMusic_Tools" TABINDEX="0">DirectMusic Tools</MSHelp:link>, <A HREF="_wcesdk_dxmusic_idirectmusicgraph.htm">IDirectMusicGraph</A>, <A HREF="_wcesdk_dxmusic_idirectmusicgraph__stamppmsg.htm">IDirectMusicGraph::StampPMsg</A>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__allocpmsg.htm">IDirectMusicPerformance::AllocPMsg</A>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__freepmsg.htm">IDirectMusicPerformance::FreePMsg</A>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__getgraph.htm">IDirectMusicPerformance::GetGraph</A>, <A HREF="_wcesdk_dxmusic_idirectmusicsegment__getgraph.htm">IDirectMusicSegment::GetGraph</A>, <A HREF="_wcesdk_dxmusic_idirectmusictool__processpmsg.htm">IDirectMusicTool::ProcessPMsg</A>, <A HREF="_wcesdk_dxmusic_dmus_pmsg.htm">DMUS_PMSG</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDirectMusicPerformance::SendPMsg&nbsp;(_wcesdk_dxmusic_idirectmusicperformance__sendpmsg.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

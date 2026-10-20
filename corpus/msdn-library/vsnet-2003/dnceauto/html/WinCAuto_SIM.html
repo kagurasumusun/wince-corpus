@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Controlling Installation of Applications with Microsoft Software Installation Manager</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Controlling Installation of Applications with Microsoft Software Installation Manager"/>
+<MSHelp:RLTitle Title="Controlling Installation of Applications with Microsoft Software Installation Manager"/>
+<MSHelp:Keyword Index="A" Term="WinCAuto_SIM"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Software Installation Manager, controlling installation of applications with"/>
+<MSHelp:Keyword Index="K" Term="SIM, controlling installation of applications with"/>
+<MSHelp:Keyword Index="A" Term="WinCAuto_SIM"/>
+<MSHelp:Keyword Index="F" Term="Controlling Installation of Applications with Microsoft Software Installation Manager"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kb68K"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Media" Value="kbText"/>
+<MSHelp:Attr Name="TargetCPU" Value="kb68K"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="This article describes how to use Microsoft Software Installation Manager (SIM) to control installations of third-party applications on Microsoft Windows CE for Automotive (WCEfA) platforms."><meta name="keywords" content="Microsoft Windows CE for Automotive (WCEfA), Windows CE for Automotive, WCEfA, Microsoft Software Installation Manager (SIM), software installation manager, SIM, controlling installations of third-party applications on Microsoft Windows CE for Automotive, controlling installations of third-party applications with Microsoft Software Installation Manager"><META name="rtfFileName" content="wincauto_sim.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Microsoft Corporation">
+<META NAME="Date" CONTENT="2002-01-25">
+<META NAME="msdnID" CONTENT="_802122">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;for&nbsp;Automotive&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="wincauto_sim"></A>Controlling Installation of Applications with Microsoft Software Installation Manager</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>January 2002</P>
+
+<P><B>Summary:</B> This article describes how to use Microsoft Software Installation Manager (SIM) to control installations of third-party applications on Microsoft Windows CE for Automotive (WCEfA) platforms. (7 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#wincauto_sim_article_motivation_for_the_software_installation_manager">Microsoft Software Installation Manager Overview</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_general_development_process">General Development Process</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_overview_of_the_software_installation_manager">Software Installation Manager (SIM) Installation</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_how_do_i_make_my_platform_open">Creating an Open Platform</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_how_do_i_make_my_platform_closed">Creating a Closed Platform</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_how_do_i_make_my_platform_restricted">Creating a Restricted Platform</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_how_does_an_application_get_certified">Certifying an Application</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_developer_requirements">Developer Requirements</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_article_what_to_test_for">Testing an Application</A><CODE><BR>
+</CODE><A HREF="#wincauto_sim_about_windows_ce_for_automotive">Microsoft Windows CE for Automotive Overview</A></P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_motivation_for_the_software_installation_manager"></A>Microsoft Software Installation Manager Overview</H2>
+
+<P>You have built an in-car computing device based on Microsoft&#174; Windows&#174; CE for Automotive (WCEfA). You have tested your platform code, all of the drivers, as well as the applications that you will be shipping with it. No memory leaks are present. Applications start up and shut down in an orderly fashion and run efficiently.</P>
+
+<P>What about software or data from third parties? Do you want to allow third&#45;party software or data to be installed on your device? If so, can you insure that anything that is allowed also runs efficiently?</P>
+
+<P>Have you considered remote upgrades? What if you need to ship a patch or want to provide an enhancement to a preinstalled application? How can that enhancement be installed once the devices are out of your control?</P>
+
+<P>Microsoft Software Install Manager (SIM), a component of WCEfA, allows you to control what can be installed on your device platform. You can define your platform as being <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_open">open</A>, <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_closed">closed</A>, or <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_restricted">restricted</A> to new installations, and SIM will enforce these designations. </P>
+
+<P>Anything can be installed on an open platform, as long as the applications are compiled for the appropriate processor. At the other extreme, no third&#45;party software can be installed on a closed platform. Only certified applications can be installed on a restricted platform. Regardless of the openness of the platform, you, &#151;the OEM&#151; can always provide updates to the files and data that were originally shipped.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_general_development_process"></A>General Development Process</H2>
+
+<P>Begin by developing the platform components such as the Hardware Abstraction Layer (HAL), boot loader, and so on. At this time, device drivers can be developed too, possibly in parallel with the platform. Application development starts later. </P>
+
+<P>By this stage in the development process, you have selected the drivers, applications, and data shipping with your product, versus drivers, applications, and data that will be third&#45;party aftermarket additions. Everything that ships as part of your product is included with the ROM image. You should build this image, test it, and eventually manufacture and install the ROM image on your devices.</P>
+
+<P>Once the platform is stable, export to an SDK with the Export&#45;To&#45;SDK function in Platform Builder. Third&#45;party developers will develop applications from this SDK and continue to develop applications from the SDK after the product ships. Once hardware is available, third parties should test the hardware. Any third&#45;party aftermarket applications and drivers should be installed after the device is produced, either by the dealer or directly by the customer.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_overview_of_the_software_installation_manager"></A>Software Installation Manager (SIM) Installation</H2>
+
+<P>You can set the SIM level of a platform to be <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_open">open</A>, <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_closed">closed</A>, or <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_restricted">restricted</A> to the installation of third&#45;party software. Anything can be installed on an open platform, as long as the applications are compiled for the appropriate processor. At the other extreme, no third&#45;party software can be installed on a closed platform. Only certified applications can be installed on a restricted platform. </P>
+
+<H3 class="dtH1">Controlling Elements Installed on a Platform</H3>
+
+<P>Windows CE for Automotive (WCEfA) installation files use a .cei file extension. The .cei extension is associated with the APCLoad application and should be included in your ROM image. </P>
+
+<P>APCLoad compares various attributes of the device with fields from the .cei file to determine whether the installation can proceed. APCLoad verifies that the platform type and version numbers in the .cei file are consistent with the platform and platform software. APCLoad compares the device SIM level against the .cei file certification key, and either allows the installation to proceed or prohibits it based on the outcome of this comparison. </P>
+
+<P>With open platforms, the installation proceeds regardless of the key. If the platform is closed, the installation does not proceed. If the platform is restricted, APCLoad verifies that the requested file is certified with a valid key before permitting the file installation to proceed. Tampering with a certified .cei file invalidates the certification key, causing APCLoad to refuse to install a file that has been modified.</P>
+
+<H3 class="dtH1">Certifying Applications or Data</H3>
+
+<P>Using the CE Install Builder (CEIBuild) tool, applications, data, speech templates, and so on, are bundled together into an installable file with a .cei extension. A generic CEIBuild tool should be included with your SDK. This generic CEIBuild tool produces .cei files without a certification key. Third&#45;party developers should use .cei files without certification keys to test their product installation process. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Development platforms for independent software vendors (ISVs) must be <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_open">open</A>, if you want them to successfully test the installation of their product.</BLOCKQUOTE>
+
+<P>If your platform is restricted, then a separate organization will need to validate the applications or data that third parties run on your platform. This validation organization will need a special copy of CEIBuild that adds a certification key to a .cei file.</P>
+
+<P>More on application certification is described below in <A HREF="#wincauto_sim_article_how_does_an_application_get_certified">Certifying an Application</A>.</P>
+
+<H3 class="dtH1">Updating ROM Components</H3>
+
+<P>You may need to change ROM components after your device ships, either to fix a problem, or to provide enhanced functionality. For this purpose, the OEM is given a CEIBuild that adds a <I>master key</I> to a .cei file. CEI files stamped with this master key can be installed on an open, closed, or a restricted platform. Therefore, they can be used to place a file in RAM that supercedes a ROM file with the same name, serving to upgrade the ROM component.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_how_do_i_make_my_platform_open"></A>Creating an Open Platform</H2>
+
+<P>Finalize OEM and platform names, and modify the following #define directives in platform\inc\autopc.h according to the comments in the file:
+
+<UL type="disc">
+	<LI>OEM_NAME_STR  (for example: X Corp).</li>
+
+	<LI>OEM_PLATNAME_STR  (for example: Fun Car PC).</li>
+
+	<LI>OEM_PLATFORM_STR  (for example: X Corp. Fun Car PC version 1.0).</li>
+
+	<LI>OEM_VERSION_NUM_STR  (for example: 1.00.0000).</li>
+</UL>
+
+<P>Note that once initially set, OEM and platform names should not be changed.</P>
+
+<P>Modify the following IOCTL in platform\kernel\hal\cfwapc.c:
+
+<UL type="disc">
+	<LI>IOCTL_HAL_VALID_SIM_KEY
+<P>Replace the implementation as you see fit. This is the function called when installing or invoking (through Autorun) a file containing an OEM certificate. It is called with an 8-byte fingerprint that you need to validate. If the file being installed was certified with your master key, then 8 bytes will be the same as the 8 bytes of your master key.
+</li>
+</UL>
+
+<P>Send Microsoft your modified version of autopc.h and an 8-byte sequence for the OEM certificate. Microsoft will return a copy of CEIBuild that generates the <I>master</I>-<I>key</I> certificate for your platform. You will also receive a copy of Certgen.exe that generates the same master-key certificates.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_how_do_i_make_my_platform_closed"></A>Creating a Closed Platform</H2>
+
+<P>Finalize OEM and platform names, and modify the following #define statements in platform\inc\autopc.h according to the comments in the file:
+
+<UL type="disc">
+	<LI>OEM_NAME_STR  (for example: X Corp).</li>
+
+	<LI>OEM_PLATNAME_STR  (for example: Fun Car PC).</li>
+
+	<LI>OEM_VERSION_STR  (for example: X Corp. Fun Car PC version 1.0).</li>
+
+	<LI>OEM_VERSION_NUM_STR  (for example: 1.00.0000).</li>
+</UL>
+
+<P>Note that once initially set, OEM and platform names should not be changed.</P>
+
+<P>Modify the following IOCTL in platform\kernel\hal\cfwapc.c:
+
+<UL type="disc">
+	<LI>IOCTL_HAL_GET_APC_SIM_LEVEL:
+<P>Replace APC_SIM_INSTALL_ANY with APC_SIM_INSTALL_OEM.
+
+<P>Replace APC_SIM_INVOKE_ANY with APC_SIM_INVOKE_OEM.
+</li>
+
+	<LI>IOCTL_HAL_VALID_SIM_KEY:
+<P>Replace the implementation as you see fit. This is the function called when installing or invoking (through Autorun) a file containing an OEM certificate. It is called with an 8-byte fingerprint that you need to validate. If the file being installed was certified with your master key, then these 8 bytes will be the same as the 8 bytes of your master key.
+</li>
+</UL>
+
+<P>Send Microsoft your modified version of autopc.h and an 8-byte sequence for the OEM certificate. Microsoft will return a copy of CEIBuild that generates the <I>master-key</I> certificate for your platform. You will also receive a copy of Certgen.exe that generates the same master-key certificates. </P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_how_do_i_make_my_platform_restricted"></A>Creating a Restricted Platform</H2>
+
+<P>Finalize OEM and platform names, and modify the following #define statements in platform\inc\autopc.h according to the comments in the file:
+
+<UL type="disc">
+	<LI>OEM_NAME_STR  (for example: X Corp).</li>
+
+	<LI>OEM_PLATNAME_STR  (for example: Fun Car PC).</li>
+
+	<LI>OEM_PLATFORM_STR  (for example: X Corp. Fun Car PC version 1.0).</li>
+
+	<LI>OEM_VERSION_NUM_STR  (for example: 1.00.0000).</li>
+</UL>
+
+<P>Note that once initially set, OEM and platform names should not be changed.</P>
+
+<P>Modify the following IOCTLs in platform\kernel\hal\cfwapc.c:
+
+<UL type="disc">
+	<LI>IOCTL_HAL_GET_APC_SIM_LEVEL:
+<P>Replace APC_SIM_INSTALL_ANY with APC_SIM_INSTALL_ISV.
+
+<P>Replace APC_SIM_INVOKE_ANY with APC_SIM_INVOKE_ISV.
+</li>
+
+	<LI>IOCTL_HAL_VALID_SIM_KEY:
+<P>Replace the implementation as you see fit. This is the function called when installing or invoking (through Autorun) a file containing an OEM certificate. It is called with an 8-byte fingerprint that you need to validate. If the file being installed was certified with your master key, then these 8 bytes will be the same as the 8 bytes of your master key. 
+</li>
+</UL>
+
+<P>Send Microsoft your modified version of autopc.h and an 8-byte sequence for the OEM certificate. Microsoft will return a copy of CEIBuild that generates the <I>master-key</I> certificate for your platform. You will also receive a copy of Certgen.exe that generates the same master-key certificates. </P>
+
+<P>Remember to inform Microsoft of who will be validating applications for your platform. This could be your own company, or a third&#45;party validation entity. Microsoft will create a program to stamp installation packages with a key that the installer recognizes as valid. This stamping function will be provided to the party that is doing your validation.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_how_does_an_application_get_certified"></A>Certifying an Application</H2>
+
+<P>Before testing begins, the validation testing organization obtains the .cei file from the independent software vendor (ISV) and also obtains <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_restricted">restricted</A> production hardware from the OEM. If the submitted application fails, the application and data is rejected. Otherwise, ensure that the platform variables within the .cei file are set appropriately for this platform, then use CEIBuild to stamp the .cei file with a certification key. Send this certified .cei file back to the ISV.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_developer_requirements"></A>Developer Requirements</H2>
+
+<P>Application developers require an SDK created specifically for your device platform. Use the Export&#45;To&#45;SDK function in Platform Builder to create the SDK. Always include the SDKConnect utility in your SDK, so application developers can connect to the device for downloading and testing purposes. Also include the generic CEIBuild tool in the SDK, not the version that stamps your master key, so third parties can package their product into a .cei file and test the installation process.</P>
+
+<P>Third&#45;party software developers should receive the SDK from the OEM, along with development hardware. Ideally, the image on the hardware should be <A HREF="#wincauto_sim_article_how_do_i_make_my_platform_open">open</A>, not restricted or closed. Develop your application, drivers, and data, download to the device with SDKConnect or CESH, then debug. When everything is operating normally, use CEIBuild to assemble your product. Before testing the installation process, confirm that the correct platform information is included in your .cei file.</P>
+
+<P>Once your application is completed, send the .cei file to the organization that is performing validation or certification for the OEM. They would validate it, then either reject it or return a .cei file that has been stamped with a certification key. You would then reproduce this .cei file on CD-ROM or a compact flash card and distribute.</P>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_article_what_to_test_for"></A>Testing an Application</H2>
+
+<P>Here are some suggestions on what you might want to have your validation provider test. Note that this list is not exclusive.
+
+<UL type="disc">
+	<LI>Memory leaks.</li>
+
+	<LI>Thread priorities.</li>
+
+	<LI>CPU efficiency.</li>
+
+	<LI>Does the application survive power cycles?</li>
+
+	<LI>Are properties in the .cei file, such as platform name, platform version, and so on, set correctly for the device?</li>
+
+	<LI>Does the application call certain kernel functions? For example, to increase its priority.</li>
+
+	<LI>Scan the application for viral infection.</li>
+
+	<LI>Does the application work well when other applications are present?</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="wincauto_sim_about_windows_ce_for_automotive"></A>Microsoft Windows CE for Automotive Overview</H2>
+
+<P>Microsoft Windows CE for Automotive (WCEfA) operating system is built on Windows CE technology and enables development of automobile computer applications capable of providing drivers and passengers with a variety of options including:
+
+<UL type="disc">
+	<LI>Hands-free communication.</li>
+
+	<LI>Access to personalized information on the Internet.</li>
+
+	<LI>The ability to summon emergency services and roadside assistance.</li>
+
+	<LI>Entertainment applications. </li>
+</UL>
+
+<P>WCEfA is an open platform where developers create powerful automobile computing solutions. WCEfA offers flexibility and choice of computing platforms, hardware peripherals and software components, as well as a large community of developers familiar with Windows CE development practices.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_802122', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseReferenceClock Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CBaseReferenceClock Class"/>
+<MSHelp:RLTitle Title="CBaseReferenceClock Class"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasereferenceclock_class"/>
+<MSHelp:Keyword Index="K" Term="CBaseReferenceClock"/>
+<MSHelp:Keyword Index="K" Term="CBaseReferenceClock, class description"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasereferenceclock_class"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxshow_classes1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_670689">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_cbasereferenceclock_class"></A>CBaseReferenceClock Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P class="fig"><IMG SRC="rclock01.gif" ALT="" BORDER=0></P>
+
+<P>This base class implements the <A HREF="_wcesdk_ireferenceclock_interface.htm">IReferenceClock</A> interface. </P>
+
+<P>The <B>CBaseReferenceClock</B> class provides a full implementation of <A HREF="_wcesdk_ireferenceclock_interface.htm">IReferenceClock</A>. It uses <A HREF="_wcesdk_ccritsec_class.htm">CCritSec</A> locking support and <A HREF="_wcesdk_camschedule_class.htm">CAMSchedule</A> scheduler support. </P>
+
+<P>Each <I>advise</I> call defines a point in time when the caller wants to be notified. A <I>periodic advise</I> is a regular series of such events. A list of these advise requests is maintained by the reference clock. The clock calculates the delay until the first requested advise, and signals an event at the due time. </P>
+
+<P>Clients are not advised through callbacks. One-shot clients have an event set, while periodic clients have a semaphore released for each event notification. A semaphore allows a client to know exactly how many events were actually triggered, because multiple time periods might elapse before the client code executes. </P>
+
+<P>During class construction, a worker thread is created. This thread executes a series of Win32 <B>WaitForSingleObject</B> calls, waking up when a command is given to the thread or the next wake-up point is reached. The wake-up points are determined by clients making advise calls. </P>
+
+<H4 class="dtH4">Protected Data Members</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Member</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><B>m_pSchedule </B></TD>
+<TD width=61%>Pointer to the <A HREF="_wcesdk_camschedule_class.htm">CAMSchedule</A> object associated with this <U>CBaseReferenceClock</U> object. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Member function</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__cbasereferenceclock.htm">CBaseReferenceClock</A></TD>
+<TD width=61%>Constructs a <B>CBaseReferenceClock</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__getschedule.htm">GetSchedule</A></TD>
+<TD width=61%>Returns the <A HREF="_wcesdk_camschedule_class.htm">CAMSchedule</A> pointer stored in the <B>m_pSchedule</B> data member. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__settimedelta.htm">SetTimeDelta</A></TD>
+<TD width=61%>Adjusts the values returned from <A HREF="_wcesdk_cbasereferenceclock__getprivatetime.htm">CBaseReferenceClock::GetPrivateTime</A> by the amount specified in this member function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__triggerthread.htm">TriggerThread</A></TD>
+<TD width=61%>Triggers the advise thread's event. If you override <A HREF="_wcesdk_cbasereferenceclock__getprivatetime.htm">CBaseReferenceClock::GetPrivateTime</A>, you should either reuse or abandon this method. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Implemented IReferenceClock Methods</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Method</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__adviseperiodic.htm">AdvisePeriodic</A></TD>
+<TD width=61%>Requests an asynchronous periodic notification that a time has elapsed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__advisetime.htm">AdviseTime</A></TD>
+<TD width=61%>Requests an asynchronous notification that a time has elapsed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__gettime.htm">GetTime</A></TD>
+<TD width=61%>Returns a reference time. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__unadvise.htm">Unadvise</A></TD>
+<TD width=61%>Removes a previously established advise link. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Overrideable Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Member function</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__getprivatetime.htm">GetPrivateTime</A></TD>
+<TD width=61%>Gets the current time from the real clock. Override this member function to implement your own clock. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Implemented INonDelegatingUnknown Methods</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Method</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%><A HREF="_wcesdk_cbasereferenceclock__nondelegatingqueryinterface.htm">NonDelegatingQueryInterface</A></TD>
+<TD width=61%>Returns a pointer to interfaces supported, that is, <A HREF="_wcesdk_ireferenceclock_interface.htm">IReferenceClock</A>. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P>DirectShow applications and DirectShow filters have different include file and link library requirements. See <A HREF="_cxconsettingupbuildenvironment.htm">Setting Up the Build Environment</A> for more information. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CBaseReferenceClock%20Class&nbsp;(_wcesdk_cbasereferenceclock_class.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

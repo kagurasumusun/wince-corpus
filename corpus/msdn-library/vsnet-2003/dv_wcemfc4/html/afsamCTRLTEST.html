@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CTRLTEST</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CTRLTEST"/>
+<MSHelp:RLTitle Title="CTRLTEST"/>
+<MSHelp:Keyword Index="A" Term="afsamCTRLTEST"/>
+<MSHelp:Keyword Index="K" Term="CTRLTEST sample"/>
+<MSHelp:Keyword Index="K" Term="custom controls, samples"/>
+<MSHelp:Keyword Index="K" Term="samples [MFC for Windows CE .NET], CTRLTEST"/>
+<MSHelp:Keyword Index="A" Term="afsamCTRLTEST"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ctrltest.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697764">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="afsamctrltest"></A>CTRLTEST</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>The CTRLTEST sample demonstrates several techniques for implementing and using custom controls.
+
+<UL type="disc">
+	<LI>CParsedEdit is a specialized edit control that illustrates two methods of using custom controls.</li>
+
+	<LI>The spin control has small up-arrow and down-arrow buttons for incrementing or decrementing a value.</li>
+
+	<LI>The bitmapped button illustrates how to implement custom menu commands by using the <A HREF="aflrfcbitmapbutton.htm"><B>CBitmapButton</B></A> class.</li>
+</UL>
+
+<P><B>Implementing and Using Custom Controls</B></P>
+
+<P>You can implement a custom control from scratch by deriving from <A HREF="aflrfcwnd.htm"><B>CWnd</B></A>, but it is much easier if you can borrow functionality from one of the standard Windows controls by deriving from its control class in the library. <B>CTRLTEST</B> does this to implement a specialized edit control, <B>CParsedEdit</B>. This edit control accepts only specified sets of characters as user input&#0151;numeric, alphabetic, and other non-control characters. <B>CParsedEdit</B> is derived from <A HREF="aflrfcedit.htm"><B>CEdit</B></A>. It has an <B>OnChar</B> message handler to filter the characters.</P>
+
+<P>The implementation of the commands in the <B>Simple</B> menu illustrates two methods for using a custom control. The methods are distinguished according to how the application associates instances of the control in the dialog box with the <B>CParsedEdit</B> class. Each <B>Simple</B> menu command displays a dialog box with four instances of the <B>CParsedEdit</B> control. Data entered in the dialog box is sent to the debug port as TRACE output. The two Simple menu commands are:</P>
+
+<P><B>Test C++ Derived Class:</B></P>
+
+<P><B>The CParsedEdit</B> controls are data members of the dialog class. The controls are explicitly created in the dialog's <B>OnInitDialog</B> function by calling <B>CParsedEdit::CreateSet</B>. See DERTEST.CPP.</P>
+
+<P><B>Test Dynamic Subclassing:</B></P>
+
+<P>The controls are laid out in a dialog template resource (<B>IDD_SUB_EDIT</B> in CTRLTEST.RC) as standard edit controls. The controls are declared as <B>CParsedEdit</B> data members in the dialog class. The dialog's <B>OnInitDialog</B> function calls <B>CParsedEdit::SubClassEdit</B>, which in turn calls <B>CWnd::SubclassDlgItem</B>, to associate each specific instance of the edit control with the <B>CParsedEdit</B> class. See PAREDIT.CPP.</P>
+
+<P><B>Example: Spin Control</B></P>
+
+<P>The CTRLTEST sample includes an implementation of a spin control. The spin control has a small up-arrow and a small down-arrow button for incrementing or decrementing a value. </P>
+
+<P>The Spin Control command calls a dialog box that has four <B>CParsedEdit</B> controls, each associated with a spin control. You can enter numeric data by either typing the value into the <B>CParsedEdit</B> control and selecting <B>OK</B> or by selecting the up or down arrow. Data entered in the <B>CParsedEdit</B> controls in this dialog box is filtered to accept only nonnegative integers. The <B>CParsedEdit</B> control treats all invalid values as 0. If you enter a negative or invalid number, an error message pops up when you select <B>OK</B>. </P>
+
+<P><B>Example: Bitmap Button</B></P>
+
+<P>The implementation of the following Custom menu commands illustrates ways to use <B>CBitmapButton</B>:
+
+<UL type="disc">
+	<LI>Bitmap Button 1: The dialog constructor explicitly loads the bitmap resources for each of the three states (up, down, and focus) of the button by calling <B>CBitmapButton::LoadBitmaps</B>.</li>
+
+	<LI>Bitmap Button 2: The dialog's <B>OnInitDialog</B> function calls <B>CBitmapButton::Autoload</B> to load the bitmap resources based on the following naming convention. The window text of the control serves as the base resource name, and the letters U, D, and F are appended to create the names of the resources for each of the three bitmap images for, respectively, up, down, and focus. For example, the three bitmap resources for the OK button are named OKU, OKD, and OKF.</li>
+
+	<LI>Bitmap Button 3: The dialog box is an extension of the second dialog box above, using a fourth possible button state, disabled. To use this dialog, click the left- or right-arrow bitmap button until the displayed number reaches 1, the lowest number, or 10, the highest number. When the limit is reached, the button is disabled and a fourth bitmap image is displayed. The naming convention for the bitmap resource for the disabled state is an X suffix, as is reflected in the resource names PREVX and NEXTX.</li>
+</UL>
+
+<P>This sample demonstrates the following keywords:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcbitmapbuttoncolcolautoload.htm"><B>CBitmapButton::AutoLoad</B></A></TD>
+<TD width=50%><A HREF="aflrfcwndcolcolmessagebox.htm"><B>CWnd::MessageBox</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcbitmapbuttoncolcolloadbitmaps.htm"><B>CBitmapButton::LoadBitmaps</B></A></TD>
+<TD width=50%><A HREF="aflrfcwndcolcolonchar.htm"><B>CWnd::OnChar</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcbitmapbuttoncolcolsizetocontent.htm"><B>CBitmapButton::SizeToContent</B></A></TD>
+<TD width=50%><A HREF="aflrfcwndcolcolsetfocus.htm"><B>CWnd::SetFocus</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcdialogcolcoldomodal.htm"><B>CDialog::DoModal</B></A></TD>
+<TD width=50%><A HREF="aflrfcwndcolcolsetwindowpos.htm"><B>CWnd::SetWindowPos</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcdialogcolcolenddialog.htm"><B>CDialog::EndDialog</B></A></TD>
+<TD width=50%><A HREF="aflrfcwndcolcolshowwindow.htm"><B>CWnd::ShowWindow</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcdialogcolcolonok.htm"><B>CDialog::OnOK</B></A></TD>
+<TD width=50%><A HREF="aflrfafxgetinstancehandlenpcnpc.htm"><B>AfxGetInstanceHandle</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfceditcolcolsetsel.htm"><B>CEdit::SetSel</B></A></TD>
+<TD width=50%><A HREF="aflrfafxmessagebox.htm"><B>AfxMessageBox</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcframewndcolcoladdadornments.htm"><B>CFrameWnd::AddAdornments</B></A></TD>
+<TD width=50%><A HREF="aflrfafxthrowresourceexception.htm"><B>AfxThrowResourceException</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcstringcolcolformat.htm"><B>CString::Format</B></A></TD>
+<TD width=50%><B>CallWindowProc</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcstringcolcolloadstring.htm"><B>CString::LoadString</B></A></TD>
+<TD width=50%><B>GetClassInfo</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcolattach.htm"><B>CWnd::Attach</B></A></TD>
+<TD width=50%><B>GetDlgItemInt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcolcreate.htm"><B>CWnd::Create</B></A></TD>
+<TD width=50%><B>IsCharAlpha</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcolenablewindow.htm"><B>CWnd::EnableWindow</B></A></TD>
+<TD width=50%><B>IsCharAlphaNumeric</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcolgetdlgitem.htm"><B>CWnd::GetDlgItem</B></A></TD>
+<TD width=50%><B>MessageBeep</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcolgetwindowrect.htm"><B>CWnd::GetWindowRect</B></A></TD>
+<TD width=50%><B>SetDlgItemInt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcolgetwindowtext.htm"><B>CWnd::GetWindowText</B></A></TD>
+<TD width=50%><B>SetWindowLong</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="aflrfcwndcolcoliswindowenabled.htm"><B>CWnd::IsWindowEnabled</B></A></TD>
+<TD width=50%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697764', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

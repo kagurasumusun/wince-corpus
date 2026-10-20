@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GIISR_INFO</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GIISR_INFO"/>
+<MSHelp:RLTitle Title="GIISR_INFO"/>
+<MSHelp:Keyword Index="A" Term="cmrefGIISR_INFO"/>
+<MSHelp:Keyword Index="K" Term="GIISR_INFO"/>
+<MSHelp:Keyword Index="A" Term="cmrefGIISR_INFO"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: oal_st.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_752768">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmrefgiisr_info"></A>GIISR_INFO</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure is passed to the interrupt service routine (ISR) through <A HREF="cmrefkernellibiocontrol.htm">KernelLibIoControl</A> after the ISR is loaded with <A HREF="cmrefloadintchainhandler.htm">LoadIntChainHandler</A>.</P>
+
+<PRE class="syntax"><B>typedef struct _GIISR_INFO {</B>
+<B>DWORD </B><I>SysIntr</I><B>;</B>
+<B>BOOL </B><I>CheckPort</I><B>;</B>
+<B>BOOL </B><I>PortIsIO</I><B>;</B>
+<B>BOOL </B><I>UseMaskReg</I><B>;</B>
+<B>DWORD </B><I>PortAddr</I><B>;</B>
+<B>DWORD </B><I>PortSize</I><B>;</B>
+<B>DWORD </B><I>Mask</I><B>;</B>
+<B>DWORD </B><I>MaskAddr</I><B>;</B>
+<B>} GIISR_INFO, *PGIISR_INFO;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>SysIntr</B></DT>
+
+<DD>System interrupt number (SYSINTR) for the ISR to return if the associated device is asserting the interrupt request (IRQ). This value is read from the registry. </dd>
+
+<DT><B>CheckPort</B></DT>
+
+<DD>If TRUE, the ISR will read a port on the device to determine whether the device is the one that is asserting the IRQ. A <B>PortAddr</B> is required to address the port that will be read to determine if the device is asserting the interrupt. 
+
+<P>If FALSE, then the ISR assumes the device is asserting the IRQ and immediately returns <B>SysIntr</B>. This option would be used only if the interrupt line that the device is using is not shared, or if the ISR is guaranteed to be last in the chain, for example, the ISR is installed with the last <B>LoadIntChainHandler</B> call on this IRQ. In general, this option should only be used if there is no means to detect whether the device is asserting the IRQ.
+</dd>
+
+<DT><B>PortIsIO</B></DT>
+
+<DD>If TRUE, the port is the I/O port. This determines whether the port is I/O or memory-mapped. This is relevant for x86 architectures because all other microprocessors are memory-mapped.</dd>
+
+<DT><B>UseMaskReg</B></DT>
+
+<DD>If TRUE, read from <B>MaskAddr</B> to obtain mask. Optionally, another device register may be used as a mask. This feature is activated if the <B>UseMaskReg</B> field is TRUE. The associated <B>MaskAddr</B> field is the statically mapped virtual address of the mask register. This option is used if the device has multiple interrupt sources that are indicated as enabled by the register pointed to by <B>MaskAddr</B>. Any disabled bits mask off the interrupt pending register pointed to by <B>PortAddr</B>.</dd>
+
+<DT><B>PortAddr</B></DT>
+
+<DD>Port address. This is a statically-mapped virtual address that is obtained through <A HREF="cmreftransbusaddrtostatic.htm">TransBusAddrToStatic</A>. This is required if <B>CheckPort</B> is TRUE.</dd>
+
+<DT><B>PortSize</B></DT>
+
+<DD>Port data width in 1, 2, or 4 bytes. </dd>
+
+<DT><B>Mask</B></DT>
+
+<DD>A mask to use on the port to determine if the device is asserting the IRQ. The <B>Mask</B> member is used to mask off the value of the <B>PortAddr</B> so that individual bits can be examined. <B>Mask</B> and the contents of the register residing at <B>PortAddr</B>, if the result is nonzero, the ISR will return <B>SysIntr</B>. Otherwise, SYSINTR_CHAIN is returned, indicating that the device is not currently asserting the IRQ.</dd>
+
+<DT><B>MaskAddr</B></DT>
+
+<DD>Address of register to use as mask.</dd>
+</DL>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Giisr.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cmrefKernelLibIoControl" TABINDEX="0">KernelLibIoControl</MSHelp:link>, <A HREF="cmrefloadintchainhandler.htm">LoadIntChainHandler</A>, <A HREF="cmreftransbusaddrtostatic.htm">TransBusAddrToStatic</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;GIISR_INFO&nbsp;(cmrefgiisr_info.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

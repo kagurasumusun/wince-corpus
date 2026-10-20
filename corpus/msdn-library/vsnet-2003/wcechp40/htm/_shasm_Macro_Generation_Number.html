@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Macro Generation Numbers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Macro Generation Numbers"/>
+<MSHelp:RLTitle Title="Macro Generation Numbers"/>
+<MSHelp:Keyword Index="A" Term="_shasm_Macro_Generation_Number"/>
+<MSHelp:Keyword Index="K" Term="generation number, SHASM macros"/>
+<MSHelp:Keyword Index="K" Term="Macro Generation Numbers"/>
+<MSHelp:Keyword Index="A" Term="_shasm_Macro_Generation_Number"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: shasm_directives.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715242">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_shasm_macro_generation_number"></A>Macro Generation Numbers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can use macro generation numbers to avoid the multiple symbol definition that can occur with multiple macro expansions. To avoid this problem, specify a macro generation number marker as part of any symbol used in a macro. This results in symbols that are unique to each macro call.</P>
+
+<P>The macro generation number marker is expanded as a 5-digit decimal number between 00000 and 99999 that is unique to a macro expansion. The syntax for specifying the macro generation number marker is as follows:</P>
+
+<PRE class="code">\@</PRE>
+
+<P>Two or more macro generation number markers can be written in a macro body, and they will be expanded to the same number in the same macro call. The following example shows how to specify macro generation numbers for #str and end_str.</P>
+
+<PRE class="code">    .MACRO  RES STR, Rn
+    MOV.L    #str\@,\Rn
+    BRA    end_str\@
+    NOP
+str\@  .SDATA  "\STR"
+    .ALIGN 2
+end_str\@
+    .ENDM
+    RES "ONE",R0  ; Different symbols are generated each time
+    RES "TWO",R1  ; RES_STR is expanded.</PRE>
+
+<P>Expanded results are as follows:</P>
+
+<PRE class="code">    MOV.L    #str00000,R0
+    BRA    end_str00000
+    NOP
+str00000      .SDATA "ONE"
+    .ALIGN 2
+end_str00000
+    MOV.L    #str00001,R1
+    BRA    end_str00001
+    NOP
+str00001      .SDATA "TWO"
+    .ALIGN 2
+end_str00001
+</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccconshasmmacrodirectives.htm">SHASM Macro Directives</A></P>
+
+<P><A HREF="_shasm_macro_and_endm_macro_definition.htm">SHASM Macro Definition</A></P>
+
+<H4 class="dtH4"></H4>
+
+<H4 class="dtH4"></H4>
+
+<H4 class="dtH4"></H4>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Macro%20Generation%20Numbers&nbsp;(_shasm_macro_generation_number.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

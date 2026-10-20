@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IQualityControl Interface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IQualityControl Interface"/>
+<MSHelp:RLTitle Title="IQualityControl Interface"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_iqualitycontrol_interface"/>
+<MSHelp:Keyword Index="K" Term="IQualityControl interface"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dshowifaces02.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_iqualitycontrol_interface"></A>IQualityControl Interface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <B>IQualityControl</B> interface defines quality messages and allows a quality manager to install itself as the sink for these messages. The following structures are defined for quality management. 
+
+<UL type="disc">
+	<LI><A HREF="_wcesdk_dtypes__qualitymessagetype.htm"><B>QualityMessageType</B></A></li>
+
+	<LI><A HREF="_wcesdk_structs__quality.htm"><B>Quality</B></A></li>
+</UL>
+
+<P>The <A HREF="_wcesdk_iqualitycontrol__notify.htm"><B>IQualityControl::Notify</B></A> method receives a Quality message. A filter may call <B>IQualityControl::Notify</B> to send a Quality message to another filter to ask for help in managing the graph quality (typically to achieve graceful degradation on a processor that is not powerful enough to handle all the data). Quality messages usually flow upstream. </P>
+
+<P>The <A HREF="_wcesdk_iqualitycontrol__setsink.htm"><B>IQualityControl::SetSink</B></A> method tells a filter where to send it. If no sink has been explicitly set or if the last <A HREF="_wcesdk_iqualitycontrol__setsink.htm"><B>SetSink</B></A> set the sink to NULL, the message should go upstream. The filter sends a message upstream by calling <A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A> on the output pin to which its input pin is connected, in order to retrieve an <B>IQualityControl</B> interface. Filters export the <B>IQualityControl</B> interface through their pins. </P>
+
+<P>Messages start with rendering filters, because these must run in real time. Other filters must run to keep the renderers supplied; these do not originate messages, but they can pass them on. </P>
+
+<P>If a filter receives a quality message, it returns S_OK if it agrees to act on the quality message to handle the situation, or S_FALSE if it cannot handle it. For example, if the video renderer receives S_FALSE (or failure codes), it will readily drop frames to try to maintain synchronization. If it receives S_OK, it will trust the upstream filter; it also will allow frames to be played much earlier than their due time and will allow frames to be played much later without dropping them. Usually, the video renderer causes early frames to be blocked until their due time. But if this is the first frame after a dropped frame, the video renderer will play the frame as soon as possible so as not to lose time. </P>
+
+<P>A reasonable implementation for a filter that cannot handle a message is to pass the message upstream and to pass on the result. For example: </P>
+
+<PRE class="code">HRESULT Notify(IBaseFilter * pSelf, QualityMessage qm)
+{
+    if (m_QualitySink!=NULL)
+        // Note how pSelf has changed into pMyself
+        return m_QualitySink-&gt;ChangeQuality(pMyself, qm);
+    else
+        return  m_Upstream-&gt;Notify(pMyself, qm);
+}</PRE>
+
+<P>A quality managing component would typically set the sink for all filters to itself. It can identify filters by their <A HREF="_wcesdk_ibasefilter_interface.htm"><B>IBaseFilter</B></A> interface pointers in the <I>Self</I> parameters. A filter must always supply the same value for its <B>IBaseFilter</B> interface. (The official COM way of determining if two filters are the same is to use <A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A> on them both for their <A HREF="_wcesdk_iunknown_interface.htm"><B>IUnknown</B></A> interfaces and compare those. However, because Microsoft® DirectShow™ is a real-time system, and because these calls are made during streaming, it is implemented this way for efficiency.) </P>
+
+<P>A quality managing component (for example, an application) typically returns S_OK when called upon to help. However, it should be prepared to find that when it sends a message to a filter requesting help from that filter, it immediately gets a request from that filter for help, and that whatever return code it gives to that filter in response to the request immediately comes back from the filter as the reply to its original message. This happens if the filter uses the suggested default implementation of passing the messages upstream, but with the <A HREF="_wcesdk_structs__quality.htm"><B>Quality</B></A> managing component intercepting all the traffic. </P>
+
+<P>The <A HREF="_wcesdk_structs__quality.htm"><B>Quality</B></A> message structure is: </P>
+
+<PRE class="code">typedef enum {
+    Famine,
+    Flood
+} QualityMessageType;
+
+typedef struct {
+    QualityMessageType Type;
+    long               Proportion;
+    REFERENCE_TIME     Late;
+} Quality;</PRE>
+
+<P>The <B>Type</B> member of the structure indicates which filter appears to have the problem. If set to Famine, it indicates that the renderer is not getting enough samples and the receiver of the message should speed up by any means possible. If set to Flood, the sender of the message cannot keep up with the data being sent and the receiver must send less data. Other methods of degradation are not appropriate. </P>
+
+<P>The <B>Proportion</B> member gives a rate (expressed in parts per thousand) to be used by a recipient that cannot seek (dropping frames is equivalent to seeking) but can only control its rate. For example, a proportion of 823 means that it should degrade enough to go faster by a factor of 1000/823. Likewise, a proportion of 1200 means that it can improve its quality by 20 percent, even if this results in going slower. The numbers are not cumulative. In particular, if a filter can degrade only in steps of, say, 20 percent, and if it receives a series of <A HREF="_wcesdk_structs__quality.htm"><B>Quality</B></A> messages all with <B>Proportion</B> equal to 990, it should ignore them all. It should not multiply them (for example, it should not deduce that a 20 percent reduction is called for after the twenty-third message in this case). </P>
+
+<P>The <B>Late</B> member says how late the application is running at the moment. Negative values mean that there is some slack (probably the renderer is waiting for this time before rendering the samples). A positive value from an audio renderer does not necessarily mean that there is an audio break; it means that the audio renderer's buffer queue is running low and is heading for a break. </P>
+
+<P class="label"><B>When to Implement</B></P>
+
+<P>Pins that are required to pass quality control messages upstream must implement this interface. The <A HREF="_wcesdk_cbasepin__cbasepin.htm"><B>CBasePin</B></A> class inherits <A HREF="#_wcesdk_iqualitycontrol_interface"><B>IQualityControl</B></A> and provides a pass-through implementation for output pins. Any filter that can act on a quality control message to adjust the rate of data flow should implement this interface. Any quality management component external to the filter graph should implement this interface to receive quality control messages. </P>
+
+<P class="label"><B>When to Use</B></P>
+
+<P>The rendering filter (usually the video renderer) is the primary user of this interface because it originates the quality control messages. Because the messages pass from one filter to another upstream, each downstream filter calls the <A HREF="_wcesdk_iqualitycontrol__notify.htm"><B>IQualityControl::Notify</B></A> method on the upstream output pin and so is a user. </P>
+
+<P class="label"><B>Methods in Vtable Order</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>IUnknown methods</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=52%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=52%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=52%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>IQualityControl methods</B></TD>
+<TD width=52%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><A HREF="_wcesdk_iqualitycontrol__notify.htm"><B>Notify</B></A></TD>
+<TD width=52%>Notifies the recipient that a quality change is requested. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><A HREF="_wcesdk_iqualitycontrol__setsink.htm"><B>SetSink</B></A></TD>
+<TD width=52%>Sets the <A HREF="#_wcesdk_iqualitycontrol_interface"><B>IQualityControl</B></A> object that will receive quality messages. </TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IQualityControl%20Interface&nbsp;(_wcesdk_iqualitycontrol_interface.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

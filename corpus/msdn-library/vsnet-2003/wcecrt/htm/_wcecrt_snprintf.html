@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_snprintf</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_snprintf"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_snprintf.htm", "_snprintf")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_snprintf"></A>_snprintf</H1>
+
+<P>Write formatted data to a string.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Routine</TH>
+<TH width=67%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>_snprintf</B></TD>
+<TD width=67%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>int _snprintf( char</B> *<I>buffer</I>, <B>size_t</B> <I>count</I>, <B>const char</B> *<I>format</I> [, <I>argument</I>] ...<B> );</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>buffer</I></DT>
+
+<DD>Storage location for output</dd>
+
+<DT><I>count</I></DT>
+
+<DD>Maximum number of characters to store</dd>
+
+<DT><I>format</I></DT>
+
+<DD>Format-control string</dd>
+
+<DT><I>argument</I></DT>
+
+<DD>Optional arguments</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Value</B></P>
+
+<P><B>_snprintf</B> returns the number of bytes stored in <I>buffer</I>, not counting the terminating null character. If the number of bytes required to store the data exceeds <I>count</I>, then <I>count</I> bytes of data are stored in <I>buffer</I> and a negative value is returned.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>_snprintf</B> function formats and stores count or fewer characters and values (including a terminating null character that is always appended unless count is zero or the formatted string length is greater than or equal to count characters) in buffer. Each <I>argument</I> (if any) is converted and output according to the corresponding format specification in <I>format</I>. The format consists of ordinary characters and has the same form and function as the <I>format</I> argument for <B>printf</B>. If copying occurs between strings that overlap, the behavior is undefined.</P>
+
+<P class="label"><B>Generic-Text Routine Mappings</B></P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=100%>TCHAR.H Routine </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>_sntprintf</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#if !defined(__cplusplus)
+typedef int bool;
+const bool true = 1;
+const bool false = 0;
+#endif
+
+int main(void)
+{
+&nbsp;&nbsp;char buffer[200];
+&nbsp;&nbsp;const static char s[] = "computer"
+#if 0
+"computercomputercomputercomputercomputercomputercomputercomputer"
+"computercomputercomputercomputercomputercomputercomputercomputer"
+"computercomputercomputercomputercomputercomputercomputercomputer"
+"computercomputercomputercomputercomputercomputercomputercomputer"
+#endif
+&nbsp;&nbsp;;
+&nbsp;&nbsp;const char c = 'l';
+&nbsp;&nbsp;const int i = 35;
+#if 1
+&nbsp;&nbsp;const double fp = 1.7320534;
+#else
+&nbsp;&nbsp;const double fp = 1e300; // also doesn't fit in the buffer
+#endif
+&nbsp;&nbsp;/* !subtract one to prevent "squeezing out" the terminal nul! */
+&nbsp;&nbsp;const int bufferSize = sizeof(buffer)/sizeof(buffer[0]) - 1;
+&nbsp;&nbsp;int bufferUsed = 0;
+&nbsp;&nbsp;int bufferLeft = bufferSize - bufferUsed;
+&nbsp;&nbsp;bool bSuccess = true;
+&nbsp;&nbsp;buffer[0] = 0;
+
+&nbsp;&nbsp;/* Format and print various data: */
+
+&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tString: %s\n", s );
+&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferLeft -= perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tCharacter: %c\n", c );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferLeft -= perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tInteger: %d\n", i );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferLeft -= perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tReal: %f\n", fp );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;if (!bSuccess)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;printf("%s\n", "failure");
+&nbsp;&nbsp;}
+&nbsp;&nbsp;else
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;/* !store nul because _snprintf doesn't necessarily (if the string fits without the
+&nbsp;&nbsp;&nbsp;&nbsp; * the terminal nul, but not with it)!
+&nbsp;&nbsp;&nbsp;&nbsp; * bufferUsed might be as large as bufferSize, which normally is like going
+&nbsp;&nbsp;&nbsp;&nbsp; * one element beyond a buffer, but in this case subtracted one from bufferSize,
+&nbsp;&nbsp;&nbsp;&nbsp; * so we're ok.
+&nbsp;&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp;&nbsp;buffer[bufferUsed] = 0;
+&nbsp;&nbsp;&nbsp;&nbsp;printf( "Output:\n%s\ncharacter count = %d\n", buffer, bufferUsed );
+&nbsp;&nbsp;}
+&nbsp;&nbsp;return EXIT_SUCCESS;
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Output:
+&nbsp;&nbsp;String: computer
+&nbsp;&nbsp;Character: l
+&nbsp;&nbsp;Integer: 35
+&nbsp;&nbsp;Real: 1.732053
+
+character count = 61</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_sprintf_swprintf.htm">sprintf</A>, <A HREF="_wcecrt_fprintf_fwprintf.htm">fprintf</A>, <A HREF="_wcecrt_printf_wprintf.htm">printf</A>, <A HREF="_wcecrt_scanf_wscanf.htm">scanf</A>, <A HREF="_wcecrt_sscanf_swscanf.htm">sscanf</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

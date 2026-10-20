@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PCI Bus Configuration and Enumeration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PCI Bus Configuration and Enumeration"/>
+<MSHelp:RLTitle Title="PCI Bus Configuration and Enumeration"/>
+<MSHelp:Keyword Index="A" Term="cxconPCIBusConfigurationEnumeration"/>
+<MSHelp:Keyword Index="K" Term="configurations, PCI bus drivers"/>
+<MSHelp:Keyword Index="K" Term="enumerating, PCI bus drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconPCIBusConfigurationEnumeration"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverloadingmodel.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758472">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconpcibusconfigurationenumeration"></A>PCI Bus Configuration and Enumeration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<H2 class="dtH2">PCI Bus Configuration</H2>
+
+<P>If necessary, the PCI bus driver first configures the PCI bus. This step is skipped if the registry value <B>NoConfig</B> is set equal to <B>dword:1</B> under the <B>PCI</B> registry key. This is useful for the CEPC because the BIOS already configures the PCI bus. The PCI bus driver scans the PCI bus, gathering resource information from the PCI to PCI bridges and the devices it finds. As each device is discovered, the registry is searched for a matching driver <B>Template</B> or <B>Instance</B> registry key. When the best match is found based on device identifiers such as <B>Class</B>, <B>SubClass</B>, <B>VendorID</B>, and so on, the corresponding registry key is examined for the presence of the <B>ConfigEntry</B> value. If <B>ConfigEntry</B> exists, the driver DLL is loaded and the configuration routine described by <B>ConfigEntry</B> is called to assist in allocating and placing resources. Note: if ConfigEntry and ConfigDll values exist, then the DLL described by ConfigDll will be loaded instead of the driver DLL ("Dll"). This mechanism is used mainly to configure non-conforming resources such as resources not in the PCI configuration registers, or to limit the resources required by the device, which is useful for systems with small PCI windows. The Generic Device Configuration library (Gdcfg.dll) is provided as a sample. It performs the usual PCI compliant resource management and provides resource management for the expansion ROM, which is ignored by the PCI bus driver. </P>
+
+<P>Once all of the resources, including memory and I/O windows, are found, the PCI bus driver places the resources within the PCI bus window. Any devices that were previously placed, such as devices used for debugging services, remain as they were, and the PCI bus driver places the resources around them. Device IRQ numbers are also allocated, using the OAL to perform the PCI IRQ to system IRQ mapping. All of the resources allocated to the devices by the PCI bus driver are requested from the I/O Resource Manager to make sure there is no overlap with other built-in devices. For more information, see <MSHelp:link keywords="cgrefIOCTL_HAL_REQUEST_SYSINTR" TABINDEX="0">IOCTL_HAL_REQUEST_SYSINTR</MSHelp:link>.</P>
+
+<H2 class="dtH2">PCI Bus Enumeration</H2>
+
+<P>The PCI bus driver then enumerates the PCI bus by re-scanning it. When a device is discovered, the registry is searched for the corresponding <B>Template</B> or <B>Instance</B> key. A best match is searched for using device identifiers such as <B>Class</B>, <B>SubClass</B>, <B>VendorID</B>, and so on. If an exact match is found with an <B>Instance</B> key, that means the device has already been configured and placed. All devices have an associated <B>Instance</B> key after a warm boot, or if there is registry persistence. If a best match is found with a <B>Template</B> key, the <B>Template</B> information, along with the configured resource values is copied to an <B>Instance</B> key for the driver. The <B>Instance</B> key is the key passed to the driver's entry point when the driver is loaded in the case of a non-stream driver, otherwise the <B>Key</B> value under the device's active key is set to the <B>Instance</B> key of the driver.</P>
+
+<H2 class="dtH2">PCI to PCI Bridge Register Configuration</H2>
+
+<P>PCI to PCI bridges may need to have registers set to configure bus latencies and other board-specific parameters. There are two possibilities for configuring the PCI to PCI bridge device. These are shown in the following list:
+
+<UL type="disc">
+	<LI>The OAL can pre-enumerate, discover the bridges, and configure appropriately.
+<P>- or -
+</li>
+
+	<LI>Load a device driver for the bridge to do the configuration, such as through the configuration routine. The driver is unloaded after finishing the configuration.</li>
+</UL>
+
+<P>Common PCI configuration registers can also be set in the registry for the PCI to PCI bridge device. These include <B>Command</B>, <B>BridgeControl</B>, <B>Latency</B>, and <B>SecondaryLatency</B>.</P>
+
+<H2 class="dtH2">PCI Bus Driver Registry Enumeration</H2>
+
+<P>After the PCI bus is configured and enumerated, the PCI bus driver looks under the <B>Instance</B> key for a <B>Dll</B> value. This Dll, typically RegEnum.dll, enumerates the <B>Instance</B> key to load the device drivers for each of the device instances found on the bus. The Registry Enumerator loads the device drivers and calls their entry points according to the <B>Order</B> value for each driver instance. If <B>Flags</B> is equal to 0x0001, then the driver does not get loaded. This is useful for reserving resources, allocating resources, or both for a driver that is already loaded by the OAL, such as the Ethernet debugging adapter.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicedriverloadingprocess.htm">Device Driver Loading Process</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;PCI%20Bus%20Configuration%20and%20Enumeration&nbsp;(cxconpcibusconfigurationenumeration.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

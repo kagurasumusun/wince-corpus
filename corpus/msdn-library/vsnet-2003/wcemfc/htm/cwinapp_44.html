@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWinApp::m_pszAppName</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwinapp_m_pszappname"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cwinapp_m_pszappname"></A>CWinApp::m_pszAppName</H1>
+
+<P>This<B> </B>data member specifies the name of the application. The application name can come from the parameter passed to the <B>CWinApp</B> constructor, or, if not specified, to the resource string with the identifier of AFX_IDS_APP_TITLE. If the application name is not found in the resource, it comes from the .exe filename of the program. </P>
+
+<PRE class=syntax><B>LPCTSTR m_pszAppName;</B><I> </I></PRE>
+
+<H4>Remarks</H4>
+
+<P>Returned by the global function <A HREF="funct_32.htm"><B>AfxGetAppName</B></A>. The <B>m_pszAppName</B> data member is a public variable of type <B>LPCTSTR</B>.</P>
+
+<P>If you assign a value to <B>m_pszAppName</B>, it must be dynamically allocated on the heap. The <B>CWinApp</B> destructor calls <B>free</B>( ) with this pointer. You many want to use the <B>_tcsdup</B>( ) run-time library function to do the allocating. Also, free the memory associated with the current pointer before assigning a new value. For example:</P>
+
+<PRE>// First free the string allocated by MFC at CWinApp startup.
+// The string is allocated before InitInstance is called.
+free((void*)m_pszAppName);
+// Change the name of the application file.
+// The CWinApp destructor will free the memory.
+m_pszAppName=_tcsdup(_T(“d:\\somedir\\myapp.exe”));
+</PRE>
+
+<H4>Example</H4>
+
+<PRE>CWnd* pWnd;
+   // Set pWnd to some CWnd object whose window has already
+   // been created.
+
+   // The following call to CWnd::MessageBox uses the application
+   // title as the message box caption.
+   pWnd-&gt;MessageBox("Some message", AfxGetApp()-&gt;m_pszAppName);
+
+   // A more direct way to get the application title is to
+   // call AfxGetAppName:
+   pWnd-&gt;MessageBox("Some message", AfxGetAppName());
+
+   // An easier way to display a message box using the application
+   // title as the message box caption is to call AfxMessageBox:
+   AfxMessageBox("Some message");
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwinapp_2.htm"><B>CWinApp</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

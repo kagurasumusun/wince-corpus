@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleObjectImpl::SetExtent</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ioleobjectimpl_setextent"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ioleobjectimpl_setextent"></A>IOleObjectImpl::SetExtent</H1>
+
+<P>This method sets the extent of the control display area.</P>
+
+<PRE class=syntax><B>STDMETHOD SetExtent(
+DWORD </B><I>dwDrawAspect</I><B>,</B> <B>
+SIZEL </B><I>*psizel</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwDrawAspect</I></DT>
+
+<DD>[in] <B>DWORD</B> that describes which form, or aspect, of an object is to be displayed. The container of the object obtains this value from the enumeration DVASPECT. The most common aspect is DVASPECT_CONTENT, which specifies a full rendering of the object within its container. An object can also be rendered as an icon, a thumbnail version for display in a browsing tool, or a print version, which displays the object as it would be rendered using the <B>File Print</B> command.</DD>
+
+<DT><I>*psizel</I></DT>
+
+<DD>[in] Pointer to the size limit for the object.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>A container calls <B>IOleObjectImpl::SetExtent</B> when it needs to dictate to an embedded object the size at which it will be displayed. Often, this call occurs in response to an end user resizing the object window. Upon receiving the call, the object, if possible, should recompose itself gracefully to fit the new window.</P>
+
+<P>Whenever possible, a container seeks to display an object at its finest resolution, sometimes called the <I>native size</I> of the object. All objects, however, have a default display size specified by their applications, and in the absence of other constraints, this is the size they will use to display themselves. Since an object knows this optimum size better than does the container, the latter normally requests that size from a running object by calling <B>IOleObjectImpl::GetExtent</B>. Only in cases where the container cannot accommodate the value returned by the object does it override the preference of the object by calling <B>IOleObjectImpl::SetExtent</B>.</P>
+
+<P>If the control class data member <A HREF="cccontrl_46.htm"><B>m_bAutoSize</B></A> is <B>TRUE</B>, this method returns <B>E_FAIL</B> because the control cannot be resized. Otherwise, <B>SetExtent</B> stores the value pointed to by <I>psizel</I> in the control class data member <A HREF="cccontrl_87.htm"><B>m_sizeExtent</B></A>. This value is in <B>HIMETRIC</B> units (0.01 millimeter per unit). </P>
+
+<P>If the control class data member <A HREF="cccontrl_56.htm"><B>m_bResizeNatural</B></A> is <B>TRUE</B>, <B>SetExtent</B> also stores the value pointed to by <I>psizel</I> in the control class data member <A HREF="cccontrl_88.htm"><B>m_sizeNatural</B></A>. </P>
+
+<P>If the control class data member <A HREF="cccontrl_54.htm"><B>m_bRecomposeOnResize</B></A> is <B>TRUE</B>, <B>SetExtent</B> calls <B>SendOnDataChange</B> and <B>SendOnViewChange</B> to notify all advisory sinks registered with the advise holder that the control size has changed. </P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ioobj_14.htm"><B>IOleObjectImpl::GetExtent</B></A>, <A HREF="cccontrl_39.htm"><B>CComControl::SendOnDataChange</B></A>, <A HREF="cccontrl_42.htm"><B>CComControl::SendOnViewChange</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

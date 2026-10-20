@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Design Considerations for Locating Partitions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Design Considerations for Locating Partitions"/>
+<MSHelp:RLTitle Title="Design Considerations for Locating Partitions"/>
+<MSHelp:Keyword Index="A" Term="cmconDesignConsiderationsForLocatingPartitions"/>
+<MSHelp:Keyword Index="K" Term="partitions, design considerations for locating"/>
+<MSHelp:Keyword Index="K" Term="Persistent Storage Manager, design considerations for locating partitions"/>
+<MSHelp:Keyword Index="A" Term="cmconDesignConsiderationsForLocatingPartitions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: psm_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756344">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmcondesignconsiderationsforlocatingpartitions"></A>Design Considerations for Locating Partitions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Intel Persistent Storage Manager (PSM) gives a designer complete control over the size of the array and partitions; however, there are a few tradeoffs with combining both the code and file partitions in a single component or bank.</P>
+
+<P>Most flash memories can only do one thing at a time, so a typical device cannot be read while it is erasing a block or programming a location. Because it cannot be read, instructions cannot be fetched from the component while any part of it is being modified. This has the following implications for system design:
+
+<UL type="disc">
+	<LI>The microprocessor must execute from some other device while the flash is being modified. This can be RAM, a second flash component, or an array. The code stored in the alternate memory will usually be a small driver that simply commands the program or erase operation to begin, and then waits for it to complete.</li>
+
+	<LI>If a single device contains both code and data partitions, the code will be unavailable while the file partition is being modified. PSM must ensure that nothing can happen, like an interrupt, which could cause the system to access the code partition during a program or erase of the file partition.</li>
+</UL>
+
+<P>PSM allows both code and data partitions in a single device. It manages the flash similar to how a real-time operating system (RTOS) manages the microprocessor. With an RTOS, when critical tasks need to execute, the RTOS preempts lower priority tasks in favor of the high priority ones. When the high priority task is finished, the lower priority one resumes.</P>
+
+<P>With PSM, because the code partition is not available for execution when the file partition is being modified, if a high priority task needs to execute from the code partition, PSM will suspend the program or erase operation and let the high priority task run to completion. When the high priority task no longer needs to execute from the code partition, the program or erase operation resumes from where it left off.</P>
+
+<H2 class="dtH2">Storing Code and Files in the Same Component or Bank</H2>
+
+<P>This configuration is lower cost and requires fewer components.</P>
+
+<P>Code-size rarely matches the size of flash components, so if a component is dedicated to storing code, some portion of it will be wasted. If code and files are stored in a single device, whatever is not used by code can store files.</P>
+
+<P>In the single component configuration, PSM disables interrupts while modifying the flash. This is the only way to ensure no task attempts to execute from the code partition. When an interrupt occurs, PSM suspends the program or erase operation and enables interrupts; as soon as interrupts are enabled, the interrupt service routine (ISR) executes. The ISR and any related tasks will execute for as long as they need to, and when PSM regains control, it will disable interrupts and resume programming or erasing.</P>
+
+<P>The net effect of all this is that when PSM is used in single component or bank configuration, the maximum interrupt latency will increase. The size of the increase will depend on how long PSM takes to sense the interrupt and issue the suspend command, and once the suspend command is issued, how long the flash component takes to free up the array for execution. The former depends on the performance of the microprocessor. The latter is the component's suspend latency and is specified in the component's datasheet. </P>
+
+<H2 class="dtH2">Storing Code and Files in Separate Components or Banks</H2>
+
+<P>While more expensive, this configuration has the highest performance. If the code and files are in separate components, no interrupt management is necessary, and there will be no increase in the maximum interrupt latency.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconpersistentstoragemanager.htm">Persistent Storage Manager</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Design%20Considerations%20for%20Locating%20Partitions&nbsp;(cmcondesignconsiderationsforlocatingpartitions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

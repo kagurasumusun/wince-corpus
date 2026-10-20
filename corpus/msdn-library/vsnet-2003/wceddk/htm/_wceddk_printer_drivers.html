@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Printer Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Printer Drivers"/>
+<MSHelp:RLTitle Title="Printer Drivers"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Printer_Drivers"/>
+<MSHelp:Keyword Index="K" Term="printer drivers, generally"/>
+<MSHelp:Keyword Index="K" Term="drivers, printer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+</xml>
+<!--Filename: print.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_printer_drivers"></A>Printer Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE versions 2.0 and later include support for printing. The printing model in the Windows CE operating system is a subset of the printing model defined for desktop Windows-based platforms. Only a small number of the graphics driver functions defined for printer drivers are required in printer drivers for Windows CE. The printer driver interface has not changed since Windows CE version 2.0.</P>
+
+<P>The following sections describe the interaction between Windows CE&#0150;based printer drivers and Windows CE&#0150;based display mechanisms. These sections also describe the functions that printer drivers must implement and the port monitor functions that printer drivers call to send data to printers.</P>
+
+<P>The Windows CE graphics display interface (GDI) and display driver perform most of the work involved in printing. At the beginning of the printing process, the GDI creates a device context with attributes that are retrieved from the printer driver during a call to the <B>DrvEnablePDEV</B> function. The display driver is used to render subsequent drawing commands that are issued from the application into the DC; the printer driver does not render the document. Therefore, some drawing functions that are allowed to be present in a printer driver, such as Drvstrokepath, are never actually called because the printer driver is not rendering the document.</P>
+
+<P>After the document has been rendered, GDI sends the resulting 24-bit BGR bitmap to the printer driver so that the printer driver can format it and send it to the printer. To conserve memory, GDI actually renders the document in several bands, which are horizontal sections of the page, and GDI makes several calls to the printer driver to send the rendered bands to the printer. The document is, therefore, actually rendered several times. GDI optimizes the rendering as much as it can to skip items that are outside of the current band. The band range in size from ¼ of the page down to 1/100 of the total page, depending on the available memory. GDI always renders the largest bands possible. The band bitmaps passed to the printer driver are in the pixel format requested by the printer driver. The following illustration shows the relationship between the various system components involved in printing.</P>
+
+<P class="fig"><IMG SRC="prntarch.gif" ALT="" BORDER=0></P>
+
+<P>In the above diagram, the interaction between the application and GDI happens only once, while the interactions between GDI, the display driver, and the printer driver happen once for each band. The Port Monitor is responsible for routing data from the printer driver to the actual hardware port that connects to the printer. The display driver shown in the diagram is the system's currently loaded graphics driver. USB is shown in dotted lines to indicate that Microsoft does not supply a sample USB printer driver with Windows CE version 3.0; however, the printing architecture supports IHVs writing drivers for their USB printers.</P>
+
+<P>Note that this architecture is different than in Microsoft Windows 95, Windows 98, Windows NT and Windows 2000. In those operating systems, the printer driver itself renders the bitmap; in Windows CE, GDI renders the bitmap, which is then passed to the printer driver for conversion into the printer's native data format. This results in lower printing performance than on the desktop operating systems, since high level information that the printer driver might make use of &#0151; such as compact representations of straight lines, solid color fills, and even text &#0151; is not available after Windows CE has rendered the page into a simple bitmap. Future versions of Windows CE may address some of these issues.</P>
+
+<P>Windows CE&#0150;based printer drivers are required to implement only those graphics driver functions that are necessary for gathering printer metrics, setting up the printer, starting and ending print jobs, and preparing rendered strips for printing. Internally, the printer driver converts the bitmap data from a GDI bitmap format into the format that is required by the printer. This can include operations such as color reduction to the color space of the printer, data compression, and data conversion into the format that is used by the printer, a format sometimes known as a printer description language. Finally, the printer driver calls the port monitor to send the rendered strips to the printer.</P>
+
+<P>Windows CE&#0150;based printer drivers are compiled as dynamic-link libraries (DLLs). As a result, they must export the <A HREF="_wceddk_drvenabledriver.htm"><B>DrvEnableDriver</B></A> function.</P>
+
+<P>For more information about Windows CE&#0150;based printer drivers, see <A HREF="_wceddk_functions_implemented_by_printer_drivers.htm">Functions Implemented by Printer Drivers</A> and <A HREF="_wceddk_registry_keys_for_printer_drivers.htm">Registry Keys for Printer Drivers</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Printer%20Drivers&nbsp;(_wceddk_printer_drivers.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

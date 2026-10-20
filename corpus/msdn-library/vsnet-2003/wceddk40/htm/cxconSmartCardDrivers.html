@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Smart Card Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Smart Card Drivers"/>
+<MSHelp:RLTitle Title="Smart Card Drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconSmartCardDrivers"/>
+<MSHelp:Keyword Index="K" Term="drivers, smart card"/>
+<MSHelp:Keyword Index="K" Term="smart card, driver development"/>
+<MSHelp:Keyword Index="A" Term="cxconSmartCardDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: smartcard_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_736803">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconsmartcarddrivers"></A>Smart Card Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Smart Card support consists of three major pieces. One is the <MSHelp:link keywords="ceconSmartCardResourceManager" TABINDEX="0">Smart Card Resource Manager</MSHelp:link>, which contains APIs that enable developers to write software that uses smart cards. Another is the smart card driver library, which contains APIs that support the creation of device drivers for smart cards. The third is a set of I/O control codes that the Smart Card Resource Manager uses to interact with smart card device drivers.</P>
+
+<P>Smart Card device drivers expose the stream interface.</P>
+
+<P>By convention, smart card reader drivers use the PSC prefix. </P>
+
+<P>The Device Manager process calls the <B>PSC_Init</B> entry point when a new device is instantiated. The <B>PSC_Init</B> routine creates a device context that is used to talk to the reader. The <B>PSC_Open</B> entry point is called when a program, such as the Smart Card Resource Manager, attempts to open the reader using the <MSHelp:link keywords="cerefCreateFile" TABINDEX="0">CreateFile</MSHelp:link> API. Because smart card reader drivers are not expected to support shared access by multiple applications, there is no need to create a separate open context. When the program releases the device by calling <MSHelp:link keywords="cerefCloseHandle" TABINDEX="0">CloseHandle</MSHelp:link>, the <B>PSC_Close</B> entry point is invoked. When it is time to remove the device from the system, the Device Manager calls <B>PSC_Deinit</B>. </P>
+
+<P><B>PSC_IOControl</B> is the main entry point for smart card requests. <B>PSC_IOControl</B> should immediately call the smart card driver library. If the library is unable to handle the call because this IOCTL call is driver-specific, the driver's callback for unknown IOCTL codes is called.</P>
+
+<P>A typical driver's IOCTL function is shown in the following code example.</P>
+
+<PRE class="code">BOOL PSC_IOControl(
+    DWORD Handle,
+    DWORD dwIoControlCode,
+    PBYTE pInBuf,
+    DWORD nInBufSize,
+    PBYTE pOutBuf,
+    DWORD nOutBufSize,
+    PDWORD pBytesReturned
+    )
+{
+    NTSTATUS status;
+    PSMARTCARD_EXTENSION pSmartcardExtension = (PSMARTCARD_EXTENSION) Handle;
+
+    if (pSmartcardExtension-&gt;ReaderExtension-&gt;d_uReaderState != STATE_OPENED)
+    {
+        SmartcardDebug(DEBUG_ERROR,(TEXT("%s: DeviceIOCTL - invalid state %d\n"), szDriverName,
+            pSmartcardExtension-&gt;ReaderExtension-&gt;d_uReaderState
+            ));
+        status = ERROR_GEN_FAILURE;
+    }
+    else
+        status = SmartcardDeviceControl(
+            pSmartcardExtension, dwIoControlCode,
+            pInBuf, nInBufSize,
+            pOutBuf, nOutBufSize,
+            pBytesReturned);
+
+    return (status == STATUS_SUCCESS ? TRUE: FALSE);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconsmartcarddriverarchitecture.htm">Smart Card Driver Architecture</A></P>
+
+<P><A HREF="cxconsmartcarddriversupport.htm">Smart Card Driver Samples</A></P>
+
+<P><A HREF="cxconsmartcarddriverregistrysettings.htm">Smart Card Driver Registry Settings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Smart%20Card%20Drivers&nbsp;(cxconsmartcarddrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

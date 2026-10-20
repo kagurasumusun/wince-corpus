@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleControl::GetActivationPolicy</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_colecontrol_getactivationpolicy"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_colecontrol_getactivationpolicy"></A>COleControl::GetActivationPolicy</H1>
+
+<P>This method alters the default activation behavior of a control that supports the <B>IPointerInactive</B> interface.</P>
+
+<PRE class=syntax><B>virtual DWORD GetActivationPolicy( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>A combination of flags from the <B>POINTERINACTIVE</B> enumeration. Possible flags are:
+
+<DL>
+<DT>POINTERINACTIVE_ACTIVATEONENTRY</DT>
+
+<DD>The object should be in-place activated when the mouse enters it during a mouse move operation.</DD>
+
+<DT>POINTERINACTIVE_DEACTIVATEONLEAVE</DT>
+
+<DD>The object should be deactivated when the mouse leaves the object during a mouse move operation.</DD>
+
+<DT>POINTERINACTIVE_ACTIVATEONDRAG</DT>
+
+<DD>The object should be in-place activated when the mouse is dragged over it during a drag and drop operation.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>When the <B>IPointerInactive</B> interface is enabled, the container will delegate WM_SETCURSOR and WM_MOUSEMOVE messages to it. The <B>COleControl</B> implementation of this interface will dispatch these messages through your control message map, after adjusting the mouse coordinates appropriately.</P>
+
+<P>Whenever the container receives a WM_SETCURSOR or WM_MOUSEMOVE message with the mouse pointer over an inactive object supporting <B>IPointerInactive</B>, it should call <B>GetActivationPolicy</B><I> </I>on the interface and return flags from the <B>POINTERINACTIVE</B> enumeration. </P>
+
+<P>You can process these messages just like ordinary window messages, by adding the corresponding entries to the message map. In your handlers, avoid using the <B>m_hWnd</B> member variable, or any methods that use it, without first checking that its value is non-<B>NULL</B>. </P>
+
+<P>Any object intended to do more than set the mouse cursor and/or fire a mouse move event, such as give special visual feedback, should return the POINTERINACTIVE_ACTIVATEONENTRY flag and draw the feedback only when active. If the object returns this flag, the container should activate it in-place immediately and then forward it the same message that triggered the call to <B>GetActivationPolicy</B>.</P>
+
+<P>If both the POINTERINACTIVE_ACTIVATEONENTRY and POINTERINACTIVE_DEACTIVATEONLEAVE flags are returned, then the object will only be activated when the mouse is over the object. If only the POINTERINACTIVE_ACTIVATEONENTRY flag is returned, then the object will only be activated once when the mouse first enters the object.</P>
+
+<P>You may also want an inactive control to be the target of an OLE drag and drop operation. This requires activating the control at the moment the user drags an object over it, so that the window of the control can be registered as a drop target. To cause activation to occur during a drag, return the POINTERINACTIVE_ACTIVATEONDRAG flag:</P>
+
+<PRE>DWORD CMyCtrl::GetActivationPolicy()
+{
+    return POINTERINACTIVE_ACTIVATEONDRAG;
+}
+</PRE>
+
+<P>The information communicated by <B>GetActivationPolicy</B> should not be cached by a container. Instead, this method should be called every time the mouse enters an inactive object.</P>
+
+<P>If an inactive object does not request to be in-place activated when the mouse enters it, its container should dispatch subsequent WM_SETCURSOR messages to this object by calling <A HREF="colectrl_102.htm"><B>OnInactiveSetCursor</B></A> as long as the mouse pointer stays over the object.</P>
+
+<P>Enabling the <B>IPointerInactive</B> interface typically means that you want the control to be capable of processing mouse messages at all times. To get this behaviour in a container that does not support the <B>IPointerInactive</B> interface, you will need to have your control always activated when visible, which means the control should have the OLEMISC_ACTIVATEWHENVISIBLE flag among its miscellaneous flags. However, to prevent this flag from taking effect in a container that does support <B>IPointerInactive</B>, you can also specify the OLEMISC_IGNOREACTIVATEWHENVISIBLE flag:</P>
+
+<PRE>static const DWORD BASED_CODE _dwMyOleMisc =
+    OLEMISC_ACTIVATEWHENVISIBLE |
+    OLEMISC_IGNOREACTIVATEWHENVISIBLE |
+    OLEMISC_SETCLIENTSITEFIRST |
+    OLEMISC_INSIDEOUT |
+    OLEMISC_CANTLINKINSIDE |
+    OLEMISC_RECOMPOSEONRESIZE;
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="colectrl_101.htm"><B>COleControl::OnInactiveMouseMove</B></A><B> </B></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

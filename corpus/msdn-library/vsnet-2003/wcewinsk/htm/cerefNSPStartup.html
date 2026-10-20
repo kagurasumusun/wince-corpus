@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NSPStartup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NSPStartup"/>
+<MSHelp:RLTitle Title="NSPStartup"/>
+<MSHelp:Keyword Index="A" Term="cerefNSPStartup"/>
+<MSHelp:Keyword Index="K" Term="NSPStartup"/>
+<MSHelp:Keyword Index="A" Term="cerefNSPStartup"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715124">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefnspstartup"></A>NSPStartup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function retrieves the dynamic information about a provider, such as the list of the DLL entry points.</P>
+
+<P>This function is called by the client on initialization. <B>NSPStartup</B> and <A HREF="cerefnspcleanup.htm">NSPCleanup</A> must be called as pairs. All the NSP functions must be called from within an <B>NSPStartup/NSPCleanup</B> pair. WSC functions do not need to be called from within an <B>NSPStartup/NSPCleanup</B> pair either.</P>
+
+<PRE class="syntax"><B>int NSPStartup(</B>
+<B>LPGUID</B><I> lpProviderId</I><B>,</B>
+<B>LPNSP_ROUTINE</B><I> lpnspRoutines</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpProviderId</I></DT>
+
+<DD>[in] Indicates the desired provider for which to return the entry points.</dd>
+
+<DT><I>lpnspRoutines</I></DT>
+
+<DD>[out] Pointer to all the provider entry points.</dd>
+</DL>
+
+<H4 class="dtH4">Data Types</H4>
+
+<P>The following data types are needed for this call.
+
+<DL>
+<DT>NSP_ROUTINE</DT>
+
+<DD>The <B>NSP_ROUTINE</B> structure contains information regarding all the functions implemented by a given provider.</dd>
+</DL>
+
+<PRE class="code">typedef struct _NSP_ROUTINE { 
+  DWORD        <I>cbSize</I>;
+  DWORD        <I>dwMajorVersion</I>;
+  DWORD        <I>dwMinorVersion</I>;
+  INT ( *NSPCleanup) ;
+  INT ( *NSPLookupServiceBegin) ;
+  INT ( *NSPLookupServiceNext) ;
+  INT ( *NSPLookupServiceEnd) ;
+  INT ( *NSPSetService) ;
+  INT ( *NSPInstallServiceClass) ;
+  INT ( *NSPRemoveServiceClass) ;
+  INT ( *NSPGetServiceClassInfo) ;
+} NSP_ROUTINE, *PNSP_ROUTINE, *LPNSP_ROUTINE; </PRE>
+
+<DL>
+<DT><I>cbSize</I></DT>
+
+<DD>Size of this structure.</dd>
+
+<DT><I>dwMajorVersion</I></DT>
+
+<DD>Major version of the service provider specification supported by this provider.</dd>
+
+<DT><I>dwMinorVersion</I></DT>
+
+<DD>Minor version of the service provider specification supported by this provider.</dd>
+
+<DT><I>*NSP*.*</I></DT>
+
+<DD>Pointers to the various NSP functions. Every entry must point to a valid function. If the provider does not implement this function, it should simply return WSAENOTIMPLEMENTED.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>In the header file this structure contains complete prototypes for all the <B>NSP</B> pointers.</BLOCKQUOTE>
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The function should return NO_ERROR (zero) if the routine succeeds. It should return SOCKET_ERROR (&#0150;1) if the routine fails and it must set the appropriate error code using <MSHelp:link keywords="cerefSetLastError" TABINDEX="0">SetLastError</MSHelp:link>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=40%>Value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>WSAEINVAL</TD>
+<TD width=60%>One or more parameters were invalid or missing for this provider.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>WSA_NOT_ENOUGH_MEMORY </TD>
+<TD width=60%>Not enough free memory available to perform this operation.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefnspcleanup.htm">NSPCleanup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NSPStartup&nbsp;(cerefnspstartup.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

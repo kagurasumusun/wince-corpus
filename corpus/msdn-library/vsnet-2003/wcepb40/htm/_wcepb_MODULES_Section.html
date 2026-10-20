@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MODULES Section</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MODULES Section"/>
+<MSHelp:RLTitle Title="MODULES Section"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_MODULES_Section"/>
+<MSHelp:Keyword Index="K" Term=".bib file, MODULES section"/>
+<MSHelp:Keyword Index="K" Term="bib file, MODULES section"/>
+<MSHelp:Keyword Index="K" Term="binary images, binary image builder file MODULES section"/>
+<MSHelp:Keyword Index="K" Term="configuration files, MODULES section"/>
+<MSHelp:Keyword Index="K" Term="image configuration files, MODULES section"/>
+<MSHelp:Keyword Index="K" Term="MODULES section of .bib file"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_MODULES_Section"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679750">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_modules_section"></A>MODULES Section</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The MODULES section specifies how the Windows CE-based modules are loaded into the memory table, as established in the MEMORY section of the Config.bib file. This section can contain up to 2,000 modules.</P>
+
+<P>Each MODULES section entry has the following columnar format.</P>
+
+<PRE class="syntax"><I>Name        Path        Memory block        Type</I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>Name</I></DT>
+
+<DD>This parameter specifies the name of the MODULES section entry as it appears in the memory table. Usually, the <I>Name</I> entry is the same as the name of the file referenced by <I>Path</I>.</dd>
+
+<DT><I>Path</I></DT>
+
+<DD>This parameter specifies the full path to the file, as specified in the MODULES section that Romimage.exe incorporates into the image. Usually, the <I>Path</I> file name is the same as the <I>Name </I>MODULES section entry.</dd>
+
+<DT><I>Memory block</I></DT>
+
+<DD>This parameter specifies the RAMIMAGE section of the memory region into which Romimage.exe loads the object module. Romimage.exe places the object modules in the specified memory location in the order in which they appear in the MEMORY section. This memory location corresponds to the MEMORY section defined in the Config.bib file. There is only one RAMIMAGE per OS image. The name used to specify the MEMORY section must be the same as the name specified in the Config.bib file.</dd>
+
+<DT><I>Type</I></DT>
+
+<DD>This parameter specifies the file type and can be a combination of the following:
+
+<UL type="disc">
+	<LI>S to define it as a system file.</li>
+
+	<LI>H to define it as a hidden file.</li>
+
+	<LI>R to compress resources. Applies to the MODULES section only.</li>
+
+	<LI>C to compress everything.</li>
+
+	<LI>D to prevent a debugger from running.</li>
+
+	<LI>N to mark a module as non-trusted. Applies to the MODULES section only.</li>
+
+	<LI>P to ignore the CPU type on a per-module basis.</li>
+
+	<LI>K to signal that ROMIMAGE has to fixup the DLL to run properly. Applies to the MODULES section only.</li>
+
+	<LI>X to signal that ROMIMAGE has to sign the module and include the signature file in the ROM. Applies to the MODULES section only.</li>
+
+	<LI>M to signal to the kernel to page in the whole module and not demand-page when needed. Applies to the MODULES section only.</li>
+
+	<LI>L to signal the ROMIMAGE to not split a ROM DLL between the process virtual memory area and the process slot 1. Applies to the MODULES section only.</li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">MODULES 
+  INIT.EXE  %_WINCEROOT%\RELEASE\INIT.EXE  NK  SH 
+   nk.exe          $(_FLATRELEASEDIR)\kitlnokd.exe             NK  SHD
+   nk.exe          $(_FLATRELEASEDIR)\kitlnokd.exe             NK  SHN</PRE>
+
+<P>Romimage.exe loads the Init.exe object module into the NK memory block. Romimage.exe creates Init.exe from %_WINCEROOT%\Release\Init.exe. The object module is both a system file (S) and a hidden file (H).</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>By default, all modules are uncompressed.</P>
+
+<P>The R and C types refer to how the file is stored in ROM and how much RAM is used when the file is run. For example, variables are always compressed into ROM because they must be copied into RAM in order to run. However, code does not need to be compressed because it can run directly in ROM. When deciding these attributes, remember that the more you compress, the smaller the ROM, but the more RAM will be needed.</P>
+
+<P>The D type prevents a debugger from running while the module is loaded and prevents a debugger from loading the module to debug it.</P>
+
+<P>The N type marks a module as non-trusted, as by default, every module in the ROM MODULES section of a BIB file and the resulting binary is considered to be a trusted application. This is better then putting the module in the FILES section of the .bib file because it keeps the XIP capabilities.</P>
+
+<P>The K type signals that a module is to be treated just like the kernel with regards to memory location and relocation fixup styles. The module also has to be loaded with a special <MSHelp:link keywords="cgrefLoadKernelLibrary" TABINDEX="0">LoadKernelLibrary</MSHelp:link> instead of in the usual manner. This is currently only used for the debugger and Remote Kernel Tracker.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MODULES%20Section&nbsp;(_wcepb_modules_section.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

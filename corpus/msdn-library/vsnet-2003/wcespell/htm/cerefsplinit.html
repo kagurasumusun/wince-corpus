@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SplInit</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SplInit"/>
+<MSHelp:RLTitle Title="SplInit"/>
+<MSHelp:Keyword Index="A" Term="cerefSplInit"/>
+<MSHelp:Keyword Index="K" Term="SplInit"/>
+<MSHelp:Keyword Index="A" Term="cerefSplInit"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: spell_checker_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_742720">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefsplinit"></A>SplInit</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is called by an application to initialize a spelling session. <A HREF="#cerefsplinit">SplInit</A> generates a handle for a spelling session, allocates buffer memory, loads the main dictionary and external user dictionaries, and creates the internal user dictionaries.</P>
+
+<PRE class="syntax"><B>int SplInit( </B>
+<B>HSPL</B> <B>*</B><I>phspl</I><B>,</B> 
+<B>int</B> <I>clex</I><B>,</B> 
+<B>WCHAR</B> <B>**</B><I>ppwsz 
+</I><B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>phspl</I></DT>
+
+<DD>Pointer to the handle of the new spelling session. The <B>SplInit</B> function creates this handle and places it at the location pointed to by this parameter. Subsequent calls by an application must include this handle to associate a call to a particular spelling session. </dd>
+
+<DT><I>clex</I></DT>
+
+<DD>Number of user<B> </B>dictionaries that are defined. If <I>clex</I> is 0, the <A HREF="cerefsplcheck.htm">SplCheck</A> function uses only the main dictionary.</dd>
+
+<DT><I>ppwsz</I></DT>
+
+<DD>Pointer to a list of pointers, each of which point to a null-terminated string that contains the path and file name for an external user dictionary. If <I>clex </I>is 0, this parameter must be NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>1 indicates success. 0 indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Windows CE .NET supplies a read-only main spelling dictionary on the device. By default, this dictionary is used during<B> </B>every spelling session. Currently, the OS does not support replacing this main dictionary with a dictionary supplied by the application. </P>
+
+<P>In addition to loading the main dictionary, <B>SplInit</B> creates three internal user dictionaries. The following table shows the dictionaries.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Dictionary Name</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SPL_IGNORE_LEX</TD>
+<TD width=67%>Contains words that the spelling checker finds, but the user does not want to change. The spelling checker ignores words in this list for the remainder of the spelling session.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SPL_CHANGE_ALWAYS_LEX</TD>
+<TD width=67%>Contains words that the spelling checker finds, paired with words that replace subsequent occurrences of the found words. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SPL_CHANGE_ONCE</TD>
+<TD width=67%>Contains words that the spelling checker finds and the user changes. The spelling checker continues to find subsequent occurrences of the words.</TD>
+</TR>
+</table></div>
+
+<P>These internal dictionaries are empty at initialization and removed by the <A HREF="cerefsplquit.htm">SplQuit</A> function when the spelling session is over.</P>
+
+<P>The application can also specify external user dictionaries to load. The <I>ppwsz</I> parameter points to a list of pointers, each of specify the path and file name of an external user dictionary. If you load one external user dictionary, <I>ppwsz</I> is a pointer to a single pointer. Use the <I>clex</I> parameter to indicate how many external user dictionaries to load. The application can define any number of external user dictionaries.</P>
+
+<P>External user dictionaries are typically created by the user and saved for use during future spelling sessions when an application calls the <B>SplQuit</B> function. During a spelling session, applications can add words to an external user dictionary using <A HREF="cerefspladduserdict.htm">SplAddUserDict</A>, remove words using <A HREF="cerefsplremuserdict.htm">SplRemUserDict</A>, and clear the contents of an external user dictionary using <A HREF="cerefsplclruserdict.htm">SplClrUserDict</A>. </P>
+
+<P><B>SplInit</B> assigns identifiers to the internal user dictionaries and to any external user dictionaries pointed to by <I>ppwsz</I>. Use these identifiers in other spelling functions to specify a dictionary. The parameter that identifies a dictionary is <I>nID</I>. The following table shows the values that <B>SplInit</B> assigns to <I>nID.</I></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=9%>Value</TH>
+<TH width=91%>Dictionary</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>&#0150;3</TD>
+<TD width=91%>SPL_IGNORE_LEX</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>&#0150;2</TD>
+<TD width=91%>SPL_CHANGE_ALWAYS_LEX</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>&#0150;1</TD>
+<TD width=91%>SPL_CHANGE_ONCE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>0</TD>
+<TD width=91%>External user dictionary 1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>1</TD>
+<TD width=91%>External user dictionary 2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%><I>clex</I>&#0150;1</TD>
+<TD width=91%>External user dictionary <I>clex</I></TD>
+</TR>
+</table></div>
+
+<P>To determine the value of the <I>nID</I> parameter for an external user dictionary, subtract one from its position in the dictionary list that the <I>ppwsz</I> parameter points to. For example, if there are three external user dictionaries to load, <I>clex</I> equals 3. The <I>nID</I> of the last dictionary loaded is <I>clex</I>&#0150;1, which equals 2.</P>
+
+<P>Because initializing a spelling session is time-consuming, consider doing it when the calling application starts and keeping the spelling session active until the calling application ends. Remember, however, that a spelling session has exclusive access to external user dictionaries until the calling application exits. This means that a second application cannot load external user dictionaries that are already in use.</P>
+
+<P>If it is possible for a user to simultaneously run multiple applications that can use the spelling checker, it might be best to initialize the spelling checker when the user requests it instead of initializing it when the calling application starts. When the application is done with the spelling checker, it calls the <B>SplQuit</B> function and the external user dictionary or dictionaries are available for use by another spelling session.</P>
+
+<P>The main dictionary is available for multiple spelling sessions because it is read-only. The internal user dictionaries are created for each spelling session and removed at the end of each session; therefore, access to them by multiple spelling sessions is not an issue. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>Splapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Splusa.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefspladduserdict.htm">SplAddUserDict</A>, <A HREF="cerefsplclruserdict.htm">SplClrUserDict</A>, <A HREF="cerefsplquit.htm">SplQuit</A>, <A HREF="cerefsplremuserdict.htm">SplRemUserDict</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SplInit&nbsp;(cerefsplinit.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

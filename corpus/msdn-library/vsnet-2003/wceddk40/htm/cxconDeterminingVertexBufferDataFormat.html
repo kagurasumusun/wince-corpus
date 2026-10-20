@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Determining the Vertex Buffer Data Format</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Determining the Vertex Buffer Data Format"/>
+<MSHelp:RLTitle Title="Determining the Vertex Buffer Data Format"/>
+<MSHelp:Keyword Index="A" Term="cxconDeterminingVertexBufferDataFormat"/>
+<MSHelp:Keyword Index="K" Term="buffers, Direct3D vertex buffers"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, FVF (Flexible Vertex Format)"/>
+<MSHelp:Keyword Index="K" Term="FVF, Direct3D vertex buffer data format"/>
+<MSHelp:Keyword Index="K" Term="texture%2C Direct3D, FVF texture dimension"/>
+<MSHelp:Keyword Index="K" Term="vertex buffers%2C Direct3D, determining data format"/>
+<MSHelp:Keyword Index="K" Term="vertex format%2C Direct3D, FVF"/>
+<MSHelp:Keyword Index="A" Term="cxconDeterminingVertexBufferDataFormat"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664968">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondeterminingvertexbufferdataformat"></A>Determining the Vertex Buffer Data Format</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To identify the format of the data in the vertex buffer, a driver should determine the following information:
+
+<UL type="disc">
+	<LI>The dimension of the textures (1D, 2D, 3D, or 4D)</li>
+
+	<LI>The components that are present in the FVF data</li>
+
+	<LI>The ordering of the components that are present</li>
+</UL>
+
+<H3 class="dtH3"><A NAME="cxcondeterminingvertexbufferdataformatanchor1"></A>FVF Texture Dimension</H3>
+
+<P>The driver should determine the dimension of the textures from the D3DTEXTURETRANSFORMFLAGS texture coordinate count flags (D3DTTFF_COUNT<I>n</I>, described in the DirectX SDK documentation). The number of the count flag signals how many texture coordinates will be present. Note that this does not necessarily equate to the dimension of the textures themselves, as explained below.</P>
+
+<P class="label"><B>Nonprojected Textures</B>
+
+<UL type="disc">
+	<LI>D3DTTFF_COUNT1 indicates that the rasterizer should expect 1D texture coordinates. </li>
+
+	<LI>D3DTTFF_COUNT2 indicates that the rasterizer should expect 2D texture coordinates. </li>
+
+	<LI>D3DTTFF_COUNT3 indicates that the rasterizer should expect 3D texture coordinates. </li>
+
+	<LI>D3DTTFF_COUNT4 indicates the rasterizer should expect 4D texture coordinates.</li>
+</UL>
+
+<P class="label"><B>Projected Textures</B></P>
+
+<P>If projected textures are being used, the D3DTTFF_PROJECTED flag is set to indicate that the texture coordinates are to be divided by the last (COUNTth) element of the texture coordinate set. Thus, for a 2D projected texture, the count would be three, because the first two elements are divided by the third, resulting in two floats for a 2D texture lookup. That is, both D3DTTFF_COUNT2 and D3DTTFF_COUNT3 | D3DTTFF_PROJECTED reference a 2D texture. </P>
+
+<H3 class="dtH3"><A NAME="cxcondeterminingvertexbufferdataformatanchor2"></A>FVF Vertex Data Components</H3>
+
+<P>The driver determines which components are present by analyzing the flags specified in the <B>dwVertexType</B> member of the <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> structure. Specifically, the following table indicates the possible bit fields that can be set in <B>dwVertexType</B> and the component(s) that they identify. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_DIFFUSE</TD>
+<TD width=71%>Each vertex has a diffuse color.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_SPECULAR</TD>
+<TD width=71%>Each vertex has a specular color.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX0</TD>
+<TD width=71%>No texture coordinates are provided with the vertex data.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX1</TD>
+<TD width=71%>Each vertex has one set of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX2</TD>
+<TD width=71%>Each vertex has two sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX3</TD>
+<TD width=71%>Each vertex has three sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX4</TD>
+<TD width=71%>Each vertex has four sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX5</TD>
+<TD width=71%>Each vertex has five sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX6</TD>
+<TD width=71%>Each vertex has six sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX7</TD>
+<TD width=71%>Each vertex has seven sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_TEX8</TD>
+<TD width=71%>Each vertex has eight sets of texture coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>D3DFVF_XYZRHW</TD>
+<TD width=71%>Each vertex has <I>x, y, z,</I> and <I>w</I> coordinates.</TD>
+</TR>
+</table></div>
+
+<P>Only one of the D3DFVF_TEX<I>n</I> flags will be set.</P>
+
+<H3 class="dtH3"><A NAME="cxcondeterminingvertexbufferdataformatanchor3"></A>FVF Vertex Component Ordering</H3>
+
+<P>The components that make up the vertex data are strictly ordered. Specifically, Direct3D will only supply the driver with vertex data that is ordered as shown in the following illustration. Note that this diagram assumes 2D texture coordinates, although 1D, 3D, and 4D textures are also valid.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=7%>x</TD>
+<TD width=8%>y</TD>
+<TD width=8%>z</TD>
+<TD width=7%>w</TD>
+<TD width=8%>d<BR>
+color</TD>
+<TD width=8%>s<BR>
+color</TD>
+<TD width=7%>tu<SUB>0</SUB></TD>
+<TD width=8%>tv<SUB>0</SUB></TD>
+<TD width=8%>tu<SUB>1</SUB></TD>
+<TD width=7%>tv<SUB>1</SUB></TD>
+<TD width=8%><B>…</B></TD>
+<TD width=8%>tu<SUB>7</SUB></TD>
+<TD width=8%>tv<SUB>7</SUB></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD colspan=4 width=30%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Location</TD>
+<TD width=8%>Diffuse<BR>
+color</TD>
+<TD width=8%>Specular<BR>
+color</TD>
+<TD colspan=7 width=54%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Texture coordinates</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Flexible Vertex Format</B></P>
+
+<P>As shown in the preceding figure, Direct3D always sends <I>x,y,z, </I>and<I> w</I> values; the remaining data is sent only as required by an application. Specifically, vertex data consists of the following components:
+
+<OL type="1">
+	<LI>Location (<I>x,y,z,w</I>) (required).
+<P>The first vertex component is four D3DVALUEs that identify the position of the vertex. Direct3D always sets the D3DFVF_XYZRHW bit in <B>dwVertexType</B>.
+</li>
+
+	<LI>Diffuse Color (optional).
+<P>If present, this component is a D3DCOLOR value that specifies the diffuse color for this vertex. Direct3D sets the D3DFVF_DIFFUSE bit in <B>dwVertexType</B> when this component is present.
+</li>
+
+	<LI>Specular Color (optional).
+<P>If present, this component is a D3DCOLOR value that specifies the specular color for this vertex. Direct3D sets the D3DFVF_SPECULAR bit in <B>dwVertexType</B> when this component is present.
+</li>
+
+	<LI>Texture Data (optional).
+<P>This part will vary based on the dimension of the texture. For each dimension in the texture, a D3DVALUE specifies each of the <I>u</I>, <I>v</I>, <I>w,</I> or <I>q</I> components (see explanation of <A HREF="#cxcondeterminingvertexbufferdataformatanchor1">FVF Texture Dimension</A>). For example, if 2D nonprojected textures are being used, two D3DVALUEs per texture are needed to specify the vertex's <I>u,v</I> values for each texture up to eight textures total. The number of <I>u,v</I> pairs present is <I>n</I>, where <I>n</I> corresponds to the D3DFVF_TEX<I>n</I> flag set in <B>dwVertexType</B>. For example, if D3DFVF_TEX3 is set in <B>dwVertexType</B>, then three <I>u,v</I> pairs are supplied with each vertex.
+</li>
+</OL>
+
+<P>FVF data is always tightly packed; that is, no memory is wasted on components that are not explicitly specified in the vertex buffer. For example, when <B>dwVertexType</B> is (D3DFVF_XYZRHW | D3DFVF_TEX2), and the texture dimension is 2D, each vertex in the buffer consists of eight tightly packed D3DVALUEs. The following illustration shows that these values specify the location (<I>x,y,z,w</I>) and texture coordinates for two textures (<I>tu<SUB>0</SUB>,tv<SUB>0</SUB>, tu<SUB>1</SUB>,tv<SUB>1</SUB></I>).</P>
+
+<P class="fig"><IMG SRC="vbuf.gif" ALT="" BORDER=0></P>
+
+<P class="label"><B>Vertex Buffer</B></P>
+
+<P>Note that in the preceding illustration it is assumed that there are only two texture coordinates. The vertex data supplied to the driver is always transformed and lit. The driver never receives normals. All data in the FVF texture coordinate sets are single precision IEEE floats. See the <I>perm3</I> sample driver for implementation details. See the Windows SDK documentation for more details about FVF.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconfvfflexiblevertexformat.htm">FVF (Flexible Vertex Format)</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Determining%20the%20Vertex%20Buffer%20Data%20Format&nbsp;(cxcondeterminingvertexbufferdataformat.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDocTemplate::MatchDocType</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdoctemplate_matchdoctype"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdoctemplate_matchdoctype"></A><SUP></SUP>CDocTemplate::MatchDocType</H1>
+
+<P>This method determines the type of document template to use for opening a file. If an application supports multiple file types, for example, this method will determine which of the available document templates is appropriate for a specified file by calling <B>MatchDocType</B> for each template in turn, and choosing a template according to the confidence value returned.</P>
+
+<PRE class=syntax><B>virtual Confidence MatchDocType(
+LPCTSTR </B><I>lpszPathName</I><B>,
+CDocument*&amp; </B><I>rpDocMatch</I> <B>);
+</B>
+<B>virtual Confidence MatchDocType(
+LPCTSTR </B><I>lpszPathName</I><B>,
+DWORD </B><I>dwFileType</I><B>,
+CDocument*&amp; </B><I>rpDocMatch</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszPathName</I></DT>
+
+<DD>Specifies the pathname of the file whose type is to be determined.</DD>
+
+<DT><I>rpDocMatch</I></DT>
+
+<DD>Specifies the pointer to a document that is assigned the matching document, if the file specified by <I>lpszPathName</I> is already open.</DD>
+
+<DT><I>dwFileType</I></DT>
+
+<DD>Specifies the type of the document (Macintosh&reg; only).</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A value from the <B>Confidence</B> enumeration, which is defined as follows:</P>
+
+<PRE>enum Confidence
+{
+        noAttempt,
+        maybeAttemptForeign,
+        maybeAttemptNative,
+        yesAttemptForeign,
+        yesAttemptNative,
+        yesAlreadyOpen
+};</PRE>
+
+<H4>Remarks</H4>
+
+<P>If the file specified by <I>lpszPathName</I> is already open, this function returns <B>CDocTemplate::yesAlreadyOpen</B> and copies the <B>CDocument</B> object of the file into the object at <I>rpDocMatch</I>.</P>
+
+<P>If the file is not open but the extension in <I>lpszPathName</I> matches the extension specified by <B>CDocTemplate::filterExt</B> or the Macintosh file type matches, this function returns <B>CDocTemplate::yesAttemptNative</B> and sets <I>rpDocMatch</I> to <B>NULL</B>. For more information on <B>CDocTemplate::filterExt</B>, see <B>CDocTemplate::GetDocString</B>.</P>
+
+<P>If neither case is true, the function returns <B>CDocTemplate::yesAttemptForeign</B>.</P>
+
+<P>The default implementation does not return <B>CDocTemplate::maybeAttemptForeign</B> or <B>CDocTemplate::MaybeAttemptNative</B>. Override this function to implement type-matching logic appropriate to your application, perhaps using these two values from the <B>Confidence</B> enumeration.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdoctemp_7.htm"><B>CDocTemplate::GetDocString</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

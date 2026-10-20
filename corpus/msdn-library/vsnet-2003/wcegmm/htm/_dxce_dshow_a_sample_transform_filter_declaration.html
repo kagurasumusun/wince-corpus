@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>A Sample Transform Filter Declaration</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="A Sample Transform Filter Declaration"/>
+<MSHelp:RLTitle Title="A Sample Transform Filter Declaration"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_a_sample_transform_filter_declaration"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dshow.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_dshow_a_sample_transform_filter_declaration"></A>A Sample Transform Filter Declaration</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This sample illustrates a true minimalist filter, which does nothing except demonstrate the least you must implement for a filter. It uses the transform-inplace classes and derives its filter class from the <MSHelp:link keywords="_wcesdk_ctransinplacefilter_class" TABINDEX="0"><B>CTransInPlaceFilter</B></MSHelp:link> class. Following is the class declaration for the derived filter class CNullNull. </P>
+
+<PRE class="code">// CNullNull
+//
+class CNullNull
+    : public CTransInPlaceFilter
+{
+
+public:
+
+    static CUnknown *CreateInstance(LPUNKNOWN punk, HRESULT *phr);
+
+    DECLARE_IUNKNOWN;
+
+    LPAMOVIESETUP_FILTER GetSetupData()
+    {
+        return &amp;sudNullNull;
+    }
+
+private:
+
+    // Constructor. Just calls the base class constructor.
+    CNullNull(TCHAR *tszName, LPUNKNOWN punk, HRESULT *phr)
+        : CTransInPlaceFilter (tszName, punk, CLSID_NullNull, phr)
+    { }
+
+    // Overrides the pure virtual Transform of CTransInPlaceFilter base 
+lass.
+    // The "real work" of a transform is done by altering *pSample. 
+    // The Null transform leaves it alone.
+    HRESULT Transform(IMediaSample *pSample){ return NOERROR; }
+
+    // This filter accepts any input type. 
+    // (It would return S_FALSE for any it did not accept.)
+    HRESULT CheckInputType(const CMediaType* mtIn) { return S_OK; }
+};
+</PRE>
+
+<P>This example illustrates the following basic member functions required in the base class. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Function</TH>
+<TH width=77%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>CreateInstance</B><U> </U></TD>
+<TD width=77%>Needed by every filter so that it can be instantiated as a COM object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>GetSetupData</B><U> </U></TD>
+<TD width=77%>Overrides <MSHelp:link keywords="_wcesdk_cbasefilter__getsetupdata" TABINDEX="0"><B>CBaseFilter::GetSetupData</B></MSHelp:link> and is used to provide the class with information required to register this particular filter. In this case, it provides the address of a structure defined in the Nullnull.cpp file included in the SDK. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>CNullNull</B><U> </U></TD>
+<TD width=77%>Class constructor, which typically just calls the base class constructor. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>Transform</B><U> </U></TD>
+<TD width=77%>Overrides <MSHelp:link keywords="_wcesdk_ctransinplacefilter__transform" TABINDEX="0"><B>CTransInPlaceFilter::Transform</B></MSHelp:link> and does the main work of CNullNull, which in this case is nothing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>CheckInputType</B><U> </U></TD>
+<TD width=77%>Overrides <MSHelp:link keywords="_wcesdk_ctransformfilter__checkinputtype" TABINDEX="0"><B>CTransInPlaceFilter::CheckInputType</B></MSHelp:link> to verify the media type during connection, and in this case accepts any media type offered, since it will simply pass it along to the next filter in line. </TD>
+</TR>
+</table></div>
+
+<P>Note that, strictly speaking, <B>GetSetupData</B> is required only if you want your filter to be self-registering. However, since the base classes implement this feature and it is easy to implement, it is a good idea to include this in your base class. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;A%20Sample%20Transform%20Filter%20Declaration&nbsp;(_dxce_dshow_a_sample_transform_filter_declaration.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

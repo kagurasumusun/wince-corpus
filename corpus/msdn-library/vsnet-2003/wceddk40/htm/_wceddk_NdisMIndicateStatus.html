@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMIndicateStatus</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMIndicateStatus"/>
+<MSHelp:RLTitle Title="NdisMIndicateStatus"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NdisMIndicateStatus"/>
+<MSHelp:Keyword Index="K" Term="NdisMIndicateStatus"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673276">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndismindicatestatus"></A>NdisMIndicateStatus</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function indicates changes in the status of an NIC to higher-level NDIS drivers.</P>
+
+<PRE class="syntax"><B>VOID NdisMIndicateStatus(</B>
+<B>NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>NDIS_STATUS</B> <I>GeneralStatus</I><B>,</B>
+<B>PVOID</B> <I>StatusBuffer</I><B>,</B>
+<B>UINT</B> <I>StatusBufferSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Handle originally input to the <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+
+<DT><I>GeneralStatus</I></DT>
+
+<DD>[in] Specifies the NDIS_STATUS_<I>XXX</I> value that indicates the general change in status for the NIC.</dd>
+
+<DT><I>StatusBuffer</I></DT>
+
+<DD>[in] Pointer to a caller-allocated buffer containing data that is medium-specific and dependent on the value of <I>GeneralStatus</I>. It indicates detailed information about the change in status.</dd>
+
+<DT><I>StatusBufferSize</I></DT>
+
+<DD>[in] Specifies the size, in bytes, of the buffer at <I>StatusBuffer</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When a miniport calls <B>NdisMIndicateStatus</B>, NDIS calls each bound protocol's <A HREF="cxrefprotocolstatus.htm">ProtocolStatus</A> function. This allows a bound protocol driver or, possibly, the configuration manager to log the change in status of an underlying NIC or to take corrective action. For example, a protocol might call the <A HREF="_wceddk_ndisreset.htm">NdisReset</A> function, depending on the NDIS_STATUS_<I>XXX</I> indicated.</P>
+
+<P>When a miniport calls <B>NdisMIndicateStatus</B> to report a change in NIC status, NDIS can call the <A HREF="cxrefminiportreset.htm">MiniportReset</A> function to try to restore the NIC to a working condition. In these circumstances, NDIS can call bound protocols only with NDIS_STATUS_RESET_START and later with NDIS_STATUS_RESET_END, rather than with the <I>GeneralStatus</I> indicated by the miniport.</P>
+
+<P><B>NdisMIndicateStatus</B> provides two pieces of information:
+
+<UL type="disc">
+	<LI>An overall status value indicating the general change in status.</li>
+
+	<LI>A specific reason for the general change, which can be network-specific. For example, ring-insertion failures are particular to Token Ring (802.5) networks, but are irrelevant to Ethernet (802.3) NICs and their drivers.</li>
+</UL>
+
+<P>A miniport can also call <B>NdisMIndicateStatus</B> to indicate problems, such as cables that have been accidentally removed and then reinserted, or a ring that has temporarily failed. For example, both the following conditions might occur:
+
+<UL type="disc">
+	<LI>The miniport calls this function with NDIS_STATUS_RING_STATUS.</li>
+
+	<LI>The <I>StatusBuffer</I> contains one of the following status values:
+<UL type="disc">
+	<LI>NDIS_RING_LOBE_WIRE_FAULT</li>
+
+	<LI>NDIS_RING_HARD_ERROR</li>
+
+	<LI>NDIS_RING_SIGNAL_LOSS</li>
+</UL>
+</li>
+</UL>
+
+<P>After such a change in status has been signaled with an indication, any associated thresholds or statistics counters remain unchanged.</P>
+
+<P>Most WAN NIC drivers indicate status with some special status codes and buffer contents. WAN NIC drivers generate these status indications, and NDIS protocol drivers bound to such a miniport can ignore these indications. However, processing these indications correctly usually results in improved performance for protocols and for WAN NIC drivers.</P>
+
+<P>The following four types of WAN-specific indications can be sent to bound protocol drivers with <B>NdisMIndicateStatus</B>:
+
+<UL type="disc">
+	<LI>Line up</li>
+
+	<LI>Line down</li>
+
+	<LI>Fragment</li>
+
+	<LI>TAPI line event</li>
+</UL>
+
+<P>A WAN miniport makes a line-up indication whenever a new link becomes active. Until this occurs, the NIC accepts frames and lets them succeed or fail, but it is unlikely that they are received by any remote. </P>
+
+<P>The WAN miniport makes this indication with <B>NdisMIndicateStatus</B> before it returns from a <A HREF="cxrefoid_tapi_get_id.htm">OID_TAPI_GET_ID</A> request.</P>
+
+<P>The status code for the line-up indication is NDIS_STATUS_WAN_LINE_UP. The buffer at <I>StatusBuffer</I> is formatted as an <A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A> structure.</P>
+
+<P>A WAN miniport makes a line-down indication whenever a link goes down. When this occurs, bound protocols should reduce their timer and retry counts until the next line-up indication.</P>
+
+<P>The status code for the line-down indication is NDIS_STATUS_WAN_LINE_DOWN. The buffer at <I>StatusBuffer</I> is formatted as an <A HREF="cxconndis_mac_line_down.htm">NDIS_MAC_LINE_DOWN</A> structure.</P>
+
+<P>A WAN miniport makes a fragment indication whenever it receives a partial packet from the remote node. When this occurs, a bound protocol sends frames to the remote that notify it of this situation, rather than waiting for a time-out to occur.</P>
+
+<P>The status code for the fragment indication is NDIS_STATUS_WAN_FRAGMENT. The buffer at <I>StatusBuffer</I> is formatted as an <A HREF="cxrefndis_mac_fragment.htm">NDIS_MAC_FRAGMENT</A> structure.</P>
+
+<P>NDISWAN monitors drop packets by counting the number of fragment indications on each link.</P>
+
+<P>A WAN miniport must use a <I>GeneralStatus</I> value of NDIS_STATUS_TAPI_INDICATION for TAPI status indications<I>.</I> The buffer at <I>StatusBuffer</I> is formatted as an <A HREF="cxrefndis_tapi_event.htm">NDIS_TAPI_EVENT</A> structure.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndis.dll</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="cxrefminiportreset.htm">MiniportReset</A>, <A HREF="_wceddk_ndismindicatestatuscomplete.htm">NdisMIndicateStatusComplete</A>, <A HREF="cxrefndis_mac_fragment.htm">NDIS_MAC_FRAGMENT</A>, <A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A>, <A HREF="cxconndis_mac_line_down.htm">NDIS_MAC_LINE_DOWN</A>, <A HREF="cxrefndis_tapi_event.htm">NDIS_TAPI_EVENT</A>, <A HREF="_wceddk_ndisreset.htm">NdisReset</A>, <A HREF="cxrefprotocolstatus.htm">ProtocolStatus</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisMIndicateStatus&nbsp;(_wceddk_ndismindicatestatus.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

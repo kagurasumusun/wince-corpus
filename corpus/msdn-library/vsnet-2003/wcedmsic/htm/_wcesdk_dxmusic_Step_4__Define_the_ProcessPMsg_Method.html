@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 4: Define the ProcessPMsg Method</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 4: Define the ProcessPMsg Method"/>
+<MSHelp:RLTitle Title="Step 4: Define the ProcessPMsg Method"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_4__Define_the_ProcessPMsg_Method"/>
+<MSHelp:Keyword Index="K" Term="ProcessPMsg method, DirectMusic (Tutorial 2)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_4__Define_the_ProcessPMsg_Method"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690670">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_4__define_the_processpmsg_method"></A>Step 4: Define the ProcessPMsg Method</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The actual work of the tool is performed in the method derived from <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool__ProcessPMsg" TABINDEX="0">IDirectMusicTool::ProcessPMsg</MSHelp:link>. This method will be called for every message of the type listed in the array returned by <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTool__GetMediaTypes" TABINDEX="0">IDirectMusicTool::GetMediaTypes</MSHelp:link>.</P>
+
+<P>The <B>CEchoTool::ProcessPMsg</B> method first performs some initialization of local variables.</P>
+
+<PRE class="code">HRESULT STDMETHODCALLTYPE CEchoTool::ProcessPMsg(
+  IDirectMusicPerformance* pPerf, 
+  DMUS_PMSG* pMsg)
+{
+  DMUS_NOTE_PMSG* pNote;
+  DWORD dwCount;
+  DWORD dwEchoNum;
+  MUSIC_TIME mtDelay;
+ 
+  // SetEchoNum() and SetDelay() use these member variables,
+  // so use a critical section to make them thread-safe.
+  EnterCriticalSection(&amp;m_CrSec);
+  dwEchoNum = m_dwEchoNum;
+  mtDelay = m_mtDelay;
+  LeaveCriticalSection(&amp;m_CrSec);
+ </PRE>
+
+<P>Next the method calls the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicGraph__StampPMsg" TABINDEX="0">IDirectMusicGraph::StampPMsg</MSHelp:link> method on the message. If there is another tool to which this message must be directed after you are finished with it here, <B>StampPMsg</B> succeeds. (Note that DirectMusic provides a final output tool, so <B>StampPMsg</B> should succeed even if there are no other application-specific tools to which the message must be routed.) If it fails, our method returns S_FREE so that the message will automatically be discarded. </P>
+
+<PRE class="code">  if ((NULL == pMsg-&gt;pGraph) ||
+    FAILED(pMsg-&gt;pGraph-&gt;StampPMsg(pMsg)))
+  {
+    return DMUS_S_FREE;
+  }
+ </PRE>
+
+<P>Now it is time for CEchoTool to perform its work on the message. Remember, it is set up to receive messages only of type DMUS_PMSGT_NOTE, DMUS_PMSGT_MIDI; or DMUS_PMSGT_PATCH. (These types are part of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PMSGT_TYPES" TABINDEX="0">DMUS_PMSGT_TYPES</MSHelp:link> enumeration.)</P>
+
+<P>For each successive echo to be created, the tool does the following:
+
+<UL type="disc">
+	<LI>Creates a new message by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__AllocPMsg" TABINDEX="0">IDirectMusicPerformance::AllocPMsg</MSHelp:link> method.</li>
+
+	<LI>Copies the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_PMSG" TABINDEX="0">DMUS_PMSG</MSHelp:link> structure for the original message into the new one and updates some members for COM management.</li>
+
+	<LI>Assigns the new message to a different performance channel.</li>
+
+	<LI>In the case of a music note, progressively reduces the volume of each echo.</li>
+
+	<LI>Adds the delay time to the time at which the message is to be played.</li>
+
+	<LI>Puts the new message in the pipeline by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SendPMsg" TABINDEX="0">IDirectMusicPerformance::SendPMsg</MSHelp:link> method. Note that because <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicGraph__StampPMsg" TABINDEX="0">IDirectMusicGraph::StampPMsg</MSHelp:link> is not called on the message, it will not be routed to any tools other than the default final output tool.</li>
+</UL>
+
+<P>Here is the sample code that deals with MIDI notes.</P>
+
+<PRE class="code">  if( pPMsg-&gt;dwType == DMUS_PMSGT_MIDI )
+  {
+    // copy MIDI messages into the echo channels.
+    for( dwCount = 1; dwCount &lt;= dwEchoNum; dwCount++ )
+    {
+      DMUS_MIDI_PMSG* pMidi;
+      if( SUCCEEDED( pPerf-&gt;AllocPMsg( sizeof(DMUS_MIDI_PMSG),
+        (DMUS_PMSG**)&amp;pMidi )))
+      {
+        // Copy the original message into this message.
+        memcpy( pMidi, pPMsg, sizeof(DMUS_MIDI_PMSG) );
+ 
+        // Addref or clear out any fields that contain
+        // or may contain pointers to objects.
+        if( pMidi-&gt;pTool ) pMidi-&gt;pTool-&gt;AddRef();
+        if( pMidi-&gt;pGraph ) pMidi-&gt;pGraph-&gt;AddRef();
+        pMidi-&gt;punkUser = NULL;
+ 
+        // Set the PChannel so the message goes to the
+        // next higher group.
+        pMidi-&gt;dwPChannel = pMidi-&gt;dwPChannel + 
+                (16*dwCount);
+ 
+        // Add to the time of the echoed message.
+        pMidi-&gt;mtTime += (dwCount * mtDelay);
+ 
+        // Set the message so only MUSIC_TIME is valid.
+        // REFERENCE_TIME will be recomputed inside
+        // SendPMsg().
+        pMidi-&gt;dwFlags = DMUS_PMSGF_MUSICTIME;
+ 
+        // Send the message
+        pPerf-&gt;SendPMsg( (DMUS_PMSG*)pMidi );
+      }
+    }
+  }
+ </PRE>
+
+<P>Patch changes are also copied and sent to all possible echo channels, even those not currently being used, so that if echoes are added later they will be played by the correct instruments. Note that in the sample EchoTool application, MAX_ECHOES is defined in Echotool.h.</P>
+
+<PRE class="code">  else if( pPMsg-&gt;dwType == DMUS_PMSGT_PATCH )
+  {
+    for( dwCount = 1; dwCount &lt;= MAX_ECHOES; dwCount++ )
+    {
+      DMUS_PATCH_PMSG* pPatch;
+      if( SUCCEEDED( pPerf-&gt;AllocPMsg( sizeof(DMUS_PATCH_PMSG),
+        (DMUS_PMSG**)&amp;pPatch )))
+      {
+        // Copy the original message into this message,
+        memcpy( pPatch, pPMsg, sizeof(DMUS_PATCH_PMSG) );
+ 
+        // Addref or clear out any fields that contain
+        // or may contain pointers to objects
+        if( pPatch-&gt;pTool ) pPatch-&gt;pTool-&gt;AddRef();
+        if( pPatch-&gt;pGraph ) pPatch-&gt;pGraph-&gt;AddRef();
+        pPatch-&gt;punkUser = NULL;
+ 
+        // Set the PChannel so the message goes to the
+        // next higher group.
+        pPatch-&gt;dwPChannel = pPatch-&gt;dwPChannel + 
+          (16*dwCount);
+ 
+        // Add to the time of the echoed message.
+        pPatch-&gt;mtTime += (dwCount * mtDelay);
+ 
+        // Set the message so only MUSIC_TIME is valid.
+        // REFERENCE_TIME will be recomputed inside
+        // SendPMsg()
+        pPatch-&gt;dwFlags = DMUS_PMSGF_MUSICTIME;
+ 
+        // Send the message.
+        pPerf-&gt;SendPMsg( (DMUS_PMSG*)pPatch );
+      }
+    }
+  }
+ </PRE>
+
+<P>The method deals with music notes much as it did with MIDI notes, but taking the additional step of reducing the volume.</P>
+
+<PRE class="code">  else if( pPMsg-&gt;dwType == DMUS_PMSGT_NOTE )
+  {
+    // Create a variable to track the next note's velocity
+    BYTE bVelocity;
+    pNote = (DMUS_NOTE_PMSG*)pPMsg;
+    bVelocity = pNote-&gt;bVelocity;
+ 
+    for( dwCount = 1; dwCount &lt;= dwEchoNum; dwCount++ )
+    {
+      if( SUCCEEDED( pPerf-&gt;AllocPMsg( sizeof(DMUS_NOTE_PMSG),
+              (DMUS_PMSG**)&amp;pNote )))
+      {
+        // Copy the original note into this message.
+        memcpy( pNote, pPMsg, sizeof(DMUS_NOTE_PMSG) );
+ 
+        // Addref or clear out any fields that contain
+        // or may contain pointers to objects.
+        if( pNote-&gt;pTool ) pNote-&gt;pTool-&gt;AddRef();
+        if( pNote-&gt;pGraph ) pNote-&gt;pGraph-&gt;AddRef();
+        pNote-&gt;punkUser = NULL;
+ 
+        // Add to the time of the echoed note.
+        pNote-&gt;mtTime += (dwCount * mtDelay);
+ 
+        // Reduce the volume of the echoed note.
+        bVelocity = (BYTE) (bVelocity - 
+                ((bVelocity * (dwCount * 15))/100));
+        pNote-&gt;bVelocity = bVelocity;
+ 
+        // Set the note so only MUSIC_TIME is valid.
+        // REFERENCE_TIME will be recomputed inside
+        // SendPMsg().
+        pNote-&gt;dwFlags = DMUS_PMSGF_MUSICTIME;
+        pNote-&gt;dwPChannel = pNote-&gt;dwPChannel + 
+          (16*dwCount);
+ 
+        // Send the message.
+        pPerf-&gt;SendPMsg( (DMUS_PMSG*)pNote );
+      }
+    }
+  }</PRE>
+
+<P>Finally, the ProcessPMsg method returns DMUS_S_REQUEUE so the original message will be put back in the pipeline.</P>
+
+<PRE class="code">  return DMUS_S_REQUEUE;
+} // End CEchoTool::ProcessPMsg()</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_5__define_the_class_methods.htm">Step 5: Define the Class Methods</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%204:%20Define%20the%20ProcessPMsg%20Method&nbsp;(_wcesdk_dxmusic_step_4__define_the_processpmsg_method.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

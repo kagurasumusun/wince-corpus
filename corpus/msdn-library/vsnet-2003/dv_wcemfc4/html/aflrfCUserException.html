@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CUserException</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CUserException"/>
+<MSHelp:RLTitle Title="CUserException"/>
+<MSHelp:Keyword Index="A" Term="aflrfCUserException"/>
+<MSHelp:Keyword Index="K" Term="CUserException class"/>
+<MSHelp:Keyword Index="K" Term="errors, trapping"/>
+<MSHelp:Keyword Index="K" Term="exceptions, throwing"/>
+<MSHelp:Keyword Index="K" Term="stopping end-user operations"/>
+<MSHelp:Keyword Index="K" Term="throwing exceptions, stopping user operations"/>
+<MSHelp:Keyword Index="A" Term="aflrfCUserException"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cuserex.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697328">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcuserexception"></A>CUserException</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>A <B>CUserException</B> is thrown to stop an end-user operation. Use <B>CUserException</B> when you want to use the throw/catch exception mechanism for application-specific exceptions. User, in the class name can be interpreted as, my user did something exceptional that I need to handle.</P>
+
+<P>A <B>CUserException</B> is usually thrown after calling the global function <B>AfxMessageBox</B> to notify the user that an operation has failed. When you write an exception handler, handle the exception specially since the user usually has already been notified of the failure. The framework throws this exception in some cases. To throw a <B>CUserException</B> yourself, alert the user and then call the global function <B>AfxThrowUserException</B>. </P>
+
+<P>In the example below, a function containing operations that may fail alerts the user and throws a <B>CUserException</B>. The calling function catches the exception and handles it specially:</P>
+
+<PRE class="code">void DoSomeOperation( )
+{
+    // Processing
+    // If something goes wrong...
+    AfxMessageBox( "The x operation failed" );
+    AfxThrowUserException( );
+}
+
+BOOL TrySomething( )
+{
+    TRY
+    {
+        // Could throw a CUserException or other exception.
+        DoSomeOperation( ); 
+    }
+    CATCH( CUserException, e )
+    {
+        return FALSE;    // User already notified.
+    }
+    AND_CATCH( CException, e )
+    {
+        // For other exception types, notify user here.
+        AfxMessageBox( "Some operation failed" );
+        return FALSE;
+    }
+    END_CATCH
+    return TRUE;   // No exception thrown.
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcexception.htm"><B>CException</B></A>, <A HREF="aforiexceptionclasses.htm"><B>Exception Classes</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697328', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirect3D8::CheckDepthStencilMatch</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDirect3D8::CheckDepthStencilMatch"/>
+<MSHelp:RLTitle Title="IDirect3D8::CheckDepthStencilMatch"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_IDirect3D8__CheckDepthStencilMatch"/>
+<MSHelp:Keyword Index="K" Term="IDirect3D8, CheckDepthStencilMatch"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_IDirect3D8__CheckDepthStencilMatch"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dx3d_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_669600">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_idirect3d8__checkdepthstencilmatch"></A>IDirect3D8::CheckDepthStencilMatch</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method determines whether a depth-stencil format is compatible with a render target format in a particular display mode.</P>
+
+<PRE class="syntax"><B>HRESULT CheckDepthStencilMatch(</B>
+<B>UINT </B><I>Adapter</I><B>,</B>
+<B>D3DDEVTYPE</B><I> DeviceType</I><B>,</B>
+<B>D3DFORMAT</B><I> AdapterFormat</I><B>,</B>
+<B>D3DFORMAT</B><I> RenderTargetFormat</I><B>,</B>
+<B>D3DFORMAT</B><I> DepthStencilFormat</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Adapter</I></DT>
+
+<DD>[in] Ordinal number denoting the display adapter to query. D3DADAPTER_DEFAULT is always the primary display adapter.</dd>
+
+<DT><I>DeviceType</I></DT>
+
+<DD>[in] Member of the <A HREF="_wcesdk_dx3d_d3ddevtype.htm">D3DDEVTYPE</A> enumerated type, identifying the device type.</dd>
+
+<DT><I>AdapterFormat</I></DT>
+
+<DD>[in] Member of the <A HREF="_wcesdk_dx3d_d3dformat.htm">D3DFORMAT</A> enumerated type, identifying the format of the display mode into which the adapter will be placed. </dd>
+
+<DT><I>RenderTargetFormat</I></DT>
+
+<DD>[in] Member of the <B>D3DFORMAT</B> enumerated type, identifying the format of the render target surface to be tested. </dd>
+
+<DT><I>DepthStencilFormat</I></DT>
+
+<DD>[in] Member of the <B>D3DFORMAT</B> enumerated type, identifying the format of the depth-stencil surface to be tested.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the depth-stencil format is compatible with the render target format in the display mode, this method returns <A HREF="_wcesdk_dx3d_return_values.htm#_wcesdk_dx3d_d3d_ok">D3D_OK</A>.</P>
+
+<P><A HREF="_wcesdk_dx3d_return_values.htm#_wcesdk_dx3d_d3derr_invalidcall">D3DERR_INVALIDCALL</A> can be returned if one or more of the parameters is invalid. If a depth-stencil format is not compatible with the render target in the display mode, then this method returns <A HREF="_wcesdk_dx3d_return_values.htm#_wcesdk_dx3d_d3derr_notavailable">D3DERR_NOTAVAILABLE</A>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This method is provided to enable applications to work with hardware requiring that certain depth formats can only work with certain render target formats.</P>
+
+<P>The following code fragment shows how you could use <B>CheckDeviceFormat</B> to validate a depth stencil format.</P>
+
+<PRE class="code">BOOL IsDepthFormatOk( D3DFORMAT DepthFormat, D3DFORMAT AdapterFormat,
+                      D3DFORMAT BackBufferFormat ) {
+    // Verify that the depth format exists.
+    HRESULT hr = pD3D-&gt;CheckDeviceFormat( D3DADAPTER_DEFAULT,
+                                          D3DDEVTYPE_HAL,
+                                          AdapterFormat,
+                                          D3DUSAGE_DEPTHSTENCIL,
+                                          D3DRTYPE_SURFACE,
+                                          DepthFormat);
+
+    if( FAILED( hr ) ) return FALSE;
+
+    // Verify that the depth format is compatible.
+    hr = pD3D-&gt;CheckDepthStencilMatch( D3DADAPTER_DEFAULT,
+                                       D3DDEVTYPE_HAL,
+                                       AdapterFormat,
+                                       BackBufferFormat,
+                                       DepthFormat);
+    return SUCCEEDED( hr );
+}</PRE>
+
+<P>The preceding call will return FALSE if <I>DepthFormat</I> cannot be used in conjunction with <I>AdapterFormat</I> and <I>BackBufferFormat</I>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=30%>Versions</TH>
+<TH width=28%>Declared in</TH>
+<TH width=15%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=30%>.NET 4.0 and later</TD>
+<TD width=28%>D3d8.h</TD>
+<TD width=15%>D3d8.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_dx3d_d3ddevtype.htm">D3DDEVTYPE</A>, <A HREF="_wcesdk_dx3d_d3dformat.htm">D3DFORMAT</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDirect3D8::CheckDepthStencilMatch&nbsp;(_wcesdk_dx3d_idirect3d8__checkdepthstencilmatch.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

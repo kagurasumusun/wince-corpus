@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleObject::Advise</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOleObject::Advise"/>
+<MSHelp:RLTitle Title="IOleObject::Advise"/>
+<MSHelp:Keyword Index="A" Term="cerefIOleObjectAdvise"/>
+<MSHelp:Keyword Index="K" Term="IOleObject, Advise"/>
+<MSHelp:Keyword Index="A" Term="cerefIOleObjectAdvise"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: automation_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748273">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefioleobjectadvise"></A>IOleObject::Advise</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method establishes an advisory connection between an OLE object and the calling object's advise sink, through which the calling object receives notification when the compound document object is renamed, save, or closed.</P>
+
+<PRE class="syntax"><B>HRESULT Advise( </B>
+<B>IAdviseSink *</B><I>pAdvSink</I><B>, </B>
+<B>DWORD *</B><I>pdwConnection</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pAdvSink</I></DT>
+
+<DD>[in] Pointer to the <B>IAdviseSink</B> interface on the advisory sink that should be informed of changes.</dd>
+
+<DT><I>pdwConnection</I></DT>
+
+<DD>[out] Pointer to a token that can be passed to the <A HREF="cerefioleadviseholderunadvise.htm">IOleAdviseHolder::Unadvise</A> method to delete the advisory connection. The calling object is responsible for calling both <A HREF="cerefiunknownaddref.htm">IUnknown::AddRef</A> and <A HREF="cerefiunknownrelease.htm">IUnknown::Release</A> on this pointer.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method supports the standard return value E_INVALIDARG, as well as S_OK, which indicates that advisory connections set up successfully.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Containers, object handlers, and link objects all create advise sinks to receive notification of changes in compound-document objects of interest, such as embedded or linked objects. OLE objects of interest to these objects must implement the <B>IOleObject</B> interface, which includes several advisory methods, including <A HREF="#cerefioleobjectadvise">IOleObject::Advise</A>. A call to this method must set up an advisory connection with any advise sink that calls it, and maintain each connection until it is closed. It must be able to handle more than one advisory connection at a time. </P>
+
+<P><B>IOleAdviseHolder::Advise</B> is intended to be used to simplify the implementation of <B>IOleObject::Advise</B>. You can get a pointer to the OLE implementation of <B>IOleAdviseHolder</B> by calling <A HREF="cerefcreateoleadviseholder.htm">CreateOleAdviseHolder</A>, and then, to implement <B>IOleObject::Advise</B>, just delegate the call to <B>IOleAdviseHolder::Advise</B>. Other <B>IOleAdviseHolder</B> methods are intended to implement other <B>IOleObject </B>advisory methods.</P>
+
+<P>If the attempt to establish an advisory connection is successful, the object receiving the call returns a nonzero value through <I>pdwConnection</I>. If the attempt fails, the object returns a zero. To delete an advisory connection, the object with the advise sink passes this nonzero token back to the object by calling <B>IOleAdviseHolder::Unadvise</B>.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>Oleidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IOleObject::Advise&nbsp;(cerefioleobjectadvise.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Low-Level DLS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Low-Level DLS"/>
+<MSHelp:RLTitle Title="Low-Level DLS"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Low_Level_DLS"/>
+<MSHelp:Keyword Index="K" Term="downloadable sounds%2C DirectMusic, low-level DLS"/>
+<MSHelp:Keyword Index="K" Term="DSL, downloading DirectMusic sounds using low-level DSL"/>
+<MSHelp:Keyword Index="K" Term="sound, DirectMusic downloadable sounds"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Low_Level_DLS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680679">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_low_level_dls"></A>Low-Level DLS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>If you are writing a DirectMusic application that edits DLS collections, you must be able to download instrument data to the synthesizer without encapsulating it in a DirectMusicInstrument object.</P>
+
+<P>Working with DLS data requires knowledge of the DLS specification and file structure. For detailed information on these topics, contact the MIDI Manufacturers Association.</P>
+
+<P>To download raw instrument data, you must first get a pointer to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload" TABINDEX="0">IDirectMusicPortDownload</MSHelp:link> interface, as shown in the following code example, in which it is assumed that <I>pIPort</I> is a valid pointer to an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPort" TABINDEX="0">IDirectMusicPort</MSHelp:link> interface.</P>
+
+<PRE class="code">IDirectMusicPortDownload **ppIDownloadPort;
+ 
+HRESULT hr = pIPort-&gt;QueryInterface(IID_IDirectMusicPortDownload,
+        (void **) ppIDownloadPort);</PRE>
+
+<P>If the <B>HRESULT</B> is not S_OK, the port does not support DLS downloading.</P>
+
+<P>Next, identify the buffers that must be prepared and downloaded. To send an instrument to the synthesizer, create one instrument buffer that represents the entire instrument definition with all the regions and articulations, and a series of wave buffers, one for each wave that the instrument refers to for its regions.</P>
+
+<P>Each buffer must be tagged with a unique identifier. Identifiers are used to resolve linkages between buffers, in particular the links between regions and waves. Tally the number of buffers that you need to download, and call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload__GetDLId" TABINDEX="0">IDirectMusicPortDownload::GetDLId</MSHelp:link> to allocate a range of identifiers. For example, if you are downloading an instrument with three waves, you must download four buffers in all. Therefore, request a set of four identifiers.</P>
+
+<P>For each buffer, calculate the size needed; then call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload__AllocateBuffer" TABINDEX="0">IDirectMusicPortDownload::AllocateBuffer</MSHelp:link> to allocate it. This method returns an <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicDownload" TABINDEX="0">IDirectMusicDownload</MSHelp:link> interface representing the buffer. Call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicDownload__GetBuffer" TABINDEX="0">IDirectMusicDownload::GetBuffer</MSHelp:link> to access the memory. </P>
+
+<P>There are two methods called <B>GetBuffer</B>:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload__GetBuffer" TABINDEX="0">IDirectMusicPortDownload::GetBuffer</MSHelp:link> returns an <B>IDirectMusicDownload</B> interface pointer for a buffer object whose download identifier is known.</li>
+
+	<LI><B>IDirectMusicDownload::GetBuffer</B> returns a pointer to the memory in the buffer.</li>
+</UL>
+
+<P>Now write the data into each buffer. Each buffer starts with a <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_DOWNLOADINFO" TABINDEX="0">DMUS_DOWNLOADINFO</MSHelp:link> structure, which defines the size and functionality of the download. This structure must be prepared as follows:
+
+<UL type="disc">
+	<LI>Set the <B>dwDLType</B> member to either DMUS_DOWNLOADINFO_INSTRUMENT for an instrument or DMUS_DOWNLOADINFO_WAVE for a wave. </li>
+
+	<LI>Set the <B>dwDLId</B> member to one of the unique identifiers that you obtained by using <B>IDirectMusicPortDownload::GetDLId</B>. </li>
+
+	<LI>Set the <B>dwNumOffsetTableEntries</B> member to the number of entries in the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_OFFSETTABLE" TABINDEX="0">DMUS_OFFSETTABLE</MSHelp:link> structure.</li>
+
+	<LI>Set the <B>cbSize</B> member to the size of the download chunk, including <B>DMUS_DOWNLOADINFO</B> and <B>DMUS_OFFSETTABLE</B>. </li>
+</UL>
+
+<P>The <B>DMUS_DOWNLOADINFO</B> structure is always followed by a <B>DMUS_OFFSETTABLE</B> structure. This offset table is used to manage all links within the data. Whenever a structure in the data refers to another structure, it addresses it with an integer index, instead of a pointer. For every structure within the data that can be referred to, there is a unique index. The <B>DMUS_OFFSETTABLE</B> translates this integer index into a byte offset into the data. </P>
+
+<P>The instrument or wave data follows the <B>DMUS_OFFSETTABLE</B>. If the download is an instrument, the data starts with the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_INSTRUMENT" TABINDEX="0">DMUS_INSTRUMENT</MSHelp:link> structure. Otherwise, it starts with the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_WAVE" TABINDEX="0">DMUS_WAVE</MSHelp:link> structure.</P>
+
+<P>The instrument data that follows the <B>DMUS_INSTRUMENT</B> structure is organized in the following structures:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_ARTICPARAMS" TABINDEX="0">DMUS_ARTICPARAMS</MSHelp:link> </li>
+
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_ARTICULATION" TABINDEX="0">DMUS_ARTICULATION</MSHelp:link> </li>
+
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_COPYRIGHT" TABINDEX="0">DMUS_COPYRIGHT</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_EXTENSIONCHUNK" TABINDEX="0">DMUS_EXTENSIONCHUNK</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_INSTRUMENT" TABINDEX="0">DMUS_INSTRUMENT</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_NOTERANGE" TABINDEX="0">DMUS_NOTERANGE</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="_wcesdk_dxmusic_DMUS_REGION" TABINDEX="0">DMUS_REGION</MSHelp:link></li>
+</UL>
+
+<P>The wave data pointed to by the <B>DMUS_WAVE</B> structure is organized in a <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_WAVEDATA" TABINDEX="0">DMUS_WAVEDATA</MSHelp:link> structure. </P>
+
+<P>When the buffers are all ready, download them by using <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload__Download" TABINDEX="0">IDirectMusicPortDownload::Download</MSHelp:link>. Download the wave buffers first so that they are in place and can be referred to when the instrument is downloaded.</P>
+
+<P>Once the buffers have been downloaded, the synthesizer is ready to play the instrument. The memory in the buffer is no longer accessible. </P>
+
+<P>Later, when done playing the instrument, unload the buffers, and release them. First, unload the instrument buffer, then all the wave buffers. To unload, call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPortDownload__Unload" TABINDEX="0">IDirectMusicPortDownload::Unload</MSHelp:link> and pass it the <B>IDirectMusicDownload</B> objects. Then, release each buffer with a call to <B>IDirectMusicDownload::</B><MSHelp:link keywords="cerefIUnknownRelease" TABINDEX="0">Release</MSHelp:link>.</P>
+
+<P>To update an instrument that has already been downloaded, you cannot write over the previously downloaded buffer. Instead, replace the instrument, but not the waves. To do this, call <B>IDirectMusicPortDownload::AllocateBuffer</B> to allocate a new <B>IDirectMusicDownload</B> interface with a buffer of the correct size. Be sure to generate a new identifier for the buffer with a call to <B>IDirectMusicPortDownload::GetDLId</B>. Write the new articulation information into the buffer; then download it. Then unload the previously downloaded buffer with a call to <B>IDirectMusicPortDownload::Unload</B>.</P>
+
+<P>To update a wave buffer, take one extra step. Create both a new wave buffer and an updated instrument buffer that refers to it. Download the new wave, then the new instrument. Then unload the old instrument, followed by the old wave.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Low-Level%20DLS&nbsp;(_wcesdk_dxmusic_low_level_dls.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

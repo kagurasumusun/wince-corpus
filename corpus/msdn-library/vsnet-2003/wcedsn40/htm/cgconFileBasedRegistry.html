@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>File-Based Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="File-Based Registry"/>
+<MSHelp:RLTitle Title="File-Based Registry"/>
+<MSHelp:Keyword Index="A" Term="cgconFileBasedRegistry"/>
+<MSHelp:Keyword Index="K" Term="file-based registries, initializing"/>
+<MSHelp:Keyword Index="A" Term="cgconFileBasedRegistry"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757260">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconfilebasedregistry"></A>File-Based Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P class="labelproc"><B>To initialize a file-based registry</B>
+
+<OL type="1">
+	<LI>Mount the boot hive from ROM to determine where the registry is stored.</li>
+
+	<LI>Call the OEM through <A HREF="cmrefoemiocontrol.htm">OEMIoControl</A> with <A HREF="cgrefioctl_hal_initregistry.htm">IOCTL_HAL_INITREGISTRY</A>.</li>
+
+	<LI>Start Device.exe if the registry value <B>Start DevMgr</B> under <B>HKEY_LOCAL_MACHINE\init\BootVars</B> is set to 1.
+<P>Load the storage manager if <B>HKEY_LOCAL_MACHINE\System\StorageManager</B> points to a loadable DLL.
+
+<P>If storage manager is loaded, create a thread to initialize it. The thread will exit when done.
+
+<P>Create an event called SYSTEM/BootPhase2, which will be triggered when the real system registry is loaded.
+
+<P>Wait for a file system to register as the storage location for registry hives.
+</li>
+
+	<LI>Mount the ROM portion of the system registry.</li>
+
+	<LI>Call the OEM with <A HREF="cgrefioctl_hal_get_hive_clean_flag.htm">IOCTL_HAL_GET_HIVE_CLEAN_FLAG</A> if there is a mismatch between the ROM portion of the system registry and the file portion.</li>
+
+	<LI>Mount the RAM portion of the system registry if a clean registry is not required. If this is a clean registry, the old registry file will be deleted and a new file will be created.</li>
+
+	<LI>Invalidate any currently open system registry handles before swapping out the boot registry hive.</li>
+
+	<LI>When the system registry is loaded, perform the following actions:
+<UL type="disc">
+	<LI>Mount the ROM portion of the system registry hive.</li>
+
+	<LI>Mount the RAM portion of the system registry hive.</li>
+
+	<LI>If the ROM and RAM portions of the registry are not synchronized, perform a clean boot on the system hive.</li>
+</UL>
+</li>
+
+	<LI>Migrate changes from the boot registry hive to the system hive.</li>
+
+	<LI>If this is not a clean boot, set the registry value <B>RegPersisted</B> under <B>HKEY_LOCAL_MACHINE</B> to 1. At this point, non-user specific registry data becomes available.</li>
+
+	<LI>Determine where the user profiles are stored by looking at the registry value ProfileDir under <B>HKEY_LOCAL_MACHINE\init\BootVars</B>.</li>
+
+	<LI>Call the OEM with <B>IOCTL_HAL_GET_HIVE_CLEAN_FLAG</B> if there is a mismatch between the ROM porting of the system registry and the file portion. If you indicate that they should be cleaned, all user profile directories are removed, along with their contents.</li>
+
+	<LI>Determine if the default user profile should be loaded. If the registry value <B>NoDefaultUser</B> under <B>HKEY_LOCAL_MACHINE\init\BootVars</B> is set to 1, a call to <A HREF="cmrefsetcurrentuser.htm">SetCurrentUser</A> is required to load a user profile. If <B>NoDefaultUser</B> is set to 0, the default user profile is loaded.
+<P>The default user hive to load is determined by the value of <B>DefaultUser</B>, a REG_SZ value, in <B>HKEY_LOCAL_MACHINE\init\BootVars</B>.&nbsp;The <B>DefaultUser</B> is set to the name of the user to use as the default profile when the system boots. If it is an existing user, the appropriate user hive is loaded.&nbsp;If it is a new user, the user profile can be created. If <B>DefaultUser</B> is not set, the default user profile is loaded. You can implement this with the following registry key.
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "DefaultUser"=&lt;<I>username</I>&gt;</PRE>
+</li>
+
+	<LI>When the user registry is loaded, perform the following actions:
+<UL type="disc">
+	<LI>Mount the ROM portion of the user registry hive.</li>
+
+	<LI>Mount the RAM portion of the user registry hive.</li>
+
+	<LI>If the ROM and RAM portions of the registry are not synchronized, perform a clean boot of the user profile.</li>
+
+	<LI>If this is not a clean registry, set the registry value <B>RegPersisted</B> under <B>HKEY_CURRENT_USER</B> to 1.</li>
+</UL>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconinitializingregistry.htm">Initializing the Registry</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;File-Based%20Registry&nbsp;(cgconfilebasedregistry.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

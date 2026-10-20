@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ftell</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_ftell"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_ftell.htm", "ftell")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_ftell"></A>ftell</H1>
+
+<P>Gets the current position of a file pointer.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Function</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>ftell</B></TD>
+<TD width=73%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>long ftell( FILE</B> *<I>stream</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Target FILE structure</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P><B>ftell</B> returns the current file position. The value returned by <B>ftell</B> may not reflect the physical byte offset for streams opened in text mode, because text mode causes carriage return&#0150;linefeed translation. Use <B>ftell</B> with <B>fseek</B> to return to file locations correctly. On error, <B>ftell</B> returns &#0150;1L. On devices incapable of seeking (such as terminals and printers), or when stream does not refer to an open file, the return value is undefined.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>ftell</B> function gets the current position of the file pointer (if any) associated with stream. The position is expressed as an offset relative to the beginning of the stream.</P>
+
+<P>Note that when a file is opened for appending data, the current file position is determined by the last I/O operation, not by where the next write would occur. For example, if a file is opened for an append and the last operation was a read, the file position is the point where the next read operation would start, not where the next write would start. (When a file is opened for appending, the file position is moved to end of file before any write operation.) If no I/O operation has yet occurred on a file opened for appending, the file position is the beginning of the file.</P>
+
+<P>In text mode, CTRL+Z is interpreted as an end-of-file character on input. In files opened for reading/writing, <B>fopen</B> and all related routines check for a CTRL+Z at the end of the file and remove it if possible. This is done because using <B>ftell</B> and <B>fseek</B> to move within a file that ends with a CTRL+Z may cause <B>ftell</B> to behave improperly near the end of the file. </P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FTELL.C: This program opens a file named FTELL.C
+ * for reading and tries to read 100 characters. It
+ * then uses ftell to determine the position of the
+ * file pointer and displays this position.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream;
+
+void main( void )
+{
+   long position;
+   char list[100];
+   if( (stream = fopen( "ftell.c", "rb" )) != NULL )
+   {
+      /* Move the pointer by reading data: */
+      fread( list, sizeof( char ), 100, stream );
+      /* Get position after read: */
+      position = ftell( stream );
+      printf( "Position after trying to read 100 bytes: %ld\n",
+              position );
+      fclose( stream );
+   }
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Position after trying to read 100 bytes: 100</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fgetpos.htm"><B>fgetpos</B></A>, <A HREF="_wcecrt_fseek.htm"><B>fseek</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

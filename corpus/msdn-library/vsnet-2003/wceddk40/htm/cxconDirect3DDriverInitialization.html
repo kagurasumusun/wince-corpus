@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Direct3D Driver Initialization</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Direct3D Driver Initialization"/>
+<MSHelp:RLTitle Title="Direct3D Driver Initialization"/>
+<MSHelp:Keyword Index="A" Term="cxconDirect3DDriverInitialization"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, driver initialization"/>
+<MSHelp:Keyword Index="K" Term="initialization, Direct3D driver"/>
+<MSHelp:Keyword Index="A" Term="cxconDirect3DDriverInitialization"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664934">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondirect3ddriverinitialization"></A>Direct3D Driver Initialization</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When the driver's <A HREF="_dxce_halinit_ddhal.htm">HALInit</A> function is called by the DirectDraw run time to initialize DirectDraw support, the driver must do the following to indicate its Direct3D capabilities:
+
+<UL type="disc">
+	<LI>Set the DDCAPS_3D flag in the <B>ddCaps.dwCaps</B> member of the <A HREF="_dxce_ddhal_ddhalinfo.htm">DDHALINFO</A> structure to indicate that the driver's hardware has 3D acceleration.</li>
+
+	<LI>Set any of the following DDSCAPS_<I>xxx</I> flags in the <B>ddCaps.ddCaps</B> member of the <B>DDHALINFO</B> structure that describes the 3D capabilities of a driver's video memory surface.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Flag</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>DDSCAPS_3DDEVICE</TD>
+<TD width=56%>Indicates that a driver's surface can be used as a destination for 3D rendering.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>DDSCAPS_TEXTURE</TD>
+<TD width=56%>Indicates that a driver's surface can be used for 3D texture mapping.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>DDSCAPS_ZBUFFER</TD>
+<TD width=56%>Indicates that a driver's surface can be used as a Z-buffer.</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>Set the <B>GetDriverInfo</B> member of the <A HREF="_dxce_ddhal_ddhalinfo.htm">DDHALINFO</A> structure to point to the driver's <A HREF="_dxce_ddhal_getdriverinfo.htm">GetDriverInfo</A> callback. The driver must also set the DDHALINFO_GETDRIVERINFOSET flag in the <B>dwFlags</B> member of the <B>DDHALINFO</B> structure to indicate that it has implemented the GetDriverInfo callback.</li>
+
+	<LI>Allocate and initialize the members of the <A HREF="cxrefd3dhal_callbacks.htm">D3DHAL_CALLBACKS</A> structure and return this structure in the <B>lpD3DHALCallbacks</B> member of the <B>DDHALINFO</B> structure.</li>
+
+	<LI>Allocate and initialize the members of the <A HREF="cxrefd3dhal_globaldriverdata.htm">D3DHAL_GLOBALDRIVERDATA</A> structure and return this structure in the <B>lpD3DGlobalDriverData</B> member of the <B>DDHALINFO</B> structure.</li>
+
+	<LI>Include the D3DDEVCAPS_DRAWPRIMITIVES2EX flag in the <B>devCaps</B> member of the <A HREF="cxrefd3ddevicedesc_v1.htm">D3DDEVICEDESC_V1</A> structure that is reported during Direct3D driver initialization. </li>
+
+	<LI>Respond to the GUID_Miscellaneous2Callbacks GUID in <B>GetDriverInfo</B> callback by setting the <B>GetDriverState</B>, <B>CreateSurfaceEx</B>, and <B>DestroyDDLocal</B> members of the <A HREF="_dxce_ddhal_ddmiscellaneous2callbacks.htm">DDHAL_DDMISCELLANEOUS2CALLBACKS</A> structure. These are set to point to the appropriate callbacks for the Direct3D driver and are used to perform an <B>OR</B> operation with the <B>dwFlags</B> member with the DDHAL_MISC2CB32_CREATESURFACEEX, DDHAL_MISC2CB32_GETDRIVERSTATE and DDHAL_MISC2CB32_DESTROYDDLOCAL bits, respectively.</li>
+</UL>
+
+<P>After <A HREF="_dxce_halinit_ddhal.htm">HALInit</A> returns, DirectDraw calls the driver's <A HREF="_dxce_ddhal_getdriverinfo.htm">GetDriverInfo</A> callback several times for different GUIDs to complete the driver's initialization. The <B>GetDriverInfo</B> callback must respond to the following GUIDs to support Direct3D:
+
+<DL>
+<DT>GUID_D3DCallbacks3</DT>
+
+<DD>The driver should allocate and initialize the members of the <A HREF="cxrefd3dhal_callbacks3.htm">D3DHAL_CALLBACKS3</A> structure and return this structure in the <B>lpvData</B> member of the <A HREF="_dxce_ddhal_ddhal_getdriverinfodata.htm">DDHAL_GETDRIVERINFODATA</A> structure.</dd>
+
+<DT>GUID_Miscellaneous2Callbacks</DT>
+
+<DD>The driver should allocate and initialize the members of the <A HREF="_dxce_ddhal_ddmiscellaneous2callbacks.htm">DDHAL_DDMISCELLANEOUS2CALLBACKS</A> structure and return this structure in the <B>lpvData</B> member of the <B>DDHAL_GETDRIVERINFODATA</B> structure.</dd>
+
+<DT>GUID_D3DExtendedCaps</DT>
+
+<DD>The driver should allocate and initialize the appropriate members of the <A HREF="cxrefd3dhal_d3dextendedcaps.htm">D3DHAL_D3DEXTENDEDCAPS</A> structure and return this structure in the <B>lpvData</B> member of the <B>DDHAL_GETDRIVERINFODATA</B> structure.</dd>
+
+<DT>GUID_ZPixelFormats</DT>
+
+<DD>The driver should allocate and initialize the appropriate members of a <MSHelp:link keywords="_wcesdk_DDPIXELFORMAT_ddraw" TABINDEX="0">DDPIXELFORMAT</MSHelp:link> structure for every Z-buffer format that the driver supports and return these structure(s) in the <B>lpvData</B> member of the <B>DDHAL_GETDRIVERINFODATA</B> structure. The driver must respond to this GUID if it supports the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor24">D3DDP2OP_CLEAR</A> operation code in its implementation of <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>.</dd>
+
+<DT>GUID_D3DParseUnknownCommandCallback</DT>
+
+<DD>The driver should store the pointer to the Direct3D run time's <B>D3DParseUnknownCommand</B> callback. The pointer is passed to the driver in the <B>lpvData</B> member of the <B>DDHAL_GETDRIVERINFODATA</B> structure. The driver's <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback will call the D3DParseUnknownCommand callback to parse commands that the driver does not recognize.</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dimplementationguide.htm">Direct3D Implementation Guide</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Direct3D%20Driver%20Initialization&nbsp;(cxcondirect3ddriverinitialization.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

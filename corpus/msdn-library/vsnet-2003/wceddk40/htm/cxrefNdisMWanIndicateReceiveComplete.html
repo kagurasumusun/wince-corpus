@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMWanIndicateReceiveComplete</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMWanIndicateReceiveComplete"/>
+<MSHelp:RLTitle Title="NdisMWanIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisMWanIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="K" Term="NdisMWanIndicateReceiveComplete"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisMWanIndicateReceiveComplete"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_746419">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndismwanindicatereceivecomplete"></A>NdisMWanIndicateReceiveComplete</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function notifies NDISWAN that one or more receives have been completed for an established link so that NDISWAN can notify the appropriate bound protocols.</P>
+
+<PRE class="syntax"><B>VOID NdisMWanIndicateReceiveComplete(</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>NdisLinkContext</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle originally input to <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>NdisLinkContext</I></DT>
+
+<DD>[in] Specifies the handle supplied by NDISWAN in the <A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A> structure at the miniport's initial call to <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A> for this link.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>After any WAN receive indication, a miniport must eventually call <B>NdisMWanIndicateReceiveComplete</B>.</P>
+
+<P><B>NdisMWanIndicateReceiveComplete</B> indicates the completion of a transfer operation for a receive. In addition, it notifies any bound protocol that has already consumed the initial indication that it may begin post-processing the received data.</P>
+
+<P>When a miniport calls <B>NdisMWanIndicateReceiveComplete</B>, NDISWAN calls the <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A> function of bound protocol drivers. <B>ProtocolReceiveComplete</B> functions need not operate under the severe time constraints of the corresponding <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> functions.</P>
+
+<P>A WAN miniport need not call <B>NdisMWanIndicateReceiveComplete</B> in one-to-one correspondence with its calls to <A HREF="cxrefndismwanindicatereceive.htm">NdisMWanIndicateReceive</A>. That is, a NIC driver can issue a single receive-complete indication for some number of receive indications, particularly when a sequence of receives is coming in to its NIC. Such a driver can call <B>NdisMWanIndicateReceiveComplete</B> after several calls to <B>NdisMWanIndicateReceive</B> have occurred, thereby giving bound protocols the opportunity to notify clients of received packets without incurring the overhead of processing one-to-one completion notifications. As a general rule, a miniport should call <B>NdisMWanIndicateReceiveComplete</B> once for every ten receive indications when network traffic is high.</P>
+
+<P>On the other hand, a miniport might call <B>NdisMWanIndicateReceiveComplete</B> once for each indication when network traffic is low so that the driver can regain ownership of the memory it allocated for receives promptly.</P>
+
+<P>A <B>ProtocolReceive</B> function is re-entrant, and <B>ProtocolReceiveComplete</B> can run concurrently with <B>ProtocolReceive</B>, particularly in SMP machines.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndis.dll</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="cxconndis_mac_line_up.htm">NDIS_MAC_LINE_UP</A>, <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A>, <A HREF="cxrefprotocolreceivecomplete.htm">ProtocolReceiveComplete</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A>, <A HREF="cxrefndismwanindicatereceive.htm">NdisMWanIndicateReceive</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisMWanIndicateReceiveComplete&nbsp;(cxrefndismwanindicatereceivecomplete.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Primary Display Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Primary Display Driver"/>
+<MSHelp:RLTitle Title="Primary Display Driver"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Primary_Display_Driver"/>
+<MSHelp:Keyword Index="K" Term="display drivers, primary display driver"/>
+<MSHelp:Keyword Index="K" Term="primary display drivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_672755">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_primary_display_driver"></A>Primary Display Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>If your platform includes a display, Windows CE loads the default, or primary, display driver when the system starts up. By default, GWES loads a display driver named Ddi.dll. If the optional <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers\Display</B> registry key is present, GWES loads the display driver that is indicated by that key. If the platform is configured to include windowing, the Window Manager uses the frame buffer that is supported by the primary display driver for all on-screen drawing.</P>
+
+<P>To perform a drawing operation, an application must first get a device context for a window or the desktop by calling <MSHelp:link keywords="cerefCreateWindow" TABINDEX="0">CreateWindow</MSHelp:link> and <MSHelp:link keywords="cerefGetDC" TABINDEX="0">GetDC</MSHelp:link>. The resulting device context is the application's drawing surface. If the application's platform does not include support for windowing, and thus has no Window Manager, the application must call <MSHelp:link keywords="cerefCreateDC" TABINDEX="0">CreateDC</MSHelp:link> with the name of the primary display driver's DLL file to create a device context directly.</P>
+
+<P>The following table shows the function used to connect to a driver.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><MSHelp:link keywords="cerefCreateDC" TABINDEX="0">CreateDC</MSHelp:link></TD>
+<TD width=50%>This function provides the only way that GDI allows anything to create a connection to a graphic device. It also calls the driver's initialization functions. The device context returned from calls such as <MSHelp:link keywords="cerefBeginPaint" TABINDEX="0">BeginPaint</MSHelp:link> and <MSHelp:link keywords="cerefGetDC" TABINDEX="0">GetDC</MSHelp:link> have been created by the Window Manager through calling <B>CreateDC</B>.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the driver's initialization functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_drvenabledriver.htm">DrvEnableDriver</A></TD>
+<TD width=50%>This function is called just once when the driver is first loaded. This role of this function is to pass an array of function pointers to GWES.exe. It also must copy the GWES support functions so that the driver can get the basic set of support services provided by GWES to graphic drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_drvenablepdev.htm">DrvEnablePDEV</A></TD>
+<TD width=50%>This function is called every time a device context is created. There is a one-to-one mapping between API calls to <B>CreateDC</B> and GWES calls to <B>DrvEnablePDEV</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>DrvCompletePDEV</B></TD>
+<TD width=50%>This call completes the DC creation process.</TD>
+</TR>
+</table></div>
+
+<P>After an application connects to a display driver, and the calls to the driver's initialization function complete, you can query, set attributes, and draw. The following table describes querying, setting attributes, and drawing.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Task</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Querying</TD>
+<TD width=50%>The most important thing that an application does is that it makes queries. For example, it has to find out the size of the drawing area before it draws. It has to find out what fonts are available before it draws any text. It must find out about color support before it attempts to draw a photograph. Much of this information comes from the graphic driver.
+<P><MSHelp:link keywords="cerefGetDeviceCaps" TABINDEX="0">GetDeviceCaps</MSHelp:link> is an important query function. It gives an application the ability to peek into the <B>GDIINFO </B>structure, which is a structure returned by the graphics driver to GDI at device context initialization time. It is returned by the driver when the <B>DrvEnablePDEV</B> function is called.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Setting Attributes</TD>
+<TD width=50%>Applications set attributes. This involves deciding what font to use when drawing text, and what color to draw the text with. There is a wide range of attribute-setting functions available to applications. None of these results in calls to the driver; instead, GWES sends the key attribute values to the driver during the drawing calls.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Drawing</TD>
+<TD width=50%>Each API-level drawing function results in a call to a driver-level function. Mapping the API-to-DDI function calls can be very helpful in making sure you understand exactly what each driver-level function must do. In this example, calls to the <MSHelp:link keywords="cerefPolyline" TABINDEX="0">Polyline</MSHelp:link> function become calls to <B>DrvStrokePath </B>within the driver.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows what functions are necessary for an application to disconnect from a device.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><MSHelp:link keywords="cerefDeleteDC" TABINDEX="0">DeleteDC</MSHelp:link></TD>
+<TD width=50%>This API-level function is the counterpart to <B>CreateDC</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_drvdisablepdev.htm">DrvDisablePDEV</A></TD>
+<TD width=50%>This DDI-level function is the counterpart to <B>DrvEnablePDEV</B>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_display_drivers.htm">Display Drivers</A></P>
+
+<P><A HREF="cxcondisplaydriveradvancedtopics.htm">Display Driver Extension</A></P>
+
+<P><A HREF="cxcondisplaydriverresources.htm">Display Driver Samples</A></P>
+
+<P><A HREF="_wceddk_secondary_display_drivers.htm">Secondary Display Drivers</A></P>
+
+<P><A HREF="_wceddk_ddi_functions.htm">DDI Functions</A></P>
+
+<P><A HREF="_wceddk_functions_in_the_blit_emulation_library.htm">Functions in the BitBlT Emulation Library</A></P>
+
+<P><A HREF="_wceddk_gpe_base_classes.htm">GPE Base Classes</A></P>
+
+<P><A HREF="_wceddk_gdi_support_services_for_display_drivers.htm">GDI Support Services for Display Drivers</A></P>
+
+<P><A HREF="_wceddk_display_buffer_formats.htm">Display Buffer Formats</A></P>
+
+<P><A HREF="_wceddk_line_drawing.htm">Line Drawing</A></P>
+
+<P><A HREF="_wceddk_display_driver_escape_codes.htm">Display Driver Escape Codes</A></P>
+
+<P><A HREF="_wceddk_including_display_drivers_in_an_os_image.htm">Display Drivers and the OS Image</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Primary%20Display%20Driver&nbsp;(_wceddk_primary_display_driver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

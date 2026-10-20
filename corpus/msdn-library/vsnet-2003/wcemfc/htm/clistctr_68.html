@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListCtrl::SortItems</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_clistctrl_sortitems"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_clistctrl_sortitems"></A>CListCtrl::SortItems</H1>
+
+<P>This method sorts list view items using an application-defined comparison function. The index of each item changes to reflect the new sequence.</P>
+
+<PRE class=syntax><B>BOOL SortItems(
+PFNLVCOMPARE </B><I>pfnCompare</I><B>,
+DWORD </B><I>dwData</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pfnCompare</I></DT>
+
+<DD>Specifies the address of the application-defined comparison function. The comparison function is called during the sort operation each time the relative order of two list items needs to be compared. The comparison function must be either a static member of a class or a standalone function that is not a member of any class.</DD>
+
+<DT><I>dwData</I></DT>
+
+<DD>Specifies the application-defined value that is passed to the comparison function.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The comparison function has the following form:</P>
+
+<PRE>int CALLBACK CompareFunc(LPARAM lParam1, LPARAM lParam2,
+&nbsp;&nbsp;LPARAM lParamSort);
+</PRE>
+
+<P>The comparison function must return a negative value if the first item should precede the second, a positive value if the first item should follow the second, or zero if the two items are equivalent.</P>
+
+<P>The <I>lParam1</I> and <I>lParam2</I> parameters specify the item data for the two items being compared. The <I>lParamSort</I> parameter is the same as the <I>dwData</I> value.</P>
+
+<H4>Example</H4>
+
+<PRE>// Sort the item in reverse alphabetical order.
+static int CALLBACK
+MyCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+{
+&nbsp;&nbsp;// lParamSort contains a pointer to the list view control.
+&nbsp;&nbsp;// The lParam of an item is just its index.
+&nbsp;&nbsp;CListCtrl* pListCtrl = (CListCtrl*) lParamSort;
+&nbsp;&nbsp;CString    strItem1 = pListCtrl-&gt;GetItemText(lParam1, 0);
+&nbsp;&nbsp;CString    strItem2 = pListCtrl-&gt;GetItemText(lParam2, 0);
+
+&nbsp;&nbsp;return strcmp(strItem2, strItem1);
+}
+
+void snip_CListCtrl_SortItems()
+{
+&nbsp;&nbsp;// The pointer to my list view control.
+&nbsp;&nbsp;CListCtrl* pmyListCtrl;
+
+&nbsp;&nbsp;// Sort the list view items using my callback procedure.
+&nbsp;&nbsp;pmyListCtrl-&gt;SortItems(MyCompareProc, (LPARAM) pmyListCtrl);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="clistctr_12.htm"><B>CListCtrl::FindItem</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

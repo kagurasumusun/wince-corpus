@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSCEnumProtocols</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSCEnumProtocols"/>
+<MSHelp:RLTitle Title="WSCEnumProtocols"/>
+<MSHelp:Keyword Index="A" Term="cerefWSCEnumProtocols"/>
+<MSHelp:Keyword Index="K" Term="WSCEnumProtocols"/>
+<MSHelp:Keyword Index="A" Term="cerefWSCEnumProtocols"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715142">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwscenumprotocols"></A>WSCEnumProtocols</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function retrieves information about available transport protocols.</P>
+
+<PRE class="syntax"><B>int WSCEnumProtocols(</B>
+<B>LPINT</B><I> lpiProtocols</I><B>,</B>
+<B>LPWSAPROTOCOL_INFOW</B><I> lpProtocolBuffer</I><B>,</B>
+<B>LPDWORD</B><I> lpdwBufferLength</I><B>,</B>
+<B>LPINT</B><I> lpErrno</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpiProtocols</I></DT>
+
+<DD>[in] Null-terminated array of <I>iProtocol</I> values. This parameter is optional; if <I>lpiProtocols</I> is NULL, information on all available protocols is returned. Otherwise, information is retrieved only for those protocols listed in the array.</dd>
+
+<DT><I>lpProtocolBuffer</I></DT>
+
+<DD>[out] Buffer that is filled with structures. </dd>
+
+<DT><I>lpdwBufferLength</I></DT>
+
+<DD>[in, out] On input, the count of bytes in the <I>lpProtocolBuffer</I> buffer passed to <B>WSCEnumProtocols</B>. On output, the minimum buffer size that can be passed to <B>WSCEnumProtocols</B> to retrieve all the requested information. </dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>WSCEnumProtocols</B> returns the number of protocols to be reported on. Otherwise, a value of SOCKET_ERROR is returned and a specific error code is available in <I>lpErrno</I>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Error value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WSAEFAULT</TD>
+<TD width=70%>One of more of the arguments<I> </I>is not in a valid part of the user address space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WSAEINVAL</TD>
+<TD width=70%>Indicates that one of the specified parameters was invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WSAENOBUFS</TD>
+<TD width=70%>Buffer length was too small to receive all the relevant structures and associated information. Pass in a buffer at least as large as the value returned in <I>lpdwBufferLength</I>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is used to discover information about the collection of transport protocols installed on the local machine. This function differs from its API counterpart (<B>WSAEnumProtocols</B>) in that structures for all installed protocols, including layered protocols, can be obtained. (<B>WSAEnumProtocols</B> only returns information on base protocols and protocol chains.) The <I>lpiProtocols </I>parameter can be used as a filter to constrain the amount of information provided. Typically, a NULL pointer is supplied so the function will return information on all available transport protocols.</P>
+
+<P>A structure is provided in the buffer pointed to by <I>lpProtocolBuffer </I>for each requested protocol. If the supplied buffer is not large enough (as indicated by the input value of <I>lpdwBufferLength </I>), the value pointed to by <I>lpdwBufferLength </I>will be updated to indicate the required buffer size. The Windows Sockets SPI client should then obtain a large enough buffer and call this function again. The <B>WSCEnumProtocols </B>function cannot enumerate over multiple calls; the passed-in buffer must be large enough to hold all expected entries in order for the function to succeed. This reduces the complexity of the function and should not pose a problem because the number of protocols loaded on a machine is typically small.</P>
+
+<P>The order in which the <B>WSAPROTOCOL_INFOW</B> structures appear in the buffer coincides with the order in which the protocol entries were registered by the service provider with the Ws2_32.dll, or with any subsequent reordering that may have occurred through the Windows Sockets applet supplied for establishing default transport providers.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwsaprotocol_info.htm">WSAPROTOCOL_INFO</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSCEnumProtocols&nbsp;(cerefwscenumprotocols.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

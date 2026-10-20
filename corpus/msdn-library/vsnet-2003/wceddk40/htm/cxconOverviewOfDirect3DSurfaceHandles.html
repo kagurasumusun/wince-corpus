@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Direct3D Surface Handles</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Direct3D Surface Handles"/>
+<MSHelp:RLTitle Title="Direct3D Surface Handles"/>
+<MSHelp:Keyword Index="A" Term="cxconOverviewOfDirect3DSurfaceHandles"/>
+<MSHelp:Keyword Index="K" Term="context management%2C Direct3D, surface handles"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664939">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconoverviewofdirect3dsurfacehandles"></A>Direct3D Surface Handles</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Direct3D DDI is designed to promote a model whereby the Direct3D run-time components parse as little of the command stream as possible before handing the commands to the driver. Additionally, the command stream should be formatted so that it can be directly consumed by future hardware.</P>
+
+<P>One important change directed towards these goals is the movement of all surface-related data out of intermediate structures owned by the Direct3D/DirectDraw run time into structures owned, updated, and formatted by the driver. </P>
+
+<P>Surfaces are referred to by handles embedded in the command stream. In these high-frequency operations, the driver can look up its own representation of a surface from the handle.</P>
+
+<P>The mechanism for assigning these handles is a new driver entry point called <A HREF="cxcond3dcreatesurfaceex.htm">D3dCreateSurfaceEx</A>. This entry point is called directly after calls to the existing <A HREF="_dxce_ddhal_cancreatesurface.htm">CanCreateSurface</A> and <A HREF="_dxce_ddhal_createsurface.htm">CreateSurface</A> entry points, and after a video memory address and handle have been assigned to a surface. At <B>D3dCreateSurfaceEx</B> time, the driver can copy all pertinent information out of the DirectDraw run time's copy of the surface structure and into its own surface structure. Surface data such as size, format, and <B>fpVidMem</B> (a member of the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_gbl.htm">DDRAWI_DDRAWSURFACE_GBL</A> structure) are obvious candidates for which driver-side copies would be required. </P>
+
+<P>Handles are guaranteed by the run time to be unique per device and per process. Handles are not guaranteed to be unique per context, and this has some implications for drivers that will be discussed in greater detail in <A HREF="cxconcreatingdriver-sidesurfacestructures.htm">Creating Driver-Side Surface Structures</A>.</P>
+
+<P><B>D3dCreateSurfaceEx</B> is then called again during surface destroy time with <B>fpVidMem</B> set to NULL to indicate a surface/handle association destruction.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirect3dcontextmanagement.htm">Direct3D Context Management</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Direct3D%20Surface%20Handles&nbsp;(cxconoverviewofdirect3dsurfacehandles.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

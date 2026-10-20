@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComObjectRootEx::FinalConstruct</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CComObjectRootEx::FinalConstruct"/>
+<MSHelp:RLTitle Title="CComObjectRootEx::FinalConstruct"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComObjectRootExcolcolFinalConstruct"/>
+<MSHelp:Keyword Index="K" Term="FinalConstruct method"/>
+<MSHelp:Keyword Index="A" Term="ealrfCComObjectRootExcolcolFinalConstruct"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ccomrtex.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_706472">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfccomobjectrootexcolcolfinalconstruct"></A>CComObjectRootEx::FinalConstruct</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method can be overridden to create an aggregated object.</P>
+
+<PRE class="syntax"><B>HRESULT</B> <B>FinalConstruct(</B> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>One of the standard <B>HRESULT</B> values. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Typically, override this method in the class derived from <B>CComObjectRootEx</B> to create any aggregated objects. For example:</P>
+
+<PRE class="code">class CMyAggObject : public CComObjectRootEx&lt; ... &gt;
+{
+   DECLARE_GET_CONTROLLING_UNKNOWN
+   HRESULT FinalConstruct( )
+   {
+      return CoCreateInstance(CLSID_SomeServer, 
+               GetControllingUnknown(), CLSCTX_ALL,
+               IID_ISomeServer, &amp;m_pSomeServer);
+   }
+   ...
+};</PRE>
+
+<P>If the construction fails, you can return an error. You can also use the macro <B>DECLARE_PROTECT_FINAL_CONSTRUCT</B> to protect your outer object from being deleted if, during creation, the internal aggregated object increments the reference count then decrements the count to zero.</P>
+
+<P>By default, <B>CComObjectRootEx::FinalConstruct</B> simply returns S_OK.</P>
+
+<P>Here is a typical way to create an aggregate:
+
+<UL type="disc">
+	<LI>Add an <B>IUnknown</B> pointer to your class object and initialize it to <B>NULL</B> in the constructor. </li>
+
+	<LI>Override <B>FinalConstruct</B> to create the aggregate. </li>
+
+	<LI>Use the <B>IUnknown</B> pointer you defined as the parameter to the <B>COM_INTERFACE_ENTRY_AGGREGATE</B> macro.</li>
+
+	<LI>Override <B>FinalRelease</B> to release the <B>IUnknown</B> pointer.</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlcom.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfccomobjectrootexcolcolfinalrelease.htm"><B>CComObjectRootEx::FinalRelease</B></A>, <A HREF="ealrfdeclareusgetuscontrollingusunknown.htm"><B>DECLARE_GET_CONTROLLING_UNKNOWN</B></A><B> </B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_706472', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

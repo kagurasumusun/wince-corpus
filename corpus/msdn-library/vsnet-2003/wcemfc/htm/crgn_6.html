@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CRgn::CreateRectRgnIndirect</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_crgn_createrectrgnindirect"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_crgn_createrectrgnindirect"></A>CRgn::CreateRectRgnIndirect</H1>
+
+<P>This method creates a rectangular region that is stored in the <B>CRgn</B> object. </P>
+
+<P>When it has finished using a region created by <B>CreateRectRgnIndirect</B>, an application should use the <A HREF="cgdiob_5.htm"><B>CGDIObject::DeleteObject</B></A> method to remove the region.</P>
+
+<PRE class=syntax><B>BOOL CreateRectRgnIndirect (
+LPCRECT</B> <I>lpRect</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpRect</I></DT>
+
+<DD>Points to a <B>RECT</B> structure or <B>CRect</B> object that contains the logical coordinates of the upper-left and lower-right corners of the region. The <B>RECT</B> structure has the following form:
+
+<PRE>typedef struct tagRECT {
+   int left;
+   int top;
+   int right;
+   int bottom;
+} RECT;
+</PRE>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the operation succeeded; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>Windows CE version 1.0 represents regions using 16-bit values. </P>
+
+<P>In Windows CE versions 2.0 and later, this method is exactly the same as it is in standard MFC. </P>
+
+<H4>Example</H4>
+
+<PRE>CRgn&nbsp;&nbsp;rgnA, rgnB, rgnC;
+
+CRect rectA(50, 50, 150, 150);
+CRect rectB(100, 50, 200, 150);
+
+VERIFY(rgnA.CreateRectRgnIndirect(&amp;rectA));
+VERIFY(rgnB.CreateRectRgnIndirect(&amp;rectB));
+VERIFY(rgnC.CreateRectRgn( 0, 0, 50, 50 ));
+
+int nCombineResult = rgnC.CombineRgn( &amp;rgnA, &amp;rgnB, RGN_AND );
+ASSERT( nCombineResult != ERROR || nCombineResult != NULLREGION );
+
+CBrush brA, brB, brC;
+VERIFY(brA.CreateSolidBrush( RGB(255, 0, 0) ));
+VERIFY(pDC-&gt;FillRgn( &amp;rgnA, &amp;brA, ));&nbsp;&nbsp;&nbsp;&nbsp;// rgnA Red
+
+VERIFY(brB.CreateSolidBrush( RGB(0, 255, 0) ));
+VERIFY(pDC-&gt;FillRgn( &amp;rgnB, &amp;brB, ));&nbsp;&nbsp;&nbsp;&nbsp;// rgnB Green
+VERIFY(brC.CreateSolidBrush( RGB(0, 0, 255) ));  // rgnC Blue
+VERIFY(pDC-&gt;FillRgn( &amp;rgnC, &amp;brC, ));
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="crgn_5.htm"><B>CRgn::CreateRectRgn</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

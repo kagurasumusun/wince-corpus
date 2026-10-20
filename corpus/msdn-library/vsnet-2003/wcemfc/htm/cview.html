@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CView</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cview"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cview"></A>CView</H1>
+
+<P>This class provides the basic functionality for user-defined view classes. A view is attached to a document and acts as an intermediary between the document and the user: the view renders an image of the document on the screen or printer and interprets user input as operations upon the document. </P>
+
+<P>A view is a child of a frame window. More than one view can share a frame window, as in the case of a splitter window. The relationship between a view class, a frame window class, and a document class is established by a <B>CDocTemplate</B> object. When the user opens a new window or splits an existing one, the framework constructs a new view and attaches it to the document. </P>
+
+<P>A view can be attached to only one document, but a document can have multiple views attached to it at once&#0151;for example, if the document is displayed in a splitter window or in multiple child windows in a multiple document interface (MDI) application. Your application can support different types of views for a given document type; for example, a word-processing program might provide both a complete text view of a document and an outline view that shows only the section headings. These different types of views can be placed in separate frame windows or in separate panes of a single frame window if you use a splitter window.</P>
+
+<P>A view may be responsible for handling several different types of input, such as keyboard input, mouse input, or input via drag-and-drop, as well as commands from menus, toolbars, or scroll bars. A view receives commands forwarded by its frame window. If the view does not handle a given command, it forwards the command to its associated document. Like all command targets, a view handles messages via a message map.</P>
+
+<P>The view is responsible for displaying and modifying data in the document data but not for storing it. The document provides the view with the necessary details about its data. You can let the view access the data members of the document directly, or you can provide methods in the document class for the view class to call.</P>
+
+<P>When data in a document changes, the view responsible for the changes typically calls the <A HREF="cdocumnt_26.htm"><B>CDocument::UpdateAllViews</B></A> function for the document, which notifies all the other views by calling the <B>OnUpdate</B> method for each. The default implementation of <B>OnUpdate</B> invalidates the  entire client area of the view. You can override it to invalidate only those regions of the client area that map to the modified portions of the document.</P>
+
+<P>To use <B>CView</B>, derive a class from it and implement the <B>OnDraw</B> method to perform screen display. You can also use <B>OnDraw</B> to perform printing and print preview. The framework handles the print loop for printing and previewing your document.</P>
+
+<P>A view handles scroll-bar messages with the <A HREF="cwnd_120.htm"><B>CWnd::OnHScroll</B></A> and <A HREF="cwnd_148.htm"><B>CWnd::OnVScroll</B></A> methods. You can implement scroll-bar message handling in these functions, or you can use the <B>CView</B> derived class <A HREF="cscrolvw.htm"><B>CScrollView</B></A> to handle scrolling for you.</P>
+
+<P>Besides <B>CScrollView</B>, the Microsoft Foundation Class Library for Windows CE provides nine other classes derived from <B>CView</B>:
+
+<UL type=disc>
+	<LI><A HREF="cctrlvw.htm"><B>CCtrlView</B></A>, a view that allows usage of document; view architecture with tree, list, and rich edit controls.</LI>
+
+	<LI><A HREF="ceditvw.htm"><B>CEditView</B></A>, a view that provides a simple multiline text editor. You can use a <B>CEditView</B> object as a control in a dialog box as well as a view on a document.</LI>
+
+	<LI><A HREF="cformvw.htm"><B>CFormView</B></A>, a scrollable view that contains dialog-box controls and is based on a dialog template resource.</LI>
+
+	<LI><A HREF="clistvw.htm"><B>CListView</B></A>, a view that allows usage of document; view architecture with list controls.</LI>
+
+	<LI><A HREF="cscrolvw.htm"><B>CScrollView</B></A>, a view that automatically provides scrolling support.</LI>
+
+	<LI><A HREF="ctreevw.htm"><B>CTreeView</B></A>, a view that allows usage of document;  view architecture with tree controls.</LI>
+</UL>
+
+<P>The <B>CView</B> class also has a derived implementation class named <B>CPreviewView</B>, which is used by the framework to perform print previewing. This class provides support for the features unique to the print-preview window, such as a toolbar, single- or double-page preview, and zooming, that is, enlarging the previewed image. You do not need to call or override any of the methods of <B>CPreviewView</B> unless you want to implement your own interface for print preview (for example, if you want to support editing in print preview mode). </P>
+
+<P>MFC for Windows CE supports the <B>OnPrepareDC </B>method of the <B>ClassName</B> class differently than standard MFC.</P>
+
+<P>MFC for Windows CE does not support the following methods of the <B>CView</B> class:
+
+<UL type=disc>
+	<LI><B>DoPreparePrinting</B></LI>
+
+	<LI><B>IsSelected</B></LI>
+
+	<LI><B>OnDragEnter</B></LI>
+
+	<LI><B>OnDragLeave</B></LI>
+
+	<LI><B>OnDragOver</B></LI>
+
+	<LI><B>OnDragScroll</B></LI>
+
+	<LI><B>OnDrop</B></LI>
+
+	<LI><B>OnDropEx</B></LI>
+
+	<LI><B>OnEndPrintPreview</B></LI>
+</UL>
+
+<P>MFC for Windows CE does not support the following classes derived from <B>CView</B> in standard MFC:
+
+<UL type=disc>
+	<LI><B>CDaoRecordView</B></LI>
+
+	<LI><B>CRecordView</B></LI>
+
+	<LI><B>CRichEditView</B></LI>
+</UL>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd.htm"><B>CWnd</B></A>, <A HREF="cframwnd.htm"><B>CFrameWnd</B></A>, <A HREF="csplitt.htm"><B>CSplitterWnd</B></A>, <A HREF="cdc.htm"><B>CDC</B></A>, <A HREF="cdoctemp.htm"><B>CDocTemplate</B></A>, <A HREF="cdocumnt.htm"><B>CDocument</B></A>, <A HREF="compare_20.htm"><B>View Classes</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

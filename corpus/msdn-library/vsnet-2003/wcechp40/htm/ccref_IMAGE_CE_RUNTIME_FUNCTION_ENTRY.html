@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_IMAGE_CE_RUNTIME_FUNCTION_ENTRY</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:RLTitle Title="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:Keyword Index="A" Term="ccref_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:Keyword Index="K" Term="_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:Keyword Index="K" Term="pdata structures, ARM and Hitachi"/>
+<MSHelp:Keyword Index="A" Term="ccref_IMAGE_CE_RUNTIME_FUNCTION_ENTRY"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: micro_ref_pdata_structure.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_803372">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccref_image_ce_runtime_function_entry"></A>_IMAGE_CE_RUNTIME_FUNCTION_ENTRY</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure contains detailed information about runtime exception processing. <B>_IMAGE_CE_RUNTIME_FUNCTION_ENTRY</B> is used only by ARM and Hitachi microprocessor families. It does not apply to MIPS microprocessors.</P>
+
+<PRE class="syntax"><B>typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY {</B>
+<B>  unsigned int </B><I>FuncStart</I> : <B>32</B>;
+<B>  unsigned int </B><I>PrologLen </I>:<B> 8</B>;
+<B>  unsigned int </B><I>FuncLen</I> : <B>22</B>;
+<B>  unsigned int </B><I>ThirtyTwoBit</I><B> : 1;</B>
+<B>  unsigned int </B><I>ExceptionFlag</I> :<B> 1;</B>
+<B>} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,</B>
+<B>*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>FuncStart</B> </DT>
+
+<DD>Address of the first instruction in the function. It is the function's entry address.</dd>
+
+<DT><B>PrologLen</B> </DT>
+
+<DD>Length of the prolog in instructions, based on the instruction size indicated in the <I>ThirtyTwoBit</I> flag. The following table shows the possible values for the <I>ThirtyTwoBit</I> flag.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Flag Value</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>1</TD>
+<TD width=73%><B>Represents</B> ARM functions each of which consists of 32-bit instructions, or 4 bytes. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>0</TD>
+<TD width=73%><B>R</B>epresents THUMB functions each of which consists of 16-bit instructions, or 2 bytes. </TD>
+</TR>
+</table></div>
+
+
+
+<P><B>PrologLen</B> is set to 1 for ARM functions, and to 0 for THUMB, SH-3, and SH-4 functions.
+
+
+<P>Hence, a prolog with ten ARM instructions would have a <B>PrologLen</B> of 10, indicating 40 bytes. A prolog with ten THUMB instructions would also have a <B>PrologLen</B> of 10, meaning 20 bytes.
+</dd>
+
+<DT><B>FuncLen</B> </DT>
+
+<DD>Total function length in instructions; see <B>PrologLen</B>, above. A function with 200 ARM instructions would have a <B>FuncLen</B> of 200 (meaning 800 bytes).</dd>
+
+<DT><B>ThirtyTwoBit</B></DT>
+
+<DD>Size of instructions in a function. This value is one for 32-bit instructions and zero for 16-bit instructions. The <B>FunLen</B> and <B>PrologLen</B> fields use this value to computer the size of a function and prolog. </dd>
+
+<DT><B>ExceptionFlag</B><I> </I></DT>
+
+<DD>Associated exception handler or handler data. When its value is 1, the <A HREF="ccrefpdata_eh.htm">PDATA_EH</A> is present in the <B>.text</B> section. When the <B>ExceptionFlag</B> is zero, no <B>PDATA_EH</B> is present.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>IMAGE_CE_RUNTIME_FUNCTION_ENTRY</B> data structure is also called as <B>PDATA</B>. A table containing these records is stored in a section called .pdata. The .pdata section aids in debugging and exception processing.</P>
+
+<P>In the event that the <B>ExceptionFlag</B> is set, or the <B>FuncLen</B> is set to zero, an additional <B>PDATA_EH</B> structure exists that precedes the function in the <B>.text</B> section. The data record containing this information appears in the <B>.text</B> section, immediately preceding the function, if and only if the <B>ExceptionFlag</B> bit is set. This record is used whenever the function has an associated exception handler or handler data. </P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>OS Versions:</B> Windows CE .NET 4.0 and later.<BR>
+<B>Header:</B> winnt.h.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccrefpdata_eh.htm">PDATA_EH</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;_IMAGE_CE_RUNTIME_FUNCTION_ENTRY&nbsp;(ccref_image_ce_runtime_function_entry.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Clock Time vs. Music Time</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Clock Time vs. Music Time"/>
+<MSHelp:RLTitle Title="Clock Time vs. Music Time"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Clock_Time_vs_Music_Time"/>
+<MSHelp:Keyword Index="K" Term="bands%2C DirectMusic, clock time vs. music time"/>
+<MSHelp:Keyword Index="K" Term="performance - DirectMusic, timing"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Clock_Time_vs_Music_Time"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680856">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_clock_time_vs_music_time"></A>Clock Time vs. Music Time</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In DirectX for C++, the time returned by the master clock is a 64-bit value defined as type <B>REFERENCE_TIME</B>. Reference time is measured in units of approximately 100 nanoseconds, so the clock ticks about 10 million times each second. The value returned by the <MSHelp:link keywords="_wcesdk_dxmusic_IReferenceClock__GetTime" TABINDEX="0">IReferenceClock::GetTime</MSHelp:link> method is relative to an arbitrary start time.</P>
+
+<P>Music time is a 32-bit value defined as type <B>MUSIC_TIME</B>. It is not an absolute measure of time, but is relative to the tempo. The clock is started when the performance is initialized and ticks DMUS_PPQ times for each quarter-note. (DMUS_PPQ is currently defined as 768.)</P>
+
+<P>When a performance is initialized, it starts keeping an internal clock. You can retrieve the current performance time in both reference time and music time by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__GetTime" TABINDEX="0">IDirectMusicPerformance::GetTime</MSHelp:link> method. </P>
+
+<P>The <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__AdjustTime" TABINDEX="0">IDirectMusicPerformance::AdjustTime</MSHelp:link> method can be used to make small changes to the performance time. Most applications do not need to do this, but it can be useful when synchronizing to another source.</P>
+
+<P>To convert between the two kinds of time in a performance, you can use the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__MusicToReferenceTime" TABINDEX="0">IDirectMusicPerformance::MusicToReferenceTime</MSHelp:link> and <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__ReferenceToMusicTime" TABINDEX="0">IDirectMusicPerformance::ReferenceToMusicTime</MSHelp:link> methods.</P>
+
+<P>When a segment is cued to play by a call to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__PlaySegment" TABINDEX="0">IDirectMusicPerformance::PlaySegment</MSHelp:link> and the start time is given in reference time, DirectMusic must convert the start time to music time. If no primary segment is currently playing, the conversion is made immediately, based on the current tempo. Otherwise, if another segment is playing, the start time of the cued segment is not converted to music time until the start time has been reached. </P>
+
+<P>If the tempo is changed before the segment starts playing, the start time can be affected, or the segment might not start on the desired boundary. In the first case, in which the conversion to music time is done immediately, the start time (in reference time) is advanced if the tempo speeds up and delayed if the tempo slows down. In the second case, in which conversion is made at start time, a change in tempo can mean that the segment does not start at correct resolution boundaries. For example, if the segment is supposed to start on a measure boundary (as indicated in the <I>dwFlags</I> parameter of <B>PlaySegment</B>), the start time (in reference time) is calculated when the segment is cued. However, if the tempo then changes, a measure boundary might not fall at that time.</P>
+
+<P>When a primary segment is passed to <B>PlaySegment</B> with the DMUS_SEGF_QUEUE flag (see <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_SEGF_FLAGS" TABINDEX="0">DMUS_SEGF_FLAGS</MSHelp:link>), the <I>i64StartTime</I> parameter is ignored, and the segment is cued to play after any primary segments whose start times have already been converted. If a previously cued segment is still stamped in reference time, that segment plays at its designated time, perhaps interrupting another segment.</P>
+
+<P>An example should make this clearer. Say you have three segments, each 10 seconds in length. You cue segment A to play 5 seconds from now. Because no primary segment is currently playing, the start time is immediately converted to music time. At 6 seconds, you cue segment B to play at 20 seconds. In this case, because music is already playing and the tempo might change, the conversion to music time is not made immediately. Then you cue segment C with the DMUS_SEGF_QUEUE flag so that it starts immediately after segment A finishes, at 15 seconds. At 20 seconds segment B starts playing and interrupts segment C.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Clock%20Time%20vs.%20Music%20Time&nbsp;(_wcesdk_dxmusic_clock_time_vs_music_time.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

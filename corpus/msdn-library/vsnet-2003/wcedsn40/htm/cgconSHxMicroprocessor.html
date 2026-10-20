@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SHx Microprocessor</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SHx Microprocessor"/>
+<MSHelp:RLTitle Title="SHx Microprocessor"/>
+<MSHelp:Keyword Index="A" Term="cgconSHxMicroprocessor"/>
+<MSHelp:Keyword Index="K" Term="Hitachi SHx microprocessors, OAL issues"/>
+<MSHelp:Keyword Index="K" Term="kernel, SHx OAL issues"/>
+<MSHelp:Keyword Index="K" Term="microprocessors, SHx OAL issues"/>
+<MSHelp:Keyword Index="K" Term="samples, SHx scheduler timer"/>
+<MSHelp:Keyword Index="K" Term="SHx microprocessors, OAL issues"/>
+<MSHelp:Keyword Index="A" Term="cgconSHxMicroprocessor"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748536">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconshxmicroprocessor"></A>SHx Microprocessor</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>SH3 ISRs are limited to using a subset of the available microprocessor registers. Specifically, an SH3 ISR can only use registers r0, r1, r2, r3, and r6. Use the following design principals when creating an OAL for an SHx microprocessor:
+
+<UL type="disc">
+	<LI>The ISR must return by means of <B>rts</B>, and cannot access any addresses through the translation look-aside buffer (TLB).</li>
+
+	<LI>Implement the nonmaskable-interrupt ISR, <A HREF="cgrefoemnmi.htm">OEMNMI</A>.</li>
+
+	<LI><A HREF="cmrefoeminit.htm">OEMInit</A> must register <B>OEMNMI</B>, unless it returns SYSINTR_NOP. </li>
+
+	<LI>You can define the variable <A HREF="cmrefoemextraccr.htm">OEMExtraCCR</A> to configure the cache control register. 
+<P>The default value is 0.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;To place an SH4 device in write-through mode, reset the cache control register (CCR) to write-through mode in <B>OEMInit</B>.</BLOCKQUOTE>
+</li>
+
+	<LI>The scheduler timer code is implemented in the Ktimer.c and Timer0.src files in the OAL. Sample versions of these files are located in the %_WINCEROOT%\Platform\%BSP%\Kernel\Hal\Shx directory.</li>
+
+	<LI>Nested interrupts
+<P>The SHx kernel utilizes a structure that provides the kernel with information about which nested interrupts are masked while the current interrupt is being handled. To gain access to this structure, the <MSHelp:link keywords="cmrefIntrPrio" TABINDEX="0">IntrPrio</MSHelp:link> global variable must be declared in the OAL.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconmicroprocessor-specificissues.htm">Microprocessor-Specific Issues</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SHx%20Microprocessor&nbsp;(cgconshxmicroprocessor.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

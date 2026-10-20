@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DeviceConfig</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DeviceConfig"/>
+<MSHelp:RLTitle Title="DeviceConfig"/>
+<MSHelp:Keyword Index="A" Term="cgrefDeviceConfig"/>
+<MSHelp:Keyword Index="K" Term="DeviceConfig"/>
+<MSHelp:Keyword Index="A" Term="cgrefDeviceConfig"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: drivermisc.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822814">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgrefdeviceconfig"></A>DeviceConfig</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is the main entry point called by the PCI bus driver to configure a device in a non-standard way. </P>
+
+<PRE class="syntax"><B>DWORD DeviceConfig(</B>
+<B>DWORD </B><I>Command</I><B>, </B>
+<B>PPCI_DEV_INFO </B><I>pInfo</I><B>,</B>
+<B>PPCI_RSRC </B><I>pRsrc1</I><B>,</B>
+<B>PPCI_RSRC </B><I>pRsrc2</I><B>,</B>
+<B>DWORD *</B><I>pMemSize</I><B>,</B>
+<B>DWORD *</B><I>pIoSize</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Command</I></DT>
+
+<DD>[in] The following table shows the possible values for <I>Command</I>; set to one of these.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Flag</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PCIBUS_CONFIG_RSRC</TD>
+<TD width=50%>Calls <A HREF="cgrefconfigrsrc.htm">ConfigRsrc</A> to gather device resources and update the total memory and I/O size requirements.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PCIBUS_CONFIG_SET</TD>
+<TD width=50%>Calls <A HREF="cgrefconfigset.htm">ConfigSet</A> to set base addresses for device resources.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PCIBUS_CONFIG_SIZE</TD>
+<TD width=50%>Calls <A HREF="cgrefconfigsize.htm">ConfigSize</A> to query device resource sizes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>PCIBUS_CONFIG_INIT</TD>
+<TD width=50%>Calls <A HREF="cgrefconfiginit.htm">ConfigInit</A> to perform any device initialization procedures if necessary.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pInfo</I></DT>
+
+<DD>[in] A pointer to a <A HREF="cgrefpci_dev_info.htm">PCI_DEV_INFO</A> structure.</dd>
+
+<DT><I>pRsrc1</I></DT>
+
+<DD>[in] A pointer to a <A HREF="cgrefpci_rsrc.htm">PCI_RSRC</A> structure.</dd>
+
+<DT><I>pRsrc2</I></DT>
+
+<DD>[in] A pointer to a <B>PCI_RSRC</B> structure.</dd>
+
+<DT><I>pMemSize</I></DT>
+
+<DD>[in] A pointer to a memory resource size accumulator.</dd>
+
+<DT><I>pIoSize</I></DT>
+
+<DD>[in] A pointer to an I/O resource size accumulator.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the possible return values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Return value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ERROR_SUCCESS</TD>
+<TD width=50%>If the call to the function specified by the flag in the <I>Command</I> parameter succeeds.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ERROR_GEN_FAILURE</TD>
+<TD width=50%>If the call to the function specified by the flag in the <I>Command</I> parameter fails.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ERROR_BAD_COMMAND</TD>
+<TD width=50%>If the flag specified by the <I>Command</I> parameter is not recognized.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The actual name of this function needs to be specified by the <B>ConfigEntry</B> value under the device's registry key. The following registry key example shows this:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\Builtin\PCI\Template\Permedia3]
+    "ConfigDll"="perm3_cfg.dll"
+    "ConfigEntry"="DeviceConfig"</PRE>
+
+<P><B>ConfigDll</B> is required only if <B>DeviceConfig</B> is implemented in a separate DLL from the device driver. If <B>ConfigDll</B> is not specified, the <B>DeviceConfig</B> function is assumed to be implemented in the device driver DLL.</P>
+
+<P>DeviceConfig is called by the PCI bus driver during four different stages. It is first called with the parameter <I>Command</I> equal to PCIBUS_CONFIG_RSRC during the resource information gathering stage. <B>DeviceConfig</B> is expected to return the size of the resources it requires. <B>DeviceConfig</B> is called next with <I>Command</I> equal to PCIBUS_CONFIG_SET to set the base address registers (BARs) with addresses generated the PCI bus driver. The third call to <B>DeviceConfig</B> is used when the PCI bus driver is enumerating the bus and requesting size information of the resources it requires. Finally, the PCI bus driver calls <B>DeviceConfig</B> with <I>Command</I> equal to PCIBUS_CONFIG_INIT to allow <B>DeviceConfig</B> to perform any initialization steps required by the device if necessary.</P>
+
+<P>Gdcfg.c gives an example of how to implement <B>DeviceConfig</B> in such a way that mimics the normal operation of the PCI bus driver. It is a good starting point for modification in order to construct your own <B>DeviceConfig</B> routine.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>.NET 4.0 and later</TD>
+<TD width=18%>Gdcfg.c</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgrefconfiginit.htm">ConfigInit</A>, <A HREF="cgrefconfigrsrc.htm">ConfigRsrc</A>, <A HREF="cgrefconfigset.htm">ConfigSet</A>, <A HREF="cgrefconfigsize.htm">ConfigSize</A>, <MSHelp:link keywords="cxconPCIBusConfigurationEnumeration" TABINDEX="0">PCI Bus Configuration and Enumeration</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DeviceConfig&nbsp;(cgrefdeviceconfig.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

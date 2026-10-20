@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPCleanup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPCleanup"/>
+<MSHelp:RLTitle Title="WSPCleanup"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPCleanup"/>
+<MSHelp:Keyword Index="K" Term="WSPCleanup"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPCleanup"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715153">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwspcleanup"></A>WSPCleanup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function terminates use of the Windows Sockets service provider.</P>
+
+<PRE class="syntax"><B>int WSPCleanup(</B>
+<B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value is zero if the operation has been successfully initiated. Otherwise, the value SOCKET_ERROR is returned, and a specific error number is available in <I>lpErrno</I>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Error value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSANOTINITIALISED</TD>
+<TD width=66%>A successful <A HREF="cerefwspstartup.htm">WSPStartup</A> call must occur before using this function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAENETDOWN</TD>
+<TD width=66%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>WSAEINVAL</TD>
+<TD width=66%>Provider identifier given to the name-space provider is not managed by the name-space provider.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The Winsock SPI client is required to perform a successful <B>WSPStartup</B> call before it can use Windows Sockets service providers. When it has completed the use of Windows Sockets service providers, the SPI client will call <B>WSPCleanup</B> to deregister itself from a Windows Sockets service provider and allow the service provider to free any resources allocated on behalf of the Winsock client. It is permissible for SPI clients to make more than one <B>WSPStartup</B> call. For each <B>WSPStartup</B> call, a corresponding <B>WSPCleanup</B> call will also be issued. Only the final <B>WSPCleanup</B> for the service provider does the actual cleanup; the preceding calls simply decrement an internal reference count in the Windows Sockets service provider.</P>
+
+<P>When the internal reference count reaches zero and actual cleanup operations commence, any pending blocking or asynchronous calls issued by any thread in this process are canceled without posting any notification messages or signaling any event objects. Any pending overlapped send and receive operations (<A HREF="cerefwspsend.htm">WSPSend</A>, <A HREF="cerefwspsendto.htm">WSPSendTo</A>, <A HREF="cerefwsprecv.htm">WSPRecv</A>, <A HREF="cerefwsprecvfrom.htm">WSPRecvFrom</A> with an overlapped socket) issued by any thread in this process are also canceled without setting the event object or invoking the completion routine, if specified. In this case, the pending overlapped operations fail with the error status WSA_OPERATION_ABORTED. Any sockets open when <B>WSPCleanup</B> is called are reset and automatically de-allocated as if <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A> was called; sockets that have been closed with <B>WSPCloseSocket</B> but still have pending data to be sent are not affected &#0151; the pending data is still sent.</P>
+
+<P>This function should not return until the service provider DLL is prepared to be unloaded from memory. In particular, any data remaining to be transmitted must either already have been sent or be queued for transmission by portions of the transport stack that will <I>not</I> be unloaded from memory along with the service provider's DLL.</P>
+
+<P>A Windows Sockets service provider must be prepared to deal with a process that terminates without invoking <B>WSPCleanup</B> (for example, as a result of an error). A Windows Sockets service provider must ensure that <B>WSPCleanup</B> leaves things in a state in which the Ws2_32.dll can immediately invoke <B>WSPStartup</B> to reestablish Windows Sockets usage.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwspstartup.htm">WSPStartup</A>, <A HREF="cerefwspclosesocket.htm">WSPCloseSocket</A>, <A HREF="cerefwspshutdown.htm">WSPShutdown</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSPCleanup&nbsp;(cerefwspcleanup.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

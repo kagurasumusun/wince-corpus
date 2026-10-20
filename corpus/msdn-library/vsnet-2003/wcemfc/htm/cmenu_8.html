@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::CreatePopupMenu</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_createpopupmenu"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cmenu_createpopupmenu"></A>CMenu::CreatePopupMenu</H1>
+
+<P>This method creates a pop-up menu and attaches it to the <B>CMenu</B> object. </P>
+
+<PRE class=syntax><B>BOOL CreatePopupMenu( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the pop-up menu was successfully created; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The menu is initially empty. Menu items can be added by using the <B>AppendMenu</B> or <B>InsertMenu</B> method. The application can add the pop-up menu to an existing menu or pop-up menu. The <B>TrackPopupMenu</B> method may be used to display this menu as a floating pop-up menu and to track selections on the pop-up menu. </P>
+
+<P>If the menu is assigned to a window, it is automatically destroyed when the window is destroyed. If the menu is added to an existing menu, it is automatically destroyed when that menu is destroyed.</P>
+
+<P>Before exiting, an application must free system resources associated with a pop-up menu if the menu is not assigned to a window. An application frees a menu by calling the <A HREF="cmenu_11.htm"><B>DestroyMenu</B></A> method.</P>
+
+<H4>Example</H4>
+
+<PRE>// The code fragment below shows how to create a new menu for the
+// application window using CreateMenu() and CreatePopupMenu().
+// Then, the created menu will replace the current menu of the
+// application. The old menu will be destroyed with DestroyMenu().
+// NOTE: The code fragment below is done in a CFrameWnd-derived class.
+
+// Create a new menu for the application window.
+VERIFY(m_NewMenu.CreateMenu());
+
+// Create a "File" popup menu and insert this popup menu to the
+// new menu of the application window. The "File" menu has only
+// one menu item, that is, "Exit".
+VERIFY(m_FileMenu.CreatePopupMenu());
+m_FileMenu.AppendMenu(MF_STRING, ID_APP_EXIT, (LPCTSTR)"E&amp;xit");
+m_NewMenu.AppendMenu(MF_POPUP, (UINT) m_FileMenu.m_hMenu, "&amp;File");
+
+// Remove and destroy the old menu.
+SetMenu(NULL);
+CMenu* old_menu = CMenu::FromHandle(m_hMenuDefault);
+old_menu-&gt;DestroyMenu();
+
+// Add a new menu.
+SetMenu(&amp;m_NewMenu);
+
+// Assign a default menu.
+m_hMenuDefault = m_NewMenu.m_hMenu;
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmenu_7.htm"><B>CMenu::CreateMenu</B></A>, <A HREF="cmenu_23.htm"><B>CMenu::InsertMenu</B></A>, <A HREF="cmenu_28.htm"><B>CMenu::TrackPopupMenu</B></A>, <A HREF="cmenu_3.htm"><B>CMenu::AppendMenu</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

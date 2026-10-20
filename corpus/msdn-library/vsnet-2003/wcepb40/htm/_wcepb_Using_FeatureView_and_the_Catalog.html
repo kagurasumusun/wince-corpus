@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Platform Modification</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Platform Modification"/>
+<MSHelp:RLTitle Title="Platform Modification"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Using_FeatureView_and_the_Catalog"/>
+<MSHelp:Keyword Index="K" Term="Catalog, platform modification using"/>
+<MSHelp:Keyword Index="K" Term="features, modifying platforms using FeatureView and Catalog"/>
+<MSHelp:Keyword Index="K" Term="FeatureView, platform modification using"/>
+<MSHelp:Keyword Index="K" Term="modifying, platforms"/>
+<MSHelp:Keyword Index="K" Term="objects, Catalog"/>
+<MSHelp:Keyword Index="K" Term="objects, FeatureView"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: customizing_platform.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_692294">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_using_featureview_and_the_catalog"></A>Platform Modification</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Use FeatureView and the Catalog together to view and modify your platform. FeatureView shows all of the features currently in your platform.</P>
+
+<P>The Catalog displays features you can add to your Windows CE&#0150;based platform, including BSPs, core OS features, transport layers, and device drivers. You can import additional features into the Catalog using Catalog feature files (.cec). </P>
+
+<P>Once a platform has been created, the features displayed in the Catalog are filtered based on the configuration and variant selected during the creation of the platform with the New Platform Wizard. This allows you to work with the set of features that is most likely to meet your platform requirements. The Variant list, which appears at the top of the Catalog, displays the variants associated with the selected configuration. You are also given the option of selecting <B>ALL</B>, which displays all of the features in the Catalog.</P>
+
+<P>Both the Catalog and FeatureView also contain folders that are containers for related groups of features.</P>
+
+<P>To move items from the Catalog to FeatureView, right-click the feature and choose <B>Add to Platform</B>, use the <B>Platform/Insert</B> menu and choose the <B>Selected Catalog Feature</B> item, or simply drag the item from the Catalog and drop it onto FeatureView. </P>
+
+<P>For information about icons used in the Catalog and FeatureView windows, see <A HREF="pbconcatalogobjecticons.htm">Object Icon Types</A>.</P>
+
+<P>A <I>feature group</I> describes the interface and functionality that is exposed by sets of features. It does not contain the functionality necessary to implement the feature. An <I>implementation</I> contains the functionality required to implement a feature. </P>
+
+<P>There can be more than one implementation for a specified feature group. For example, Display is a display driver feature group. If you add Display to your project, you are adding a placeholder for a display driver without specifying which display driver. There are several standard display driver implementations, including ddi_ati, ddi_flat, ddi_rflat, and Mq200. Each of the standard drivers contains the functionality to implement a unique kind of display driver. </P>
+
+<P>When you initially add a feature group from the Catalog to your platform, it appears as a feature group in your FeatureView window. Before you can build your platform you must convert all feature groups into features. The process of converting a feature group into a feature is called <I>resolving</I>. To resolve the feature, you must select an implementation to replace the feature group. This is done by selecting <B>Resolve Feature(s)</B>, which can be accessed by right-clicking the feature group or from the <B>Platform</B> menu. Once resolution is complete, the item is shown as a feature. If you attempt to build a platform with unresolved features, the <B>Feature Resolution</B> dialog box appears. For more information about the <B>Feature Resolution</B> dialog box, see <A HREF="pbtskresolvingfeature.htm">Resolving a Feature</A>.</P>
+
+<P>If you add an implementation directly to your platform, it automatically resolves to a feature.</P>
+
+<P>Anchored features are features that are included in a platform through the platform creation process or that you have manually inserted. The CESysgen.bat file contains dependency rules. The IDE tools compare the features in your platform against these dependency rules and automatically include any additional features that are required to support the anchored features. These features, which are brought in automatically by the tools, are considered <I>unanchored features</I>.</P>
+
+<P>Each time you add or remove a feature from your platform, or perform any other action that would require a Sysgen of the platform, the tools compare the features in your platform against the CESysgen.bat file and redisplay the list of features in the FeatureView window. The <B>Build</B> tab of the Output window also displays a list of all the unanchored features that were added. The system starts with no unanchored features each time this process is run and adds in all the required features. For more information about the build process, see <A HREF="_wcepb_building_an_os_image.htm">Platform Building</A>.</P>
+
+<P>The last stage of this dependency analysis compares the list of core OS modules in your platform with the list of BSP variables set by the batch file for the BSP you are using to determine which drivers are supported by your current OS configuration and by your BSP. The tool then automatically inserts the drivers necessary to meet the requirements of your system. These drivers are imported as anchored features into your platform.</P>
+
+<P>Each driver feature group contains a default driver, which is set by variables in the BSP batch file and by the DefaultDriver element in the Catalog feature file for each BSP. To override the defaults, simply add the specific driver you want to your platform. </P>
+
+<P>You can only delete anchored features from your platform. Unanchored features can only be removed if the feature that pulled them in is removed from your platform. If you want to anchor an unanchored feature, ensuring that it is not removed from the platform if its parent feature is removed, you can choose <B>Anchor Feature(s)</B> from the shortcut menu. You can also reverse this process, by choosing <B>Remove Anchor from Feature</B> when an anchored feature is selected.</P>
+
+<P>The dependency functionality will not be included in the features you create unless you add it to the batch file manually.</P>
+
+<P>You can examine the list of special feature notifications for your platform by selecting <B>Review Special Notifications</B> from the <B>Platform</B> menu. A window appears that lists the special notification summaries associated with the features included in your platform. You can select each <B>Notification Acknowledged</B> check box in the list to acknowledge the associated notification.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbconcatalogobjecticons.htm">Object Icon Types</A></P>
+
+<P><A HREF="pbtskresolvingfeature.htm">Resolving a Feature</A></P>
+
+<P><MSHelp:link keywords="pbconCatalogFeatures" TABINDEX="0">Catalog Features</MSHelp:link></P>
+
+<P><A HREF="_wcepb_adding_a_feature_to_the_platform.htm">Additions to a Platform</A></P>
+
+<P><A HREF="_wcepb_modifying_your_platform_settings.htm">Platform Settings</A></P>
+
+<P><A HREF="pbconbootloader.htm">Boot Loader Development</A></P>
+
+<P><A HREF="pbconoal.htm">OAL Development</A></P>
+
+<P><A HREF="_wcepb_developing_a_device_driver.htm">Driver Development</A></P>
+
+<P><A HREF="pbconeventtracker.htm">Event Tracker</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Platform%20Modification&nbsp;(_wcepb_using_featureview_and_the_catalog.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseControlVideo::GetStaticImage</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CBaseControlVideo::GetStaticImage"/>
+<MSHelp:RLTitle Title="CBaseControlVideo::GetStaticImage"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasecontrolvideo__getstaticimage"/>
+<MSHelp:Keyword Index="K" Term="GetStaticImage"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dshowclasses01.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_cbasecontrolvideo__getstaticimage"></A>CBaseControlVideo::GetStaticImage</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Pure virtual method that derived classes override. </P>
+
+<PRE class="syntax"><B>virtual HRESULT GetStaticImage(</B>
+<B>long *</B><I>pBufferSize</I>,
+<B>long *</B><I>pDIBImage</I><B>) PURE;</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>pBufferSize </I></DT>
+
+<DD>Size of the output buffer. </dd>
+
+<DT><I>pDIBImage </I></DT>
+
+<DD>Pointer to output buffer. </dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>Returns an <B>HRESULT</B> value. </P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>Through the <A HREF="_wcesdk_ibasicvideo_interface.htm"><B>IBasicVideo</B></A> interface, an application can request that it be given a copy of the current image in a memory buffer (some renderers can return E_NOTIMPL to this if they do not support it). The derived class determines how to retrieve the image. When the application calls <B>CBaseControlVideo::GetStaticImage</B>, it calls this pure virtual method that the derived class should override to implement it. This is also called by the <A HREF="_wcesdk_cbasecontrolvideo__getcurrentimage.htm"><B>CBaseControlVideo::GetCurrentImage</B></A> member function. </P>
+
+<P>The class provides a helper member function, <A HREF="_wcesdk_cbasecontrolvideo__copyimage.htm"><B>CBaseControlVideo::CopyImage</B></A>, that can be given a sample that contains an image, and the member function will copy the relevant section of it (based on the current source rectangle) into the output buffer supplied by the application. </P>
+
+<P>The following example from the video renderer sample, SampVid, demonstrates an implementation of this member function in a derived class. In this example, m_pRenderer holds an object of a class derived from <A HREF="_wcesdk_cbasevideorenderer_class.htm"><B>CBaseVideoRenderer</B></A>. </P>
+
+<PRE class="code">// Return a copy of the current image in the video renderer
+
+HRESULT CVideoText::GetStaticImage(long *pBufferSize,long *pDIBImage)
+{
+    // Get any sample the renderer may be holding.
+
+    IMediaSample *pMediaSample = m_pRenderer-&gt;GetCurrentSample();
+    if (pMediaSample == NULL) {
+        return E_UNEXPECTED;
+    }
+
+    // Call the base class helper method to do the work.
+
+    HRESULT hr = CopyImage(pMediaSample,          // Buffer containing image
+                           &amp;m_pRenderer-&gt;m_mtIn,                // Type representing bitmap
+                           pBufferSize,                                     // Size of buffer for DIB
+                           (BYTE*) pDIBImage);                   // Data buffer for output
+
+    pMediaSample-&gt;Release();
+    return hr;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CBaseControlVideo::GetStaticImage&nbsp;(_wcesdk_cbasecontrolvideo__getstaticimage.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

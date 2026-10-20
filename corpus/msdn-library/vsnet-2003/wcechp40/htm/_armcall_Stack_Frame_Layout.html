@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ARM Stack Frame Layout</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ARM Stack Frame Layout"/>
+<MSHelp:RLTitle Title="ARM Stack Frame Layout"/>
+<MSHelp:Keyword Index="A" Term="_armcall_Stack_Frame_Layout"/>
+<MSHelp:Keyword Index="K" Term="architecture, ARM microprocessors"/>
+<MSHelp:Keyword Index="K" Term="stack frame layout, ARM/THUMB"/>
+<MSHelp:Keyword Index="A" Term="_armcall_Stack_Frame_Layout"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: armcalls.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673550">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_armcall_stack_frame_layout"></A>ARM Stack Frame Layout</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following illustration shows the stack frame layout.</P>
+
+<P class="fig"><IMG SRC="arccall1.gif" ALT="" BORDER=0></P>
+
+<P>The following list gives more information about the stack frame layout.
+
+<UL type="disc">
+	<LI>The Register Save Area holds the preserved values of any permanent registers used by the function. It also contains the function return address.</li>
+
+	<LI>The Locals and Temporaries area represents the stack space allocated for local variables and compiler-generated temporaries.</li>
+
+	<LI>The first four words at the top of the stack may contain the values passed in <B>R0-R3</B>. Any of these values could be missing. The values should be stored in the <B>R0-R3</B> if registers cannot hold the arguments for the entire function, or if the addresses for the arguments are already in use. </li>
+
+	<LI>If a routine needs storage space for the first four words of arguments, it creates and initializes the storage at the very top of the called function stack. The following list shows reasons for which a routine can allocate space:
+<UL type="disc">
+	<LI>An argument word address is taken</li>
+
+	<LI>An argument words has a value altered by the called function</li>
+
+	<LI>An argument register must be spilled. </li>
+</UL>
+
+<P>If a register keeps an argument for the argument live range, the argument has no associated storage in the stack frame.
+</li>
+
+	<LI>If a routine has <B>alloca()</B> locals, the ARM Specification requires a separate frame pointer register to access incoming arguments and locals. <B>R11</B> is the assigned frame pointer<B> </B>for ARM, and <B>R7</B> is the assigned frame pointer for THUMB. A leaf routine may use any free integer register as the frame pointer. A non-leaf routine must use a permanent register. The routine must not modify the frame pointer register between the prolog and epilog.</li>
+
+	<LI>In a routine that uses <B>alloca()</B>, everything in the frame at a lower address than the <B>alloca()</B> area is referenced relative to <B>R13</B> and never contains a defined value at the time of an <B>alloca()</B> call. Thus, the <B>alloca()</B> operation never has to copy this part of the stack frame, and no data relocation problems arise. Everything in the frame at an address higher than the <B>alloca()</B> area is referenced relative to the frame pointer, <B>R11</B> for ARM or <B>R7</B> for THUMB.</li>
+
+	<LI>To more efficiently access data in large stack frames, a routine may establish another frame pointer. A frame pointer helps mitigate problems with the limited size of the bit-field that specifies register-displacement-addressing offset. The frame pointer typically points to a fixed frame offset in the RSA or Local and Temporaries areas of the stack frame, but may point to other offsets within the frame.</li>
+
+	<LI>A routine need not set up a stack frame for itself unless it needs to save permanent registers, or to allocate space for locals or outgoing argument areas that are bigger than four words.</li>
+
+	<LI>The stack pointer and frame pointer addresses align on 4-byte boundaries.</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_armcall_arm_calling_standard.htm">ARM Calling Sequence Specification</A></P>
+
+<P><A HREF="ccrefwhatsnewforarmcompiler.htm">What's New for the ARM Compiler</A></P>
+
+<P><A HREF="_armcall_registers.htm">ARM Registers</A></P>
+
+<P><A HREF="_armcall_parameter_passing.htm">ARM Parameter Passing</A></P>
+
+<P><A HREF="_armcall_return_values.htm">ARM Return Values</A></P>
+
+<P><A HREF="_armcall_prolog_and_epilog.htm">ARM Prolog and Epilog</A></P>
+
+<P><A HREF="ccrefarmprologpdatastructures.htm">ARM pdata Structures</A></P>
+
+<P><A HREF="_armcall_assembler_macros.htm">ARM Assembler Macros</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ARM%20Stack%20Frame%20Layout&nbsp;(_armcall_stack_frame_layout.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

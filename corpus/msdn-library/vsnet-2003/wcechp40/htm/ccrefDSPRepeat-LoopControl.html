@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DSP Repeat-Loop Control</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="DSP Repeat-Loop Control"/>
+<MSHelp:RLTitle Title="DSP Repeat-Loop Control"/>
+<MSHelp:Keyword Index="A" Term="ccrefDSPRepeat-LoopControl"/>
+<MSHelp:Keyword Index="K" Term="DSP repeat-loop control, Hitachi SH3-DSP series assembler"/>
+<MSHelp:Keyword Index="K" Term="Hitachi SH3-DSP series assembler, instructions"/>
+<MSHelp:Keyword Index="K" Term="instructions, Hitachi SH3-DSP series assembler"/>
+<MSHelp:Keyword Index="K" Term="SH3-DSP series assembler, instructions"/>
+<MSHelp:Keyword Index="A" Term="ccrefDSPRepeat-LoopControl"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dspshasm.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720191">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccrefdsprepeat-loopcontrol"></A>DSP Repeat-Loop Control</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The SH3-DSP repeat-loop control function is a special utility for controlling repetition efficiently. It executes the <B>SETRC</B> instruction to hold a repeat count in <B>RC</B>, the repeat counter, and to set an execution mode in which the repeat-loop program continues until the <B>RC</B> is 1. On completion of the repeat operation, the content of the <B>RC</B> becomes 0.</P>
+
+<P>The repeat start register, <B>RS</B>, holds the start address of the repeated section. The repeat end register, <B>RE,</B> holds the ending address of the repeated section. The repeat counter, <B>RC,</B> holds the repeat count. </P>
+
+<P>The following steps show the procedure for executing repeat control.
+
+<OL type="1">
+	<LI>Set the repeat start address in the <B>RS</B> register.</li>
+
+	<LI>Set the repeat end address in the <B>RE</B> register.</li>
+
+	<LI>Set the repeat count in the <B>RC</B> counter.</li>
+
+	<LI>Execute the repeated program loop.</li>
+</OL>
+
+<P>The following instructions execute step 1 and step 2.</P>
+
+<PRE class="code">LDRS @(disp,PC);
+LDRE @(disp,PC);</PRE>
+
+<P>The repeat-loop control uses the <B>SETRC</B> instruction to execute steps 3 and 4. It may use immediate data or a general register to specify the repeat count as the operand of the <B>SETRC</B> instruction. The following instructions show how to specify a repeat counter.</P>
+
+<PRE class="code">SETRC #imm  ; #imm     &gt; Rc,   enable repeat control
+SETRC Rm       ; Rm         &gt; Rc,   enable repeat control</PRE>
+
+<P><code class="ce">#imm</code> is eight bits and the <B>RC</B> counter is 12 bits, so to set the <B>RC</B> counter to a value of 256 or greater using the <B>Rm</B> register. The following sample shows how to do this.</P>
+
+<PRE class="code">     LDRS     RptStart;
+     LDRE     RptEnd;
+     SETRC     #imm;     RC=#imm
+     instr0;     </PRE>
+
+<P><code class="ce">; instr1~5</code> executes repeatedly</P>
+
+<PRE class="code">RptStart:     instrl;
+     instr2;
+     instr3;
+     instr4;
+RptEnd:     instr5;
+            instr6;</PRE>
+
+<P>There are several restrictions on repeat control:
+
+<OL type="1">
+	<LI>At least one instruction must come between the <B>SETRC</B> instruction and the first instruction of the repeat program loop.</li>
+
+	<LI>Execute the <B>SETRC</B> instruction after executing the <B>LDRS</B> and <B>LDRE</B> instructions.</li>
+
+	<LI>When there are more than four instructions for the repeat program and there is no repeat start address at the long word boundary, one cycle stall awaiting execution is required for each repeat.</li>
+
+	<LI>The following instructions cannot be used when there are three or fewer instructions in the loop. .
+<UL type="disc">
+	<LI>Branch instructions such as <B>BRA</B>, <B>BSR</B>, <B>BT</B>, <B>BF</B>, <B>BT/S</B>, <B>BF/S</B>, <B>BSRF</B>, <B>RTS</B>, <B>BRAF</B>, <B>RTE</B>, <B>JSR</B>, and <B>JMP</B></li>
+
+	<LI>Repeat control instructions such as <B>SETRC</B>, <B>LDRS</B>, <B>LDRE</B></li>
+
+	<LI>Load instructions such as <B>SR</B>, <B>RS</B>, and <B>RE</B></li>
+
+	<LI>TRAPA instructions </li>
+</UL>
+
+<P>If such an instruction is used, illegal instruction exception handling starts and the address values are stored in <B>SPC</B>.
+
+<P>The following table shows the <B>PC</B> values address stored in <B>SPC</B>.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Conditions</TH>
+<TH width=15%>Position</TH>
+<TH width=52%>Address Stored in SPC</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>RC&gt;=2</TD>
+<TD width=15%>Any</TD>
+<TD width=52%>RptStart</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>RC=1</TD>
+<TD width=15%>Any</TD>
+<TD width=52%>Program address of illegal instruction</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI>If there are four or fewer instructions in the loop, the following instructions cannot be used for the last three instructions in the loop
+<UL type="disc">
+	<LI>Branch instructions such as <B>BRA</B>, <B>BSR</B>, <B>BT</B>, <B>BF</B>, <B>BT/S</B>, <B>BF/S</B>, <B>BSRF</B>, <B>RTS</B>, <B>BRAF</B>, <B>RTE</B>, <B>JSR</B>, <B>JMP</B></li>
+
+	<LI>Repeat control instructions such as <B>SETRC</B>, <B>LDRS</B>, and <B>LDRE</B></li>
+
+	<LI>Load instructions such as <B>SR</B>, <B>RS</B>, and <B>RE</B> </li>
+
+	<LI><B>TRAPA </B></li>
+</UL>
+
+<P>If such an instruction is used, illegal instruction exception handling starts and the address values shown in the following table are stored in SPC. Repeat control instructions such as <B>SETRC</B>, <B>LDRS</B>, and <B>LDRE</B>, and load instructions such as <B>SR</B>, <B>RS</B>, and <B>RE</B>, cannot be described in positions other than the repeat module. 
+
+<P>The following table shows the PC value addresses stored in SPC
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Conditions</TH>
+<TH width=33%>Position</TH>
+<TH width=34%>Address Stored in SPC</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>RC&gt;=2</TD>
+<TD width=33%>
+<PRE class="code">instr3</PRE>
+</TD>
+<TD width=34%>Program address of illegal instruction</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>&nbsp;</TD>
+<TD width=33%>
+<PRE class="code">instr4</PRE>
+</TD>
+<TD width=34%>
+<PRE class="code">RptStart-4</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>&nbsp;</TD>
+<TD width=33%>
+<PRE class="code">instr5</PRE>
+</TD>
+<TD width=34%>
+<PRE class="code">RptStart-2</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>RC=1</TD>
+<TD width=33%>Any</TD>
+<TD width=34%>Program address of illegal instruction</TD>
+</TR>
+</table></div>
+
+<P>When there are three or fewer instructions in the loop, PC relative instructions such as <B>MOVA</B> (disp,PC), <B>R0</B>, or the like, can only be used at instr1.
+
+<P>If there are four or more instructions in the loop, PC relative instructions such as <B>MOVA</B> (disp,PC), <B>R0</B>, or the like, cannot be used in the final two instructions.
+</li>
+
+	<LI>The SH3-DSP does not have a repeat valid flag; repeats become invalid when the RC counter becomes zero. When the RC counter is not zero and the PC counter matches the RE register contents, repeating begins. When the RC counter is set to zero, the repeat program is invalid but the loop executes once, and does not return to the loop start instruction. When the RC counter is 1, the repeat module executes only once. Though it does not return to the repeat program start instruction, the RC counter becomes zero when the repeat module executes.
+<P>If there are four or more instructions in the loop, the branched instructions including the subroutine call back and return instructions cannot be used for the <code class="ce">inst3</code> through <code class="ce">inst5</code> instructions as branch destination address. If inst3 and inst5 execute, the repeat control does not work correctly. If a repeating portion of a program contains three or more instructions, and if the branching destination is <code class="ce">RptStart</code> or an address ahead of it, then repeat control does not work properly and the content of RC in the SR register is not updated.
+</li>
+
+	<LI>While the repeat executes, the SH3-DSP restricts interruption and permits no TLB instruction or data misses.</li>
+</OL>
+
+<P>The following example shows a repeat sequence that contains one repeat instruction.</P>
+
+<PRE class="code">                LDRS RptStart0+8;
+                LDRE RptStart0+4;
+                SETRC RptCount;
+                ---
+RptStart0:  instr0;
+RtpStart:     instr1; Repeat instruction
+                instr2;</PRE>
+
+<P>The following example shows a repeat sequence that contains three repeat instructions.</P>
+
+<PRE class="code">                LDRS RptStart0+4;
+                LDRE RptStart0+4;
+                SETRC RptCount;
+                ---
+RptStart0:    instr0;
+RtpStart:    instr1; Repeat instruction
+                instr2; Repeat instruction
+RptEnd:        instr3; Repeat instruction
+                instr4;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccrefnewinstructions.htm">SH3-DSP Instructions</A></P>
+
+<P><A HREF="ccrefdoublesingledatatransferinstructions.htm">DSP Data Transfer Instructions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;DSP%20Repeat-Loop%20Control&nbsp;(ccrefdsprepeat-loopcontrol.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

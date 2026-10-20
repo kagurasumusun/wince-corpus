@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CTabCtrl::GetItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ctabctrl_getitem"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ctabctrl_getitem"></A>CTabCtrl::GetItem</H1>
+
+<P>This method retrieves information about a tab in a tab control.</P>
+
+<P>When the message is sent, the <I>mask</I> member specifies which attributes to return. If the <I>mask</I> member specifies the TCIF_TEXT value, the <I>pszText</I> member must contain the address of the buffer that receives the item text and the <I>cchTextMax</I> member must specify the size of the buffer.</P>
+
+<PRE class=syntax><B>BOOL GetItem(
+int </B><I>nItem</I><B>,
+TCITEM* </B><I>pTabCtrlItem</I><B> )
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nItem</I></DT>
+
+<DD>Specifies the zero-based index of the tab.</DD>
+
+<DT><I>pTabCtrlItem</I></DT>
+
+<DD>Specifies the pointer to a <B>TCITEM</B> structure, used to specify the information to retrieve. Also used to receive information about the tab. This structure is used with the <B>InsertItem</B>, <B>GetItem</B>, and <B>SetItem</B> methods.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Returns <B>TRUE</B> if it is successful; <B>FALSE</B> if it is otherwise.</P>
+
+<H4>Remarks</H4>
+
+<DL>
+<DT><I>mask</I></DT>
+
+<DD>Value specifying which <B>TCITEM</B> structure members to retrieve or set. This member can be zero or a combination of the following values:
+
+<UL type=disc>
+	<LI>TCIF_TEXT&nbsp;&nbsp;&nbsp;The <I>pszText</I> member is valid.</LI>
+
+	<LI>TCIF_IMAGE&nbsp;&nbsp;&nbsp;The <I>iImage</I> member is valid. </LI>
+
+	<LI>TCIF_PARAM&nbsp;&nbsp;&nbsp;The <I>lParam</I> member is valid. </LI>
+
+	<LI>TCIF_RTLREADING&nbsp;&nbsp;&nbsp;The text of <I>pszText</I> is displayed using right-to-left reading order on Hebrew or Arabic systems. </LI>
+
+	<LI>TCIF_STATE&nbsp;&nbsp;&nbsp;The <I>dwState</I> member is valid. </LI>
+</UL>
+</DD>
+
+<DT><I>pszText</I></DT>
+
+<DD>Pointer to a null-terminated string containing the tab text if the structure contains information about a tab. If the structure is receiving information, this member specifies the address of the buffer that receives the tab text.</DD>
+
+<DT><I>cchTextMax</I></DT>
+
+<DD>Size of the buffer pointed to by <I>pszText</I>. This member is ignored if the structure is not receiving information.</DD>
+
+<DT><I>iImage</I></DT>
+
+<DD>Index into the image list of the tab control, or  &#0150;1 if there is no image for the tab.</DD>
+
+<DT><I>lParam</I></DT>
+
+<DD>Application-defined data associated with the tab. If there are more than four bytes of application-defined data per tab, an application must define a structure and use it instead of the <B>TCITEM</B> structure. The first member of the application-defined structure must be a <B>TCITEMHEADER </B>structure. The <B>TCITEMHEADER</B> structure is identical to the <B>TCITEM</B> structure, but without the <I>lParam</I> member. The difference between the size of your structure and the size of the <B>TCITEMHEADER</B> structure should equal the number of extra bytes per tab.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// In this example a CTabCtrl data member, m_tabCtrl, changes the
+// text of the tabs in the tab control.  A call to GetItem is used
+// to get the current text, and then the text is changed.  A call
+// to SetItem is used to update the tab with the new text.
+
+void CDialogDlg::OnChangeItem()
+{
+&nbsp;&nbsp;TCITEM tcItem;
+&nbsp;&nbsp;CString pszString;
+
+&nbsp;&nbsp;//  Get text for the tab item.
+&nbsp;&nbsp;GetDlgItemText(IDC_ITEM_TEXT, pszString);
+&nbsp;&nbsp;
+&nbsp;&nbsp;//  Get the current tab item text.
+&nbsp;&nbsp;tcItem.mask = TCIF_TEXT;
+&nbsp;&nbsp;m_tabCtrl.GetItem(0, &amp;tcItem);
+&nbsp;&nbsp;
+&nbsp;&nbsp;//  Set the new text for the item.
+&nbsp;&nbsp;tcItem.pszText = pszString.GetBuffer(256);
+
+&nbsp;&nbsp;//  Set the item in the tab control.
+&nbsp;&nbsp;m_tabCtrl.SetItem(0, &amp;tcItem);
+
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P>&nbsp;&nbsp;<B>Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ctabctrl_19.htm"><B>CTabCtrl::InsertItem</B></A>, <A HREF="ctabctrl_25.htm"><B>CTabCtrl::SetItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

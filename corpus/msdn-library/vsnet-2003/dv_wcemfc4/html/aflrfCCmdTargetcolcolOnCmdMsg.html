@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCmdTarget::OnCmdMsg</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CCmdTarget::OnCmdMsg"/>
+<MSHelp:RLTitle Title="CCmdTarget::OnCmdMsg"/>
+<MSHelp:Keyword Index="A" Term="aflrfCCmdTargetcolcolOnCmdMsg"/>
+<MSHelp:Keyword Index="K" Term="OnCmdMsg method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCCmdTargetcolcolOnCmdMsg"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ccmdtarg.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709932">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfccmdtargetcolcoloncmdmsg"></A>CCmdTarget::OnCmdMsg</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework to route and dispatch command messages and to handle the update of command user-interface objects. </P>
+
+<PRE class="syntax"><B>virtual BOOL OnCmdMsg( 
+UINT </B><I>nID</I><B>, 
+int </B><I>nCode</I><B>, 
+void* </B><I>pExtra</I><B>, 
+AFX_CMDHANDLERINFO* </B><I>pHandlerInfo</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nID</I></DT>
+
+<DD>Specifies the container for the command identifier.</dd>
+
+<DT><I>nCode</I></DT>
+
+<DD>Identifies the command notification code. See the Remarks section for more information about values for <I>nCode</I>.</dd>
+
+<DT><I>pExtra</I></DT>
+
+<DD>Used according to the value of <I>nCode</I>. See the Remarks section for more information about <I>pExtra</I>.</dd>
+
+<DT><I>pHandlerInfo</I></DT>
+
+<DD>If not <B>NULL</B>, <B>OnCmdMsg</B> fills in the <I>pTarget</I> and <I>pmf</I> members of the <I>pHandlerInfo</I> structure instead of dispatching the command. Typically, this parameter should be <B>NULL</B>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if the message is handled; otherwise, it is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This is the main implementation routine of the framework command architecture.</P>
+
+<P>At run time, <B>CCmdTarget::OnCmdMsg</B> dispatches a command to other objects or handles the command itself by calling the root class <B>CCmdTarget::OnCmdMsg</B>, which does the actual message-map lookup. </P>
+
+<P>On rare occasions, you may want to override this method to extend the standard command routing of the framework. If you override <B>CCmdTarget::OnCmdMsg</B>, you must supply the appropriate value for <I>nCode</I>, the command notification code, and <I>pExtra</I>, which depends on the value of <I>nCode</I>. The following table lists their corresponding values:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=45%><I>nCode</I> value</TH>
+<TH width=55%><I>pEvent</I> value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_COMMAND</TD>
+<TD width=55%>CCmdUI *</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_EVENT</TD>
+<TD width=55%>AFX_EVENT *</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_UPDATE_COMMAND_UI</TD>
+<TD width=55%>CCmdUI*</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_OLECOMMAND</TD>
+<TD width=55%>COleCmdUI *</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_OLE_UNREGISTER</TD>
+<TD width=55%>NULL</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// This example illustrates extending the standard command
+// route of the framework from the view to objects managed by the view. This example 
+// is from an object-oriented drawing application, similar to the 
+// DRAWCLI sample application, which draws and edits shapes.
+
+BOOL CMyView::OnCmdMsg(UINT nID, int nCode, void* pExtra,
+      AFX_CMDHANDLERINFO* pHandlerInfo)
+{
+   // Extend the command route of the framework from the view to
+   // he application-specific CMyShape that is selected in the view.
+   // m_pActiveShape is NULL if no shape object is selected in the 
+   // view.
+   if ((m_pActiveShape != NULL)
+      &amp;&amp; m_pActiveShape-&gt;OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+      return TRUE;
+
+   // If the object in the extended command route does not handle
+   // the command, let the base class OnCmdMsg handle it.
+   return CView::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+}
+
+// The command handler for ID_SHAPE_COLOR, the menu command to change
+// the color of the selected shape, is added to the message map of 
+// CMyShape, not CMyView, using ClassWizard.  
+
+// The menu item is automatically enabled or disabled, depending 
+// on whether a CMyShape is selected in the view, that is, depending 
+// on whether CMyView::m_pActiveView is NULL.  You do not need to 
+// implement an ON_UPDATE_COMMAND_UI handler to enable or disable 
+// the menu item.  
+
+BEGIN_MESSAGE_MAP(CMyShape, CCmdTarget)
+   //{{AFX_MSG_MAP(CMyShape)
+   ON_COMMAND(ID_SHAPE_COLOR, OnShapeColor)
+   //}}AFX_MSG_MAP
+END_MESSAGE_MAP()</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfccmdui.htm"><B>CCmdUI</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709932', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

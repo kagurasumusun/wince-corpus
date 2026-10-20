@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SAPI 5.0 Overview</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SAPI 5.0 Overview"/>
+<MSHelp:RLTitle Title="SAPI 5.0 Overview"/>
+<MSHelp:Keyword Index="A" Term="ceconSAPI50Overview"/>
+<MSHelp:Keyword Index="A" Term="ceconSAPI50Overview"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: sapi_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821913">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconsapi50overview"></A>SAPI 5.0 Overview</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>SAPI 5.0 consists of two interfaces: the application programming interface (API) and the device driver interface (DDI). The SAPI 5.0 API dramatically reduces the code overhead required for an application to use speech recognition and synthesis, making speech more useable for more applications by more developers.</P>
+
+<P>This section covers the following topics:
+
+<UL type="disc">
+	<LI>API and DDI Overview </li>
+
+	<LI>API Events </li>
+
+	<LI>API for Speech Synthesis </li>
+
+	<LI>DDI for Speech Synthesis </li>
+
+	<LI>API for Speech Recognition </li>
+
+	<LI>DDI for Speech Recognition </li>
+</UL>
+
+<H2 class="dtH2">API and DDI Overview</H2>
+
+<P>The SAPI 5.0 DDI and API remove the implementation details such as multi-threading and audio device management making speech synthesis and recognition engines and applications convenient. The SAPI 5.0 interfaces are new and do not use the legacy SAPI 4.0 interfaces.</P>
+
+<P class="fig"><IMG SRC="sapiapi.gif" ALT="" BORDER=0></P>
+
+<H3 class="dtH3">API Events</H3>
+
+<P>In both speech synthesis and speech recognition, applications receive events. For example, when words of text have been spoken or when phrases of speech have been recognized. SAPI components that generate events implement an ISpNotifySource interface. Specifically, SAPI uses SetNotifySink. An application passes to ISpNotifySource::SetNotifySink an ISpNotifySink interface pointer which receives notification calls to ISpNotifySink::Notify when there are one or more events about which the application can retrieve data. Usually, applications will not implement ISpNotifySink because it must be free-threaded. Instead, applications can conveniently use CoCreateInstance (with COM) to make a proxy ISpNotifySink object implemented by the component CLSID_SpNotify. This proxy object provides an ISpNotifyControl interface. It can set up one of three notification mechanisms.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Method</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cerefispnotifytranslatorinitwindowmessage.htm">ISpNotifyTranslator::InitWindowMessage</A></TD>
+<TD width=50%>Enables a window callback function to receive notifications as window messages. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cerefispnotifytranslatorinitcallback.htm">ISpNotifyTranslator::InitCallback</A></TD>
+<TD width=50%>Enables a callback function to receive notifications. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cerefispnotifytranslatorinitwin32event.htm">ISpNotifyTranslator::InitWin32Event</A></TD>
+<TD width=50%>Enables notifications through Win32 events. </TD>
+</TR>
+</table></div>
+
+<P>The ISpNotifySource and ISpNotifySink interfaces only provide a mechanism for a notification, but no information on the events that caused the notification. Using an ISpEventSource object, an application can retrieve information about the event that caused the notification. An ISpEventSource also provides the mechanism to filter and queue events. By default, an application (really an ISpNotifySink) does not receive any notification from ISpEventSource until ISpEventSource::SetInterest has been called to specify about which events to provide notification and for which events repetitions should be queued. Events are identified by the flags SPEVENTENUM.</P>
+
+<P>When an application receives a notification, there may be information on multiple events. By calling ISpEventSource::GetInfo, the ulCount member in the returned SPEVENTSOURCEINFO structure indicates the number of events for which information is available. Using ISpEventSource::GetEvents, an application extracts a specified number of SPEVENT structures, each containing information about a specific event.</P>
+
+<H2 class="dtH2">API for Speech Synthesis</H2>
+
+<P>For basic speech synthesis, an application needs to use the interface ISpVoice. An application calls COM's CoCreateInstance for the component CLSID_SpVoice to get a pointer to the ISpVoice interface of a voice object. An application can start calling the methods of ISpVoice such as ISpVoice::Speak, which will synthesize speech for the text passed in as a parameter. By default, a voice object is set to the default voice unless the voice has been changed by a call to ISpVoice::SetVoice. Similarly, a voice object will also be set to a default audio data destination unless ISpVoice::SetOutput is called with an IUnknown and an appropriate SPSTREAMFORMAT format.</P>
+
+<H3 class="dtH3">Resources</H3>
+
+<P>General management functions are provided through an ISpResourceManager object that is created by calling CoCreateInstance with CLSID_SpResourceManager.</P>
+
+<H3 class="dtH3">Beyond Basics</H3>
+
+<P>In addition to generating speech from plain text, an application can place synthesis markup language within the text passed into ISpVoice::Speak. This markup language is based on the XML format. An application can also play raw audio data using the ISpVoice::SpeakStream. Text files can be spoken using the ISpVoice::SpeakStream as well. The format of the text (either Unicode or ANSI) will automatically be detected. Both functions have flags to control whether or not to purge any sounds not already played and whether or not calls are asynchronous.</P>
+
+<P>Because an ISpVoice object is also an ISpEventSource object, an application can start receiving notifications of events by calling ISpNotifySource::SetNotifySink, by passing in an ISpNotifySink object. In association with an ISpVoice::Speak or ISpVoice::SpeakStream call, ISpVoice provides an SPEI_START_INPUT_STREAM event before the engine begins synthesizing and an SPEI_END_INPUT_STREAM event when the engine has finished synthesizing. For each call to ISpVoice::Speak or ISpVoice::SpeakStream, a stream number is assigned (pulStreamNum). For each SPEVENT structure describing an event, the ulStreamNum member identifies the stream number associated with an ISpVoice::Speak or ISpVoice::SpeakStream call. ISpVoice generates the following events of type SPEVENTENUM.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Event</TH>
+<TH width=50%>Function</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPEI_VOICE_CHANGE</TD>
+<TD width=50%>Voice identifier or voice type has changed during stream synthesis. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPEI_TTS_BOOKMARK </TD>
+<TD width=50%>A bookmark was encountered during synthesis. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPEI_WORD_BOUNDARY </TD>
+<TD width=50%>Start of word being spoken. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPEI_SENTENCE_BOUNDARY </TD>
+<TD width=50%>Start of sentence being spoken. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPEI_PHONEME </TD>
+<TD width=50%>Phoneme being spoken. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SPEI_VISEME </TD>
+<TD width=50%>Viseme being spoken. </TD>
+</TR>
+</table></div>
+
+<P>Applications can call ISpVoice::GetStatus to receive the current status of speech synthesis.</P>
+
+<H2 class="dtH2">DDI for Speech Synthesis</H2>
+
+<P>A SAPI speech synthesis engine implements the ISpTTSEngine interface. The primary method called by SAPI to perform speech rendering is ISpTTSEngine::Speak. SAPI, rather than the engine, performs XML parsing of the input text stream. The Speak method is handed a linked list of text fragments with their associated XML attribute state. The Speak method also receives a pointer to the SpVoice object's ISpTTSEngineSite interface. The TTS engine uses this interface to queue events and write output data.</P>
+
+<P>Even though SAPI is a free-threaded architecture, the TTS engine instances will always be called by SAPI on a single thread. TTS engines are never directly accessed by applications. SAPI ensures that all parameter validation and thread synchronization has been properly performed before the TTS engine is called. For more Speech Synthesis DDI information, see Text-to-Speech Engine Manager.</P>
+
+<H2 class="dtH2">API for Speech Recognition</H2>
+
+<P>Just as ISpVoice is the main interface for speech synthesis, ISpRecoContext is the main interface for speech recognition. Like the ISpVoice, it is an ISpEventSource, which means that it is the speech application's vehicle for receiving notifications for the requested speech recognition events.</P>
+
+<P>An application has the choice of two different types of speech recognition engines (ISpRecognizer). A shared recognizer that could possibly be shared with other speech recognition applications is recommended for most speech applications. To create an ISpRecoContext for a shared ISpRecognizer, an application need only call COM's CoCreateInstance on the component CLSID_SpSharedRecoContext. In this case, SAPI will set up the audio input stream, setting it to SAPI's default audio input stream. For large server applications that would run alone on a system, and for which performance is key, an InProc speech recognition engine is more appropriate. In order to create an ISpRecoContext for an InProc ISpRecognizer, the application must first call CoCreateInstance on the component CLSID_SpInprocRecoInstance to create its own InProc ISpRecognizer. Then the application must make a call to ISpRecognizer::SetInput (see also ISpObjectToken) in order to set up the audio input. Finally, the application can call ISpRecognizer::CreateRecoContext to obtain an ISpRecoContext. </P>
+
+<P>The next step is to set up notifications for events the application is interested in. As the ISpRecognizer is also an ISpEventSource, which in turn is an ISpNotifySource, the application can call one of the ISpNotifySource methods from its ISpRecoContext to indicate where the events for that ISpRecoContext should be reported. Then it should call ISpEventSource::SetInterest to indicate which events it needs to be notified of. The most important event is the SPEI_RECOGNITION, which indicates that the ISpRecognizer has recognized some speech for this ISpRecoContext. See SPEVENTENUM for details on the other available speech recognition events.</P>
+
+<P>Finally, a speech application must create, load, and start an ISpRecoGrammar, which essentially indicates what type of utterances to recognize, such as Dictation or a Command and Control grammar. First, the application creates an ISpRecoGrammar using ISpRecoContext::CreateGrammar. Then, the application loads the appropriate grammar, either by calling ISpRecoGrammar::LoadDictation for Dictation or one of the ISpRecoGrammar::LoadCmdxxx methods for Command and Control. Finally, to start these grammars so that recognition can start, the application calls ISpRecoGrammar::SetDictationState for Dictation or ISpRecoGrammar::SetRuleState or ISpRecoGrammar::SetRuleIdState for Command and Control.</P>
+
+<P>When recognitions come back to the application by means of the requested notification mechanism, the lParam member of the SPEVENT structure will be an ISpRecoResult by which the application can determine what was recognized and for which ISpRecoGrammar of the ISpRecoContext. </P>
+
+<P>An ISpRecognizer, whether shared or InProc, can have multiple ISpRecoContexts associated with it, and each one can be notified in its own way of events pertaining to it. An ISpRecoContext can have multiple ISpRecoGrammars created from it, each one for recognizing different types of utterances.</P>
+
+<H2 class="dtH2">DDI for Speech Recognition</H2>
+
+<P>At the most basic level, the SAPI 5.0 Recognition DDI provides the functionality for an engine to receive audio data from SAPI and return phrase recognitions. The two interfaces used for this are ISpSREngine, which is implemented by the engine, and ISpSREngineSite, which is implemented by SAPI. The SAPI interface ISpSREngineSite also provides speech engine methods for communicating more detailed information on what the engine recognizes. Grammars and speakers provide information to engines that better help them recognize speech and are a critical part of the communication between SAPI and speech engines. There are two final aspects of the communication between engine and SAPI: The order in which calls can be made, and threading issues. One of the key benefits from SAPI 5.0 is the simplification of threading issues.</P>
+
+<H3 class="dtH3">Basics</H3>
+
+<P>An engine provides its services to SAPI through the ISpSREngine interface. The function through which all recognitions are made is the ISpSREngine::RecognizeStream. When SAPI calls ISpSREngine::SetSite, it passes in a pointer to the interface ISpSREngineSite through which the engine will communicate to SAPI during the execution of ISpSREngine::RecognizeStream. SAPI dedicates a thread to an ISpSREngine object and the engine should not return from ISpSREngine::RecognizeStream until there is a failure or SAPI has indicated using ISpSREngineSite::Read, that there will be no more data to process and the engine has done whatever cleanup is appropriate.</P>
+
+<P>SAPI isolates engine developers from the details of managing an audio device. SAPI maintains a logical stream of raw audio data that it indexes with a stream position index. With a stream position index, an engine can call ISpSREngineSite::Read to receive a buffer of raw audio data during the execution of ISpSREngine::RecognizeStream. This call will block until all requested data is available. If ISpSREngineSite::Read returns with less data than requested, this means that there is no more data and the engine should return from ISpSREngine::RecognizeStream.</P>
+
+<H3 class="dtH3">Beyond Basics</H3>
+
+<P>Once an engine has recognized a phrase with enough certainty that it warrants a notification to the application, it should call ISpSREngineSite::AddEvent. The stream position passed into AddEvent indicates the point in the audio stream after which the engine is seeking recognitions. To pass phrase hypotheses to the application, the engine calls ISpSREngineSite::Recognition and passes an SPRECORESULTINFO structure with the hypothesis flag set. Once an engine has a final recognition candidate, it must call ISpSREngineSite::Recognition with an SPRECORESULTINFO structure with the hypothesis flag not set. If an engine rejects all possible recognitions, then it calls ISpSREngineSite::Recognition and passes in a NULL even though it called ISpSREngineSite::AddEvent. Although every call to ISpSREngineSite::AddEvent should be followed by one or more calls to ISpSREngineSite::Recognition, this restriction is not enforced by SAPI and must not be depended on.</P>
+
+<H3 class="dtH3">Calling order of functions and threading</H3>
+
+<P>The SAPI DDI layers make it possible for an engine to only have one thread which executes between SAPI and an engine. The only method in ISpSREngine which does not enter and exit relatively quickly is ISpSREngine::RecognizeStream. The engine can remain executing and blocking inside of ::RecognizeStream until it fails or receives no more data to process from ISpSREngineSite::Read. When the engine has the opportunity to give SAPI a chance to call back into ISpSREngine, it should call ISpSREngine::Synchronize and pass the stream position index of where the engine has finished recognizing audio data. From whatever thread Synchronize is called on, SAPI can call back into any of the other ISpSREngine methods except Recognize. For example, the speaker can change, grammars can unload, start or stop dynamically. At any point in time, ISpSREngine will be called only on the original thread which created the ISpSREngine or the thread on which the engine called ISpSREngineSite::Sychronize. If the engine only calls ISpSREngineSite::Synchronize on the same thread which entered ISpSREngine::RecognizeStream, then there is only one thread with which SAPI ever calls into an instance of ISpSREngine.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SAPI%205.0%20Overview&nbsp;(ceconsapi50overview.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Kernel and Device Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Kernel and Device Drivers"/>
+<MSHelp:RLTitle Title="Kernel and Device Drivers"/>
+<MSHelp:Keyword Index="A" Term="cmconKernelDeviceDrivers"/>
+<MSHelp:Keyword Index="K" Term="device drivers, migrating from version 2.12"/>
+<MSHelp:Keyword Index="K" Term="kernel, migrating from version 2.12"/>
+<MSHelp:Keyword Index="K" Term="migration, device driver issues"/>
+<MSHelp:Keyword Index="K" Term="migration, kernel issues"/>
+<MSHelp:Keyword Index="A" Term="cmconKernelDeviceDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: migration_issues.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801713">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconkerneldevicedrivers"></A>Kernel and Device Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table describes migration issues for the kernel and device drivers.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Issue</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="cmrefinterruptinitialize.htm">InterruptInitialize</A></TD>
+<TD width=63%>In Windows CE .NET, the <B>InterruptIntialize</B> function must be called prior to using the <I>hEvent</I> parameter that specified an ISR in a <A HREF="cerefwaitforsingleobject.htm">WaitForSingleObject</A> call. If you use the <I>hEvent</I> parameter in a call to <B>WaitForSingleObject</B> before you call <B>InterruptInitialize</B>, the <B>InterruptInitialize</B> call will fail.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>Full kernel mode</TD>
+<TD width=63%>The default mode in Windows CE .NET is to run every thread in kernel mode. This reduces overhead and increases performance of many APIs. However, this enables access to physical memory for all threads. The default mode can be set to user mode through the build process.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="cerefwaitformultipleobjects.htm">WaitForMultipleObjects</A> and ISTs</TD>
+<TD width=63%>In Windows CE 3.0 and earlier, the handle of the event that is linked to an ISR could have been used in a call to <B>WaitForMultipleObjects</B>. However, in doing this you could loose interrupts. In Windows CE .NET, a handle to an ISR can only be used in a call for <B>WaitForSingleObject</B>. This enables the kernel to optimize the setting of the ISR event that starts the waiting IST.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>Priority inversion</TD>
+<TD width=63%>The OS has simplified the algorithm to correct priority inversion, and as a result in some case only one level of inversion will occur.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>Default quantum</TD>
+<TD width=63%>The default thread for the OS is now 100_ms, but you can change it to any value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="cmconnestedinterrupts.htm">Nested Interrupts</A></TD>
+<TD width=63%>Support has been implemented for nested interrupts on the microprocessors and hardware that can support nested interrupts.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>Timer tick</TD>
+<TD width=63%>In Windows CE 3.0 and earlier, you could not redefine the timer tick. In Windows CE .NET, the timer tick is a constant 1 ms when not in idle. When entering IDLE mode, <MSHelp:link keywords="cmrefOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link>, you are given information on how to reset the timer tick to an extended period.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><MSHelp:link keywords="_wcesdk_Win32_GetThreadTimes" TABINDEX="0">GetThreadTimes</MSHelp:link></TD>
+<TD width=63%>In Windows CE .NET, the OS supports the complete implementation of this API.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>Priorities</TD>
+<TD width=63%>In Windows CE .NET, the OS supports 256 priorities and all the drivers, and the OS has been adjusted to take advantage of the new priorities.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmrefinterruptinitialize.htm">InterruptInitialize</A></P>
+
+<P><A HREF="cerefwaitforsingleobject.htm">WaitForSingleObject</A></P>
+
+<P><A HREF="cerefwaitformultipleobjects.htm">WaitForMultipleObjects</A></P>
+
+<P><MSHelp:link keywords="_wcesdk_Win32_GetThreadTimes" TABINDEX="0">GetThreadTimes</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Kernel%20and%20Device%20Drivers&nbsp;(cmconkerneldevicedrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

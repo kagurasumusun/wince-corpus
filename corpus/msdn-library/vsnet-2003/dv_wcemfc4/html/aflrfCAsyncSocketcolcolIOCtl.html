@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::IOCtl</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CAsyncSocket::IOCtl"/>
+<MSHelp:RLTitle Title="CAsyncSocket::IOCtl"/>
+<MSHelp:Keyword Index="A" Term="aflrfCAsyncSocketcolcolIOCtl"/>
+<MSHelp:Keyword Index="K" Term="IOCtl method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCAsyncSocketcolcolIOCtl"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="casyncso.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709746">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcasyncsocketcolcolioctl"></A>CAsyncSocket::IOCtl</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves operating parameters associated with the socket, independent of the protocol and communications subsystem.</P>
+
+<PRE class="syntax"><B>BOOL IOCtl( 
+long </B><I>lCommand</I><B>, 
+DWORD* </B><I>lpArgument </I><B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lCommand</I></DT>
+
+<DD>The command to perform on the socket.</dd>
+
+<DT><I>lpArgument</I></DT>
+
+<DD>A pointer to a parameter for <I>lCommand</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero, and a specific error code can be retrieved by calling <B>GetLastError</B>. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</dd>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</dd>
+
+<DT>WSAEINVAL</DT>
+
+<DD><I>lCommand</I> is not a valid command, or <I>lpArgument</I> is not an acceptable parameter for <I>lCommand</I>, or the command is not applicable to the type of socket supplied.</dd>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</dd>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Call this method to control the mode of a socket. You can use this routine on any socket in any state. The following commands are supported:
+
+<UL type="disc">
+	<LI><B>FIONBIO</B>&nbsp;&nbsp;&nbsp;Enables or disables nonblocking mode on the socket. The <I>lpArgument</I> parameter points at a <B>DWORD</B>, which is nonzero if nonblocking mode is enabled and zero if it is disabled. If <B>AsyncSelect</B> is issued on a socket, any attempt to use <B>IOCtl</B> to set the socket back to blocking mode fails with <B>WSAEINVAL</B>. To set the socket back to blocking mode and prevent the <B>WSAEINVAL</B> error, an application must first disable <B>AsyncSelect</B> by calling <B>AsyncSelect</B> with the <I>lEvent</I> parameter equal to zero, and then call <B>IOCtl</B>.</li>
+
+	<LI><B>FIONREAD</B>&nbsp;&nbsp;&nbsp;Determines the maximum number of bytes that can be read with one <B>Receive</B> call from this socket. The <I>lpArgument</I> parameter points at a <B>DWORD</B> in which <B>IOCtl</B> stores the result. If this socket is of type <B>SOCK_STREAM</B>, <B>FIONREAD</B> returns the total amount of data which can be read in a single <B>Receive</B>; this is normally the same as the total amount of data queued on the socket. If this socket is of type <B>SOCK_DGRAM</B>, <B>FIONREAD</B> returns the size of the first datagram queued on the socket.</li>
+
+	<LI><B>SIOCATMARK</B>&nbsp;&nbsp;&nbsp;Determine whether all out-of-band data has been read. This applies only to a socket of type <B>SOCK_STREAM</B> that is configured for in-line reception of any out-of-band data (<B>SO_OOBINLINE</B>). If no out-of-band data is waiting to be read, the operation returns nonzero. Otherwise, it returns zero, and the next <B>Receive</B> or <B>ReceiveFrom</B> performed on the socket retrieves some or all of the data preceding the mark. The application should use the <B>SIOCATMARK</B> operation to determine whether any data remains. If there is any normal data preceding the urgent (out-of-band) data, it is received in order. A <B>Receive</B> or <B>ReceiveFrom</B> never mixes out-of-band and normal data in the same call. The <I>lpArgument</I> parameter points at a <B>DWORD</B> in which <B>IOCtl</B> stores the result.</li>
+</UL>
+
+<P>This function is a subset of <B>IOctl</B> as used in Berkeley sockets. In particular, there is no command which is equivalent to <B>FIOASYNC</B>, while <B>SIOCATMARK</B> is the only socket-level command which is supported.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Afxsock.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcasyncsocketcolcolcreate.htm"><B>CAsyncSocket::Create</B></A>, <A HREF="aflrfcasyncsocketcolcolgetsockopt.htm"><B>CAsyncSocket::GetSockOpt</B></A>, <A HREF="aflrfcasyncsocketcolcolsetsockopt.htm"><B>CAsyncSocket::SetSockOpt</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709746', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

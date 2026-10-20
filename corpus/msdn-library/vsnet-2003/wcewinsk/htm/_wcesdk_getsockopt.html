@@ -1,0 +1,462 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>getsockopt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="getsockopt"/>
+<MSHelp:RLTitle Title="getsockopt"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_getsockopt"/>
+<MSHelp:Keyword Index="K" Term="getsockopt"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_getsockopt"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720492">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_getsockopt"></A>getsockopt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function retrieves a socket option.</P>
+
+<PRE class="syntax"><B>int getsockopt(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>int </B><I>level</I><B>,</B>
+<B>int </B><I>optname</I><B>,</B>
+<B>char FAR *</B><I>optval</I><B>,</B>
+<B>int FAR *</B><I>optlen</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s </I></DT>
+
+<DD>[in] Descriptor identifying a socket. </dd>
+
+<DT><I>level</I> </DT>
+
+<DD>[in] Level at which the option is defined; the supported levels include SOL_SOCKET and IPPROTO_TCP. </dd>
+
+<DT><I>optname</I> </DT>
+
+<DD>[in] Socket option for which the value is to be retrieved. </dd>
+
+<DT><I>optval</I> </DT>
+
+<DD>[out] Pointer to the buffer in which the value for the requested option is to be returned. </dd>
+
+<DT><I>optlen</I> </DT>
+
+<DD>[in/out] Pointer to the size of the <I>optval</I> buffer. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>getsockopt</B> returns zero. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code can be retrieved by calling <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Error value </TH>
+<TH width=69%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSANOTINITIALISED </TD>
+<TD width=69%>A successful <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> call must occur before using the <B>getsockopt</B> function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAENETDOWN </TD>
+<TD width=69%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEFAULT </TD>
+<TD width=69%>One of the <I>optval</I> or <I>optlen</I> parameters is not a valid part of the user address space, or the <I>optlen</I> parameter is too small. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEINPROGRESS </TD>
+<TD width=69%>A blocking Winsock call is in progress, or the service provider is still processing a callback function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAEINVAL </TD>
+<TD width=69%>The <I>level</I> parameter is unknown or invalid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAENOPROTOOPT </TD>
+<TD width=69%>The option is unknown or unsupported by the indicated protocol family. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>WSAENOTSOCK </TD>
+<TD width=69%>The descriptor is not a socket. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>getsockopt</B> function retrieves the current value for a socket option associated with a socket of any type, in any state, and stores the result in <I>optval</I>. Options can exist at multiple protocol levels, but they are always present at the uppermost socket level. Options affect socket operations, such as the packet routing and out of band (OOB) data transfer.</P>
+
+<P>The value associated with the selected option is returned in the buffer <I>optval</I>. The integer pointed to by <I>optlen</I> should originally contain the size of this buffer; on return, it will be set to the size of the value returned. For SO_LINGER, this will be the size of a <A HREF="cereflinger.htm">linger</A> structure. For most other options, it will be the size of an integer.</P>
+
+<P>The application is responsible for allocating any memory space pointed to directly or indirectly by any of the parameters it specified.</P>
+
+<P>If the option was never set with <A HREF="_wcesdk_setsockopt.htm">setsockopt</A>, then <B>getsockopt</B> returns the default value for the option.</P>
+
+<P>The following options are supported for <B>getsockopt</B>. The Type column identifies the type of data addressed by <I>optval</I>.</P>
+
+<P><B><I>level</I> =</B> <B>SOL_SOCKET</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value </TH>
+<TH width=26%>Type </TH>
+<TH width=41%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_ACCEPTCONN </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>The socket is listening.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_BROADCAST </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>The socket is configured for the transmission of broadcast messages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_DONTLINGER </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>If TRUE, the SO_LINGER option is disabled.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_ERROR </TD>
+<TD width=26%>int</TD>
+<TD width=41%>Retrieves error status and clear.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_GROUP_ID </TD>
+<TD width=26%>GROUP</TD>
+<TD width=41%>Reserved.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_GROUP_PRIORITY </TD>
+<TD width=26%>int</TD>
+<TD width=41%>Reserved.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_KEEPALIVE </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>Keep-alives are being sent. Not supported on ATM sockets.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_LINGER </TD>
+<TD width=26%><A HREF="cereflinger.htm">linger</A> structure</TD>
+<TD width=41%>Returns the current linger options.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_OOBINLINE </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>OOB data is being received in the usual data stream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_RCVBUF </TD>
+<TD width=26%>int</TD>
+<TD width=41%>Buffer size for receives.
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;</B>This option is only supported for SOCK_DGRAM sockets.</BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_REUSEADDR </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>The socket can be bound to an address that is already in use. Not applicable for ATM sockets.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_SNDBUF </TD>
+<TD width=26%>int</TD>
+<TD width=41%>Buffer size for sends.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_TYPE </TD>
+<TD width=26%>int</TD>
+<TD width=41%>The type of the socket.</TD>
+</TR>
+</table></div>
+
+<P><B><I>level</I> = IPPROTO_TCP</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value </TH>
+<TH width=26%>Type</TH>
+<TH width=41%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>TCP_NODELAY </TD>
+<TD width=26%>BOOL</TD>
+<TD width=41%>Disables the Nagle algorithm for send coalescing.</TD>
+</TR>
+</table></div>
+
+<P><B><I>level</I> = NSPROTO_IPX</B></P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Windows CE .NET does not support Internetwork Packet Exchange (IPX).</BLOCKQUOTE>
+
+<P>BSD options not supported for <B>getsockopt</B> are as follows.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value </TH>
+<TH width=26%>Type </TH>
+<TH width=41%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_RCVLOWAT </TD>
+<TD width=26%>int </TD>
+<TD width=41%>Retrieves <B>recv</B> low watermark. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_RCVTIMEO </TD>
+<TD width=26%>int </TD>
+<TD width=41%>Retrieves <B>recv</B> time-out value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_SNDLOWAT </TD>
+<TD width=26%>int </TD>
+<TD width=41%>Retrieves send low watermark. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SO_SNDTIMEO </TD>
+<TD width=26%>int </TD>
+<TD width=41%>Retrieves time-out value for send.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>TCP_MAXSEG </TD>
+<TD width=26%>int </TD>
+<TD width=41%>RetrievesTCP maximum-segment size. </TD>
+</TR>
+</table></div>
+
+<P>Calling <B>getsockopt</B> with an unsupported option will result in an error code of WSAENOPROTOOPT being returned from <B>WSAGetLastError</B>.</P>
+
+<P><B>SO_DEBUG </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+Windows Sockets service providers are encouraged, but not required, to supply output debug information if the SO_DEBUG option is set by an application. The mechanism for generating the debug information and the form it takes are beyond the scope of this document. </BLOCKQUOTE>
+
+<P><B>SO_ERROR </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+The SO_ERROR option returns and resets the per socket&#0150;based error code, which is different from the per thread based&#0150;error code that is handled using the <B>WSAGetLastError</B> and <A HREF="_wcesdk_wsasetlasterror.htm">WSASetLastError</A> function calls. A successful call using the socket does not reset the socket-based error code returned by the SO_ERROR option. </BLOCKQUOTE>
+
+<P><B>SO_GROUP_ID </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+This option is reserved. This option is also exclusive to <B>getsockopt</B> and the value should be NULL. </BLOCKQUOTE>
+
+<P><B>SO_GROUP_PRIORITY</B></P>
+
+<BLOCKQUOTE class="dtBlock">
+This option is reserved. </BLOCKQUOTE>
+
+<P><B>SO_KEEPALIVE </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+An application can request that a TCP/IP service provider enable the use of keep-alive packets on TCP connections by turning on the SO_KEEPALIVE socket option. A Windows Sockets provider need not support the use of keep-alive. If it does, the precise semantics are implementation-specific but should conform to section 4.2.3.6 of RFC 1122: Requirements for Internet Hosts &#0151; Communication Layers. If a connection is dropped as the result of keep-alives, the error code WSAENETRESET is returned to any calls in progress on the socket and any subsequent calls will fail with WSAENOTCONN. SO_KEEPALIVE is not supported on ATM sockets, and requests to enable the use of keep-alive packets on an ATM socket results in an error being returned by the socket. </BLOCKQUOTE>
+
+<P><B>SO_LINGER </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+SO_LINGER controls the action taken when unsent data is queued on a socket and a <A HREF="_wcesdk_closesocket.htm">closesocket</A> is performed. See <B>closesocket</B> for a description of the way in which the SO_LINGER settings affect the semantics of <B>closesocket</B>. The application gets the current behavior by retrieving a <B>linger</B> structure (pointed to by the <I>optval</I> parameter). </BLOCKQUOTE>
+
+<P><B>SO_MAX_MSG_SIZE </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+This is a get-only socket option that indicates the maximum outbound (send) size of a message for message-oriented socket types (for example, SOCK_DGRAM) as implemented by a particular service provider. It has no description for byte stream oriented sockets. There is no provision to find out the maximum inbound&#0150;message size. </BLOCKQUOTE>
+
+<P><B>SO_PROTOCOL_INFO </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+This is a get-only option that supplies the <A HREF="cerefwsaprotocol_info.htm">WSAPROTOCOL_INFO</A> structure associated with this socket. See <A HREF="_wcesdk_wsaenumprotocols.htm">WSAEnumProtocols</A> for more information about this structure. </BLOCKQUOTE>
+
+<P><B>SO_SNDBUF </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+When a Windows Sockets implementation supports the SO_RCVBUF and SO_SNDBUF options, an application can request different buffer sizes (larger or smaller). The call to <B>setsockopt</B> can succeed even if the implementation did not provide the whole amount requested. An application must call this function with the same option to check the buffer size actually provided. </BLOCKQUOTE>
+
+<P><B>SO_REUSEADDR </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+By default, a socket cannot be bound (see <A HREF="_wcesdk_bind.htm">bind</A>) to a local address that is already in use. On occasion, however, it can be necessary to reuse an address in this way. Because every connection is uniquely identified by the combination of local and remote addresses, there is no problem with having two sockets bound to the same local address as long as the remote addresses are different. To inform the Windows Sockets provider that a <B>bind</B> on a socket should not be disallowed because the desired address is already in use by another socket, the application should set the SO_REUSEADDR socket option for the socket before issuing the <B>bind</B>. Note that the option is interpreted only at the time of the <B>bind</B>. It is therefore unnecessary (but harmless) to set the option on a socket that is not to be bound to an existing address and setting or resetting the option after the <B>bind</B> has no effect on this or any other socket. SO_REUSEADDR is not applicable for ATM sockets, and although requests to reuse and address do not result in an error, they have no affect on when an ATM socket is in use. </BLOCKQUOTE>
+
+<P><B>PVD_CONFIG </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+This option retrieves an opaque data structure object from the service provider associated with socket <I>s</I>. This object stores the current configuration information of the service provider. The exact format of this data structure is service provider specific. </BLOCKQUOTE>
+
+<P><B>TCP_NODELAY </B></P>
+
+<BLOCKQUOTE class="dtBlock">
+The TCP_NODELAY option is specific to TCP/IP service providers. The Nagle algorithm is disabled if the TCP_NODELAY option is enabled (and vice versa). The Nagle algorithm (described in RFC 896) is very effective in reducing the number of small packets sent by a host. The process involves buffering send data when there is unacknowledged data already in flight or buffering send data until a full-size packet can be sent. It is highly recommended that Windows Sockets implementations enable the Nagle Algorithm by default because, for the vast majority of application protocols, the Nagle Algorithm can deliver significant performance enhancements. However, for some applications this algorithm can impede performance, and <B>setsockopt</B> with the same option can be used to turn it off. These are applications where many small messages are sent, and the time delays between the messages are maintained. </BLOCKQUOTE>
+
+<H4 class="dtH4">Notes for IrDA Sockets</H4>
+
+<UL type="disc">
+	<LI>The Af_irda.h header file must be explicitly included. </li>
+
+	<LI>Windows NT&reg; and Windows 2000 will return WSAENETDOWN to indicate the underlying transceiver driver failed to initialize with the IrDA protocol stack. </li>
+
+	<LI>IrDA supports special socket options, which are shown in the following table. <div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value </TH>
+<TH width=26%>Type </TH>
+<TH width=41%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>IRLMP_ENUMDEVICES </TD>
+<TD width=26%>*DEVICELIST </TD>
+<TD width=41%>Describes devices in range. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>IRLMP_IAS_QUERY </TD>
+<TD width=26%>*IAS_QUERY </TD>
+<TD width=41%>Retrieve Information Access Service (IAS) attributes. </TD>
+</TR>
+</table></div>
+</li>
+</UL>
+
+<P>Before an IrDA socket connection can be initiated, a device address must be obtained by performing a <B>getsockopt</B>(IRLMP_ENUMDEVICES) function call, which returns a list of all available IrDA devices. A device address returned from the function call is copied into a <A HREF="cerefsockaddr_irda.htm">SOCKADDR_IRDA</A> structure, which in turn is used by a subsequent call to the <B>connect</B> function call. </P>
+
+<P>Discovery can be performed in two ways. First, performing a <B>getsockopt</B> function call with the IRLMP_ENUMDEVICES option causes a single discovery to be run on each idle adapter. The list of discovered devices and cached devices (on active adapters) is returned immediately. The following code example demonstrates this approach.</P>
+
+<PRE class="code">SOCKADDR_IRDA     DestSockAddr = { AF_IRDA, 0, 0, 0, 0, "SampleIrDAService" };
+#define DEVICE_LIST_LEN    10
+unsigned char    DevListBuff[sizeof(DEVICELIST) &#0150;
+                 sizeof(IRDA_DEVICE_INFO) +
+                 (sizeof(IRDA_DEVICE_INFO) * DEVICE_LIST_LEN)];
+int              DevListLen    = sizeof(DevListBuff);
+PDEVICELIST      pDevList      = (PDEVICELIST) &amp;DevListBuff;
+pDevList-&gt;numDevice = 0;
+// Sock is not in connected state
+if (getsockopt(Sock, SOL_IRLMP, IRLMP_ENUMDEVICES,
+               (char *) pDevList, &amp;DevListLen) == SOCKET_ERROR)
+{
+        // WSAGetLastError 
+}
+if (pDevList-&gt;numDevice == 0)
+{
+        // no devices discovered or cached
+        // not a bad idea to run a couple of times
+}
+else
+{
+       // one per discovered device
+       for (i = 0; i &lt; (int) pDevList-&gt;numDevice; i++)
+       {
+            // typedef struct _IRDA_DEVICE_INFO
+            // {
+            //     u_char    irdaDeviceID[4];
+            //     char      irdaDeviceName[22];
+            //     u_char    irdaDeviceHints1;
+            //     u_char    irdaDeviceHints2;
+            //     u_char    irdaCharSet;
+            // } _IRDA_DEVICE_INFO;
+            // pDevList-&gt;Device[i]. see _IRDA_DEVICE_INFO for fields
+            // display the device names and let the user select one
+       }
+}
+// assume the user selected the first device [0]
+memcpy(&amp;DestSockAddr.irdaDeviceID[0], &amp;pDevList-&gt;Device[0].irdaDeviceID[0], 4);
+if (connect(Sock, (const struct sockaddr *) &amp;DestSockAddr,
+            sizeof(SOCKADDR_IRDA)) == SOCKET_ERROR)
+{
+       // WSAGetLastError
+}</PRE>
+
+<P>The second approach to performing discovery of IrDA device addresses is to perform a lazy discovery. In this approach, the application is not notified until the discovered devices list changes from the last discovery run by the stack.</P>
+
+<P>The <B>IAS_QUERY</B> structure shown in the Type column in the previous table is used to retrieve a single attribute of a single class from a peer device's IAS database. The application specifies the device and class to query and the attribute and attribute type. Note that the device would have been obtained previously by a call to <B>getsockopt</B>(IRLMP_ENUMDEVICES). It is expected that the application allocates a buffer, of the necessary size, for the returned parameters.</P>
+
+<P>Many SO level socket options are not meaningful to IrDA; only SO_LINGER and SO_DONTLINGER are specifically supported.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_bind.htm">bind</A>, <A HREF="_wcesdk_closesocket.htm">closesocket</A>, <A HREF="_wcesdk_setsockopt.htm">setsockopt</A>, <A HREF="_wcesdk_socket.htm">socket</A>, <A HREF="_wcesdk_wsaconnect.htm">WSAConnect</A>, <A HREF="_wcesdk_wsaenumprotocols.htm">WSAEnumProtocols</A>, <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsasetlasterror.htm">WSASetLastError</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A>, <A HREF="cereflinger.htm">linger</A>, <A HREF="cerefsockaddr_irda.htm">SOCKADDR_IRDA</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;getsockopt&nbsp;(_wcesdk_getsockopt.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

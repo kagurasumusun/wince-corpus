@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSAConnect</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSAConnect"/>
+<MSHelp:RLTitle Title="WSAConnect"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAConnect"/>
+<MSHelp:Keyword Index="K" Term="WSAConnect"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAConnect"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720513">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_wsaconnect"></A>WSAConnect</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function establishes a connection to another socket application and exchanges <A HREF="_wcesdk_connect_function.htm">connect</A> data.</P>
+
+<PRE class="syntax"><B>int  WSAConnect(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>const struct SOCK_ADDR *</B><I>name</I><B>,</B>
+<B>int </B><I>namelen</I><B>,</B>
+<B>LPWSABUF </B><I>lpCallerData</I><B>,</B>
+<B>LPWSABUF </B><I>lpCalleeData</I><B>,</B>
+<B>LPQOS </B><I>lpSQOS</I><B>,</B>
+<B>LPQOS </B><I>lpGQOS</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor identifying an unconnected socket.</dd>
+
+<DT><I>name</I></DT>
+
+<DD>[in] Name of the socket in the other application to which to connect.</dd>
+
+<DT><I>namelen</I></DT>
+
+<DD>[in] Length of the name.</dd>
+
+<DT><I>lpCallerData</I></DT>
+
+<DD>[in] Pointer to the user data that is to be transferred to the other socket during connection establishment.</dd>
+
+<DT><I>lpCalleeData</I></DT>
+
+<DD>[out] Pointer to the user data that is to be transferred back from the other socket during connection establishment.</dd>
+
+<DT><I>lpSQOS</I></DT>
+
+<DD>[in] Reserved.</dd>
+
+<DT><I>lpGQOS</I></DT>
+
+<DD>[in] Reserved.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>WSAConnect</B> returns zero. Otherwise, it returns SOCKET_ERROR, and a specific error code can be retrieved by calling the <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A> function. On a blocking socket, the return value indicates success or failure of the connection attempt.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The Windows CE default TCP/UDP service provider does not support the exchange of data at the time of connection for the default service provider. <I>lpCalleeData</I> and <I>lpCallerData</I> should both be NULL.</BLOCKQUOTE>
+
+<P>With a nonblocking socket, the connection attempt cannot be completed immediately. In this case, <B>WSAConnect</B> will return SOCKET_ERROR and <B>WSAGetLastError</B> will return WSAEWOULDBLOCK. The application could perform the following actions: 
+
+<UL type="disc">
+	<LI>Use <B>select</B> to determine the completion of the connection request by checking if the socket is writeable. </li>
+
+	<LI>If your application is using <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A> to indicate interest in connection events, then the associated event object will be signaled when the connect<B> </B>operation is complete (successful or not). </li>
+</UL>
+
+<P>For a nonblocking socket, until the connection attempt completes all subsequent calls to <B>WSAConnect</B> on the same socket will fail with the error code WSAEALREADY.</P>
+
+<P>If the return error code indicates the connection attempt failed (that is, WSAECONNREFUSED, WSAENETUNREACH, or WSAETIMEDOUT), the application can call <B>WSAConnect</B> again for the same socket. The following table shows a list of possible error values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Error value </TH>
+<TH width=73%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSANOTINITIALISED </TD>
+<TD width=73%>A successful <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> call must occur before using the <B>WSAConnect</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENETDOWN </TD>
+<TD width=73%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEADDRINUSE </TD>
+<TD width=73%>The local address of the socket is already in use and the socket was not marked to allow address reuse with SO_REUSEADDR. This error usually occurs during the execution of the <A HREF="_wcesdk_bind.htm">bind</A> function, but it could be delayed until the <B>WSAConnect</B> function if the <B>bind</B> function operates on a partially wildcard address (involving ADDR_ANY) and if a specific address needs to be "committed" at the time of the <B>WSAConnect</B> function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINTR </TD>
+<TD width=73%>The (blocking) Winsock call was canceled, or the socket was closed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINPROGRESS </TD>
+<TD width=73%>A blocking Winsock call is in progress, or the service provider is still processing a callback function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEALREADY </TD>
+<TD width=73%>A nonblocking <B>connect</B>/<B>WSAConnect</B> call is in progress on the specified socket. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEADDRNOTAVAIL </TD>
+<TD width=73%>The remote address is not a valid address (such as ADDR_ANY). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEAFNOSUPPORT </TD>
+<TD width=73%>Addresses in the specified family cannot be used with this socket. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAECONNREFUSED </TD>
+<TD width=73%>The attempt to connect<B> </B>was rejected. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEFAULT </TD>
+<TD width=73%>The <I>name</I> or <I>namelen</I> parameter is not a valid part of the user address space; the <I>namelen</I> parameter is too small; the buffer length for <I>lpCalleeData</I> is too small; or the buffer length for <I>lpCallerData</I> is too large. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINVAL </TD>
+<TD width=73%>The parameter <I>s</I> is a listening socket. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEISCONN </TD>
+<TD width=73%>The socket is already connected (connection-oriented sockets only). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENETUNREACH </TD>
+<TD width=73%>The network cannot be reached from this host at this time. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENOBUFS </TD>
+<TD width=73%>No buffer space is available. The socket cannot be connected. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENOTSOCK </TD>
+<TD width=73%>The descriptor is not a socket. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEOPNOTSUPP </TD>
+<TD width=73%>The structures specified in <I>lpSQOS</I> and <I>lpGQOS</I> cannot be satisfied. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEPROTONOSUPPORT </TD>
+<TD width=73%>The <I>lpCallerData</I> argument is not supported by the service provider. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAETIMEDOUT </TD>
+<TD width=73%>An attempt to connect<B> </B>timed out without establishing a connection. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEWOULDBLOCK </TD>
+<TD width=73%>The socket is marked as nonblocking and the connection cannot be completed immediately. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEACCES </TD>
+<TD width=73%>An attempt to connect<B> </B>datagram socket to broadcast address failed because setsockopt SO_BROADCAST is not enabled. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>WSAConnect</B> function is used to create a connection to the specified destination and to perform a number of other ancillary operations that occur at connect<B> </B>time. If socket <I>s</I> is unbound, unique values are assigned to the local association by the system and the socket is marked as bound.</P>
+
+<P>For connection-oriented sockets (for example, type <B>SOCK_STREAM</B>), an active connection is initiated to the foreign host using name (an address in the name space of the socket). When this call completes successfully, the socket is ready to send and receive data. If the <I>address</I> parameter of the <I>name</I> structure is all zeroes, <B>WSAConnect</B> will return the error WSAEADDRNOTAVAIL. Any attempt to reconnect an active connection will fail with the error code WSAEISCONN.</P>
+
+<P>For connection-oriented nonblocking sockets, it is often not possible to complete the connection immediately. In such cases, this function returns the error WSAEWOULDBLOCK. However, the operation proceeds. When the success or failure outcome becomes known, it may be reported in one of several ways depending on how the client registers for notification. If the client uses the <A HREF="_wcesdk_select.htm">select</A> function, success is reported in the writefds set and failure is reported in the exceptfds set. If the client uses <B>WSAEventSelect</B>, the notification is announced with FD_CONNECT and the error code associated with the FD_CONNECT indicates either success or a specific reason for failure.</P>
+
+<P>For a connectionless socket (for example, type <B>SOCK_DGRAM</B>), the operation performed by <B>WSAConnect</B> is merely to establish a default destination address so that the socket can be used on subsequent connection-oriented send and receive operations (<A HREF="_wcesdk_send.htm">send</A>, <A HREF="_wcesdk_wsasend.htm">WSASend</A>, <A HREF="_wcesdk_recv.htm">recv</A>, and <A HREF="_wcesdk_wsarecv.htm">WSARecv</A>). Any datagrams received from an address other than the destination address specified will be discarded. If the entire <I>name</I> structure is all zeros (not just the <I>address</I> parameter of the <I>name</I> structure), then the socket will be disconnected. Then, the default remote address will be indeterminate, so <B>send</B>/<B>WSASend</B> and <B>recv</B>/<B>WSARecv</B> calls will return the error code WSAENOTCONN. However, <A HREF="_wcesdk_sendto.htm">sendto</A>/<A HREF="_wcesdk_wsasendto.htm">WSASendTo</A> and <A HREF="_wcesdk_recvfrom.htm">recvfrom</A>/<A HREF="_wcesdk_wsarecvfrom.htm">WSARecvFrom</A> can still be used. The default destination can be changed by simply calling <B>WSAConnect</B> again, even if the socket is already connected. Any datagrams queued for receipt are discarded if name is different from the previous <B>WSAConnect</B> call.</P>
+
+<P>For connectionless sockets, name can indicate any valid address, including a broadcast address. However, to connect<B> </B>to a broadcast address, a socket must have <A HREF="_wcesdk_setsockopt.htm">setsockopt</A> SO_BROADCAST enabled. Otherwise, <B>WSAConnect</B> will fail with the error code WSAEACCES.</P>
+
+<P>On connectionless sockets, exchange of user-to-user data is not possible and the corresponding parameters will be silently ignored.</P>
+
+<P>The application is responsible for allocating any memory space pointed to directly or indirectly by any of the parameters it specifies.</P>
+
+<P>The <I>lpCallerData</I> parameter is a value parameter that contains any user data that is to be sent along with the connection request. If <I>lpCallerData</I> is NULL, no user data will be passed to the peer. The <I>lpCalleeData</I> parameter is a result parameter that will contain any user data passed back from the other socket as part of the connection establishment in a <B>WSABUF</B> structure. The <I>lpCalleeData-&gt;len </I>member initially contains the length of the buffer allocated by the application and pointed to by <I>lpCalleeData</I>-&gt;<I>buf</I>. The <I>lpCalleeData-&gt;len</I> member will be set to zero if no user data has been passed back. The <I>lpCalleeData</I> information will be valid when the connection operation is complete. For blocking sockets, the connection operation completes when <B>WSAConnect</B> returns. For nonblocking sockets, completion will be after the FD_CONNECT notification has occurred. If <I>lpCalleeData</I> is NULL, no user data will be passed back. The exact format of the user data is specific to the address family to which the socket belongs.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_accept_function.htm">accept</A>, <A HREF="_wcesdk_bind.htm">bind</A>, <A HREF="_wcesdk_connect_function.htm">connect</A>, <A HREF="_wcesdk_getsockname.htm">getsockname</A>, <A HREF="_wcesdk_getsockopt.htm">getsockopt</A>, <A HREF="_wcesdk_recv.htm">recv</A>, <A HREF="_wcesdk_recvfrom.htm">recvfrom</A>, <A HREF="_wcesdk_select.htm">select</A>, <A HREF="_wcesdk_send.htm">send</A>, <A HREF="_wcesdk_sendto.htm">sendto</A>, <A HREF="_wcesdk_setsockopt.htm">setsockopt</A>, <A HREF="_wcesdk_socket.htm">socket</A>, <A HREF="_wcesdk_wsaeventselect.htm">WSAEventSelect</A>, <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsarecv.htm">WSARecv</A>, <A HREF="_wcesdk_wsarecvfrom.htm">WSARecvFrom</A>, <A HREF="_wcesdk_wsasend.htm">WSASend</A>, <A HREF="_wcesdk_wsasendto.htm">WSASendTo</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSAConnect&nbsp;(_wcesdk_wsaconnect.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

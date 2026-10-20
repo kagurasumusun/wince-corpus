@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Optimizing the ATI Sample Display Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Optimizing the ATI Sample Display Driver"/>
+<MSHelp:RLTitle Title="Optimizing the ATI Sample Display Driver"/>
+<MSHelp:Keyword Index="A" Term="cxconOptimizingATISampleDisplayDriver"/>
+<MSHelp:Keyword Index="K" Term="ATI display drivers, sample"/>
+<MSHelp:Keyword Index="K" Term="samples, ATI display driver"/>
+<MSHelp:Keyword Index="A" Term="cxconOptimizingATISampleDisplayDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_688075">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconoptimizingatisampledisplaydriver"></A>Optimizing the ATI Sample Display Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The sample ATI driver has a performance issue with video memory to video memory bit block transfers that also use TRANPARENCY. This can be improved by replacing the <B>ATI::AcceleratedSrcCopyBlt</B> function in %_WINCEROOT%\Public\Common\OAK\Drivers\Display\ATI with the following code.</P>
+
+<PRE class="code">SCODE
+ATI::AcceleratedSrcCopyBlt (GPEBltParms *pBltParms)
+{
+   DWORD  DstCntl = DST_Y_TOP_TO_BOTTOM | DST_X_LEFT_TO_RIGHT;
+   int    srcX = pBltParms-&gt;prclSrc-&gt;left + ((ATISurf *) (pBltParms-&gt;pSrc))-&gt;Left(); // left of source rect
+   int    srcY = pBltParms-&gt;prclSrc-&gt;top + ((ATISurf *) (pBltParms-&gt;pSrc))-&gt;Top();   // top of source rect
+   int    dstX = pBltParms-&gt;prclDst-&gt;left + ((ATISurf *) (pBltParms-&gt;pDst))-&gt;Left(); // left of dest rect
+   int    dstY = pBltParms-&gt;prclDst-&gt;top + ((ATISurf *) (pBltParms-&gt;pDst))-&gt;Top();   // top of dest rect
+   int    width = pBltParms-&gt;prclDst-&gt;right  - pBltParms-&gt;prclDst-&gt;left;             // Rectangle Width Data Store
+   int    height = pBltParms-&gt;prclDst-&gt;bottom - pBltParms-&gt;prclDst-&gt;top;             // Rectangle Height Data Store
+
+   RETAILMSG (ATI_FUNCTION_MSGS, (TEXT("ATI::AcceleratedSrcCopyBlt()\r\n")));
+ 
+   // check for negative x or y direction and correct values accordingly
+
+   if (!pBltParms-&gt;xPositive)
+   {
+          srcX += (width - 1);
+          dstX += (width - 1);
+          DstCntl &amp;= ~DST_X_LEFT_TO_RIGHT;
+   }
+ 
+   if (!pBltParms-&gt;yPositive)
+   {
+          srcY += (height - 1);
+          dstY += (height - 1);
+          DstCntl &amp;= ~DST_Y_TOP_TO_BOTTOM;
+   }
+ 
+   WaitForFIFO(10);           // wait for max number of possibly used registers to be available
+ 
+   if (pBltParms-&gt;bltFlags &amp; BLT_TRANSPARENT)
+   {
+          _memwD_reg (CLR_CMP_CNTL, COMPARE_SOURCE | COMPARE_EQUAL);    // turn on transparency
+          _memwD_reg (CLR_CMP_CLR, pBltParms-&gt;solidColor);              // set comparison color
+   }
+ 
+   switch (pBltParms-&gt;rop4)
+   {
+          case   0x6666:       // SRCINVERT
+                 _memwD_reg (DP_MIX, FRGD_MIX_D_XOR_S | BKGD_MIX_D);
+                 break;
+ 
+          case   0x8888:       // SRCAND
+                 _memwD_reg (DP_MIX, FRGD_MIX_D_AND_S | BKGD_MIX_D);
+                 break;
+ 
+          default:
+
+          case   0xCCCC:       // SRCCOPY
+                 _memwD_reg (DP_MIX, FRGD_MIX_S | BKGD_MIX_D);
+                 break;
+ 
+          case   0xEEEE:       // SRCPAINT
+                 _memwD_reg (DP_MIX, FRGD_MIX_D_OR_S | BKGD_MIX_D);
+                 break;
+   }
+ 
+   _memwD_reg (DP_SRC, FRGD_SRC_BLIT);
+   _memwD_reg (SRC_Y_X, (srcX &lt;&lt; 16) | srcY);
+   _memwD_reg (SRC_HEIGHT1_WIDTH1, (width &lt;&lt; 16) | height);
+   _memwD_reg (DST_CNTL, DstCntl);
+   _memwD_reg (DST_Y_X, (dstX &lt;&lt; 16) | dstY);
+   _memwD_reg (DST_HEIGHT_WIDTH, (width &lt;&lt; 16) | height);
+ 
+   if (pBltParms-&gt;bltFlags &amp; BLT_TRANSPARENT)
+   {
+          _memwD_reg (CLR_CMP_CNTL, COMPARE_DESTINATION | COMPARE_FALSE);      // turn off Transparency
+
+   }
+ 
+   return S_OK;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconflatsampledisplaydriver.htm">FLAT Sample Display Driver</A></P>
+
+<P><A HREF="cxconatisampledisplaydriver.htm">ATI Sample Display Driver</A></P>
+
+<P><A HREF="cxconvictoriapcigraphicsdevelopmentboard.htm">Victoria PCI Graphics Development Board</A></P>
+
+<P><A HREF="_wceddk_sample_drvescape_function.htm">Sample DrvEscape Function</A></P>
+
+<P><A HREF="cxconsampleblitacceleration.htm">Sample Blit Acceleration</A> </P>
+
+<P><A HREF="cxcondisplaydriverperformanceprofiling.htm">Display Driver Performance Profiling</A></P>
+
+<P><A HREF="cxcondisplaydriverregistrysettings.htm">Display Driver Registry Settings</A> </P>
+
+<P><A HREF="cxcondisplaydriverarchitecture.htm">Display Driver Architecture</A></P>
+
+<P><A HREF="cxcondisplaydriveradvancedtopics.htm">Display Driver Extension</A></P>
+
+<P><A HREF="cxcondisplaydriversupport.htm">Display Driver Recommendations</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Optimizing%20the%20ATI%20Sample%20Display%20Driver&nbsp;(cxconoptimizingatisampledisplaydriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

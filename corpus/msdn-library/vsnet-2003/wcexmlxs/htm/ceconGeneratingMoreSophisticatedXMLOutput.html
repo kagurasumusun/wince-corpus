@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Generating More Sophisticated XML Output</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Generating More Sophisticated XML Output"/>
+<MSHelp:RLTitle Title="Generating More Sophisticated XML Output"/>
+<MSHelp:Keyword Index="A" Term="ceconGeneratingMoreSophisticatedXMLOutput"/>
+<MSHelp:Keyword Index="A" Term="ceconGeneratingMoreSophisticatedXMLOutput"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xslpg03.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801973">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cecongeneratingmoresophisticatedxmloutput"></A>Generating More Sophisticated XML Output</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When generating XML, it is often useful to generate comments, processing instructions, and so on. XSLT provides a set of commands for creating specific kinds of nodes in the output. Just as the &lt;xsl:attribute&gt; element can insert an attribute into the tree, XSLT provides a similar set of elements for inserting other types of nodes. For more information about the &lt;xsl:attribute&gt; element, see <A HREF="ceconaccessingoutputtingattributes.htm">Accessing and Outputting Attributes</A>.</P>
+
+<P>The &lt;xsl:comment&gt; element inserts a comment into the output. Comments within the style sheet are not passed through to the output, but are treated as comments upon the style sheet itself. When a comment is required in the output, place the comment text within an &lt;xsl:comment&gt; element.</P>
+
+<P>The &lt;xsl:processing-instruction&gt; element allows processing instructions to be inserted into the output. The name attribute specifies the name of the attribute, and the content of the element becomes the text of the processing instruction.</P>
+
+<P>The &lt;xsl:element&gt; element provides an alternative mechanism for creating elements in the output. The name attribute specifies the name of the element. The following code example shows two ways of creating a &lt;DIV&gt; element produce identical results.</P>
+
+<PRE class="code">1) &lt;DIV class="menuItem"&gt;
+     Choose me
+   &lt;/DIV&gt;
+2) &lt;xsl:element name="DIV"&gt;
+     &lt;xsl:attribute name="class"&gt;menuItem&lt;/xsl:attribute&gt;
+     Choose me
+   &lt;/xsl:element&gt;</PRE>
+
+<P>Attributes must be added to elements created using the &lt;xsl:element&gt; element with the &lt;xsl:attribute&gt; element instead of being placed directly on the element.</P>
+
+<P>Because XSLT allows output elements to be specified directly, there are only a few situations where &lt;xsl:element&gt; is useful, for example, as an escaping mechanism for creating XSLT elements in the output, which allows style sheets to generate style sheets.</P>
+
+<P>The following sample converts style sheets to use the &lt;xsl:element&gt; syntax. In the process, it uses the &lt;xsl:element&gt; to generate elements in the XSLT namespace and inserts processing instructions and a comment at the start of the file.</P>
+
+<PRE class="code">&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+  &lt;xsl:output method="xml" indent="yes"/&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;xsl:processing-instruction name="xml-stylesheet"&gt;type="text/xsl"
+ href="style.xsl"&lt;/xsl:processing-instruction&gt;
+    &lt;xsl:comment&gt;Style sheet converted automatically to 
+&amp;lt;xsl:element&amp;gt; syntax&lt;/xsl:comment&gt;
+    &lt;xsl:apply-templates select="comment()"/&gt;
+    &lt;xsl:apply-templates select="*"/&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;!-- Copy text, comments and processing instructions --&gt;
+  &lt;xsl:template match="comment() | processing-instruction() | text()"&gt;
+    &lt;xsl:copy&gt;
+      &lt;xsl:apply-templates /&gt;
+    &lt;/xsl:copy&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;!-- Convert non-XSL elements to &lt;xsl:element&gt; syntax --&gt;
+  &lt;xsl:template match="*"&gt;
+    &lt;xsl:element name="xsl:element"&gt;
+      &lt;xsl:attribute name="name"&gt;&lt;xsl:value-of select="name(.)"/&gt;&lt;/xsl:attribute&gt;
+      &lt;xsl:apply-templates select="@*"/&gt; &lt;!-- consolidate --&gt;
+      &lt;xsl:apply-templates select="node()"/&gt;
+    &lt;/xsl:element&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;!-- Convert non-XSL attribute to &lt;xsl:attribute&gt; syntax --&gt;
+  &lt;xsl:template match="@*"&gt;
+    &lt;xsl:element name="xsl:attribute"&gt;
+      &lt;xsl:attribute name="name"&gt;&lt;xsl:value-of select="name(.)"/&gt;&lt;/xsl:attribute&gt;
+      &lt;xsl:value-of select="."/&gt;
+    &lt;/xsl:element&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;!-- Copy namespace attributes --&gt;
+  &lt;xsl:template match="@xmlns:*"&gt;
+    &lt;xsl:copy&gt;&lt;xsl:value-of select="."/&gt;&lt;/xsl:copy&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;!-- Copy XSL elements and their attributes --&gt;
+  &lt;xsl:template match="xsl:*"&gt;
+    &lt;xsl:copy&gt;
+      &lt;xsl:for-each select="@*"&gt;
+        &lt;xsl:copy&gt;&lt;xsl:value-of select="."/&gt;&lt;/xsl:copy&gt;
+      &lt;/xsl:for-each&gt;
+      &lt;xsl:apply-templates select="node()"/&gt;
+    &lt;/xsl:copy&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</PRE>
+
+<P>The preceding style sheet has five templates. The first adds a boilerplate to the root of the output document, and selects all comments and the document element for copying to the output. The second template copies comments, processing instructions, and text nodes to the output. The third template converts elements to the &lt;xsl:element&gt; syntax. The fourth template converts attributes to the &lt;xsl:attribute&gt; syntax. The fifth template ensures that any elements from the XSLT namespace are copied to the output with their attributes and not converted by the third template.</P>
+
+<H2 class="dtH2">Using XSL as the Default Namespace</H2>
+
+<P>Another use for &lt;xsl:element&gt; is to generate elements when the default namespace of the style sheet is set to XSL. Some style sheets, such as the following one, consist of nearly all elements from the XSL namespace and contain virtually no output elements. It might be convenient to set the default namespace of the document to the XSL namespace so that prefixes can be omitted. &lt;xsl:element&gt; can be used for the rare output elements. Style sheets written in this way are more readable and compact, and more amenable to validation with an XML schema.</P>
+
+<PRE class="code">&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+  &lt;!-- Identity transformation template --&gt;
+  &lt;template&gt;
+    &lt;copy&gt;
+      &lt;apply-templates select="@* | * | comment() | processing-instruction() | text()"/&gt;
+    &lt;/copy&gt;
+  &lt;/template&gt;
+  
+  &lt;!-- Rename "stock" elements to "security" --&gt;
+  &lt;template match="stock"&gt;
+    &lt;element name="security"&gt;
+      &lt;apply-templates select="@* | * | comment() | processing-instruction() | text()"/&gt;
+    &lt;/element&gt;
+  &lt;/template&gt;
+&lt;/stylesheet&gt;</PRE>
+
+<P>This sample uses just one named output element, "security", so it is easier to use the XSL namespace as the default, and use the &lt;xsl:element&gt; element for this one output element. However, consistently using the "xsl" prefix helps make your style sheets look familiar to other authors.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconadvancedxsltfeatures.htm">Advanced XSLT Features</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Generating%20More%20Sophisticated%20XML%20Output&nbsp;(cecongeneratingmoresophisticatedxmloutput.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

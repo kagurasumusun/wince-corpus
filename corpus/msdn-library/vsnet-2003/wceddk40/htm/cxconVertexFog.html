@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Vertex Fog</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Vertex Fog"/>
+<MSHelp:RLTitle Title="Vertex Fog"/>
+<MSHelp:Keyword Index="A" Term="cxconVertexFog"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="fogging%2C Direct3D, vertex fog"/>
+<MSHelp:Keyword Index="K" Term="hardware, Direct3D hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="lighting%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="transformation%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="vertex fogging%2C Direct3D"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665085">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconvertexfog"></A>Vertex Fog</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Vertex fog is enabled using the D3DRENDERSTATE_FOGENABLE render state. Vertex fog can be made perspective-correct. For scenes with large polygons, vertex fog might not be the better choice, because the vertices are farther apart. </P>
+
+<P>Vertex fog can be used in two ways:
+
+<OL type="1">
+	<LI>Make use of Direct3D lighting code using <B>D3DVERTEX</B> structures (described in the Direct3D SDK documentation) to define the fog blending factor.</li>
+
+	<LI>Make use of <B>D3DLVERTEX</B> or <B>D3DTLVERTEX</B> structures. This is useful for doing custom fog effects such as layered fog, range-based fog, volume fog, and others. </li>
+</OL>
+
+<P>When using fog with the <B>D3DVERTEX</B> structure, <B>PRIMCAPS.dwRasterCaps</B> has the D3DPRASTERCAPS_FOGVERTEX flag set. Individual calls to the <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__SetRenderState" TABINDEX="0">IDirect3DDevice8::SetRenderState</MSHelp:link> method (described in the Direct3D SDK documentation) are used to set D3DRENDERSTATE_FOGENABLE to TRUE, and D3DRENDERSTATE_FOGCOLOR to a 24-bit RGB color. For linear fog, the <B>IDirect3DDevice8::SetRenderState</B> method is used to set D3DRENDERSTATE_FOGSTART and D3DRENDERSTATE_FOGEND. For exponential and exponential squared fog, the D3DRENDERSTATE_FOGDENSITY render state is set with <B>D3DLIGHTSTATETYPE</B>.</P>
+
+<P>When using fog with the <B>D3DTLVERTEX</B> structure, the <B>IDirect3DDevice8::SetRenderState</B> method is used to set D3DRENDERSTATE_FOGENABLE to TRUE, set the color of the fog in D3DRENDERSTATE_FOGCOLOR, and set D3DRENDERSTATE_FOGTABLEMODE to D3DFOG_NONE (this is set in the <B>D3DTLVERTEX</B> structure itself). A fog blend factor <B>f</B> is defined at each vertex. This is the alpha component of the specular RGBA. </P>
+
+<P>The following illustration shows a sample relationship between altitude and fog density in a Layered Atmosphere Model. </P>
+
+<P class="fig"><IMG SRC="d3dfig25.gif" ALT="" BORDER=0></P>
+
+<P class="label"><B>Layered Atmosphere Model</B></P>
+
+<P>The fog blending factor is calculated during the lighting phase and is placed in the alpha component of the specular color value in the vertex. This should then be interpolated according to the current shade mode set up by the D3DRENDERSTATE_SHADEMODE render state. </P>
+
+<P>The fog blending factors for vertices v1, v2, and v3 are calculated in the following formula: </P>
+
+<P class="fig"><IMG SRC="d3dfig8.gif" ALT="" BORDER=0></P>
+
+<P>f1, f2, and f3 are interpolated across the triangle based on the current shade mode.</P>
+
+<P>The new color, <B>C</B>, is obtained from the following formula: </P>
+
+<P><B>C = (1</B> <B>- f)</B> * <B>fog_color</B> <B>+</B> <B>f</B> * <B>src_color</B></P>
+
+<P>In this formula,
+
+<UL type="disc">
+	<LI><B>f</B> is the source, interpolated fog blending factor</li>
+
+	<LI><B>fog_color</B> is the current fog color (set by the render state D3DRENDERSTATE_FOGCOLOR)</li>
+
+	<LI><B>src_color</B> is the source, interpolated, textured color</li>
+</UL>
+
+<P>If <B>f</B>, the fog blending factor, is 0.0, <B>C</B> will be set to a value identical to the fog color. If <B>f</B> is 1.0 there will be no fog effect.</P>
+
+<P>Fog factor in a vertex is a function of the distance from the camera position to the vertex. This distance could be approximated by taking only Z value in camera space. For per-vertex fog, (X<SUB>c</SUB>,Y<SUB>c</SUB>,Z<SUB>c</SUB>) in camera space is computed by transforming the vertex using <B>Mworld*Mview</B>, and then computing the distance to the vertex.</P>
+
+<P>In RGB mode, fog factor <B>f</B> is scaled to be in the range 0 through 255, and is written to the alpha component of the specular output color.</P>
+
+<P>In Ramp mode, diffuse and specular components are multiplied by the fog factor <B>f</B> and are clamped to be in the range 0.0 through 1.0.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconhardwaretransformlighting.htm">Hardware Transform and Lighting</A></P>
+
+<P><A HREF="cxconvertexpixelfogging.htm">Vertex and Pixel Fogging</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Vertex%20Fog&nbsp;(cxconvertexfog.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

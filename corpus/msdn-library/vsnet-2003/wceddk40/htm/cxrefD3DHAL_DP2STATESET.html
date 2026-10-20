@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DHAL_DP2STATESET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DHAL_DP2STATESET"/>
+<MSHelp:RLTitle Title="D3DHAL_DP2STATESET"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2STATESET"/>
+<MSHelp:Keyword Index="K" Term="D3DHAL_DP2STATESET"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2STATESET"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665275">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefd3dhal_dp2stateset"></A>D3DHAL_DP2STATESET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure is used to inform the driver about stateset operations to perform.</P>
+
+<PRE class="syntax"><B>typedef struct _D3DHAL_DP2STATESET {</B>
+<B>  DWORD</B>               <I>dwOperation</I><B>;</B>
+<B>  DWORD</B>               <I>dwParam</I><B>;</B>
+<B>  D3DSTATEBLOCKTYPE</B>   <I>sbType</I><B>;</B>
+<B>} D3DHAL_DP2STATESET, *LPD3DHAL_DP2STATESET;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwOperation</B></DT>
+
+<DD>Specifies the operation to perform. The value of this member can be one of the following.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DHAL_STATESETBEGIN</TD>
+<TD width=64%>Specifies the beginning of the stateset referenced by <B>dwParam</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DHAL_STATESETCAPTURE</TD>
+<TD width=64%>Specifies that capture is to be done. When this flag is specified, the driver must capture a snapshot of the current state that matches the state block referenced by the handle passed in <B>dwParam</B>. That is, only the state that is specified in the state block is captured. See <A HREF="cxconacceleratedstatemanagement.htm">Accelerated State Management</A> for important details about state capture.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DHAL_STATESETCREATE</TD>
+<TD width=64%>On receipt of this request the driver should create a state block of the type given in the field <B>sbType</B>. The information to record for each state block type is described later in this topic.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DHAL_STATESETDELETE</TD>
+<TD width=64%>Specifies that the stateset referenced by <B>dwParam</B> should be deleted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DHAL_STATESETEND</TD>
+<TD width=64%>Specifies the end of the stateset referenced by <B>dwParam</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DHAL_STATESETEXECUTE</TD>
+<TD width=64%>Specifies that the stateset referenced by <B>dwParam</B> should be executed.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>dwParam</B></DT>
+
+<DD>Specifies the stateset handle that references the state block being manipulated with the current <B>dwOperation</B>.</dd>
+
+<DT><B>sbType</B></DT>
+
+<DD>If the driver implements extended render states, that is, render states beyond those the Direct3D run time supplies, it can use <B>sbType</B> to determine what types of predefined render states are being used. From this information the driver can determine how to append the state block appropriately, to support its extensions. 
+
+<P>The <B>sbType</B> member, which is valid only for D3DHAL_STATESETBEGIN, D3DHAL_STATESETEND, and D3DHAL_STATECREATE, specifies the state block type with one of the following <MSHelp:link keywords="_wcesdk_dx3d_D3DSTATEBLOCKTYPE" TABINDEX="0">D3DSTATEBLOCKTYPE</MSHelp:link> enumerated types. For more details see the DirectX SDK documentation.
+
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DSBT_ALL</TD>
+<TD width=64%>Signals the driver to capture all state.
+<P>When requested to capture all state in pure device mode the driver should capture all state with the exception of the current vertex stream state, the current index stream state and the currently realized textures.</P>
+
+<P>The state that should be captured is as follows; the render states in the following list , the texture stage states in the following list, the viewport, all the world transforms, the view transform, the projection transform, the texture transform for all texture stages, all user clip planes, the current material, all lights that have been used prior to the state block creation, the current vertex shader handle, the current pixel shader handle, the current vertex shader constants and the current pixel shader constants.</P>
+
+<P>The render states to record are as follows:</P>
+
+<PRE class="code">D3DRENDERSTATE_SPECULARENABLE
+D3DRENDERSTATE_ZENABLE
+D3DRENDERSTATE_FILLMODE
+D3DRENDERSTATE_SHADEMODE
+D3DRENDERSTATE_LINEPATTERN
+D3DRENDERSTATE_ZWRITEENABLE
+D3DRENDERSTATE_ALPHATESTENABLE
+D3DRENDERSTATE_LASTPIXEL
+D3DRENDERSTATE_SRCBLEND
+D3DRENDERSTATE_DESTBLEND
+D3DRENDERSTATE_CULLMODE
+D3DRENDERSTATE_ZFUNC
+D3DRENDERSTATE_ALPHAREF
+D3DRENDERSTATE_ALPHAFUNC
+D3DRENDERSTATE_DITHERENABLE
+D3DRENDERSTATE_FOGENABLE
+D3DRENDERSTATE_STIPPLEDALPHA
+D3DRENDERSTATE_FOGCOLOR
+D3DRENDERSTATE_FOGTABLEMODE
+D3DRENDERSTATE_FOGSTART
+D3DRENDERSTATE_FOGEND
+D3DRENDERSTATE_FOGDENSITY
+D3DRENDERSTATE_EDGEANTIALIAS
+D3DRENDERSTATE_ALPHABLENDENABLE
+D3DRENDERSTATE_ZBIAS
+D3DRENDERSTATE_RANGEFOGENABLE
+D3DRENDERSTATE_STENCILENABLE
+D3DRENDERSTATE_STENCILFAIL
+D3DRENDERSTATE_STENCILZFAIL
+D3DRENDERSTATE_STENCILPASS
+D3DRENDERSTATE_STENCILFUNC
+D3DRENDERSTATE_STENCILREF
+D3DRENDERSTATE_STENCILMASK
+D3DRENDERSTATE_STENCILWRITEMASK
+D3DRENDERSTATE_TEXTUREFACTOR
+D3DRENDERSTATE_WRAP0
+D3DRENDERSTATE_WRAP1
+D3DRENDERSTATE_WRAP2
+D3DRENDERSTATE_WRAP3
+D3DRENDERSTATE_WRAP4
+D3DRENDERSTATE_WRAP5
+D3DRENDERSTATE_WRAP6
+D3DRENDERSTATE_WRAP7
+D3DRENDERSTATE_AMBIENT
+D3DRENDERSTATE_COLORVERTEX
+D3DRENDERSTATE_FOGVERTEXMODE
+D3DRENDERSTATE_CLIPPING
+D3DRENDERSTATE_LIGHTING
+D3DRENDERSTATE_NORMALIZENORMALS
+D3DRENDERSTATE_LOCALVIEWER
+D3DRENDERSTATE_EMISSIVEMATERIALSOURCE
+D3DRENDERSTATE_AMBIENTMATERIALSOURCE
+D3DRENDERSTATE_DIFFUSEMATERIALSOURCE
+D3DRENDERSTATE_SPECULARMATERIALSOURCE
+D3DRENDERSTATE_VERTEXBLEND
+D3DRENDERSTATE_CLIPPLANEENABLE
+D3DRS_SOFTWAREVERTEXPROCESSING
+D3DRS_POINTSIZE
+D3DRS_POINTSIZE_MIN
+D3DRS_POINTSPRITEENABLE
+D3DRS_POINTSCALEENABLE
+D3DRS_POINTSCALE_A
+D3DRS_POINTSCALE_B
+D3DRS_POINTSCALE_C
+D3DRS_MULTISAMPLEANTIALIAS
+D3DRS_MULTISAMPLEMASK
+D3DRS_PATCHEDGESTYLE
+D3DRS_PATCHSEGMENTS
+D3DRS_POINTSIZE_MAX
+D3DRS_INDEXEDVERTEXBLENDENABLE
+D3DRS_COLORWRITEENABLE
+D3DRS_TWEENFACTOR
+D3DRS_BLENDOP</PRE>
+
+<P>The texture stage states to record are as follows:</P>
+
+<PRE class="code">D3DTSS_COLOROP
+D3DTSS_COLORARG1
+D3DTSS_COLORARG2
+D3DTSS_ALPHAOP
+D3DTSS_ALPHAARG1
+D3DTSS_ALPHAARG2
+D3DTSS_BUMPENVMAT00
+D3DTSS_BUMPENVMAT01
+D3DTSS_BUMPENVMAT10
+D3DTSS_BUMPENVMAT11
+D3DTSS_TEXCOORDINDEX
+D3DTSS_ADDRESSU
+D3DTSS_ADDRESSV
+D3DTSS_BORDERCOLOR
+D3DTSS_MAGFILTER
+D3DTSS_MINFILTER
+D3DTSS_MIPFILTER
+D3DTSS_MIPMAPLODBIAS
+D3DTSS_MAXMIPLEVEL
+D3DTSS_MAXANISOTROPY
+D3DTSS_BUMPENVLSCALE
+D3DTSS_BUMPENVLOFFSET
+D3DTSS_TEXTURETRANSFORMFLAGS
+D3DTSS_ADDRESSW
+D3DTSS_COLORARG0
+D3DTSS_ALPHAARG0
+D3DTSS_RESULTARG</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DSBT_PIXELSTATE</TD>
+<TD width=64%>Signals the driver to capture pixel state only.
+<P>When capturing pixel state in pure device mode the following state should be captured; the pixel processing related render states in the following list, the pixel processing texture stage states in the following list, the current pixel shader handle and the current pixel shader constants.</P>
+
+<P>The render states to record are as follows:</P>
+
+<PRE class="code">D3DRENDERSTATE_ZENABLE
+D3DRENDERSTATE_FILLMODE
+D3DRENDERSTATE_SHADEMODE
+D3DRENDERSTATE_LINEPATTERN
+D3DRENDERSTATE_ZWRITEENABLE
+D3DRENDERSTATE_ALPHATESTENABLE
+D3DRENDERSTATE_LASTPIXEL
+D3DRENDERSTATE_SRCBLEND
+D3DRENDERSTATE_DESTBLEND
+D3DRENDERSTATE_ZFUNC
+D3DRENDERSTATE_ALPHAREF
+D3DRENDERSTATE_ALPHAFUNC
+D3DRENDERSTATE_DITHERENABLE
+D3DRENDERSTATE_STIPPLEDALPHA
+D3DRENDERSTATE_FOGSTART
+D3DRENDERSTATE_FOGEND
+D3DRENDERSTATE_FOGDENSITY
+D3DRENDERSTATE_EDGEANTIALIAS
+D3DRENDERSTATE_ALPHABLENDENABLE
+D3DRENDERSTATE_ZBIAS
+D3DRENDERSTATE_STENCILENABLE
+D3DRENDERSTATE_STENCILFAIL
+D3DRENDERSTATE_STENCILZFAIL
+D3DRENDERSTATE_STENCILPASS
+D3DRENDERSTATE_STENCILFUNC
+D3DRENDERSTATE_STENCILREF
+D3DRENDERSTATE_STENCILMASK
+D3DRENDERSTATE_STENCILWRITEMASK
+D3DRENDERSTATE_TEXTUREFACTOR
+D3DRENDERSTATE_WRAP0
+D3DRENDERSTATE_WRAP1
+D3DRENDERSTATE_WRAP2
+D3DRENDERSTATE_WRAP3
+D3DRENDERSTATE_WRAP4
+D3DRENDERSTATE_WRAP5
+D3DRENDERSTATE_WRAP6
+D3DRENDERSTATE_WRAP7
+D3DRS_COLORWRITEENABLE
+D3DRS_BLENDOP</PRE>
+
+<P>The texture stage states to record are as follows:</P>
+
+<PRE class="code">D3DTSS_COLOROP
+D3DTSS_COLORARG1
+D3DTSS_COLORARG2
+D3DTSS_ALPHAOP
+D3DTSS_ALPHAARG1
+D3DTSS_ALPHAARG2
+D3DTSS_BUMPENVMAT00
+D3DTSS_BUMPENVMAT01
+D3DTSS_BUMPENVMAT10
+D3DTSS_BUMPENVMAT11
+D3DTSS_TEXCOORDINDEX
+D3DTSS_ADDRESSU
+D3DTSS_ADDRESSV
+D3DTSS_BORDERCOLOR
+D3DTSS_MAGFILTER
+D3DTSS_MINFILTER
+D3DTSS_MIPFILTER
+D3DTSS_MIPMAPLODBIAS
+D3DTSS_MAXMIPLEVEL
+D3DTSS_MAXANISOTROPY
+D3DTSS_BUMPENVLSCALE
+D3DTSS_BUMPENVLOFFSET
+D3DTSS_TEXTURETRANSFORMFLAGS
+D3DTSS_ADDRESSW
+D3DTSS_COLORARG0
+D3DTSS_ALPHAARG0
+D3DTSS_RESULTARG</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DSBT_VERTEXSTATE</TD>
+<TD width=64%>Signals the driver to capture vertex state only.
+<P>When capturing vertex state in pure device mode the following state should be captured; the vertex processing related render states in the following list, the vertex processing texture stage states in the following list, all lights that have been used prior to the state block creation, the current vertex shader handle and the current vertex shader constants.</P>
+
+<P>The render states to record are as follows:</P>
+
+<PRE class="code">D3DRENDERSTATE_SHADEMODE
+D3DRENDERSTATE_SPECULARENABLE
+D3DRENDERSTATE_CULLMODE
+D3DRENDERSTATE_FOGENABLE
+D3DRENDERSTATE_FOGCOLOR
+D3DRENDERSTATE_FOGTABLEMODE
+D3DRENDERSTATE_FOGSTART
+D3DRENDERSTATE_FOGEND
+D3DRENDERSTATE_FOGDENSITY
+D3DRENDERSTATE_RANGEFOGENABLE
+D3DRENDERSTATE_AMBIENT
+D3DRENDERSTATE_COLORVERTEX
+D3DRENDERSTATE_FOGVERTEXMODE
+D3DRENDERSTATE_CLIPPING
+D3DRENDERSTATE_LIGHTING
+D3DRENDERSTATE_NORMALIZENORMALS
+D3DRENDERSTATE_LOCALVIEWER
+D3DRENDERSTATE_EMISSIVEMATERIALSOURCE
+D3DRENDERSTATE_AMBIENTMATERIALSOURCE
+D3DRENDERSTATE_DIFFUSEMATERIALSOURCE
+D3DRENDERSTATE_SPECULARMATERIALSOURCE
+D3DRENDERSTATE_VERTEXBLEND
+D3DRENDERSTATE_CLIPPLANEENABLE
+D3DRS_SOFTWAREVERTEXPROCESSING
+D3DRS_POINTSIZE
+D3DRS_POINTSIZE_MIN
+D3DRS_POINTSPRITEENABLE
+D3DRS_POINTSCALEENABLE
+D3DRS_POINTSCALE_A
+D3DRS_POINTSCALE_B
+D3DRS_POINTSCALE_C
+D3DRS_MULTISAMPLEANTIALIAS
+D3DRS_MULTISAMPLEMASK
+D3DRS_PATCHEDGESTYLE
+D3DRS_PATCHSEGMENTS
+D3DRS_POINTSIZE_MAX
+D3DRS_INDEXEDVERTEXBLENDENABLE
+D3DRS_TWEENFACTOR</PRE>
+
+<P>The texture stage states to record are as follows:</P>
+
+<PRE class="code">D3DTSS_TEXCOORDINDEX
+D3DTSS_TEXTURETRANSFORMFLAGS</PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NULL</TD>
+<TD width=64%>No predefined state group is specified.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>See <A HREF="cxconacceleratedstatemanagement.htm">Accelerated State Management</A> in the Graphics Design Guide for more information about the use of this structure in state block management.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>D3dhal.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconacceleratedstatemanagement.htm">Accelerated State Management</A>, <MSHelp:link keywords="_wcesdk_dx3d_D3DSTATEBLOCKTYPE" TABINDEX="0">D3DSTATEBLOCKTYPE</MSHelp:link>, <A HREF="cxrefd3dhal_xxxstructures.htm">D3DHAL_XXX Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DHAL_DP2STATESET&nbsp;(cxrefd3dhal_dp2stateset.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

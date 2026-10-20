@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HcdMdd_CreateMemoryObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HcdMdd_CreateMemoryObject"/>
+<MSHelp:RLTitle Title="HcdMdd_CreateMemoryObject"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_OhcdMdd_CreateMemoryObject"/>
+<MSHelp:Keyword Index="K" Term="HcdMdd_CreateMemoryObject"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: usb_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673364">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ohcdmdd_creatememoryobject"></A>HcdMdd_CreateMemoryObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function creates the host controller interface shared memory area.</P>
+
+<PRE class="syntax"><B>LPVOID</B> <B>HcdMdd_CreateMemoryObject(</B>
+<B>DWORD</B> <I>cbSize</I><B>,</B>
+<B>DWORD</B> <I>cbHighPrioritySize</I><B>,</B>
+<B>PUCHAR</B> <I>pVirtAddr</I><B>,</B>
+<B>PUCHAR</B> <I>pPhysAddr</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>cbSize</I></DT>
+
+<DD>[in] Specifies the total size of the host controller device shared memory area.</dd>
+
+<DT><I>cbHighPrioritySize</I></DT>
+
+<DD>[in] Specifies the bytes reserved for high-priority isochronous or interrupt transfers and the host controller interface (HCI) communication area.</dd>
+
+<DT><I>pVirtAddr</I></DT>
+
+<DD>[in] Pointer to the virtual address, which may be NULL, of a memory area.</dd>
+
+<DT><I>pPhysAddr</I></DT>
+
+<DD>[in] Pointer to the physical address, which may be NULL, of a memory area.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A pointer to an host controller (HC) driver memory object indicates success. NULL indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function is called by the HC driver platform-dependent driver (PDD) to initialize the shared memory area used by the HCI driver. This memory contains data structures shared between the driver and the host controller hardware and is also used to allocate DMA buffers for USB driver data transfers. Two options are available. If a platform has an area of memory set aside that can be used by HCI, as specified in the Config.bib file, it can pass the virtual and physical address pointers in to this function. This is the recommended method. Alternatively, the PDD may pass NULL in for the physical and virtual address pointers, in which case the <B>HcdMdd_CreateMemoryObject</B> function attempts to allocate a suitable memory buffer from system RAM.</P>
+
+<P>The host controller interface shared memory area is broken into two separate areas: a high-priority pool of buffers for the host controller communications area and for isochronous client buffers, and a lower-priority pool of buffers for other client transfers.</P>
+
+<P>The size of the shared memory area is dependent on the perceived usage of USB within the platform. </P>
+
+<P>A recommended value for general-purpose USB operation is 64 KB, with 20 KB reserved for high-priority isochronous transfers. OEMs that anticipate less demand on the USB subsystem can safely reduce this or change the split between normal and high-priority reserve. Reducing the size of the high-priority buffer may cause isochronous transfers to fail if memory cannot be allocated, whereas reducing the size of the non-high-priority buffer reduces performance on bulk interrupt and control transfers. However, reducing the non-high-priority buffer does not cause failures, because bulk transfers can block to wait for memory to become available.</P>
+
+<P>If possible, OEMs should consider placing the HC driver shared memory area in high-speed memory, particularly to support streaming, isochronous, data transfers.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>Ohcdddsi.h or Uhcdddsi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ohcdmdd_destroymemoryobject.htm">HcdMdd_DestroyMemoryObject</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;HcdMdd_CreateMemoryObject&nbsp;(_wceddk_ohcdmdd_creatememoryobject.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

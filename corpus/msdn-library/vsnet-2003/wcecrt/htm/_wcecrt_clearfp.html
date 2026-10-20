@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_clearfp</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_clearfp"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_clearfp.htm", "_clearfp")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_clearfp"></A>_clearfp</H1>
+
+<P>Get and clear the floating-point status word.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Routine</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>_clearfp</B></TD>
+<TD width=73%>&lt;float.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>unsigned int _clearfp( void );</B></PRE>
+
+<P class="fineprint"></P>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>The bits in the value returned indicate the floating-point status before the call to <B>_clearfp</B>. See Float.h for a complete definition of the bits returned by _<B>clear87</B>. Many of the math library functions modify the 8087/80287 status word, with unpredictable results. </P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P><B>_clearfp</B> is a platform-independent, portable version of the <B>_clear87 </B>routine. It is identical to _<B>clear87</B> on Intel® (x86) platforms and is also supported by the MIPS® and ALPHA platforms. To ensure that your floating-point code is portable to MIPS or ALPHA, use _<B>clearfp</B>. If you are only targeting x86 platforms, you can use either _<B>clear87</B> or _<B>clearfp</B>.</P>
+
+<P class="label"><B>Example </B></P>
+
+<PRE class="code">/* CLEAR87.C: This program creates various floating-point
+ * problems, then uses _clear87 to report on these problems.
+ * Compile this program with Optimizations disabled (/Od).
+ * Otherwise the optimizer will remove the code associated with
+ * the unused floating-point values.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;float.h&gt;
+
+void main( void )
+{
+   double a = 1e-40, b;
+   float x, y;
+
+   printf( "Status: %.4x - clear\n", _clear87()  );
+
+   /* Store into y is inexact and underflows: */
+   y = a;
+   printf( "Status: %.4x - inexact, underflow\n", _clear87() );
+
+   /* y is denormal: */
+   b = y;
+   printf( "Status: %.4x - denormal\n", _clear87() );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Status: 0000 - clear
+Status: 0003 - inexact, underflow
+Status: 80000 - denormal
+ </PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptHashToBeSigned</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CryptHashToBeSigned"/>
+<MSHelp:RLTitle Title="CryptHashToBeSigned"/>
+<MSHelp:Keyword Index="A" Term="cerefCryptHashToBeSigned"/>
+<MSHelp:Keyword Index="K" Term="CryptHashToBeSigned"/>
+<MSHelp:Keyword Index="A" Term="cerefCryptHashToBeSigned"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: crypto2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751363">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcrypthashtobesigned"></A>CryptHashToBeSigned</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function computes the hash of the encoded content from a signed and encoded certificate. The hash is performed on only the to be signed encoded content and its signature.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptHashToBeSigned(</B>
+<B>HCRYPTPROV </B><I>hCryptProv</I><B>,</B>
+<B>DWORD </B><I>dwCertEncodingType</I><B>,</B>
+<B>const BYTE *</B><I>pbEncoded</I><B>,</B>
+<B>DWORD </B><I>cbEncoded</I><B>,</B>
+<B>BYTE *</B><I>pbComputedHash</I><B>,</B>
+<B>DWORD *</B><I>pcbComputedHash</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hCryptProv </I></DT>
+
+<DD>[in] Handle of the CSP used to compute the hash.
+
+<P>Unless there is a strong reason for passing in a specific cryptographic provider in the <I>hCryptProv</I> parameter, zero is passed in. Passing in zero causes the default RSA or DSS provider to be acquired before doing hash, signature verification or recipient encryption operations.
+</dd>
+
+<DT><I>dwCertEncodingType </I></DT>
+
+<DD>[in] Specifies the encoding type used. Currently, only X509_ASN_ENCODING is used; however, additional encoding types may be added in the future.</dd>
+
+<DT><I>pbEncoded </I></DT>
+
+<DD>[in] Address of a buffer containing the content to be hashed. This is the encoded form of a CERT_SIGNED_CONTENT_INFO.</dd>
+
+<DT><I>cbEncoded </I></DT>
+
+<DD>[in] Size, in bytes, of the buffer.</dd>
+
+<DT><I>pbComputedHash </I></DT>
+
+<DD>[out] Pointer to a buffer to receive the computed hash.
+
+<P>This parameter can be NULL to set the size of this information for memory allocation purposes.
+</dd>
+
+<DT><I>pcbComputedHash </I></DT>
+
+<DD>[in/out] Pointer to a <B>DWORD</B> that contains the size, in bytes, of the buffer pointed to by the <I>pbComputedHash</I> parameter. When the function returns, the <B>DWORD</B> contains the number of bytes stored in the buffer.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;When processing the data returned in the buffer, applications need to use the actual size of the data returned. The actual size can be slightly smaller than the size of the buffer specified on input. (On input, buffer sizes are usually specified large enough to ensure that the largest possible output data will fit in the buffer.) On output, the variable pointed to by this parameter is updated to reflect the actual size of the data copied to the buffer.</BLOCKQUOTE>
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link> function.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Errors from the called <MSHelp:link keywords="cerefCryptCreateHash" TABINDEX="0">CryptCreateHash</MSHelp:link>, <MSHelp:link keywords="cerefCryptGetHashParam" TABINDEX="0">CryptGetHashParam</MSHelp:link>, and <MSHelp:link keywords="cerefCryptHashData" TABINDEX="0">CryptHashData</MSHelp:link> functions might be propagated to this function. The following table shows the error codes for this function.</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Error code</TH>
+<TH width=68%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>ERROR_MORE_DATA </TD>
+<TD width=68%>If the buffer specified by the <I>pbComputedHash</I> parameter is not large enough to hold the returned data, the function sets the ERROR_MORE_DATA code and stores the required buffer size, in bytes, into the variable pointed to by the <I>pcbComputedHash</I> parameter. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>ERROR_FILE_NOT_FOUND</TD>
+<TD width=68%>Invalid certificate encoding type. Currently only X509_ASN_ENCODING is supported. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>NTE_BAD_ALGID</TD>
+<TD width=68%>The signature algorithm's object identifier does not map to a known or supported hash algorithm. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The desktop platform supports the PKCS_7_ASN_ENCODING flag, but Windows CE does not. Windows CE ignores the flag when it is specified.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefCryptCreateHash" TABINDEX="0">CryptCreateHash</MSHelp:link>, <MSHelp:link keywords="cerefCryptGetHashParam" TABINDEX="0">CryptGetHashParam</MSHelp:link>, <A HREF="cerefcrypthashcertificate.htm">CryptHashCertificate</A>, <MSHelp:link keywords="cerefCryptHashData" TABINDEX="0">CryptHashData</MSHelp:link>, <A HREF="cerefcrypthashpublickeyinfo.htm">CryptHashPublicKeyInfo</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CryptHashToBeSigned&nbsp;(cerefcrypthashtobesigned.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

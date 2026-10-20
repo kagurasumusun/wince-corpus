@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_TASK_OFFLOAD</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_TASK_OFFLOAD"/>
+<MSHelp:RLTitle Title="NDIS_TASK_OFFLOAD"/>
+<MSHelp:Keyword Index="A" Term="cxconNDIS_TASK_OFFLOAD"/>
+<MSHelp:Keyword Index="K" Term="NDIS_TASK_OFFLOAD"/>
+<MSHelp:Keyword Index="A" Term="cxconNDIS_TASK_OFFLOAD"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690519">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconndis_task_offload"></A>NDIS_TASK_OFFLOAD</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When a miniport supplies the structure in response to <A HREF="cxrefoid_tcp_task_offload.htm">OID_TCP_TASK_OFFLOAD</A>, this structure specifies a NIC's capabilities for performing a particular type of task offloaded from the TCP/IP transport. This structure specifies an offload task that the TCP/IP transport is enabling.</P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_TASK_OFFLOAD {</B>
+<B>ULONG </B><I>Version</I><B>;</B>
+<B>ULONG </B><I>Size</I><B>;</B>
+<B>NDIS_TASK </B><I>Task</I><B>;</B>
+<B>ULONG </B><I>OffsetNextTask</I><B>;</B>
+<B>ULONG </B><I>TaskBufferLength</I><B>;</B>
+<B>UCHAR </B><I>TaskBuffer</I>[1]<B>;</B>
+<B>} NDIS_TASK_OFFLOAD, *PNDIS_TASK_OFFLOAD;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>Version</B></DT>
+
+<DD>Version number of this task-offload capability. If the miniport's NIC supports more than one version of a particular task-offload capability, each version of the capability should be indicated with a separate <B>NDIS_TASK_OFFLOAD</B> structure. The TCP/IP transport chooses the most suitable version to enable.</dd>
+
+<DT><B>Size</B></DT>
+
+<DD>Specifies the size, in bytes, of the <B>NDIS_TASK_OFFLOAD</B> structure. <B>Size</B> is set to <B>sizeof</B>(<B>NDIS_TASK_OFFLOAD</B>) and is used to determine the version of the <B>NDIS_TASK_OFFLOAD</B> structure.</dd>
+
+<DT><B>Task</B></DT>
+
+<DD>Specifies the type of offload task as one of the following values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Value</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>TcpIpChecksumNdisTask</TD>
+<TD width=68%>Checksum offload. <B>TaskBuffer</B> contains an <A HREF="cxrefndis_task_tcp_ip_checksum.htm">NDIS_TASK_TCP_IP_CHECKSUM</A> structure. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>IpSecNdisTask</TD>
+<TD width=68%>Not supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>TcpLargeSendNdisTask</TD>
+<TD width=68%>Segmentation offload. <B>TaskBuffer</B> contains an <A HREF="cxrefndis_task_tcp_large_send.htm">NDIS_TASK_TCP_LARGE_SEND</A> structure. </TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>OffsetNextTask</B></DT>
+
+<DD>Specifies, in bytes, the offset from the beginning of this <B>NDIS_TASK_OFFLOAD</B> structure to the next <B>NDIS_TASK_OFFLOAD</B> structure. If this <B>NDIS_TASK_OFFLOAD</B> structure is the last one in the buffer, <B>OffsetNextTask</B> is set to 0.</dd>
+
+<DT><B>TaskBufferLength</B></DT>
+
+<DD>Specifies the size, in bytes, of the structure at <B>TaskBuffer</B>.</dd>
+
+<DT><B>TaskBuffer[1]</B></DT>
+
+<DD>Specifies a variable-length array that contains information specific to the offload task indicated by <B>Task</B>. The contents of <B>TaskBuffer</B> vary according to the task type.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If a NIC has the appropriate capabilities, the Microsoft TCP/IP transport can offload one or more of the following tasks to a NIC:
+
+<UL type="disc">
+	<LI>Calculation and/or validation of IP or TCP checksums</li>
+
+	<LI>IP security processing</li>
+
+	<LI>Segmentation of large TCP packets into smaller TCP packets</li>
+</UL>
+
+<P>The TCP/IP transport determines a NIC's task-offload capabilities by querying <B>OID_TCP_TASK_OFFLOAD</B>. In response, a miniport returns in the <B>InformationBuffer</B> member of the <A HREF="_wceddk_ndis_request.htm">NDIS_REQUEST</A> structure an <A HREF="cxrefndis_task_offload_header.htm">NDIS_TASK_OFFLOAD_HEADER</A> structure followed by one or more <B>NDIS_TASK_OFFLOAD</B> structures. The <B>TaskBuffer</B> member of each <B>NDIS_TASK_OFFLOAD</B> structure contains a task-specific structure (<B>NDIS_TASK_TCP_IP_CHECKSUM</B> or <B>NDIS_TASK_TCP_LARGE_SEND</B>) that specifies a particular task-offload capability supported by the miniport's NIC. If the miniport's NIC supports multiple versions of a particular task-offload capability, it returns one <B>NDIS_TASK_OFFLOAD</B> structure for each version.</P>
+
+<P>After querying a NIC's task-offload capabilities, the TCP/IP transport enables a NIC's task-offload capabilities by setting <B>OID_TCP_TASK_OFFLOAD</B>. In this set operation, the TCP/IP transport supplies in <B>InformationBuffer</B> an <B>NDIS_TASK_OFFLOAD_HEADER</B> structure followed by an <B>NDIS_TASK_OFFLOAD</B> structure for each offload task that it is enabling. The miniport must examine each <B>NDIS_TASK_OFFLOAD</B> structure to determine which offload tasks are being enabled. The miniport must also examine the task-specific structure in <B>TaskBuffer</B> of each <B>NDIS_TASK_OFFLOAD</B> structure to determine which specific capabilities for a particular offload task are being enabled.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefndis_task_offload_header.htm">NDIS_TASK_OFFLOAD_HEADER</A>, <A HREF="#cxconndis_task_offload">NDIS_TASK_OFFLOAD</A>, <A HREF="_wceddk_ndis_request.htm">NDIS_REQUEST</A>, <A HREF="cxrefndis_task_tcp_large_send.htm">NDIS_TASK_TCP_LARGE_SEND</A>, <A HREF="cxrefndis_task_tcp_ip_checksum.htm">NDIS_TASK_TCP_IP_CHECKSUM</A>, <A HREF="cxrefoid_tcp_task_offload.htm">OID_TCP_TASK_OFFLOAD</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_TASK_OFFLOAD&nbsp;(cxconndis_task_offload.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

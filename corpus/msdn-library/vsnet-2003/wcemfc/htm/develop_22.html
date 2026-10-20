@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Menus</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_menus"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_menus"></A><SUP></SUP>Menus</H1>
+
+<P>MFC supplies two elements to help you work with menus:
+
+<UL type=disc>
+	<LI>Class <B>CMenu </B>for manipulating your program’s menus at run time. Use the documentation for <B>CMenu</B> to learn how to use <B>CMenu</B> effectively.</LI>
+
+	<LI>A mechanism for updating menus and toolbar buttons, enabling or disabling them on the fly to suit current program conditions.</LI>
+</UL>
+
+<P>See the DYNAMENU sample program for an illustration of changing menus dynamically.</P>
+
+<P>Use class <B>CMenu</B> to manipulate menus and menu items on the fly. <B>CMenu</B> encapsulates a Windows <B>HMENU</B> handle and supplies member functions for working with menus. </P>
+
+<P>MFC for Windows CE 3.0 supports all <B>CMenu </B>methods except <B>GetMenuContextHelpId</B>, <B>LoadMenuIndirect</B>, or <B>SetMenuItemBitmaps</B> methods.</P>
+
+<H4>Updating a User-Interface Object</H4>
+
+<P>Typically, menu items and toolbar buttons have more than one state. For example, a menu item is grayed (dimmed) if it is unavailable in the present context. Menu items can also be checked or unchecked. A toolbar button can also be disabled if unavailable, or it can be checked.</P>
+
+<P>Who updates the state of these items as program conditions change? Logically, if a menu item generates a command that is handled by, say, a document, it makes sense to have the document update the menu item. The document probably contains the information on which the update is based.</P>
+
+<P>If a command has multiple user-interface objects (perhaps a menu item and a toolbar button), both are routed to the same handler function. This encapsulates your user-interface update code for all of the equivalent user-interface objects in a single place.</P>
+
+<P>The framework provides a convenient interface for automatically updating user-interface objects. You can choose to do the updating in some other way, but the interface provided is efficient and easy to use.</P>
+
+<H4>When Update Handlers Are Called</H4>
+
+<P>Suppose the user clicks the mouse in the File menu, which generates a WM_INITMENUPOPUP message. The framework’s update mechanism collectively updates all items on the File menu before the menu drops down so the user can see it.</P>
+
+<P>To do this, the framework routes update commands for all menu items in the pop-up menu along the standard command routing. Command targets on the routing have an opportunity to update any menu items by matching the update command with an appropriate message-map entry (of the form <B>ON_UPDATE_COMMAND_UI</B>) and calling an “update handler” function. Thus, for a menu with six menu items, six update commands are sent out. If an update handler exists for the command ID of the menu item, it is called to do the updating. If not, the framework checks for the existence of a handler for that command ID and enables or disables the menu item as appropriate.</P>
+
+<P>If the framework does not find an <B>ON_UPDATE_COMMAND_UI</B> entry during command routing, it automatically enables the user-interface object if there is an <B>ON_COMMAND</B> entry somewhere with the same command ID. Otherwise, it disables the user-interface object. Therefore, to ensure that a user-interface object is enabled, supply a handler for the command the object generates or supply an update handler for it. </P>
+
+<P>It is possible to disable the default disabling of user-interface objects. For more information, see the <B>m_bAutoMenuEnable</B> member of class <B>CFrameWnd</B>. </P>
+
+<P>Menu initialization is automatic in the framework, occurring when the application receives a WM_INITMENUPOPUP message. During the idle loop, the framework searches the command routing for button update handlers in much the same way as it does for menus. </P>
+
+<H4>ON_UPDATE_COMMAND_UI Macro</H4>
+
+<P>Use ClassWizard to connect a user-interface object to a command-update handler in a command-target object. It will automatically connect the user-interface object’s ID to the <B>ON_UPDATE_COMMAND_UI</B> macro and create a handler in the object that will handle the update.</P>
+
+<P>For example, to update a <B>Clear All </B>command in a menu, use ClassWizard to add a message-map entry in the chosen class, a function declaration for a command-update handler called <B>OnUpdateEditClearAll</B> in the class declaration, and an empty function template in the class implementation file. The function prototype looks like this:</P>
+
+<PRE>afx_msg void OnUpdateEditClearAll( CCmdUI* pCmdUI );
+</PRE>
+
+<P>Like all handlers, the function shows the <B>afx_msg</B> keyword. Like all update handlers, it takes one argument, a pointer to a <B>CCmdUI</B> object.</P>
+
+<H4>The CCmdUI Class</H4>
+
+<P>When it routes an update command to its handler, the framework passes the handler a pointer to a <B>CCmdUI</B> object (or to an object of a <B>CCmdUI</B>-derived class). This object represents the menu item, toolbar button, or other user-interface object that generated the command. The update handler calls member functions of the <B>CCmdUI</B> structure through the pointer to update the user-interface object. For example, the following is an update handler for the <B>Clear All</B> menu item:</P>
+
+<PRE>void CMyClass::OnUpdateToolsMyTool( CCmdUI* pCmdUI )
+{
+    if( ToolAvailable() )
+        pCmdUI-&gt;Enable( TRUE );
+}
+</PRE>
+
+<P>This handler calls the <B>Enable</B> member function of an object with access to the menu item. <B>Enable</B> makes the item available for use.</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

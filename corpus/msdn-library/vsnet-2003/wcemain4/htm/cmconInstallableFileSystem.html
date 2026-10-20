@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Installable File System</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Installable File System"/>
+<MSHelp:RLTitle Title="Installable File System"/>
+<MSHelp:Keyword Index="A" Term="cmconInstallableFileSystem"/>
+<MSHelp:Keyword Index="K" Term="Persistent Storage Manager, installable file system"/>
+<MSHelp:Keyword Index="A" Term="cmconInstallableFileSystem"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: psm_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756348">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconinstallablefilesystem"></A>Installable File System</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Intel Persistent Storage Manager (PSM) needs to know where the flash and file partition are located. The structure <A HREF="cxrefpsm_oeminfo.htm">PSM_OEMInfo</A>, in Plat_api.c and Plat_api.h, contains this information. <B>PSM_OEMInfo</B> lists the physical and virtual locations of the flash along with other array parameters. This structure contains the following information:
+
+<UL type="disc">
+	<LI>The flash array location. Both physical and virtual addresses are required.</li>
+
+	<LI>The location of the file partition in the array.</li>
+
+	<LI>The size of accesses to use when writing to the array.</li>
+</UL>
+
+<P>The first three entries of the <B>PSM_OEMINFO</B> structure, which are array addresses, are used in two different places, the registry utilities and the Installable File System Manager (IFS), so there are two versions. The registry utilities require virtual addresses, so there is a compile-time option, PSM_PRE_OS_ACCESS, which is defined when the registry support is compiled and linked. PSM_PRE_OS_ACCESScauses the first version of the address variables, the virtual ones, to be made available to those utilities. The IFS accesses the flash using physical addresses. When it is built, PSM_PRE_OS_ACCESS will not be defined, so the second version of the address parameters, the physical ones, will be made available to the IFS.</P>
+
+<P>Add the following registry entries to <B>HKEY_LOCAL_MACHINE\System\StorageManager\AutoLoad\PSM</B> so the OS loads PSM.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\AutoLoad\PSM]
+    "Dll"="PSMFSD.dll"
+    "Paging"=dword:0</PRE>
+
+<P>The typical location for the default registry settings is Platform.reg. The default registry is typically Platform.Reg, contained within the board support package. For example, for the SA11X0BD BSP, the default registry is found in %_WINCEROOT%\Platform\SA11X0BD\Files.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconpersistentstoragemanager.htm">Persistent Storage Manager</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Installable%20File%20System&nbsp;(cmconinstallablefilesystem.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

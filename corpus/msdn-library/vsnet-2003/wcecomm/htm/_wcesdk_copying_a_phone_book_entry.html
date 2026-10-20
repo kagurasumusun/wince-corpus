@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Copying a Phone-Book Entry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Copying a Phone-Book Entry"/>
+<MSHelp:RLTitle Title="Copying a Phone-Book Entry"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Copying_a_Phone_Book_Entry"/>
+<MSHelp:Keyword Index="K" Term="Copying a Phone-Book Entry"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: ras.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_copying_a_phone_book_entry"></A>Copying a Phone-Book Entry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An application can use the <MSHelp:link keywords="_wcesdk_Win32_RasGetEntryProperties" TABINDEX="0"><B>RasGetEntryProperties</B></MSHelp:link> or the <MSHelp:link keywords="_wcesdk_Win32_RasSetEntryProperties" TABINDEX="0"><B>RasSetEntryProperties</B></MSHelp:link> function to copy the configuration data to another entry. The <I>lpszEntryName</I> parameter can be used to change the entry.</P>
+
+<P class="labelproc"><B>To copy a phone-book entry to the dialing list</B>
+
+<OL type="1">
+	<LI>Call <B>RasGetEntryProperties</B> to get current phone-book properties.</li>
+
+	<LI>Call <B>RasSetEntryProperties</B> to set new phone-book properties.</li>
+
+	<LI>Call <B>RasGetEntryDialParams</B> to retrieve current user data.</li>
+
+	<LI>Call <B>RasSetEntryDialParams</B> to set user password data.</li>
+
+	<LI>The return value is TRUE if successful, and FALSE if not.</li>
+</OL>
+
+<P>The following code example shows how to copy a RAS entry.</P>
+
+<PRE class="code">BOOL CopyRasEntry (LPTSTR lpszEntryName)
+{
+  BOOL bPasswordSaved;              
+  TCHAR szNewEntryName[100];       // Name for the copied entry
+  TCHAR szError[100];              // Buffer for the error message
+  DWORD dwError,                   // Return code from the functions
+        dwRasEntrySize,            // Size of the RASENTRY structure
+        dwDevConfigSize,           // Size of DevConfigBuf
+        dwDeviceNum = 0xFFFFFFFF;  // Telephony API device number 
+  BYTE DevConfigBuf[128];          // Buffer for device configuration 
+                                   // data
+  RASENTRY RasEntry;               // RASENTRY structure
+  RASDIALPARAMS RasDialParams;     // RASDIALPARAMS structure 
+  LPVARSTRING lpDevConfig = (LPVARSTRING)&amp;DevConfigBuf;
+                                   // Pointer to the memory location of
+                                   // the device configuration structure
+
+  // Assign the name for the copied phone-book entry.
+  wsprintf (szNewEntryName, TEXT("%s1"), lpszEntryName);
+    
+  // Validate the format of a connection entry name.
+  if (dwError = RasValidateEntryName (NULL, szNewEntryName))
+  {
+    wsprintf (szError, TEXT("Unable to validate entry name.")
+              TEXT(" Error %ld"), dwError);  
+
+    return FALSE;
+  }
+
+  dwDevConfigSize = sizeof (DevConfigBuf);
+  dwRasEntrySize = sizeof (RASENTRY);
+  RasEntry.dwSize = dwRasEntrySize;
+
+  // Retrieve the entry properties.
+  if (dwError = RasGetEntryProperties (NULL,               
+                                       lpszEntryName,      
+                                       (LPBYTE)&amp;RasEntry,  
+                                       &amp;dwRasEntrySize,    
+                                       DevConfigBuf,       
+                                       &amp;dwDevConfigSize))  
+  {
+    wsprintf (szError, TEXT("Unable to read entry properties.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  memset (&amp;RasDialParams, 0, sizeof (RasDialParams));
+  RasDialParams.dwSize = sizeof (RASDIALPARAMS);
+  _tcscpy (RasDialParams.szEntryName, lpszEntryName);
+
+  // Retrieve the connection data.
+  if (dwError = RasGetEntryDialParams (NULL, &amp;RasDialParams, 
+                      &amp;bPasswordSaved))
+  {
+    wsprintf (szError, TEXT("Unable to get the connection information.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+// Create a new phone-book entry.
+  if (dwError = RasSetEntryProperties (NULL, 
+                                       szNewEntryName, 
+                                       (LPBYTE)&amp;RasEntry,
+                                       dwRasEntrySize, 
+                                       DevConfigBuf, 
+                                       dwDevConfigSize))
+  {
+    wsprintf (szError, TEXT("Unable to copy the phonebook entry.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+  
+  _tcscpy (RasDialParams.szEntryName, szNewEntryName);
+
+  // Change the connection data.
+  if (dwError = RasSetEntryDialParams (NULL, &amp;RasDialParams, FALSE))
+  {
+    wsprintf (szError, TEXT("Unable to set the connection information.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  return TRUE;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, July 09, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Copying%20a%20Phone-Book%20Entry&nbsp;(_wcesdk_copying_a_phone_book_entry.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

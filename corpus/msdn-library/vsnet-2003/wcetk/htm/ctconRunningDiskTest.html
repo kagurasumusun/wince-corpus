@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Storage Device Block Driver API Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running the Storage Device Block Driver API Test"/>
+<MSHelp:RLTitle Title="Running the Storage Device Block Driver API Test"/>
+<MSHelp:Keyword Index="A" Term="ctconRunningDiskTest"/>
+<MSHelp:Keyword Index="A" Term="ctconRunningDiskTest"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: disktest.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756839">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ctconrunningdisktest"></A>Running the Storage Device Block Driver API Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Storage Device Block Driver API Test executes the <code class="ce">tux &#0150;o &#0150;d disktest</code> command line on default execution. Prior to running this test, be aware that any information on the storage device is destroyed. The test writes to and reads from sectors on the storage device without preserving the contents of the sectors. Microsoft recommends that you back up data on all cards and disks that are attached to the tested device before running the test.</P>
+
+<P>You can modify the test by editing the command line. The following table shows the additional command-line options that you can insert.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Command-line entry</TH>
+<TH width=56%>Result</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>
+<PRE class="code">-d DSKx</PRE>
+</TD>
+<TD width=56%>Specifies the device name of the disk to be tested. If you do not specify this option, the disk test probes for a mass storage disk on devices <CODE>DSK1-9</CODE>. Specifying this option overrides the automatic detection process and forces tests to use the device that you specify.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>
+<PRE class="code">-o</PRE>
+</TD>
+<TD width=56%>Forces the test to use previous disk I/O control codes (IOCTLs) rather than the current set of IOCTLs. The previous IOCTLs begin with DISK_IOCTL_ and are not Microsoft&reg; Windows&reg; CE IOCTLs. The current set of IOCTLs begin with IOCTL_DISK_. Many block drivers support both previous and current IOCTLs and this option can be used to verify that both current and previous IOCTLs work properly.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The Storage Device Block Driver API Test deletes all data from the storage device. You can mount one or more disks on the Windows CE-based device prior to running the test. The test is performed on the first mass storage device that is detected.</BLOCKQUOTE>
+
+<P>The following table shows the test cases for the Storage Device Block Driver API Test.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Test case</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4001: Check name of mass storage disk</TD>
+<TD width=56%>Tests the functionality of the IOCTL_DISK_GETNAME I/O control code. If the storage device supports only previous I/O control codes, use the <code class="ce">&#0150;o</code> command-line option to test the DISK_IOCTL_GETNAME I/O control code instead. This test case fails if the block driver does not support the I/O control code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4002: Format mass storage disk</TD>
+<TD width=56%>Tests the functionality of the IOCTL_DISK_FORMAT_MEDIA I/O control code. If the disk supports only previous I/O control codes, use the <code class="ce">&#0150;o</code> command-line option to test the DISK_IOCTL_FORMAT_MEDIA I/O control code instead. This test case fails if the block driver does not support the I/O control code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4003: Write, Read, Verify 1 sector at a time</TD>
+<TD width=56%>Verifies that data written to any sector of the disk one sector at a time can be read back properly. This test case fails if data is corrupted while reading or writing. This test case also fails if the boundary of a read or write buffer is overwritten.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4004: Write, Read, Verify 8 sectors at a time</TD>
+<TD width=56%>Verifies that data written to any sector of the disk eight sectors at a time can be read back properly. This test case fails if data is corrupted while reading or writing. This test case also fails if the boundary of a read or write buffer is overwritten.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4005: Write, Read, Verify 32 sectors at a time</TD>
+<TD width=56%>Verifies that data written to any sector of the disk 32 sectors at a time can be read back properly. This test case fails if data is corrupted while reading or writing. This test case also fails if the boundary of a read or write buffer is overwritten. This test case fails if the storage device does not support large reads or writes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4006: Write, Read, Verify varying sized buffers</TD>
+<TD width=56%>Verifies that reads of and writes to multiple sectors can be performed in a range of sizes. This test case fails if data is corrupted while reading or writing. This test also fails if the boundary of a read or write buffer is overwritten.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4007: Write, Read with 3 SG buffers, Verify</TD>
+<TD width=56%>Verifies that reads of three scatter-gather (SG) buffers behave properly. This test fails if the driver for the storage device does not support multiple SG buffer reads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4008: Write, Read with 2 SG buffers, Verify</TD>
+<TD width=56%>Verifies that reads of two SG buffers behave properly. This test fails if the driver for the storage device does not support multiple SG buffer reads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4009: Write, Read with 8 SG buffers, Verify</TD>
+<TD width=56%>Verifies that reads of eight SG buffers behave properly. This test fails if the driver for the storage device does not support multiple SG buffer reads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4010: Write, Read with 32 SG buffers, Verify</TD>
+<TD width=56%>Verifies that reads of 32 SG buffers behave properly. This test fails if the driver for the storage device does not support multiple SG buffer reads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4011: Various SG buffer sizes</TD>
+<TD width=56%>Verifies that all SG buffers work properly. This test case fail if the driver for the storage device does not support multiple SG buffer reads.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4012: Read buffer extends past last sector</TD>
+<TD width=56%>Verifies the behavior of a disk read when the request extends past the last sector on the disk. This test case fails if the read succeeds. A failure of the test case does not necessarily indicate a problem with the driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4013: Read starts past final sector</TD>
+<TD width=56%>Verifies the behavior of a disk read when the request starts past the last sector on the disk. This test case fails if the read succeeds. A failure of the test case does not necessarily indicate a problem with the driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4014: Write buffer extends past last sector</TD>
+<TD width=56%>Verifies the behavior of a disk write when the request extends past the last sector on the disk. This test case fails if the write succeeds. A failure of the test case does not necessarily indicate a problem with the driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>4015: Write starts past final sector</TD>
+<TD width=56%>Verifies the behavior of a disk write when the request starts past the last sector on the disk. This test fails if the write succeeds. A failure of the test case does not necessarily indicate a problem with the driver.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This test library can have one or more optional command-line entries to change the behavior of the test. To specify one or more optional command-line entries to the test library, you must use the <CODE>&#0150;c</CODE> command-line option. This option forces Tux to pass the specified string into the test library.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ctcondisktest.htm">Storage Device Block Driver API Test</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20the%20Storage%20Device%20Block%20Driver%20API%20Test&nbsp;(ctconrunningdisktest.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

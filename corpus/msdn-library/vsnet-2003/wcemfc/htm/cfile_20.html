@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFile::SetFilePath</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cfile_setfilepath"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cfile_setfilepath"></A><SUP></SUP>CFile::SetFilePath</H1>
+
+<P>This method specifies the path of the file. For example, if the path of a file is not available when a <B>CFile</B> object is constructed, call <B>SetFilePath</B> to provide the path.</P>
+
+<P><B>SetFilePath</B> does not open or create the file; it simply associates the <B>CFile</B> object with a path name, which can then be used.</P>
+
+<PRE class=syntax><B>virtual void SetFilePath( </B><I>
+</I><B>LPCTSTR </B><I>lpszNewName</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszNewName</I></DT>
+
+<DD>Specifies the pointer to a string specifying the new path.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>TCHAR* pstrName = _T("MyFile.DAT");
+
+// Open a file.
+HANDLE hFile = ::CreateFile(pstrName, GENERIC_WRITE, FILE_SHARE_READ,
+&nbsp;&nbsp;NULL, CREATE_ALWAYS, 0, NULL);
+
+if (hFile != INVALID_HANDLE_VALUE)
+{
+   // Attach a CFile object to it.
+   CFile myFile((int) hFile);
+
+   // At this point, myFile does not know the path name for the file
+   // it owns because Windows does not associate that information
+   // with the handle. Any CFileExceptions thrown by this object
+   // will not have complete information.
+
+   // Calling SetFilePath() remedies that problem by letting CFile
+   // know the name of the file that is associated with the object.
+
+   myFile.SetFilePath(pstrName);
+
+   // Write something to the file and flush it immediately.
+   DWORD dwValue = 1234;
+   myFile.Write(&amp;dwValue, sizeof(dwValue));
+   myFile.Flush();
+
+   // Destroying the CObject here will call ::CloseHandle() on the file.
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cfile.htm"><B>CFile</B></A>, <A HREF="cfile_7.htm"><B>CFile::GetFilePath</B></A>, <A HREF="cfile_2.htm"><B>CFile::CFile</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

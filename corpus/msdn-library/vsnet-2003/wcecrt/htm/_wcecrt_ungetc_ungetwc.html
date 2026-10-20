@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ungetc, ungetwc</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_ungetc_ungetwc"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_ungetc_ungetwc.htm", "ungetc,%20ungetwc")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_ungetc_ungetwc"></A>ungetc, ungetwc</H1>
+
+<P>Pushes a character back onto the stream.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Routine</TH>
+<TH width=70%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>ungetc</B></TD>
+<TD width=70%>&lt;stdio.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>ungetwc</B></TD>
+<TD width=70%>&lt;stdio.h&gt; </TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>int ungetc( int </B><I>c</I><B>, FILE *</B><I>stream</I><B> );</B>
+<B>wint_t ungetwc( wint_t </B><I>c</I><B>, FILE *</B><I>stream</I><B> );</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>c</I></DT>
+
+<DD>Character to be pushed</dd>
+
+<DT><I>stream</I></DT>
+
+<DD>Pointer to <B>FILE</B> structure</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>If successful, each of these functions returns the character argument <I>c</I>. If <I>c</I> cannot be pushed back or if no character has been read, the input stream is unchanged and <B>ungetc</B> returns <B>EOF</B>; <B>ungetwc</B> returns <B>WEOF</B>.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>ungetc</B> function pushes the character <I>c</I> back onto <I>stream</I> and clears the end-of-file indicator. The <I>stream</I> must be open for reading. A subsequent read operation on <I>stream</I> starts with <I>c</I>. An attempt to push <B>EOF</B> onto the stream using <B>ungetc</B> is ignored.</P>
+
+<P>Characters placed on the stream by <B>ungetc</B> may be erased if <B>fflush</B>, <B>fseek</B>, or <B>fsetpos</B> is called before the character is read from the stream. The file-position indicator will have the value it had before the characters were pushed back. The external storage corresponding to the stream is unchanged. On a successful <B>ungetc</B> call against a text stream, the file-position indicator is unspecified until all the pushed-back characters are read or discarded. On each successful <B>ungetc</B> call against a binary stream, the file-position indicator is decremented; if its value was 0 before a call, the value is undefined after the call.</P>
+
+<P>Results are unpredictable if <B>ungetc</B> is called twice without a read or file-positioning operation between the two calls. After a call to <B>fscanf</B>, a call to <B>ungetc</B> may fail unless another read operation has been performed. This is because <B>fscanf</B> itself calls <B>ungetc</B>.</P>
+
+<P><B>ungetwc</B> is a wide-character version of <B>ungetc</B>. However, on each successful <B>ungetwc</B> call against a text or binary stream, the value of the file-position indicator is unspecified until all pushed-back characters are read or discarded.</P>
+
+<P class="label"><B>Generic-Text Routine Mappings</B></P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>TCHAR.H Routine </TH>
+<TH width=62%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>_ungettc</TD>
+<TD width=62%>ungetwc </TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* UNGETC.C: This program first converts a character
+ * representation of an unsigned integer to an integer. If
+ * the program encounters a character that is not a digit,
+ * the program uses ungetc to replace it in the  stream.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+void main( void )
+{
+   int ch;
+   int result = 0;
+
+   printf( "Enter an integer: " );
+
+   /* Read in and convert number: */
+   while( ((ch = getchar()) != EOF) &amp;&amp; isdigit( ch ) )
+      result = result * 10 + ch - '0';    /* Use digit. */
+   if( ch != EOF )
+      ungetc( ch, stdin );                /* Put nondigit back. */
+   printf( "Number = %d\nNextcharacter in stream = '%c'",
+            result, getchar() );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Enter an integer: 521a
+Number = 521
+Nextcharacter in stream = 'a'</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

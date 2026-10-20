@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CInternetSession</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cinternetsession"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cinternetsession"></A><SUP></SUP>CInternetSession</H1>
+
+<P>This class creates and initializes one or more simultaneous Internet sessions and, if necessary, describes your connection to a proxy server. If your Internet connection must be maintained for the duration of an application, you can create a <B>CInternetSession</B> member of the class <A HREF="cwinapp.htm"><B>CWinApp</B></A>.</P>
+
+<P>Once you have established an Internet session, you can call <A HREF="cinetses_8.htm"><B>OpenURL</B></A>. <B>CInternetSession</B> then parses the URL for you by calling the global function <A HREF="mfcapi_3.htm"><B>AfxParseURL</B></A>. Regardless of its protocol type, <B>CInternetSession</B> interprets the URL and manages it for you. It can handle requests for local files identified with the URL resource, file://. <B>OpenURL</B> will return a pointer to a <A HREF="cstdfile.htm"><B>CStdioFile</B></A> object if the name you pass it is a local file. </P>
+
+<P>If you open a URL on an Internet server using <B>OpenURL</B>, you can read information from the site. If you want to perform service-specific actions on files located on a server, such as HTTP, you must establish the appropriate connection with that server. To open a particular kind of connection directly to a particular service, use the following method:
+
+<UL type=disc>
+	<LI><B>GetHttpConnection</B> to open a connection to an HTTP service.</LI>
+</UL>
+
+<P><A HREF="cinetses_9.htm"><B>QueryOption</B></A> and <A HREF="cinetses_11.htm"><B>SetOption</B></A> allow you to set the query options of your session, such as time-out values, number of retries, and so on. </P>
+
+<P>During an Internet session, a transaction such as a search or data download can take appreciable time. The user might want to continue working, or might want to have status information about the progress of the transaction. To handle this problem, <B>CInternetSession</B> provides for searches and data transfer to occur asychronously, allowing the user to perform other tasks while waiting for the transfer to complete. If you want to provide the user with status information, or if you want to handle any operations asynchronously, three conditions must be set:
+
+<UL type=disc>
+	<LI>In the constructor, <I>dwFlags</I> must include INTERNET_FLAG_ASYNC.</LI>
+
+	<LI>In the constructor, <I>dwContext</I> must be set to a nonzero value.</LI>
+
+	<LI>You must establish a call back function by calling <A HREF="cinetses_4.htm"><B>EnableStatusCallback</B></A></LI>
+</UL>
+
+<P>Use the overridable method <A HREF="cinetses_7.htm"><B>OnStatusCallback</B></A> to get status information on asynchronous retrieval. To use this overridable method, you must derive your own class from <B>CInternetSession</B>.</P>
+
+<P><B>CInternetSession</B> will throw an <A HREF="funct_62.htm"><B>AfxThrowNotSupportedException</B></A> for unsupported service types. Only the HTTP and FILE service types are currently supported.</P>
+
+<H4>Remarks</H4>
+
+<P>MFC for Windows CE supports the following<B> </B>methods of the <B>CInternetSession</B> class differently than the standard MFC:
+
+<UL type=disc>
+	<LI><A HREF="cinetses_11.htm"><B>CInternetSession::SetOption</B></A></LI>
+</UL>
+
+<P>In MFC for Windows CE, the <I>dwFlags</I> parameter of the <B>CInternetSession</B> constructor must be zero. In addition, the <B>CInternetSession</B> constructor does not support the INTERNET_FLAG_DONT_CACHE flag for the <I>dwAccessType </I>parameter<I>.</I></P>
+
+<P>In MFC for Windows CE, the <I>dwFlags</I> parameter of the <B>OpenURL</B> method does not support all of the flags in MFC that it does in standard MFC. In addition, the <I>dwFlags</I> parameter must include the INTERNET_FLAG_TRANSFER_ASCII flag or the INTERNET_FLAG_TRANSFER_BINARY flag, but not both.</P>
+
+<P>Since MFC for Windows CE does not support FTP or gopher connections, it does not support the following desktop methods:
+
+<UL type=disc>
+	<LI><B>CInternetSession::GetFTPConnection</B></LI>
+
+	<LI><B>CInternetSession::GetGopherConnection</B></LI>
+</UL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxinet.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="compare_24.htm">Internet Services Classes</A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISOAPError</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISOAPError"/>
+<MSHelp:RLTitle Title="ISOAPError"/>
+<MSHelp:Keyword Index="A" Term="cerefISOAPError"/>
+<MSHelp:Keyword Index="K" Term="ISOAPError"/>
+<MSHelp:Keyword Index="K" Term="ISOAPError, interface description"/>
+<MSHelp:Keyword Index="A" Term="cerefISOAPError"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: soap_objects_ref.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750388">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisoaperror"></A>ISOAPError</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This interface provides the properties necessary to create a &lt;Fault&gt; element in a Simple Object Access Protocol (SOAP) message.</P>
+
+<P>The <B>SoapServer</B> and <B>SoapClient</B> objects each handle errors in a specific way. The following text describes how each of these objects handles errors.</P>
+
+<H2 class="dtH2">How the Server Handles Errors</H2>
+
+<OL type="1">
+	<LI>If the COM object on the server returns an error, the <B>SoapServer</B> object queries the COM object for the <B>ISOAPError</B> interface. If the COM object implements the <B>ISOAPError</B> interface, the <B>SoapServer</B> object creates a &lt;Fault&gt; element whose:
+<UL type="disc">
+	<LI>&lt;faultcode&gt; child element has been set to the string returned by the <A HREF="cereffaultcodepropertyisoaperror.htm">faultcode property</A> of the <B>ISOAPError</B> interface with a namespace prefix that identifies the namespace URI returned by the <A HREF="cereffaultcodensproperty.htm">faultcodeNS property</A> of the <B>ISOAPError</B> interface.</li>
+
+	<LI>&lt;faultstring&gt; child element has been set to the value returned by the <A HREF="cereffaultstringpropertyisoaperror.htm">faultstring property</A> of the <B>ISOAPError</B> interface.</li>
+
+	<LI>&lt;faultactor&gt; child element has been set to the value returned by the <A HREF="cereffaultactorpropertyisoaperror.htm">faultactor property</A> of the <B>ISOAPError</B> interface. If the <B>faultactor</B> property returns an empty string or a null value, the &lt;faultactor&gt; child element will be set to the service address specified in the Web Services Description Language (WSDL) document used to initialize the server</li>
+
+	<LI>&lt;detail&gt; child element has been set to the XML text returned by <A HREF="cerefdetailpropertyisoaperror.htm">detail property</A> of the <B>ISOAPError</B> interface. (Note that the detail property must contain valid XML content with any text strings both placed inside of elements and properly escaped according to XML rules).</li>
+</UL>
+</li>
+
+	<LI>If the COM object does not implement the <B>ISOAPError</B> interface, but does support the COM <B>IErrorInfo</B> interface, the <B>SoapServer</B> object creates a &lt;Fault&gt; element whose:
+<UL type="disc">
+	<LI>&lt;faultcode&gt; child element has been set to <code class="ce">"SOAP-ENV:Client"</code>.</li>
+
+	<LI>&lt;faultstring&gt; child element has been set to the value returned by the <B>GetDescription</B> method of the <B>IErrorInfo</B> interface.</li>
+
+	<LI>&lt;faultactor&gt; child element has been set to the service address specified in the WSDL document used to initialize the server.</li>
+
+	<LI>&lt;detail&gt; child element has been set to the content described in <A HREF="ceconunderstandingsoapfaultdetailcontents.htm">Understanding the SOAP Fault &lt;detail&gt; Contents</A>.</li>
+</UL>
+</li>
+
+	<LI>If the COM object supports neither the <B>ISOAPError</B> interface, nor the <B>IErrorInfo</B> interface, the <B>SoapServer</B> object creates a &lt;Fault&gt; element whose:
+<UL type="disc">
+	<LI>&lt;faultcode&gt; child element has been set to <code class="ce">"SOAP-ENV:Client"</code>.</li>
+
+	<LI>&lt;faultstring&gt; child element has been set to a message containing the name of the method that failed.</li>
+
+	<LI>&lt;faultactor&gt; child element has been set to the service address specified in the WSDL document used to initialize the server.</li>
+
+	<LI>&lt;detail&gt; child element has been set to the content described in the <A HREF="ceconunderstandingsoapfaultdetailcontents.htm">Understanding the SOAP Fault &lt;detail&gt; Contents</A>.</li>
+</UL>
+</li>
+</OL>
+
+<H2 class="dtH2">How the Client Handles Errors</H2>
+
+<P>If the server returns a SOAP message containing a &lt;Fault&gt; element to the client, the &lt;faultcode&gt;, &lt;faultstring&gt;, &lt;faultactor&gt; and &lt;detail&gt; element values in the SOAP message are copied to the corresponding properties in the <B>SoapClient</B> object and the client generates an <B>ErrorInfo</B> object that can be used through the <B>Err</B> object.</P>
+
+<P>If the error occurs on the client (for example during initialization), the <B>SoapClient</B> object generates values for its error properties: <B>faultcode</B>, <B>faultstring</B>, <B>faultactor</B>, and <B>detail</B>. As with an error occurring on the server, the <B>SoapClient</B> also sets an <B>ErrorInfo</B> object.</P>
+
+<P>The following table shows the properties supported by the <B>ISOAPError</B> interface.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>Property</TH>
+<TH width=79%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="cereffaultcodepropertyisoaperror.htm">faultcode</A></TD>
+<TD width=79%>(read-only) Provides the value of the &lt;faultcode&gt; element of the Simple Object Access Protocol (SOAP) &lt;Fault&gt; element.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="cereffaultstringpropertyisoaperror.htm">faultstring</A></TD>
+<TD width=79%>(read-only) Provides the value of the &lt;faultstring&gt; element of the SOAP &lt;Fault&gt; element.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="cereffaultactorpropertyisoaperror.htm">faultactor</A></TD>
+<TD width=79%>(read-only) Provides the value of the &lt;faultactor&gt; element of the SOAP &lt;Fault&gt; element.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="cerefdetailpropertyisoaperror.htm">detail</A></TD>
+<TD width=79%>(read-only) Provides the value of the &lt;detail&gt; element of the SOAP &lt;Fault&gt; element.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><A HREF="cereffaultcodensproperty.htm">faultcodeNS</A></TD>
+<TD width=79%>(read-only) Provides the namespace URI used in the &lt;faultcode&gt; element of the SOAP &lt;Fault&gt; element.</TD>
+</TR>
+</table></div>
+
+<H3 class="dtH3">Example</H3>
+
+<P>In the Calc sample application described in , the COM object on the server provides services such as <B>Add</B> and <B>Subtract.</B> The following code examples show how to revise the code used in the high-level API sample to handle errors generated by a COM object.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For the following revised code to work, you also need to generate new WSDL and Web Services Meta Language (WSML) files using the WSDL/WSML Generator.</BLOCKQUOTE>
+
+<H3 class="dtH3">Revising the Code on the Server</H3>
+
+<P>The following code implements the same COM object as in the high-level API sample with the following revisions:
+
+<UL type="disc">
+	<LI>A <B>DivideNumbers</B> method is added</li>
+
+	<LI><B>ISOAPError</B> interface is exposed</li>
+</UL>
+
+<P>To simplify the following example, only the <B>Divide</B> method implements error handling. If an error occurs in one of the other methods, such as <B>Multiply</B> or <B>Add</B>, the <B>SoapServer</B> object would follow the same process as previously described for a COM object that supports neither the <B>ISOAPError</B> interface nor the <B>IErrorInfo</B> interface.</P>
+
+<P>In the revised code, any error that occurs when calling <B>Divide</B> (for example, trying to divide by zero) results in the <B>SoapServer</B> object returning error information using the <B>faultcode</B>, <B>faultstring</B>, <B>faultactor</B>, <B>detail</B>, and <B>faultcodeNS</B> properties of the <B>ISOAPError</B> interface. </P>
+
+<H3 class="dtH3">Revising the Code on the Client</H3>
+
+<P>To handle any errors returned by the server, the client-side code used in the high-level API sample must also be revised. The following revised code outlines how the client would now be able to handle an error generated by a call to the <B>DivideNumbers</B> method.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Mssoap.h</TD>
+<TD width=20%>Mssoap1.dll</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISOAPError&nbsp;(cerefisoaperror.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

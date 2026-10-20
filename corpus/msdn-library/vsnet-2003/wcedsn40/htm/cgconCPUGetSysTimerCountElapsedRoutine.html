@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPUGetSysTimerCountElapsed Routine</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CPUGetSysTimerCountElapsed Routine"/>
+<MSHelp:RLTitle Title="CPUGetSysTimerCountElapsed Routine"/>
+<MSHelp:Keyword Index="A" Term="cgconCPUGetSysTimerCountElapsedRoutine"/>
+<MSHelp:Keyword Index="K" Term="CPUGetSysTimerCountElapsed"/>
+<MSHelp:Keyword Index="K" Term="OEMIdle, CPUGetSysTimerCountElapsed routine"/>
+<MSHelp:Keyword Index="A" Term="cgconCPUGetSysTimerCountElapsedRoutine"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757315">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconcpugetsystimercountelapsedroutine"></A>CPUGetSysTimerCountElapsed Routine</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This routine is prototyped as shown in the following code sample.</P>
+
+<PRE class="code">DWORD CPUGetSysTimerCountElapsed(
+DWORD dwTimerCountdownMSec,
+volatile DWORD *pCurMSec,
+DWORD *pPartialCurMSec,
+volatile ULARGE_INTEGER *pCurTicks
+);</PRE>
+
+<P><A HREF="cmrefoemidle.htm">OEMIdle</A> calls <B>CPUGetSysTimerCountElapsed</B> to determine how much time has elapsed since the last timer tick. In some situations, <B>CPUGetSysTimerCountElapsed</B> is called with interrupts off, making it possible for a timer interrupt to be pending when it is called. This routine must compensate for the ISR which will also update <B>CurMSec</B> when its interrupt is unmasked. Systems that use a PIT should note the return value from <B>CPUClearSysTimerIRQ</B> as it indicates whether the PIT interrupt was serviced in time to avoid losing timer information.</P>
+
+<P>The following list shows the parameters to this routine:
+
+<UL type="disc">
+	<LI><I>dwCountdownMSec</I>
+<P>The number of milliseconds that the system expected to sleep before the next timer interrupt.
+</li>
+
+	<LI><I>pCurMSec</I>
+<P>Points to a millisecond counter, often but not always the global variable<A HREF="cmrefcurmsec.htm"> CurMSec</A>.
+</li>
+
+	<LI><I>pPartialCurMSec</I>
+<P>Some number of timer counts, not timer ticks, not accounted for in the current value of *<I>pCurMSec</I>.
+</li>
+
+	<LI><I>pCurTicks</I>
+<P>Pointer to a 64-bit tick counter.
+</li>
+</UL>
+
+<P><B>CPUGetSysTimerCountElapsed</B> determines the number of counter increments or decrements that have elapsed and adds it to *<I>pPartialCurMSec</I>. It then calculates the number of whole milliseconds the sum represents and updates *<I>pCurMSec</I> with that value. Finally, it updates *<I>pPartialCurMSec</I> with any counts left over from this calculation.</P>
+
+<P><B>CPUGetSysTimerCountElapsed</B> treats *<I>pCurTicks </I>as a running number of timer counts, reflecting the number of times the counter has been incremented or decremented, not the number of interrupts it has generated or the number of milliseconds elapsed.</P>
+
+<P>The following code sample shows an implementation of <B>CPUGetSysTimerCountElapsed</B> for an ARM platform, using a PIT.</P>
+
+<PRE class="code">DWORD CPUGetSysTimerCountElapsed(
+DWORD dwTimerCountdownMSec,
+volatile DWORD *pCurMSec,
+DWORD *pPartialCurMSec,
+volatile ULARGE_INTEGER *pCurTicks
+);
+{
+  TimerStruct_t  *pTimer = gSysTimers[OS_TIMER].pt;
+  DWORD dwTick = dwTimerCountdownMSec * OEMCount1ms;
+  DWORD dwCount;
+  // If timer IRQ pending, a full resched period elapsed
+  if (CPUClearSysTimerIRQ( )) {
+  *pCurMSec += dwTimerCountdownMSec;
+  pCurTicks-&gt;QuadPart += dwTick;
+  return dwTimerCountdownMSec;
+}
+  // No timer IRQ pending, calculate how much time has elapsed
+  dwCount = pTimer-&gt;TimerValue;
+  if (dwCount &gt; dwTick) {
+  // This is an error case.  Recover gracefully.
+  dwCount = dwTick;
+  } else {
+  dwCount = dwTick - dwCount;
+  }
+  pCurTicks-&gt;QuadPart += dwCount;
+  dwCount += *pPartialCurMSec;
+  *pPartialCurMSec = dwCount % OEMCount1ms;
+  *pCurMSec += (dwCount /= OEMCount1ms);
+  return dwCount;
+}</PRE>
+
+<P>The following code sample shows an implementation for the DDB5476 platform using a free-running timer with value and compare registers.</P>
+
+<PRE class="code">DWORD CPUGetSysTimerCountElapsed(
+DWORD dwTimerCountdownMSec,
+volatile DWORD *pCurMSec,
+DWORD *pPartialCurMSec,
+volatile ULARGE_INTEGER *pCurTicks
+);
+{
+DWORD dwTick = dwTimerCountdownMSec * OEMCount1ms;
+DWORD dwCount = R4000Compare( ) - R4000Count( );
+// Note: if dwCount is negative, the counter went past the compare 
+// point.  The math still works because it accounts 
+// for the dwTick time plus the time past the compare point.
+dwCount = dwTick - dwCount;
+pCurTicks-&gt;QuadPart += dwCount;
+dwCount += *pPartialCurMSec;
+*pPartialCurMSec = dwCount % OEMCount1ms;
+dwCount /= OEMCount1ms;
+*pCurMSec += dwCount;
+return dwCount;
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconboilerplateinterfaceroutines.htm">Boilerplate Interface Routines</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CPUGetSysTimerCountElapsed%20Routine&nbsp;(cgconcpugetsystimercountelapsedroutine.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

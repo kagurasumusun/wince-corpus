@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Host Name Resolution Using a DNS Server for IPv4</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Host Name Resolution Using a DNS Server for IPv4"/>
+<MSHelp:RLTitle Title="Host Name Resolution Using a DNS Server for IPv4"/>
+<MSHelp:Keyword Index="A" Term="cmconHostNameResolutionUsingDNSServer"/>
+<MSHelp:Keyword Index="K" Term="name resolution, using NDS server (IPv4)"/>
+<MSHelp:Keyword Index="A" Term="cmconHostNameResolutionUsingDNSServer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tcpip_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749006">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconhostnameresolutionusingdnsserver"></A>Host Name Resolution Using a DNS Server for IPv4</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>To make host name resolution scaleable and centrally manageable, IP address mappings for fully-qualified domain names (FQDNs) are stored on DNS servers. Windows CE does not support hosting a DNS server running on Windows CE. However, Windows CE queries a DNS server for name resolution if a server exists on the network. The following process outlines what happens when the DNS resolver component on a host sends a DNS query to a DNS server.
+
+<OL type="1">
+	<LI>The DNS resolver component formats a DNS Name Query containing the FQDN and sends it to the configured DNS server. For Windows XP, the DNS resolver forms a FQDN by appending the value of the <B>HKEY_LOCAL_MACHINE\Comm\<I>interface</I>\TCPIP\Parms\DNSDomain</B> registry entry to the name passed to the resolver, for example, <B>gethostbyname</B>. Windows CE first checks that the name is a valid DNS name; for example, Windows CE checks that the name is not too long and is in the form <I>name</I>.<I>something</I>. If the name is valid, Windows CE then checks the DNS server for the name that was passed to the resolver.</li>
+
+	<LI>The DNS server checks the FQDN in the DNS Name Query against locally-stored address records. If a record is found, the IP address corresponding to the requested FQDN is sent back to the client.</li>
+
+	<LI>If the FQDN is not found, the DNS server forwards the request to a DNS server that is authoritative for the FQDN.</li>
+
+	<LI>The authoritative DNS server returns the reply, containing the resolved IP address, back to the original DNS server.
+<P>The original DNS server sends the IP address mapping information to the client. 
+</li>
+</OL>
+
+<P>Windows Sockets applications generally use the <B>gethostbyname</B> or <B>getaddrinfo </B>functions to resolve a host name to an IP address. When looking up a name, the resolver performs the following operations by default:
+
+<OL type="1">
+	<LI>Checks the registry for a name that matches the value of the <B>HKEY_LOCAL_MACHINE\Comm\Tcpip\Hosts\host name</B> entry. </li>
+
+	<LI>Checks the name cache, which is stored in memory for Windows CE 3.0 and later, unless <B>HKEY_LOCAL_MACHINE\Comm\Afd\ResolverCheckCacheFirst</B> is equal to zero.
+<P>If a DNS Server is configured and the name matches the definition of a DNS name, the resolver queries the DNS server as outlined above. The resolver tries both the primary DNS Name Server (DNS1) and the secondary DNS Name Server (DNS2).
+
+<P>If the resolver does not find a match and the name matches the definition of a WINS name, the resolver tries the NetBIOS Name Server. The resolver tries both the primary NetBIOS Name Server (WINS1) and the secondary NETBIOS Name Server (WINS2).
+</li>
+
+	<LI>Tries the IP subnet broadcast, if the resolver did not find a match in the earlier steps.</li>
+
+	<LI>Tries the name cache, if the resolver did not find a match in the earlier steps and if the <B>ResolverCheckCacheFirst</B> registry entry is equal to 0.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The resolver determines whether the name that you want to look up matches the definition of a DNS name or the definition of a WINS name. The resolver then queries only the appropriate servers, based on the type of name matched.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P>Some applications use the resolver to resolve an IP address to a host name. The resolver performs the following operations by default:
+
+<OL type="1">
+	<LI>Checks the registry for a matching name entry</li>
+
+	<LI>Queries a Domain Name Server, if one is configured</li>
+
+	<LI>Sends a NetBIOS unicast message to the device, if the resolver did not find a match in the earlier steps
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Windows CE does not support dynamic DNS for name registration at this time. For information about host name registration, see <A HREF="ceconnameregistration.htm">Name Registration for IPv4</A>.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+Windows XP support for host name resolution using a DNS server is slightly different. For more information about host name resolution on Windows XP, see the Windows XP documentation.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P>For information about host name resolution for IPv6, see <A HREF="cmconhostnameresolutionforipv6.htm">Host Name Resolution for Dual Stack (IPv4/IPv6)</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Host%20Name%20Resolution%20Using%20a%20DNS%20Server%20for%20IPv4&nbsp;(cmconhostnameresolutionusingdnsserver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

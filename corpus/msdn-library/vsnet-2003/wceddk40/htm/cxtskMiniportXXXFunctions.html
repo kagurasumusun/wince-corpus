@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registering MiniportXXX Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registering MiniportXXX Functions"/>
+<MSHelp:RLTitle Title="Registering MiniportXXX Functions"/>
+<MSHelp:Keyword Index="A" Term="cxtskMiniportXXXFunctions"/>
+<MSHelp:Keyword Index="K" Term="miniports, registering NDIS MiniportXXX functions"/>
+<MSHelp:Keyword Index="K" Term="NDIS, registering MiniportXXX functions"/>
+<MSHelp:Keyword Index="A" Term="cxtskMiniportXXXFunctions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753234">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxtskminiportxxxfunctions"></A>Registering MiniportXXX Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Each address member of the <A HREF="cxrefndis_miniport_characteristics.htm">NDIS_MINIPORT_CHARACTERISTICS</A> structure must be initialized &#0151; that is, it must be set to the address of a miniport-supplied function or to NULL. The miniport must supply entry points for all mandatory <B>Miniport<I>XXX</I></B> functions; otherwise, NDIS will unload the driver. The <B>Miniport<I>XXX</I></B> functions are defined in the Ndis.h header file. </P>
+
+<P>Because the miniport supplies the addresses, and not the names, of its <B>Miniport<I>XXX</I></B> functions, driver developers are free to name these functions whatever they want. A reasonable miniport-development strategy is to give these functions names that make debugging easier. For instance, the miniport NIC driver Mp.sys could name the entry points MpISR, MpSend, and so on.</P>
+
+<P>Some <B>Miniport<I>XXX</I></B> functions are optional. For instance, if a NIC does not generate interrupts, the miniport must poll its NIC. Such a miniport must have a <A HREF="cxrefminiporttimer.htm">MiniportTimer</A> function but does not need a <A HREF="cxrefminiportisr.htm">MiniportISR</A> function, a <A HREF="cxrefminiportenableinterrupt.htm">MiniportEnableInterrupt</A> function, or a <A HREF="cxrefminiportdisableinterrupt.htm">MiniportDisableInterrupt</A> function.</P>
+
+<P>A typical miniport driver uses a small number of functions to communicate through NDIS with the upper layers and hardware. NDIS calls <B>Miniport<I>XXX</I></B> functions to communicate with a miniport on its own behalf or on the behalf of a protocol driver.</P>
+
+<P>NDIS NIC miniports and upper-layer drivers use the NDIS library (Ndis.sys) to communicate with each other through calls to <B>Ndis<I>XXX</I></B> functions </P>
+
+<P>The following table summarizes the <A HREF="cmconndisdriverupper-edgefunctions.htm">NDIS Driver Upper-Edge Functions</A>, or miniport driver functions, that a miniport can or must export.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=40%>Description</TH>
+<TH width=27%>Asynchronous Operation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxtskdriverentryofndisminiportdrivers.htm">DriverEntry</A></TD>
+<TD width=40%>Called by the operating system to activate and initialize the miniport driver. </TD>
+<TD width=27%>Not Applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportcheckforhang.htm">MiniportCheckForHang</A></TD>
+<TD width=40%>Checks the internal state of the NIC. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportdisableinterrupt.htm">MiniportDisableInterrupt</A></TD>
+<TD width=40%>Disables the NIC from generating interrupts. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportenableinterrupt.htm">MiniportEnableInterrupt</A></TD>
+<TD width=40%>Enables the NIC to generate interrupts.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiporthalt.htm">MiniportHalt</A></TD>
+<TD width=40%>De-allocates and deregisters resources used for the NIC and halts the NIC so that it is no longer functioning.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiporthandleinterrupt.htm">MiniportHandleInterrupt</A></TD>
+<TD width=40%>Deferred processing function called to complete interrupt-driven I/O processing.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A></TD>
+<TD width=40%>Initializes the NIC. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportisr.htm">MiniportISR</A></TD>
+<TD width=40%>Runs at a high priority as the interrupt service routine for the NIC. </TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A></TD>
+<TD width=40%>Queries the capabilities and status of the miniport driver.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportreconfigure.htm">MiniportReconfigure</A></TD>
+<TD width=40%>Currently, the NDIS library never calls this function, but a <B>MiniportInitialize</B> function can call a <B>MiniportReconfigure</B> function as an internal driver function.</TD>
+<TD width=27%>Not<BR>
+Applicable</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportreset.htm">MiniportReset</A></TD>
+<TD width=40%>Issues a hardware reset to the NIC. </TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportreturnpacket.htm">MiniportReturnPacket</A></TD>
+<TD width=40%>Receives from an upper layer a packet that was previously passed up by a call to <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportsend.htm">MiniportSend</A></TD>
+<TD width=40%>Transmits a packet through the NIC onto the network. Required if the driver has no <B>MiniportSendPackets</B> or <B>MiniportWanSend</B> function.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxconminiportsendpackets.htm">MiniportSendPackets</A></TD>
+<TD width=40%>Transmits an array of packets through the NIC onto the network.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A></TD>
+<TD width=40%>Changes (sets) information about the miniport driver or its NIC.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxconminiportshutdown.htm">MiniportShutdown</A></TD>
+<TD width=40%>Restores a NIC to its initial state when the system is shut down.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxconminiportsynchronizeisr.htm">MiniportSynchronizeISR</A></TD>
+<TD width=40%>Synchronizes access to resources shared with <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B>.</TD>
+<TD width=27%>No</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiporttransferdata.htm">MiniportTransferData</A></TD>
+<TD width=40%>Copies the contents of a packet received by the NIC into a given packet buffer.</TD>
+<TD width=27%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefminiportwansend.htm">MiniportWanSend</A></TD>
+<TD width=40%>Transmits a packet through the NIC onto the network. Required if the driver controls a WAN NIC.</TD>
+<TD width=27%>No</TD>
+</TR>
+</table></div>
+
+<P>Many miniport functions can operate either synchronously or asynchronously. The asynchronous functions have functions that must be called when an operation is finished, shown in the following table. For example, if a protocol driver calls <A HREF="_wceddk_ndisreset.htm">NdisReset</A> to reset a NIC, the miniport's <B>MiniportReset</B> function can pend the reset operation by returning NDIS_STATUS_PENDING. Eventually, the <B>MiniportReset</B> function must call <A HREF="_wceddk_ndismresetcomplete.htm">NdisMResetComplete</A> to indicate the final status of the reset request. </P>
+
+<P>The following table shows the NDIS completion function that corresponds to each possibly asynchronous upper-edge driver function for a miniport. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function(s)</TH>
+<TH width=50%>Asynchronous Completion Function</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MiniportSend,</B><BR>
+<B>MiniportSendPackets</B></TD>
+<TD width=50%><A HREF="_wceddk_ndismsendcomplete.htm">NdisMSendComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MiniportQueryInformation</B></TD>
+<TD width=50%><A HREF="_wceddk_ndismqueryinformationcomplete.htm">NdisMQueryInformationComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MiniportReset</B></TD>
+<TD width=50%><A HREF="_wceddk_ndismresetcomplete.htm">NdisMResetComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MiniportSetInformation</B></TD>
+<TD width=50%><A HREF="_wceddk_ndismsetinformationcomplete.htm">NdisMSetInformationComplete</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>MiniportTransferData</B></TD>
+<TD width=50%><A HREF="cxrefndismtransferdatacomplete.htm">NdisMTransferDataComplete</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconminiportdrivers.htm">Miniport Drivers</A></P>
+
+<P><A HREF="cxrefchoosingsendfunctionforconnectionlessminiports.htm">Choosing a Send Function</A></P>
+
+<P><A HREF="cxrefchoosingreceivefunctionforconnectionlessminiports.htm">Choosing a Receive Function</A></P>
+
+<P><A HREF="cxrefregisteringcheckforhanghandler.htm">Registering a CheckForHang Handler</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registering%20MiniportXXX%20Functions&nbsp;(cxtskminiportxxxfunctions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

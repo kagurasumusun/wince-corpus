@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating and Retrieving Cookies</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating and Retrieving Cookies"/>
+<MSHelp:RLTitle Title="Creating and Retrieving Cookies"/>
+<MSHelp:Keyword Index="A" Term="ceconGeneratingCookies"/>
+<MSHelp:Keyword Index="K" Term="cookies, creating and retrieving using WinInet functions"/>
+<MSHelp:Keyword Index="K" Term="WinInet, creating and retrieving cookies"/>
+<MSHelp:Keyword Index="A" Term="ceconGeneratingCookies"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: wininet_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715550">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cecongeneratingcookies"></A>Creating and Retrieving Cookies</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table shows WinInet functions that allow an application to create or retrieve cookies in the cookie database. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Function</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><A HREF="cerefinternetgetcookie.htm">InternetGetCookie</A> </TD>
+<TD width=72%>Retrieves cookies for the specified URL and all its parent URLs. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><A HREF="cerefinternetsetcookie.htm">InternetSetCookie</A> </TD>
+<TD width=72%>Sets a cookie on the specified URL. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%><A HREF="cerefinternetsetcookieex.htm">InternetSetCookieEx</A></TD>
+<TD width=72%>Same as <B>InternetSetCookie</B>, but includes a parameter for verifying that the cookie is from a third party.</TD>
+</TR>
+</table></div>
+
+<P>Note that, unlike most of the WinInet functions, the cookie functions do not require a call to <B>InternetOpen</B>. </P>
+
+<H4 class="dtH4">Getting a Cookie</H4>
+
+<P>The following example demonstrates a call to <B>InternetGetCookie</B>. </P>
+
+<PRE class="code">char szURL[256];          // buffer to hold the URL
+LPSTR lpszData = NULL;    // buffer to hold the cookie data
+DWORD dwSize=0;           // variable to get the buffer size needed
+// Insert code to retrieve the URL.
+retry:
+// The first call to InternetGetCookie will get the required 
+// buffer size needed to download the cookie data.
+if (!InternetGetCookie(szURL, NULL, lpszData, &amp;dwSize))
+{
+// Check for an insufficient buffer error.
+    if (GetLastError()== ERROR_INSUFFICIENT_BUFFER)
+    {   // Allocate the necessary buffer.
+        lpszData = new char[dwSize];
+        // Try the call again.
+        goto retry;
+    }   else
+    {// Insert error handling code. }
+   }
+else
+{
+    // Insert code to display the cookie data.
+    // Release the memory allocated for the buffer.
+    delete[]lpszData;
+}</PRE>
+
+<H4 class="dtH4">Setting a Cookie</H4>
+
+<P>You can use either <B>InternetSetCookie</B> or <B>InternetSetCookieEx</B> to set a cookie on a specified URL. <B>InternetSetCookie</B> can create both persistent and session cookies.</P>
+
+<P>Persistent cookies are cookies that have an expiration date. These cookies are stored in the Windows\System directory. Session cookies are stored in memory and can be accessed only by the process that created them.</P>
+
+<P>The data for the cookie should be in the format:</P>
+
+<P>NAME=VALUE</P>
+
+<P>For the expiration date, the format must be:</P>
+
+<P>DAY, DD-MMM-YYYY HH:MM:SS GMT</P>
+
+<P>DAY is the three-letter abbreviation for the day of the week, DD is the day of the month, MMM is the three-letter abbreviation for the month, YYYY is the year, and HH:MM:SS is the time of the day on a twenty-four-hour clock.</P>
+
+<P>The following example shows two calls to <B>InternetSetCookie</B>. The first call creates a session cookie and the second creates a persistent cookie.</P>
+
+<PRE class="code">BOOL bReturn;
+// Create a session cookie.
+bReturn = InternetSetCookie("http://www.adventure-works.com", NULL,
+            "TestData = Test");
+// Create a persistent cookie.
+bReturn = InternetSetCookie("http://www.adventure-works.com", NULL,
+             "TestData = Test; expires = Sat, 01-Jan-2000 00:00:00 GMT");</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20and%20Retrieving%20Cookies&nbsp;(cecongeneratingcookies.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

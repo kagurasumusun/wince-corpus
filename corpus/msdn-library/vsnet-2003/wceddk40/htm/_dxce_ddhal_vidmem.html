@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VIDMEM</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="VIDMEM"/>
+<MSHelp:RLTitle Title="VIDMEM"/>
+<MSHelp:Keyword Index="A" Term="_dxce_ddhal_vidmem"/>
+<MSHelp:Keyword Index="K" Term="VIDMEM"/>
+<MSHelp:Keyword Index="A" Term="_dxce_ddhal_vidmem"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ddraw_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_681491">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_ddhal_vidmem"></A>VIDMEM</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure manages the display memory into heaps.</P>
+
+<PRE class="syntax"><B>typedef struct _VIDMEM{</B>
+<B>DWORD</B>     <I>dwFlags</I><B>;</B>
+<B>FLATPTR</B>   <I>fpStart</I><B>;</B>
+<B>union{</B>
+<B>    FLATPTR</B>   <I>fpEnd</I><B>;</B>
+<B>    DWORD</B>     <I>dwWidth</I><B>};</B>
+<B>DDSCAPS</B>   <I>ddsCaps</I><B>;</B>
+<B>DDSCAPS</B>   <I>ddsCapsAlt</I><B>;</B>
+<B>union{</B>
+<B>    LPVMEMHEAP</B>   <I>lpHeap</I><B>;</B>
+<B>    DWORD</B>        <I>dwHeight</I><B>};</B>
+<B>}</B> <B>VIDMEM</B>;
+<B>typedef VIDMEM FAR *LPVIDMEM;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwFlags</B></DT>
+
+<DD>Indicates the type of display memory. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Flag</TH>
+<TH width=64%>Usage</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISHEAP </TD>
+<TD width=64%>Reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISLINEAR </TD>
+<TD width=64%>Indicates linear memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISNONLOCAL </TD>
+<TD width=64%>The heap resides in nonlocal (AGP) memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISRECTANGULAR </TD>
+<TD width=64%>Indicates rectangular memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISWC </TD>
+<TD width=64%>The driver has enabled write combining on the display memory in this heap. Write combining is a special caching mode in Pentium&trade; Pro-class processors that batches writes to the same cache line so they can be transferred in a single bus clock. Write combining does not preserve ordering of the writes, a tradeoff that is usually acceptable for frame buffers. Refer to Intel&reg; documentation for more information on write combining. </TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>fpStart</B></DT>
+
+<DD>Indicates the starting address of the memory range in the heap. </dd>
+
+<DT><B>fpEnd</B></DT>
+
+<DD>Indicates the ending address of the memory range, if the heap is linear. This address is inclusive; for example, it specifies the last valid address in the range. Thus, the number of bytes specified by <B>fpStart</B> and <B>fpEnd</B> is (<B>fpEnd</B>-<B>fpStart</B>+1). </dd>
+
+<DT><B>dwWidth</B></DT>
+
+<DD>Indicates the width of a memory chunk in rectangular memory. </dd>
+
+<DT><B>ddsCaps</B></DT>
+
+<DD><MSHelp:link keywords="_wcesdk_DDSCAPS_ddraw" TABINDEX="0">DDSCAPS</MSHelp:link> structure that indicates what this memory cannot be used for. </dd>
+
+<DT><B>ddsCapsAlt</B></DT>
+
+<DD>Structure that indicates what this memory cannot be used for if no other memory is found on the first pass. </dd>
+
+<DT><B>lpHeap</B></DT>
+
+<DD>Indicates the heap pointer used by DirectDraw. </dd>
+
+<DT><B>dwHeight</B></DT>
+
+<DD>Indicates the height of a memory chunk in rectangular memory. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>DirectDraw scans through to allocate its surfaces in the order the display memory heaps are listed. Heaps are managed in an array of <B>VIDMEM</B> structures. The memory allocated first is the memory that is accessed first. The <B>VIDMEM</B> structure sets up certain starting points, and determines the amount of memory on the surface and what cannot be done with the surface. DirectDraw manages it by suballocating and de-allocating memory, that is, creating and destroying surfaces under each heap's jurisdiction. Physical limits determine how to set up these attributes. </P>
+
+<P>DirectDraw's heap manager makes two passes through the <B>VIDMEM</B> structures. The ddsCaps member indicates to DirectDraw what the memory in the heap cannot be used for on the first pass. For example, if the heap were just big enough for a back buffer, sprites could be excluded from being allocated on the first pass by setting the DSCAPS_OFFSCREENPLAIN flag in the <B>DDSCAPS</B> structure. That way, other surfaces would fill up with sprites, while preserving the back buffer for page flipping. The ddsCapsAlt member could be set to allow sprites on the second pass (by removing the DSCAPS_OFFSCREENPLAIN flag). This allows heaps to be used preferentially for their highest and best use, without ruling out alternative uses. By choosing the order of allocation carefully (for example, by listing the back buffer last), the need to sort by <B>ddsCaps</B> and <B>ddsCapsAlt</B> can sometimes be eliminated.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>2.12 and later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=20%>Ddrawi.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_DDSCAPS_ddraw" TABINDEX="0">DDSCAPS</MSHelp:link>, <A HREF="cxrefdisplaymemorystructures.htm">Display Memory Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;VIDMEM&nbsp;(_dxce_ddhal_vidmem.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

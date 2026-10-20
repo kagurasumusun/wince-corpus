@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Opening an Adapter Underlying a Protocol Driver</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Opening an Adapter Underlying a Protocol Driver"/>
+<MSHelp:RLTitle Title="Opening an Adapter Underlying a Protocol Driver"/>
+<MSHelp:Keyword Index="A" Term="cxrefOpeningAdapterUnderlyingProtocolDriver"/>
+<MSHelp:Keyword Index="K" Term="adapters, opening adapters underlying protocol drivers"/>
+<MSHelp:Keyword Index="K" Term="NDIS, opening adapters underlying protocol drivers"/>
+<MSHelp:Keyword Index="K" Term="protocol drivers, opening adapters underlying"/>
+<MSHelp:Keyword Index="A" Term="cxrefOpeningAdapterUnderlyingProtocolDriver"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758527">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefopeningadapterunderlyingprotocoldriver"></A>Opening an Adapter Underlying a Protocol Driver</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The protocol driver reads the registry information stored during setup to build a list of names of adapters to which it will bind. The registry contains binding information written when the network is configured. The driver initialization functions read this information, including the names of the adapter or adapters to which it can bind.</P>
+
+<P>A protocol driver calls <A HREF="_wceddk_ndisopenprotocolconfiguration.htm">NdisOpenProtocolConfiguration</A> to obtain a handle to the registry key where the protocol driver can store adapter-specific information. A protocol driver can then call <A HREF="cxrefndisopenconfigurationkeybyindex.htm">NdisOpenConfigurationKeyByIndex</A> or <A HREF="cxrefndisopenconfigurationkeybyname.htm">NdisOpenConfigurationKeyByName</A> to obtain a handle to a subkey below the registry key opened with <B>NdisOpenProtocolConfiguration</B>.</P>
+
+<P>A protocol driver that stores adapter-specific information in the registry must store it under the <I>ProtocolName </I>key and use NDIS functions to access the information. Once a handle to this key is obtained, a protocol driver calls the <A HREF="_wceddk_ndisreadconfiguration.htm">NdisReadConfiguration</A> and <A HREF="_wceddk_ndiswriteconfiguration.htm">NdisWriteConfiguration</A> functions to read and write such information. </P>
+
+<P>If a protocol driver provides a <A HREF="cxrefprotocolbindadapter.htm">ProtocolBindAdapter</A> function, the <I>SystemSpecific1</I> parameter passed to this function is passed uninterpreted to <B>NdisOpenProtocolConfiguration</B> at <I>ProtocolSection</I>. If a protocol driver does not provide a ProtocolBindAdapter function, the driver is assumed to know both the name of the adapter it is opening and the string value to be passed at <I>ProtocolSection</I>. </P>
+
+<P>After a protocol driver has retrieved the information it requires from the registry and has registered by calling <A HREF="_wceddk_ndisregisterprotocol.htm">NdisRegisterProtocol</A>, and before the protocol driver can send packets and receive incoming data, it must bind itself to one or more underlying NICs managed by a miniport or an intermediate NDIS driver. The protocol binds itself to an underlying NIC and the miniport that controls it by calling <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A><B>.</B></P>
+
+<P>A protocol driver passes a handle at <I>ProtocolBindingContext</I> to an adapter-specific context area that it allocated to store state information for the binding. NDIS will return this handle to the protocol driver in subsequent calls pertaining to the binding &#0151; for instance, in calls to <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> or <A HREF="cxrefprotocolstatus.htm">ProtocolStatus</A>. NDIS returns a handle at <I>NdisBindingHandle</I> to the protocol driver. This handle must be retained by the protocol, usually in its adapter-specific context area. The protocol driver must pass this handle to NDIS in future calls relating to this binding.</P>
+
+<P>The protocol driver passes the name of the adapter that it has read from the registry or that was input to the <B>ProtocolBindAdapter</B> function at <I>DeviceName</I> to <B>NdisOpenAdapter</B> at <I>AdapterName</I>. It passes the types of mediums it supports at <I>MediumArray</I>. If the call to <B>NdisOpenAdapter</B> succeeds, the underlying NIC driver will select a medium from <I>MediumArray</I> and return its index at <I>SelectedMediumIndex</I>. The value at <I>NdisProtocolHandle</I> is the value returned to the protocol driver from a successful call to <B>NdisRegisterProtocol</B>.</P>
+
+<P>If a protocol driver cannot successfully bind to an underlying adapter, it de-allocates any resources it previously allocated for that adapter. If the protocol driver cannot successfully open any of the possible adapters, it should de-allocate any global resources the protocol has previously allocated and return an appropriate failure status. In this case, the protocol driver will subsequently be unloaded.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmcondynamicadapterbinding.htm">Dynamic Adapter Binding</A></P>
+
+<P><A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A></P>
+
+<P><A HREF="cxrefndisopenconfigurationkeybyindex.htm">NdisOpenConfigurationKeyByIndex</A> </P>
+
+<P><A HREF="cxrefndisopenconfigurationkeybyname.htm">NdisOpenConfigurationKeyByName</A> </P>
+
+<P><A HREF="_wceddk_ndisopenprotocolconfiguration.htm">NdisOpenProtocolConfiguration</A> </P>
+
+<P><A HREF="_wceddk_ndisreadconfiguration.htm">NdisReadConfiguration</A> </P>
+
+<P><A HREF="_wceddk_ndisregisterprotocol.htm">NdisRegisterProtocol</A></P>
+
+<P><A HREF="_wceddk_ndiswriteconfiguration.htm">NdisWriteConfiguration</A> </P>
+
+<P><A HREF="cxrefprotocolbindadapter.htm">ProtocolBindAdapter</A></P>
+
+<P><A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> </P>
+
+<P><A HREF="cxrefprotocolstatus.htm">ProtocolStatus</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Opening%20an%20Adapter%20Underlying%20a%20Protocol%20Driver&nbsp;(cxrefopeningadapterunderlyingprotocoldriver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

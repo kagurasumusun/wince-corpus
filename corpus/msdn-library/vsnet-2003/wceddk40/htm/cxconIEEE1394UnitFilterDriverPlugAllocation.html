@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Unit Filter Driver Plug Allocation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Unit Filter Driver Plug Allocation"/>
+<MSHelp:RLTitle Title="IEEE 1394 Unit Filter Driver Plug Allocation"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394UnitFilterDriverPlugAllocation"/>
+<MSHelp:Keyword Index="K" Term="1394 unit filter drivers, plug allocation"/>
+<MSHelp:Keyword Index="K" Term="IEEE 1394 unit filter drivers, plug allocation"/>
+<MSHelp:Keyword Index="K" Term="plugs, IEEE 1394 unit filter driver allocation"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394UnitFilterDriverPlugAllocation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_ufd.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758918">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconieee1394unitfilterdriverplugallocation"></A>IEEE 1394 Unit Filter Driver Plug Allocation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A virtual subunit may need to permanently allocate serial bus plugs and have those plugs associated with a particular subunit plug. Many clients do not dynamically query for plugs; they query once when they identify the subunit, or they use hard-coded plug numbers or depend on broadcast. To accommodate these older clients, newer clients should be using an AV/C plug management API dynamically; a virtual subunit needs to have default plugs allocated and externally visible no later than when it receives an IRP_MN_START_DEVICE request. </P>
+
+<P>As allocating default plugs is likely to be a common occurrence among virtual subunits, the unit filter driver offers some code for facilitating the process. The <A HREF="cxrefioctl_unit_process_registry_plugs.htm">IOCTL_UNIT_PROCESS_REGISTRY_PLUGS</A> command accepts a registry handle as an argument and processes the values and keys underneath in a known format. It uses that information to allocate the local plugs by issuing callbacks into the subunit's registration callbacks. It uses <A HREF="cxrefunit_allocatelocalplugcb.htm">UNIT_AllocateLocalPlugCB</A> to do this.</P>
+
+<P>The registry key passed is an <B>HKEY</B> to a known location. This location is preferably the virtual subunit driver's registry key as obtainable from <B>IoOpenDeviceRegistryKey</B> with PLUGPLAY_REGKEY_DRIVER.</P>
+
+<P>The registry format is defined as the following.</P>
+
+<PRE class="code">Plugs\<I>incremental plug definition index</I>\<I>values</I></PRE>
+
+<P><B><I>Incremental plug definition index</I></B> refers to an incrementing, unique number for each plug to be defined. For example, 0 for the first plug, 1 for the next, and so on.</P>
+
+<P><B><I>Values</I></B> refers to the types in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Name</TH>
+<TH width=33%>Type</TH>
+<TH width=34%>Purpose</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>MediaType</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>This must be one of the values defined by the Avc_stream.h <B>STREAM_MediaType</B> enumeration. The numerical equivalents of the textual types are listed below. This is the media type that this plug expects to stream.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Direction</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>1 to represent an input plug, which receives streams, or 2 to represent an output plug, which transmits streams.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>SubunitPlugID</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>This identifies which subunit plug is represented by the serial bus plug that these registry entries define. The subunit plug identifier is entirely relative to the subunit, and is defined at the discretion of the developer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>MaximumThroughput</B></TD>
+<TD width=33%><B>DWORD</B></TD>
+<TD width=34%>This is a requirement only for output plugs, and represents the maximum number of bits per second that this plug will ever stream. </TD>
+</TR>
+</table></div>
+
+<P>The <B>MediaType</B> registry entry must be chosen from the numerical values for particular types. The types are defined in Avc_stream.h and are shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Name</TH>
+<TH width=50%>Numerical value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_MPEG</TD>
+<TD width=50%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_MPEG_TimeShifted</TD>
+<TD width=50%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DSS</TD>
+<TD width=50%>2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DSS_TimeShifted</TD>
+<TD width=50%>3</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_Audio_AM824</TD>
+<TD width=50%>4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_Audio_24x4Pack</TD>
+<TD width=50%>5</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_Audio_32fp</TD>
+<TD width=50%>6</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DV_SD_625_50Hz</TD>
+<TD width=50%>7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DV_SD_525_60Hz</TD>
+<TD width=50%>8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DV_SDL_625_50Hz</TD>
+<TD width=50%>9</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DV_SDL_525_60Hz</TD>
+<TD width=50%>10</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DV_HD_1250_50Hz</TD>
+<TD width=50%>11</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STREAM_MediaType_DV_HD_1125_60Hz</TD>
+<TD width=50%>12</TD>
+</TR>
+</table></div>
+
+<P>The definitions for type <B>DWORD</B> in the registry are in hexadecimal. The numerical values in the table above are in decimal. An example of the following registry definition can be found in Common.reg.</P>
+
+<PRE class="code">; Define the default plugs that the Virtual VCR subunit should create on startup:
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-5CCDA55EAE0}\0000\Plugs\0]
+; MPEG, Output Plug, 26Mpbs peak
+    "MediaType"=dword:0
+    "Direction"=dword:2
+    "SubunitPlugID"=dword:0
+    "MaximumThroughput"=dword:18cba80
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-5CCDA55EAE0}\0000\Plugs\1]
+; MPEG, Input Plug
+    "MediaType"=dword:0
+    "SubunitPlugID"=dword:0
+    "Direction"=dword:1</PRE>
+
+<P>Having plugs automatically allocated only indirectly makes the plugs known to the virtual subunit driver. Indirectly, as the creation is done through the <A HREF="cxrefunit_allocatelocalplugcb.htm">UNIT_AllocateLocalPlugCB</A> routine mentioned above. At any time, the virtual subunit driver can issue an <A HREF="cxrefioctl_unit_query_local_plugs.htm">IOCTL_UNIT_QUERY_LOCAL_PLUGS</A> command to the unit driver. This command permits the virtual subunit to get updates on whether the state of any plug has changed. For example, if an external node connects to a local plug associated with the subunit, an IOCTL_UNIT_QUERY_LOCAL_PLUGS command that is pending at the time will receive a response describing the new connection state. A virtual subunit may need to know when at least one connection to a plug is made, or know that all connections to a plug are broken. This information may need to be used as an indicator on whether the virtual subunit should start or stop streaming data at that time. Usually, streaming is started or stopped due to other indicators, such as the pressing of a PLAY or STOP button on a VCR.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394unitfilterdriverarchitecture.htm">IEEE 1394 Unit Filter Driver Architecture</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Unit%20Filter%20Driver%20Plug%20Allocation&nbsp;(cxconieee1394unitfilterdriverplugallocation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Identifying Pocket Internet Explorer to a Web Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Identifying Pocket Internet Explorer to a Web Server"/>
+<MSHelp:RLTitle Title="Identifying Pocket Internet Explorer to a Web Server"/>
+<MSHelp:Keyword Index="A" Term="ceconIdentifyingPocketInternetExplorerToWebServer"/>
+<MSHelp:Keyword Index="K" Term="Pocket Internet Explorer, identifying to Web server"/>
+<MSHelp:Keyword Index="K" Term="Web server, identifying Pocket Internet Explorer to"/>
+<MSHelp:Keyword Index="A" Term="ceconIdentifyingPocketInternetExplorerToWebServer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: pie_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757062">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconidentifyingpocketinternetexplorertowebserver"></A>Identifying Pocket Internet Explorer to a Web Server</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Microsoft Internet Information Services (IIS) provides a mechanism for providing customized views of your Web application based on information received from the user's browser. When a browser connects to the Web server, it automatically sends an HTTP User Agent header. This header is an ASCII string that identifies the browser and its version number. The <B>BrowserType</B> object compares the header to entries in the Browscap.ini file, which maps browser capabilities to the HTTP User Agent header. </P>
+
+<P>To identify Pocket Internet Explorer browsers to your IIS Web Server, add the following lines to the Browsecap.ini file on the server. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Pocket Internet Explorer, which does not have a version number, is a mixture of Internet Explorer 3.02 (HTML support), Internet Explorer 4.0 (scripting support), and Internet Explorer 5.0 (XML support) components. Thus, the browser is identified as compatible with MSIE 3.02, while listing the version property as 4.0. </BLOCKQUOTE>
+
+<PRE class="code">[Mozilla/2.0 (compatible; MSIE 3.02; Windows CE;)]
+browser=Microsoft Internet Explorer
+version=4.0
+majorver=#4
+minorver=#0
+platform=Windows CE
+;specify width of display on target device here
+; this example specifies 240 pixels
+width=240
+;specify height of display on target device here
+;this example specifies 320 pixels
+height=320
+cookies=TRUE
+frames=TRUE
+backgroundsounds=TRUE
+javaapplets=FALSE
+javascript=TRUE
+vbscript=FALSE
+tables=TRUE
+activexcontrols=TRUE</PRE>
+
+<P>When Pocket Internet Explorer sends a request to an HTTP server, the following specific information is included in the HTTP request header.</P>
+
+<PRE class="code">UA-pixels: {for example 240x320}
+UA-color: {mono2 | mono4 | color8 | color16 | color24 | color32}
+UA-OS: {for example Windows CE (POCKET PC) - Version 3.0}
+UA-CPU = {for example MIPS R4111}</PRE>
+
+<P>Use this server-side script (ASP) line to specify pages that are optimized for a Windows CE platform.</P>
+
+<PRE class="code">'Check for Windows CE 
+if (InStr(Request.ServerVariables("HTTP_USER_AGENT"), "Windows CE")) then
+   { add Windows CE-specific code }
+else
+   { add code for other platforms }
+end if
+The following client-side Microsoft JScript&reg; code identifies a Windows CE platform. 
+   var strNav = navigator.userAgent;
+// Check for Windows CE Platform
+var isCE = strNav.indexOf("Windows CE");
+   if(isCE &gt; -1) {
+      //add Windows CE specific code 
+   }
+   else {
+      //add code for other platforms 
+   }</PRE>
+
+<P>The following code example checks for the presence of a specific device, MyCEDevice, which has a display size of 240 x 320 pixels.</P>
+
+<PRE class="code">   var isMyCEDevice = strNav.indexOf("240x320");
+      if(isPPC &gt; -1) {
+       // add device-specific code
+   }
+   else {
+      // add code for other platforms
+   }</PRE>
+
+<P>For more information about using the browser capabilities component in IIS to deliver dynamic, interactive Web pages, see the Microsoft Internet Information Services 5.1 documentation at this <A HREF="http://go.microsoft.com/fwlink/?linkid=5191">Microsoft Web site</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Identifying%20Pocket%20Internet%20Explorer%20to%20a%20Web%20Server&nbsp;(ceconidentifyingpocketinternetexplorertowebserver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

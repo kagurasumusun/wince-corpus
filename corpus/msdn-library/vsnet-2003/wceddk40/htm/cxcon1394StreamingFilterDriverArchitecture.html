@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Streaming Filter Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Streaming Filter Driver Architecture"/>
+<MSHelp:RLTitle Title="IEEE 1394 Streaming Filter Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="cxcon1394StreamingFilterDriverArchitecture"/>
+<MSHelp:Keyword Index="K" Term="1394 streaming filter drivers, architecture"/>
+<MSHelp:Keyword Index="K" Term="architecture, IEEE 1394 streaming filter drivers"/>
+<MSHelp:Keyword Index="K" Term="IEEE 1394 streaming filter drivers, architecture"/>
+<MSHelp:Keyword Index="K" Term="streaming filter driver%2C IEEE 1394, architecture"/>
+<MSHelp:Keyword Index="A" Term="cxcon1394StreamingFilterDriverArchitecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_avcstream.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750913">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcon1394streamingfilterdriverarchitecture"></A>IEEE 1394 Streaming Filter Driver Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The streaming filter driver takes advantage of a WDM concept of a type of device driver that is not specific to a particular piece of hardware, but that applies to a set of other drivers that share a similar concept or protocol. An easy way to consider it is sort of a DLL for device drivers. That is, it is a chunk of driver-style code that can be shared and used by multiple drivers in the same way all at once without incurring its cost over and over again.</P>
+
+<P>The following illustration shows a sample driver stack where an application communicates with a VCR subunit driver, and the subunit driver communicates with lower-level components, which communicate with even lower-level components, and so on, to complete the application's requests.</P>
+
+<P class="fig"><IMG SRC="1394avcstack.gif" ALT="" BORDER=0></P>
+
+<P>An application is likely to need to control, transmit, and receive streamed media. This functionality can be included in a subunit itself, but that would require the same support to exist in every subunit driver for the subunits to remain even remotely compatible. This would also generate a complication in synchronization if bugs were fixed in one subunit driver, but not others. It is advantageous for all subunit drivers to export the same streaming API to applications, to use the same source for such code, and not to repeat code unnecessarily.</P>
+
+<P>A filter driver is associated with a particular driver or class of drivers, and is defined as being an upper or lower filter driver. Whenever the targeted subunit driver is instantiated in a driver stack, the WDM code will automatically insert any filter drivers associated with the subunit driver into the driver stack.</P>
+
+<P>The filter driver will be inserted either above or below the target driver, depending on whether the filter driver was defined as an upper or a lower filter driver, as shown in the following illustration.</P>
+
+<P class="fig"><IMG SRC="1394filter.gif" ALT="" BORDER=0></P>
+
+<P>Filter drivers have the ability to intercept requests passing through them, filtering out requests that they choose to process. They also have the ability to provide common functionality if all drivers above them deal with unknown requests by properly sending the requests down to the next driver in the stack. The filter driver being discussed here, the streaming filter driver, works in exactly that manner. It exists as a lower filter driver, and expects all drivers above it to pass down unknown IOCTL commands. If the IOCTL commands are those known by the streaming filter driver, it will process them and complete them for the requester, which is usually the application.</P>
+
+<P>In this manner, a single driver that is shared by all subunit drivers encompasses all AV/C streaming functionality.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394streamingfilterdriverusefromapplication.htm">IEEE 1394 Streaming Filter Driver Use From an Application</A></P>
+
+<P><A HREF="cxconieee1394streamingfilterdriversupportinavcsubunit.htm">IEEE 1394 Streaming Filter Driver Support in an AV/C Subunit</A></P>
+
+<P><A HREF="cxconieee1394streamingfilterdriveriocontrollerprocessingrequirements.htm">IEEE 1394 Streaming Filter Driver IOCTL Processing Requirements</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Streaming%20Filter%20Driver%20Architecture&nbsp;(cxcon1394streamingfilterdriverarchitecture.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

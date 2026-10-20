@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Port Property Sets</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Port Property Sets"/>
+<MSHelp:RLTitle Title="Port Property Sets"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Port_Property_Sets"/>
+<MSHelp:Keyword Index="K" Term="port property sets, DirectMusic"/>
+<MSHelp:Keyword Index="K" Term="ports, DirectMusic"/>
+<MSHelp:Keyword Index="K" Term="property sets, DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Port_Property_Sets"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680642">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_port_property_sets"></A>Port Property Sets</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Through property sets, DirectMusic provides unlimited support for new features in hardware and drivers. A property set is associated with a particular port.</P>
+
+<P>Hardware vendors define new capabilities as properties and publish the specification for these properties, including GUIDs. You can use the <MSHelp:link keywords="_wcesdk_dxmusic_IKsControl__KsProperty" TABINDEX="0">IKsControl::KsProperty</MSHelp:link> method to find out whether a property is available, and then to set and retrieve values for that property. Obtain the <MSHelp:link keywords="_wcesdk_dxmusic_IKsControl" TABINDEX="0">IKsControl</MSHelp:link> interface for a port by calling the <B>IDirectMusicPort::</B><MSHelp:link keywords="cerefIUnknownQueryInterface" TABINDEX="0">QueryInterface</MSHelp:link> method, passing IID_IKsControl as the interface identifier.</P>
+
+<P>A property set is represented by a GUID, and each item within the set is represented by a zero-based index. The meaning of the indexed items for a GUID never changes. For a list of the property sets supported by DirectMusic, see <MSHelp:link keywords="_wcesdk_dxmusic_KSPROPERTY" TABINDEX="0">KSPROPERTY</MSHelp:link>.</P>
+
+<P>All property sets predefined by DirectMusic have only one item, usually at index 0. However, the full definition of kernel-streaming (KS) properties is supported, and vendors are free to create property sets with any number of items and instances, and data of any size.</P>
+
+<P>Routing of the property item request to the port varies, depending on the port implementation. No properties are supported by ports that represent DirectMusic emulation over the Windows CE handle-based multimedia calls (the <B>midiOut</B> and <B>midiIn</B> functions).</P>
+
+<P>The following code example uses the <B>IKsControl::KsProperty</B> method to determine if the port supports General MIDI in hardware.</P>
+
+<PRE class="code">BOOL IsGMSupported(IDirectMusicPort *pPort) 
+{ 
+    HRESULT     hr; 
+    IKsControl  *pControl; 
+    KSPROPERTY  ksp; 
+    DWORD       dwFlags; 
+    ULONG       cb; 
+    BOOL        fIsSupported;
+ 
+    // Query for an IKsControl interface.
+    hr = pPort-&gt;QueryInterface(IID_IKsControl, (void**)&amp;pControl); 
+    if (FAILED(hr)) 
+    { 
+        // Port does not support properties; assume no GM support.
+        return FALSE; 
+    }
+    // Ask about GM. 
+    ksp.Set   = GUID_DMUS_PROP_GM_Hardware; 
+    ksp.Id    = 0; 
+    ksp.Flags = KSPROPERTY_TYPE_BASICSUPPORT;
+    hr = pControl-&gt;KsProperty(&amp;ksp, sizeof(ksp),
+            &amp;dwFlags, sizeof(dwFlags), &amp;cb);
+    fIsSupported = FALSE; 
+    if (SUCCEEDED(hr) || (cb &gt;= sizeof(dwFlags))
+    {
+        // Set is supported.
+        fIsSupported = (BOOL)(dwFlags &amp; KSPROPERTY_TYPE_GET);
+    }
+    pControl-&gt;Release();
+    return fIsSupported;
+}</PRE>
+
+<P>The following code example shows how a property can be changed. In this case, the reverberation properties of the software synthesizer are set to those contained in a <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_WAVES_REVERB_PARAMS" TABINDEX="0">DMUS_WAVES_REVERB_PARAMS</MSHelp:link> structure.</P>
+
+<PRE class="code">/* Assume that m_* variables have been initialized to valid values.
+   m_pPort is a pointer to IDirectMusicPort. */
+ 
+DMUS_WAVES_REVERB_PARAMS Params;
+ 
+Params.fInGain = m_fReverbIn;
+Params.fHighFreqRTRatio = m_fReverbHigh;
+Params.fReverbMix = m_fReverbMix;
+Params.fReverbTime = m_fReverbTime;
+ 
+IKsControl *pControl;
+if (m_pPort)
+{
+    // Query for IKsControl interface.
+    HRESULT hr = m_pPort-&gt;QueryInterface(IID_IKsControl,
+            (void**)&amp;pControl);
+    if (SUCCEEDED(hr)) 
+    {
+        KSPROPERTY ksp;
+        ULONG cb;
+ 
+        ZeroMemory(&amp;ksp, sizeof(ksp));
+        ksp.Set   = GUID_DMUS_PROP_WavesReverb;
+        ksp.Id    = 0;
+        ksp.Flags = KSPROPERTY_TYPE_SET;
+ 
+        pControl-&gt;KsProperty(&amp;ksp,
+                             sizeof(ksp),
+                             (LPVOID)&amp;Params,
+                             sizeof(Params),
+                             &amp;cb);
+        pControl-&gt;Release();
+    }
+}</PRE>
+
+<P>The following code example turns on the reverb effect for the port represented by <I>m_pPort</I>.</P>
+
+<PRE class="code">DWORD dwEffects = 0;
+IKsControl *pControl;
+HRESULT hr = m_pPort-&gt;QueryInterface(IID_IKsControl,
+        (void**)&amp;pControl);
+if (SUCCEEDED(hr)) 
+{
+  KSPROPERTY ksp;
+  ULONG cb;
+ 
+  ZeroMemory(&amp;ksp, sizeof(ksp));
+  dwEffects = DMUS_EFFECT_REVERB;
+  ksp.Set   = GUID_DMUS_PROP_Effects;
+  ksp.Id    = 0;
+  ksp.Flags = KSPROPERTY_TYPE_SET;
+ 
+  pControl-&gt;KsProperty(&amp;ksp,
+             sizeof(ksp),
+             (LPVOID)&amp;dwEffects,
+             sizeof(dwEffects),
+             &amp;cb);
+  pControl-&gt;Release();
+}</PRE>
+
+<P>The final example shows how you might turn off reverb, leaving any other effects intact.</P>
+
+<PRE class="code">DWORD dwEffects = 0;
+IKsControl *pControl;
+HRESULT hr = m_pPort-&gt;QueryInterface(IID_IKsControl,
+        (void**)&amp;pControl);
+if (SUCCEEDED(hr)) 
+{
+  KSPROPERTY ksp;
+  ULONG cb;
+ 
+  ZeroMemory(&amp;ksp, sizeof(ksp));
+  ksp.Set   = GUID_DMUS_PROP_Effects;
+  ksp.Id    = 0;
+  ksp.Flags = KSPROPERTY_TYPE_GET;
+ 
+  pControl-&gt;KsProperty(&amp;ksp,
+             sizeof(ksp),
+             (LPVOID)&amp;dwEffects,
+             sizeof(dwEffects),
+             &amp;cb);
+
+  ZeroMemory(&amp;ksp, sizeof(ksp));
+  dwEffects = dwEffects &amp; ~DMUS_EFFECT_REVERB;
+  ksp.Set   = GUID_DMUS_PROP_Effects;
+  ksp.Id    = 0;
+  ksp.Flags = KSPROPERTY_TYPE_SET;
+ 
+  pControl-&gt;KsProperty(&amp;ksp,
+             sizeof(ksp),
+             (LPVOID)&amp;dwEffects,
+             sizeof(dwEffects),
+             &amp;cb);
+
+  pControl-&gt;Release();
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Port%20Property%20Sets&nbsp;(_wcesdk_dxmusic_port_property_sets.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

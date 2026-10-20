@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpSREngine::RecognizeStream</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpSREngine::RecognizeStream"/>
+<MSHelp:RLTitle Title="ISpSREngine::RecognizeStream"/>
+<MSHelp:Keyword Index="A" Term="cerefISpSREngineRecognizeStream"/>
+<MSHelp:Keyword Index="K" Term="ISpSREngine, RecognizeStream"/>
+<MSHelp:Keyword Index="A" Term="cerefISpSREngineRecognizeStream"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_engine_level_speech_recognition_engine.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822240">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefispsrenginerecognizestream"></A>ISpSREngine::RecognizeStream</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpSREngine::RecognizeStream</B> indicates to the SR engine that recognition processing should start. From this point on the engine can read data, perform recognition and send results and events back up to SAPI. When all the data to be recognized has been read, or the application has deactivated recognition then the engine finishes processing and returns from this method. </P>
+
+<P>The engine can read audio data using the <A HREF="cerefispsrenginesiteread.htm">ISpSREngineSite::Read</A> method. It determines how much data is available for reading with the <A HREF="cerefispsrenginesitedataavailable.htm">ISpSREngineSite::DataAvailable</A> method, or by using the <I>hDataAvailable</I> event handle. The engine does not have direct access to the input audio device. This is so that the engine reacts in a consistent way regardless of whether input is from desktop audio, wave files, or a custom audio device. The audio format is given by the <I>rguidFmtId</I> and <I>pWaveFormatEx</I> parameters, and additional details of the audio device can be found from the <I>fNewAudioStream</I>, <I>fRealTimeAudio</I>, and <I>pAudioObjectToken</I> parameters. When a Read call indicates that there is no more data available then the engine should complete processing on the data it has and return from the <B>RecognizeStream</B> method.</P>
+
+<P>The engine should recognize from all rules and, or Dictation grammars that have been activated. If there are multiple active rules and, or dictations, the engine is expected to recognize from all things "in parallel", such as, the user is able to say something from anything that is active. It is possible for this method to be called with nothing active. In this case, the engine can just read data and then discard it, or use it to gather noise environment information.</P>
+
+<P>Because the engine remains in the <B>RecognizeStream</B> method all the time that it is recognizing, SAPI has effectively given the engine one thread to perform recognition on. It is possible to write an engine which does all processing on this one thread and thus does not require any additional threads or critical sections or other thread-locking. It is also possible to have alternative arrangements with additional threads. For example, one thread could read data, while another thread could do the actual recognition processing. SAPI makes no restrictions about which threads call which methods or whether they are called simultaneously.</P>
+
+<P>The engine uses the <A HREF="cerefispsrenginesitesynchronize.htm">ISpSREngineSite::Synchronize</A> method to be informed of any grammar or other changes that are pending, and uses the <A HREF="cerefispsrenginesiteupdaterecopos.htm">ISpSREngineSite::UpdateRecoPos</A> to keep SAPI informed of how far through the stream it has recognized. The engine passes back to SAPI details of events and recognition results with the <A HREF="cerefispsrenginesiteaddevent.htm">ISpSREngineSite::AddEvent</A> and <A HREF="cerefispsrenginesiterecognition.htm">ISpSREngineSite::Recognition</A> methods.</P>
+
+<PRE class="syntax"><B>HRESULT Function(
+REFGUID </B><I>rguidFmtId</I><B>,
+const WAVEFORMATEX *</B><I>pWaveFormatEx</I><B>,
+HANDLE </B><I>hRequestSync</I><B>,
+HANDLE </B><I>hDataAvailable</I><B>,
+HANDLE </B><I>hExit</I><B>,
+BOOL </B><I>fNewAudioStream</I><B>,
+BOOL </B><I>fRealTimeAudio</I><B>,
+ISpObjectToken *</B><I>pAudioObjectToken</I><B>
+);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>rguidFmtId</I> </DT>
+
+<DD>[in] The REFGUID of the input audio format to recognize. This will be SPDFID_WaveFormatEx for wave format files. </dd>
+
+<DT><I>pWaveFormatEx</I> </DT>
+
+<DD>[in] The <B>WAVEFORMATEX</B> structure describing the input format (if it is a wave format). Only a format that the engine has already indicated it can process (by returning the format from <A HREF="cerefispsrenginegetinputaudioformat.htm">ISpSREngine::GetInputAudioFormat</A>) will be used. </dd>
+
+<DT><I>hRequestSync</I> </DT>
+
+<DD>[in] This is a Win32 event handle that is set whenever there are tasks (such as grammar changes and so on) waiting for the engine to respond to. The tasks get processed whenever the engine calls Synchronize. The engine can call Synchronize regularly or do so only when this event is set. </dd>
+
+<DT><I>hDataAvailable</I> </DT>
+
+<DD>[in] This is a Win32 event handle that is set when data is available for reading. The amount of data to be available before this event is set can be controlled by calling the <A HREF="cerefispsrenginesitesetbuffernotifysize.htm">ISpSREngineSite::SetBufferNotifySize</A> method. By default this event will be set whenever any amount of data is available. This event can be used as an alternative to the <B>ISpSREngineSite::DataAvailable</B> method. </dd>
+
+<DT><I>hExit</I> </DT>
+
+<DD>[in] This is a Win32 event handle that is set when the engine should exit. The engine should exit both when there is no more data in the stream and it has finished processing, and when this event is set. When this event is set the engine should exit immediately, without completing processing. This event being set is also indicated by a Recognition or Synchronize call returning S_FALSE. </dd>
+
+<DT><I>fNewAudioStream</I> </DT>
+
+<DD>[in] Indicates whether the input is a new stream or not. TRUE means it is a newly created stream; FALSE otherwise. For example, if an application deactivates the active rules and the RecognizeStream returns, and then later the application activates some rules, the RecognizeStream call will have this parameter set as FALSE. Only if the application does a new <A HREF="cerefisprecognizersetinput.htm">ISpRecognizer::SetInput</A> will this return TRUE. Some engines may find this information useful. </dd>
+
+<DT><I>fRealTimeAudio</I> </DT>
+
+<DD>[in] Indicates whether the input is real time audio or not. TRUE means it is real time audio; FALSE otherwise. Real-time inputs in SAPI are those that implement the ISpAudio interface &#0150; for example the standard multi-media microphone input. Non-real time streams are those that only implement ISpStreamFormat - for example input from wave files using the ISpStream object. With non real-time streams all the data is available for reading immediately. The hDataAvailable event is always set and the <B>DataAvailable</B> method will always return INFINITE. </dd>
+
+<DT><I>pAudioObjectToken</I> </DT>
+
+<DD>[in] The object token interface for the audio object that the stream was created from. Engines do not need to do anything with this parameter, but it may be useful in some circumstances. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>S_OK </TD>
+<TD width=53%>Function completed successfully. This should be returned if the engine is exiting because the stream has ended, or because it was signaled to exit by SAPI.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>FAILED (hr) </TD>
+<TD width=53%>Appropriate error message if the engine is terminating for an unexpected reason. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapiddk.idl</TD>
+<TD width=18%>Sapiddk.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpSREngine::RecognizeStream&nbsp;(cerefispsrenginerecognizestream.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

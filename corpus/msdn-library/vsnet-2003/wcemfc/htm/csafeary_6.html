@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleSafeArray::Attach</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_colesafearray_attach"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_colesafearray_attach"></A>COleSafeArray::Attach</H1>
+
+<P>This method gives control of the existing <B>VARIANT</B> array to the <B>COleSafeArray</B> object. The type of the source <B>VARIANT</B> is set to <B>VT_EMPTY</B>. This function clears the current array data, if any.</P>
+
+<PRE class=syntax><B>void Attach(
+VARIANT&amp; </B><I>varSrc</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>varSrc</I></DT>
+
+<DD>A <B>VARIANT</B> object. The <I>varSrc</I> parameter must have the <B>VARTYPE</B> <B>VT_ARRAY</B>.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// Sort is an automation method by the CCmdTarget-derived class
+// CSAProjDlgAutoProxy
+void CSAProjDlgAutoProxy::Sort(VARIANT FAR* vArray)
+{
+&nbsp;&nbsp;COleSafeArray sa;
+&nbsp;&nbsp;BSTR *pbstr;
+&nbsp;&nbsp;TCHAR buf[1024];
+&nbsp;&nbsp;LONG cElements, lLBound, lUBound;
+
+&nbsp;&nbsp;// Needed for OLE2T macro below, include afxpriv.h.
+&nbsp;&nbsp;USES_CONVERSION;
+
+&nbsp;&nbsp;// Type check VARIANT parameter. It should contain a BSTR array
+&nbsp;&nbsp;// passed by reference. The array must be passed by reference it is
+&nbsp;&nbsp;// an in-out-parameter.
+&nbsp;&nbsp;if (V_VT(vArray) != (VT_ARRAY | VT_BSTR))
+&nbsp;&nbsp;&nbsp;&nbsp;AfxThrowOleDispatchException(1001,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Type Mismatch in Parameter. Pass a string array by reference");
+
+&nbsp;&nbsp;// Clears data in sa and copies the variant data into sa.
+&nbsp;&nbsp;sa.Attach(*vArray);
+
+&nbsp;&nbsp;// Check that array is 1 dimensional.
+&nbsp;&nbsp;if (sa.GetDim() != 1)
+&nbsp;&nbsp;&nbsp;&nbsp;AfxThrowOleDispatchException(1002,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Type Mismatch in Parameter. Pass a one-dimensional array");
+
+&nbsp;&nbsp;try
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get array bounds.
+&nbsp;&nbsp;&nbsp;&nbsp;sa.GetLBound(1, &amp;lLBound);
+&nbsp;&nbsp;&nbsp;&nbsp;sa.GetUBound(1, &amp;lUBound);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Get a pointer to the elements of the array
+&nbsp;&nbsp;&nbsp;&nbsp;// and increments the lock count on the array
+&nbsp;&nbsp;&nbsp;&nbsp;sa.AccessData((LPVOID*)&amp;pbstr);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Get no. of elements in array.
+&nbsp;&nbsp;&nbsp;&nbsp;cElements = lUBound-lLBound+1;
+&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i &lt; cElements-1; i++)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Output the elements of the array.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsprintf(buf, "%s", OLE2T(pbstr[i]));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OutputDebugString(buf);
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;// Decrement lock count.
+&nbsp;&nbsp;&nbsp;&nbsp;sa.UnaccessData();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;catch (COleException *pEx)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxThrowOleDispatchException(1003,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Unexpected Failure in FastSort method");
+&nbsp;&nbsp;&nbsp;&nbsp;pEx-&gt;Delete();
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="csafeary_14.htm"><B>COleSafeArray::Detach</B></A>, <A HREF="struct_32.htm"><B>VARIANT</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

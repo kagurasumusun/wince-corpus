@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>XML Parser Implementation Considerations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="XML Parser Implementation Considerations"/>
+<MSHelp:RLTitle Title="XML Parser Implementation Considerations"/>
+<MSHelp:Keyword Index="A" Term="coconMSXMLImplementationConsiderations"/>
+<MSHelp:Keyword Index="K" Term="implementation, MSXML"/>
+<MSHelp:Keyword Index="K" Term="MSXML, implementation considerations"/>
+<MSHelp:Keyword Index="A" Term="coconMSXMLImplementationConsiderations"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: xml_oak_intro.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_752545">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="coconmsxmlimplementationconsiderations"></A>XML Parser Implementation Considerations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The XML Parser for Windows CE .NET can be implemented in several different configurations, depending on your needs. The features have been componentized into specific XML technologies, which allow you to select the proper level of XML support for your device.</P>
+
+<P>The XML Minimal Parser provides minimal Simple API for XML (SAX)-based parsing of data. This feature is a good choice for platforms that need an extremely small footprint, but still need to provide some XML functionality. The XML Minimal Parser is for devices that do not require extensibility, or highly specialized applications. </P>
+
+<P>For enterprise-level devices, choose the full complement of XML parser functionality. The features necessary for full XML support are XML Core Services and Document Object Model (DOM), XML HTTP, XML Query Language, XML Stylesheet Language Transormation, and the full XML SAX. This group of features provide increased portability of applications between the desktop version of MSXML and devices using Windows CE .NET. The full complement of XML features increases support for databases and Web services.</P>
+
+<P>The following tables show the core and networking components that implement XML Parser functionality on Windows CE .NET. To implement the XML Parser, you must use one or more of the core components and exactly one networking component.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=23%>Core component</TH>
+<TH width=31%>Environment variable</TH>
+<TH width=46%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Xmlminisax</TD>
+<TD width=31%>SYSGEN_MSXML_MINI</TD>
+<TD width=46%>Provides the smallest possible Extensible Markup Language (XML) configuration for devices that require some XML parsing but have extremely limited resources. This component supports SAX-based parsing only, but does not perform Document Type Definition (DTD) validation or element resolution. It also does not support the MXXMLWriter class and is not callable from Microsoft Visual Basic&reg;. This option must be the only core XML component specified; no other components rely on it. Selecting this component automatically selects the xmlnetmini networking component.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Xmldom</TD>
+<TD width=31%>SYSGEN_MSXML_DOM</TD>
+<TD width=46%>Supports the basic DOM for MSXML. This component performs DTD and schema verification on documents if desired and includes XML error strings not included in xmlminisax. It also supports schema caching. This component is required by all other core XML components except xmlminisax. Selecting this component automatically selects the xmlnetful networking component.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Xmlhttp</TD>
+<TD width=31%>SYSGEN_MSXML_HTTP</TD>
+<TD width=46%>Implements the XMLHTTP object. This object enables web services.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Xmlsax</TD>
+<TD width=31%>SYSGEN_MSXML_SAX</TD>
+<TD width=46%>Provides SAX support for configurations in which xmldom is included. Unlike xmlminisax, xmlsax performs DTD validation of documents, includes MXXMLWriter, and can be used from Visual Basic.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Xmlxql</TD>
+<TD width=31%>SYSGEN_MSXML_XQL</TD>
+<TD width=46%>Provides support for the XML Query Language (XQL).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>Xmlxslt</TD>
+<TD width=31%>SYSGEN_MSXML_XSLT</TD>
+<TD width=46%>Provides XML Stylesheet Language Transformation (XSLT) support. Requires the xmlxql component.</TD>
+</TR>
+</table></div>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Networking component</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>xmlnetfull</TD>
+<TD width=62%>Relies on WinInet and Urlmon to perform network operations, such as downloading DTDs from remote servers. This component is required for xmlhttp and asynchronous parsing support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>xmlnetmini</TD>
+<TD width=62%>Uses httplite, which is a stripped down version of WinInet and is intended for devices that have resource limitations. If xmlnetmini is selected, asynchronous downloads are not supported. Attempts to set the async property in DOM will return E_NOTIMPL.</TD>
+</TR>
+</table></div>
+
+<P>The XML Parser for Windows CE does not support the following features in any componentization configuration: 
+
+<UL type="disc">
+	<LI>The <B>ServerXMLHTTP</B> object</li>
+
+	<LI>The <B>IWinHttp</B> interface, which is set through <B>setServerHttpRequest</B></li>
+
+	<LI>Data Source Objects (DSO) support</li>
+
+	<LI>Data island support</li>
+
+	<LI>The <B>FreeThreadedDOMDocument</B> object</li>
+
+	<LI>The <B>XSLTemplate</B> and <B>IXSLProcessor</B> interfaces. MSXML 3.0 supports XSLT through the <MSHelp:link keywords="cerefTransformNodeMethod" TABINDEX="0">transformNode</MSHelp:link> method, but it does not support template caching</li>
+
+	<LI>Backward compatibility with the MSXML DOM supported by Microsoft Internet Explorer 4.0</li>
+</UL>
+
+<P>For more information about XML development and using the MSXML Parser, see this <A HREF="http://go.microsoft.com/fwlink/?LinkId=5191">Microsoft Web site</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;XML%20Parser%20Implementation%20Considerations&nbsp;(coconmsxmlimplementationconsiderations.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

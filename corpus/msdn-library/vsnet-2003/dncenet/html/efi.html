@@ -1,0 +1,578 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows CE .NET and the Extensible Firmware Interface (EFI)</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows CE .NET and the Extensible Firmware Interface (EFI)"/>
+<MSHelp:RLTitle Title="Windows CE .NET and the Extensible Firmware Interface (EFI)"/>
+<MSHelp:Keyword Index="A" Term="efi"/>
+<MSHelp:Keyword Index="K" Term="EFI, architecture"/>
+<MSHelp:Keyword Index="K" Term="EFI, Windows CE .NET"/>
+<MSHelp:Keyword Index="K" Term="Extensible Firmware Interface (EFI), architecture"/>
+<MSHelp:Keyword Index="K" Term="Extensible Firmware Interface, Windows CE .NET"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, development"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, Extensible Firmware Interface (EFI)"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, Intel EFI"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" CONTENT="Explains the relevance of Intel's Extensible Firmware Interface (EFI) and its relation to Windows CE .NET. Includes code samples and explains how development is affected."><meta name="keywords" content="Windows CE .NET, Extensible Firmware Interface (EFI), EFI, Intel firmware, EFI Architecture"><META name="rtfFileName" content="efi.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="James Y. Wilson">
+<META NAME="Date" CONTENT="2002-07-01">
+<META NAME="msdnID" CONTENT="_830570">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="efi"></A>Microsoft Windows CE .NET and the Extensible Firmware Interface (EFI)</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>James Y. Wilson, Windows Embedded MVP</P>
+
+<P>July 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.0</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#efi_topic1">What is EFI?</A> <BR>
+<A HREF="#efi_topic2">What Does This Mean to Windows CE Developers?</A> <BR>
+<A HREF="#efi_topic3">EFI Overview</A> <BR>
+<A HREF="#efi_topic4">EFI Architecture</A> <BR>
+<A HREF="#efi_topic5">EFI OS Loader</A> <BR>
+<A HREF="#efi_topic6">Boot Manager Activation</A> <BR>
+<A HREF="#efi_topic7">Parsing Command Line Arguments</A> <BR>
+<A HREF="#efi_topic8">Locate Kernel Image</A> <BR>
+<A HREF="#efi_topic9">Allocate Memory Resources</A> <BR>
+<A HREF="#efi_topic10">Load Kernel Image</A> <BR>
+<A HREF="#efi_topic11">Relocation of Kernel Arguments and Configure Platform for Kernel</A> <BR>
+<A HREF="#efi_topic12">Exit Boot Services and Launch Kernel</A> <BR>
+<A HREF="#efi_topic13">Conclusion</A></P>
+
+<H2 class="dtH1"><A NAME="efi_topic1"></A>What is EFI?</H2>
+
+<P>If you recall the days of DOS programming, you might remember making BIOS calls using software interrupts. The PC BIOS was a low level abstraction of PC hardware, providing a wide range of services from the display of ASCII characters to RS-232 I/O. For the last ten years or more very little has changed in terms of the architecture of the PC BIOS, or in the services offered to application and OS developers. Well, thanks to the recent availability of Intel's "Extensible Firmware Interface" (EFI), all this has changed.</P>
+
+<P>EFI is Intel's proposed standard for the architecture, interface, and services of a brand new type of PC firmware. Its main purpose is to provide a well-specified set of Boot Services that are consistent across all platforms before the OS is loaded (pre-boot). The EFI standards document itself is available for download at <A HREF="http://developer.intel.com/technology/efi">http://developer.intel.com/technology/efi</A> under the "Specifications" hyperlink. A reference implementation of EFI, with source for x86 processors, is also available at the same URL under the "Tools" hyperlink. This reference implementation runs on existing legacy PC's with a standard BIOS and can actually be built to load directly from a floppy when restarting the PC. This allows you to get started today experimenting with EFI, even if your PC is not EFI capable.</P>
+
+<H2 class="dtH1"><A NAME="efi_topic2"></A>What Does This Mean to Windows CE Developers?</H2>
+
+<P>Today when you decide to base your Microsoft&#174; Windows&#174; CE platform on an embedded PC you pretty much expect to leave the BIOS intact, or to license an alternative BIOS (possibly at extra expense) that provides enhanced services. You might also choose this alternative BIOS because it provides access to the source and/or is well supported by a knowledgeable developer community. If you are loading your custom Windows CE kernel image into RAM from a hard disk, for example, you might also be licensing a copy of MS DOS to maintain a file system for storage of the kernel image file on the hard disk. This is the model used in the implementation of the LOADCEPC.EXE example application provided with the Platform Builder.</P>
+
+<P>Thankfully the need to license a new BIOS and/or a copy of MSDOS just to get your PC-based Windows CE platform initialized and the kernel image loaded is no longer necessary. The key word in the name "Extensible Firmware Interface" is "extensible," and it is this extensibility that provides a well-documented mechanism for adding drivers and application modules. As in desktop operating systems an EFI driver provides a layer of abstraction between the hardware using a defined interface, or "protocol" in EFI parlance. Applications are simply modules that have access to the vast selection of protocols defined by EFI.</P>
+
+<P>EFI also serves another very useful purpose that may not be immediately apparent. In my experience, the code dedicated to platform initialization, usually referred to as the boot loader in Windows CE, contains the least architecture, most hurried component of an embedded system. As the schedule goes it is usually on the "critical path," and is often belatedly assigned the responsibility for platform diagnostics, flash update and anything else commonly required when working with prototype hardware. There is usually only enough time for barebones implementations of these capabilities, and they are rarely useable on future platforms. This is where EFI really shines. As you will soon see, albeit only as a brief introduction, it is constructed well and comes with the kind of debugging tools that you would not expect without a full fledged OS.</P>
+
+<P>So this begs the question, how would you use EFI if your Windows CE platform was not directly supported by the reference implementations available on the EFI website? EFI was released with source code enabling you to conduct a port to your own platform and target processor. The process for doing so is not discussed in this article, but the advantages for such an undertaking should be clear. You immediately inherit a solid foundation of C source for the creation of your Windows CE boot loader, along with an array of device drivers and tools, all of which are largely platform independent. This means that as successive generations of your platform evolve you can leverage your pre-boot software investment from previous generations while isolating any required changes to EFI device drivers. Later in this article we will explore writing an EFI Windows CE OS loader as one case in point of how to create a platform independent, pre-boot, reusable software component under EFI.</P>
+
+<H2 class="dtH1"><A NAME="efi_topic3"></A>EFI Overview</H2>
+
+<P>EFI services are divided into two distinct camps, those that are available only before the OS is loaded, known as "Boot Services," and those that are also available after EFI has assumed its minimum footprint configuration, known as "Runtime Services." Boot Services provide the breadth of functionality offered by EFI for platform configuration, initialization, diagnostics, OS kernel image loading, and other functions too numerous to list here. Run-time Services, however, represent a minimum set of services primarily used to query and update nonvolatile EFI settings. Boot Services consume more resources depending on the build options selected, while Runtime Services consume very few resources to remain as transparent as possible the running OS. </P>
+
+<P>Services within EFI are officially specified in the EFI Specification as core services and protocol interfaces. Various protocol interfaces have been defined for access to a variety of boot devices, many of which are provided in the EFI reference implementation. Other protocol interfaces provide services for application level functions, such as memory allocation and obtaining access to a specified protocol interface.</P>
+
+<P>EFI modules are generally defined as applications or drivers. Drivers conform to a model defined in the EFI specification, and are used to implement a particular protocol interface. In many cases the implementation of one protocol interface may use or enhance the functionality of an existing protocol interface, thereby providing a mechanism for an object oriented design practice called containment and aggregation. </P>
+
+<P>EFI drivers that abstract platform specific capabilities exist in the COREFW\fw\platform source tree, and are linked into the core EFI image. Other drivers that implement functional abstractions of certain hardware capabilities are separate from the platform specific drivers and are located in the EDK subdirectory. They follow a driver model that is defined in the 1.10 EFI specification (as of this writing, still in review) and apply to such categories of boot device hardware as SCSI, Video, IDE, LAN, USB, and so forth. EDK drivers are built as standalone executables with the extension .efi and can be loaded dynamically during the EFI startup sequence.</P>
+
+<P>EFI applications are generally loaded by the boot manager, and are listed along with their location on the boot device media in a series of nonvolatile variables. It is also possible to load applications from the EFI command shell, provided in the reference implementation. Because applications do not expose their services through a protocol interface the application model is somewhat simpler. The EFI shell and Boot Manager are two examples of EFI applications that are provided with source code in the reference implementation on the Web site.</P>
+
+<P>The EFI specification also defines a debug support protocol, to allow source level debugging in C on remote debugging consoles. This supports the implementation of third party debuggers.</P>
+
+<P>At over 1000 pages, the current EFI Draft Specification Version 1.10, defines far more capabilities than can be described in this article. Visit the <A HREF="http://developer.intel.com/technology/efi">Intel</A> Web site to download the specification and the current reference implementation. Table 1 provides a partial list of the functions available when developing application and device driver modules.</P>
+
+<P class="label"><B>Table 1. Functions available for the implementation of EFI application and device driver modules (partial list) </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=50%>Shell services</TD>
+<TD width=50%>Math functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Platform initialization functions</TD>
+<TD width=50%>Spin lock functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Linked list support macros</TD>
+<TD width=50%>Handle and protocol support functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>String functions</TD>
+<TD width=50%>File I/O support functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Memory support functions</TD>
+<TD width=50%>Device path support functions</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CRC support functions</TD>
+<TD width=50%>Miscellaneous functions and macros</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Text I/O functions</TD>
+<TD width=50%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="efi_topic4"></A>EFI Architecture</H2>
+
+<P>Figure 1 depicts the architecture of a Windows CE boot loader before and after the use of EFI. Today's Windows CE boot loader is a monolithic composition of services all linked together from various object modules, each with unique APIs. Boot loaders created with these libraries are largely platform dependent and must be updated or rewritten for each new or revised platform. In many cases the capability you would need to address certain boot devices is not available or must be adapted from reference source supplied by the manufacturer.</P>
+
+<P>The After image depicts an OS loader as a separate module able to access EFI boot services and library functions to download the Windows CE kernel image, perform platform diagnostics, and any required platform configuration specific to the Windows CE kernel startup sequence (not already performed during EFI startup). Drivers are well defined with separate protocol interfaces, allowing you to use (or port) an existing driver in the EFI reference implementation or obtain one from a hardware vendor who supports the EFI specification with a driver for your target CPU.</P>
+
+<P>The EFI specification even defines a "Byte Code Virtual Machine" to allow drivers and applications to simultaneously support multiple CPUs. A special compiler called the EFI Byte Code compiler will be offered as a product from Intel that will allow EFI drivers in standard C source to be compiled to a form of pseudo code that is interpreted by a core Boot Services driver implemented for a specific processor. This effectively allows the driver to be written and compiled once to function on many different platforms with different target processors.</P>
+
+<P class="fig"><CODE><IMG SRC="efi_fig1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. Windows CE boot loader architecture, before and after the use of EFI </B></P>
+
+<H2 class="dtH1"><A NAME="efi_topic5"></A>EFI OS Loader</H2>
+
+<P>An OS loader in EFI is a special type of application whose purpose, simply stated, is to load and activate the OS image. Specifically what steps are involved will depend on whether the kernel image is stored in flash (or ROM), or in a file system, and whether it is located locally or remotely. Figure 2 contains an activity diagram depicting the steps required for loading a Windows CE kernel image from a PC hard disk. We will begin by examining the sample source for a sample Windows CE OS loader for each step in the diagram. The aspects of the source code that are common to all types of EFI development will also be noted.</P>
+
+<P class="fig"><CODE><IMG SRC="efi_fig2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. EFI OS loader activity diagram </B></P>
+
+<H2 class="dtH1"><A NAME="efi_topic6"></A>Boot Manager Activation</H2>
+
+<P>At some point in the startup sequence of your custom platform, you may want to present a menu to the end user. This will allow them to deviate from the standard boot process where the OS image is immediately loaded, to allow execution of other EFI applications. In a development build of the EFI image, this menu could be used to select from a list of available kernel images, each built with unique options. You could also provide the option to activate internal diagnostics or to perform the download and reflashing of a new kernel image. In any case, the EFI "Console I/O Protocol," which is the aggregation of the Simple Input and Simple Text Output protocols, provides the character mode textual output and the keyboard input for a basic user interface. This interface is sufficiently flexible to allow the use of a remote screen and keyboard, or physical buttons (as in a jog dial or application button on a Windows CE .NET device), an essential requirement for headless devices.</P>
+
+<P>The default Boot Manager menu provided in the reference implementation is populated using data stored in NVRAM. The format of this data is defined in the "Firmware Boot Manager" section of the EFI specification, and allows for applications, drivers, and even OS images to be specified. The data in NVRAM is accessed by the Boot Manager using "Variable Services," an interface for storing a block of configuration data identified by a unique GUID. The implementation of Variable Services controls where the data is actually stored, and in the case of the EFI reference implementation a file on the hard disk is created, instead of writing directly to Flash or EEROM.</P>
+
+<P>An easy way to add the sample Windows CE OS loader to the default Boot Manager is to use the "bcfg" command available from the EFI command shell. Sample 1 contains an example of this command, where an entry for the Windows CE OS loader file Celoader.efi, located in the root directory of the first floppy disk drive ("fs0:"), will be added to NVRAM (hard disk file in the EFI reference implementation). The "boot" option in this command indicates that an entry should be added to the boot manager's option menu, while the number 1 specifies that it should appear as the first entry in the menu. The "Windows CE OS Loader" text string specifies how the entry should appear in the menu.</P>
+
+<P class="label"><B>Sample 1. Adding an entry to the Boot Manager Option Menu</B></P>
+
+<PRE class="code">bcfg boot add 1 fs0:celoader.efi "Windows CE OS Loader"
+</PRE>
+
+<H2 class="dtH1"><A NAME="efi_topic7"></A>Parsing Command Line Arguments</H2>
+
+<P>As a type of EFI application, an OS Loader can check the command line to determine if the caller has passed any parameters that might be used to modify how the kernel image is loaded. The caller in this case could be the Boot Manager or the end user who is manually running the Windows CE OS Loader (Celoader.efi) from the EFI command shell. The parameters you expose might include any or all of the following:</P>
+
+<P>Initial video mode that should be configured before entering the Windows CE kernel.</P>
+
+<P>COM port and its bit rate to be used for Windows CE kernel debug messages.</P>
+
+<P>The location of the Windows CE kernel image file if loaded into RAM from external media, such as a hard disk partition and directory, a Compact Flash card, and so on.</P>
+
+<P>The ProcessCommandLineArgs function in the CELoaderParms.c module of the sample Windows CE OS loader is designed to process command line arguments and update a global structure called BootArgs. The address of this structure in RAM is later copied to a reserved memory location and is processed by the Windows CE kernel early in its startup sequence. The current implementation of the ProcessCommandLineArgs function simply initializes the BootArgs structure to a series of hard coded default values and does not process any command line arguments. Sample 2, however, demonstrates the use of the "Shell Interface Protocol" to obtain the values of argv and argc contained in the global variable SI. The function InitializeShellApplication performs the initialization of SI.</P>
+
+<P class="label"><B>Sample 2. Processing command line arguments</B></P>
+
+<PRE class="code">CHAR16 **gArgv;
+UINTN    gArgc;
+
+EFI_STATUS
+InitializeApplication (
+    IN EFI_HANDLE       ImageHandle,
+    IN EFI_SYSTEM_TABLE *SystemTable
+    )
+{
+    InitializeLib(ImageHandle, SystemTable);
+    InitializeShellApplication(ImageHandle, SystemTable);
+
+    gArgv = SI-&gt;Argv;
+    gArgc = SI-&gt;Argc;
+
+    // Begin parsing each of the arguments contained in the string array
+  gArgv.
+    // The number of arguments, if any, is contained in gArgc.
+    .
+    .
+    .
+</PRE>
+
+<H2 class="dtH1"><A NAME="efi_topic8"></A>Locate Kernel Image</H2>
+
+<P>If you are building your Windows CE kernel image to execute in RAM, it must be stored on some form of non-volatile media. This media could include Flash memory (onboard or from a compact Flash card) or rotating media (or IDE hard disk or USB and IEEE hard disks) downloaded over a network connection. As of this writing the EFI reference implementation provides support for accessing IDE and SCSI hard disk media, Flash devices and USB devices, through the designated protocol interface. In most cases you need only focus on the development of the code in your OS loader that will determine which media to use and then locate the kernel image.</P>
+
+<P>Sample 3 assumes that the kernel image is located in the root directory of some hard disk partition. This code begins by getting a list of all supported fixed media devices and checks the root directory for the kernel image file named in the PathFileName parameter. The LibLocateHandle library function is used to retrieve the handle of all those drivers that support the protocol BlockIoProtocol. The returned values are stored in the HandleList array, which is then checked for support of the protocol FileSystemProtocol in the following for-loop. When the request for the FileSystemProtocol finally succeeds, the associated OpenVolume service is used to obtain file I/O services, which is subsequently used to attempt opening the file in the PathFileName variable. If the file is successfully found, the handle to the File I/O services is returned to the caller.</P>
+
+<P>Notice the use of the BS variable to call the function HandleProcotol. This variable is a global variable whose value was previously initialized in the OS loaders main entry point InitializeOSLoader (through a call to the InitializeLib function in the CeLoaderMain.c module) and contains the address of the functions that collectively represent the available boot services. EFI uses global variables and handles to store the functions defined for each protocol. It is not uncommon to use the services referenced by one handle to obtain access to the services referenced in another handle. Though the terminology of handles is not used consistently, the important thing to remember is that the handle is used both as a key to identify a particular resource, and as a pointer to a structure containing the addresses of designated services (protocol interface).</P>
+
+<P class="label"><B>Sample 3. Locating the kernel image using the EFI "BlockIoProtocol" </B></P>
+
+<PRE class="code">CELOADER_ERROR_CODES
+  LocateKernelImage(IN CHAR16 *PathFileName, IN BOOLEAN Verbose, OUT
+    EFI_FILE_HANDLE
+    *OutFileIOHandle)
+{
+    Certain code omitted for brevity.  See original source for more 
+      details...
+
+    Status = LibLocateHandle(ByProtocol,
+                             &amp;BlockIoProtocol,
+                             NULL,
+                             &amp;MaxHandles,
+                             &amp;HandleList
+                             );
+
+    if (EFI_ERROR(Status)) {
+        Print(L"Error: Unable to obtain an array of BLOCK_IO handles.\n");
+        return (CeLoaderErrorFileIOError);
+    }
+
+    for (HandleListIdx = 0; HandleListIdx &lt; MaxHandles; HandleListIdx++) 
+    {
+        Status = BS-&gt;HandleProtocol(HandleList[HandleListIdx],
+                                    &amp;FileSystemProtocol,
+                                    &amp;FileSystem
+                                    );
+
+        if (EFI_ERROR(Status)) 
+        {
+            continue;
+        }
+
+        Status = FileSystem-&gt;OpenVolume(FileSystem, &amp;FileIOHandle);
+
+        if (EFI_ERROR(Status)) 
+        {
+            continue;
+        }
+        Status = FileIOHandle-&gt;Open(FileIOHandle,
+                                    &amp;FileHandle,
+                                    PathFileName,
+                                    EFI_FILE_MODE_READ,
+                                    0
+                                    );
+        if (EFI_ERROR(Status))
+        {
+            continue;
+        }
+        else
+        {
+            *OutFileIOHandle = FileIOHandle;
+
+            return (CeLoaderSuccessful);
+        }
+    }
+</PRE>
+
+<P>If your Windows CE kernel image was built to execute in place out of flash or ROM then the role of your Windows CE OS loader will be more limited. Since the kernel image is already loaded and ready for execution you would first perform any final platform initialization required by the Windows CE kernel. Then you would determine the entry point address of your kernel image and jump to this address to continue execution (a process which is demonstrated later in this article).</P>
+
+<H2 class="dtH1"><A NAME="efi_topic9"></A>Allocate Memory Resources</H2>
+
+<P>If you were developing a more traditional Windows CE boot loader (as opposed to an EFI Windows CE OS Loader) you would expect to access whatever memory is required with impunity. There would be no need, for example, to allocate memory to load the Windows CE kernel image from a hard disk file, since the boot loader is expected to be the only program running. With EFI this is no longer the case. Device drivers and various applications all share access to memory resources, requiring the use of memory allocation functions.</P>
+
+<P>In Sample 4 the size of the memory required for the kernel image is retrieved from the CeLoaderDiskImage structure, which was previously initialized from the header at the beginning of the kernel image file. This value, along with the physical starting address of the kernel, is used in the call to AllocatePages. Notice the use of the EfiRuntimeServicesData parameter. This is required to assure that the memory is <I>not </I>deallocated and reinitialized when EFI reconfigures itself for runtime operation (discussed later in the Exit Boot Services section).</P>
+
+<P class="label"><B>Sample 4. Allocating runtime memory for a kernel image loaded into RAM </B></P>
+
+<PRE class="code">static EFI_STATUS
+AllocateImageMemory(IN BOOLEAN Verbose)
+{
+    EFI_STATUS Status;
+    UINTN NumPages =
+        (UINTN)
+        ((CeLoaderDiskImage.PhysicalImageSize + GetSizeOfBootArgs()) 
+            / EFI_PAGE_SIZE + 1);
+    UINT64 LoadStartAddress = CeLoaderDiskImage.PhysicalStartAddress;
+
+    //
+    // Make sure the allocation uses the memory type of
+      EfiRuntimeServicesData
+    // to make sure that it is *not* reclaimed when calling
+      ExitBootServices().
+    //
+    Status = 
+        BS-&gt;AllocatePages(
+                AllocateAddress, 
+                EfiRuntimeServicesData,
+                NumPages,
+                &amp;LoadStartAddress);
+
+    if (EFI_ERROR(Status) || LoadStartAddress !=
+      CeLoaderDiskImage.PhysicalStartAddress)
+    {
+        Print(L"Error in allocating memory at physical address 0x%X.");
+    }
+
+    //
+    // Save the LoadStartAddress which in this case simply corresponds to
+      the
+    // physical address of the kernel image.  This might not be the case
+    // if the kernel was loaded at one address then relocated later to its
+    // physical address.
+    //
+    CeLoaderDiskImage.LoadStartAddress = (UINT32)LoadStartAddress;
+
+    return (Status);
+}  
+</PRE>
+
+<H2 class="dtH1"><A NAME="efi_topic10"></A>Load Kernel Image</H2>
+
+<P>If the Windows CE kernel image file was built to run out of RAM it will be necessary for you to load the image file from some form of external media. EFI provides drivers for access to SCSI and IDE hard disks, Ethernet, RS-232 serial port, Flash, and USB devices. The availability of these drivers saves significant development time and allows you to offer support for locating the kernel image on a variety of media types. This is useful not only during development when the kernel image is being frequently modified in repeated compile/build/debug cycles, but to allow your end users a more convenient mechanism for field updates of the kernel image.</P>
+
+<P>Sample 5 uses the handle to the File I/O protocol interface provided by the caller (through the LocateKernelImage function) to open the kernel image file. The signature, physical starting address, and the length of the physical image are then read into the CeLoaderDiskImage structure, which will be later returned to the caller in the OsDiskImage out parameter. These values are then used in the subsequent call to the AllocateImageMemory function discussed in the section above. It requests the allocation of enough RAM for the entire kernel image at the address specified. The while loop which follows reads each section of the kernel image file into RAM until the section with an address of 0 is reached, indicating the address of the kernel entry point. At the same time it indicates that all sections have been read.</P>
+
+<P>This function is not particularly complicated, but it does effectively demonstrate the power of EFI to simplify an otherwise complicated process. Behind the scenes we are accessing a hard disk through its IDE interface and reading the data from the appropriate sectors of the hard disk media as dictated by the underlying file system. This is occurring in what is effectively your Windows CE boot loader, without the months of effort that would be required to develop this capability from scratch or even from source code libraries in the public domain.</P>
+
+<P class="label"><B>Sample 5. Loading the Windows CE kernel image from a file system </B></P>
+
+<PRE class="code">CELOADER_ERROR_CODES
+LoadDiskImage(
+    IN EFI_HANDLE ImageHandle,
+    IN EFI_FILE_HANDLE FileIOHandle,
+    IN CHAR16 *FileName, 
+    IN BOOLEAN Verbose,
+    OUT CELOADER_OS_DISK_IMAGE **OsDiskImage
+    )
+{
+    Certain code omitted for brevity.  See original source for more 
+      details...
+
+    CeLoaderDiskImage.Verbose = Verbose;
+    CeLoaderDiskImage.FileName = FileName;
+
+    // 
+    // Open the file using the File I/O interface
+    // passed in by the caller.
+    //
+    Status = FileIOHandle-&gt;Open(FileIOHandle,
+                                &amp;FileHandle,
+                                FileName,
+                                EFI_FILE_MODE_READ,
+                                0
+                                );
+    //
+    // Read initial signature and physical start and size of CE OS kernel 
+      image.
+    //
+    ReadSize = sizeof(Signature) + 2 * sizeof(UINT32);
+
+    Status = FileHandle-&gt;Read(FileHandle,
+                              &amp;ReadSize,
+                              &amp;Buffer
+                              );
+
+    // 
+    // Initialize the physical starting address and the total size
+    // of the image from the OS kernel image signature bytes.
+    //
+    CeLoaderDiskImage.PhysicalStartAddress = 
+        *(UINT32 *)&amp;Buffer[sizeof(Signature)];
+    CeLoaderDiskImage.PhysicalImageSize = 
+        *(UINT32 *)&amp;Buffer[sizeof(Signature) + sizeof(UINT32)];
+    //
+    // Now that the CeLoaderDiskImage structure contains sufficient 
+      information to 
+    // describe the physical memory requirements of the kernel image, 
+      allocate the 
+    // required memory as an EFI runtime memory region.
+    //
+    Status = AllocateImageMemory(Verbose);
+
+    // 
+    // Initialize the memory region occupied by the OS kernel image.
+    //
+    SetMem((VOID *)CeLoaderDiskImage.PhysicalStartAddress, 
+        CeLoaderDiskImage.PhysicalImageSize, 0);
+
+    //
+    // Copy OS kernel image one section at a time into physical memory.
+    //
+    while (TRUE)
+    {
+        Status = FileHandle-&gt;Read(FileHandle,
+                                  &amp;SectionHeaderSize,
+                                  Buffer);
+
+        SectionAddress = *(UINT32 *)&amp;Buffer[0];
+        SectionSize = *(UINT32 *)&amp;Buffer[sizeof(UINT32)];
+        SectionChecksum = *(UINT32 *)&amp;Buffer[sizeof(UINT32) + 
+          sizeof(UINT32)];
+
+        //
+        // If the section address is 0 then consider this the last section
+          and
+        // use the section size as the entry point address for the OS
+          kernel image.
+        //
+        if (SectionAddress == 0)
+        {
+            CeLoaderDiskImage.EntryPoint = (UINT32)SectionSize;
+
+            break;
+        }
+
+        //
+        // Verify that the section address is valid by comparing it to the
+        // upper and lower bounds of the physical memory region.
+        //
+        if (SectionAddress &lt; CeLoaderDiskImage.PhysicalStartAddress ||
+               (SectionAddress + SectionSize) &gt;
+               (CeLoaderDiskImage.PhysicalStartAddress + 
+                CeLoaderDiskImage.PhysicalImageSize))
+        {
+            Print(
+                L"Image section doesn't fit physical image memory.\n"
+                L"OS kernel image memory at 0x%X, size = %d\n"
+                L"Section physical start = 0x%X, size = %d\n",
+                CeLoaderDiskImage.PhysicalStartAddress, 
+                CeLoaderDiskImage.PhysicalImageSize,
+                SectionAddress, SectionSize);
+
+            return (CeLoaderErrorImageSectionOutOfBounds);
+        }
+
+        //
+        // We have already verified that physical memory is available so
+          go
+        // ahead and read the section of the OS kernel image file directly
+        // into its destination address.  
+        //
+        Status = FileHandle-&gt;Read(FileHandle,
+                                  (UINT32 *)&amp;SectionSize,
+                                  (VOID *)SectionAddress);
+    }
+
+    //
+    // Close OS kernel image file. 
+    //
+    Status = FileHandle-&gt;Close(FileHandle);
+
+    // 
+    // Provide the caller with a reference to the OsDiskImage structure
+    // in the OUT parm, which is now populated with information on the
+    // kernel image.
+    //
+    *OsDiskImage = &amp;CeLoaderDiskImage;
+
+    return (CeLoaderSuccessfulLoad);
+}
+</PRE>
+
+<H2 class="dtH1"><A NAME="efi_topic11"></A>Relocation of Kernel Arguments and Configure Platform for Kernel</H2>
+
+<P>At startup the Windows CE kernel examines the values in a structure with a predefined format, represented in the sample Windows CE OS loader source as BOOT_ARGS. The address of this structure must be copied to a reserved location in RAM, defined by Microsoft for each platform. For CEPC platforms the value of this address is contained in the BOOT_ARG_PTR_LOCATION constant, the same name as the constant used in the sample Windows CE OS loader.</P>
+
+<P>You may also be required to perform some type of final configuration of your platform prior to entering the Windows CE kernel. For CEPC platforms this includes setting the video controller in the mode that will be used by the Windows CE kernel. Considering that the final configuration requirements for each platform will vary, the code used to change video modes was placed in a driver called CeHal. This driver implements a protocol interface, defined specifically for this article to demonstrate how the Windows CE OS loader should perform final platform configuration. As such it consists of only one entry point to change the current video mode using a legacy Int10 BIOS call.</P>
+
+<P>Sample 6 contains an excerpt of the CeLoaderVideoInit.c module in the sample OS loader source. This function is used to set the video mode requested by the caller. The function LibLocateProtocol is used to obtain a pointer to the protocol interface saved in the CeHal variable. The SetVideoMode function in the cehal driver is then called, with the first parameter being the protocol interface pointer; it acts as a handle to the instance of the driver in use, similar to the transparent use of the "this" pointer by C++ compilers.</P>
+
+<P class="label"><B>Sample 6. Calling the "Cehal" protocol interface from the Windows CE OS loader "Celoader" </B></P>
+
+<PRE class="code">CELOADER_ERROR_CODES
+CeLoaderSetVideoMode(INTN Mode)
+{
+    EFI_CE_HAL_PROTOCOL *CeHal;     
+    EFI_STATUS Status;
+
+    Status = LibLocateProtocol(&amp;gEfiCeHalProtocolGuid, &amp;CeHal);
+
+    if (EFI_ERROR(Status)) 
+    {
+        Print(L"Unable to retrieve the CeHalProtocol for ImageHandle\n");
+        return (CeLoaderErrorGeneral);
+    }
+
+    CeHal-&gt;SetVideoMode(CeHal, Mode);
+
+    return (CeLoaderSuccessful);
+}
+</PRE>
+
+<P>It should be noted that the use of an int10 call is certainly platform specific. This is the main reason that a separate module was created. As described in the ReadMe.txt file accompanying the sample OS loader source, the cehal module is added to the EFI build as a platform specific driver in the corefw\fw\platform\cepc\drivers EFI source tree, rather than the apps directory tree where the celoader itself is located. Another option would have been to develop the cehal driver as a standalone module with distinct .efi executable (as with the drivers in the EDK source tree). This was not possible because of the platform specific services used to make the int10 call, which are only available to drivers linked into the primary EFI image.</P>
+
+<P>A few minor code changes in certain EFI initialization functions are required to get the cehal driver loaded. The preferred method to get a driver properly loaded by EFI is to use the "bcfg driver" command, but since cehal is a platform driver this is not possible. The EFI source file modifications are shown in Sample 7.</P>
+
+<P class="label"><B>Sample 7. EFI source modifications required to load a platform driver </B></P>
+
+<PRE class="code">Major portions of code omitted for brevity.  See original source for more 
+  details...
+
+File: COREFW\fw\platform\BuildTip\bios32\init.c
+
+POST_CODE(0x1b);
+// JYW-CELoader:  Load Windows CE Hal Services driver.
+    LOAD_INTERNAL_BS_DRIVER (L"CeHal",
+      CeHalDriverEntryPoint);
+
+File: COREFW\fw\platform\BuildTip\inc\drivers.h
+
+// JYW-CeLoader: Add prototype of the CeHal driver entry point to allow
+  the EFI
+// core firmware to load this driver through the LOAD_INTERNAL_BS_DRIVER
+  macro.
+
+EFI_STATUS
+CeHalDriverEntryPoint(
+  IN EFI_HANDLE         ImageHandle,
+  IN EFI_SYSTEM_TABLE   *SystemTable
+  );
+</PRE>
+
+<H2 class="dtH1"><A NAME="efi_topic12"></A>Exit Boot Services and Launch Kernel</H2>
+
+<P>Exiting boot services is the next to the last step required for the Windows CE OS loader. As depicted in Sample 8, a call to ExitBootServices must be preceded by a call to LibMemoryMap to update the memory map before EFI can enter its reduced footprint, run-time configuration. After the call to ExitBootServices, only EFI run-time services may be called, meaning that any diagnostic messages which you might be tempted to insert to announce the impending activation of the Windows CE kernel must be inserted before the call to ExitBootServices. And for the grand finale, LaunchKernel is finally called to enter the Windows CE kernel.</P>
+
+<P class="label"><B>Sample 8. Calling ExitBootServices and entering the Windows CE kernel </B></P>
+
+<PRE class="code">Portions of code omitted for brevity.  See original source for more
+  details...
+    //
+    // Get the most current memory map.
+    //
+    MemoryMap = LibMemoryMap(&amp;NoEntries, &amp;MapKey, &amp;DescriptorSize, 
+  &amp;DescriptorVersion);
+
+    //
+    // Transition from Boot Services to Run Time Services.
+    //
+    BS-&gt;ExitBootServices(ImageHandle, MapKey);
+
+    //
+    // Vector to the entry point for the CE kernel.
+    //
+    LaunchKernel(VerboseStatus);
+</PRE>
+
+<H2 class="dtH1"><A NAME="efi_topic13"></A>Conclusion</H2>
+
+<P>When I first encountered EFI I was very excited by what I saw. Having spent a good number of years developing applications prior to writing a Windows CE boot loader, I always missed the kind of order carefully imposed on source code written to use a comprehensive library, such as the Microsoft Foundation Class (MFC) library or Active Template Library (ATL). Though it is quite different than an application level library, EFI is an analogous advance in software engineering. Though it may sound overly dramatic, I like to think of EFI as order from pre-boot chaos.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_830570', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

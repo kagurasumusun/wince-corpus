@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DHAL_DP2DRAWTRIPATCH</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DHAL_DP2DRAWTRIPATCH"/>
+<MSHelp:RLTitle Title="D3DHAL_DP2DRAWTRIPATCH"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2DRAWTRIPATCH"/>
+<MSHelp:Keyword Index="K" Term="D3DHAL_DP2DRAWTRIPATCH"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2DRAWTRIPATCH"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665247">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefd3dhal_dp2drawtripatch"></A>D3DHAL_DP2DRAWTRIPATCH</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure is parsed from the command buffer by the <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback when the <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure's <B>bCommand</B> member is set to <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor7">D3DDP2OP_DRAWTRIPATCH</A>, and is used to render a triangular patch.</P>
+
+<PRE class="syntax"><B>typedef struct _D3DHAL_DP2DRAWTRIPATCH {</B>
+<B>  DWORD</B>   <I>Handle</I><B>;</B>
+<B>  DWORD</B>   <I>Flags</I><B>;</B>
+<B>} D3DHAL_DP2DRAWTRIPATCH, *LPD3DHAL_DP2DRAWTRIPATCH;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>Handle</B></DT>
+
+<DD>Specifies the handle associated with the surface.</dd>
+
+<DT><B>Flags</B></DT>
+
+<DD>Specifies what, if any, additional information follows the <B>D3DHAL_DP2DRAWTRIPATCH</B> data structure in the DP2 stream.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>Handle</B> is used to associate the surface with a handle, so that the next time this surface is drawn there is no need to respecify the <B>D3DTRIPATCH_INFO</B> for this patch. This makes it possible for the driver to precompute and cache forward difference coefficients and/or any other information, which in turn allows subsequent <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor7">D3DDP2OP_DRAWTRIPATCH</A> tokens using the same handle to execute more efficiently.</P>
+
+<P>The actual value of <B>Handle</B> is determined by the application and is not under run-time control. Therefore, the driver should be prepared to cope with any value specifiable by a <B>DWORD</B>. The special handle value of zero means that the patch is dynamic and there is no point precomputing or caching information for this patch. A non-zero value for <B>Handle</B> means the patch is static (or updated with low frequency) and precomputation and caching are possible.</P>
+
+<P>The <B>Flags</B> is used to communicate what, if any, additional information follows the <B>D3DHAL_DP2DRAWTRIPATCH</B> data structure in the DP2 stream. If RTPATCHFLAG_HASSEGS is specified then three floating-point values follow <B>D3DHAL_DP2DRAWTRIPATCH</B> in the DP2 stream. These floats give the segment counts for each of the three edges of the triangular patch and override the value of the render state D3DRS_PATCHSEGMENTS. If RTPATCHFLAG_HASINFO is specified then a <B>D3DTRIPATCH_INFO</B> data structure follows in the DP2 stream. Information on this structure can be found in the DirectX 8.0 SDK documentation. If both flags are specified the three floats specifying segment counts follow <B>D3DHAL_DP2DRAWTRIPATCH</B> and the <B>D3DTRIPATCH_INFO</B> structure follows the floating-point values.</P>
+
+<P>There are four scenarios a driver must handle when processing D3DDP2OP_DRAWTRIPATCH.</P>
+
+<P>If <B>Handle</B> is zero then the patch is dynamic and no precomputation or caching should be performed. In this case a D3DTRIPATCH_INFO will follow D3DHAL_DP2DRAWTRIPATCH in the DP2 stream (and the flag RTPATCHFLAG_HASINFO will be set to indicate the presence of the <B>D3DHAL_DP2DRAWTRIPATCH</B> data structure). Optionally, RTPATCHFLAG_HASSEGS may also be set to indicate the presence of the segment information. However, if this is omitted the value of the render state D3DRS_PATCHSEGMENTS should be used instead.</P>
+
+<P>If <B>Handle</B> is non-zero and the handle value has not been specified by an earlier D3DDP2OP_DRAWTRIPATCH this indicates that a new cacheable patch is being drawn. The driver should allocate memory to store cached data and add this data to its patch handle table. As this patch has not been seen before the RTPATCHFLAG_HASINFO flags should be set and a D3DTRIPATCH_INFO flag should follow in the DP2 stream. The run time does not guarantee this, however, and the driver should verify the presence of the patch information by testing the flag. If no information is specified this token should be ignored and no handle should be allocated in the driver's patch handle table. Optionally, RTPATCHFLAG_HASSEGS may also be set to indicate the presence of the segment information. However, if this is omitted the value of the render state D3DRS_PATCHSEGMENTS should be used instead. </P>
+
+<P>If <B>Handle</B> is non-zero, the handle value has been specified by an earlier D3DDP2OP_DRAWTRIPATCH token and the <B>Flags</B> field contains RTPATCHFLAG_HASINFO then the definition for the patch is being updated. A <B>D3DTRIPATCH_INFO</B> data structure will follow in the DP2 stream and the driver should use that to recompute and recache patch information. Optionally, RTPATCHFLAG_HASSEGS may also be set to indicate the presence of the segment information. However, if this is omitted the value of the render state D3DRS_PATCHSEGMENTS should be used instead.</P>
+
+<P>If <B>Handle</B> is non-zero, the handle value has been specified by an earlier D3DDP2OP_DRAWTRIPATCH token and the <B>Flags</B> field does not contain RTPATCHFLAG_HASINFO then the cached information should be used for drawing the patch. In this case the current vertex streams are ignored, the cached information should be used instead. However, it is still possible in this case for a new segment information to be specified. Therefore, the driver should check for the flag RTPATCHFLAG_HASSEGS and handle specified segment information even if using a cached patch.</P>
+
+<P>The driver receives notification that cached patch information is be released through the render state <A HREF="cxcond3drs_deletertpatch.htm">D3DRS_DELETERTPATCH</A>. The value of this render state is the patch to be deleted.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>D3dhal.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor5">D3DDP2OP_DRAWPRIMITIVE2</A>, <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor7">D3DDP2OP_DRAWTRIPATCH</A>, <A HREF="cxcond3drs_deletertpatch.htm">D3DRS_DELETERTPATCH</A>, <A HREF="cxcond3drs_deletertpatch.htm">D3DRS_DELETERTPATCH</A>, <A HREF="cxrefd3dhal_xxxstructures.htm">D3DHAL_XXX Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DHAL_DP2DRAWTRIPATCH&nbsp;(cxrefd3dhal_dp2drawtripatch.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

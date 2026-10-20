@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CString::GetBuffer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CString::GetBuffer"/>
+<MSHelp:RLTitle Title="CString::GetBuffer"/>
+<MSHelp:Keyword Index="A" Term="aflrfCStringcolcolGetBuffer"/>
+<MSHelp:Keyword Index="K" Term="GetBuffer method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCStringcolcolGetBuffer"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cstring.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697049">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcstringcolcolgetbuffer"></A>CString::GetBuffer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves a pointer to the internal character buffer for the <B>CString</B> object. The returned <B>LPTSTR</B> is not <B>const</B> and thus allows direct modification of <B>CString</B> contents.</P>
+
+<P>If <I>nMinBufLength</I> is greater than the length of the current buffer, the call to <B>GetBuffer</B> will destroy the current buffer. Replace it with a buffer of the requested size, and reset the reference count to zero. If you have previously called <A HREF="aflrfcstringcolcollockbuffer.htm"><B>LockBuffer</B></A> on this buffer, you will lose the lock on the buffer.</P>
+
+<PRE class="syntax"><B>LPTSTR GetBuffer( 
+int </B><I>nMinBufLength</I><B> );</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>nMinBufLength</I></DT>
+
+<DD>Specifies the minimum size of the character buffer in characters. This value does not include space for a null terminator.</dd>
+</DL>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>This is an <B>LPTSTR</B> pointer to the character buffer of the null-terminated object.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>If you use the pointer returned by <B>GetBuffer</B> to change the string contents, you must call <A HREF="aflrfcstringcolcolreleasebuffer.htm"><B>ReleaseBuffer</B></A> before using any other <B>CString</B> methods. </P>
+
+<P>The address returned by <B>GetBuffer</B> may not be valid after the call to <B>ReleaseBuffer</B> since additional <B>CString</B> operations may cause the <B>CString</B> buffer to be reallocated. The buffer will not be reallocated if you do not change the length of the <B>CString</B>.</P>
+
+<P>The buffer memory will be freed automatically when the <B>CString</B> object is destroyed. </P>
+
+<P>Note that, if you keep track of the string length yourself, you should not append the terminating null character. You must, however, specify the final string length when you release the buffer with <B>ReleaseBuffer</B>. If you do append a terminating null character, you should pass &#0150;1 for the length to <B>ReleaseBuffer, </B>which will perform a <MSHelp:link keywords="ellrfstrlencmawcslen" TABINDEX="0"><B>_tcslen</B></MSHelp:link> on the buffer to determine its length. </P>
+
+<P class="label"><B>Example</B></P>
+
+<P>The following example demonstrates the use of <B>CString::GetBuffer</B>.</P>
+
+<PRE class="code">// example for CString::GetBuffer
+CString s( "abcd" );
+#ifdef _DEBUG
+afxDump &lt;&lt; "CString s " &lt;&lt; s &lt;&lt; "\n";
+#endif
+LPTSTR p = s.GetBuffer( 10 );
+lstrcpy( p, _T("Hello") );&nbsp;&nbsp;// directly access CString buffer
+s.ReleaseBuffer( );
+#ifdef _DEBUG
+afxDump &lt;&lt; "CString s " &lt;&lt; s &lt;&lt; "\n";
+#endif</PRE>
+
+<P class="label"><B>Requirements</B></P>
+
+<P>&nbsp;&nbsp;<B>Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcstringcolcolgetbuffersetlength.htm"><B>CString::GetBufferSetLength</B></A>, <A HREF="aflrfcstringcolcolreleasebuffer.htm"><B>CString::ReleaseBuffer</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697049', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

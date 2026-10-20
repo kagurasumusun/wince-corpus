@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CInternetSession::OnStatusCallback</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cinternetsession_onstatuscallback"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cinternetsession_onstatuscallback"></A><SUP></SUP>CInternetSession::OnStatusCallback</H1>
+
+<P>This method is called by the framework to update the status when status callback is enabled and an operation is pending. You must first call <A HREF="cinetses_4.htm"><B>EnableStatusCallback</B></A> to take advantage of status callback.  </P>
+
+<PRE class=syntax><B>virtual</B> <B>void</B> <B>OnStatusCallback</B>(
+<B>DWORD</B> <I>dwContext</I>,
+<B>DWORD</B> <I>dwInternetStatus</I>,
+<B>LPVOID</B> <I>lpvStatusInformation</I>,
+<B>DWORD</B> <I>dwStatusInformationLength</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwContext</I></DT>
+
+<DD>Specifies the context value supplied by the application.</DD>
+
+<DT><I>dwInternetStatus</I></DT>
+
+<DD>Specifies a status code which indicates why the callback is being made. See the Remarks section for a table of possible values.</DD>
+
+<DT><I>lpvStatusInformation</I></DT>
+
+<DD>Specifies a pointer to a buffer containing information pertinent to this callback.</DD>
+
+<DT><I>dwStatusInformationLength</I></DT>
+
+<DD>Specifies the size of <I>lpvStatusInformation</I>.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <I>dwInternetStatus</I> parameter indicates the operation being performed and determines what the contents of <I>lpvStatusInformation</I> will be. <I>dwStatusInformationLength</I> indicates the length of the data included in <I>lpvStatusInformation</I>. The following status values for <I>dwInternetStatus</I> are defined as follows:
+
+<DL>
+<DT>INTERNET_STATUS_RESOLVING_NAME</DT>
+
+<DD>Looking up the IP address of the name contained in <I>lpvStatusInformation</I>.</DD>
+
+<DT>INTERNET_STATUS_NAME_RESOLVED</DT>
+
+<DD>Successfully found the IP address of the name contained in <I>lpvStatusInformation</I>.</DD>
+
+<DT>INTERNET_STATUS_CONNECTING_TO_SERVER</DT>
+
+<DD>Connecting to the socket address (<A HREF="struct_27.htm"><B>SOCKADDR</B></A>) pointed to by <I>lpvStatusInformation</I>.</DD>
+
+<DT>INTERNET_STATUS_CONNECTED_TO_SERVER</DT>
+
+<DD>Successfully connected to the socket address (<B>SOCKADDR</B>) pointed to by <I>lpvStatusInformation</I>.</DD>
+
+<DT>INTERNET_STATUS_SENDING_REQUEST</DT>
+
+<DD>Sending the information request to the server. The <I>lpvStatusInformation</I> parameter is <B>NULL</B>.</DD>
+
+<DT>INTERNET_STATUS_ REQUEST_SENT</DT>
+
+<DD>Successfully sent the information request to the server. The <I>lpvStatusInformation</I> parameter is <B>NULL</B>.</DD>
+
+<DT>INTERNET_STATUS_RECEIVING_RESPONSE</DT>
+
+<DD>Waiting for the server to respond to a request. The <I>lpvStatusInformation</I> parameter is <B>NULL</B>.</DD>
+
+<DT>INTERNET_STATUS_RESPONSE_RECEIVED</DT>
+
+<DD>Successfully received a response from the server. The <I>lpvStatusInformation</I> parameter is <B>NULL</B>.</DD>
+
+<DT>INTERNET_STATUS_CLOSING_CONNECTION</DT>
+
+<DD>Closing the connection to the server. The <I>lpvStatusInformation</I> parameter is <B>NULL</B>.</DD>
+
+<DT>INTERNET_STATUS_CONNECTION_CLOSED</DT>
+
+<DD>Successfully closed the connection to the server. The <I>lpvStatusInformation</I> parameter is <B>NULL</B>.</DD>
+
+<DT>INTERNET_STATUS_HANDLE_CREATED</DT>
+
+<DD>Used by the Windows CE API function <B>InternetConnect</B> to indicate that it has created the new handle. This lets the application call the Windows CE function <B>InternetCloseHandle</B> from another thread if the connect is taking too long. See the Platform SDK<I> </I>for more information about these functions.</DD>
+
+<DT>INTERNET_STATUS_HANDLE_CLOSING</DT>
+
+<DD>Successfully terminated this handle value.</DD>
+
+<DT>INTERNET_STATUS_REQUEST_COMPLETE</DT>
+
+<DD>Successfully completed the asynchronous operation. See the <A HREF="cinetses_2.htm"><B>CInternetSession</B></A> constructor for details on INTERNET_FLAG_ASYNC.The <I>lpvStatusInformation</I> parameter points at an <B>INTERNET_ASYNC_RESULT</B> structure, and <I>dwStatusInformationLength</I> contains the final completion status of the asynchronous function. If this is ERROR_INTERNET_EXTENDED_ERROR, the application can retrieve the server error information by using the Windows CE function <B>InternetGetLastResponseInfo</B>. </DD>
+</DL>
+
+<P>In the case of INTERNET_STATUS_REQUEST_COMPLETE, <I>lpvStatusInformation</I> points at an <B>INTERNET_ASYNC_RESULT</B> structure, which is defined as:
+
+<UL type=disc>
+	<LI><B>DWORD</B> <I>dwResult</I>; The return code from the operation.</LI>
+
+	<LI><B>DWORD</B> <I>dwError</I>; If dwResult indicates that the operation failed, this member contains the error code. If the operation was successful, this member usually contains ERROR_SUCCESS.</LI>
+</UL>
+
+<P>Override this method to require some action before a status callback routine is performed.</P>
+
+<P>Status callbacks need thread-state protection. If you are using MFC in a shared library, add the following line to the beginning of your override:</P>
+
+<PRE>AFX_MANAGE_STATE( AfxGetAppModuleState( ) );
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxinet.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

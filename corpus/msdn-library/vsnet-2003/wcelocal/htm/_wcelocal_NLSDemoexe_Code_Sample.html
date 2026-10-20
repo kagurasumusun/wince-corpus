@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NLSDemo.exe Code Sample</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NLSDemo.exe Code Sample"/>
+<MSHelp:RLTitle Title="NLSDemo.exe Code Sample"/>
+<MSHelp:Keyword Index="A" Term="_wcelocal_NLSDemoexe_Code_Sample"/>
+<MSHelp:Keyword Index="K" Term="global applications, NLSDemo.exe code sample"/>
+<MSHelp:Keyword Index="A" Term="_wcelocal_NLSDemoexe_Code_Sample"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSampleProd"/>
+</xml>
+<!--Filename: globui.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731355">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcelocal_nlsdemoexe_code_sample"></A>NLSDemo.exe Code Sample</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<PRE class="code">//////////////////////////////////////////////////////
+// &copy; 1999 Microsoft Corporation. All rights reserved.
+//////////////////////////////////////////////////////
+
+#ifndef STRICT
+#define STRICT
+#endif
+#include &lt;windows.h&gt;
+#include &lt;resource.h&gt;
+
+// Constants
+
+// Maximum length of the string representation of the currency amount
+#define MAX_CURRENCY_LEN 32
+
+// The maximum length of the string representation of the number
+#define MAX_NUMERIC_LEN 32
+
+// Global variables
+
+HINSTANCE g_hMain = NULL;   // Handle to the main program
+HINSTANCE g_hRsrc = NULL;   // Handle to the satellite resource .dll
+
+DWORD g_dwCurLcid;         // Lcid relative to which to display strings
+
+// global constants
+
+TCHAR k_szRsrcLibFileName[] = TEXT("NLSRsrc");      // Language-
+                     \\invariant name of the resource .dll
+TCHAR k_szCurrencyAmount[] = TEXT("-12345.67");      // Currency amount
+TCHAR k_szNumericAmount[] = TEXT("987654321.09");   // Numerical value
+
+// InitGlobals -- initialize global variables
+void InitGlobals(HINSTANCE hMain)
+{
+   // NLS will format items according to the default user locale.
+   // On Windows CE, this is the same as the system locale.
+   g_dwCurLcid = GetUserDefaultLCID();
+
+   // Save away the handle to the global instance
+   g_hMain = hMain;
+
+   // Load the satellite resource .dll
+   g_hRsrc = LoadLibrary(k_szRsrcLibFileName);
+}
+
+// UninitGlobals -- clean up any globals that might persist.
+void UninitGlobals()
+{
+   FreeLibrary(g_hRsrc);   // Good practice, in general
+}
+
+// InitRsrcDlg -- set up the dialog contents for the
+// dialog box represented by hWnd.
+
+void InitRsrcDlg(HWND hWnd)
+{
+   TCHAR szTemplate[256];
+
+   TCHAR szDate[32];
+   TCHAR szTime[32];
+
+   PVOID pvBuffer;
+
+   PVOID pvArgs[] = {szTime, szDate};
+
+   TCHAR szCurrency[MAX_CURRENCY_LEN];
+   TCHAR szNumber[MAX_NUMERIC_LEN];
+
+   // First, initialize the startup time string.
+
+   // GetDateFormat is the NLS routine that formats a time in a 
+   // locale-sensitive fashion.  In this case, the current date is 
+   // being displayed in the long date format
+   if (0 == GetDateFormat(g_dwCurLcid, DATE_LONGDATE, NULL, NULL,
+      szDate, 32)) {
+      return;
+   }
+
+   // GetTimeFormat is the NLS routine that formats a time in a 
+   // locale-sensitive fashion.  In this case, the current time is 
+   // being displayed in the default format
+   if (0 == GetTimeFormat(g_dwCurLcid, 0, NULL, NULL, szTime, 32)) {
+      return;
+   }
+
+   // Load the formatting string for the date and time entry from the 
+   // satellite .dll, not the main program.  This resource is in 
+   // whatever language is represented in the resource .dll; it is not 
+   // directly sensitive to the operational language.
+   if (0 == LoadString(g_hRsrc, IDS_THETIMEIS, szTemplate, 256)) {
+      return;
+   }
+
+   // Use FormatMessage to create a single string which contains these
+   // items in the correct order.  FormatMessage will allocate the
+   // output buffer containing the formatted message itself, but
+   // we will be responsible for freeing it when we are done.
+   FormatMessage(FORMAT_MESSAGE_FROM_STRING | 
+      FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+      FORMAT_MESSAGE_ARGUMENT_ARRAY,
+      szTemplate,
+      0,   // Ignored
+      0,   // Ignored
+      (LPTSTR) &amp;pvBuffer,
+      256,
+      (va_list *) pvArgs);
+
+   // Display the string in the dialog box.
+   SetDlgItemText(hWnd, IDC_DATETIME, (LPCTSTR) pvBuffer);
+
+   // Release the buffer.
+   LocalFree(pvBuffer);
+
+   // Now, display the currency amount and the number using NLS.
+   // GetCurrencyFormat is the NLS routine that formats a currency 
+   // amount in a locale-sensitive fashion.
+   if (0 != GetCurrencyFormat(g_dwCurLcid, 0, k_szCurrencyAmount, NULL,
+      szCurrency, MAX_CURRENCY_LEN)) {
+      SetDlgItemText(hWnd, IDC_CURRENCY, szCurrency);
+   }
+
+   // GetNumberFormat is the NLS routine which formats a number in a 
+   // locale-sensitive fashion.
+   if (0 != GetNumberFormat(g_dwCurLcid, 0, k_szNumericAmount, NULL, 
+      szNumber, MAX_NUMERIC_LEN)) {
+      SetDlgItemText(hWnd, IDC_NUMBER, szNumber);
+   }
+}
+
+// NLSDemoDlgProc -- Main dialog proc for the window
+
+BOOL CALLBACK NLSDemoDlgProc(HWND hWnd, 
+                      UINT uMsg,
+                      WPARAM wParam,
+                      LPARAM lParam)
+{
+   switch(uMsg) {
+   case WM_INITDIALOG:
+      InitRsrcDlg(hWnd);   // Initialize the dialog box.
+
+      return TRUE;
+
+   case WM_COMMAND:
+      switch (LOWORD(wParam)) {
+      case IDCANCEL:
+
+         EndDialog(hWnd, 0);   // Finished; return 0
+
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
+// wWinMain -- main program.
+// Notice that this is a wide character entry point; this is a Windows 
+// CE program, and all API interfaces are Unicode-based.  The usual 
+// entry point, WinMain, is an ANSI function.
+
+LRESULT WINAPI wWinMain(HINSTANCE hMain,
+                  HINSTANCE /* Ignored */,
+                  LPWSTR /* Ignored */,
+                  INT nCmdShow)
+{
+   // Initialize globals
+   InitGlobals(hMain);
+
+   // Show the window
+   return DialogBox(g_hRsrc, MAKEINTRESOURCE(IDD_NLSDEMODLG), NULL,
+                NLSDemoDlgProc);
+}</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcelocal_internationalized_sample_application.htm">Internationalized Sample Application</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NLSDemo.exe%20Code%20Sample&nbsp;(_wcelocal_nlsdemoexe_code_sample.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

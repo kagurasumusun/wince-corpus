@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implications of Full-Screen Support for the Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implications of Full-Screen Support for the Application"/>
+<MSHelp:RLTitle Title="Implications of Full-Screen Support for the Application"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_implications_of_full-screen_support_for_the_application"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dshow.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_dshow_implications_of_full-screen_support_for_the_application"></A>Implications of Full-Screen Support for the Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>While the interface exposed to applications is relatively simple, the underlying implementation can be more complex. The full-screen renderer has some special properties that application developers should be aware of. In particular, the renderer changes display modes only when activated (either paused or running). Therefore, if the filter graph is stopped when switching to full-screen mode, no change might be obviously visible until the filter graph is started again. When the filter graph is subsequently run, the display mode will change and the full-screen rendering will start. </P>
+
+<P>If a window is being stretched full-screen (that is, no full-screen renderer is being used), the change will be viewable when the full-screen mode is set, regardless of state. If full-screen playback is being supported directly by a filter in the filter graph, it might elect to copy the behavior of the full-screen renderer and switch to full-screen only when activated. The filter supporting full-screen playback might have to do this, because the resources they require to play full-screen might not be available until then. Therefore, an application should avoid setting full-screen mode when stopped. </P>
+
+<P>This makes sense in a user interface context as well, because if full-screen mode is set when the filter graph is stopped, users are unlikely to be able to start the graph running without switching out of full-screen mode (that is, tabbing back to the original application). </P>
+
+<P>All renderers that implement <MSHelp:link keywords="_wcesdk_ivideowindow_interface" TABINDEX="0"><B>IVideoWindow</B></MSHelp:link> send event codes to the filter graph manager when their windows are activated or deactivated. When in full-screen mode, the PID watches for these event codes. When it sees a window that it made full-screen being deactivated, it will automatically switch out of full-screen mode and send an <MSHelp:link keywords="_wcesdk_event_notification_codes__ec_fullscreen_lost" TABINDEX="0">EC_FULLSCREEN_LOST</MSHelp:link> notification to the application event queue. This is the only interference caused by the PID; all other user interface is left open to the application as described in the remainder of this article. </P>
+
+<P>One of the most important aspects of full-screen playback is that when in full-screen mode, no window can be displayed on top of the full-screen window. In fact, when the full-screen renderer switches display modes, it disables all GDI output for other applications, so displaying a window on top of a full-screen window is actually impossible. Any user interactions with the computer must be done through hot keys. </P>
+
+<P>Whatever mechanism the PID ultimately uses to implement full-screen playback, it always ensures that the message drain property is set on the window executing the playback. (The message drain specifies a window that will be forwarded all Windows&reg; messages sent to the renderer.) So, even if the full-screen renderer is used, as long as a message drain has previously been set on the filter graph manager's <B>IVideoWindow</B> interface, all messages will be passed on to that renderer. </P>
+
+<P>Because the message drain is set on the appropriate window, an application can rely on receiving all mouse and keyboard messages when in full-screen mode, regardless of which filter is implementing it. An application can use this fact to implement hot-key support for seeking, for example. However, properties can be set only when not in full-screen mode, so if the only time an application is required to catch messages is when it is in full-screen mode, it must set the message drain before setting full-screen on. Likewise, the message drain can be reset only after setting full-screen mode off. </P>
+
+<P>One other application consideration is that, when in full-screen mode, any source and destination rectangles set through <MSHelp:link keywords="_wcesdk_ibasicvideo_interface" TABINDEX="0"><B>IBasicVideo</B></MSHelp:link> will not be adhered to. The PID resets these rectangles when switching to full-screen mode. It does this because not all filters implementing full-screen support can guarantee to support <B>IBasicVideo</B> as well. </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implications%20of%20Full-Screen%20Support%20for%20the%20Application&nbsp;(_dxce_dshow_implications_of_full-screen_support_for_the_application.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDISUIO Binding and Unbinding</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDISUIO Binding and Unbinding"/>
+<MSHelp:RLTitle Title="NDISUIO Binding and Unbinding"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDISUIOBindingUnbinding"/>
+<MSHelp:Keyword Index="K" Term="NDISUIO Binding and Unbinding"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDISUIOBindingUnbinding"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndisuio_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801423">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndisuiobindingunbinding"></A>NDISUIO Binding and Unbinding</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The NDISUIO driver is installed as an NDIS protocol that is bound to all devices installed with an <B>Interfaces</B> value in the registry of either <B>ndis4</B> or <B>ndis5</B>. When NDISUIO is loaded, NDIS calls <A HREF="cxrefprotocolbindadapter.htm">ProtocolBindAdapter</A> for all devices it is configured to bind to. NDISUIO creates an NDIS binding at this point from its bind adapter function. NDISUIO unbinds the adapter when notified by NDIS regarding a triggering event, such as a disabled NIC.</P>
+
+<P>NDISUIO creates a binding to an NDIS device by calling <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A> from its BindAdapter handler. Because NDISUIO works with Ethernet frames, the only medium type of interest is <B>NdisMedium802_3</B>. NDISUIO creates an <A HREF="cxrefndisuio_open_context.htm">NDISUIO_OPEN_CONTEXT</A> structure to represent the protocol context for the binding. The following list shows the information contained in this structure:
+
+<UL type="disc">
+	<LI>Flags that indicate state information</li>
+
+	<LI>The NDIS binding handle</li>
+
+	<LI>The device name</li>
+
+	<LI>A queue of received packets</li>
+
+	<LI>A reference count</li>
+</UL>
+
+<P>After creating the binding, NDISUIO sets its packet filter for the binding to:</P>
+
+<PRE class="code">NDIS_PACKET_TYPE_DIRECTED| NDIS_PACKET_TYPE_MULTICAST| NDIS_PACKET_TYPE_BROADCAST</PRE>
+
+<P>NDISUIO unbinds the adapter by calling <A HREF="_wceddk_ndiscloseadapter.htm">NdisCloseAdapter</A> from its UnbindAdapter function. If a file object is associated with this binding, it remains associated, but any pending or future read and write I/O request packets (IRP) on this file object will fail.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconprotocoldrivers.htm">Protocol Drivers</A></P>
+
+<P><A HREF="_wceddk_ndiscloseadapter.htm">NdisCloseAdapter</A></P>
+
+<P><A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A></P>
+
+<P><A HREF="cxrefprotocolbindadapter.htm">ProtocolBindAdapter</A></P>
+
+<P><A HREF="cxrefndisuio_open_context.htm">NDISUIO_OPEN_CONTEXT</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDISUIO%20Binding%20and%20Unbinding&nbsp;(cxrefndisuiobindingunbinding.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

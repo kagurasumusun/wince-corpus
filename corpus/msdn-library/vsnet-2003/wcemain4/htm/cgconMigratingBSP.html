@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Migrating a BSP</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Migrating a BSP"/>
+<MSHelp:RLTitle Title="Migrating a BSP"/>
+<MSHelp:Keyword Index="A" Term="cgconMigratingBSP"/>
+<MSHelp:Keyword Index="K" Term="board support packages, migrating"/>
+<MSHelp:Keyword Index="K" Term="BSPs, migrating"/>
+<MSHelp:Keyword Index="K" Term="migration, BSPs"/>
+<MSHelp:Keyword Index="A" Term="cgconMigratingBSP"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: migration_issues.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_761097">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconmigratingbsp"></A>Migrating a BSP</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In addition to creating a BSP, you should consider migrating or updating a BSP to be fully compatible with the features in Windows CE .NET. This topic provides a complete list of steps required to migrate the BSP to Windows CE and contains the implementation details for each step. </P>
+
+<P>These steps are categorized as required, recommended, or optional. You should attempt to implement each of these features in your BSP. At a minimum, implement the required and recommended features on your BSP.</P>
+
+<P>The following procedure shows a summary of the list of steps needed to migrate a BSP:
+
+<OL type="1">
+	<LI><A HREF="cgconintegrateyourbspintoidecatalog.htm">Add the BSP to the Catalog</A>.
+<P>The following table shows a summary of how to add your BSP to the Catalog.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Step</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use the BSP Wizard to create a BSP definition for <I>MyBSP</I> in the Catalog.</TD>
+<TD width=50%>Required</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI><A HREF="cgconupdateyouroal.htm">Update your OAL</A>.
+<P>The following table shows a summary of how to update your OAL.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Step</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Implement a variable system timer tick in the OAL.</TD>
+<TD width=50%>Required. At a minimum, use the new variables.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Update IRQ-to-SYSINTR mappings with <MSHelp:link keywords="cgrefOEMTranslateIrq" TABINDEX="0">OEMTranslateIrq</MSHelp:link>.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Update IRQ-to-SYSINTR mappings with <MSHelp:link keywords="cgrefOEMTranslateSysIntr" TABINDEX="0">OEMTranslateSysIntr</MSHelp:link>.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Update IRQ-to-SYSINTR mappings with <MSHelp:link keywords="cgrefOEMRequestSysIntr" TABINDEX="0">OEMRequestSysIntr</MSHelp:link>, for new SYSINTR mappings.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cgconupdateyouroal.htm">Add new IOCTLs</A>.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cgconupdateyouroal.htm">Remove old IOCTLs</A>.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Remove <MSHelp:link keywords="cmrefCreateStaticMapping" TABINDEX="0">CreateStaticMapping</MSHelp:link> space in the OAL.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Enable KITL in the BSP by adding or updating HALKITL.C. See the shipping platform code.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Enable KITL in the BSP by using the <MSHelp:link keywords="cxconEnablingPCIBusDriverInstallableISRsOnPlatform" TABINDEX="0">PCI Reg</MSHelp:link> tool and populate registry with KITL info. This is required so the PCI bus driver does not try to load a product driver for the debug NIC.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Enumerate KITL, other debug devices, and any intermediate PCI bridges.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Enable installable ISRs in the BSP by implementing shared interrupts in main ISR.</TD>
+<TD width=50%>Recommended for systems using shared interrupts</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Enable installable ISRs in the BSP with the NKChain interrupt handler.</TD>
+<TD width=50%>Recommended for systems using shared interrupts</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Setup and Initialize fixed and built-in devices.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Add a hive-based registry.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI><A HREF="cgconupdateyourbootloader.htm">Update your Boot Loader</A>.
+<P>The following table shows a summary of how to update your boot loader.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Step</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use BLCOMMON infrastructure.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Update the .bib files and verify that the address range is compatible with the OS image.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Remove PCI code from the boot loader and only enumerate debug devices and any intermediate PCI-PCI bridges.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Remove code to clear memory for a clean boot. The KITL library based on user selections from Platform Builder now does this.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Enable VMINI in the boot loader. See Readme.txt in %_WINCEROOT%\Public\Common\Oak\Drivers\Ethdbg\Vmini.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI><A HREF="cgconupdateyourkerneldebuggerprofiler.htm">Update your Kernel, Debugger, and Profiler</A>.
+<P>The following table shows a summary of how to update your kernel, debugger, and profiler.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Step</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Update kernel image names, kern, kernkitl, kernkitlprof, and directories.</TD>
+<TD width=50%>Required</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI><A HREF="cgconupdateyourbuildenvironment.htm">Update your Build Environment</A>
+<P>The following table shows a summary of how to update your build environment.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Step</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Adjust for new CPU names; for example SA1100 is now ARMV4 and R4300 is now MIPSII_FP.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Adjust for new Kernel names.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use BSP and BSP_NO environment variables, set as appropriate in platform batch file and reference in platform .reg and .bib files.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Set BSP_DISPLAY flag.</TD>
+<TD width=50%>Required</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use new SYSGEN flags; filter platform dirs files based on CE_MODULES to build only require components.</TD>
+<TD width=50%>Required</TD>
+</TR>
+</table></div>
+</li>
+
+	<LI><MSHelp:link keywords="cxconDriverMigration" TABINDEX="0">Update your Device Drivers</MSHelp:link>.
+<P>The following table shows a summary of how to update your device drivers.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Step</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use the CSP and common drivers.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use the new <MSHelp:link keywords="cxconDeviceDriverLoadingModel" TABINDEX="0">driver loading model</MSHelp:link> to load drivers.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use the new NDIS driver loading model to load NDIS miniports.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> to load drivers.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use <MSHelp:link keywords="cxconResourceManager" TABINDEX="0">I/O Resource Manager</MSHelp:link> (IORM) and update registry for drivers.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use <MSHelp:link keywords="cxconEnablingDriverToBeLoadedByPCIBusDriver" TABINDEX="0">PCI bus</MSHelp:link> driver and update registry for drivers.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use <MSHelp:link keywords="cmconInstallableISRs" TABINDEX="0">Installable ISRs</MSHelp:link> in device drivers.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Use <MSHelp:link keywords="cxconDevicePowerManagement" TABINDEX="0">power management</MSHelp:link> in device drivers.</TD>
+<TD width=50%>Recommended</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Update device drivers to provide device notifications. For more information, see <MSHelp:link keywords="cxconDeviceNotifications" TABINDEX="0">Device Interface Notifications</MSHelp:link>.</TD>
+<TD width=50%>Optional</TD>
+</TR>
+</table></div>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="pbconUsingBSPWizard" TABINDEX="0">BSP Wizard Overview</MSHelp:link></P>
+
+<P><MSHelp:link keywords="pbconCreatingBSP" TABINDEX="0">Creating a BSP</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cgconRecommendationsForCreatingYourBSP" TABINDEX="0">Creating a BSP: Simplest Case</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cgconUsingBSPTools" TABINDEX="0">Using the BSP Tools</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Migrating%20a%20BSP&nbsp;(cgconmigratingbsp.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

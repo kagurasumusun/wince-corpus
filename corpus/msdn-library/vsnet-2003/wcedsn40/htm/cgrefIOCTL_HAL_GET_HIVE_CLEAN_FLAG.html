@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL_HAL_GET_HIVE_CLEAN_FLAG</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL_HAL_GET_HIVE_CLEAN_FLAG"/>
+<MSHelp:RLTitle Title="IOCTL_HAL_GET_HIVE_CLEAN_FLAG"/>
+<MSHelp:Keyword Index="A" Term="cgrefIOCTL_HAL_GET_HIVE_CLEAN_FLAG"/>
+<MSHelp:Keyword Index="K" Term="IOCTL_HAL_GET_HIVE_CLEAN_FLAG"/>
+<MSHelp:Keyword Index="A" Term="cgrefIOCTL_HAL_GET_HIVE_CLEAN_FLAG"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: tm4oalapis.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756867">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgrefioctl_hal_get_hive_clean_flag"></A>IOCTL_HAL_GET_HIVE_CLEAN_FLAG</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This input/output control is used by Filesys.exe to query the OEM as to whether the registry hives and user profiles should be deleted and recreated.</P>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwIoControlCode</I></DT>
+
+<DD>Set to <B>IOCTL_HAL_GET_HIVE_CLEAN_FLAG</B>.</dd>
+
+<DT><I>lpInBuf</I></DT>
+
+<DD>Pointer to a <B>DWORD</B>. The <B>DWORD</B> will be set to one of the following values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>HIVECLEANFLAG_SYSTEM</TD>
+<TD width=56%>Inquiring about the system hive.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>HIVECLEANFLAG_USERS</TD>
+<TD width=56%>Inquiring about data in all user profile directories. If you specify a clean up, all user profile directories and their contents will be removed. The user profile directory is identified by containing a file called User.hv.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>nInBufSize</I></DT>
+
+<DD>Set to size of <B>DWORD</B>. Can be set to the same values as lpInBuf.</dd>
+
+<DT><I>lpOutBuf</I></DT>
+
+<DD>Set to NULL.</dd>
+
+<DT><I>nOutBufSize</I></DT>
+
+<DD>Set to 0.</dd>
+
+<DT><I>lpBytesReturned</I></DT>
+
+<DD>Set to NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>You can set the output value to TRUE if the system and/or user hive should be cleaned up, or FALSE if it should not. Default is FALSE if this IOCTL is not implemented.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This has no effect on the object store based registry. If the OEM sets the flag to TRUE, it will have the same effect as starting with a new user or system registry. The OAL is called one time for each registry hive file that is loaded. On a typical boot, this would be once for the system hive and once for the user hive.</P>
+
+<P>This IOCTL is supported to provide the OEM with a way to force a clean boot. Setting the flag to FALSE does not prevent other cleanup mechanisms from operating. For example, if the device is flashed with a new ROM image that contains different registry settings, the registry hive files will be cleaned up regardless of the return value from IOCTL_HAL_GET_HIVE_CLEAN_FLAG. This mechanism prevents conflicts between registry settings in a persisted hive file from an old image, and registry settings in a new ROM image. For more information, see <MSHelp:link keywords="cmconRegistryHiveROMDependency" TABINDEX="0">Registry Hive ROM Dependency</MSHelp:link>.</P>
+
+<H4 class="dtH4">Sample Code</H4>
+
+<PRE class="code">case IOCTL_HAL_GET_HIVE_CLEAN_FLAG:
+   if (!lpInBuf || (nInBufSize != sizeof(DWORD))
+     || !lpOutBuf || (nOutBufSize != sizeof(BOOL))) {
+   SetLastError(ERROR_INVALID_PARAMETER);
+     return FALSE;
+   } else {
+     DWORD *pdwFlags = (DWORD*)lpInBuf;
+     BOOL  *pfClean  = (BOOL*)lpOutBuf;
+   if (*pdwFlags == HIVECLEANFLAG_SYSTEM) {
+     RETAILMSG(1, (TEXT("OEM: Not cleaning system hive\r\n")));
+     *pfClean = FALSE;
+   } else if (*pdwFlags == HIVECLEANFLAG_USERS) {
+     RETAILMSG(1, (TEXT("OEM: Cleaning user profiles\r\n")));
+     *pfClean = TRUE;
+   }
+  }
+return TRUE;</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>.NET 4.0 and later</TD>
+<TD width=18%>Pkfuncs.h</TD>
+<TD width=16%>Pwinreg.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cmconRegistryHiveROMDependency" TABINDEX="0">Registry Hive ROM Dependency</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IOCTL_HAL_GET_HIVE_CLEAN_FLAG&nbsp;(cgrefioctl_hal_get_hive_clean_flag.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,578 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Benchmarking Real-time Determinism in Microsoft Windows CE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Benchmarking Real-time Determinism in Microsoft Windows CE"/>
+<MSHelp:RLTitle Title="Benchmarking Real-time Determinism in Microsoft Windows CE"/>
+<MSHelp:Keyword Index="A" Term="benchmarking"/>
+<MSHelp:Keyword Index="K" Term="real-time performance, Windows CE"/>
+<MSHelp:Keyword Index="K" Term="StrongARM, with Windows CE"/>
+<MSHelp:Keyword Index="K" Term="Windows CE, real-time performance"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbce300"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwinembed"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Compare Windows CE .NET to Windows CE 3.0 in real-time performance on the StrongARM platform. Is the new operating system more or less agile than its widely used predecessors?"><meta name="keywords" content="Windows CE .NET, Windows CE 3.0, Windows CE 2.12, real-time determinism, StrongARM, Windows CE, real-time performance, latency, jitter, saturation, polygons"><META name="rtfFileName" content="benchmarking.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Chris Tacke and Lawrence Ricci">
+<META NAME="Date" CONTENT="2002-06-01">
+<META NAME="msdnID" CONTENT="_829810">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="benchmarking"></A>Benchmarking Real-time Determinism in Microsoft Windows CE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Chris Tacke, Windows Embedded MVP <BR>
+Lawrence Ricci, Windows Embedded MVP <BR>
+Applied Data Systems</P>
+
+<P>June 2002 </P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE versions 2.12 and 3.0 <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Windows CE .NET</P>
+
+<H4 class="dtH1">Abstract</H4>
+
+<P>The real time or deterministic performance of Microsoft Windows CE has been extensively investigated for applications in industrial control systems. With the release of Windows CE .NET, engineers are asking if the new operating system (OS) is more or less agile than its widely used predecessors, Windows CE versions 2.12 and 3.0. This white paper first establishes the real-time performance of Windows CE 3.0 on the 'industry standard' StrongARM platform, and then compares it in detail to Windows CE. NET and its predecessor, Windows CE 2.12.</P>
+
+<P>Real-Time performance was tested by using a standard function generator to create a hardware interrupt on the device. The device then starts an IST, which immediately sets a GPIO line high and sets a Windows event. Further, an application thread receives that event and sets another GPIO line high. We tested and are reporting several timing differentials with reference to the generated hardware interrupt and the time at which the output GPIO lines actually went high.</P>
+
+<P>These are 'hard tests' for 'hard real time'. There are no measurements made 'internal' to the hardware/software platform, and there are no semantic games on the nature of hard and soft real time. The results, measured with high speed, high precision instruments, were surprising, suggesting that specifications for Windows CE real time performance were too conservative. Windows CE, as an RTOS, performs far better then generally discussed. (16 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#benchmarking_intro">Introduction</A> <BR>
+<A HREF="#benchmarking_testequip">Test Equipment</A> <BR>
+<A HREF="#benchmarking_graphics">Graphics Master Test Platform</A> <BR>
+<A HREF="#benchmarking_detailedtests">Detailed Tests of Windows CE 3.0</A> <BR>
+<A HREF="#benchmarking_maximum">Maximum Interrupt Frequency and Saturation Frequency for Three Systems</A> <BR>
+<A HREF="#benchmarking_comparison">Graphic Comparison, Three Systems</A> <BR>
+<A HREF="#benchmarking_summary">Summary and Recommendations</A> </P>
+
+<H2 class="dtH1"><A NAME="benchmarking_intro"></A>Introduction</H2>
+
+<P>The tests we ran are simple and direct. We send a signal to a controller running various versions of Microsoft&#174; Windows&#174; CE, and measure how long it takes to respond. The "latency time" and "jitter time" of this response are the quantified measures of determinism.</P>
+
+<P>As a separate test, we follow the methodology of Dupre and Barcos published at http://www.isa.org/~pmcd/acs/brtd.html. This test does not measure latency and jitter, but does measure 'saturation' which we define as the repetitive interrupt loading where the system becomes saturated and its response becomes non-deterministic.</P>
+
+<P>Finally, to more accurately reflect the environment of a real device in actual operation, we introduce a load in the form of the "Polygons" program. The Latency, Jitter, and Saturation are measured under load.</P>
+
+<P>We like these tests because of their reliance on 'full loop' testing&#151;beginning with the stimulus of a system input and measuring the system output. The tests make no assumptions about the 'internals' of the device. The tests make no references to 'interrupt latencies' or 'context switch times'; it is a basic measurement of the full system&#151;both hardware and software performance.</P>
+
+<P>The reader should note how this test might map to the actual limiting case for real time performance of the OS in a target application. </P>
+
+<P>On the one hand, the 'control logic' in this test is very low overhead, simple C++ Programs that read a processor-IO input on interrupt or sense a Windows event and set an output. Also, a real controller would have additional latencies associated with the hardware multiplexing to a 'real world' process I/O subsystem. Likewise, this test is independent of networking and calculation loads, and it is independent of the overhead associated with a soft-control executive. It should be noted that all these loads would typically be independent of OS used, so we remain focused, as intended, on raw OS performance.</P>
+
+<P>On the other hand, the system tested has not been optimized for real-time performance and carries the full "Max ALL" build of Windows CE, with all Windows CE utilities installed. We run from relatively slow DRAM. Also, even during the 'unloaded' test the system was refreshing a VGA flat panel display. Since the single-board StrongARM&#8482; system uses the CPU, not a separate graphics card, to update the display, this load is not trivial. </P>
+
+<H2 class="dtH1"><A NAME="benchmarking_testequip"></A>Test Equipment</H2>
+
+<P>Our test setup follows that of Dupre and Barcos, with the addition of a high-speed memory scope to let us measure latency, jitter, and thread run time.</P>
+
+<P class="fig"><IMG SRC="benchmarking_fig1.gif" ALT="" BORDER=0></P>
+
+<P class="label"><B>Figure 1. Initial test setup</B></P>
+
+<P>In our setup the following equipment was used
+
+<UL type="disc">
+	<LI>Signal Generator Agilent 33210A</li>
+
+	<LI>Counters A, B Systron Donner 6150</li>
+
+	<LI>Control System ADS Graphic Master Development System</li>
+
+	<LI>Oscilloscope: Tektronix TDS 224</li>
+</UL>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. Photograph of test setup</B></P>
+
+<P>Code may be hardware independent, but embedded systems programmers seldom are. </P>
+
+<H2 class="dtH1"><A NAME="benchmarking_graphics"></A>Graphics Master Test Platform</H2>
+
+<P>The Graphic Master is a single board embedded computer furnished by Applied Data in an 'application ready' format. The system is SA 1110/1111 running at 206 MHz, with 32 Meg Flash and 32 Meg RAM. The system includes a high-speed 8-bit micro-controller often used as a real time front-end I/O processor, but this was not used in the tests. Rather, general purpose I/O lines were used for input and output. </P>
+
+<P>The Windows CE versions used for this test were: 
+
+<UL type="disc">
+	<LI>Windows CE 2.12 </li>
+
+	<LI>Windows CE 3.0</li>
+
+	<LI>Windows CE .NET</li>
+</UL>
+
+<P>In all cases, this is the 'standard' out-of-the-box configuration with full graphics, desktop, control panels, networks, browsers, and so forth. This was the standard ADS build and does not reflect optimization to any particular performance target. </P>
+
+<P>The hardware here WAS NOT completely standard. The interrupt line we used for the test is most normally used for a 'power on/power off' pushbutton to signal transition in and out of power saving 'sleep' mode. In this service, it is useful to have some small filters on the board to eliminate contact bounce from the typical membrane pushbutton. Once we started running the test, it became clear that the OS real time performance was much quicker than we expected, and was occurring at time intervals inside the 'contact bounce' of a button, so we removed the filters from the board. It should be noted that this type of selective depopulation is a routine operation for ADS systems as purchased by OEMs.</P>
+
+<P>More detailed specification of the Graphics Master can be found at http://www.applieddata.net/products_master.asp.</P>
+
+<P>To help the reader understand the general performance level of this system, we benchmark using "Polygons" for each OS, and compare these to other systems. This is not an 'apples to apples' comparison since IPAQ is QVGA and therefore has only ¼ the number of pixels to update, but it does provide a general indication of the efficiency of the OS board support package (BSP). For comparison, we also ran Polygons on a slightly different version of Graphics Master running 3.0 with a QVGA display, and a desktop Pentium running a Microsoft Windows CE .NET PC-based hardware development platform (CEPC).</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Polygons/Second</TH>
+<TH width=15%>Windows CE 2.12</TH>
+<TH width=17%>Windows CE 3.0</TH>
+<TH width=18%>Windows CE .NET</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Graphics Master (VGA)</TD>
+<TD width=15%>170</TD>
+<TD width=17%>751</TD>
+<TD width=18%>537</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Graphics Master Variation (QGA 8bit)</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=17%>980</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>3630 iPaq (QVGA 16bit)</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=17%>260</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Figure 3. Polygon benchmarks</B></P>
+
+<P>As of this date (March 2002) this is an early release of the BSP shipped with Windows CE&nbsp;.NET for this system; some improvement is expected over the next few months.</P>
+
+<P>The particular 'control logic' for this series of tests was of two types. One routine (ISR_TEST) was a few lines of code linked directly to the ISR. When the interrupt occurred, the routine ran with the ISR and set an output on the Graphics Master. This would be the type of code used for the most demanding real-time applications and runs at 'interrupt priority'. A typical application for this type of real-time code would be something that must happen very quickly, for example, the register store and shutdown required to put a system into sleep as a result of a power failure, or an application with a high-speed 'stream' of interrupts, for example, a pulse encoder.</P>
+
+<P>The second routine APP_TEST was analogous to typical 'control packages' which communicate only with the standard OS API and messaging system. For this routine, the ISR sets a Windows event. When the event is recognized by the APP_TEST routine, it runs, turns a different output on, and then shuts it off as soon as it finishes running. This routine ran quite well in our tests and requires no knowledge of the driver structure to implement, so is the better choice for most applications.</P>
+
+<P>Code for APP_TEST test is as shown in Figure 4. It is identical code for all versions of the OS, written in C++.</P>
+
+<PRE class="code">#define LED_ON&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+#define LED_OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+#define ITERATIONS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1000000
+
+DWORD EventThread(LPVOID threadParams);
+
+HANDLE&nbsp;&nbsp;&nbsp;hPort&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= INVALID_HANDLE_VALUE;
+HANDLE&nbsp;&nbsp;&nbsp;hPwrOffEvent&nbsp;&nbsp;&nbsp;= INVALID_HANDLE_VALUE;
+HANDLE hThreadEvent&nbsp;&nbsp;&nbsp;= INVALID_HANDLE_VALUE;
+TCHAR&nbsp;&nbsp;&nbsp;szEvent[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= _T("PWROFF");
+TCHAR&nbsp;&nbsp;&nbsp;szThreadEvent[]&nbsp;&nbsp;&nbsp;= _T("DONE");
+TCHAR&nbsp;&nbsp;&nbsp;szLEDName[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= _T("LED3:");
+
+int WINAPI WinMain(&nbsp;&nbsp;&nbsp;HINSTANCE hInstance,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HINSTANCE hPrevInstance,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LPTSTR&nbsp;&nbsp;&nbsp;&nbsp;lpCmdLine,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nCmdShow)
+{
+&nbsp;&nbsp;&nbsp;HANDLE&nbsp;&nbsp;&nbsp;hThread;
+
+&nbsp;&nbsp;&nbsp;hThreadEvent = CreateEvent(NULL, FALSE, FALSE, szThreadEvent);
+&nbsp;&nbsp;&nbsp;hThread = CreateThread(NULL, NULL, EventThread, NULL, 0, NULL);
+
+#if (_WIN32_WCE &lt; 300)
+&nbsp;&nbsp;&nbsp;SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
+#else 
+&nbsp;&nbsp;&nbsp;CeSetThreadPriority(hThread, 0);
+&nbsp;&nbsp;&nbsp;CeSetThreadQuantum(hThread, 0);
+#endif
+
+&nbsp;&nbsp;&nbsp;WaitForSingleObject(hThreadEvent, INFINITE);
+
+&nbsp;&nbsp;&nbsp;return 0;
+}
+
+DWORD EventThread(LPVOID threadParams)
+{
+&nbsp;&nbsp;&nbsp;BYTE&nbsp;&nbsp;&nbsp;ledStatus;
+&nbsp;&nbsp;&nbsp;DWORD&nbsp;&nbsp;&nbsp;dwSize;
+&nbsp;&nbsp;&nbsp;DWORD&nbsp;&nbsp;&nbsp;dwRet;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;// open LED
+&nbsp;&nbsp;&nbsp;hPort = CreateFile(szLEDName, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL);
+
+&nbsp;&nbsp;&nbsp;// check for success
+&nbsp;&nbsp;&nbsp;if(hPort == INVALID_HANDLE_VALUE)
+&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETAILMSG(TRUE, (_T("\r\nFailed to open LED: %d\r\n"), 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GetLastError()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return -1;
+&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;// ensure LED is off
+&nbsp;&nbsp;&nbsp;ledStatus = LED_OFF;
+&nbsp;&nbsp;&nbsp;WriteFile(hPort, &amp;ledStatus, 1, &amp;dwSize, NULL);
+
+&nbsp;&nbsp;&nbsp;// create event
+&nbsp;&nbsp;&nbsp;hPwrOffEvent = CreateEvent(NULL, FALSE, FALSE, szEvent);
+
+&nbsp;&nbsp;&nbsp;// check for success
+&nbsp;&nbsp;&nbsp;if(hPwrOffEvent == INVALID_HANDLE_VALUE)
+&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETAILMSG(TRUE,(_T("Failed to create event: %d\r\n"),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GetLastError()));
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return -1;
+&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;for(int i = 0 ; i &lt; ITERATIONS ; i++)
+&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// wait for interrupt-driven event
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dwRet = WaitForSingleObject(hPwrOffEvent, INFINITE);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// turn on LED
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ledStatus = LED_ON;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WriteFile(hPort, &amp;ledStatus, 1, &amp;dwSize, NULL);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// turn off LED
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ledStatus = LED_OFF;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WriteFile(hPort, &amp;ledStatus, 1, &amp;dwSize, NULL);
+&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;// close port
+&nbsp;&nbsp;&nbsp;CloseHandle(hPort);
+
+&nbsp;&nbsp;&nbsp;// destroy event
+&nbsp;&nbsp;&nbsp;CloseHandle(hPwrOffEvent);
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;SetEvent(hThreadEvent);
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;// destroy event
+&nbsp;&nbsp;&nbsp;CloseHandle(hThreadEvent);
+
+&nbsp;&nbsp;&nbsp;return 0;
+}
+</PRE>
+
+<P class="label"><B>Figure 4. APP_TEST</B></P>
+
+<H2 class="dtH1"><A NAME="benchmarking_detailedtests"></A>Detailed Tests of Windows CE 3.0</H2>
+
+<P>We ran all tests on all OS variations; however, we will use Windows CE 3.0 here as a base case to outline the detail of the methodology. We set up the apparatus with the controller comfortably monitoring and passing on square wave inputs at a frequency of 5000 Hz (200 micro second period peak to peak for pulses) with pulse generator set at 20 percent duty cycle (each pulse 40 microseconds wide). The frequency of 5000 Hz was chosen to be comfortably less than saturation, but still more than expected of a 32 bit Graphic system in real-work applications.</P>
+
+<P>The input pulse signal was input as channel 1 (bottom trace) to the memory scope, acting as the trigger. The Interrupt-linked ISR_TEST was channel 2 (middle trace) and the Windows event linked APP_TEST was channel 3 (upper trace).</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig5.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 5. 3.0 latency, unloaded scenario</B></P>
+
+<P>As you can see, the interrupt linked ISR_TEST output lagged the input signal by about 2.5 microseconds. The Windows-event linked APP_TEST output lagged the interrupt input by 16 microseconds. </P>
+
+<P>Most readers will note these numbers are far inside any specification limits typically discussed by Microsoft or most professionals. To help quantify this performance in meaningful terms, consider the latency (propagation delay) in cable is about 1 nanosecond per foot. This means the ISR_TEST response occurred as if the entire StrongARM/CE system were replaced with a 2,500 foot cable. Most real world designs do not find determinism a meaningful problem in a spool of cable. Alternately, consider that the lion's share of real-time processes occur outside the period of one millisecond, for example, the specification of industrial SOE recorders is 1ms resolution +/- 1ms accuracy. If you are viewing the above chart on normal paper, the one-millisecond mark is about 15 feet to your right. Windows CE 3.0 is clearly, in most environments, well inside the time window used to discuss determinism.</P>
+
+<P>Since determinism is a 'statistical' property, we needed to measure this latency over an extended number of samples to quantify "Jitter" or the variation in latency. It would have been nice to make a statistical distribution plot of the start of rise time and the start of completion time, but we did not have suitable equipment. Nevertheless, we were able to make a closely related measurement.</P>
+
+<P>The scope used for testing has a feature to average samples, giving us a good way to measure this Jitter. The "rise time" of the controller output is sharp, only a few nanoseconds, so as the pulse would jitter back and forth, an average would be created for the last group of samples. The average for two pulses, jittered back and forth, would be a 'one step' stairway to the top of the pulse. For three staggered pulses, two steps, and so on. For the 128 samples offered by the scope, this gave the averaged output a smooth 'slope' up to a flat-topped peak. The time duration of the 'slope' is taken as the Jitter.</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig6a.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 6a. Jitter Windows CE 3.0 system under no load</B></P>
+
+<P>Here we can see that 95 percent or more of the "jitter" or variation in the latency tends to occur within half a division, or about 2.5 microseconds. This is essentially the same for both the ISR_TEST and APP_TEST outputs of the unloaded system. In this test, we do, however, see a few pixel high 'step' trailing each of these outputs, suggesting that there were some outliers, which later we measure under load.</P>
+
+<P>This system in this test was 'unloaded'. No programs except ISR_TEST and APP_TEST were running, and the system was not being driven to saturation. The realistic case would include some background load for graphics, algorithmic processing, communalizations, and so forth. To simulate this load, we use the Polygons test program shipped with Windows CE and running at top priority. This program presents intensive integer compute demands on the CPU and contends with APP_TEST for processing at the highest priority level. In our experience, Polygons is a far more intensive load than most Graphics MMI/SCADA applications. The nature of the load it presents on the CPU in a StrongARM system is largely integer arithmetic, much like a control program. In short, Polygons is on balance quite a realistic load.</P>
+
+<P>Repeating the first test, Figure 1, we see essentially no change for the system under load.</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig6b.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 6b. Windows CE 3.0 system under load</B></P>
+
+<P>This is the same chart as Figure 5, this time with the system under load from Polygons and with the time axis compressed X10 to 25 microseconds per division. We would expect the ISR_TEST to be the same (it is) because it runs at OS/Interrupt priority. The APP_TEST, however, now contends at parity priority with Polygons so it shows a much higher latency, about 133 microseconds, depending on how the OS spreads CPU cycles between two identically prioritized tasks.</P>
+
+<P>The next test is to measure the average response under load. </P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig6c.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 6c. Windows CE 3.0 average response under load</B></P>
+
+<P>Here we can see the ISR_TEST, linked to the interrupt, is still very deterministic with respect to when it starts, even under load. Its completion time, however, becomes more varied, as expected. Both IRS_TEST and APP_TEST are deterministic as to when they signal output "on", but they are dependant on code run time as to when they shut output "off". </P>
+
+<P>The response to the Windows-event scheduled APP_TEST is in some ways the opposite. The OS is very deterministic in ensuring the APP_TEST will run within the 133 microsecond window even contending with Polygons, but a measurable number of executions occur much earlier, at peaks about 15 microseconds and 30 microseconds. So, we should understand that with Windows CE 3.0, determinism of an interrupt-linked process is best interpreted with respect to how quickly they start. Determinism of Windows event scheduled processes is best interpreted with respect to when they must start, with the time interval understood more as a 'back' wall.</P>
+
+<P>Apart from the average, an analysis of determinism needs to understand the behavior of outliers, the small number of responses (early or late) that are far from the mean. To measure these outliers, we use the persistence feature of the scope, which records and overwrites ALL traces for a total of many hundreds of thousands of traces. The result does show outlier behavior.</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig7.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 7. Windows CE 3.0 under load, thousands of samples</B></P>
+
+<P>Here we can see the deterministic behavior measured over many tens of thousands of cycles. The dark line is the last recorded response. Here we can see that all interrupt-linked processes were complete within about 50 microseconds and all Windows event-linked processes were complete within about 125 microseconds.</P>
+
+<H2 class="dtH1"><A NAME="benchmarking_maximum"></A>Maximum Interrupt Frequency and Saturation Frequency for Three Systems</H2>
+
+<P>After the above detailed investigation of Windows CE 3.0, we can now compare the Maximum Frequency and Saturation Frequency of all three versions of Windows CE. </P>
+
+<P>In the manner of Dupre and Barcos, the test is set up to measure the maximum frequency (MF) that the controller can accept input and faithfully reproduce output. This is measured separately for both ISR_TEST linked to interrupts and APP_TEST linked to Windows events. </P>
+
+<P>We also consider the 'saturation frequency' (SF) of the controller an important variable, indicating when processing real time inputs preempts other programs in the system.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=16%>Variable</TH>
+<TH width=24%>Name</TH>
+<TH width=60%>Definition</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>MF-ISR</TD>
+<TD width=24%>Max Frequency</TD>
+<TD width=60%>The input frequency at which the output of a ISR-linked process is seen to miss (any) input pulses</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>MF-ISR</TD>
+<TD width=24%>Max Frequency</TD>
+<TD width=60%>The input frequency at which the output Windows-event linked process is seen to miss (any) input pulses</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=16%>SF</TD>
+<TD width=24%>Saturation Frequency</TD>
+<TD width=60%>The input frequency at which the system can no longer run Polygons</TD>
+</TR>
+</table></div>
+
+<P>This test is the place where we will introduce a direct comparison of the three versions for the CE operating systems because is shows so clearly the effect of the real-time recode between Windows CE 2.12 and Windows CE 3.0.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>&nbsp;</TH>
+<TH width=14%>MF-ISR interrupt linked</TH>
+<TH width=15%>MF-APP Windows linked</TH>
+<TH width=14%>SF Polygons Dies</TH>
+<TH width=35%>Comment</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Windows CE 2.12</TD>
+<TD width=14%>20Hz</TD>
+<TD width=15%>19 Hz</TD>
+<TD width=14%>&nbsp;</TD>
+<TD width=35%>Notice! 20 Hz NOT kHz!</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Windows CE 2.12 Loaded</TD>
+<TD width=14%>20Hz</TD>
+<TD width=15%>19 Hz</TD>
+<TD width=14%>N/A*</TD>
+<TD width=35%>Polygons never stopped</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Windows CE 3.0</TD>
+<TD width=14%>127 KHz</TD>
+<TD width=15%>28 kHz</TD>
+<TD width=14%>&nbsp;</TD>
+<TD width=35%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Windows CE 3.0 Loaded</TD>
+<TD width=14%>127 KHz</TD>
+<TD width=15%>15 kHz</TD>
+<TD width=14%>85 kHz</TD>
+<TD width=35%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Windows CE .NET</TD>
+<TD width=14%>47 kHz</TD>
+<TD width=15%>6.1 kHz</TD>
+<TD width=14%>&nbsp;</TD>
+<TD width=35%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Windows CE .NET Loaded</TD>
+<TD width=14%>47 kHz</TD>
+<TD width=15%>6 kHz</TD>
+<TD width=14%>40 kHz</TD>
+<TD width=35%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Figure 8. Dupre/Barcos test results </B></P>
+
+<P>Here it becomes very clear that Windows CE 2.12 was a very different animal before it went into its cocoon and emerged as some sort of supersonic Windows 3.0 butterfly. Windows CE 2.12 drops off the end of this test at a frequency of only 20 cycles per second, corresponding to the system time clock set, in this case, at a 50 ms 'tic'. Outside this load rate, Windows CE 2.12 behaves quite nicely, but inside this window it is non-responsive. In short, a mixed choice for real time processing.</P>
+
+<P>Windows CE 3.0, however, is another matter. We were not expecting anything like this interrupt-linked performance. We were watching a full graphic system servicing interrupts comfortably above 100 kHz, and even running background graphics at 80 kHz. If we had shut off the APP-TEST routine, it doubtless would have reached even higher frequencies.</P>
+
+<P>When we placed the unit on a scope, we could see that that system continued to behave completely determinately until the frequency increased to the point that the ISR did not complete before the next ISR (on the same interrupt line) repeated. In other words, it was real time to the point that it was processing interrupts just about as fast as the CPU could compute. All this time the system was processing APP TEST and servicing other real time processes like the system clock and memory refresh. It is also notable that the load from Polygons had no effect on the interrupt-linked processing at all; the system comply preempted this background application. </P>
+
+<P>Windows CE .NET is still very agile, even though it carries a lot more baggage in terms of network support and graphics&#151;the perennial bug-bear of real time systems. Windows CE .NET serviced interrupts right up to 47 kHz. While not exactly a threat to the AM band on your radio, this would have been a useful frequency for Marconi. For the vast range of events that are associated with electrical or mechanical devices, a frequency of 47 kHz, corresponding to a period of 20 microseconds, should be quite sufficient. </P>
+
+<P>What is notable, and actually very positive with respect to the real time performance of Windows CE .NET, is the way the maximum frequency of the Windows event linked APP_TEST changed under background load. We can see that for Windows CE .NET, the MF changed only about 2 percent when Polygons was running. In Windows CE 3.0, MF_APP changed more than 50 percent as a result of background load. This means that for the form of real time programming most often used (Windows event linked tasks), Windows CE .NET is more deterministic than Windows CE 3.0. Later, we will see the Windows CE .NET situation with Latency and Jitter was even better.</P>
+
+<P>This improvement is because some changes were made to the Windows CE .NET interrupt handling to better arbitrate between two processes sharing the same priority&#151;in this case APP_TEST and Polygons. This code seems to work very well to improve the repeatability and determinism of the system. We expect it is the presence of this additional logic that slows the maximum frequency of the interrupt-paced system. If so, the trade-off is probably worth it. There probably are not too many processes that require a performance window between the ~10 microsecond performance of Windows CE 3.0 and the ~20 microsecond performance of Windows CE .NET.</P>
+
+<H2 class="dtH1"><A NAME="benchmarking_comparison"></A>Graphic Comparison, Three Systems</H2>
+
+<P>Here we condense the measurements onto a single chart grid to facilitate comparison of the three operating systems. All systems were running polygons. Note the horizontal axis is 25 microseconds per division.</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig9a.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 9a. Windows CE 2.12 overall performance</B></P>
+
+<P>In this figure we overlay the average (dark black trace) the last (gray trace) and the montage of tens of thousands of traces (gray area), which catches the outliers. This is a 'loaded' system with Polygons running while the test was done. In this case, the test was run at a leisurely 19 Hz because of the low saturation rate of Windows CE 2.12.</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig9b.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 9b. Windows CE 3.0 overall performance under load</B></P>
+
+<P>This is the response of a Windows CE 3.0 system, again under load, but this time managing quite well at 5000 Hz. Notice the interesting response of the event-linked task, sometimes 'beating polygons to the CPU' and running just 10 microseconds after interrupt, the rest of the time waiting for polygons to finish, and running about 100 microseconds after interrupt.</P>
+
+<P class="fig"><CODE><IMG SRC="benchmarking_fig10.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 10. Windows CE .NET overall performance under load</B></P>
+
+<P>Here we see Windows CE .NET under load. We notice that both the interrupt linked ISR_TEST and the Windows event linked APP_TEST are more tightly defined, more deterministic in response. While almost as quick as Windows CE 3.0, Windows CE .NET is a little bit more predictable, especially for the APP_TEST under load.</P>
+
+<P>Finally we can summarize several charts in a single table. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>&nbsp;</TH>
+<TH colspan=4 width=40%>ISR Start (&mu;s)</TH>
+<TH colspan=4 width=40%>APP Start (&mu;s)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=20%>&nbsp;</TD>
+<TH width=10%>Max</TH>
+<TH width=10%>Min</TH>
+<TH width=10%>Jitter</TH>
+<TH width=10%>Latency</TH>
+<TH width=10%>Max</TH>
+<TH width=10%>Min</TH>
+<TH width=10%>Jitter</TH>
+<TH width=10%>Latency</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE 2.12 **</TD>
+<TD width=10%>6</TD>
+<TD width=10%>2.6</TD>
+<TD width=10%>3.4</TD>
+<TD width=10%>3</TD>
+<TD width=10%>162</TD>
+<TD width=10%>51</TD>
+<TD width=10%>111</TD>
+<TD width=10%>61</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE 2.12** Loaded</TD>
+<TD width=10%>11</TD>
+<TD width=10%>3.9</TD>
+<TD width=10%>7.1</TD>
+<TD width=10%>4.8</TD>
+<TD width=10%>201</TD>
+<TD width=10%>117</TD>
+<TD width=10%>84</TD>
+<TD width=10%>135</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE 3.0</TD>
+<TD width=10%>5.2</TD>
+<TD width=10%>1.4</TD>
+<TD width=10%>3.8</TD>
+<TD width=10%>2.5</TD>
+<TD width=10%>17.6</TD>
+<TD width=10%>14.4</TD>
+<TD width=10%>3.2</TD>
+<TD width=10%>21</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE 3.0 Loaded</TD>
+<TD width=10%>7</TD>
+<TD width=10%>2</TD>
+<TD width=10%>5</TD>
+<TD width=10%>5</TD>
+<TD width=10%>133</TD>
+<TD width=10%>16</TD>
+<TD width=10%>117</TD>
+<TD width=10%>71</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE .NET</TD>
+<TD width=10%>5</TD>
+<TD width=10%>2</TD>
+<TD width=10%>3</TD>
+<TD width=10%>3</TD>
+<TD width=10%>170</TD>
+<TD width=10%>24</TD>
+<TD width=10%>146</TD>
+<TD width=10%>47</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE .NET Loaded</TD>
+<TD width=10%>12.2</TD>
+<TD width=10%>2.8</TD>
+<TD width=10%>9.4</TD>
+<TD width=10%>6.3</TD>
+<TD width=10%>125</TD>
+<TD width=10%>46</TD>
+<TD width=10%>79</TD>
+<TD width=10%>53</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Figure 11. Latency and Jitter</B>&#151;<B>three operating systems</B></P>
+
+<P>We think the place most engineers should focus on is the performance of the 'loaded' system. Whether loaded by graphics, as in this case, or loaded with some sort of control/optimization algorithm, real time in a Windows CE system will usually mean real time in a system also performing other tasks. Conversely, very few devices would invest a 32-bit CPU, much less a full multi-tasking OS, in a single function device. In this measure, performance under load, Windows CE .NET comes out very well.</P>
+
+<P>Under load, the system actually becomes MORE deterministic. The "Jitter" on the APP_TEST actually reduces, not only to less than a loaded Windows CE 3.0 system, but less than a Windows CE .NET system under no load! The actual Latency numbers are also quite good, with an interrupt linked response starting 6.3 microseconds after interrupt, and a Windows event linked response starting only 53 microseconds after interrupt. Again, we point out this is an early build of the BSP for this system; we expect some improvement over the coming months.</P>
+
+<H2 class="dtH1"><A NAME="benchmarking_summary"></A>Summary and Recommendations</H2>
+
+<P>We were very pleased with the real time response of Windows CE 3.0 and Windows CE .NET on this platform. While for certain tests Windows CE 3.0 seemed to have an edge, we think that for the realistic cases&#151;Windows events linked tasks on loaded systems&#151;Windows CE .NET is the clear choice. We also think the series of tests give a good general guideline for Windows CE application to real time process. If the time intervals are measured in milliseconds, don't analyze too deeply, you are probably okay. If the time intervals are measured in tens to hundreds of microseconds, think about it and perhaps test your target system and BSP. If time intervals are single-digit microseconds, test carefully and consider hardware-based interrupt handling.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_829810', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

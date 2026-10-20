@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>APIs for Setting Up/Tearing Down the Extension Layer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="APIs for Setting Up/Tearing Down the Extension Layer"/>
+<MSHelp:RLTitle Title="APIs for Setting Up/Tearing Down the Extension Layer"/>
+<MSHelp:Keyword Index="A" Term="cgconAPIsForSettingUpTearingDownExtensionLayer"/>
+<MSHelp:Keyword Index="A" Term="cgconAPIsForSettingUpTearingDownExtensionLayer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: bluetooth_stack.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_752549">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconapisforsettinguptearingdownextensionlayer"></A>APIs for Setting Up/Tearing Down the Extension Layer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>All Bluetooth stack layers, from HCI and up, follow the same guidelines for exporting interfaces and connecting to lower-level stacks. The templates for these interfaces are depicted in the following table.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The terms LAYER_ and layer_ are generic substitutes used in this section for real stack layer prefixes such as HCI_, L2CAP_, SDP_, RFCOMM_, hci_, l2cap_, sdp_, rfcomm_ prefixes that are part of real names.</BLOCKQUOTE>
+
+<P>To facilitate the setting up and tearing down of the extension layer, the following APIs are provided as reference.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function syntax</TH>
+<TH width=43%>Description</TH>
+<TH width=24%>Return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>
+<PRE class="code">int
+<I>layer</I>_InitializeOnce
+(void);</PRE>
+</TD>
+<TD width=43%>This function is called only once during driver load. It can be called from DllMain and cannot contain anything beyond initialization of synchronization primitives or I/O.</TD>
+<TD width=24%>Ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>
+<PRE class="code">int
+<I>layer</I>_UninitializeOnce
+(void);</PRE>
+</TD>
+<TD width=43%>This function is called during driver unload. It must be called when the driver has already entered a shutdown state. It can be called from DllMain and can only contain un-initialization of synchronization primitives created in the <B><I>layer</I>_InitializeOnce</B> function. It is only called once, and the driver is unloaded immediately after that.</TD>
+<TD width=24%>Ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>
+<PRE class="code">int
+<I>layer</I>_CreateDriverInstance
+(void);</PRE>
+</TD>
+<TD width=43%>This function is used to initialize the stack layer. It is called after <B><I>layer</I>_InitializeOnce</B> and can count on synchronization primitives being initialized. It can be called out of sequence with <B><I>layer</I>_CloseDriverInstance</B> and must maintain state and protect against duplicate calls.
+<P>This call must start the stack layer, which includes connecting to the bottom layer, preparing for connection requests from top layers, and initializing hardware, if appropriate. The stack layer must be in an operational state for this function to return a success.</P>
+</TD>
+<TD width=24%>ERROR_SUCCESS if the stack layer is operational. If an error occurs, the appropriate error status from Winerror.h is returned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>
+<PRE class="code">int
+<I>layer</I>_CloseDriverInstance
+(void);</PRE>
+</TD>
+<TD width=43%>This function is used to un-initialize the stack layer. It is called after <B><I>layer</I>_InitializeOnce</B> and can count on synchronization primitives being initialized. It can be called out of sequence with <B><I>layer</I>_CloseDriverInstance</B> and must maintain state and protect against duplicate calls.
+<P>This call must stop the stack layer, which includes closing all connections, freeing the interface to the lower layer, notifying the upper layers of its shutdown, destroying all threads, and freeing everything allocated by <B><I>layer</I>_CreateDriverInstance</B>.</P>
+</TD>
+<TD width=24%>ERROR_SUCCESS if the stack layer is operational. If an error occurs, the appropriate error status from Winerror.h is returned.</TD>
+</TR>
+</table></div>
+
+<P>Interfacing between layers is achieved through callback tables. Each layer consumes two callback tables from each upper layer and provides each upper layer with one interface table. An inter-layer interface consists of calls, callbacks, and events. </P>
+
+<P>On registration, the upper layer establishes a connection with the lower layer by supplying a table of events (<I>LAYER</I>_EVENT_INDICATION) and command completion callbacks (<I>LAYER</I>_CALLBACKS). A function table is received back for the lower-level interface (<I>LAYER</I>_INTERFACE). </P>
+
+<PRE class="code">int LAYER_EstablishDeviceConect(
+   void*                       pUserContext,     /*IN*/
+   filters for<I> the incomming connection,         </I>/*IN*/
+   <I>LAYER</I>_EVENT_INDICATION     *<I>pInd</I>,             /*IN*/
+   <I>LAYER</I>_CALLBACKS            *<I>pCall</I>,            /*IN*/
+   <I>LAYER</I>_INTERFACE            *<I>pInt</I>,             /*OUT*/
+   int                        *<I>pcDataHeaders</I>,    /*OUT*/
+   int                        *pcDataTrailers,   /*OUT*/
+   HANDLE                     *phDeviceContext   /*OUT*/
+);</PRE>
+
+<P>When the upper layer issues a call to the lower layer, it calls a function pointer in the <I>LAYER</I>_INTERFACE table. If the call immediately fails (for example, for incorrect parameters and/or low memory conditions), the function immediately returns a non-zero error value. If there are enough resources to schedule the command for execution, it is queued and the function returns ERROR_SUCCESS.</P>
+
+<P>Each function pointer from the interface table takes a void* cookie that uniquely identifies the call context to the calling layer. The upper layer can abort the call by calling the <B><I>LAYER</I>_INTERFACE::layer_AbortCall</B> function. The call can also be aborted by an underlying system due to communication loss, timeout, or hardware removal. If such a condition occurs, the <B><I>LAYER</I>_CALLBACKS::layer_CallAborted</B> function is called with this cookie.</P>
+
+<P>If the lower layer completes the call successfully, meaning it did not abort, the lower layer calls one of the callbacks provided by the upper layer. Every _In command from <I>LAYER</I>_INTERFACE has a corresponding _Out command in <B><I>LAYER</I>_CALLBACKS</B>.</P>
+
+<P>If the lower stack generates events that are asynchronous and not directly related to commands executed by an upper layer, they are passed to the upper layer through <I>LAYER</I>_EVENT_INDICATION callbacks.</P>
+
+<H4 class="dtH4">Command Example</H4>
+
+<P>This example requests the RFCOMM layer to establish a connection to the channel on device *<I>pba</I>. The <I>hDeviceContext</I> parameter is the lower layer's handle that was returned by <B><I>LAYER</I>_EstablishDeviceContext</B>. The <I>pCallContext</I> parameter is a pointer to the cookie that is used by the response callback.</P>
+
+<PRE class="code">typedef int (*RFCOMM_ConnectRequest_In)( 
+    HANDLE              hDeviceContext, 
+    void               *pCallContext, 
+    BD_ADDR            *pba, 
+    unsigned char       channel
+);</PRE>
+
+<H4 class="dtH4">Callback Example</H4>
+
+<PRE class="code">typedef int (*RFCOMM_ConnectRequest_Out)( 
+    void               *pCallContext, 
+    int                 iError, 
+    HANDLE              hConnection
+);</PRE>
+
+<H4 class="dtH4">Event Example</H4>
+
+<P>This event indicates that a connection request has come from a device with the address of <I>*pba</I> on port <I>psm</I>. The channel ID assigned for this connection, if the upper layer chooses to accept it, is CID.</P>
+
+<PRE class="code">typedef int (*L2CA_ConnectInd) (
+    void               *pUserContext,
+    BD_ADDR            *pba,
+    unsigned short      cid,
+    unsigned char       id,
+    unsigned short      psm
+);</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Not all event and callbacks must be provided, and not all interface functions must be implemented. Passing NULL in the event/callback/interface table indicates an unimplemented function. Lower layers of the stack MUST accept any level of implementation, including all NULLs, in events and callbacks. Upper layers MUST check for sufficiency of the lower-layer implementation.</BLOCKQUOTE>
+
+<P>The <I>pUserContext</I> argument for all callback calls is the same cookie that is passed to <B><I>LAYER</I>_EstablishDeviceContext</B> as its first argument.</P>
+
+<P>The *<I>pcDataHfeaders</I> and *<I>pcDataTrailers</I> parameters are used to indicate how many bytes the upper layer must pre-allocate for lower-layer headers in the packet.</P>
+
+<P>The upper layer might want to restrict incoming connections that are passed by the lower layer. For example, RFCOMM is only interested in connections on PSM 3, and SDP on PSM 1. They are not interested in connections on any other PSM (protocol/service multiplexer). The SCO stack is only interested in incoming SCO, but not ACL connections. Therefore, every stack maintains one and only one general client who can accept all incoming connections, and multiple stacks that accept connections based on some parameter, such as address or connection type. These parameters are different for different layers and do not intersect for multiple clients of the same layer. </P>
+
+<P>Each incoming connection is checked to match restrictions against existing clients with connection restrictions. If no matching client exists, the generic upper-layer handler is executed.</P>
+
+<P>When the upper layer is ready to shutdown, it calls the <B><I>LAYER</I>_CloseDeviceConnection</B> function. Calls that were placed by this layer are aborted and the connections, owned by this layer, are closed.</P>
+
+<PRE class="code">int <I>LAYER</I>_CloseDeviceContext (
+HANDLE   hDeviceContext
+);</PRE>
+
+<H4 class="dtH4">L2CAP</H4>
+
+<P>Upper layers of stack may install itself on top of L2CAP using this function.</P>
+
+<PRE class="code">int L2CAP_EstablishDeviceContext(
+   void                    *pUserContext,      /* IN */
+   unsigned short           psm,               /* IN */
+   L2CAP_EVENT_INDICATION  *pInd,              /* IN */
+   L2CAP_CALLBACKS         *pCall,             /* IN */
+   L2CAP_INTERFACE         *pInt,              /* OUT */
+   int                     *pcDataHeaders,     /* OUT */
+   int                     *pcDataTrailers,    /* OUT */
+   HANDLE                  *phDeviceContext    /* OUT */
+);</PRE>
+
+<P>PSM is 0 for single listen-to-all stack, and a number for clients with fixed PSMs; SDP and RFCOMM for example.</P>
+
+<P>Only connection-oriented L2CAP channels are implemented. CLT-related functions are stubbed with NULL. L2CAP accepts all negotiation parameters, including QoS but passes it to the user without attempting to enforce or even store it. See the description of isochronous channels above.</P>
+
+<P>See the Bt_hci.h file for complete specifications of the L2CAP interface.</P>
+
+<H4 class="dtH4">RFCOMM</H4>
+
+<P>RFCOMM clients can listen only on a particular channel by passing a non-zero channel argument to the following function:</P>
+
+<PRE class="code">int RFCOMM_EstablishDeviceContext(
+   void                     *pUserContext,      /* IN */
+   unsigned char            channel,            /* IN */
+   RFCOMM_EVENT_INDICATION  *pInd,              /* IN */
+   RFCOMM_CALLBACKS         *pCall,             /* IN */
+   RFCOMM_INTERFACE         *pInt,              /* OUT */
+   int                      *pcDataHeaders,     /* OUT */
+   int                      *pcDataTrailers,    /* OUT */
+   HANDLE                   *phDeviceContext    /* OUT */
+);</PRE>
+
+<P>One and only one general-purpose stack (channel=0) can be installed.</P>
+
+<P>RFCOMM passes negotiated parameters to the top level of the stack, but neither enforces nor stores them. The same is true for model commands and statuses that are used by a port emulation entity.</P>
+
+<P>RFCOMM uses StackEvent to pass flow control status to every client. It will also enforce aggregate, but not connection-based flow control.</P>
+
+<P>See the Bt_ddi.h file for complete specifications of the RFCOMM interface.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconinterfacereferences.htm">Interface References</A></P>
+
+<P><A HREF="cgconbluetoothstackextensionlayer.htm">Enhancing the Bluetooth Stack</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;APIs%20for%20Setting%20Up%2FTearing%20Down%20the%20Extension%20Layer&nbsp;(cgconapisforsettinguptearingdownextensionlayer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

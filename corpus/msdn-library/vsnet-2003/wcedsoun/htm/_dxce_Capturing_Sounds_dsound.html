@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capturing Sounds</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Capturing Sounds"/>
+<MSHelp:RLTitle Title="Capturing Sounds"/>
+<MSHelp:Keyword Index="A" Term="_dxce_Capturing_Sounds_dsound"/>
+<MSHelp:Keyword Index="K" Term="capture, DirectSound sound capture"/>
+<MSHelp:Keyword Index="K" Term="DirectSound, capture"/>
+<MSHelp:Keyword Index="K" Term="sound capture, DirectSound sound capture"/>
+<MSHelp:Keyword Index="A" Term="_dxce_Capturing_Sounds_dsound"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxsound_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680831">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_dxce_capturing_sounds_dsound"></A>Capturing Sounds</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Capturing a sound consists of the following steps:
+
+<OL type="1">
+	<LI>Start the buffer by calling the <MSHelp:link keywords="_wcesdk_IDirectSoundCaptureBuffer_Start_dsound" TABINDEX="0">IDirectSoundCaptureBuffer::Start</MSHelp:link> method. Audio data from the input device begins filling the buffer from the beginning. </li>
+
+	<LI>Wait until the desired amount of data is available. For one method of determining when the capture position reaches a certain point, see <A HREF="_dxce_capture_buffer_notification_dsound.htm">Capture Buffer Notification</A>. </li>
+
+	<LI>When sufficient data is available, lock a portion of the capture buffer by calling the <MSHelp:link keywords="_wcesdk_IDirectSoundCaptureBuffer_Lock_dsound" TABINDEX="0">IDirectSoundCaptureBuffer::Lock</MSHelp:link> method. 
+<P>To make sure you are not attempting to lock a portion of memory that is about to be used for capture, you can first obtain the current read position by calling <MSHelp:link keywords="_wcesdk_IDirectSoundCaptureBuffer_GetCurrentPosition_dsound" TABINDEX="0">IDirectSoundCaptureBuffer::GetCurrentPosition</MSHelp:link>. For an explanation of the read position, see <A HREF="_dxce_capture_buffer_information_dsound.htm">Capture Buffer Information</A>.
+
+<P>As parameters to the <B>Lock</B> method, you pass the size and offset of the block of memory you want to read. The method returns a pointer to the address where the memory block begins, and the size of the block. If the block wraps around from the end of the buffer to the beginning, two pointers are returned, one for each section of the block. The second pointer is NULL if the locked portion of the buffer does not wrap around.
+</li>
+
+	<LI>Copy the data from the buffer, using the addresses and block sizes returned by the <B>Lock</B> method.</li>
+
+	<LI>Unlock the buffer with the <MSHelp:link keywords="_wcesdk_IDirectSoundCaptureBuffer_Unlock_dsound" TABINDEX="0">IDirectSoundCaptureBuffer::Unlock</MSHelp:link> method.</li>
+
+	<LI>Repeat steps 2 to 5 until you are ready to stop capturing data. Then call the <MSHelp:link keywords="_wcesdk_idirectsoundcapturebuffer_stop_dsound" TABINDEX="0">IDirectSoundCaptureBuffer::Stop</MSHelp:link> method.</li>
+</OL>
+
+<P>Normally the buffer stops capturing automatically when the capture position reaches the end of the buffer. However, if the DSCBSTART_LOOPING flag was set in the <I>dwFlags</I> parameter to the <B>IDirectSoundCaptureBuffer::Start</B> method, the capture will continue until the application calls the <B>IDirectSoundCaptureBuffer::Stop</B> method.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Capturing%20Sounds&nbsp;(_dxce_capturing_sounds_dsound.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

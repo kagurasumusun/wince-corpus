@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCHookProc</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CCHookProc"/>
+<MSHelp:RLTitle Title="CCHookProc"/>
+<MSHelp:Keyword Index="A" Term="cerefCCHookProc"/>
+<MSHelp:Keyword Index="K" Term="CCHookProc"/>
+<MSHelp:Keyword Index="A" Term="cerefCCHookProc"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: commdlg.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753668">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefcchookproc"></A>CCHookProc</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is an application-defined or library-defined callback function that is used with the <B>Color</B> common dialog box. <B>CCHookProc</B> receives messages or notifications intended for the default dialog box procedure.</P>
+
+<PRE class="syntax"><B>UINT APIENTRY CCHookProc(</B>
+<B>HWND</B> <I>hdlg</I><B>, </B>
+<B>UINT</B> <I>uiMsg</I><B>, </B>
+<B>WPARAM</B> <I>wParam</I><B>, </B>
+<B>LPARAM</B> <I>lParam</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hdlg</I></DT>
+
+<DD>[in] Handle to the <B>Color</B> dialog box window for which the message is intended. </dd>
+
+<DT><I>uiMsg</I></DT>
+
+<DD>[in] Identifies the message being received.</dd>
+
+<DT><I>wParam</I></DT>
+
+<DD>[in] Specifies additional information about the message. The exact meaning depends on the value of the <I>uiMsg</I> parameter.</dd>
+
+<DT><I>lParam</I></DT>
+
+<DD>[in] Specifies additional information about the message. The exact meaning depends on the value of the <I>uiMsg </I>parameter.
+
+<P>If the <I>uiMsg</I> parameter indicates the <A HREF="cerefwm_initdialog.htm">WM_INITDIALOG</A> message, <I>lParam</I> is a pointer to a <A HREF="cerefchoosecolor.htm">CHOOSECOLOR</A> structure containing the values specified when the dialog was created. 
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Zero indicates that the default dialog box procedure processes the message. Nonzero indicates that the default dialog box procedure ignores the message.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When you use the <A HREF="cerefchoosecolor.htm">ChooseColor</A> function to create a <B>Color</B> dialog box, you can provide a <B>CCHookProc</B> hook procedure to process messages or notifications intended for the dialog box procedure. To enable the hook procedure, use the <B>CHOOSECOLOR</B> structure that you passed to the dialog creation function. Specify the address of the hook procedure in the <B>lpfnHook</B> member and specify the CC_ENABLEHOOK flag in the <B>Flags</B> member.</P>
+
+<P>The default dialog box procedure processes the WM_INITDIALOG message before passing it to the hook procedure. For all other messages, the hook procedure receives the message first. Then, the return value of the hook procedure determines whether the default dialog procedure processes the message or ignores it.</P>
+
+<P>If the hook procedure processes the <A HREF="cerefwm_ctlcolordlg.htm">WM_CTLCOLORDLG</A> message, it must return a valid brush handle for painting the background of the dialog box. In general, if the hook procedure processes any WM_CTLCOLOR* message, it must return a valid brush handle for painting the background of the specified control.</P>
+
+<P>Do not call the <A HREF="cerefenddialog.htm">EndDialog</A> function from the hook procedure. Instead, the hook procedure can call the <A HREF="cerefpostmessage.htm">PostMessage</A> function to post a WM_COMMAND message with the IDABORT value to the dialog box procedure. Posting IDABORT closes the dialog box and causes the dialog box function to return FALSE. If you need to know why the hook procedure closed the dialog box, you must provide your own communication mechanism between the hook procedure and your application.</P>
+
+<P>You can subclass the standard controls of the common dialog box. However, the common dialog box procedure may also subclass the controls. Because of this, you should subclass controls when your hook procedure processes the WM_INITDIALOG message. This ensures that your subclass procedure receives the control-specific messages before the subclass procedure set by the dialog box procedure. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Commdlg.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefchoosecolor.htm">ChooseColor</A>, <A HREF="cerefenddialog.htm">EndDialog</A>, <A HREF="cerefpostmessage.htm">PostMessage</A>, <A HREF="cerefwm_initdialog.htm">WM_INITDIALOG</A>, <A HREF="cerefwm_ctlcolordlg.htm">WM_CTLCOLORDLG</A>, <A HREF="cerefchoosecolor.htm">CHOOSECOLOR</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CCHookProc&nbsp;(cerefcchookproc.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

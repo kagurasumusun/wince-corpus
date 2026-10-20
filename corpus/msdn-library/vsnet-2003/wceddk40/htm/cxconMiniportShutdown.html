@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportShutdown</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportShutdown"/>
+<MSHelp:RLTitle Title="MiniportShutdown"/>
+<MSHelp:Keyword Index="A" Term="cxconMiniportShutdown"/>
+<MSHelp:Keyword Index="K" Term="MiniportShutdown"/>
+<MSHelp:Keyword Index="A" Term="cxconMiniportShutdown"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_upper_edge_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_730866">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconminiportshutdown"></A>MiniportShutdown</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>MiniportShutdown</B> is an optional function that restores a NIC to its initial state when the system is shut down, whether by the user or because an unrecoverable system error occurred. </P>
+
+<PRE class="syntax"><B>VOID</B> <B>MiniportShutdown(
+IN</B> <B>PVOID</B> <I>ShutdownContext
+</I><B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ShutdownContext</I></DT>
+
+<DD>Points to a context area supplied when the NIC driver's <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> function called <A HREF="_wceddk_ndismregisteradaptershutdownhandler.htm">NdisMRegisterAdapterShutdownHandler</A>. Usually, this input parameter is the NIC-specific <I>MiniportAdapterContext</I> pointer passed to other <B>MiniportXxx</B> functions. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Every NIC driver should have a <B>MiniportShutdown</B> function. <B>MiniportShutdown</B> does nothing more than restore the NIC to its initial state (before the miniport's <A HREF="cxtskdriverentryofndisminiportdrivers.htm">DriverEntry</A> function runs). However, this ensures that the NIC is in a known state and ready to be reinitialized when the machine is rebooted after a system shutdown occurs for any reason, including a crash dump.</P>
+
+<P>A NIC driver's <B>MiniportInitialize</B> function must call <B>NdisMRegisterAdapterShutdownHandler</B> to set up a <B>MiniportShutdown</B> function. The driver's <A HREF="cxrefminiporthalt.htm">MiniportHalt</A> function must make a reciprocal call to <A HREF="_wceddk_ndismderegisteradaptershutdownhandler.htm">NdisMDeregisterAdapterShutdownHandler</A>. </P>
+
+<P>If <B>MiniportShutdown</B> is called due to a user-initiated system shutdown, it runs at IRQL PASSIVE_LEVEL in a system-thread context. If it is called due to an unrecoverable error, <B>MiniportShutdown</B> runs at an arbitrary IRQL and in the context of whatever component raised the error. For example, <B>MiniportShutdown</B> might be run at high DIRQL in the context of an ISR for a device essential to continued execution of the system. </P>
+
+<P><B>MiniportShutdown</B> should call no <B>Ndis</B><I>XXX</I> functions.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Externs.h</TD>
+<TD width=16%>Externs.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtskdriverentryofndisminiportdrivers.htm">DriverEntry</A>, <A HREF="cxrefminiporthalt.htm">MiniportHalt</A>, <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="_wceddk_ndismderegisteradaptershutdownhandler.htm">NdisMDeregisterAdapterShutdownHandler</A>, <A HREF="_wceddk_ndismregisteradaptershutdownhandler.htm">NdisMRegisterAdapterShutdownHandler</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MiniportShutdown&nbsp;(cxconminiportshutdown.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

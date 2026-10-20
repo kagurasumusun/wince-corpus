@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling the Creation of Multi-Sampled Surfaces</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Handling the Creation of Multi-Sampled Surfaces"/>
+<MSHelp:RLTitle Title="Handling the Creation of Multi-Sampled Surfaces"/>
+<MSHelp:Keyword Index="A" Term="cxconHandlingCreationOfMulti-SampledSurfaces"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, multisampling"/>
+<MSHelp:Keyword Index="K" Term="multisampling, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="surfaces%2C Direct3D, multisampled surfaces"/>
+<MSHelp:Keyword Index="A" Term="cxconHandlingCreationOfMulti-SampledSurfaces"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715382">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconhandlingcreationofmulti-sampledsurfaces"></A>Handling the Creation of Multi-Sampled Surfaces</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When a multi-sampled surface is being created the number of samples can be found in the <B>ddsCapsEx.dwCaps3</B> of the <B>DD_SURFACE_MORE</B> structure. This field simply holds one of the values of the enumerated type <MSHelp:link keywords="_wcesdk_dx3d_D3DMULTISAMPLE_TYPE" TABINDEX="0">D3DMULTISAMPLE_TYPE</MSHelp:link>. It is not a bit field like <B>wFlipMSTypes</B> or <B>wBltMSTypes</B>. If a surface is not multi-sampled <B>dwCaps3</B> will have the value D3DMULTISAMPLE_NONE (0).</P>
+
+<P>When determining whether a creation request for a multisample surface can be satisfied or not the driver should not take into account the current value of the D3DRS_MULTISAMPLEANTIALIAS render state. It is not permissible for a driver to fail a request to set D3DRS_MULTISAMPLEANTIALIAS false. Therefore, any restriction which would affect the ability to perform multisample rendering should be enforced at context create time even if D3DRS_MULTISAMPLEANTIALIAS is FALSE at that time.</P>
+
+<P>Although DirectX 8.0 reduces the applications ability to access the primary surface it does not eliminate them. This has important implications when the primary buffer itself is multi-sampled. In those cases where Direct3D does lock the primary it does not expect the surface data to be multi-sampled. Therefore, if the underlying hardware does have a multisampled primary it must take appropriate action when the primary is locked and unlocked. On <A HREF="_dxce_ddhal_lock.htm">Lock</A> the driver must return a buffer of data that contains the contents of the primary in a single sample-per-pixel format. On <A HREF="_dxce_ddhal_unlock.htm">Unlock</A> the driver must convert the single sample-per-pixel format back to primary's multi-sampled format. The new cursor API can also result in <A HREF="_dxce_ddhal_blt.htm">Blt</A> calls targeting the primary. Again, if the primary is multi-sampled, the <B>Blt</B> call must handle the conversion from the single sample-per-pixel cursor data to the mutlisampled primary.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectx80ddisupport.htm">DirectX 8.0 DDI Support</A></P>
+
+<P><A HREF="cxconmultisamplerendering.htm">Multisample Rendering</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Handling%20the%20Creation%20of%20Multi-Sampled%20Surfaces&nbsp;(cxconhandlingcreationofmulti-sampledsurfaces.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

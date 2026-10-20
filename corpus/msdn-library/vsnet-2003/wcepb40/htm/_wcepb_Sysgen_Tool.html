@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sysgen Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sysgen Tool"/>
+<MSHelp:RLTitle Title="Sysgen Tool"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Sysgen_Tool"/>
+<MSHelp:Keyword Index="K" Term="command-line tools, Sysgen tool"/>
+<MSHelp:Keyword Index="K" Term="Sysgen tool"/>
+<MSHelp:Keyword Index="K" Term="tools, Sysgen tool"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Sysgen_Tool"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tools.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_677584">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_sysgen_tool"></A>Sysgen Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Cebuild.bat calls this tool. You should not normally call this tool directly. To run Sysgen.bat correctly for all the OS trees that are used by your project, run <B>cebuild -q</B> instead. The following documentation is provided for completeness and informational purposes only.</BLOCKQUOTE>
+
+<P>The Sysgen tool (Sysgen.bat) builds a customized Windows CE OS by using the configuration specified in Cesysgen.bat. It uses Nmake.exe to create the modules specified in Cesysgen.bat by linking together the .lib files that correspond to the features specified in Cesysgen.bat.</P>
+
+<P>After verifying that the Cesysgen.bat file exists in the %_PROJECTROOT%\Oak\Misc directory, Sysgen.bat sets the appropriate environment variables for the features specified in Cesysgen.bat.</P>
+
+<P>Sysgen.bat then calls Nmake.exe, which uses the rules in the makefile file, located in either the %_WINCEROOT%\Public\Common\Cesysgen directory or, if the <B>-p</B> <I>Project</I> option is specified in the makefile file, the %_WINCEROOT%\Public\<I>Project</I>\Cesysgen directory, to do the following:
+
+<UL type="disc">
+	<LI>Create any target system directories that do not already exist.</li>
+
+	<LI>Create the modules specified in Cesysgen.bat by linking the .lib files that correspond to the specified features for each module in Cesysgen.bat.</li>
+
+	<LI>Call the Resource Combining tool (Res2res.exe) to combine the resource files for each feature specified in Cesysgen.bat. Sysgen.bat calls Res2res.exe once for each language.</li>
+
+	<LI>Call the Resource Check tool (Checkres.exe) and the Resource Merge tool (Rebaseic.exe) to combine multiple binary resource files (.res) into a single .res file and fix any conflicting resource identifiers. During this process, the following warning may be displayed: 
+<PRE class="code">Did not find a redirect resource. </PRE>
+
+<P>You can ignore this message.
+</li>
+
+	<LI>Call the Feature Filter tool (Cefilter.exe) to preprocess the Windows CE header files and other miscellaneous source files before the selected modules and features are linked. 
+<P>The Windows CE header files and the common files contain comment lines with special tags that Cefilter.exe uses for preprocessing. These tags are written in the @CESYSGEN tag language. The syntax of this language includes conditional statements; for example, logical-and, logical-or, and logical-not conditions. If you edit or remove these tags, unexpected errors will occur.
+
+<UL type="disc">
+	<LI>The following table shows the files that Cefilter.exe calls for preprocessing and location of these files after processing is complete.<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Input files from %_COMMONPUBROOT%</TH>
+<TH width=66%><BR>
+Output directory in %_PROJECTROOT%</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Sdk\Inc\*.*</TD>
+<TD width=66%>Cesysgen\Sdk\Inc</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Oak\Inc\*.*</TD>
+<TD width=66%>Cesysgen\Oak\Inc</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Ddk\Inc\*.*</TD>
+<TD width=66%>Cesysgen\Ddk\Inc</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Oak\Files\Common\*.*</TD>
+<TD width=66%>Cesysgen\Oak\Files</TD>
+</TR>
+</table></div>
+</li>
+</UL>
+</li>
+
+	<LI>Copy modules that do not have features into the appropriate target directories.</li>
+</UL>
+
+<P>Sysgen.bat places the resulting files in various subdirectories of %_PROJECTROOT%\Cesysgen.</P>
+
+<P>Sysgen.bat places error information in the Build.log file in the %_WINCEROOT% directory.</P>
+
+<PRE class="syntax"><B>sysgen</B> [<B>-h</B>] [<B>-b</B>] [<B>-c</B>] [<B>-p</B> <I>Tree</I>][<I>NmakeTarget</I>] [<I>NmakeTarget</I>] …</PRE>
+
+<H4 class="dtH4">Arguments</H4>
+
+<DL>
+<DT><B>-h</B></DT>
+
+<DD>Displays a Help screen.</dd>
+
+<DT><B>-b</B></DT>
+
+<DD>Used for internal calls only.</dd>
+
+<DT><B>-c</B></DT>
+
+<DD>Runs Nmake.exe with the <B>-clean</B> parameter.</dd>
+
+<DT><B>-p</B> <I>Tree</I></DT>
+
+<DD>Runs Sysgen.bat in the specified project. If no project is specified, Sysgen.bat runs in the Common project, which builds the Windows CE core features. </dd>
+
+<DT><I>NmakeTarget</I></DT>
+
+<DD>Specifies a specific module to build. If <I>NmakeTarget</I> is not specified, Nmake.exe builds all the modules listed in Cesysgen.bat. Normally, you should not use this parameter, because a target device with only one project may be incomplete.</dd>
+</DL>
+
+<P>You can use <I>NmakeTarget</I> to specify a special target, as well as a module. The following table describes the special targets that can be used as <I>NmakeTarget</I> parameters.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=14%>Value</TH>
+<TH width=86%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Files</B></TD>
+<TD width=86%>Copies the filtered Common.* files to the local target directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Includes</B></TD>
+<TD width=86%>Copies the filtered include files to the local target directories.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Makedirs</B></TD>
+<TD width=86%>Creates NLS files and copies them to the local target directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Nls</B></TD>
+<TD width=86%>Copies the code page files to the local target directory.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Error Messages</H4>
+
+<DL>
+<DT>ERROR: Project specific cesysgen.bat not found. Please create a cesysgen.bat in %_PROJECTROOT%\oak\misc</DT>
+
+<DD>Sysgen.bat relies on Cesysgen.bat to specify the features and modules for the Windows&nbsp;CE project. Sysgen.bat looks for Cesysgen.bat in %_PROJECTROOT%\Oak\Misc. To troubleshoot, be sure Cesysgen.bat resides in this directory.</dd>
+</DL>
+
+<P>Any additional errors during the running of this tool appear in the Build.log file, located in the %_WINCEROOT% directory.</P>
+
+<H4 class="dtH4">Examples</H4>
+
+<P>The following code example shows how to use Sysgen.bat to call Nmake.exe to create target system directories as required, build or link the Windows&nbsp;CE core features, and copy the core features to the local target areas.</P>
+
+<PRE class="code">sysgen</PRE>
+
+<P>The following code example shows how to use Sysgen.bat to call Nmake.exe to build or link the Windows CE shell features and copy them to the local target areas.</P>
+
+<PRE class="code">sysgen -p wceshell</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_cesysgen_configuration_file.htm">Cesysgen Configuration File</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sysgen%20Tool&nbsp;(_wcepb_sysgen_tool.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

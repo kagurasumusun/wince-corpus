@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Binary Image Builder File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Binary Image Builder File"/>
+<MSHelp:RLTitle Title="Binary Image Builder File"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Binary_Image_Builder_File"/>
+<MSHelp:Keyword Index="K" Term=".bib file, overview"/>
+<MSHelp:Keyword Index="K" Term="bib file, overview"/>
+<MSHelp:Keyword Index="K" Term="binary images, binary image builder file overview"/>
+<MSHelp:Keyword Index="K" Term="configuration files, binary image builder file"/>
+<MSHelp:Keyword Index="K" Term="files, binary image builder"/>
+<MSHelp:Keyword Index="K" Term="image configuration files, binary image builder file"/>
+<MSHelp:Keyword Index="K" Term="images, binary image builder files"/>
+<MSHelp:Keyword Index="K" Term="Makeimg.exe, binary image builder files"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Binary_Image_Builder_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679747">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_binary_image_builder_file"></A>Binary Image Builder File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A binary image builder (.bib) file defines which modules and files are included in an OS image. Makeimg.exe uses .bib files to determine how to load modules and files into the memory of a target device. </P>
+
+<P>The following table shows the sections that a .bib file can contain. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>.bib file section</TH>
+<TH width=78%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>MEMORY</TD>
+<TD width=78%>Defines the physical memory available, including the starting address, size, and type of memory. This section is found in the Config.bib file, located in the Platform\MYBSP\Files directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>CONFIG</TD>
+<TD width=78%>Defines configuration options for Romimage.exe to customize its output. This section is found in the Config.bib file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>MODULES</TD>
+<TD width=78%>Specifies the object modules to be loaded into areas of memory by Romimage.exe. Object modules that are not compressed in the MODULE section execute in place.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>FILES</TD>
+<TD width=78%>Reserves a section of memory for .lib files.</TD>
+</TR>
+</table></div>
+
+<P>The Platform.bib file defines the hardware modules and files, such as driver files, for the target device. The Project.bib file defines the modules and file entries for the OS image, such as .exe files and waveform audio (.wav) files. Config.bib contains the MEMORY and CONFIG sections for the OS image.</P>
+
+<P>The MEMORY section of Config.bib defines the memory table for the OS image by specifying the name, address, size, and type of the MEMORY regions within the OS image. When updating either Platform.bib or Project.bib to include a file, specify the following items:
+
+<UL type="disc">
+	<LI>The source and image file name.</li>
+
+	<LI>The region of the MEMORY section defined as RAMIMAGE type. Each OS image has only one RAMIMAGE region.</li>
+
+	<LI>The file attributes in the OS image.</li>
+</UL>
+
+<P>Use the <I>Address</I> and <I>Size</I> parameters in the memory table to define the section of memory devoted to RAM as well as ROM. The <I>Address</I> parameter specifies the address where the RAM section starts. Together, the <I>Address</I> and the <I>Size </I>parameters indicate the address where the RAM section ends. The image must be defined as RAMIMAGE type. The RAM section must be defined as RAM type. The following illustration shows the relationship between the ROMSTART and ROMSIZE keywords and the memory table parameters for the image section.</P>
+
+<P class="fig"><IMG SRC="ram1.gif" ALT="" BORDER=0></P>
+
+<P>The .bin files contain information about the image that the boot loader uses to boot the image. The .bin files are organized into logical units called records and exist only in the RAMIMAGE section of memory. </P>
+
+<P>The following code example shows an entry in Project.bib. In this example, if a user-defined environment variable, IMGINCLUDEAPPS, is defined before running Makeimg.exe, Makeimg.exe includes the MyApp1.exe input file as the MyApp.exe output file. It then loads the output file in a MEMORY region named NK as a file with system and hidden attributes. </P>
+
+<PRE class="code">MODULES
+; Name        Path                           Memory Type
+; --------------  --------------------------------------
+IF IMGINCLUDEAPPS
+  myapp.exe   $(_FLATRELEASEDIR)\myapp1.exe  NK   SH
+ENDIF</PRE>
+
+<P>The following code example shows that, if IMGNODEBUGGER is not defined, Makeimg.exe includes the Myproj.exe file and loads it in the NK MEMORY region as a system file. </P>
+
+<PRE class="code">IF IMGNODEBUGGER !
+   myproj.exe  $(_FLATRELEASEDIR)\myproj.exe  NK  S
+ENDIF</PRE>
+
+<P>To configure the .bib files, you must specify a data format for the OS image. After you determine a data format, define this format in the .bib files for your project and platform.</P>
+
+<H2 class="dtH2">Bibhelper Script</H2>
+
+<P>The Bibhelper.vbs script allows you to make last second changes to any of the <I>flags</I> fields for a component in the Ce.bib file, and uses the following syntax.</P>
+
+<PRE class="syntax">[Module Name] [+ - =][<I>flag</I>]</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>flag</I></DT>
+
+<DD>You can use this to set any of the module's attributes. For more information, see the <I>type</I> parameter in<I> </I><A HREF="_wcepb_modules_section.htm">MODULES Section</A> and <A HREF="_wcepb_files_section.htm">FILES Section</A>. </dd>
+</DL>
+
+<P>The following example adds the compression attribute to a file.</P>
+
+<PRE class="code">Filename.exe    +C</PRE>
+
+<P>The following example adds the hidden and system attributes to a file, while removing the compression attribute from that file.</P>
+
+<PRE class="code">Filename.exe    +H +S -C</PRE>
+
+<P>The following example completely changes a file's flags.</P>
+
+<PRE class="code">Filename.exe    =HSC</PRE>
+
+<P>To use this script, place a configuration file (.cfg) in the platform\files directory and then run Preromimage.bat, which resides in the files directory, using the following commands.</P>
+
+<PRE class="code">copy %_FLATRELEASEDIR%\ce.bib %_FLATRELEASEDIR%\ce_orig.bib
+cscript %_MAKEENVROOT%\bibhelper.vbs %_FLATRELEASEDIR%\sa11x0bd_bib.cfg %_FLATRELEASEDIR%\ce_orig.bib %_FLATRELEASEDIR%\ce.bib</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_windows_ce_rom_image_data_formats.htm">Windows CE ROM Image Data Formats</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Binary%20Image%20Builder%20File&nbsp;(_wcepb_binary_image_builder_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

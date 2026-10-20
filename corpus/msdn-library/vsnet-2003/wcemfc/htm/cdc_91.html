@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::StretchBlt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdc_stretchblt"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdc_stretchblt"></A><SUP></SUP>CDC::StretchBlt</H1>
+
+<P>This method copies a bitmap from a source rectangle into a destination rectangle, and stretches or compresses the bitmap to fit the dimensions of the destination rectangle.</P>
+
+<PRE class=syntax><B>BOOL StretchBlt (
+int</B> <I>x</I>, <B>
+int</B> <I>y</I>, <B>
+int</B> <I>nWidth</I>, <B>
+int</B> <I>nHeight</I>, <B>
+CDC*</B> <I>pSrcDC</I>,
+<B>int</B> <I>xSrc</I>, <B>
+int</B> <I>ySrc</I>, <B>
+int</B> <I>nSrcWidth</I>, <B>
+int</B> <I>nSrcHeight</I>, <B>
+DWORD</B> <I>dwRop</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>x</I></DT>
+
+<DD>The x-coordinate, in logical units, of the upper-left corner of the destination rectangle.</DD>
+
+<DT><I>y</I></DT>
+
+<DD>The y-coordinate, in logical units, of the upper-left corner of the destination rectangle.</DD>
+
+<DT><I>nWidth</I></DT>
+
+<DD>The width, in logical units, of the destination rectangle.</DD>
+
+<DT><I>nHeight</I></DT>
+
+<DD>The height, in logical units, of the destination rectangle.</DD>
+
+<DT><I>pSrcDC</I></DT>
+
+<DD>The source device context.</DD>
+
+<DT><I>xSrc</I></DT>
+
+<DD>The x-coordinate, in logical units, of the upper-left corner of the source rectangle.</DD>
+
+<DT><I>ySrc</I></DT>
+
+<DD>The x-coordinate, in logical units, of the upper-left corner of the source rectangle.</DD>
+
+<DT><I>nSrcWidth</I></DT>
+
+<DD>The width, in logical units, of the source rectangle.</DD>
+
+<DT><I>nSrcHeight</I></DT>
+
+<DD>The height, in logical units, of the source rectangle.</DD>
+
+<DT><I>dwRop</I></DT>
+
+<DD>The raster operation to perform. Raster operation codes define how the GDI combines colors in output operations that involve a current brush, a possible source bitmap, and a destination bitmap. This parameter may be one of the following values:
+
+<UL type=disc>
+	<LI>SRCCOPY&nbsp;&nbsp;&nbsp;Copies the source bitmap to the destination bitmap.</LI>
+
+	<LI>SRCINVERT&nbsp;&nbsp;&nbsp;Combines pixels of the destination and source bitmaps using the Boolean XOR operator.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the bitmap is drawn; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>StretchBlt</B> method moves the bitmap from the source device given by <I>pSrcDC</I> to the destination device represented by the device-context object whose method is being called. The <I>xSrc</I>, <I>ySrc</I>, <I>nSrcWidth</I>, and <I>nSrcHeight</I> parameters define the upper-left corner and dimensions of the source rectangle. The <I>x</I>, <I>y</I>, <I>nWidth</I>, and <I>nHeight</I> parameters give the upper-left corner and dimensions of the destination rectangle. The raster operation specified by <I>dwRop</I> defines how the source bitmap and the bits on the destination device are combined.</P>
+
+<P>The <B>StretchBlt</B> method creates a mirror image of a bitmap if the signs of the <I>nSrcWidth</I> and <I>nWidth</I> or <I>nSrcHeight</I> and <I>nHeight</I> parameters differ. If <I>nSrcWidth</I> and <I>nWidth</I> have different signs, the function creates a mirror image of the bitmap along the x-axis. If <I>nSrcHeight</I> and <I>nHeight</I> have different signs, the function creates a mirror image of the bitmap along the y-axis.</P>
+
+<P>The <B>StretchBlt</B> method stretches or compresses the source bitmap in memory and copies the result to the destination. If a pattern is to be merged with the result, it is not merged until the stretched source bitmap is copied to the destination. If a brush is used, it is the selected brush in the destination device context. The destination coordinates are transformed according to the destination device context; the source coordinates are transformed according to the source device context.</P>
+
+<P>If the destination, source, and pattern bitmaps do not have the same color format, <B>StretchBlt</B> converts the source and pattern bitmaps to match the destination bitmaps. The foreground and background colors of the destination device context are used in the conversion. </P>
+
+<P>If <B>StretchBlt</B> must convert a monochrome bitmap to color, it sets white bits (1) to the background color and black bits (0) to the foreground color. To convert color to monochrome, it sets pixels that match the background color to white (1) and sets all other pixels to black (0). The foreground and background colors of the device context with color are used.</P>
+
+<P>Not all devices support the <B>StretchBlt</B> function. To determine whether a device supports <B>StretchBlt</B>, call the <B>GetDeviceCaps</B> method with the <B>RASTERCAPS</B> index and check the return value for the <B>RC_STRETCHBLT</B> flag.</P>
+
+<P>The only raster operations Windows&nbsp;CE supports in the <I>dwRop</I> parameter are SRCCOPY and SRCINVERT. Windows&nbsp;CE does not support mirroring.</P>
+
+<P>Windows&nbsp;CE 1.0 only supports two bit per pixel (maximum) gray scale graphics. When performing a bit-block transfer that converts two bit-per-pixel (2 bpp) to one bit-per-pixel (1 bpp), Windows&nbsp;CE 1.0 maps the background color to white, and all other colors to black. When converting from 1 bpp to 2 bpp, it maps white to white and black to black, as expected.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdc_5.htm"><B>CDC::BitBlt</B></A>, <A HREF="cdc_37.htm"><B>CDC::GetDeviceCaps</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

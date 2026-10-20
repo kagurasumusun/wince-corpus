@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Residential Gateway Implementation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Residential Gateway Implementation"/>
+<MSHelp:RLTitle Title="Residential Gateway Implementation"/>
+<MSHelp:Keyword Index="A" Term="cgtskResidentialGatewayImplementation"/>
+<MSHelp:Keyword Index="A" Term="cgtskResidentialGatewayImplementation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configurations.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759659">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgtskresidentialgatewayimplementation"></A>Residential Gateway Implementation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>By default your gateway image includes the correct components, but some are disabled in the registry settings for security reasons. To finish configuring your Internet gateway device, you should change the settings in Project.reg as described in the following procedure.</P>
+
+<P class="labelproc"><B>To implement a residential gateway configuration</B>
+
+<OL type="1">
+	<LI>Change the following Project.reg settings for the registry key <B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing</B>:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\ConnectionSharing]
+    "EnablePacketFiltering"=dword:1 ; enable the Firewall/Packet filter on the public network
+    "EnableAddressTranslation"=dword:1 ; enable NAT 
+    "EnableDhcpAllocator"=dword:1 ; enable DHCP allocator on private network
+    "EnableDnsProxy"=dword:1 ; handle DNS requests from private network
+    "PrivateInterface"="NE20001" ; name of interface to use as the private network
+    "PublicInterface"="VMINI1" ; name of interface to use as the public network<B> </B></PRE>
+
+<P>Determine the names of the interfaces on your device. Type <code class="ce">s ipconfig /d /all</code> in the <B>Target Control Window</B>. One of the network adapters can be VMINI, which allows that adapter to be shared between the device and the debugger. During development this is useful because it not only allows you to use two-only adapters for your gateway and debugging; it also makes it easier to determine which to use as the private and public interfaces, since the debug interface would normally be on the "public" side of the device. 
+</li>
+
+	<LI>Optional. If you are using ISA cards, you may need to configure the network cards in Platform.reg to make sure you have the correct IRQ/IO information. (PCI and PCMCIA are automatically configured via Plug and Play (PnP.)</li>
+
+	<LI>Determine the address of the device using one of the following methods.
+<OL type="a">
+	<LI>Review the debug log, which will display the address used. This will likely be an AutoIP assigned address in the 169.254.x.y range, unless you manually assign a default in your image See the <B>Setting the Default Page</B> procedure in the topic for more information about changing the default Web page. 
+<P>- or -
+</li>
+
+	<LI>Connect a device or PC to the network on the private side of the device and renew the IP address of the device via DHCP. On most Microsoft operating systems, this can be done from the command line using <code class="ce">ipconfig</code>. You can then look at the <B>default gateway</B> setting received by the device, which this will be listed in the <code class="ce">ipconfig</code> output. This address will be the address of the IGD.</li>
+</OL>
+</li>
+
+	<LI>Verify the card configuration at http://[device IP address]/networkadmin/network.</li>
+</OL>
+
+<P class="label"><B>Setting a Static IP Address for the Device</B></P>
+
+<P>Most devices deployed into an unmanaged network are preconfigured with an internal network address to a known, private address such as 192.168.1.1. The following code example shows how to add a private address to the Project.reg file with Platform Builder.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\NE20001\Parms\Tcpip]
+    "IPAddress"="192.168.1.1"
+    "SubnetMask"="255.255.0.0"
+    "EnableDHCP"=dword:0</PRE>
+
+<P class="label"><B>Setting the Default Page</B></P>
+
+<P>Microsoft includes a sample administration utility (NATADMIN.DLL) that can be accessed on the devices Web server from the private network.</P>
+
+<P>Once the Web server is enabled and you have your image loaded, you can browse to http://[device IP address]/networkadmin to review and/or change the settings. Additionally, this location can be changed to be the default page for the device in the Project.reg file.</P>
+
+<P>You can make the networkadmin page be the default page for the gateway device by adding the following in Project.reg or changing it in Servers.reg.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS\/]
+    @=\\windows\atadmin.dll
+    "a"=dword:0</PRE>
+
+<P>If you change the default page, you will get to it by browsing directly to http://[gatewaydeviceIP], which you can access from the debug window in Microsoft Platform Builder, or you can set in your image to be a default. Microsoft recommends a default in the reserved address range such as 192.168.1.1 if you change it. By default the gateway comes up in AutoIP mode and assigns itself an address in the 169.254.x.y range.</P>
+
+<P>You may also want to set a default initial password on the devices administration site. The user can change this later by way of the Web site. See the documentation on the Windows CE Web Server for more information about how to configure this.</P>
+
+<P class="label"><B>Other Considerations</B></P>
+
+<P>If you have a proxy server on the public side of the gateway, this is set on the client device. Note also that this may prevent your client from locating the gateway to browse to for settings. To locate the gateway, either turn off the proxy settings while browsing to the gateway or change your client configuration to "bypass the proxy" for addresses in the appropriate range. This will not likely be a problem on a typical customer site; this may be a problem in your organization while you are developing and testing a device.</P>
+
+<P class="label"><B>Recommendations</B></P>
+
+<P>Microsoft recommends the following.
+
+<OL type="1">
+	<LI>Customize the settings page to be appropriate for your device and target customer. This will not only give you the ability to brand the user interface for the device, but also will allow you to add or remove settings as appropriate.</li>
+
+	<LI>Change the default name of the device by modifying the following lines in Project.reg.
+<PRE class="code">[HKEY_LOCAL_MACHINE\Ident]
+    "Name"="WinCE"
+    "Desc"="WinCE Device"</PRE>
+
+<P>For example, change them to:
+
+<PRE class="code">"Name"="MyGateway"
+"Desc"=" Internet Gateway Device"</PRE>
+</li>
+
+	<LI>The Internet Gateway Device (IGD) can include Universal Plug and Play (UPnP), along with the IGD schema, depending on the options you chose in the initial wizard. This schema is a sample implementation included only to show how to implement the schema. As a result it may require further customization to expose the full capability of your device. UPnP allows certain clients, including Windows XP, DirectX, Messenger, and others to automatically locate and properly negotiate through the gateway device. This not only simplifies the user experience, but also makes having a gateway more seamless to the user, because the OS and its applications can directly locate and use the gateway.
+<P>To configure your device to use the UPnP schema if you did not choose that option:
+
+<OL type="a">
+	<LI>Drag the Sample UPnP (Internet Gateway Device) schema implementation into your project from the catalog. This feature is located in the catalog under Communications and Networking Services, Networking Features, Internet Connection Sharing (ICS), Sample UPnP IGD Schema Implementation.</li>
+
+	<LI>Disable UPnP on the public interface for security reasons.
+<PRE class="code">[HKEY_LOCAL_MACHINE\COMM\UPnP\Exclude]
+"PublicInterface"=dword:1</PRE>
+</li>
+</OL>
+
+<P>Where <B>PublicInterface</B> is the name of the public interface of the gateway. This should be the same as the value of <B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing:PublicInterface</B> for IPNAT settings. More information is available on these settings in the UPnP documentation on the USB Implementers Forum, Inc. Web site.
+</li>
+
+	<LI>Review very carefully the various components and settings chosen for your device. You may want to include other components to aid in development, such as telnet. You may also decide to remove unneeded support to reduce the size of the footprint. One example would be to remove dialup support if you do not plan on using a modem with your device.</li>
+
+	<LI>Make sure your device is as secure as possible. This can only be done by fully understanding the components and settings used in your device.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_Windows_CE_Web_Server" TABINDEX="0">Web Server (HTTPD)</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Residential%20Gateway%20Implementation&nbsp;(cgtskresidentialgatewayimplementation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

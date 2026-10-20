@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Persistent Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Persistent Registry"/>
+<MSHelp:RLTitle Title="Persistent Registry"/>
+<MSHelp:Keyword Index="A" Term="cmconPersistentRegistry"/>
+<MSHelp:Keyword Index="K" Term="persistent registry%2C Thin Client"/>
+<MSHelp:Keyword Index="K" Term="registries, Thin Client persistent"/>
+<MSHelp:Keyword Index="K" Term="Thin Client, persistent registry"/>
+<MSHelp:Keyword Index="A" Term="cmconPersistentRegistry"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: thinclient.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760393">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconpersistentregistry"></A>Persistent Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When using the RAM-based registry, Windows Thin Client must restore the registry when it is turned off or reset. If you implement the required functionality in the OAL, then the registry can be saved to an OEM-specified persistent storage area by using a call to the <B>RegFlushKey</B> function.</P>
+
+<PRE class="code">LONG RegFlushKey(
+HKEY hKey //handle of key to write
+);</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>When you call the <B>RegFlushKey</B> function in Windows CE, the <I>hKey</I> parameter is ignored, and the entire registry is flushed. Do not call <B>RegFlushKey</B> more than necessary, because this can be time-consuming, depending on the implementation of the OEM &#0151; for example, writing to flash &#0151; and the size of the registry.</BLOCKQUOTE>
+
+<P>Calling the <B>RegFlushKey</B> function calls the <B>WriteRegistryToOEM</B> function. If <B>WriteRegistryToOEM</B> is not implemented in the OAL, then <B>RegFlushKey</B> will fail. Therefore, you must implement <B>WriteRegistryToOEM</B>, as demonstrated in the following code example.</P>
+
+<PRE class="code">BOOL WriteRegistryToOEM(
+  DWORD dwFlags,
+  LPBYTES lpData,
+  DWORD cbData
+);</PRE>
+
+<P>If the <B>WriteRegistryToOEM</B> function succeeds, then the <B>RegFlushKey</B> function will succeed. If <B>WriteRegistryToOEM</B> fails, then <B>RegFlushKey</B> will fail. For information about implementing this function, see <MSHelp:link keywords="cmrefWriteRegistryToOEM" TABINDEX="0">WriteRegistryToOEM</MSHelp:link>.</P>
+
+<P>You also must implement the <B>ReadRegistryFromOEM</B> function. If this function is implemented correctly, then the OS calls the function during initialization while the Filesys.exe file is being initialized. Therefore, after Filesys.exe loads, the registry is updated by means of a call to <B>ReadRegistryFromOEM</B> by the OS. For information about implementing this function, see <MSHelp:link keywords="cmrefReadRegistryFromOEM" TABINDEX="0">ReadRegistryFromOEM</MSHelp:link>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconmicrosoftwindowsthinclientproviderregistrysettings.htm">Thin Client Provider Registry Settings</A></P>
+
+<P><A HREF="cmconthinclientregistrykeys.htm">Thin Client Registry Keys</A></P>
+
+<P><A HREF="cmconshellconfigurationsettings.htm">Shell Configuration Settings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Persistent%20Registry&nbsp;(cmconpersistentregistry.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

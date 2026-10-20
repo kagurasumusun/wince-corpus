@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMarshal::DisconnectObject</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IMarshal::DisconnectObject"/>
+<MSHelp:RLTitle Title="IMarshal::DisconnectObject"/>
+<MSHelp:Keyword Index="A" Term="cerefIMarshalDisconnectObject"/>
+<MSHelp:Keyword Index="K" Term="IMarshal, DisconnectObject"/>
+<MSHelp:Keyword Index="A" Term="cerefIMarshalDisconnectObject"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces4.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748029">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefimarshaldisconnectobject"></A>IMarshal::DisconnectObject</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method forcibly releases all external connections to an object. The object's server calls the object's implementation of this method prior to shutting down.</P>
+
+<PRE class="syntax"><B>HRESULT DisconnectObject(</B>
+<B>DWORD </B><I>dwReserved</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwReserved</I></DT>
+
+<DD>[in] Reserved for future use; must be zero. To ensure compatibility with future use, <B>DisConnectObject</B> must not check for zero.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The method supports the standard return value E_FAIL, as well as the following: 
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The object was disconnected successfully.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This method is implemented on the object, not the proxy.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Notes to Callers</H4>
+
+<P>The usual case in which this method is called occurs when an end user forcibly closes a COM server that has one or more running objects that implement <A HREF="cerefimarshaliunknown.htm">IMarshal</A>. Prior to shutting down, the server calls the <A HREF="cerefcodisconnectobject.htm">CoDisconnectObject</A> helper function to sever external connections to all its running objects. For each object that implements <B>IMarshal</B>, however, this function calls <B>IMarshal::DisconnectObject</B>, so that each object that manages its own marshaling can take steps to notify its proxy that it is about to shut down.</P>
+
+<H4 class="dtH4">Notes to Implementers</H4>
+
+<P>As part of its normal shutdown code, a server should call the <B>CoDisconnectObject</B> function, which in turn calls <B>IMarshal::DisconnectObject</B>, on each of its running objects that implements <B>IMarshal</B>.</P>
+
+<P>The outcome of any implementation of this method should be to enable a proxy to respond to all subsequent calls from its client by returning RPC_E_DISCONNECTED or CO_E_OBJECTNOTCONNECTED rather than attempting to forward the calls on to the original object. It is up to the client, of course, to destroy the proxy.</P>
+
+<P>If you are implementing this method for an immutable object, such as a moniker, your implementation does not need to do anything because such objects are typically copied whole into the client's address space. Therefore, they have neither a proxy nor a connection to the original object. For more information on marshaling immutable objects, see <A HREF="cerefimarshaliunknown.htm">IMarshal</A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>Objidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefcodisconnectobject.htm">CoDisconnectObject</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IMarshal::DisconnectObject&nbsp;(cerefimarshaldisconnectobject.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

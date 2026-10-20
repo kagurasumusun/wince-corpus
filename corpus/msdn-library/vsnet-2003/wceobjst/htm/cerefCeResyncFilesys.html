@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeResyncFilesys</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CeResyncFilesys"/>
+<MSHelp:RLTitle Title="CeResyncFilesys"/>
+<MSHelp:Keyword Index="A" Term="cerefCeResyncFilesys"/>
+<MSHelp:Keyword Index="K" Term="CeResyncFilesys"/>
+<MSHelp:Keyword Index="A" Term="cerefCeResyncFilesys"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: fsd.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753393">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefceresyncfilesys"></A>CeResyncFilesys</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function causes a file system driver to remount a device because of a media change.</P>
+
+<PRE class="syntax"><B>BOOL CeResyncFilesys(</B>
+<B>HANDLE </B><I>hDevice</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>[in] Handle to registered device created with a call to the <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>A device driver uses <B>CeResyncFilesys</B> to indicate to its associated file system driver (FSD) that a new volume or media has been inserted. </P>
+
+<P>Retrieve the handle from the device's active key in the registry or from the <I>p_hDevice</I> field of the <MSHelp:link keywords="cerefPOST_INIT_BUF" TABINDEX="0">POST_INIT_BUF</MSHelp:link> structure passed to the post-initialization IOCTL.</P>
+
+<P>When a driver detects a media change it can call <B>CeResyncFilesys</B> with <I>hDevice</I> and return a <B>BOOL</B>.</P>
+
+<P>The following code shows how to obtain the device handle by looking in the disk device's key under <B>HKEY_LOCAL_MACHINE\Drivers\Active</B>. The registry path to the device's active key is passed as the <I>dwContext</I> in <B>DSK_Init</B>. You need to make a copy of this in your driver structure.</P>
+
+<PRE class="code">PDISK pDisk = (PDISK)pvDisk;
+HKEY hActive;
+HANDLE hDevice;
+DWORD Type;
+DWORD Len;
+DWORD status;
+status = RegOpenKeyEx( 
+HKEY_LOCAL_MACHINE,
+pDisk-&gt;d_ActivePath,
+0,
+0,
+&amp;hActive);
+if (status) {
+DEBUGMSG(1,
+(TEXT("ATADISK: RegOpenKeyEx(HLM\\%s) returned %d!!!\r\n"),
+pDisk-&gt;d_ActivePath, status)); return 0;
+}
+Len = sizeof(hDevice);
+status = RegQueryValueEx(
+hActive,
+DEVLOAD_HANDLE_VALNAME,
+NULL,
+&amp;Type,
+(PUCHAR)&amp;hDevice,
+&amp;Len);
+if (status != ERROR_SUCCESS) {
+DEBUGMSG(1,
+(TEXT("ATADISK: RegQueryValueEx(%s) returned %d\r\n"),
+DEVLOAD_HANDLE_VALNAME, status));
+RegCloseKey(hActive); return 0;
+}
+RegCloseKey(hActive);</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Winbase.h</TD>
+<TD width=20%>Device.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link>, <MSHelp:link keywords="cerefPOST_INIT_BUF" TABINDEX="0">POST_INIT_BUF</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CeResyncFilesys&nbsp;(cerefceresyncfilesys.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

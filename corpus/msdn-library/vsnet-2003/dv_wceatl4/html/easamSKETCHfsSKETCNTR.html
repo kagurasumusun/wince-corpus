@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SKETCH/SKETCNTR</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SKETCH/SKETCNTR"/>
+<MSHelp:RLTitle Title="SKETCH/SKETCNTR"/>
+<MSHelp:Keyword Index="A" Term="easamSKETCHfsSKETCNTR"/>
+<MSHelp:Keyword Index="K" Term="SKETCH sample"/>
+<MSHelp:Keyword Index="K" Term="SKETCNTR sample"/>
+<MSHelp:Keyword Index="A" Term="easamSKETCHfsSKETCNTR"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="sketch.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_707081">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="easamsketchfssketcntr"></A>SKETCH/SKETCNTR</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>The SKETCH sample demonstrates how to capture mouse/stylus messages and use them to draw on the screen. The SKETCNTR sample is a simple dialog box application that provides a container for the <B>CSketcCtl</B> control.</P>
+
+<P>The <B>CSKETCNTRDlg</B> dialog box class has one public variable, <B>m_Sketch</B>, which is a <B>CSketcCtl</B> object. The dialog box also has an <B>Erase</B> button.</P>
+
+<P>The <B>CSketcCtl</B> class implements the <B>ISketcCtl</B> interface in addition to the <B>IUnknown</B> and <B>IDispatch</B> interfaces. It supports a dual interface, so you can either access the <B>ISketcCtl</B> methods through <B>IDispatch::Invoke</B> or call them directly by way of the <B>vtable</B>. <B>ISketcCtl</B> exposes three methods, <B>get_PenWidth</B>, <B>put_PenWidth</B>, and <B>Erase</B>. The <B>CSketcCtl</B> class has seven data members. The left, right, top, and bottom data members contain the x an y coordinates of the lop left and bottom right corners, respectively, of the rectangle occupied by the control. These members are used for drawing and erasing the control. The <B>bLBDown</B> member indicates whether the stylus tip is touching the touch screen (which is equivalent to the left button being pressed on a mouse). The <B>m_PenWidth</B> member specifies the current width in pixels of the pen. The line member is an array of two <B>POINT</B> structures. The <B>POINT</B> at line[0] represents the coordinates for the beginning of a line, and the <B>POINT</B> at line[1] represents the coordinates for the end of the line.</P>
+
+<P>When you touch the dialog box with the stylus, in the area occupied by the Sketch control, it sends the Sketch Control a WM_LBUTTONDOWN message. The <B>CSketcCtl::OnLButtonDown</B> handler sets <B>bLBDown</B> to <B>TRUE</B>, and assigns the coordinates of the stylus tip to the <B>POINT</B> at line[0]. When you move the stylus on the touch screen, it sends a WM_MOUSEMOVE message. The <B>CSketcCtl::OnMouseMove</B> handler sets the value at line[1] to the current coordinates of the stylus tip, draws a line from the point represented by line[0] to the point represented by line[1], then replaces the value at line[0] with the current value at line[1]. When you lift the stylus from the screen, it sends a WM_LBUTTONUP message. The <B>CSketcCtl::OnLButtonUp</B> handler sets <B>bLBDown</B> to <B>FALSE</B>. When you tap the “Erase” button on the <B>CSKETCNTRDlg</B> dialog box, it calls the Sketch control’s <B>ISketcCtl::Erase</B> method, which erases the contents of the control.</P>
+
+<P>The dialog box does not provide a way to access the <B>ISketcCtl::get_PenWidth</B> and <B>ISketcCtl::put_PenWidth</B> methods, but you could easily add features to take advantage of this functionality. These methods simply set and retrieve the value of the <B>CSketcCtl::m_PenWidth</B> member, which is used to set the pen width in the <B>OnMouseMove</B> handler.</P>
+
+<P>This sample demonstrates the following keywords:
+
+<UL type="disc">
+	<LI><B>GetDC</B></li>
+
+	<LI><B>Polyline</B></li>
+
+	<LI><B>Rectangle</B></li>
+
+	<LI><B>ReleaseDC</B></li>
+
+	<LI><B>SelectObject</B></li>
+</UL>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_707081', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

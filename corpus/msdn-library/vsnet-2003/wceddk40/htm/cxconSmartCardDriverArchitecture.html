@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Smart Card Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Smart Card Driver Architecture"/>
+<MSHelp:RLTitle Title="Smart Card Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconSmartCardDriverArchitecture"/>
+<MSHelp:Keyword Index="K" Term="architecture, smart card driver"/>
+<MSHelp:Keyword Index="K" Term="smart card, driver architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconSmartCardDriverArchitecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: smartcard_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750620">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconsmartcarddriverarchitecture"></A>Smart Card Driver Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Smart card readers are opened using the <MSHelp:link keywords="cerefCreateFile" TABINDEX="0">CreateFile</MSHelp:link> API, passing in the device name as a parameter. Most smart card readers have a device name of the form PSCn:, where <I>n</I> is a digit from 0 through 9.</P>
+
+<P>The smart card driver libraries supports a driver in performing the following actions: 
+
+<UL type="disc">
+	<LI>Creation of device names needed by the Smart Card Resource Manager</li>
+
+	<LI>Parameter checking and error detection for IOCTL calls</li>
+
+	<LI>ATR parsing and parameter conversion</li>
+
+	<LI>Support for the ISO protocols T=0 and T=1</li>
+
+	<LI>Support for inverse convention </li>
+
+	<LI>Synchronizing access to the driver </li>
+</UL>
+
+<P>The smart card driver library consists of the following files.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>File</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>%_WINCEROOT%\Public\Common\DDK\Inc\Smclib.h</TD>
+<TD width=72%>Contains driver-specific definitions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>%_WINCEROOT%\Public\Common\DDK\Inc\Smcce.h</TD>
+<TD width=72%>Contains Microsoft&reg; Windows CE&reg; .NET operating system-specific definitions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>%_WINCEROOT%\Public\Common\SDK\Inc\Winsmcrd.h</TD>
+<TD width=72%>Global include file for smart card reader driver's interface definitions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>Smclib.lib</TD>
+<TD width=72%>The smart card driver library for Windows CE drivers.</TD>
+</TR>
+</table></div>
+
+<P>The smart card resource manager calls the driver. The driver calls the smart card driver library. The library checks the parameters of the call. If the driver's help is not needed to satisfy the call, the library returns the requested data, or an error code, to the caller. If the driver's help is needed to satisfy the call, for example for I/O and for vendor-specific calls, the library calls the driver with all parameters set up correctly. The driver performs I/O and uses support functions of the library to complete the request. The driver returns to the resource manager.</P>
+
+<P>The smart card library synchronizes access to your driver. No two callback functions will be called at the same time. However, card insertion and removal event handling must be processed asynchronously.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconsmartcarddriverdebugging.htm">Smart Card Driver Debugging</A></P>
+
+<P><A HREF="cxconsmartcarddriverregistrysettings.htm">Smart Card Driver Registry Settings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Smart%20Card%20Driver%20Architecture&nbsp;(cxconsmartcarddriverarchitecture.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

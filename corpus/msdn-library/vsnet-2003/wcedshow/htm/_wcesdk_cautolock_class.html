@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAutoLock Class</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CAutoLock Class"/>
+<MSHelp:RLTitle Title="CAutoLock Class"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cautolock_class"/>
+<MSHelp:Keyword Index="K" Term="CAutoLock"/>
+<MSHelp:Keyword Index="K" Term="CAutoLock, class description"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cautolock_class"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxshow_classes1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_670363">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_cautolock_class"></A>CAutoLock Class</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P class="fig"><IMG SRC="util02.gif" ALT="" BORDER=0></P>
+
+<P>This class holds a critical section for the scope of a block or function. The constructor locks the critical section and the destructor unlocks it. The object passed to the <B>CAutoLock</B> constructor must be derived from the <A HREF="_wcesdk_ccritsec_class.htm">CCritSec</A> class. Thus, by declaring a <B>CAutoLock</B> object as a local variable in a function, a critical section can be locked without the danger of forgetting to unlock it in some of the code paths: the destructor ensures that upon exit from the function (or the scope of the declaration), the critical section will be unlocked. Member functions in this class are not designed for overriding. </P>
+
+<PRE class="code">/* Typical usage ensuring object is always unlocked correctly */
+
+HRESULT MyFunc(IMediaSample *pSample)
+{
+   CAutoLock cObjectLock(m_pMyLock);
+
+   /* Ignore samples passed when inactive */
+
+   if (!m_bActive) {
+      return NOERROR;
+   }
+
+   /* Add the sample to the pending queue */
+
+   HRESULT hr = m_PendingList.AddTail(pSample);
+   if (FAILED(hr)) {
+      pSample-&gt;Release();
+      return hr;
+   }
+   return NOERROR;
+}</PRE>
+
+<H4 class="dtH4">Protected Data Members</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Member</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>M_pLock </B></TD>
+<TD width=73%>Critical section for this lock. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Member Functions</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Member function</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><A HREF="_wcesdk_cautolock__cautolock.htm">CAutoLock</A></TD>
+<TD width=73%>Takes a pointer to a critical section object and locks it. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P>DirectShow applications and DirectShow filters have different include file and link library requirements. See <A HREF="_cxconsettingupbuildenvironment.htm">Setting Up the Build Environment</A> for more information. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;CAutoLock%20Class&nbsp;(_wcesdk_cautolock_class.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

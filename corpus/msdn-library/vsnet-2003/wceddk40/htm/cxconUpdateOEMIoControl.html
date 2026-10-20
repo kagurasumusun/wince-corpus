@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Update OEMIoControl</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Update OEMIoControl"/>
+<MSHelp:RLTitle Title="Update OEMIoControl"/>
+<MSHelp:Keyword Index="A" Term="cxconUpdateOEMIoControl"/>
+<MSHelp:Keyword Index="K" Term="OEMIoControl, updating"/>
+<MSHelp:Keyword Index="K" Term="PCI bus drivers, updating OEMIoControl"/>
+<MSHelp:Keyword Index="A" Term="cxconUpdateOEMIoControl"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757459">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconupdateoemiocontrol"></A>Update OEMIoControl</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Update <MSHelp:link keywords="cmrefOEMIoControl" TABINDEX="0">OEMIoControl</MSHelp:link> to include <MSHelp:link keywords="cgrefIOCTL_HAL_TRANSLATE_IRQ" TABINDEX="0">IOCTL_HAL_TRANSLATE_IRQ</MSHelp:link>, <MSHelp:link keywords="cgrefIOCTL_HAL_REQUEST_SYSINTR" TABINDEX="0">IOCTL_HAL_REQUEST_SYSINTR</MSHelp:link>, and <MSHelp:link keywords="cgrefIOCTL_HAL_REQUEST_IRQ" TABINDEX="0">IOCTL_HAL_REQUEST_IRQ</MSHelp:link>. </P>
+
+<P>See %_WINCEROOT%\Platform\ARMIntegrator\Kernel\Hal\Oemioctl.c for an example implementation.</P>
+
+<P>This implementation is also shown in the code example below.</P>
+
+<PRE class="code">// Translate IRQ -&gt; SYSINTR (or request new SYSINTR)
+case IOCTL_HAL_TRANSLATE_IRQ:
+case IOCTL_HAL_REQUEST_SYSINTR:
+    if (nInBufSize &gt;= sizeof(DWORD) &amp;&amp; nOutBufSize &gt;= sizeof(DWORD) &amp;&amp; lpOutBuf &amp;&amp; lpInBuf) {
+        *(PDWORD)lpOutBuf = OEMRequestSysIntr(*(PDWORD)lpInBuf);
+                
+        if (lpBytesReturned) {
+            *lpBytesReturned = sizeof(DWORD);
+        }
+                
+        return TRUE;
+    }
+            
+    DEBUGMSG(1, (TEXT("OEMIoControl(IOCTL_HAL_TRANSLATE_IRQ): Invalid Parameter.\r\n")));
+    return FALSE;
+
+// Provide interrupt number based on device location
+case IOCTL_HAL_REQUEST_IRQ:
+    if (nInBufSize &gt;= sizeof(DEVICE_LOCATION) &amp;&amp; nOutBufSize &gt;= sizeof(DWORD) &amp;&amp; lpOutBuf &amp;&amp; lpInBuf) {
+        retval = OEMGetInterrupt((PDEVICE_LOCATION)lpInBuf, (PDWORD)lpOutBuf);
+                
+        if (lpBytesReturned) {
+            *lpBytesReturned = sizeof(DWORD);
+        }
+                
+        break;
+    }
+            
+    DEBUGMSG(1, (TEXT("OEMIoControl(IOCTL_HAL_TRANSLATE_IRQ): Invalid Parameter.\r\n")));
+    return FALSE;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconmodifybootloaderinitializationcode.htm">Modify the Boot Loader and Initialization Code</A></P>
+
+<P><A HREF="cxconsetuphosttopcibridge.htm">Set Up the Host to PCI Bridge</A> </P>
+
+<P><A HREF="cxconimplementoalfunctions.htm">Implement OAL Functions</A> </P>
+
+<P><A HREF="cxconupdatemainisrroutine.htm">Update the Main OAL ISR Routine</A> </P>
+
+<P><A HREF="cxconupdateplatformregplatformbib.htm">Update Platform.reg and Platform.bib</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Update%20OEMIoControl&nbsp;(cxconupdateoemiocontrol.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

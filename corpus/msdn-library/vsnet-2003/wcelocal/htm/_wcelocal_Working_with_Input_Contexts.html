@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Working with Input Contexts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Working with Input Contexts"/>
+<MSHelp:RLTitle Title="Working with Input Contexts"/>
+<MSHelp:Keyword Index="A" Term="_wcelocal_Working_with_Input_Contexts"/>
+<MSHelp:Keyword Index="K" Term="IMEs, Windows CE IME input contexts"/>
+<MSHelp:Keyword Index="K" Term="input, IME input contexts"/>
+<MSHelp:Keyword Index="A" Term="_wcelocal_Working_with_Input_Contexts"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: imemme.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_659751">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcelocal_working_with_input_contexts"></A>Working with Input Contexts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An input context stores information about the status of the IME. An input context is an internal structure maintained by the IME. The system creates and assigns a default input context to each thread. Within the thread, this default input context is a shared resource and is associated with each newly created window. Input contexts require considerable system resources, so use them conservatively.</P>
+
+<P>To retrieve or set information in the IME, an application must first obtain a handle to the input context associated with a specified window. To obtain this handle, use the <MSHelp:link keywords="cerefImmGetContext" TABINDEX="0">ImmGetContext</MSHelp:link> function. You can use the returned handle in subsequent calls to the IMM functions to retrieve and set IME values, such as the Composition window style, the composition style, and the Status window position. The <MSHelp:link keywords="cerefImmNotifyIME" TABINDEX="0">ImmNotifyIME</MSHelp:link> function notifies the IME about changes to the input context. Once you are finished with the context, you must release it by using the <MSHelp:link keywords="cerefImmReleaseContext" TABINDEX="0">ImmReleaseContext</MSHelp:link> function.</P>
+
+<P>Because the default input context is a shared resource, any changes that you make to it apply to all windows in the thread. However, you can override this default behavior by creating and associating your own input context for one or more windows in the thread. The changes that you make to your own input context apply only to the windows with which it is associated.</P>
+
+<P>To create an input context, use the <MSHelp:link keywords="cerefImmCreateContext" TABINDEX="0">ImmCreateContext</MSHelp:link> function. To assign an input context to a window, use the <A HREF="cerefimmassociatecontext.htm">ImmAssociateContext</A> function. <B>ImmAssociateContext</B> returns the handle of the previously associated input context. If you have not previously associated an input context with a window, the returned handle is for the default input context. When an application has finished with an input context that it has created, it calls <MSHelp:link keywords="cerefImmDestroyContext" TABINDEX="0">ImmDestroyContext</MSHelp:link> to free the memory that was allocated. It is the responsibility of the application to ensure that the input context being destroyed is not associated with a window. <B>ImmAssociateContext</B> is used to restore the original context of a window.</P>
+
+<P>To create a new component that is a member of an input context structure, use the <MSHelp:link keywords="cerefImmCreateIMCC" TABINDEX="0">ImmCreateIMCC</MSHelp:link> function. This function returns an input context component handle and initializes the component with 0s. To retrieve or change the size of the input context component, use the <MSHelp:link keywords="cerefImmGetIMCCSize" TABINDEX="0">ImmGetIMCCSize</MSHelp:link><B> </B>and <MSHelp:link keywords="cerefImmReSizeIMCC" TABINDEX="0">ImmReSizeIMCC</MSHelp:link> functions. Use <MSHelp:link keywords="cerefImmDestroyIMCC" TABINDEX="0">ImmDestroyIMCC</MSHelp:link> to free the memory of an input context component. </P>
+
+<P>To obtain a handle to an input context, an IME calls the <MSHelp:link keywords="cerefImmLockIMC" TABINDEX="0">ImmLockIMC</MSHelp:link> function. To obtain a handle to an input context component that is a member of an input context, an IME calls the <MSHelp:link keywords="cerefImmLockIMCC" TABINDEX="0">ImmLockIMCC</MSHelp:link> function. With each call to these functions, the total number of handles, or the lock count, is incremented for the corresponding input context or input context component. To get the lock count of an input context or input context component, use the <MSHelp:link keywords="cerefImmGetIMCLockCount" TABINDEX="0">ImmGetIMCLockCount</MSHelp:link> and <MSHelp:link keywords="cerefImmGetIMCCLockCount" TABINDEX="0">ImmGetIMCCLockCount</MSHelp:link> functions. To release a handle and decrement the lock count, use the <MSHelp:link keywords="cerefImmUnlockIMC" TABINDEX="0">ImmUnlockIMC</MSHelp:link> or <MSHelp:link keywords="cerefImmUnlockIMCC" TABINDEX="0">ImmUnlockIMCC</MSHelp:link><B> </B>function.</P>
+
+<P>Once an input context is associated with a window, the system automatically selects that context when the window receives the input focus. The style and other information in the input context affects subsequent keyboard input for that window, and determines the appearance and operation of the IME.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefimmassociatecontext.htm">ImmAssociateContext</A> </P>
+
+<P><MSHelp:link keywords="cerefImmCreateContext" TABINDEX="0">ImmCreateContext</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmCreateIMCC" TABINDEX="0">ImmCreateIMCC</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmDestroyContext" TABINDEX="0">ImmDestroyContext</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmDestroyIMCC" TABINDEX="0">ImmDestroyIMCC</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmGetIMCCLockCount" TABINDEX="0">ImmGetIMCCLockCount</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmGetIMCCSize" TABINDEX="0">ImmGetIMCCSize</MSHelp:link><B> </B></P>
+
+<P><MSHelp:link keywords="cerefImmGetIMCLockCount" TABINDEX="0">ImmGetIMCLockCount</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmLockIMC" TABINDEX="0">ImmLockIMC</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmLockIMCC" TABINDEX="0">ImmLockIMCC</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmReSizeIMCC" TABINDEX="0">ImmReSizeIMCC</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmUnlockIMC" TABINDEX="0">ImmUnlockIMC</MSHelp:link> </P>
+
+<P><MSHelp:link keywords="cerefImmUnlockIMCC" TABINDEX="0">ImmUnlockIMCC</MSHelp:link><B> </B></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Working%20with%20Input%20Contexts&nbsp;(_wcelocal_working_with_input_contexts.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

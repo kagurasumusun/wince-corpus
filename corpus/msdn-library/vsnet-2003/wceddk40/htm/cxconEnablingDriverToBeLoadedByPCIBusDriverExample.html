@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Driver Loading with the PCI Bus Driver Example</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Driver Loading with the PCI Bus Driver Example"/>
+<MSHelp:RLTitle Title="Driver Loading with the PCI Bus Driver Example"/>
+<MSHelp:Keyword Index="A" Term="cxconEnablingDriverToBeLoadedByPCIBusDriverExample"/>
+<MSHelp:Keyword Index="K" Term="drivers, loading with PCI bus sample"/>
+<MSHelp:Keyword Index="K" Term="PCI bus drivers, driver loading sample"/>
+<MSHelp:Keyword Index="K" Term="samples, driver loading with PCI bus"/>
+<MSHelp:Keyword Index="A" Term="cxconEnablingDriverToBeLoadedByPCIBusDriverExample"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751314">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconenablingdrivertobeloadedbypcibusdriverexample"></A>Driver Loading with the PCI Bus Driver Example</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This is an example showing the template and resulting instance keys for the ES1371 driver located in %_WINCEROOT%\Public\Common\OAK\Drivers\WaveDev\PDD\ES1371.</P>
+
+<P>The following registry example is the template as provided in your Platform.reg file.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Template\WaveDev]
+    "Prefix"="WAV"
+    "Dll"="es1371.dll"
+    "Index"=dword:1
+    "Order"=dword:0
+    "Dma"=dword:5
+    "Class"=dword:04
+    "SubClass"=dword:01
+    "ProgIF"=dword:00
+    "VendorID"=multi_sz:"1274","1274"
+    "DeviceID"=multi_sz:"1371","5880"
+    "IsrDll"="giisr.dll"
+    "IsrHandler"="ISRHandler"</PRE>
+
+<P>The resulting <B>Instance</B> registry key for instance 1 of the ES1371 driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PCI\Instance\WaveDev1]
+    DWORD: SysIntr = 0x20
+    DWORD: Irq = 0x9
+    DWORD: IoLen = 0x40
+    DWORD: IoBase = 0xe000
+    DWORD: BusNumber = 0x0
+    DWORD: InterfaceType = 0x5
+    DWORD: SubSystemID = 0x1371
+    DWORD: SubVendorID = 0x1274
+    DWORD: RevisionID = 0x8
+    DWORD: DeviceID = 0x1371
+    DWORD: VendorID = 0x1274
+    DWORD: ProgIF = 0x0
+    DWORD: SubClass = 0x1
+    DWORD: Class = 0x4
+    SZ: IsrHandler = ISRHandler
+    SZ: IsrDll = giisr.dll
+    DWORD: Dma = 0x5
+    DWORD: Order = 0x0
+    DWORD: Index = 0x1
+    SZ: Dll = es1371.dll
+    SZ: Prefix = WAV
+    DWORD: InstanceIndex = 0x1</PRE>
+
+<P>Everything the driver needs is provided here, <B>IoBase</B>, <B>IoLen</B>, <B>Irq</B> and <B>SysIntr</B>. Device identification information is also provided, which includes <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B>, <B>DeviceID</B>, <B>RevisionID</B>, <B>SubVendorID</B> and <B>SubSystemID</B>. 0x5 if specified for the PCI <B>InterfaceType</B>, and 0 is specified for the PCI bus <B>BusNumber</B>. These are useful when calling <MSHelp:link keywords="cmrefHalTranslateBusAddress" TABINDEX="0">HalTranslateBusAddress</MSHelp:link> or <MSHelp:link keywords="cmrefTransBusAddrToVirtual" TABINDEX="0">TransBusAddrToVirtual</MSHelp:link>.</P>
+
+<P>A driver reads the <B>IoBase</B>, <B>IoLen</B>, <B>Irq</B>, <B>SysIntr</B>, <B>InterfaceType</B> and <B>BusNumber</B> values out of the registry and then calls <MSHelp:link keywords="cmrefTransBusAddrToVirtual" TABINDEX="0">TransBusAddrToVirtual</MSHelp:link> to create a virtual base address to the device. The driver can be bus-agnostic because all of the relevant information is provided for it. Thus, the same driver can be used for an ISA device as long as the expected registry values are pre-set in the registry.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="#cxconenablingdrivertobeloadedbypcibusdriverexample">Driver Loading with the PCI Bus Driver Example</A></P>
+
+<P><A HREF="cxconenablingpcibusdriverinstallableisrsonplatform.htm">PCI Device Support</A></P>
+
+<P><A HREF="cxconinstallableisrs.htm">Installable ISRs with Drivers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Driver%20Loading%20with%20the%20PCI%20Bus%20Driver%20Example&nbsp;(cxconenablingdrivertobeloadedbypcibusdriverexample.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

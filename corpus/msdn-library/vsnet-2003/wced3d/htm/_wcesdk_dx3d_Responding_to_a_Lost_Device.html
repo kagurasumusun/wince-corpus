@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Responding to a Lost Device</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Responding to a Lost Device"/>
+<MSHelp:RLTitle Title="Responding to a Lost Device"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Responding_to_a_Lost_Device"/>
+<MSHelp:Keyword Index="K" Term="lost devices%2C Direct3D, responding to"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dx3d_concepts3_using.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680421">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_responding_to_a_lost_device"></A>Responding to a Lost Device</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>If a device is lost, the application queries the device to see if it can be restored to the operational state. If not, the application waits until the device can be restored. </P>
+
+<P>If the device can be restored, the application prepares the device by destroying all video-memory resources and any swap chains. Then, the application calls the <A HREF="_wcesdk_dx3d_idirect3ddevice8__reset.htm">IDirect3DDevice8::Reset</A> method. <B>Reset</B> is the only method that has an effect when a device is lost, and is the only method by which an application can change the device from a lost to an operational state. <B>Reset</B> will fail unless the application releases all resources that are allocated in D3DPOOL_DEFAULT, including those created by the <A HREF="_wcesdk_dx3d_idirect3ddevice8__createrendertarget.htm">IDirect3DDevice8::CreateRenderTarget</A> and <A HREF="_wcesdk_dx3d_idirect3ddevice8__createdepthstencilsurface.htm">IDirect3DDevice8::CreateDepthStencilSurface</A> methods.</P>
+
+<P>For the most part, the high-frequency calls of Microsoft&reg; Direct3D&reg; do not return any information about whether the device has been lost. The application can continue to call rendering methods, such as <A HREF="_wcesdk_dx3d_idirect3ddevice8__drawprimitive.htm">IDirect3DDevice8::DrawPrimitive</A>, without receiving notification of a lost device. Internally, these operations are discarded until the device is reset to the operational state.</P>
+
+<P>The application can determine what to do on encountering a lost device by querying the return value of the <A HREF="_wcesdk_dx3d_idirect3ddevice8__testcooperativelevel.htm">IDirect3DDevice8::TestCooperativeLevel</A> method.
+
+<UL type="disc">
+	<LI>If the method returns D3D_OK, the device is operational.</li>
+
+	<LI>If the device is lost but cannot be restored at the current time, the return value is D3DERR_DEVICELOST. This is the case when the user presses ALT+TAB, causing a full-screen device to lose focus. Applications should respond by pausing until the device can be reset. A D3DERR_DEVICENOTRESET return code from <B>TestCooperativeLevel</B> indicates this situation.</li>
+
+	<LI>If the device is lost and can be restored, the return code from <B>TestCooperativeLevel</B> is D3DERR_DEVICENOTRESET. Note that the return code from the <A HREF="_wcesdk_dx3d_idirect3ddevice8__present.htm">IDirect3DDevice8::Present</A> method is still D3DERR_DEVICELOST.</li>
+</UL>
+
+<P>In all cases, destroying video-memory resources is a prerequisite to calling <B>Reset</B>, even if the device has not been lost.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Responding%20to%20a%20Lost%20Device&nbsp;(_wcesdk_dx3d_responding_to_a_lost_device.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

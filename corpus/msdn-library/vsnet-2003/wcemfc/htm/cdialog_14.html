@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDialog::OnOK</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdialog_onok"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdialog_onok"></A><SUP></SUP>CDialog::OnOK</H1>
+
+<P>This method is called by the framework when the user chooses the <B>OK</B> button. The <B>OK</B> button uses the identifier <B>IDOK</B>.</P>
+
+<PRE class=syntax><B>virtual void OnOK( );</B><I> </I></PRE>
+
+<H4>Remarks</H4>
+
+<P>Override this method to perform the <B>OK </B>button action. If the dialog box includes automatic data validation and exchange, the default implementation of this method validates the dialog-box data and updates the appropriate variables in your application.</P>
+
+<P>If you implement the <B>OK </B>button in a modeless dialog box, you must override the <B>OnOK</B> method and call <B>DestroyWindow</B> from within it. Do not call the base-class method, because it calls <B>EndDialog</B>, which makes the dialog box invisible but does not destroy it.</P>
+
+<H4>Example</H4>
+
+<PRE>// MyDialog.cpp
+#include "MyDialog.h"
+
+void CMyDialog::OnOK()
+{
+&nbsp;&nbsp;// TODO: Add extra validation here.
+&nbsp;&nbsp;
+&nbsp;&nbsp;// Ensure that the UI got the necessary input from the user
+&nbsp;&nbsp;// before closing the dialog. The default OnOK closes this.
+&nbsp;&nbsp;if ( m_nMyValue == 0 ) // Is a field still empty?
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Please enter a value for MyValue");
+&nbsp;&nbsp;&nbsp;&nbsp;return; // Tell the user that the dialog cannot be closed without
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// entering the necessary values and do not close the dialog.
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;CDialog::OnOK(); // This closes the dialog and DoModal returns.
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdialog_12.htm"><B>CDialog::OnCancel</B></A>, <A HREF="cdialog_6.htm"><B>CDialog::EndDialog</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

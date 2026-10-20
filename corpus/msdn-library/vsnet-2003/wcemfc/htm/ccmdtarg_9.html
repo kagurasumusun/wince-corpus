@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCmdTarget::OnCmdMsg</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ccmdtarget_oncmdmsg"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ccmdtarget_oncmdmsg"></A>CCmdTarget::OnCmdMsg</H1>
+
+<P>This method is called by the framework to route and dispatch command messages and to handle the update of command user-interface objects. </P>
+
+<PRE class=syntax><B>virtual BOOL OnCmdMsg(
+UINT </B><I>nID</I><B>,
+int </B><I>nCode</I><B>,
+void* </B><I>pExtra</I><B>,
+AFX_CMDHANDLERINFO* </B><I>pHandlerInfo</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nID</I></DT>
+
+<DD>Specifies the container for the command identifier.</DD>
+
+<DT><I>nCode</I></DT>
+
+<DD>Identifies the command notification code. See the Remarks section for more information about values for <I>nCode</I>.</DD>
+
+<DT><I>pExtra</I></DT>
+
+<DD>Used according to the value of <I>nCode</I>. See the Remarks section for more information about <I>pExtra</I>.</DD>
+
+<DT><I>pHandlerInfo</I></DT>
+
+<DD>If not <B>NULL</B>, <B>OnCmdMsg</B> fills in the <I>pTarget</I> and <I>pmf</I> members of the <I>pHandlerInfo</I> structure instead of dispatching the command. Typically, this parameter should be <B>NULL</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the message is handled; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>This is the main implementation routine of the framework command architecture.</P>
+
+<P>At run time, <B>CCmdTarget::OnCmdMsg</B> dispatches a command to other objects or handles the command itself by calling the root class <B>CCmdTarget::OnCmdMsg</B>, which does the actual message-map lookup. </P>
+
+<P>On rare occasions, you may want to override this method to extend the standard command routing of the framework. If you override <B>CCmdTarget::OnCmdMsg</B>, you must supply the appropriate value for <I>nCode</I>, the command notification code, and <I>pExtra</I>, which depends on the value of <I>nCode</I>. The following table lists their corresponding values:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=45%><I>nCode</I> value</TH>
+<TH width=55%><I>pEvent</I> value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_COMMAND</TD>
+<TD width=55%>CCmdUI *</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_EVENT</TD>
+<TD width=55%>AFX_EVENT *</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_UPDATE_COMMAND_UI</TD>
+<TD width=55%>CCmdUI*</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_OLECOMMAND</TD>
+<TD width=55%>COleCmdUI *</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%>CN_OLE_UNREGISTER</TD>
+<TD width=55%>NULL</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Example</H4>
+
+<PRE>// This example illustrates extending the standard command
+// route of the framework from the view to objects managed by the view. This example
+// is from an object-oriented drawing application, similar to the
+// DRAWCLI sample application, which draws and edits shapes.
+
+BOOL CMyView::OnCmdMsg(UINT nID, int nCode, void* pExtra,
+      AFX_CMDHANDLERINFO* pHandlerInfo)
+{
+   // Extend the command route of the framework from the view to
+   // he application-specific CMyShape that is selected in the view.
+   // m_pActiveShape is NULL if no shape object is selected in the
+   // view.
+   if ((m_pActiveShape != NULL)
+      &amp;&amp; m_pActiveShape-&gt;OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+      return TRUE;
+
+   // If the object in the extended command route does not handle
+   // the command, let the base class OnCmdMsg handle it.
+   return CView::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+}
+
+// The command handler for ID_SHAPE_COLOR, the menu command to change
+// the color of the selected shape, is added to the message map of
+// CMyShape, not CMyView, using ClassWizard.
+
+// The menu item is automatically enabled or disabled, depending
+// on whether a CMyShape is selected in the view, that is, depending
+// on whether CMyView::m_pActiveView is NULL.  You do not need to
+// implement an ON_UPDATE_COMMAND_UI handler to enable or disable
+// the menu item.
+
+BEGIN_MESSAGE_MAP(CMyShape, CCmdTarget)
+   //{{AFX_MSG_MAP(CMyShape)
+   ON_COMMAND(ID_SHAPE_COLOR, OnShapeColor)
+   //}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccmdui.htm"><B>CCmdUI</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

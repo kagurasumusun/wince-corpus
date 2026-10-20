@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolRequestComplete</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolRequestComplete"/>
+<MSHelp:RLTitle Title="ProtocolRequestComplete"/>
+<MSHelp:Keyword Index="A" Term="cxrefProtocolRequestComplete"/>
+<MSHelp:Keyword Index="K" Term="ProtocolRequestComplete"/>
+<MSHelp:Keyword Index="A" Term="cxrefProtocolRequestComplete"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_lower_edge_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_678776">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefprotocolrequestcomplete"></A>ProtocolRequestComplete</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is a required driver function that completes the processing of a protocol-initiated query or set for which <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A> returned NDIS_STATUS_PENDING.</P>
+
+<PRE class="syntax"><B>VOID ProtocolRequestComplete(</B>
+<B>NDIS_HANDLE</B> <I>ProtocolBindingContext</I><B>,</B>
+<B>PNDIS_REQUEST</B> <I>NdisRequest</I><B>,</B>
+<B>NDIS_STATUS</B> <I>Status</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ProtocolBindingContext</I></DT>
+
+<DD>[in] Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>.</dd>
+
+<DT><I>NdisRequest</I></DT>
+
+<DD>[in] Points to the protocol-supplied structure previously passed to <B>NdisRequest</B>.</dd>
+
+<DT><I>Status</I></DT>
+
+<DD>[in] Specifies the final status of the request set by the underlying driver or by NDIS. This argument determines what <B>ProtocolRequestComplete</B> does with the information at <I>NdisRequest</I>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>ProtocolRequestComplete</B> uses the input <I>Status</I> as follows:
+
+<UL type="disc">
+	<LI>If this argument is NDIS_STATUS_SUCCESS, the <B>BytesRead</B> or <B>BytesWritten</B> member of the <A HREF="_wceddk_ndis_request.htm">NDIS_REQUEST</A> structure has been set by NDIS or the underlying driver to specify how much protocol-supplied information was transferred from the buffer at InformationBuffer to the network adapter in a set operation or how much information was returned at InformationBuffer in response to a query operation.</li>
+
+	<LI>If the protocol made a query, <B>ProtocolRequestComplete</B> can use the data returned at InformationBuffer in any protocol-determined way, depending on the value of the Oid member.</li>
+
+	<LI>For example, if the protocol originally initiated an OID_GEN_MAXIMUM_SEND_PACKETS query, <B>ProtocolRequestComplete</B> might set up state variables in the <I>ProtocolBindingContext</I> area to throttle the number of outstanding sends the driver will set up for subsequent calls to <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A>.</li>
+
+	<LI>If this argument is NDIS_STATUS_INVALID_LENGTH or NDIS_STATUS_BUFFER_TOO_SHORT, the BytesNeeded member specifies the <B>Oid</B>-specific value of the InformationBufferLength member required to carry out the requested operation.</li>
+
+	<LI>In these circumstances, <B>ProtocolRequestComplete</B> can allocate sufficient buffer space for the request, set up another <A HREF="_wceddk_ndis_request.htm">NDIS_REQUEST</A> structure with the required InformationBufferLength and same Oid, and retry the call to <B>NdisRequest</B>.</li>
+
+	<LI><B>ProtocolRequestComplete</B> can retry requests for certain other NDIS_STATUS_<I>XXX</I> arguments, as well, as described in the reference for <B>NdisRequest</B>.</li>
+
+	<LI>If this argument is an NDIS_STATUS_<I>XXX</I> that is an unrecoverable error, <B>ProtocolRequestComplete</B> should release the memory allocated for the <B>NDIS_REQUEST</B> structure and determine whether the driver should call <A HREF="_wceddk_ndisreset.htm">NdisReset</A>, close the binding, or adjust its binding-specific state information to handle continued network I/O operations on the binding.</li>
+</UL>
+
+<P>For global queries and sets, the underlying connectionless miniport's call to <A HREF="_wceddk_ndismqueryinformationcomplete.htm">NdisMQueryInformationComplete</A> or <A HREF="_wceddk_ndismsetinformationcomplete.htm">NdisMSetInformationComplete</A> causes NDIS to call the <B>ProtocolRequestComplete</B> function. NDIS forwards the miniport-determined <I>Status</I> passed to <B>NdisM<I>XXX</I>InformationComplete</B> as the input <I>Status</I> to <B>ProtocolRequestComplete</B>.</P>
+
+<P>For binding-specific queries, NDIS calls the <B>ProtocolRequestComplete</B> function itself. Because the NDIS library maintains bindings for all miniports, NDIS can return binding-specific information only about underlying drivers that report their medium-type as one for which the system provides a filter library. NDIS returns NDIS_STATUS_NOT_SUPPORTED for protocol-initiated binding-specific queries to other miniports.</P>
+
+<P><B>ProtocolRequestComplete</B> can be called before the protocol has had time to inspect the status code that <B>NdisRequest</B> returns at <I>Status</I>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndisrequest.htm">NdisRequest</A>, <A HREF="_wceddk_ndis_request.htm">NDIS_REQUEST</A>, <A HREF="_wceddk_ndismqueryinformationcomplete.htm">NdisMQueryInformationComplete</A>, <A HREF="_wceddk_ndismsetinformationcomplete.htm">NdisMSetInformationComplete</A>, <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, <A HREF="_wceddk_ndisreset.htm">NdisReset</A>, <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ProtocolRequestComplete&nbsp;(cxrefprotocolrequestcomplete.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

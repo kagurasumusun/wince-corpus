@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertySheet::EndDialog</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertysheet_enddialog"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertysheet_enddialog"></A>CPropertySheet::EndDialog</H1>
+
+<P>This method terminates the property sheet. This method is called by the framework when the <B>OK</B>, <B>Cancel</B>, or <B>Close</B> button is pressed. Call this method if an event occurs that should close the property sheet.</P>
+
+<P>This method is only used with a modal dialog box. </P>
+
+<PRE class=syntax><B>void EndDialog(
+int </B><I>nEndID</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nEndID</I></DT>
+
+<DD>Specifies the identifier to be used as return value of the property sheet.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// Simulate the selection of OK and Cancel buttons when Alt+K and
+// Alt+C are pressed.  CMyPropertySheet is a CPropertySheet-derived
+// class.
+BOOL CMyPropertySheet::PreTranslateMessage(MSG* pMsg)
+{
+&nbsp;&nbsp;if (pMsg-&gt;message &gt;= WM_KEYFIRST &amp;&amp; pMsg-&gt;message &lt;= WM_KEYLAST)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;BOOL altkey = GetKeyState(VK_MENU) &lt; 0;
+&nbsp;&nbsp;&nbsp;&nbsp;if (altkey)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BOOL handled = TRUE;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch(toupper(pMsg-&gt;wParam))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 'C':&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// for Alt+C - Cancel button
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PressButton(PSBTN_CANCEL);&nbsp;&nbsp;// or EndDialog(IDCANCEL);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 'K':&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// for Alt+K - OK button
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PressButton(PSBTN_OK);&nbsp;&nbsp;&nbsp;&nbsp;// or EndDialog(IDOK);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handled = FALSE;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (handled)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return TRUE;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;return CPropertySheet::PreTranslateMessage(pMsg);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cproppg_8.htm"><B>CPropertyPage::OnOK</B></A>, <A HREF="cproppg_6.htm"><B>CPropertyPage::OnCancel</B></A>, <A HREF="cwnd_22.htm"><B>CWnd::DestroyWindow</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

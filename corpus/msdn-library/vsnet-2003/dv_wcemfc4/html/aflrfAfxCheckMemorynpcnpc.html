@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxCheckMemory  </TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AfxCheckMemory  "/>
+<MSHelp:RLTitle Title="AfxCheckMemory"/>
+<MSHelp:Keyword Index="A" Term="aflrfAfxCheckMemorynpcnpc"/>
+<MSHelp:Keyword Index="K" Term="AfxCheckMemory function"/>
+<MSHelp:Keyword Index="A" Term="aflrfAfxCheckMemorynpcnpc"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="funct.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697655">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfafxcheckmemorynpcnpc"></A>AfxCheckMemory&nbsp;&nbsp;</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This function validates the free memory pool and prints error messages as required. If the function detects no memory corruption, it prints nothing.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B>AfxCheckMemory(</B> <B>);</B><I> </I></PRE>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>Nonzero if no memory errors; otherwise, it is zero.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>All memory blocks currently allocated on the heap are checked, including those allocated by <B>new</B> but not those allocated by direct calls to underlying memory allocators, such as the <B>malloc</B> function or the <B>LocalAlloc</B> Windows CE function. If any block is found to be corrupted, a message is printed to the debugger output.</P>
+
+<P>If you include the line</P>
+
+<PRE class="code">#define new DEBUG_NEW</PRE>
+
+<P>in a program module, then subsequent calls to <B>AfxCheckMemory</B> show the filename and line number where the memory was allocated.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If your module contains one or more implementations of serializable classes, then you must put the <B>#define</B> line after the last <B>IMPLEMENT_SERIAL</B> macro call.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+This function works only in the Debug version of MFC.</BLOCKQUOTE>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// example for AfxCheckMemory
+CAge* pcage = new CAge( 21 );  // CAge is derived from CObject.
+Age* page = new Age( 22 );     // Age is NOT derived from CObject.
+*(((char*) pcage) &#0150;1) = 99;   // Corrupt preceding guard byte
+*(((char*) page) &#0150;1) = 99;    // Corrupt preceding guard byte
+AfxCheckMemory();</PRE>
+
+<P>The results from the program are as follows:</P>
+
+<PRE class="code">memory check error at $0067495F = $63, should be $FD
+DAMAGE: before Non-Object block at $00674960
+Non-Object allocated at file test02.cxx(48)
+Non-Object located at $00674960 is 2 bytes long
+memory check error at $00674905 = $63, should be $FD
+DAMAGE: before Object block at $00674906
+Object allocated at file test02.cxx(47)
+Object located at $00674906 is 6 bytes long</PRE>
+
+<P class="label"><B>Requirements</B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697655', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

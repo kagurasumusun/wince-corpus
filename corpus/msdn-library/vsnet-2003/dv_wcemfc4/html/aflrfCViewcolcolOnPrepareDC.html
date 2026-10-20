@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CView::OnPrepareDC</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CView::OnPrepareDC"/>
+<MSHelp:RLTitle Title="CView::OnPrepareDC"/>
+<MSHelp:Keyword Index="A" Term="aflrfCViewcolcolOnPrepareDC"/>
+<MSHelp:Keyword Index="K" Term="OnPrepareDC method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCViewcolcolOnPrepareDC"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cview.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697339">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcviewcolcolonpreparedc"></A>CView::OnPrepareDC</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework before the <B>OnDraw</B> method is called for screen display and before the <A HREF="aflrfcviewcolcolonprint.htm"><B>OnPrint</B></A> method is called for each page during printing or print preview.. </P>
+
+<PRE class="syntax"><B>virtual void OnPrepareDC( 
+CDC* </B><I>pDC</I><B>, 
+CPrintInfo* </B><I>pInfo</I><B> = NULL );</B><I> 
+</I>
+<B>virtual void OnPrepareDC( 
+CDC* </B><I>pDC</I><B>, 
+const void* </B><I>pUnused</I><B> = NULL );</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Points to the device context to be used for rendering an image of the document.</dd>
+
+<DT><I>pInfo</I></DT>
+
+<DD>Points to a <A HREF="aflrfcprintinfo.htm"><B>CPrintInfo</B></A> structure that describes the current print job if <B>OnPrepareDC</B> is being called for printing or print preview; the <B>m_nCurPage</B> member specifies the page about to be printed. This parameter is <B>NULL</B> if <B>OnPrepareDC</B> is being called for screen display.</dd>
+
+<DT><I>pUnused</I></DT>
+
+<DD>(Dummy argument)</dd>
+</DL>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The second implementation above is available for platforms that do not support printing.</P>
+
+<P>The default implementation of this method does nothing if the function is called for screen display. However, this method is overridden in derived classes, such as <A HREF="aflrfcscrollview.htm"><B>CScrollView</B></A>, to adjust attributes of the device context; consequently, you should always call the base class implementation at the beginning of your override. </P>
+
+<P>If the method is called for printing, the default implementation examines the page information stored in the <I>pInfo</I> parameter. If the length of the document has not been specified, <B>OnPrepareDC</B> assumes the document to be one page long and stops the print loop after one page has been printed. The method stops the print loop by setting the <B>m_bContinuePrinting</B> member of the structure to <B>FALSE</B>.</P>
+
+<P>Override <B>OnPrepareDC</B> for any of the following reasons:
+
+<UL type="disc">
+	<LI>To adjust attributes of the device context as needed for the specified page. For example, if you need to set the mapping mode or other characteristics of the device context, do so in this method. </li>
+
+	<LI>To perform print-time pagination. Normally you specify the length of the document when printing begins, using the <A HREF="aflrfcviewcolcolonprepareprinting.htm"><B>OnPreparePrinting</B></A> method. However, if you do not know in advance how long the document is (for example, when printing an undetermined number of records from a database), override <B>OnPrepareDC</B> to test for the end of the document while it is being printed. When there is no more of the document to be printed, set the <B>m_bContinuePrinting</B> member of the <B>CPrintInfo</B> structure to <B>FALSE</B>. </li>
+
+	<LI>To send escape codes to the printer on a page-by-page basis. To send escape codes from <B>OnPrepareDC</B>, call the <B>Escape</B> method of the <I>pDC</I> parameter.</li>
+</UL>
+
+<P>Call the base class version of <B>OnPrepareDC</B> at the beginning of your override.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void CMyView::OnPrepareDC (CDC* pDC, CPrintInfo* pInfo)
+{
+&nbsp;&nbsp;CView::OnPrepareDC(pDC, pInfo);
+
+&nbsp;&nbsp;// If we are printing, set the mapmode and the window
+&nbsp;&nbsp;// extent properly, then set viewport extent. Use the
+&nbsp;&nbsp;// SetViewportOrg method in the CDC class to
+&nbsp;&nbsp;// move the viewport origin to the center of the view.
+&nbsp;&nbsp;
+&nbsp;&nbsp;if(pDC-&gt;IsPrinting()) // Is the DC a printer DC.
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CRect rect;
+&nbsp;&nbsp;&nbsp;&nbsp;GetClientRect (&amp;rect);
+
+&nbsp;&nbsp;&nbsp;&nbsp;int oldMapMode = pDC-&gt;SetMapMode(MM_ISOTROPIC);
+&nbsp;&nbsp;&nbsp;&nbsp;CSize ptOldWinExt = pDC-&gt;SetWindowExt(1000, 1000);
+&nbsp;&nbsp;&nbsp;&nbsp;ASSERT( ptOldWinExt.cx != 0 &amp;&amp; ptOldWinExt.cy != 0 );
+&nbsp;&nbsp;&nbsp;&nbsp;CSize ptOldViewportExt = pDC-&gt;SetViewportExt(rect.Width(),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -rect.Height());
+&nbsp;&nbsp;&nbsp;&nbsp;ASSERT( ptOldViewportExt.cx != 0 &amp;&amp; ptOldViewportExt.cy != 0 );
+&nbsp;&nbsp;&nbsp;&nbsp;CPoint ptOldOrigin = pDC-&gt;SetViewportOrg(rect.Width()/2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rect.Height()/2);
+&nbsp;&nbsp;}
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcviewcolcolondraw.htm"><B>CView::OnDraw</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697339', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

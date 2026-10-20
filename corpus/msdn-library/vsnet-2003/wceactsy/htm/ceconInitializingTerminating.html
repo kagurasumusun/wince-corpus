@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Initializing and Terminating</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Initializing and Terminating"/>
+<MSHelp:RLTitle Title="Initializing and Terminating"/>
+<MSHelp:Keyword Index="A" Term="ceconInitializingTerminating"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, initializing and terminating"/>
+<MSHelp:Keyword Index="K" Term="initialization, ActiveSync"/>
+<MSHelp:Keyword Index="A" Term="ceconInitializingTerminating"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: activesync_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759481">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconinitializingterminating"></A>Initializing and Terminating</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>IReplStore::Initialize</B> ensures that the stock portfolio data file exists and is opened. The name of the file that needs to be synchronized is stored in the registry. ActiveSync manager determines the registry location for this file name.</P>
+
+<P>The ActiveSync manager can manage multiple partnerships for different devices. Even if no device is connected, the user can select any one of the devices and set ActiveSync options, which might initiate the ActiveSync provider.</P>
+
+<P>The bit flag ISF_REMOTE_CONNECTED is set if the device is remotely connected, such as through Ethernet or a modem. When implementing <B>IReplStore::Initialize</B>, if this flag is set, the ActiveSync provider should avoid using any blocking user interface, such as MessageBox or a dialog box, because the user will rarely be present to respond. The provider should instead take any default actions without prompting the user.</P>
+
+<P><B>IReplStore::Initialize</B> is usually the first IReplStore method called by the ActiveSync manager. In some cases other methods would be called first, especially when users need to change synchronization options for a disconnected device. The following is a list of methods that might be called before Initialize. All these methods must work correctly without Initialize being called first.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Method</TH>
+<TH width=59%>Purpose</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstoregetstoreinfo.htm">IReplStore::GetStoreInfo</A></TD>
+<TD width=59%>Get information about a store. This information is displayed in the ActiveSync <B>Option</B> dialog box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstoregetobjtypeuidata.htm">IReplStore::GetObjTypeUIData</A></TD>
+<TD width=59%>Get information about an object type. The information is displayed in the ActiveSync <B>Option</B> dialog box.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstoregetfolderinfo.htm">IReplStore::GetFolderInfo</A></TD>
+<TD width=59%>Give the ActiveSync provider a chance to see the folder handle (HREPLFLD).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstoreactivatedialog.htm">IReplStore::ActivateDialog</A></TD>
+<TD width=59%>Let an ActiveSync provider to allow user to change options for a synchronization service.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstoreobjecttobytes.htm">IReplStore::ObjectToBytes</A></TD>
+<TD width=59%>Convert a HREPLITEM or HREPLFLD handle to a sequence of bytes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstorebytestoobject.htm">IReplStore::BytesToObject</A></TD>
+<TD width=59%>Convert a sequence of bytes to a HREPLITEM or HREPLFLD handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%><A HREF="cerefireplstorereportstatus.htm">IReplStore::ReportStatus</A></TD>
+<TD width=59%>Let the ActiveSync provider know about certain events.</TD>
+</TR>
+</table></div>
+
+<P>The ActiveSync manager calls <B>IReplStore::GetObjTypeUIData</B> to retrieve object type-specific data for display in the ActiveSync status window. An ActiveSync provider must set up the given <B>OBJUIDATA</B> structure correctly. This structure is defined as follows.</P>
+
+<PRE class="code">typedef struct tagObjUIData
+{
+   UINT   cbStruct;      // size of this structure, in bytes
+   HICON  hIconLarge;    // handle of a large icon used in the list view
+   HICON  hIconSmall;    // handle of a small icon used in the list view
+   char   szName [MAX_PATH];     // text displayed in the "Name" column
+   char   szSyncText [MAX_PATH]; // obsolete in ActiveSync 3.0 and later
+   char   szTypeText [80];       // obsolete in ActiveSync 3.0 and later
+   char   szPlTypeText [80];     // obsolete in ActiveSync 3.0 and later
+} OBJUIDATA, *POBJUIDATA;</PRE>
+
+<P>The ActiveSync provider is unloaded automatically when the device is disconnected. The ActiveSync manager is typically the last to call <B>IReplStore::Release</B>. The provider reference count should reach zero and the interface can then be deleted. However, while executing, an ActiveSync provider might make calls to another party that increase the reference count of its own IReplStore instance, and the ActiveSync manager might not be the last to release the interface. The ActiveSync manager therefore always calls <B>IReplStore::ReportStatus</B> with RSC_RELEASE before calling <B>IReplStore::Release</B>. An ActiveSync provider can make sure all other external interfaces are released when RSC_RELEASE is received. This ensures that the reference count reaches zero when ActiveSync manager frees the store.</P>
+
+<H2 class="dtH2">Enumerating All Desktop Objects</H2>
+
+<P><B>IReplStore::FindFirstItem</B> is always the first function called in an enumeration. <B>IReplStore::FindNextItem</B> is then called repeatedly until the *pfExist flag returns FALSE, indicating there are no more objects to be enumerated. This terminates the enumeration, and ActiveSync calls <B>IReplStore::FindItemClose</B>. The ActiveSync provider is then responsible for "cleaning up" &#0151; freeing memory, deleting temporary objects, and so forth.</P>
+
+<P>Objects can be lost when synchronizing a device with more than one computer. Objects not selected out during synchronization appear as deleted objects on the desktop. Desktop enumeration no longer returns these objects, so the ActiveSync manager commands the device to delete them. If two computers have different selection criteria, objects that are supposed to be retained on one computer will be deleted if they were not selected during a previous synchronization with the other computer.</P>
+
+<P>To prevent this loss, the ActiveSync manager must know whether an object has actually been deleted or has only been deliberately omitted from selection. The ActiveSync provider should return every object in the store during enumeration, then use <B>IReplStore::IsItemReplicated</B> to implement selection. <B>IReplStore::IsValidObject </B>must return RERR_OBJECT_DELETED only if a handle representing a deleted object is passed.</P>
+
+<P>All ActiveSync providers, regardless of whether they support real-time notification of changes and deletions, should set *pfChanged TRUE the first time the provider calls this API after a store is loaded. This forces ActiveSync to do an initial enumeration to determine if changes occurred while the device was not connected.</P>
+
+<P>If an ActiveSync provider has an efficient way to detect whether an object is changed or deleted, it should implement that technique in <B>IReplStore::IsFolderChanged</B>. If <B>IsFolderChanged</B> sets *pfChanged FALSE when no object is changed or deleted, ActiveSync manager skips enumeration.</P>
+
+<P>Typically, an ActiveSync provider sets a flag in <B>IReplStore::GetFolderInfo</B> for each folder. If this flag is set, <B>IReplStore::IsFolderChanged</B> sets *pfChanged TRUE and clears the flag. If the flag is not set, *pfChanged is always set FALSE.</P>
+
+<P>An ActiveSync provider must be able to enumerate all objects in a given folder.</P>
+
+<H2 class="dtH2">Detecting Changes or Deletions between Synchronizations</H2>
+
+<P>Each time an ActiveSync provider returns a new handle through <B>IReplStore::FindFirstItem</B> or <B>IReplStore::FindNextItem</B>, the ActiveSync manager searches the saved list for a handle that represents the same object. This matching process has three possible outcomes.
+
+<UL type="disc">
+	<LI>An enumerated handle matches a handle from the list.
+<P>The ActiveSync manager calls <B>IReplStore::IsItemChanged</B> to see if the object has changed since last time it was synchronized. If it has, ActiveSync calls <B>IReplStore::CopyObject</B> to copy the data from the returned handle into the handle it saves. It then calls <B>IReplStore::IsItemReplicated</B> to determine whether the object should be replicated (copied) when synching to CE devices.
+</li>
+
+	<LI>An enumerated handle fails to match any handle from the list.
+<P>The enumerated object is new to the desktop, so a new object is created in the desktop store.
+</li>
+
+	<LI>A handle from the list does not have a matching enumerated handle.
+<P>The list object was deleted from the desktop. It should be marked for deletion from the saved list.
+</li>
+</UL>
+
+<H2 class="dtH2">IReplNotify</H2>
+
+<P>The <B>IReplNotify</B> interface is implemented by the ActiveSync manager. It exposes the following methods:
+
+<UL type="disc">
+	<LI><B>OnItemNotify &#0151; </B>Notifies the ActiveSync manager of object changes and deletions. Also notifies the ActiveSync manager to shut down the ActiveSync provider. This enables the manager to update synchronization status for the service provider in real time. If the service provider does not have the ability to detect real-time object changes/deletions, it can ignore this method.</li>
+
+	<LI><B>SetStatusText &#0151; </B>This function is obsolete.</li>
+
+	<LI><B>GetWindow &#0151; </B>Returns a window handle that is used as a parent window of any modal dialog or message box.</li>
+
+	<LI><B>QueryDevice &#0151; </B>Returns information about the selected device.</li>
+</UL>
+
+<H2 class="dtH2">Reporting Changes or Deletions in Real Time</H2>
+
+<P>If an ActiveSync provider is implemented to detect changes in the desktop store as they occur, it can call <B>IReplNotify::OnItemNotify</B> to immediately notify ActiveSync. The provider should pass RNC_CREATED, RNC_MODIFIED, or RNC_DELETED to indicate the kind of change. The provider also passes a handle to the object, which allows the ActiveSync manager to search its own table for a matching device object.</P>
+
+<H2 class="dtH2">Sending and Receiving ActiveSync Objects</H2>
+
+<P>Synchronization can be manually initiated by the user, automatically initiated when a CE-based device is connected to a desktop computer, or performed continuously whenever data on either connected machine changes (as implemented by an <B>IReplNotify::OnItemNotify</B> call).</P>
+
+<P>Objects are copied from one machine to another by first being transformed into a byte sequence (serialized), then converted back into object format (deserialized). <B>IReplObjHandler</B> is the COM interface that performs these tasks. ActiveSync manager also uses this interface to delete an object from the store. <B>IReplObjHandler</B> is implemented on both desktop and the device so that much of the code can be shared. One instance of this interface is created for each object type.</P>
+
+<P>There is no restriction on how an object can be converted to a byte stream. The ActiveSync manager guarantees the data will be sent in the correct sequence and properly reassembled into an object.</P>
+
+<P>It is easy to serialize and deserialize StockPor data because only one packet is needed. The packet has the following structure.</P>
+
+<PRE class="code">// Data structure used to synchronize a stock used by IReplObjHandler
+// on both the desktop and device. All strings are Unicode.
+
+typedef struct tagStockPacket
+{
+   WCHAR     wszSym [10];
+   WCHAR     wszCompany [80];
+   WCHAR     wszLastPrice [20];
+   WCHAR     wszPurDate [20];
+   WCHAR     wszPurPrice [20];
+   WCHAR     wszGain [20];
+   FILETIME  ftUpdated;
+} STPACKET, *PSTPACKET;</PRE>
+
+<P>The following methods are always called in sequence whenever an object is converted into a byte sequence.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Method</TH>
+<TH width=63%>Purpose</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="cerefireplobjhandlersetup.htm">IReplObjHandler::Setup</A></TD>
+<TD width=63%>Tell ActiveSync provider what object is to be serialized. Give it a chance to allocate any resource needed for serialization.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="cerefireplobjhandlergetpacket.htm">IReplObjHandler::GetPacket</A></TD>
+<TD width=63%>Let ActiveSync provider create one or more byte packets of any size. It is called repeatedly until RWRN_LAST_PACKET is returned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="cerefireplobjhandlerreset.htm">IReplObjHandler::Reset</A></TD>
+<TD width=63%>Serialization is completed. Let ActiveSync provider release any resources.</TD>
+</TR>
+</table></div>
+
+<P>The structure <B>REPLSETUP</B> is passed in <B>IReplObjHandler::Setup</B>. This structure is defined as follows.</P>
+
+<PRE class="code">typedef struct _tagReplSetup
+{
+   UINT         cbStruct;
+   BOOL         fRead;
+   DWORD        dwFlags;    // see RSF_ definitions
+   HRESULT      hr;
+   OBJTYPENAME  szObjType;
+   IReplNotify *pNotify;
+
+   DWORD        oid;
+   DWORD        oidNew;
+
+#ifndef UNDER_CE
+   IReplStore  *pStore;
+   HREPLFLD     hFolder;
+   HREPLITEM    hItem;
+#endif
+} REPLSETUP, *PREPLSETUP;</PRE>
+
+<P>The ActiveSync provider should pay attention to the following structure members.
+
+<UL type="disc">
+	<LI><I>fRead</I> is set TRUE for reading an object from the desktop store and FALSE for writing an object into the desktop store.</li>
+
+	<LI><I>dwFlags </I>is a collection of bit flags related to object serializing/deserializing.</li>
+
+	<LI><I>hFolder</I> is a handle to the object folder.</li>
+
+	<LI><I>hItem</I> is the handle of the object to be serialized. ActiveSync should use the information contained in this handle to identify the object and convert it into.</li>
+</UL>
+
+<P>All other members are internal to the ActiveSync manager and should not be changed.</P>
+
+<P>Receiving an object from the device is similar to sending an object. <B>IReplObjHandler</B> interface methods are called to convert the data packets into an object, as shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Method</TH>
+<TH width=62%>Purpose</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="cerefireplobjhandlersetup.htm">IReplObjHandler::Setup</A></TD>
+<TD width=62%>Tell ActiveSync provider which object to deserialized. Give it a chance to allocate resources needed for deserialization.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="cerefireplobjhandlersetpacket.htm">IReplObjHandler::SetPacket</A></TD>
+<TD width=62%>Send packets to ActiveSync provider so it can recreate the object. Packets are sent in the same number, size and sequence. SetPacket is called repeatedly until last packet is received from device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="cerefireplobjhandlerreset.htm">IReplObjHandler::Reset</A></TD>
+<TD width=62%>Deserialization complete. The ActiveSync provider should release any resources.</TD>
+</TR>
+</table></div>
+
+<P>The ActiveSync provider creates an object from the data packets. A new HREPLITEM representing the object is created and set in <B>REPLSETUP::hItem</B>.</P>
+
+<H2 class="dtH2">Deleting ActiveSync Objects</H2>
+
+<P>Deleted objects sometimes require special attention. For example, when user deletes an e-mail message on the CE device, the message is actually marked as "changed" because it is moved to the Deleted Item folder. When the desktop ActiveSync provider receives notification, it has to decide whether to move its own copy of the message to the desktop's Deleted Item folder, or immediately delete the message.</P>
+
+<P>In this case, the following special error codes can be returned by <B>IReplObjHandler::SetPacket</B>.</P>
+
+<P><B>RERR_DISCARD </B>The ActiveSync provider wants to delete the device object immediately after the change is synchronized. ActiveSync manager will send a command to the device object to delete the corresponding object.</P>
+
+<P><B>RERR_DISCARD_LOCAL </B>The ActiveSync provider wants to delete the desktop object immediately after the change is synchronized. ActiveSync manager will call <B>IReplObjHandler::DeleteObject</B> to delete the existing desktop object.</P>
+
+<H2 class="dtH2">Resolving StockPor Conflicts</H2>
+
+<P>A conflict occurs when an object has changed on both the device and the desktop since the last synchronization. The conflict is resolved by prompting the user to choose which object to save.</P>
+
+<P>When ActiveSync detects a conflict, <B>IReplObjHandler</B> methods are called to create a temporary copy of the device's object on the desktop. The ActiveSync manager then calls <B>IReplStore::GetConflictInfo</B>, passing the handle for the original desktop object and the handle for the temporary object. The ActiveSync provider fills in a <B>CONFINFO</B> structure to customize the text displayed in the <B>Conflict Resolution </B>dialog box. This structure is defined as follows.</P>
+
+<PRE class="code">typedef struct tagConfInfo
+{
+   UINT         cbStruct;
+   HREPLFLD     hFolder;
+   HREPLITEM    hLocalItem;
+   HREPLITEM    hRemoteItem;
+   OBJTYPENAME  szLocalName;
+   TCHAR        szLocalDesc [512];
+   OBJTYPENAME  szRemoteName;
+   TCHAR        szRemoteDesc [512];
+} CONFINFO, *PCONFINFO;</PRE>
+
+<P>The <B>Conflict Resolution </B>dialog box offers the choice of discarding the original desktop object or the device object. The discarded object is marked as up-to-date &#0151; unchanged since the last synchronization &#0151; while the kept object retains its "dirty" &#0151; changed &#0151; status. In the subsequent synchronization, the "changed" object overwrites the "unchanged" object.</P>
+
+<P>Regardless of which object is chosen, <B>IReplObjHandler::DeleteObject</B> is called to delete the temporary object.</P>
+
+<P class="labelproc"><B>To resolve a conflict</B>
+
+<OL type="1">
+	<LI>On detecting a conflict, the ActiveSync manager sends a command to the device's ActiveSync provider to read the object.</li>
+
+	<LI><B>IReplObjHandler::GetPacket</B> is called on the device to serialize the object and send the packets to the desktop ActiveSync provider.</li>
+
+	<LI><B>IReplObjHandler::SetPacket</B> is called on the desktop to create a temporary object from the deserialized packets. The HREPLITEM handle created for this object is returned to the ActiveSync manager.</li>
+
+	<LI>The ActiveSync manager places the handles for both objects in the <B>CONFINFO</B> structure in a call to <B>IReplStore::GetConflictInfo</B>. The ActiveSync provider can use these handles to extract information from the objects and save them in CONFINFO.</li>
+
+	<LI>Using the description text returned in the <B>CONFINFO</B> structure, ActiveSync manager displays the standard <B>Conflict Resolution </B>dialog box.</li>
+
+	<LI>If the user chooses to keep the object on the device, the desktop object is marked up-to-date.</li>
+
+	<LI>If the user chooses to keep the object on the desktop, the device object is marked up-to-date.
+<P>If the user cancels the dialog box, nothing is done and conflict resolution for this item will begin again at the next synchronization.
+</li>
+
+	<LI><B>IReplObjHandler::DeleteObject</B> is called to delete the temporary object.</li>
+</OL>
+
+<P>ActiveSync manager sets the RSF_CONFLICT_OBJECT flag in all calls to <B>IReplObjHandler</B> methods.</P>
+
+<P>If the ActiveSync provider cannot or does not want to write a temporary object in Step 3, it can save the packets in memory and return a HREPLITEM with a pointer to the memory. To the ActiveSync manager, this handle is like a handle to an object. To the ActiveSync provider, this handle is a special one that represents packets of data. The provider needs to make sure this type of handle is properly implemented in all <B>IReplStore</B> methods that take an HREPLITEM handle (for example, CopyObject, FreeObject). When <B>IReplStore::GetConflictInfo</B> is called, <B>CONFINFO::hRemoteItem</B> will be this special handle. The ActiveSync provider can then extract descriptive text from the handle and save it in <B>CONFINFO</B>.</P>
+
+<P>The ActiveSync provider can be written to resolve conflicts by itself, without prompting the user to make a decision. The following error values can be used in the implementation of <B>IReplStore::GetConflictInfo</B> to guide conflict resolution:
+
+<UL type="disc">
+	<LI>RERR_IGNORE Using the two handles in <B>CONFINFO</B>, the ActiveSync provider recognizes that the objects are identical, so there is no need to prompt the user to select one. The ActiveSync manager resolves the conflict by setting both as "up to date."</li>
+
+	<LI>RERR_DISCARD The desktop object is already deleted. ActiveSync manager issues commands to the device to delete the device object.</li>
+
+	<LI>RERR_DISCARD_LOCAL It is assumed the device object is the newer version, so the local (desktop) version is deleted. This is potentially dangerous, but it is a reasonable assumption if changes almost always occur to device objects, but rarely to desktop objects.</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Initializing%20and%20Terminating&nbsp;(ceconinitializingterminating.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

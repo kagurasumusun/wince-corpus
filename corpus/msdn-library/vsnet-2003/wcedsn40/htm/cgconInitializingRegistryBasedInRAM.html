@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Persisting Data with the RAM-Based Registry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Persisting Data with the RAM-Based Registry"/>
+<MSHelp:RLTitle Title="Persisting Data with the RAM-Based Registry"/>
+<MSHelp:Keyword Index="A" Term="cgconInitializingRegistryBasedInRAM"/>
+<MSHelp:Keyword Index="K" Term="RAM, RAM-based registries persisting data"/>
+<MSHelp:Keyword Index="K" Term="registries, persisting data with RAM-based"/>
+<MSHelp:Keyword Index="A" Term="cgconInitializingRegistryBasedInRAM"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_file.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748764">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconinitializingregistrybasedinram"></A>Persisting Data with the RAM-Based Registry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The RAM-based registry supports two different save-and-restore mechanisms. OEMs can use these mechanisms to persist registry data when the RAM, which contains the object store, is not being powered. In addition, the mechanisms can also be used to provide last-known-good protection against invalid data configurations.</P>
+
+<P>The first mechanism is based on the APIs <MSHelp:link keywords="cmrefRegCopyFile" TABINDEX="0">RegCopyFile</MSHelp:link> and <MSHelp:link keywords="cmrefRegRestoreFile" TABINDEX="0">RegRestoreFile</MSHelp:link>. <B>RegCopyFile</B> saves the entire registry to a file, and <B>RegRestoreFile</B> sets up the registry to be replaced with the data in the given file on the next boot. To persist the registry when a device is powered off, an OEM would first use <B>RegCopyFile</B> to save the data to a persistent file. Then on the next cold boot, the OEM would call <B>RegRestoreFile</B> to prepare the registry to be replaced with data in the file, and do a warm reboot to do the registry replacement. This manner of registry persistence is easy to implement, but since it requires a dual-boot to restore the registry after a device was powered off, it is relatively slow. The <B>RegCopyFile</B> and <B>RegRestoreFile</B> mechanism is better suited to providing last-known-good backup to protect against errors than it is to providing registry persistence.</P>
+
+<P>The second mechanism gives the OEM responsibility for persisting the data. An OEM can implement the two functions <A HREF="cmrefwriteregistrytooem.htm">WriteRegistryToOEM</A> and <A HREF="cmrefreadregistryfromoem.htm">ReadRegistryFromOEM</A> in their OAL. These functions, if implemented, are called by the registry code to save and restore the data. When an application calls <MSHelp:link keywords="cerefRegFlushKey" TABINDEX="0">RegFlushKey</MSHelp:link>, the OS makes a series of calls to <B>WriteRegistryToOEM</B> to pass the entire registry to the OEM, who stores the data on any persistent media. Then when the system is booting, it makes another series of calls to <B>ReadRegistryFromOEM</B> to receive the data from wherever the OEM stored it. The difficulty in using this mechanism is that file system calls such as <MSHelp:link keywords="cerefCreateFile" TABINDEX="0">CreateFile</MSHelp:link>, <MSHelp:link keywords="cerefReadFile" TABINDEX="0">ReadFile</MSHelp:link>, and <MSHelp:link keywords="cerefWriteFile" TABINDEX="0">WriteFile</MSHelp:link>, cannot be used to read the data from storage during <B>ReadRegistryFromOEM</B>. While they can be used during <B>WriteRegistryToOEM</B>, the block and file system drivers needed to read from external media are not started until after the registry is initialized. Therefore, implementing <B>ReadRegistryFromOEM</B> is difficult; code to read from the persistent media must be added to the OAL. But this mechanism has the benefit of requiring only a single boot to restore the registry, as opposed to the dual-boot required by the <B>RegCopyFile</B> and <B>RegRestoreFile</B> mechanism.</P>
+
+<P>These pairs of APIs, <B>RegCopyFile</B> and <B>RegRestoreFile</B>, and <B>WriteRegistryToOEM</B> and <B>ReadRegistryFromOEM</B>, cannot be intermixed. The file produced by <B>RegCopyFile</B> is not the same as that produced by <B>WriteRegistryToOEM</B>.</P>
+
+<P>To make use of either save-and-restore mechanism, you must understand how Windows CE initializes the RAM-based registry. The following list shows the process of initializing the RAM-based registry:
+
+<OL type="1">
+	<LI>The system initializes the kernel.</li>
+
+	<LI>The kernel launches Filesys.exe.</li>
+
+	<LI>Filesys.exe initializes the RAM file system.</li>
+
+	<LI>Filesys.exe initializes the database subsystem.</li>
+
+	<LI>Filesys.exe initializes the registry by checking for a registry in RAM. If one is found, go to step 7.</li>
+
+	<LI>If Filesys.exe does not find a registry in step 5, it restores the registry from ROM. Filesys.exe loads \Windows\Default.fdf, which was created using Makeimg.exe.</li>
+
+	<LI>Filesys.exe checks for the <B>ReadRegistryFromOEM</B> OEM adaptation layer (OAL) function. If Filesys.exe does not find <B>ReadRegistryFromOEM</B>, it keeps the registry from ROM, as described in step 6.</li>
+
+	<LI>Filesys.exe tries to restore \Windows\Restore.fdf, which is created with the <B>RegCopyFile</B> function. If Filesys.exe cannot restore \Windows\Restore.fdf, it keeps the registry from ROM, as described in step 6.</li>
+
+	<LI>Filesys.exe checks one more time for <B>ReadRegistryFromOEM</B>. If Filesys.exe does not find <B>ReadRegistryFromOEM</B>, it keeps the registry from ROM as described in step 6.</li>
+</OL>
+
+<P>You cannot access files that would exist on a PC Card or any other device that is serviced by a device driver that is managed by Device.exe because Device.exe has not been loaded. Also, you cannot allocate memory to pass to the system because the registry saving and loading functionality is implemented in the OAL.</P>
+
+<P class="labelproc"><B>To initialize a RAM-based registry</B>
+
+<OL type="1">
+	<LI>Expose the <B>ReadRegistryFromOEM</B> and <B>WriteRegistryToOEM</B> functions in your OAL after Filesys.exe initializes the RAM file system. </li>
+
+	<LI>If an OAL is not available, use the <B>RegCopyFile</B> and <B>RegRestoreFile</B> functions to initialize a registry from RAM. 
+<P><B>RegCopyFile</B> saves the registry and <B>RegRestoreFile</B> restores the registry.
+</li>
+
+	<LI>After <B>RegRestoreFile</B> succeeds, reset your device for the new registry settings to take effect. </li>
+</OL>
+
+<P>You can create a boot sequence so that the user is unaware that a reset has occurred by configuring the <B>HKEY_LOCAL_MACHINE\Init</B> registry key. In this registry key, you can restore the registry and reboot without launching Gwes.exe. Then, you can do a full startup. By preventing Gwes.exe from launching, the display does not become active and therefore the user is unaware that any reset has occurred.</P>
+
+<P>Using <B>RegCopyFile</B> and <B>RegRestoreFile</B> to initialize a registry from RAM requires enough of the system to be running to restore the registry. The portions of the system that must be running depend on where your registry file resides. For example, if your registry file resides on a PC Card, Device.exe must be running before the registry can be restored. Otherwise, your system cannot access the registry file on the PC Card.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconram-basedregistry.htm">RAM-Based Registry</A></P>
+
+<P><A HREF="cgconram-basedregistrysetup.htm">RAM-Based Registry Setup</A></P>
+
+<P><MSHelp:link keywords="cmrefRegCopyFile" TABINDEX="0">RegCopyFile</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefRegRestoreFile" TABINDEX="0">RegRestoreFile</MSHelp:link></P>
+
+<P><A HREF="cmrefwriteregistrytooem.htm">WriteRegistryToOEM</A></P>
+
+<P><A HREF="cmrefreadregistryfromoem.htm">ReadRegistryFromOEM</A></P>
+
+<P><MSHelp:link keywords="cerefRegFlushKey" TABINDEX="0">RegFlushKey</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Persisting%20Data%20with%20the%20RAM-Based%20Registry&nbsp;(cgconinitializingregistrybasedinram.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

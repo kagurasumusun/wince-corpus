@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HttpSendRequest</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="HttpSendRequest"/>
+<MSHelp:RLTitle Title="HttpSendRequest"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_HttpSendRequest"/>
+<MSHelp:Keyword Index="K" Term="HttpSendRequest"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: internet.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_win32_httpsendrequest"></A>HttpSendRequest</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This<B> </B>function sends the specified request to the HTTP server.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI HttpSendRequest(
+HINTERNET </B><I>hRequest</I><B>, 
+LPCTSTR </B><I>lpszHeaders</I><B>, 
+DWORD </B><I>dwHeadersLength</I><B>, 
+LPVOID </B><I>lpOptional</I><B>, 
+DWORD </B><I>dwOptionalLength</I><B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>hRequest </I></DT>
+
+<DD>[in] Open HTTP request handle returned by <A HREF="_wcesdk_win32_httpopenrequest.htm"><B>HttpOpenRequest</B></A>. </dd>
+
+<DT><I>lpszHeaders </I></DT>
+
+<DD>[in] Long pointer to null-terminated strings that contain additional headers to be appended to the request. This parameter can be NULL if there are no additional headers to append. </dd>
+
+<DT><I>dwHeadersLength </I></DT>
+
+<DD>[in] Specifies the length, in characters, of the additional headers. If this parameter is -1L and <I>lpszHeaders</I> is not NULL, the function assumes that <I>lpszHeaders</I> is zero-terminated (ASCIIZ), and the length is calculated. </dd>
+
+<DT><I>lpOptional </I></DT>
+
+<DD>[in] Long pointer to any optional data to send immediately after the request headers. This parameter is generally used for POST and PUT operations. The optional data can be the resource or information being posted to the server. This parameter can be NULL if there is no optional data to send. </dd>
+
+<DT><I>dwOptionalLength </I></DT>
+
+<DD>[in] Specifies the length, in bytes, of the optional data. This parameter can be zero if there is no optional data to send. </dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P><B>HttpSendRequest</B> sends the specified request to the HTTP server and allows the client to specify additional headers to send along with the request. </P>
+
+<P>The function also lets the client specify optional data to send to the HTTP server immediately following the request headers. This feature is generally used for "write" operations such as PUT and POST. When using optional data, be aware of the following caveat: the size of the optional data buffer, specified with the <I>dwOptionalLength</I> parameter, must be either less than 32 bytes or greater than approximately 150 bytes. Otherwise, the <B>HttpSendRequest</B> function fails. </P>
+
+<P>Another caveat requires that the optional data buffer begin with '/r/n'. This ensures that header and buffer is separated by '/r/n/r/n' as required by RFC 2068.</P>
+
+<P>After the request is sent, the status code and response headers from the HTTP server are read. These headers are maintained internally and are available to client applications through the <B>HttpQueryInfo</B> function. </P>
+
+<P>An application can use the same HTTP request handle in multiple calls to <B>HttpSendRequest</B>, but the application must read all data returned from the previous call before calling the function again. </P>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Wininet.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Wininet.lib</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_httpopenrequest.htm"><B>HttpOpenRequest</B></A>, <A HREF="_wcesdk_win32_httpqueryinfo.htm"><B>HttpQueryInfo</B></A>, <A HREF="_wcesdk_win32_internetreadfile.htm"><B>InternetReadFile</B></A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;HttpSendRequest&nbsp;(_wcesdk_win32_httpsendrequest.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

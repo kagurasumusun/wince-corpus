@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OleDraw</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OleDraw"/>
+<MSHelp:RLTitle Title="OleDraw"/>
+<MSHelp:Keyword Index="A" Term="cerefOleDraw"/>
+<MSHelp:Keyword Index="K" Term="OleDraw"/>
+<MSHelp:Keyword Index="A" Term="cerefOleDraw"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: automation_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748089">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefoledraw"></A>OleDraw</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This helper function provides a convenient way to draw objects by encapsulating the <B>IViewObject::Draw</B> method and other related maintenance functions for the drawing rectangle.</P>
+
+<PRE class="syntax"><B>WINOLEAPI</B> <B>OleDraw(</B>
+<B>IUnknown</B> <B>*</B><I>pUnk</I><B>,</B> 
+<B>DWORD</B> <I>dwAspect</I><B>,</B> 
+<B>HDC</B> <I>hdcDraw</I><B>,</B> 
+<B>LPCRECT</B> <I>lprcBounds</I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pUnk</I></DT>
+
+<DD>[in] Pointer to the <B>IUnknown</B> interface on the view object that is to be drawn.</dd>
+
+<DT><I>dwAspect</I></DT>
+
+<DD>[in] Specifies how the object is to be represented. Representations include content, an icon, a thumbnail, or a printed document. Valid values are taken from the enumeration <A HREF="cerefdvaspect.htm">DVASPECT</A>. See <B>DVASPECT</B> for more information.</dd>
+
+<DT><I>hdcDraw</I></DT>
+
+<DD>[in] Handle to the device context (DC) on which to draw. Cannot be a metafile device context.</dd>
+
+<DT><I>lprcBounds</I></DT>
+
+<DD>[in] Long pointer to a <B>RECT</B> structure specifying the rectangle in which the object should be drawn. This parameter is converted to a <MSHelp:link keywords="cerefRECTL" TABINDEX="0">RECTL</MSHelp:link> structure and passed to <A HREF="cerefiviewobjectdraw.htm">IViewObject::Draw</A>.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function supports the standard return values E_INVALIDARG and E_OUTOFMEMORY, as well as the following.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>S_OK</TD>
+<TD width=67%>Object was successfully drawn.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OLE_E_BLANK</TD>
+<TD width=67%>No data to draw from.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>E_ABORT</TD>
+<TD width=67%>The draw operation was aborted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>VIEW_E_DRAW</TD>
+<TD width=67%>An error occurred in drawing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OLE_E_INVALIDRECT</TD>
+<TD width=67%>The rectangle is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DV_E_NOIVIEWOBJECT</TD>
+<TD width=67%>The object does not support the <A HREF="cerefiviewobjectiunknown.htm">IViewObject</A> interface.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Passing into this function any invalid and, under some circumstances, NULL pointers will result in unexpected termination of the application. </P>
+
+<P>The <B>OleDraw</B> helper function calls the <B>QueryInterface</B> method for the object specified (<I>pUnk</I>), asking for an <B>IViewObject</B> interface on that object. Then, <B>OleDraw</B> converts the <B>RECT</B> structure to a <B>RECTL</B> structure, and calls <A HREF="cerefiviewobjectdraw.htm">IViewObject::Draw</A> as follows.</P>
+
+<PRE class="code">lpViewObj-&gt;Draw(dwAspect,-1,0,0,0,hdcDraw,&amp;rectl,0,0,0); </PRE>
+
+<P>Do not use <B>OleDraw</B> to draw into a metafile because it does not specify the <I>lprcWBounds</I> parameter required for drawing into metafiles.</P>
+
+<P>To determine whether the platform supports this function, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Ole2.h</TD>
+<TD width=15%>Ole2.h</TD>
+<TD width=20%>Ole32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefdvaspect.htm">DVASPECT</A>, <MSHelp:link keywords="cerefRECTL" TABINDEX="0">RECTL</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;OleDraw&nbsp;(cerefoledraw.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

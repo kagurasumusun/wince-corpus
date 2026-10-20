@@ -1,0 +1,940 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>System Memory Management in Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="System Memory Management in Windows CE .NET"/>
+<MSHelp:RLTitle Title="System Memory Management in Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="systemmemorymgmtwince"/>
+<MSHelp:Keyword Index="K" Term="System memory management, storage technologies"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, system memory management"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenet"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="Memory"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbMemory"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn about the design tradeoffs involved in creating Windows CE .NET operating system (OS) solutions for hardware that implements one of many nonvolatile storage technologies. Different storage technologies, such as NAND and NOR flash memory, masked ROM, and electromechanical Advanced Technology Attachment (ATA) or Integrated Drive Electronics (IDE) storage, impose design constraints and create opportunities for the software environment."><meta name="keywords" content="Windows CE .NET, system memory management"><META name="rtfFileName" content="systemmemorymgmtwince.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Microsoft Corporation">
+<META NAME="Date" CONTENT="2002-10-01">
+<META NAME="msdnID" CONTENT="_839564">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="systemmemorymgmtwince"></A>System Memory Management in Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>October 2002</P>
+
+<P>Applies to: <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.1 and later</P>
+
+<P><B>Summary:</B> Learn about the design tradeoffs involved in creating Windows CE .NET operating system (OS) solutions for hardware that implements one of many nonvolatile storage technologies. Different storage technologies, such as NAND and NOR flash memory, masked ROM, and electromechanical Advanced Technology Attachment (ATA) or Integrated Drive Electronics (IDE) storage, impose design constraints and create opportunities for the software environment. (30 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#systemmemorymgmtwince_topic1">Introduction</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic2">Memory and Storage Technologies</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic3">NAND Flash Memory</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic3a">Conventional Linear or NOR Flash Memory</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic3b">Hybrid Flash Memory</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic3c">ATA or IDE Hard Disk Drive</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic4">XIP vs. Relocatable Code</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic4a">ROM Image Builder</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic4b">Binary Image Builder File</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic5">Image Mapping</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic5a">Single Image</A> <U><BR>
+</U>&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic5b">Multiple Region Images</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic6">File Systems</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic7">Modules Area</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic7a">ROM File System</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic7b">RAM File System (Object Store)</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic7c">External File Systems</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic7d">File System Registries</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic8">Boot Loaders</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic8a">Boot Loaders and Image Storage</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic8b">Boot Loaders and Multiple Region Images</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic8c">Specialized Boot Loaders</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic9">Typical Systems</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic9a">Topology A: Linear (NOR) Flash Memory and RAM</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic9b">Topology B: Linear ROM and RAM</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic9c">Topology C: NAND Flash Memory and RAM</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic9d">Topology D: Linear ROM, NAND Flash Memory, and RAM</A> <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="#systemmemorymgmtwince_topic9e">Topology E: Linear ROM, Disk Drive, and RAM</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic10">Conclusion</A> <BR>
+<A HREF="#systemmemorymgmtwince_topic11">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic1"></A>Introduction</H2>
+
+<P>This article gives an overview of the different storage memory technologies, describes the constraints and opportunities for different memory topologies, and describes the different ways you can configure the Microsoft&#174; Windows&#174;&nbsp;CE OS image. The article also discusses how storage memory and the OS can be used together to target specific design criteria such as performance, power consumption, or upgradeability.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic2"></A>Memory and Storage Technologies</H2>
+
+<P>The physical storage you choose for a particular design has significant impact on the cost and performance of the overall design. Each storage technology imposes design constraints that you, the software engineer, should be aware of. This section describes the common storage technologies available and compares and contrasts the features for each technology.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The data for this section was derived from leading vendor publications for both NAND and NOR. Because of ongoing changes in flash memory technologies, this information is subject to change.</BLOCKQUOTE>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic3"></A>NAND Flash Memory</H2>
+
+<P>Toshiba Corporation invented NAND flash memory in the late 1980s and its lower cost per byte and higher storage sizes are making it a popular flash memory technology for embedded applications today. The gate design in combination with process technology miniaturization is enabling single NAND flash memory parts in the upper hundreds of megabytes to be realized at a superior cost-per-byte ratio.</P>
+
+<P>NAND flash memory is a block-accessed storage device, very much like a conventional electro-mechanical disk drive with a serial interface. For this reason, NAND flash memory is not suitable for execute in place (XIP) solutions because the CPU requires program memory to be linear. Instead, NAND flash memory images are typically moved to DRAM during execution either at boot time or by OS paging. This ties the cost of NAND flash memory-based devices more closely to the fluctuating DRAM market prices. It also poses a design problem: how to fetch the initial pre-boot or OS code at boot time. This can be resolved by adding NOR to the system design, either in hybrid form or as a separate part, or by using new CPU designs that support streaming the initial boot code over NAND's serial interface during CPU reset.</P>
+
+<P>A disadvantage to using NAND flash memory is its susceptibility to manufacturing flaws and run-time cell failures, which show up in the form of bad NAND sectors and/or blocks. Data errors can also occur during read cycles, which make hardware and/or software data error detection and correction logic essential in any NAND design. For example, you can correct single bit data errors through basic Hamming-based error correction codes (ECCs). You can also apply wear-leveling techniques to limit the number of erase cycles per block. Wear-leveling helps extend the lifespan of the part by minimizing the number of block erase cycles.</P>
+
+<P>The typically shorter erase and write access times for NAND flash memory over conventional linear flash memory is an advantage. Read access times for both NAND flash memory and conventional linear flash memory are comparable. In addition, the erase cycle is typically an order of magnitude greater than linear flash memory, thereby extending the lifespan of the NAND flash memory part. This cost-per-byte benefit and the larger storage sizes offset the added complexity involved in the NAND solution and any additional expense in DRAM.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic3a"></A>Conventional Linear or NOR Flash Memory</H3>
+
+<P>The storage capacity of NOR flash memory devices is typically smaller than that of NAND flash memory, but their simpler SRAM-like hardware interface and their lack of manufactured bad blocks make NOR a suitable choice for certain designs.</P>
+
+<P>NOR flash memory is a random-access storage device with a hardware interface similar to SRAM. Because of this, NOR flash memory is suitable for XIP designs where the CPU is allowed to fetch instructions directly from flash memory. While flash memory read access times are slower than that of DRAM, the performance penalty can be lessened through good design, for example, by optimizing code for cache usage and running select high-impact code from RAM.</P>
+
+<P>NOR flash memory capacities are typically smaller than NAND due to the basic gate design and to yield concerns&#151;NOR flash memory is sold without manufactured bad blocks. This tends to limit capacities while elevating the cost-per-byte ratio. However, for a given design, NOR flash memory can be advantageous because it does not require additional DRAM or bad block management logic.</P>
+
+<P>The following table shows the per-chip NAND and NOR flash memory attributes.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Measurement</TH>
+<TH width=33%>NOR</TH>
+<TH width=34%>NAND</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Capacity</B></TD>
+<TD width=33%>1 MB - 16 MB</TD>
+<TD width=34%>8 MB - 128 MB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Performance</B></TD>
+<TD width=33%>Erase: very slow
+<P>Write: slow</P>
+
+<P>Read: fast</P>
+</TD>
+<TD width=34%>Erase: fast
+<P>Write: fast</P>
+
+<P>Read: fast</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Reliability</B></TD>
+<TD width=33%>Less than 10% of the life span of NAND</TD>
+<TD width=34%>Requires bad block and bit error management</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Erase cycles range</B></TD>
+<TD width=33%>10,000 - 100,000</TD>
+<TD width=34%>100,000 - 1,000,000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>XIP capabilities</B></TD>
+<TD width=33%>Random</TD>
+<TD width=34%>Sequential</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Interface</B></TD>
+<TD width=33%>SRAM-like</TD>
+<TD width=34%>I/O only (serial)</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Table 1. NOR and NAND comparison. Source: NAND Flash Technology vs. NOR Flash Technology, M-Systems.</B></P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic3b"></A>Hybrid Flash Memory</H3>
+
+<P>A number of flash memory manufacturers are trying to combine the best of both NAND and NOR flash memory technologies on a single device. NAND flashes that support on-chip wear-leveling and SRAM-like interfaces are now available. NAND parts that support an XIP-able NOR boot flash memory region can enable a single flash memory part design.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic3c"></A>ATA or IDE Hard Disk Drive</H3>
+
+<P>The standard ATA or IDE hard disk drive can also be a good choice for image storage. Like NAND flash memory, disk drives are block-accessed devices. This means that you cannot directly execute code from disk. Instead, you must copy code to linear memory (DRAM), where you can execute it. Read and write access times are significantly longer than that of solid-state devices, but the storage capacity of disk drives is much larger. Many of the software design techniques that you apply to boot from and dynamically use NAND flash memory with the Windows CE OS also apply here.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic4"></A>XIP vs. Relocatable Code</H2>
+
+<P>You can create individual Windows CE-based components in one of two different forms at build time: position independent (also called, "relocatable") forms; or fixed position (also called, "execute in place [XIP]") forms. At run time, the OS loader fixes relocatable code to run at an available RAM address dynamically chosen by the loader. The benefit is an efficient use of system RAM without requiring you to explicitly specify the RAM layout. The downside is slightly longer load times as the OS loader handles the relocation. In addition, you have less flexibility as to where the code executes from, because code can only be relocated to RAM.</P>
+
+<P>XIP images are fixed position images and are built to run from a specific location. The location must be accessible in a linear format so that the CPU can fetch instructions; thus, DRAM and NOR flash memory are possible storage types. XIP images present the possibility of running from flash memory and thus minimizing RAM usage.</P>
+
+<P>For you to understand how the build tools determine what needs to be XIP and what needs to be relocatable, you need to understand ROM Image Builder tool (Romimage.exe) and Binary Image Builder (.bib) files. For more information, see the <A HREF="#systemmemorymgmtwince_topic4a">ROM Image Builder</A> and <A HREF="#systemmemorymgmtwince_topic4b">Binary Image Builder File</A> topics.</P>
+
+<P>By controlling the compressibility of the constituent OS image components and specifying the system address range where executable code is to be located, you can control which parts of the image are XIP and which are relocated at run time. You also have some degree of control over what runs out of flash memory and what runs from RAM.</P>
+
+<P>When you store images in flash memory, you should compress performance-critical code and rarely used modules. This will minimize flash memory usage, page the code into RAM at run time, and thus result in faster access time. Performance-critical code should execute from RAM without demand paging. Critical code should be either loaded completely by the OS loader instead of demand paging, or copied into RAM by a boot-time loader.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic4a"></A>ROM Image Builder</H3>
+
+<P>The ROM Image Builder tool, Romimage.exe, is a build tool for Windows CE that runs in the final phase of the build process. Romimage.exe performs the following functions:
+
+<UL type="disc">
+	<LI>Collects all the requisite components that make up the final image including drivers, executables, and data files</li>
+
+	<LI>Performs fix-ups on any executable code in a space efficient manner, thus detailing where code will execute from by default</li>
+
+	<LI>Compresses parts of the image</li>
+
+	<LI>Places any data files or compressed sections in address holes between aligned components</li>
+
+	<LI>Generates the Nk.bin image, which is placed on the target platform</li>
+</UL>
+
+<P>Configurable .bib files mainly drive the whole process.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic4b"></A>Binary Image Builder File</H3>
+
+<P>A binary image builder (.bib) file specifies the files and components placed in the final, built OS image. The file also includes information about attributes that dictate how the OS handles each file and component. For example, the file includes information about decompressing images or pages in the whole module at load time, and choosing where the files and components are loaded in the virtual address space. A .bib file is composed of three sections: MEMORY, MODULES and FILES.</P>
+
+<H4 class="dtH1">MEMORY section</H4>
+
+<P>The MEMORY section of a .bib file, specified in Config.bib, details the system addresses available to the OS. Each board support package (BSP) contains one copy of Config.bib. The following code example shows a MEMORY region entry.</P>
+
+<PRE class="code">     NK      80001000  01FFF000  RAMIMAGE
+     RAM     82000000  01DB0000  RAM
+</PRE>
+
+<P>The RAMIMAGE entry tells Romimage.exe to locate any executables, modules, data files and compressed sections in the range of virtual address 0x8000.1000 through 0x81FF.FFFF. These addresses can physically correspond to RAM or to linear flash memory. The RAM entry specifies the range of virtual addresses available to the Windows CE kernel for allocation to the file system or object store, process virtual address spaces such as heaps and stacks, memory mapped files and writable data sections. Once you run Romimage.exe, all non-compressed executable code is fixed up to run at a virtual address in slot 0 with the code actually residing within the range of addresses specified in the RAMIMAGE entry. Slot 0 is an address space created by the Windows CE kernel.</P>
+
+<H4 class="dtH1">MODULES section</H4>
+
+<P>The MODULES section of a .bib file informs Romimage.exe about which files to load into the final image and how to load them into the memory range specified in the MEMORY section. The following code example shows an entry in the MODULES section.</P>
+
+<PRE class="code">INIT.EXE   %_WINCEROOT%\RELEASE\INIT.EXE   NK  SH
+MYDLL.DLL  %_WINCEROOT%\RELEASE\MYDLL.DLL  NK  SHC
+</PRE>
+
+<P>The entries inform Romimage.exe to include Init.exe and Mydll.dll in the OS image. More specifically, the entries tell Romimage.exe to locate both files in the section labeled NK, which is in the RAMIMAGE range as specified in the MEMORY section entry. The C flag in the second MOUDULES section entry also specifies that Romimage.exe needs to compress Mydll.dll. For more information about flags used in the MODULES section, see <A HREF="http://go.microsoft.com/fwlink/?LinkId=10543">Modules Section</A> in Windows CE .NET Help. By compressing Mydll.dll, Romimage.exe is informing the kernel that it needs to uncompress, perform any run-time fix-ups, and demand page the image into RAM. If the compressed file is already in RAM, that is, the RAMIMAGE section maps to RAM, then Mydll.dll is occupying two areas of RAM. However, the compressed image can be in flash memory.</P>
+
+<H4 class="dtH1">FILES section</H4>
+
+<P>The FILES section of a .bib file is similar to the MODULES section. However, Romimage.exe compresses all entries by default. The FILES section is typically comprised of data files that are loaded into application processes, for example, waveform audio files (.wav) and bitmaps. The following code example shows an entry in the FILES section. It instructs Romimage.exe to include Initobj.dat in the image and to compress it.</P>
+
+<PRE class="code">INITOBJ.DAT  $(_FLATRELEASEDIR)\RELEASE\INITOBJ.DAT  NK  SH
+</PRE>
+
+<P>There is a key difference between placing a file in the MODULES section over placing a file in the FILES section. Namely, any dynamic-link libraries (DLLs) in the MODULES section will be loaded into process slot 1 of the Windows CE virtual memory map. Process slot 1 is a 32 MB address space set aside specifically for these modules and therefore provides significant space for storing DLL code used across the system. Any DLLs placed in the FILES section will be loaded into every slot location and thus decrease the virtual address space available to any one process. For more information about Windows CE processes and virtual memory design, see this <A HREF="http://go.microsoft.com/fwlink/?LinkId=10544">Memory Architecture</A> in Windows CE .NET Help.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic5"></A>Image Mapping</H2>
+
+<P>At run time, OS components are fetched from the addresses chosen by Romimage.exe at build time. These components can be executed in place provided they exist in CPU-accessible linear memory or they can be paged into RAM by the OS loader. Romimage.exe and the .bib file controls the location from which components are fetched and the manner in which the original is organized. More specifically, the .bib file allows you to control the segmentation and layout of the entire OS image. For example, rather than having a single monolithic Nk.bin image, you may want to organize the components into individual regions: Nk.bin, for kernel, file system and other critical components; IE.bin, for Internet Explorer components; and Apps.bin, for any custom applications. By arranging your OS image in this way, you can update areas individually, control access to special areas and provide an additional way to map components through paging or through XIP.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic5a"></A>Single Image</H3>
+
+<P>By default, Romimage.exe will generate a single Nk.bin file. Though this file may contain compressed modules, which will be paged into RAM at run time by the OS loader, anything that is uncompressed will run XIP from the address range specified in the MEMORY section of the .bib file. If the XIP areas are physically in RAM, but the image is stored in some non-volatile storage such as flash memory, then code is required&#151;either a boot loader or early OS startup code&#151;to copy the image from non-volatile storage to the correct RAM location per Config.bib where execution continues.</P>
+
+<P>When updating any part of the image, you need to update the entire Nk.bin file. This can be a bit dangerous, for example, if you only want to update an application, but have to perform a flash memory operation on the entire OS image. A better solution might be to locate applications that may need periodic updates in a separate image region. Other than dealing with linear flash memory limitations of executing in place while updating flash memory, it could then be possible to close the running application, update just the application region, then restart the application without ever touching the kernel and without rebooting.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic5b"></A>Multiple Region Images</H3>
+
+<P>With a multi-region image, you have finer control over the image layout, can control region updates, and can decide on a per-region basis how the OS will access that region when it pages its components at run time. For example, you may want to have the OS loader page in modules from a region through a low-level flash memory file system driver or through a more conventional FAT file system in flash memory. The <A HREF="#systemmemorymgmtwince_topic6">File Systems</A> topic describes these file system concepts. Creating a multi-region image requires .bib and OEM adaptation layer (OAL) source modifications.</P>
+
+<H4 class="dtH1">Multiple region BIB changes</H4>
+
+<P>To specify the number of image regions and their locations, you need to modify the MEMORY section of the .bib file, Config.bib, to describe the starting address and length of each region. The following code example shows how you can do this.</P>
+
+<PRE class="code">   NK       80220000  008de000  RAMIMAGE
+   CHAIN    80afe000  00001000  RESERVED
+   EXT2     80aff000  00001000  RAMIMAGE
+   EXT      80b00000  00100000  RAMIMAGE
+   RAM      80c00000  01000000  RAM
+</PRE>
+
+<P>The above MEMORY entries tell Romimage.exe that four image regions need to be created: NK, for the kernel and core OS files, EXT2, EXT and CHAIN. The size specified for each region is the maximum size of that region. When updating a region, code and data sizes can increase up to the limit specified in the MEMORY section. Once a multi-region image is created, the MEMORY values should not be altered in order for future builds to remain compatible. The above example MEMORY entries also indicate where the RAM managed by the kernel resides. For this example, RAM resides in 0x80C0.0000 through 0x81BF.FFFF.</P>
+
+<P>Each multi-region image requires a CHAIN region where a chain file resides. The chain file is a list containing information about each of the image regions. It is available to the kernel through the OAL and provides a way for the OS to know about the files and modules that make up each region. In the MEMORY section, you need to define a fix-up variable that is ultimately used by the OAL to know where Romimage.exe places the chain file. This allows you to avoid hard coding the address in the OAL. Note that the value assigned to the variable should match the start of the CHAIN region defined in the above code example.</P>
+
+<P>The following code example shows how you can define a longword pointer <B>LPDWORD</B> <I>pdwXIPLoc</I> in your OAL code, and assign it the value 0x80AF.E000, which corresponds to the start of the CHAIN region.</P>
+
+<PRE class="code">   pdwXIPLoc 00000000  80afe000  FIXUPVAR
+</PRE>
+
+<P>After defining a fix-up variable, you need to add entries in the CONFIG section of the .bib file, which tell Romimage.exe where the chain file needs to be placed and to help with automatically sizing module images. The following code example shows the entries you need to add in the CONFIG section.</P>
+
+<PRE class="code">XIPSCHAIN=80afe000
+DLLADDR_AUTOSIZE=ON
+</PRE>
+
+<P>The XIPSCHAIN variable should point to the start of the CHAIN region defined in the MEMORY section.</P>
+
+<P>Last, you should tag the .bib entry for each component with the name of the region in which it is to reside. The following code example shows how you can do this.</P>
+
+<PRE class="code">pcmcia.dll     $(_FLATRELEASEDIR)\ti1250.dll        EXT  SH
+ensoniq.dll    $(_FLATRELEASEDIR)\ensoniq.dll       EXT  SH
+iesample.exe   $(_FLATRELEASEDIR)\iesample.exe      EXT2  S
+</PRE>
+
+<P>In the above example, the PCMCIA and Ensoniq drivers are placed in the EXT region and IESample is placed in the EXT2 region. You can modify both the MODULES and FILES sections in this way to organize files between the various regions. Each region definition results in a single .bin file that includes its own table of contents, which describes in detail each of the files in the region. The chain file in turn provides a way to enumerate the entire table of contents across all regions and thus gives the kernel a way to locate any file in the image.</P>
+
+<H4 class="dtH1">Multiple region OAL changes</H4>
+
+<P>The Windows CE kernel is informed of the existence of multiple image regions during OAL initialization, specifically, during <B>OEMInit</B>. The kernel exports a pointer, that when assigned to an array of structures that each point to a specific region's table of contents, provides the kernel with a way to enumerate all the files in an image across region boundaries. The following code example demonstrates how this is done.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>The code example uses the fix-up variable <I>pdwXIPLoc</I>, which is discussed in the <A HREF="#systemmemorymgmtwince_topic5b">Multiple region BIB changes</A> topic.</BLOCKQUOTE>
+
+<PRE class="code">#define NOT_FIXEDUP         (DWORD*)-1
+#define MAX_ROM             32 // Maximum number of regions.
+#define ROMXIP_OK_TO_LOAD   0x0001
+
+// ROM chain pointer exported by the kernel library
+extern  ROMChain_t     *OEMRomChain;
+
+// Fix-up variable (corresponds to variable in Config.bib)
+DWORD *pdwXIPLoc = NOT_FIXEDUP;
+
+void InitRomChain()
+{
+    static ROMChain_ts_pNextRom[MAX_ROM] = {0};
+    DWORD  dwRomCount = 0;
+    DWORD  dwChainCount = 0;
+    DWORD *pdwCurXIP = 0;
+    DWORD dwNumXIPs = 0;
+    PXIPCHAIN_ENTRY pChainEntry = NULL;
+
+    // Verify that Romimage.exe fixed up chain file pointer
+    if(pdwXIPLoc == NOT_FIXEDUP)
+    {
+        return;  // No chain or not fixed up properly
+    }
+
+    // Set the top bit to mark it as a virtual address
+    pdwCurXIP = (DWORD*)(((DWORD)pdwXIPLoc) | 0x80000000);
+
+    // First DWORD is number of XIP regions.
+    dwNumXIPs = (*pdwCurXIP);
+
+    // Make sure number of XIP regions does not exceed our maximum
+    if(dwNumXIPs &gt; MAX_ROM)
+    {
+        lpWriteDebugStringFunc(TEXT("ERROR: Number of XIP regions exceeds 
+          the maximum.\n"));
+        return;
+    }
+
+    // Point to the first XIP region chain entry
+    pChainEntry = (PXIPCHAIN_ENTRY)(pdwCurXIP + 1);
+
+    // Skip first entry because loader will add that in for
+    // us (this is the kernel region)
+    ++pChainEntry;
+    dwChainCount++;
+    
+    while (dwChainCount &lt; dwNumXIPs)
+    {
+        // If region is a valid XIP region and signature
+        // matches, then proceed.
+        if ((pChainEntry-&gt;usFlags &amp; ROMXIP_OK_TO_LOAD) &amp;&amp;
+          *(LPDWORD)(((DWORD)(pChainEntry-&gt;pvAddr)) + 
+            ROM_SIGNATURE_OFFSET) == ROM_SIGNATURE)
+        {
+            s_pNextRom[dwRomCount].pTOC = 
+              *(ROMHDR**)(((DWORD)(pChainEntry-&gt;pvAddr)) + 
+                ROM_SIGNATURE_OFFSET + 4);
+            s_pNextRom[dwRomCount].pNext = NULL;
+
+            if (dwRomCount != 0)
+            {
+                s_pNextRom[dwRomCount-1].pNext = &amp;s_pNextRom[dwRomCount];
+            }
+            else
+            {
+                OEMRomChain = s_pNextRom;
+            }
+            dwRomCount++;
+        }
+        else
+        {
+            lpWriteDebugStringFunc(TEXT("Invalid XIP region found.\n"));
+        }
+
+        ++pChainEntry;
+   dwChainCount++;
+    }
+}
+</PRE>
+
+<P>If <B>OEMInit</B> calls the <B>InitRomChain</B> function, <B>InitRomChain</B> will register the multiple XIP regions with the kernel, and thus provide a complete picture of the entire image. For more information about the <B>InitRomChain</B> function see the <B>ROMChain_t</B> and <B>ROMHDR</B> structures, which are defined in %_WINCEROOT%\Public\Common\Oak\Inc\Romldr.h.</P>
+
+<H4 class="dtH1">Building and using multiple region images</H4>
+
+<P>Once you build the multiregion image, it takes the form of five different .bin files: Chain.bin, Nk.bin, Ext.bin, Ext2.bin and Xip.bin. The first four files contain the files allocated to each of the defined regions. The last file, Xip.bin, is a composite image made up of the first four files and exists only to make the initial download to the target device easier.</P>
+
+<P>Once you store the entire image on the target device, you can update individual regions by downloading only the affected .bin file for a region. You can download the initial image and update images from boot loaders to OS applications in different ways. Boot loader options are discussed in more detail in the <A HREF="#systemmemorymgmtwince_topic8">Boot Loaders</A> topic.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic6"></A>File Systems</H2>
+
+<P>Windows CE supports file systems based on file allocation tables (FATs). The FAT driver works with any external storage cards that you can plug into your target device, such as Advanced Technology Attachment (ATA) and linear flash memory cards. These are mainly PC Cards. The cards can contain a file system partitioned into sections. Each section is mounted as a FAT volume and placed under a special folder in the root directory. The device driver associated with the card provides the name of the mounted folder. If a name is not provided, the name Storage Card is used to mount the file system.</P>
+
+<P>You can place file system components in four different areas: execute in place (XIP), ROM File System, Object Store, and External File System.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic7"></A>Modules Area</H2>
+
+<P>The modules area is the area that is true XIP. Modules that are placed in the XIP area are loaded by the ROM-image into RAM in the order specified. This is advantageous for your system, as it does not take up space in the virtual memory of a process. If there is no available RAM, the system will use virtual memory of a process by default. Modules placed in the XIP area are uncompressed by default. However, compressed modules will be handled in the same fashion as uncompressed modules.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic7a"></A>ROM File System</H3>
+
+<P>The file system manages all components that are defined in the FILES section of the .bib file for your image. You can choose to compress these components by enabling OS compression. By default, processes and modules that are loaded from the ROM file system area are paged. Modules will not be paged if they are loaded using the <B>LoadDriver</B> function. They will instead be copied into RAM to be executed. Any module loaded from this area will use virtual memory space in all processes.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic7b"></A>RAM File System (Object Store)</H3>
+
+<P>The object store, or RAM file system, is a memory area that has both read and write capabilities and is generally located in RAM with a battery-backup. All files that are placed in the object store are compressed by default. In order to turn off compression, you must specify <B>nknocompr</B> instead of <B>nkcompr</B> as your kernel component. Individual files can be stored uncompressed by using the FILE_FLAG_RANDOM_ACCESS flag when the file is created. By default, processes and modules that are loaded from the object store area are paged. Modules will not be paged if they are loaded using the <B>LoadDriver</B> function. They will instead be copied into RAM to be executed. Any module loaded from this area will use virtual memory space in all processes.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic7c"></A>External File Systems</H3>
+
+<P>An external file system is a file system that is mounted externally and managed by the file system driver manager (fsdmgr). Microsoft currently provides the FAT file system (FATFS) and the Universal Disk file system (UDFS) for external file systems. FATFS is supported for all block devices, while UDFS is a file system used for DVD-ROMs. UDFS also includes the compact disk file system (CDFS) for CD-ROMs. You can also use file systems provided by other vendors as well. In order to support paging for external file systems you must implement the <B>ReadFileWithSeek</B> and <B>WriteFileWithSeek</B> functions. The following registry entry can be used to enable file system paging.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\&lt;filesystem&gt;]
+     "Paging"=dword:1
+</PRE>
+
+<P>You can also disable file system paging by setting the <B>Paging</B> registry entry to 0. You can modify the behavior of a file system for a specific profile by altering the registry entry for that profile. The following registry entry controls the behavior of a file system.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profile\&lt;profilename&gt;\&lt;filesyste
+  m&gt;]
+     "Paging"=dword:1
+</PRE>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic7d"></A>File System Registries</H3>
+
+<P>When selecting the registry for your device, three registry options are available: the RAM-based (object-store-based) registry, the hive-based registry and the SRAM registry. The registry type in use is invisible to applications, but it will change the persistence, boot sequence and speed, and memory usage on your device. As a result, choosing the correct registry will improve your device characteristics and behavior.</P>
+
+<H4 class="dtH1">Object store registry</H4>
+
+<P>The object store registry is a RAM-based registry solution that can be set to persist by adding support in the OEM adaptation layer (OAL). This can be accomplished by implementing <B>pReadRegistryFromOEM</B> and <B>pWriteRegistryToOEM</B> functions in the OAL. When the registry is flushed using the <B>RegFlushKey</B> function, the file system enumerates through the entire registry and calls the <B>pWriteRegistryToOEM</B> function for each element. Upon initialization, the file system restores the registry by calling the <B>pReadRegistryFromOEM</B> function. The process of setting the registry to be persistent in the OAL as well as the restoring of the registry occurs before any other system components are loaded, with the exception of the kernel and file system. A last known good (LKG) configuration can be created by saving the registry using the <B>RegCopyFile</B> function and later restoring it using <B>RegRestoreFile</B>.</P>
+
+<H4 class="dtH1">Hive-based registry</H4>
+
+<P>A memory-mapped file on a target file system implements the hive-based registry. If the <B>StartDevMgr</B> registry value is set in <B>HKEY_LOCAL_MACHINE\init\BootVars</B> then the file system mounts the registry on an external location. If the <B>StartDevMgr</B> registry value is not set, the file system uses the object store registry. Only the changes that have been made to the ROM registry, or deltas, are saved in the hive. The registry can be saved and restored on the hive-based registry using <B>RegSaveKey</B> and <B>RegReplaceKey</B>. This is advantageous in an LKG scenario, as it requires a system reboot.</P>
+
+<H4 class="dtH1">SRAM registry</H4>
+
+<P>The SRAM registry is nearly identical to the hive-based registry except that the hive points to a specific section of SRAM. If the OAL implements <B>IOCTL_HAL_GET_HIVE_RAM_REGION</B> then the file system will use the specified RAM region. The SRAM registry is typically backed with a battery, but to have true persistence, the contents of the SRAM registry must be stored on a permanent storage device. The persistence of this type of registry is left up to the OEM.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic8"></A>Boot Loaders</H2>
+
+<P>The boot loader is used to place the OS image into memory and to jump to the OS startup routine. The boot loader can obtain the OS image in a number of different ways, including loading it over a cabled connection, such as Ethernet, universal serial bus (USB) or serial. The boot loader can also load the OS from a local storage device, such as flash memory or a disk drive. It may store the image in RAM or in nonvolatile storage, such as flash memory or a disk drive, for later use.</P>
+
+<P>In a retail device, the boot loader allows a kernel image to be compressed and/or built for a location other than where it is stored, for example, the kernel image is built to run from DRAM, but stored in compressed form in NAND flash memory. While the boot loader does not have to be the primary means of updating the OS image, its availability as a failsafe loader means that there is always an update mechanism to fall back on.</P>
+
+<P>The next few topics discuss a few of the common loader features that apply when running Windows CE from a variety of storage devices, discuss the multi-region image as it affects boot loaders, and describes two specialized boot loaders which are provided with Windows CE.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic8a"></A>Boot Loaders and Image Storage</H3>
+
+<P>Typically, the boot loader is the first bit of code to run on a device after hardware reset with the possible exception of BIOS/POST code. The boot loader is responsible for locating, loading, and executing the OS image. The loader typically resides in CPU-accessible linear memory, although there are instances where the loader resides on a block-accessed device such as a disk drive or NAND flash memory, for example, the BIOS boot loader which relies on the PC BIOS bootstrap process to load it into RAM and execute it. Though the bootstrap process could easily load the OS image, the boot loader can provide some additional benefits in a retail device scenario.</P>
+
+<P>When searching for a valid OS image to load, the boot loader will typically look in local storage first. Verifying that an image is valid can involve checking the signature of the stored image&#151;such as hashing the important contents of the image and then generating a digital certificate, which is compared against the image&#151;or can be based on a simpler validation like a checksum.</P>
+
+<P>The type of storage device and the manner in which the image is stored on the device dictates the support required in the loader. For example, in one of the simplest cases, the OS image could be stored uncompressed in NOR flash memory and after verification, be executed by simply jumping to the starting address in flash memory. A more complex scheme could involve finding and decompressing the kernel region of a multi-region image in NAND flash memory and moving it to RAM where it is executed. The choice as to how the image is stored and on what type of storage device is driven by cost, performance, and upgradeability concerns. For more information about design tradeoffs, see the <A HREF="#systemmemorymgmtwince_topic9">Typical Systems</A> topic.</P>
+
+<P>In failsafe scenarios where the boot loader cannot locate a valid image in local storage, the loader typically turns to a local cabled connection such as Ethernet or USB over which it can download a known good image and then write to local storage. Because the stored boot loader image typically either resides in a separate and protected memory device or resides in a special area of general storage, the size of the boot loader is generally restricted. This means that more sophisticated networking features are the domain of the OS. While the OS can coordinate download and updates with the boot loader, the boot loader typically implements a simple test of network features as a failsafe measure. For example, an application under the OS can download an update over HTTP into RAM, but because some flashes cannot be updated while being executed from, the application might set a flag to communicate with the boot loader and reboot the system, thus letting the boot loader update the device.</P>
+
+<P>When downloading and/or performing a flash memory operation on the image updates, the loader is typically tasked with validating the image first, possibly using checksums and signatures. Because typical flash memory erase and write times or disk drive writes can be significant, downloaded images are often cached temporarily in DRAM before being written to storage. Checksums and signatures are often verified in DRAM.</P>
+
+<P>If the storage device is unprepared, the next steps performed by the boot loader typically depend on the design of the OS image. For example, if the OS image makes use of a flash memory file system driver to page code from a region of NAND flash memory into DRAM, that file system may require that the device be partitioned and formatted with logical to physical sector numbering. Bad blocks may also need to be identified and marked so that the file system knows to ignore them. Ultimately, it is the boot loader's responsibility to ensure that the storage device is prepared in a manner consistent with what the OS image is expecting. Once done, the downloaded image is stored.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic8b"></A>Boot Loaders and Multiple Region Images</H3>
+
+<P>Multi-region images require the boot loader to be able to differentiate between the different .bin files and update only the pertinent regions of storage with the updated image. The .bin file format makes this relatively easy. The following table shows more information about the .bin file format.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Field</TH>
+<TH width=26%>Length (bytes)</TH>
+<TH width=41%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Sync bytes (optional)</TD>
+<TD width=26%>7</TD>
+<TD width=41%>Byte 0 is <CODE>B</CODE>, indicating a .bin file format.
+<P>Bytes 1-6 are reserved and set to <CODE>0</CODE>, <CODE>0</CODE>, <CODE>0</CODE>, <CODE>F</CODE>, <CODE>F</CODE>, <CODE>\n</CODE>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Image address</TD>
+<TD width=26%>4</TD>
+<TD width=41%>Physical starting address of the image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Image length</TD>
+<TD width=26%>4</TD>
+<TD width=41%>Physical length, in bytes, of the image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Record address</TD>
+<TD width=26%>4</TD>
+<TD width=41%>Physical starting address of the data record. If this value is zero, the record address is the end of the file, and <I>record length</I> contains the starting address of the image.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Record length</TD>
+<TD width=26%>4</TD>
+<TD width=41%>Length of <I>record data</I>, in bytes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Record checksum</TD>
+<TD width=26%>4</TD>
+<TD width=41%>Signed 32-bit sum of <I>record data</I> bytes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Record data</TD>
+<TD width=26%><I>Record length</I></TD>
+<TD width=41%>Record information.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Table 2. Binary Image Builder (.bin) record format</B></P>
+
+<P>The image header consists of the <I>image address</I> and <I>image length</I>. One or more records consist of the <I>record address, record length</I>, <I>record checksum</I> and <I>record data</I>. The .bin file is composed of a master header and a series of records, with each record having a header that specifies the location it is to be written to along with a length and a checksum value. Romimage.exe computes the header addresses based on the MEMORY section in Config.bib. For example, given the following code example in the MEMORY section:</P>
+
+<PRE class="code">    NK       80001000  01FFF000  RAMIMAGE
+    RAM      82000000  01DB0000  RAM
+</PRE>
+
+<P>You will receive the following output from Romimage.exe:</P>
+
+<PRE class="code">&lt;cut&gt;
+Physical Start Address:  80001000
+Physical End Address:    8122bed0
+Start RAM:               82000000
+Start of free RAM:       82032000
+End of RAM:              83db0000
+&lt;cut&gt;
+</PRE>
+
+<P>The output from Romimage.exe results in a .bin file that consists of the following records:</P>
+
+<PRE class="code">Image Start = 0x80001000, length = 0x0122AED0
+Record [  0] : Start = 0x80001000, Length = 0x00000014, Chksum = 
+  0x000002B1
+Record [  1] : Start = 0x80001040, Length = 0x00000008, Chksum = 
+  0x000002C5
+Record [  2] : Start = 0x80002000, Length = 0x00139014, Chksum = 
+  0x04D28C9C
+Record [  3] : Start = 0x8013C000, Length = 0x000000A4, Chksum = 
+  0x00000C30
+&lt;cut&gt;
+</PRE>
+
+<P>In a multi-region image, the .bin record addresses are unique across the various regions. Romimage.exe enforces this when you define the MEMORY section in Config.bib. As such, caching the image and uniquely locating the final storage location of the image on the device can be derived from the .bin record addresses, with consideration given to any non-zero ROMOFFSET value.</P>
+
+<P>ROMOFFSET is a .bib file CONFIG section variable. Its purpose is to differentiate where an image is stored on a device versus where it is executed from. Romimage.exe reads the value assigned to ROMOFFSET and applies that offset value to the computed .bin record addresses. This is useful, for example, if you want the image to execute in place from DRAM, thus requiring RAM-based fix-up addresses, but want to store the image itself in flash memory under the assumption that a loader or the OS startup code will copy the image to RAM at run time. Occasionally, it is important for the boot loader to figure out not only where the downloaded region should be stored, but also where it should be copied during run time. By knowing the ROMOFFSET value, you can determine the location. The following code example is from the BLCOMMON boot loader library and it demonstrates one way to compute ROMOFFSET.</P>
+
+<PRE class="code">#define ROM_SIGNATURE_OFFSET 64
+#define ROM_SIGNATURE        0x43454345
+
+// Look for ROMHDR to compute ROM offset. NOTE: Romimage.exe guarantees 
+  that the record containing
+// the TOC signature and pointer will always come before the record that 
+  contains the ROMHDR contents.
+//
+if (dwRecLen == sizeof(ROMHDR) &amp;&amp; (*(LPDWORD) OEMMapMemAddr(dwImageStart, 
+  dwImageStart + ROM_SIGNATURE_OFFSET) == ROM_SIGNATURE))
+{
+    DWORD dwTempOffset = (dwRecAddr &#0150; 
+      *(LPDWORD)OEMMapMemAddr(dwImageStart, dwImageStart + 
+        ROM_SIGNATURE_OFFSET + sizeof(ULONG)));
+    ROMHDR *pROMHdr = (ROMHDR *)lpDest;
+
+    // Check to make sure this record really contains the ROMHDR.
+    //
+    if ((pROMHdr-&gt;physfirst == (dwImageStart - dwTem
+pOffset)) &amp;&amp; (pROMHdr-&gt;physlast  == (dwImageStart - dwTempOffset + 
+dwImageLength)) &amp;&amp; (DWORD)(HIWORD(pROMHdr-&gt;dllfirst &lt;&lt; 16) &lt;= pROMHdr-
+&gt;dlllast) &amp;&amp; (DWORD)(LOWORD(pROMHdr-&gt;dllfirst &lt;&lt; 16)&lt;= pROMHdr-&gt;dlllast))
+    {
+        g_dwROMOffset = dwTempOffset;                                      
+        EdbgOutputDebugString("rom_offset=0x%x.\r\n", g_dwROMOffset);
+    }
+}
+</PRE>
+
+<P><B>OEMMapMemAddr</B> is of only slight interest in this case&#151;it maps the image to a temporary RAM cache address before the image is stored. The .bin file headers provide the <I>dwImageStart</I> and <I>dwRecAddr</I> parameters. The algorithm attempts to locate the .bin record that contains the <B>ROMHDR</B> region by size then compares the contents of the record to known image characteristics and the offset is computed by taking the difference between the <B>ROMHDR</B> .bin file record start address and the actual location from which the <B>ROMHDR</B> was built for run time.</P>
+
+<P>Lastly, an important aspect of handling multi-region image updates is to know during image update or download which region contains the kernel. This is often important in cases where the loader will be the one copying the kernel image to DRAM at reset. By locating the kernel region, saving the storage address, ROMOFFSET and start address, the loader has most of the information it needs to load and start the kernel at boot time. The following code example demonstrates whether it contains the Windows CE kernel given a region start address and length.</P>
+
+<PRE class="code">static BOOL IsKernelRegion(DWORD dwRegionStart, DWORD dwRegionLength)
+{
+   DWORD dwCacheAddress = 0;
+   ROMHDR *pROMHeader;
+   DWORD dwNumModules = 0;
+   TOCentry *pTOC;
+
+   if (dwRegionStart == 0 || dwRegionLength == 0)
+      return(FALSE);
+
+   if (*(LPDWORD) OEMMapMemAddr (dwRegionStart, dwRegionStart + 
+     ROM_SIGNATURE_OFFSET) != ROM_SIGNATURE)
+      return FALSE;
+
+   // A pointer to the ROMHDR structure lives just past the ROM_SIGNATURE 
+     (which is a longword value).  Note that
+   // this pointer is remapped because it might be a flash memory address 
+     (image destined for flash memory), but is actually cached
+   // in RAM.
+   //
+   dwCacheAddress = *(LPDWORD) OEMMapMemAddr (dwRegionStart, dwRegionStart 
+     + ROM_SIGNATURE_OFFSET + sizeof(ULONG));
+   pROMHeader     = (ROMHDR *) OEMMapMemAddr (dwRegionStart, 
+     dwCacheAddress);
+
+   // Make sure sure are some modules in the table of contents.
+   //
+   if ((dwNumModules = pROMHeader-&gt;nummods) == 0)
+      return FALSE;
+
+   // Locate the table of contents and search for the kernel executable 
+     and the TOC immediately follows the ROMHDR.
+   //
+    pTOC = (TOCentry *)(pROMHeader + 1);
+
+   while(dwNumModules--) {
+      LPBYTE pFileName = OEMMapMemAddr(dwRegionStart, (DWORD)pTOC-
+        &gt;lpszFileName);
+      if (!strcmp(pFileName, "nk.exe")) {
+         return TRUE;
+      }
+      ++pTOC;
+   }
+   return FALSE;
+}
+</PRE>
+
+<P>In the above code example, <B>OEMMapMemAddr</B> simply maps the storage address to a temporary RAM cached address, where it is kept before being written to final storage.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic8c"></A>Specialized Boot Loaders</H3>
+
+<P>Microsoft provides boot loaders with particular specialties in addition to the standard Ethernet boot loader provided with each BSP. Currently, these specialized boot loaders only address the needs of x86 platform solutions.</P>
+
+<H4 class="dtH1">x86 ROM boot loader</H4>
+
+<P>The x86 ROM boot loader (romboot) is a small boot loader that resides in the system flash memory part, usually a 256 KB flash memory/EEPROM. During power-on, it handles the platform initialization tasks that would normally be done by the platform BIOS. Once the platform is initialized, romboot supports downloading an image over Ethernet or loading the image from a local IDE drive.</P>
+
+<P>Because romboot is designed to reside in the flash memory, where the BIOS normally resides, the boot loader replaces the BIOS. This means that there are no BIOS features available to the OS. It also means that romboot configures the platform. This task includes setting up the memory controller, host bridge and PCI enumeration.</P>
+
+<P>The primary advantage of using romboot is that it is a very fast-booting loader solution. Romboot is an alternative to LoadCEPC.exe and is designed to not require BIOS or Microsoft MS-DOS&#174; services for the x86 platforms that it supports, thus providing a faster boot and download alternative. The loader currently supports the Lanner EM-350 and EM-351 Embedded SBCs and Advantech PCM-5822 and PCM-5823 Biscuit PC systems, though it can be extended to support many other chipsets. For more information about the systems supported by boot loader, see <A HREF="http://go.microsoft.com/fwlink/?LinkId=10545">Lanner EM-350 and EM-351 Embedded Single Board Computers</A> and <A HREF="http://go.microsoft.com/fwlink/?LinkId=10546">Advantech PCM-5822 and PCM-5823 Biscuit PC</A>.</P>
+
+<P>The boot loader supports downloading an image over an Ethernet connection, getting its IP address through the Dynamic Host Configuration Protocol (DHCP) or by static IP, as well as from a local IDE/ATA hard disk. You should place the NK.bin image in the root directory of the active partition when loading from a hard disk.</P>
+
+<P>You can find code for the ROM Boot Loader at the following locations:
+
+<UL type="disc">
+	<LI>Build files (BIB, batch, and others): %_WINCEROOT%\Platform\Geode\Romboot</li>
+
+	<LI>Common boot loader code: %_WINCEROOT%\Public\Common\Oak\CSP\i486\Romboot</li>
+
+	<LI>Geode/MediaGX code: %_WINCEROOT%\Public\Common\Oak\CSP\i486\Geode\Romboot</li>
+</UL>
+
+<P>For more information about the x86 ROM boot loader, see %_WINCEROOT%\Platform\Geode\Romboot\Readme.txt and <A HREF="http://go.microsoft.com/fwlink/?LinkId=10556">x86 ROM Boot Loader</A> in Windows CE .NET Help.</P>
+
+<H4 class="dtH1">x86 BIOS boot loader</H4>
+
+<P>The x86 BIOS boot loader (biosloader) is an alternative to romboot. Unlike romboot, biosloader does not replace the system BIOS. Rather, it uses the BIOS services like the VESA BIOS for video display control and INT 13h services for disk I/O to load an image from a local storage device. It will load a BIN image from any device that the BIOS exposes INT 13h support for and views as a storage device. This currently includes floppy, hard disk, Compact Flash (CF), and Disk-On-Chip. The boot loader resides on a bootable storage device and is found and loaded by a boot sector image.</P>
+
+<P>For more information about the BIOS boot loader and the boot process, see <A HREF="http://go.microsoft.com/fwlink/?LinkId=10560">x86 BIOS Boot Loader</A> in Windows CE .NET Help.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic9"></A>Typical Systems</H2>
+
+<P>Systems used today combine flash memory, ROM, RAM and disk storage in many different ways. This topic describes a few of these memory topologies and the various ways in which you can configure the Windows CE OS. It also includes a summary that reviews the design trade-offs, including performance, power, and upgradeability, involved in supporting each topology.</P>
+
+<P>The summaries make some basic assumptions about the relative differences between the various memory devices. More specifically, for the memory types described in this article, the following assumptions are made:
+
+<UL type="disc">
+	<LI>Read access times increase with device type in the following order: SDRAM, flash memory (NAND and NOR are not differentiated, it depends on read mode) and then disk drives.</li>
+
+	<LI>For the non-volatile memory types, erase and write times or the ability to update data, increase with device type in the following order: NAND flash memory, NOR flash memory, and then disk drives. SDRAM has the fastest erase and write times.</li>
+
+	<LI>Operating power consumption increases with device type in the following order: disk drives, SDRAM, NOR flash memory and then NAND flash memory.</li>
+
+	<LI>NAND flash memory does not support executing code in place from the flash memory part and thus typically requires a linear non-volatile memory solution such as NOR flash memory or ROM for boot-time initialization. NAND vendors offers hybrid designs like NAND flash memory with a small NOR boot block or logic designs that enable a CPU to read from a particular good NAND block at reset time to address this issue.</li>
+</UL>
+
+<P>The following table shows the various memory topologies discussed in this topic.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Memory topologies</TH>
+<TD width=70%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Topology A</TD>
+<TD width=70%>Linear (NOR) flash memory and RAM</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Topology B</TD>
+<TD width=70%>Linear ROM (not writeable) and RAM</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Topology C</TD>
+<TD width=70%>NAND flash memory and RAM</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Topology D</TD>
+<TD width=70%>Linear ROM (not writeable), NAND flash memory, and RAM</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Topology E</TD>
+<TD width=70%>Linear ROM (not writeable), disk drive, and RAM</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Table 3. Common system memory topologies</B></P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic9a"></A>Topology A: Linear (NOR) Flash Memory and RAM</H3>
+
+<P>In this configuration, NOR flash memory provides non-volatile storage. Typically there is no BIOS or boot loader present; this means that code execution will need to start from the NOR flash memory at CPU reset, thus prohibiting compression of the entire image to save space and perhaps allow for a smaller NOR part.</P>
+
+<H4 class="dtH1">OS configurations</H4>
+
+<P>For this memory topology, you can configure the Windows CE OS in the following ways:
+
+<UL type="disc">
+	<LI>XIP everything from NOR and use RAM for file system, object store and program memory.
+<P>This configuration supports the ability of NOR flash memory to store code that can be fetched directly by the CPU. The NOR flash memory is physically located at an address visible to the CPU at reset time and thus execution starts and proceeds from a known location in NOR flash memory. Because the kernel executes directly from NOR flash memory, this does not impose the requirement that a monitor or boot loader be present to relocate the kernel image to RAM.
+
+<P>To create an OS configuration of this type, the platform's Config.bib MEMORY section should indicate the available NOR flash memory address range with the RAMIMAGE keyword and the available RAM address range with the RAM keyword.
+</li>
+
+	<LI>XIP the kernel from NOR and page select programs and modules from NOR into RAM, and use the remainder of RAM for file system, object store, and program memory.
+<P>This configuration is very similar to the former configuration. However, for performance reasons it may be necessary to load specific programs and modules into RAM. Though the need for this will vary based on usage patterns, cache design and other factors, it is typically the case that executing code from SDRAM will be faster than from NOR flash memory. At CPU reset time, the Windows CE kernel is executed from NOR flash memory.
+
+<P>To create an OS configuration of this type, once having created the previous configuration, the specific programs and modules to be run from SDRAM can be selected by marking each file in the .bib file(s) with a compressed flag. When Romimage.exe generates the final OS image, these files will be compressed, thus taking up less NOR flash memory, and at run time the OS loader will decompress the code and page it into RAM where it is executed.
+</li>
+
+	<LI>XIP everything from RAM and use NOR for code and data storage.
+<P>This configuration makes the least use of the ability of NOR flash memory to support code that can be executed in place. However, it can offer the greatest overall performance solution for this specific memory topology. Instead of only compressing specific programs and modules in the image, as was done in the previous configuration, this configuration allows the entire OS image to be compressed. This configuration will typically require a monitor or boot loader to decompress and copy the entire image into RAM where it is executed.
+
+<P>To create an OS configuration of this type, the platform's Config.bib MEMORY section should indicate the available RAM and for image storage with the RAMIMAGE keyword. The portion of RAM to be used for the file system, object store and program RAM should be denoted with the RAM keyword. Once Romimage.exe has created the final OS image, you can compress the image with any number of compression schemes. You then need to include code in any monitor or boot loader environment to decompress the image. This will load the image into RAM at boot time.
+</li>
+</UL>
+
+<H4 class="dtH1">Summary</H4>
+
+<P>In this topology, the trade off for NOR flash memory versus RAM depends on the overall product goals. The following items discuss some of the specific engineering trade-offs in this design&#151;hardware and/or software.</P>
+
+<P class="label"><B>Performance issues</B></P>
+
+<P>The performance target and the cost of DRAM determine whether code execution during CPU reset continues from NOR flash memory. With DRAM access times typically shorter than NOR flash memory, running out of RAM is often the way to realize greater performance. Code locality, cache design, and memory bus design play a role in determining whether this holds true or not. A general rule of thumb is to move the most heavily executed code into RAM. This could be the kernel itself or specific modules. The kernel can be fixed to execute in place from RAM, start running in NOR flash memory, and then copy itself into RAM during early initialization. If specific modules are moved into RAM, the performance benefit of running from RAM while minimizing the NOR footprint can be realized by compressing the modules of interest.</P>
+
+<P>However, all of this takes away from one of the major benefits of NOR flash memory, which is the ability to XIP from it. In some cases, due to cost, complexity or power consumption, executing in place out of NOR with only a minimal amount of RAM is desirable. Specific optimizations can be achieved by moving performance critical components into RAM.</P>
+
+<P class="label"><B>Cost issues</B></P>
+
+<P>There are a number of complexities in analyzing cost. At its most simplistic level, the cost of DRAM is typically less than that of NOR flash memory. Therefore, minimizing the size of NOR flash memory in favor of DRAM is typically advantageous both in terms of cost and performance.</P>
+
+<P class="label"><B>Upgradeability</B></P>
+
+<P>If upgradeability is a concern, this is not the best configuration to choose. First, the lack of a boot loader means that the update would need to be done under the OS itself without the benefit of any failsafe environment. A single OS image means that the entire image needs to be updated for any one change. Because you would typically use NOR for executing in place, you need to be careful to avoid reading from the part while it is being written.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic9b"></A>Topology B: Linear ROM and RAM</H3>
+
+<P>In this configuration, non-writeable ROM, most likely production masked ROM, provides non-volatile storage. The topology is very similar to topology A with the same design trade offs. The main benefit of this design over topology A is typically the cost advantage, depending on volumes, of replacing the NOR flash memory with a ROM part. The downside is effectively the lack of a real software upgrade path for field devices other than physical replacement of the ROM part. This topic only discusses the differences between this configuration and topology A because of their similarities. For more information about topology A, see the <A HREF="#systemmemorymgmtwince_topic9a">Topology A: Linear (NOR) Flash Memory and RAM</A> topic.</P>
+
+<H4 class="dtH1">OS configurations</H4>
+
+<P>For this memory topology, you can configure the Windows CE OS in the following ways:
+
+<UL type="disc">
+	<LI>XIP everything from NOR and use RAM for file system, object store and program memory.</li>
+
+	<LI>XIP the kernel from NOR and page select programs and modules from NOR into RAM, and use the remainder of RAM for file system, object store and program memory.</li>
+
+	<LI>XIP everything from RAM and use NOR for code and data storage.</li>
+</UL>
+
+<H4 class="dtH1">Summary</H4>
+
+<P>In this topology, the trade off for NOR flash memory versus RAM depends on the overall product goals. The following items discuss some of the specific engineering trade-offs in this design&#151;hardware and/or software.</P>
+
+<P class="label"><B>Performance issues</B></P>
+
+<P>In general, the performance in this topology is similar to that of topology A with the same performance trade-offs.</P>
+
+<P class="label"><B>Cost issues</B></P>
+
+<P>Mass produced ROMs are typically cheaper than the NOR solution per a given production volume when large volumes of the same ROM and image are required. As such, you can reduce the cost by running XIP out of ROM with a small amount of RAM.</P>
+
+<P class="label"><B>Upgradeability</B></P>
+
+<P>There is no upgrade path other than to replace the ROM.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic9c"></A>Topology C: NAND Flash Memory and RAM</H3>
+
+<P>In this configuration, a single NAND flash memory device provides non-volatile storage. Because NAND is a block device and does not support a linear interface, the CPU cannot directly execute code stored in NAND flash memory. As a result, for this configuration to work, either a non-volatile linear storage area is required&#151;many hybrid NAND flash memory parts contain a small linear NOR region called a boot block&#151;or the NAND flash memory must appear to be linear, at least at boot time. The basic idea is to have a small amount of code that runs at boot time, initializes the hardware to the point that NAND flash memory and SDRAM are available, then moves the kernel and some amount of the OS image from NAND to SDRAM where it is executed. From there, the OS can page in the requisite modules from NAND flash memory as needed.</P>
+
+<H4 class="dtH1">OS configurations</H4>
+
+<P>For this memory topology, you can configure the Windows CE OS in the following way:
+
+<UL type="disc">
+	<LI>XIP everything from RAM and use NAND for code and data storage.
+<P>This is the only viable configuration for a NAND and RAM design with little or no available linear non-volatile storage. The only real design issues are how much of the OS should be paged into RAM and when should the paging take place. For example, it is possible to compress the entire OS image in NAND flash memory and require the boot loader code to decompress an entire image into RAM. The disadvantages to this configuration include potentially greater RAM requirements for the design, greater power consumption, and greater load times as everything is moved into RAM. The advantages include faster code execution and smaller run-time loading delays.
+
+<P>Alternately, with a multi-region design, it would be possible to split the kernel region from the other parts of the image, compress these parts, and then simply load only the kernel region into RAM at boot time. From there, the OS loader could then page in required modules from NAND flash memory as needed. The upsides could potentially be lower RAM requirements, power savings, and quicker load times. The downsides are potentially greater module load times and the need to manage multiple image regions.
+</li>
+</UL>
+
+<H4 class="dtH1">Summary</H4>
+
+<P>While this topology does require some amount of linear non-volatile storage, it can provide cost advantages when SDRAM prices are low. Performance is relatively good with code executing primarily from SDRAM and allowing the OEM flexibility in deciding when code is paged into RAM. The following items discuss some of the specific engineering trade-offs in this design&#151;hardware and/or software:</P>
+
+<P class="label"><B>Performance issues</B></P>
+
+<P>This topology yields good performance because code is executed from RAM. The primary design trade-off is deciding how much of the code should be copied into RAM and when that copy should occur. This decision is based on boot-time and run-time performance requirements. Unless the overhead of decompressing code is an issue, all the code in NAND flash memory should be compressed, thus saving flash memory space.</P>
+
+<P>Power consumption in this configuration can be high as higher-powered SDRAM is required for the solution. To minimize power consumption, improve control of RAM usage and power down banks that are not required.</P>
+
+<P>Also, the performance of write operations on NAND is typically better than NOR. As a result, by running a flash file system on top of NAND, you can obtain the benefits of both the faster storage device and larger storage capacity.</P>
+
+<P class="label"><B>Cost issues</B></P>
+
+<P>The amount of NAND flash memory required for a particular solution is smaller that other types of non-volatile storage because typically everything in NAND flash memory is compressed. Given the cost-per-byte advantage of NAND flash memory over other flash memory, compressing the image usually means more flash memory is available for other purposes, for example, file system storage.</P>
+
+<P>Using this topology, which makes greater use of SDRAM than other configurations, means that the cost is often more closely tied to SDRAM prices.</P>
+
+<P class="label"><B>Upgradeability</B></P>
+
+<P>If you can control OS paging, for example, by disabling an interrupt, you can upgrade NAND flash memory images using an update application because all code needs to execute from SDRAM. To do this, you need to shut down any applications or unload any drivers that may be dependent upon the updated code. The safest way is to restart the system after an update.</P>
+
+<P>One disadvantage to this configuration is the unavailability of a failsafe monitor or loader due to the limited linear boot block region, which is typically only a few kilobytes. This means that any problems during the field update of a device might not have a failsafe means of recovery. A solution would be to store a second compressed OS for such occasions, but that would take up additional NAND flash memory space.</P>
+
+<P>By using the multi-region image option, you can achieve greater upgrade flexibility. You can update specific regions individually with protection mechanisms unique to any or all of the regions. In addition, the segmentation of the image can reduce the need to restart the system completely following an upgrade.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic9d"></A>Topology D: Linear ROM, NAND Flash Memory, and RAM</H3>
+
+<P>This topology differs from the topology C primarily in the amount of available linear memory, in this case, ROM. For more information about topology C, see the <A HREF="#systemmemorymgmtwince_topic9c">Topology C: NAND Flash Memory and RAM</A> topic. While the boot block of a hybrid NAND flash memory part is usually a few kilobytes in size, you can have a more complex monitor or boot loader environment with a suitably sized ROM part, thus adding more options to any failsafe recovery. Combined with multi-region, it can also mean greater protection and/or control over what can and cannot be updated on the system. For example, the kernel image can be run or loaded in from ROM, thus it cannot be upgraded, but applications can be paged in from NAND flash memory where they could be updated.</P>
+
+<H4 class="dtH1">OS configurations</H4>
+
+<P>You can use the following OS configurations for this environment. The first configuration is the most likely.
+
+<UL type="disc">
+	<LI>XIP a monitor and/or boot loader from ROM, use NAND for all code and data storage, and use RAM for code execution and file system, object store and program memory.
+<P>A simple failsafe loader stored in ROM allows you to boot strap the OS while providing a way to update the image in NAND flash memory if other means failed. The larger NAND flash memory capacities typically mean ample room for both image storage, possibly compressed and a separate file system partition for data storage. All OS code needs to be loaded or paged into RAM for execution.
+</li>
+
+	<LI>XIP everything from ROM, use NAND only for data storage and use RAM for file system, object store and program memory.
+<P>From an upgrade scenario, this is a less flexible alternative than the previous configuration. However, it is possible to upgrade certain OS drivers and applications, which are stored in a file system on the NAND part. This imposes a small RAM footprint and thus can be less costly and save more power.
+</li>
+
+	<LI>XIP everything from RAM, use ROM for code storage, use NAND only for data storage, and use RAM for code execution and file system, object store and program memory.
+<P>This is probably not a very desirable configuration. ROM costs are based on volumes and this configuration means fixing the image in ROM, which results in a weak upgrade path. This configuration also consumes more RAM than the previous configuration, thus more cost and power drain. However, this configuration can offer a performance benefit over the previous configuration.
+</li>
+
+	<LI>XIP the kernel from ROM, use NAND for code and data storage, and use RAM for code execution and file system, object store, and program memory.
+<P>Given the need for ROM code to boot strap the OS, this configuration can be beneficial if you want to avoid kernel image updates in the field. Because most of the code resides in NAND flash memory, those parts could be field upgraded.
+</li>
+</UL>
+
+<H4 class="dtH1">Summary</H4>
+
+<P>This topology allows for a number of different OS configurations. However, when using ROM parts, analyze the volumes for cost savings and determine a clear field upgrade up front. Otherwise, you may be locked into physical ROM upgrades in the field for any updates. You can save on power by executing in place code from ROM instead of paging from flash memory, but that cost and performance trade-off needs to be done against field upgradeability. Alternately, you can use NOR flash memory in place of ROM to allow for better field upgradeability.</P>
+
+<P class="label"><B>Performance issues</B></P>
+
+<P>Running the image from DRAM yields the best performance. Depending on target power, cost, and upgrade goals, running the image from DRAM can mean either running the whole image from DRAM or running only parts of the image, such as the kernel and/or specific modules.</P>
+
+<P class="label"><B>Power issues</B></P>
+
+<P>Executing in place code directly from ROM yields the best power savings. This enables the basic design to use less DRAM or enable parts of DRAM to be powered down when not required.</P>
+
+<P class="label"><B>Cost issues</B></P>
+
+<P>The ROM parts require larger volumes to amortize initial ROM mask design costs. However, this can yield DRAM savings and power requirements.</P>
+
+<P class="label"><B>Upgradeability</B></P>
+
+<P>As much of the image as possible should reside in NAND flash memory for the best upgradeability. This typically requires setting aside a reserved area in flash memory where OS components can be paged in through a Windows CE-based file system like FAT file system. Updates then become only a matter of downloading and replacing the file in the file system.</P>
+
+<H3 class="dtH1"><A NAME="systemmemorymgmtwince_topic9e"></A>Topology E: Linear ROM, Disk Drive, and RAM</H3>
+
+<P>This memory topology is similar to topology D, where NAND flash memory is replaced by disk storage. For more information about topology D, see the <A HREF="#systemmemorymgmtwince_topic9d">Topology D: Linear ROM, NAND Flash Memory, and RAM</A> topic. A major benefit of this configuration is the larger storage capacity provided by the disk drive over solid-state non-volatile storage. The disadvantages include longer access times and the inability to XIP directly from disk.</P>
+
+<H4 class="dtH1">OS configurations</H4>
+
+<P>For this memory topology, you can configure the Windows CE OS in the following ways:
+
+<UL type="disc">
+	<LI>XIP a monitor and/or boot loader from ROM, use disk for all code and data storage, and use RAM for code execution and file system, object store and program memory.</li>
+
+	<LI>XIP everything from ROM, use disk only for data storage and use RAM for file system, object store and program memory.</li>
+
+	<LI>XIP everything from RAM, use ROM for code storage, use disk only for data storage and use RAM for code execution and file system, object store and program memory.</li>
+
+	<LI>XIP kernel from ROM, use disk for code and data storage and use RAM for code execution and file system, object store and program memory.</li>
+</UL>
+
+<H4 class="dtH1">Summary</H4>
+
+<P>This memory topology offers a multitude of different places from which an executable image can be loaded or launched: RAM, ROM, or off a disk drive. RAM in general will provide the best performance while ROM, based on volumes, will typically provide the best cost, and disk will provide the best upgrade capabilities.</P>
+
+<P class="label"><B>Performance issues</B></P>
+
+<P>In general, you want code to execute out of RAM assuming ROM access time is slower than RAM. Without a boot loader, the OS code that initially runs from ROM could copy itself entirely to RAM and continue executing in RAM, or individual modules within the OS could be marked compressed and thus be paged into RAM at run time. Similarly, any modules that you need to upgrade will need to reside on a disk where they can be paged in through a file system and executed from RAM. Your choice of file system has serious impact on performance and flexibility.</P>
+
+<P>Generally, the most heavily executed code, which only needs to be loaded once, should reside on disk. The cost per byte is lower and the possibility of upgrades exists. Meanwhile, any system critical code or code that needs to be loaded and reloaded should reside in ROM. Whether the latter is compressed, and thus paged into RAM, or whether it is XIP depends on two factors: the frequency in which it is used, and the overhead involved in decompression and paging. Although the kernel could copy itself from ROM to RAM, because it is a single OS image, that would potentially waste a good amount of RAM and thus be undesirable from a cost perspective. In this case, use of multi-XIP images can help.</P>
+
+<P class="label"><B>Cost issues</B></P>
+
+<P>Disk storage is the cheapest compared to ROM and RAM assuming the hardware is already present for other design reasons. Otherwise, the cost of the hardware and the development effort involved in getting it to work can be significant.</P>
+
+<P class="label"><B>Upgradeability</B></P>
+
+<P>For best upgradeability, as much of the image as possible should reside on disk. This will typically require setting aside a reserved area on disk where OS components can be paged in through a Windows CE-based file system, like the FAT file system. Updates then become only a matter of downloading and replacing the file in the file system.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic10"></A>Conclusion</H2>
+
+<P>Your choice of storage device and the overall system memory topology in which it is used are design decisions you should make with the following trade-offs in mind: performance, cost, power consumption and field upgradeability. With a specific design goal in mind, the Windows CE .NET OS and its associated development environment can provide you with a number of options along with a path towards reaching your goals.</P>
+
+<H2 class="dtH1"><A NAME="systemmemorymgmtwince_topic11"></A>For More Information</H2>
+
+<P>For more information about the Windows CE .NET OS and a more detailed understanding of the topics covered in this article, see Windows CE .NET Help or visit MSDN&#174;, the Microsoft Developer Network, at this <A HREF="http://go.microsoft.com/fwlink/?LinkId=4726">Microsoft Web site</A>.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_839564', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

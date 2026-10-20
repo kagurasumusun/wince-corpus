@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPOlItems::SetColumns</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IPOlItems::SetColumns"/>
+<MSHelp:RLTitle Title="IPOlItems::SetColumns"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_IPOlItems_SetColumns"/>
+<MSHelp:Keyword Index="K" Term="IPOlItems, SetColumns"/>
+<MSHelp:Keyword Index="K" Term="SetColumns"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: po_iface.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_ipolitems_setcolumns"></A>IPOlItems::SetColumns</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This method applies only to collections of contacts. It enables you to retrieve contacts quicker by specifying only the properties you want to retrieve. When you retrieve a contact the specified properties will be set to their current values, and all other properties will be set to NULL.</P>
+
+<PRE class="syntax"><B>HRESULT SetColumns(&nbsp;BSTR</B> <I>Columns </I><B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>Columns</I></DT>
+
+<DD>Columns you want to retrieve. For example, to retrieve <B>FileAs</B> and BusinessTelephoneNumber, you would use the string “FileAs,BusinessTelephoneNumber” for <I>Columns</I>.</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>S_OK indicates that the string was parsed correctly. If an error occurs, the appropriate <B>HRESULT</B> value is returned.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>Use this method when you want to examine one or two fields in a lot of contacts very quickly. For example, to look iteratively at the <B>FileAs</B> and <B>BusinessTelephoneNumber</B> properties of all Contacts, you can first call <B>SetColumns</B> as follows:</P>
+
+<PRE class="code">pContacts-&gt;SetColumns(“FileAs, BusinessTelephoneNumber”)</PRE>
+
+<P>Then when you use the <B>IPOutlookItemCollection</B> interface method <B>Item</B> to get a contact, it will have only these two properties set.</P>
+
+<P>The tradeoff for the enhanced performance is that you cannot modify the contacts found with the columns set. Therefore use <B>SetColumns</B> when you need to examine or use specified properties of all or many contacts in a collection, but you need to modify relatively few or none of the contacts.</P>
+
+<P>To modify a contact, you can use the <B>IPOutlookApp</B> interface method <B>GetItemFromOid</B> to get the contact and modify it. (<B>Oid</B> and <B>Application</B> are special properties still available after you call <B>SetColumns</B>.) Alternatively, you can use a second Contact Items collection pointer that has not had <B>SetColumns</B> called on it, and use the <B>Item</B> method on it to get the Contact and modify it.</P>
+
+<P class="label"><B>Code Example</B></P>
+
+<P>The following C++ code snippet shows how to set columns and get a contact:</P>
+
+<PRE class="code">void FindContact(IPOutlookItemCollection *pContacts)
+{
+IPOutlookApp *pApplication;
+IPOlItems *pContacts2;
+IContact *pContact;
+long lOid;
+
+pContacts-&gt;QueryInterface(IID_IPOlItems, (LPVOID *) &amp;pContacts2);
+pContacts2-&gt;SetColumns(TEXT(“CompanyName”));
+
+// Put all the companies you have into a list
+int numItems;
+pContacts2-&gt;get_Count(&amp;numItems);
+for (i = 1; i &lt;= numItems; i++)
+{
+// Read the contact
+pContacts2-&gt;Item(i, (IDispatch **) &amp;pContact);
+
+// Use or manipulate the company name in some way
+...
+// For example, if the company name is Hotmail, change to MSN
+if (IsCompanyHotmail(pContact))  {
+pContact-&gt;get_Application(&amp;pApplication);
+pContact-&gt;get_Oid(&amp;lOid);
+pApplication-&gt;GetItemFromOid(lOid, (IDispatch ** ) &amp;pContact);pContact-&gt;put_Company(TEXT(“MSN”));
+}
+}
+
+\\ Release objects
+pApplication-&gt;Release();
+pContacts2-&gt;Release();
+pContact-&gt;Release();
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcesdk_ipolitems_unknown.htm">IPOlItems::Unknown</A>, <A HREF="_wcesdk_ipoutlookitemcollection__unknown.htm">IPOutlookItemCollection::Unknown</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IPOlItems::SetColumns&nbsp;(_wcesdk_ipolitems_setcolumns.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

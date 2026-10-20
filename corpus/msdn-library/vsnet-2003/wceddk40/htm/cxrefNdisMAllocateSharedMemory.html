@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMAllocateSharedMemory</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NdisMAllocateSharedMemory"/>
+<MSHelp:RLTitle Title="NdisMAllocateSharedMemory"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisMAllocateSharedMemory"/>
+<MSHelp:Keyword Index="K" Term="NdisMAllocateSharedMemory"/>
+<MSHelp:Keyword Index="A" Term="cxrefNdisMAllocateSharedMemory"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_library_functions2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_692766">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndismallocatesharedmemory"></A>NdisMAllocateSharedMemory</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function allocates and maps a host memory range so it is simultaneously accessible from both the system and a bus master direct memory access (DMA) network interface card (NIC).</P>
+
+<PRE class="syntax"><B>VOID NdisMAllocateSharedMemory(</B>
+<B>NDIS_HANDLE </B><I>MiniportAdapterHandle</I><B>,</B>
+<B>ULONG </B><I>Length</I><B>,</B>
+<B>BOOLEAN </B><I>Cached</I><B>,</B>
+<B>PVOID *</B><I>VirtualAddress</I><B>,</B>
+<B>PNDIS_PHYSICAL_ADDRESS </B><I>PhysicalAddress</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>[in] Specifies the handle input to the <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A> function.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>[in] Specifies the number of bytes to allocate.</dd>
+
+<DT><I>Cached</I></DT>
+
+<DD>[in] Specifies TRUE if the range can be allocated from cached memory.</dd>
+
+<DT><I>VirtualAddress</I></DT>
+
+<DD>[out] Points to a caller-supplied variable in which this function returns the base virtual address of the allocation for use by the miniport. If <B>NdisMAllocateSharedMemory</B> cannot satisfy its caller, it returns NULL to indicate that no memory was allocated.</dd>
+
+<DT><I>PhysicalAddress</I></DT>
+
+<DD>[out] Points to a caller-supplied variable in which this function returns a physical address, suitable for use by the NIC, that corresponds to that returned at <I>VirtualAddress</I>, or it returns NULL.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>None.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>NdisMAllocateSharedMemory</B> provides both the mapped virtual address range that the driver uses to access the shared memory block and the <B>NDIS_PHYSICAL_ADDRESS</B> type range that the NIC uses. A value returned at <I>PhysicalAddress</I> can be doubly mapped by the system. That is, a physical address range described by the value at <I>PhysicalAddress</I> and <I>Length</I> can be a range of mapped logical addresses that do not match the host physical addresses for the allocation in every possible platform.</P>
+
+<P><B>NdisMAllocateSharedMemory</B> can be called only from <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>. You can decide how large an allocation to request based on how the driver writer, decides to make the tradeoff between the following performance versus size dilemma:
+
+<UL type="disc">
+	<LI>In periods of high network traffic, a miniport cannot maintain high I/O throughput if it runs low on shared memory space for device-accessible data buffers.
+<P>For example, the miniport could be indicating receive buffers in shared memory faster than such buffers are being returned from bound protocols when a flood of receives come in to its NIC. If all its shared memory space is consumed by outstanding receive buffers, the miniport might have to disable receive interrupts on its NIC until it has some shared memory space available for receive buffers.
+</li>
+
+	<LI>On the other hand, calling <B>NdisMAllocateSharedMemory</B> with a <I>Length</I> parameter chosen to anticipate some maximum transfer demand makes the driver's image larger and its resource usage quite uneconomical, except for rare periods of very high I/O demand. Moreover, <B>NdisMAllocateSharedMemory</B> might not give the driver such a large block if insufficient system memory is available, forcing the driver to fail initialization.</li>
+</UL>
+
+<P><B>NdisMAllocateSharedMemory</B> is the only <B>Ndis<I>XXX</I></B> function that can be called to allocate host memory that is shared between the driver, which uses virtual addresses, and a bus master NIC, which uses the corresponding logical addresses.</P>
+
+<P>Whenever possible, a NIC driver calls <B>NdisMAllocateSharedMemory</B> with <I>Cached</I> set to TRUE because its request is more likely to succeed. In any platform, noncached memory is always a scarce system resource. Usually, drivers can get larger allocations from cached memory as well. A NIC driver must allocate its shared memory space from noncached memory if either of the following is true:
+
+<UL type="disc">
+	<LI>The NIC or miniport writes directly into receive buffers before the miniport indicates the newly received data.
+<P>For example, a NIC that sets flags in each received frame after it has been transferred must have access to receive buffers in noncached memory. Otherwise, the miniport could not determine when it should issue a flush to maintain cache coherency: either the miniport would take a performance hit by waiting for a fail-safe interval to flush the cached receive buffer or the miniport would make indications in which the frame flags were randomly set.
+</li>
+
+	<LI>The NIC transfers some number of received frames sequentially into contiguous physical memory within the shared memory space.
+<P>If such a NIC transferred incoming frames into contiguous cached memory, its driver cannot maintain data integrity for all such frames when any frame might straddle a cache-line boundary. When the miniport flushed the range for such a frame, it also might flush the cache space containing some of the next frame if it was already transferred, thereby making that next frame incoherent.
+</li>
+</UL>
+
+<P>A miniport should align the buffers it allocates from shared cached memory on an integral of the host data-cache-line boundary to prevent cache-line tearing during DMA. Cache-line tearing can cause data integrity problems in the driver or degrade the driver's (and the system's) I/O performance by requiring excessive data-cache flushing to maintain data integrity. <B>MiniportInitialize</B> can call <A HREF="_wceddk_ndisgetcachefillsize.htm">NdisGetCacheFillSize</A> to determine the alignment boundary in the current platform for device-accessible buffers that the driver will set up within an allocated range of shared memory.</P>
+
+<P><B>MiniportInitialize</B> also might call <A HREF="_wceddk_ndissystemprocessorcount.htm">NdisSystemProcessorCount</A> before it calls <B>NdisMAllocateSharedMemory</B> if the driver writer decides to allocate a larger shared memory block in multiprocessor machines on the assumption that any SMP machine is likely to be a network server with higher network-transfer demands on the NIC than a workstation.</P>
+
+<P>If <B>MiniportInitialize</B> did not specify that the NIC is a bus master when it called <A HREF="_wceddk_ndismsetattributes.htm">NdisMSetAttributes</A> or <A HREF="_wceddk_ndismsetattributesex.htm">NdisMSetAttributesEx</A>, <B>NdisMAllocateSharedMemory</B> simply returns control without attempting to make an allocation.</P>
+
+<P>If its call to <B>NdisMAllocateSharedMemory</B> fails, <B>MiniportInitialize</B> can call again requesting a smaller allocation. However, if <B>MiniportInitialize</B> cannot allocate sufficient shared memory for the NIC, it must release all resources it has already allocated and fail initialization.</P>
+
+<P>If the NIC driver subsequently indicates receives with <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, it must allocate some number of buffer descriptors from buffer pool that map the NIC's receive buffers in the shared memory block.</P>
+
+<P>If the allocated memory is cached and, therefore, needs to be flushed on transfers, the miniport must call <A HREF="_wceddk_ndisallocatebuffer.htm">NdisAllocateBuffer</A> to allocate an <B>NDIS_BUFFER</B> type descriptor for the shared memory range. The NIC driver must call <A HREF="_wceddk_ndisflushbuffer.htm">NdisFlushBuffer</A> with this buffer descriptor to perform such a flush. In addition, such a miniport should call <A HREF="cxrefndismupdatesharedmemory.htm">NdisMUpdateSharedMemory</A> to ensure data integrity on all possible platforms.</P>
+
+<P>Any miniport that calls <B>NdisMAllocateSharedMemory</B> must release all outstanding allocations with one or more calls to <A HREF="cxrefndismfreesharedmemory.htm">NdisMFreeSharedMemory</A> when its NIC is removed; that is, when its <A HREF="cxrefminiporthalt.htm">MiniportHalt</A> function is called.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>Ndis.dll</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiporthalt.htm">MiniportHalt</A>, <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="_wceddk_ndisallocatebuffer.htm">NdisAllocateBuffer</A>, <A HREF="_wceddk_ndisflushbuffer.htm">NdisFlushBuffer</A>, <A HREF="_wceddk_ndisgetcachefillsize.htm">NdisGetCacheFillSize</A>, <A HREF="cxrefndismfreesharedmemory.htm">NdisMFreeSharedMemory</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndismsetattributes.htm">NdisMSetAttributes</A>, <A HREF="_wceddk_ndismsetattributesex.htm">NdisMSetAttributesEx</A>, <A HREF="cxrefndismupdatesharedmemory.htm">NdisMUpdateSharedMemory</A>, <A HREF="_wceddk_ndissystemprocessorcount.htm">NdisSystemProcessorCount</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NdisMAllocateSharedMemory&nbsp;(cxrefndismallocatesharedmemory.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

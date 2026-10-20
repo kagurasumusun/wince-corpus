@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMPLEMENT_SERIAL</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_implement_serial"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_implement_serial"></A><SUP></SUP>IMPLEMENT_SERIAL</H1>
+
+<P>Generates the C++ code necessary for a dynamic <B>CObject</B>-derived class with run-time access to the class name and position within the hierarchy. Use the <B>IMPLEMENT_SERIAL</B> macro in a .CPP module; then link the resulting object code only once.</P>
+
+<PRE class=syntax><B>IMPLEMENT_SERIAL(</B>
+<I>class_name</I><B>,</B>
+<I>base_class_name</I><B>,</B>
+<I>wSchema</I> <B>)</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>class_name</I></DT>
+
+<DD>The actual name of the class (not enclosed in quotation marks).</DD>
+
+<DT><I>base_class_name</I></DT>
+
+<DD>The name of the base class (not enclosed in quotation marks).</DD>
+
+<DT><I>wSchema</I></DT>
+
+<DD>A <B>UINT</B> “version number” that will be encoded in the archive to enable a deserializing program to identify and handle data created by earlier program versions. The class schema number must not be &#0150;1. </DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>You can use the <B>AFX_API</B> macro to automatically export the <B>CArchive</B> extraction operator for classes that use the <B>DECLARE_SERIAL</B> and <B>IMPLEMENT_SERIAL</B> macros. Bracket the class declarations (located in the .H file) with the following code:</P>
+
+<PRE>#undef AFX_API
+#define AFX_API AFX_EXT_CLASS
+
+&lt;your class declarations here&gt;
+
+#undef AFX_API
+#define AFX_API
+</PRE>
+
+<H4>Using the DECLARE_SERIAL Macro</H4>
+
+<P>The <B>DECLARE_SERIAL</B> macro is required in the declaration of classes that will support serialization, as shown here:</P>
+
+<PRE>class CPerson : public CObject
+{
+    DECLARE_SERIAL( CPerson )
+    // rest of declaration follows...
+};
+</PRE>
+
+<H4>Defining a Constructor with No Arguments</H4>
+
+<P>MFC requires a default constructor when it re-creates your objects as they are deserialized (loaded from disk). The deserialization process will fill in all member variables with the values required to re-create the object.</P>
+
+<P>This constructor can be declared public, protected, or private. If you make it protected or private, you ensure that it will only be used by the serialization functions. The constructor must put the object in a state that allows it to be safely deleted if necessary.</P>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;If you forget to define a constructor with no arguments in a class that uses the <B>DECLARE_SERIAL</B> and <B>IMPLEMENT_SERIAL</B> macros, you will get a “no default constructor available” compiler warning on the line where the <B>IMPLEMENT_SERIAL</B> macro is used.</P>
+
+<H4>Example</H4>
+
+<PRE>// MyClass.cpp
+#include "stdafx.h"
+#include "MyClass.h"
+
+IMPLEMENT_SERIAL( CMyClass, CObject, VERSIONABLE_SCHEMA | 2 )
+
+...
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+
+<H4>See Also </H4>
+
+<P><A HREF="funct_9.htm"><B>DECLARE_SERIAL</B></A>, <A HREF="funct_15.htm"><B>RUNTIME_CLASS</B></A>, <A HREF="cobject_6.htm"><B>CObject::IsKindOf</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

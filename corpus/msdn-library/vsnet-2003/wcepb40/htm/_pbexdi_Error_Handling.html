@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Error Handling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Error Handling"/>
+<MSHelp:RLTitle Title="Error Handling"/>
+<MSHelp:Keyword Index="A" Term="_pbexdi_Error_Handling"/>
+<MSHelp:Keyword Index="K" Term="error handling, eXDI"/>
+<MSHelp:Keyword Index="K" Term="eXDI drivers, error handling"/>
+<MSHelp:Keyword Index="A" Term="_pbexdi_Error_Handling"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: exdi_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_685890">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_pbexdi_error_handling"></A>Error Handling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Each method of the eXDI interfaces returns the data type <B>HRESULT</B>. For each of them, there is a defined set of values, known as standard errors, which correspond to behaviors defined by Platform Builder. Those values enable predefined behavior for handling these standard errors, but the driver can also return non-standard error values. Any client can get a textual description of the errors using <B>GetErrorDescription</B>. Platform Builder normally handles the standard errors.</P>
+
+<P>In the case of non-standard errors, a more specific error code can be given, and Platform Builder will display the description in a message box.</P>
+
+<P><B>GetErrorDescription</B> assumes that one code corresponds to only one description string, and does not vary with context, so there is no assumption made concerning the sequence of calls in which <B>GetErrorDescription</B> is made.</P>
+
+<P>In case of a communication error (eXDI_E_COMMUNICATION) or concurrent access error (eXDI_E_USEDBYCONCURRENTTHREAD), Platform Builder will try the same request every 300 ms, for 15 seconds &#0151; time in calls excluded. If this time passes without successfully making the request, Platform Builder displays a message box asking the user which action to take; for example, <B>Cancel</B> or <B>Retry</B>. In the case of an unexpected error, Platform Builder immediately queries the user what action to take, <B>Cancel</B> or <B>Retry</B>. But in case of a retry, it insures a minimum delay of 300 ms between each call.</P>
+
+<P>eXDI defines its own set of exception code and descriptions. This set should be constant during a debugging session with a specific microprocessor. The debugger client normally requests the code and description table once after connecting to the driver. New code should not collide with the pre-defined set within Platform Builder, and it would be ignored if a collision occurred.</P>
+
+<P>Platform Builder defines exception filtering. The eXDI API does not define any filtering but your eXDI implementation should, especially if the hardware supports it. Ideally, your driver would individually filter each exception captured by the probe. One of the advantages of this is that it enables hardware and kernel co-debugging. This would however require two instances of Platform Builder.</P>
+
+<P>There are some cases when the eXDI driver may generate its own exceptions. Those accidental exceptions should be silent. eXDI should intercept these exceptions and convert them to <B>HRESULT</B> failure so that the inner workings of the probe are transparent to its clients.</P>
+
+<P>It is highly recommended that you implement all the eXDI methods. There are a number of methods intended for you to develop that may not be used by Platform Builder or eXDI directly, but may be used by generic plug-ins.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_pbexdi_extended_debugging_interface.htm">Extended Debugging Interface</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Error%20Handling&nbsp;(_pbexdi_error_handling.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

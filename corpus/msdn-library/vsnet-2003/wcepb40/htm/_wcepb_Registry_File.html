@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry File"/>
+<MSHelp:RLTitle Title="Registry File"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Registry_File"/>
+<MSHelp:Keyword Index="K" Term=".reg file, description"/>
+<MSHelp:Keyword Index="K" Term="configuration files, registry file"/>
+<MSHelp:Keyword Index="K" Term="file, registry"/>
+<MSHelp:Keyword Index="K" Term="Makeimg.exe, registry file"/>
+<MSHelp:Keyword Index="K" Term="reg file, overview"/>
+<MSHelp:Keyword Index="K" Term="registry entries, for OS images"/>
+<MSHelp:Keyword Index="K" Term="registry file, overview"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Registry_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679756">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_registry_file"></A>Registry File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Makeimg.exe uses registry (.reg) files to establish the registry entries for an OS image. When you cold boot your target device, Filesys.exe uses the .reg files to create a default registry. Platform.reg defines the hardware registry settings for the target device, and Project.reg defines the registry settings for the Windows CE-based .exe files. </P>
+
+<P>The registry files have the following format. </P>
+
+<PRE class="code">[KEY1]
+"ValueName1"={Value Type}:{data}
+"ValueName2"={Value Type}:{data}
+[KEY2]
+"ValueName1"={Value Type}:{data}
+...</PRE>
+
+<P>You can specify the default value names by using the following format.</P>
+
+<PRE class="code">[KEY1]
+@ = "<I>default value name</I>" </PRE>
+
+<P>The possible value types are shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Value type</TH>
+<TH width=75%>Format</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>REG_SZ</TD>
+<TD width=75%>"my string"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>REG_DWORD</TD>
+<TD width=75%>DWORD: NNNNN (hex number)
+<P>Type is always interpreted as a hex value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>REG_MULTI_SZ</TD>
+<TD width=75%>multi_sz: "my string", "my string"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>REG_BINARY</TD>
+<TD width=75%>hex: xx,xx,xx,xx ...</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>HEX</TD>
+<TD width=75%>hex(xxxxxxxx): xx,xx,xx,xx
+<P>The hex(xx) types should correspond to the remaining Microsoft&reg; Win32&reg; registry types.</P>
+</TD>
+</TR>
+</table></div>
+
+<P>You can also use <B>IF/ENDIF</B> keywords, which execute a block of registry settings when an environment variable is set or equal to a particular value. To execute a block of registry settings when an environment variable is not set or not equal to a particular value, use a space and an exclamation point (!) at the end of the line. <B>IF/ENDIF</B> blocks may be nested. </P>
+
+<P>The <B>IF/ENDIF</B> keywords have the following format.</P>
+
+<PRE class="code">IF <I>environment variable </I>[= <I>value</I>] [!]
+[KEY1]
+"ValueName1"={Value Type}:{data}
+"ValueName2"={Value Type}:{data}
+[KEY2]
+"ValueName1"={Value Type}:{data}
+...
+ENDIF</PRE>
+
+<P>Use the semicolon (;) to start a line of comments.</P>
+
+<P>To create a registry entry for starting an application in the Windows CE OS, update or add the <B>HKEY_LOCAL_MACHINE\init</B> section of the Project.reg file with the following syntax.</P>
+
+<PRE class="code">"launch<I>nn</I>"="<I>defined_exe_name</I>"
+"depend<I>nn</I>"=hex:<I>xx,yy</I>...</PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT>launch<I>nn</I></DT>
+
+<DD>Defines the order that the .exe file is started, where <I>nn</I> is 00&#0150;99. This parameter must be enclosed in double quotation marks (" ").</dd>
+
+<DT><I>defined_exe_name</I></DT>
+
+<DD>Specifies the name of the file to be started. This parameter must be enclosed in double quotation marks (" ").</dd>
+
+<DT>depend<I>nn</I></DT>
+
+<DD>Assigns a dependency that prevents the defined .exe file from starting until another .exe file is started, where <I>nn</I> is 00&#0150;99. This parameter must be enclosed in double quotation marks (" ").</dd>
+
+<DT>hex:<I>xx,yy</I>...</DT>
+
+<DD>Defines the hexadecimal number of the .exe file that must be run before the defined .exe file is run. This parameter consists of the <B>hex</B> keyword, a colon, and one or more hexadecimal numbers, one for each byte of hexadecimal data. </dd>
+</DL>
+
+<P>To delete a registry key, place a dash (-) before the key name, using the following format.</P>
+
+<PRE class="code">[-KEY1]</PRE>
+
+<P>To delete a value, place a dash (-) after the value's equal sign, using the following format.</P>
+
+<PRE class="code">"ValueName1"=-{Value Type}:{data}</PRE>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following example creates several registry keys and values. Registry entries for launching the application Myproc.exe at startup are created, as well as a new key with a default value. If the IMGNOCONDEXAMPLE environment variable is not set, an additional subkey and value are entered into the registry.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init]
+"Launch60"="myproc.exe"
+"Depend60"=hex:14,00, 1e,00
+[HKEY_LOCAL_MACHINE\RegExample]
+@=""
+IF IMGNOCONDEXAMPLE !
+[HKEY_LOCAL_MACHINE\RegExample\ConditionalSubKey]
+"MyString"="This is a string"
+ENDIF</PRE>
+
+<H4 class="dtH4"></H4>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When Makeimg.exe processes all the .REG files to create a single file, any duplicate entries found result in a warning message. The message indicates a duplicate entry in the final .REG file, Default.fdf or System.hiv or User.hiv. The duplication may be valid in some cases. The OEM should verify the duplication. When the OS cold boots, as in the case of the Default.fdf file, the last version of the duplicated data is the version that is created and stored in the real registry. In the case of the .HIV files, the data contained in it is the last version found during Makeimg.exe.</P>
+
+<P>When support for file or hive-based registries become available, the .REG files can contain additional tags that get processed during Makeimg.exe time. These tags identify what parts of the registry are contained in the boot hive file. Each registry entry that must be set in the boot hive to boot the device must be wrapped with the following tag.</P>
+
+<PRE class="code">; HIVE BOOT SECTION
+ … reg data…
+; END HIVE BOOT SECTION</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20File&nbsp;(_wcepb_registry_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

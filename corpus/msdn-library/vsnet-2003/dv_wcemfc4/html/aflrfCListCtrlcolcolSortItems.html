@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListCtrl::SortItems</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CListCtrl::SortItems"/>
+<MSHelp:RLTitle Title="CListCtrl::SortItems"/>
+<MSHelp:Keyword Index="A" Term="aflrfCListCtrlcolcolSortItems"/>
+<MSHelp:Keyword Index="K" Term="SortItems method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCListCtrlcolcolSortItems"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="clistctr.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710745">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfclistctrlcolcolsortitems"></A>CListCtrl::SortItems</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method sorts list view items using an application-defined comparison function. The index of each item changes to reflect the new sequence.</P>
+
+<PRE class="syntax"><B>BOOL SortItems( 
+PFNLVCOMPARE </B><I>pfnCompare</I><B>, 
+DWORD </B><I>dwData</I><B> );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pfnCompare</I></DT>
+
+<DD>Specifies the address of the application-defined comparison function. The comparison function is called during the sort operation each time the relative order of two list items needs to be compared. The comparison function must be either a static member of a class or a standalone function that is not a member of any class.</dd>
+
+<DT><I>dwData</I></DT>
+
+<DD>Specifies the application-defined value that is passed to the comparison function.</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The comparison function has the following form:</P>
+
+<PRE class="code">int CALLBACK CompareFunc(LPARAM lParam1, LPARAM lParam2, 
+  LPARAM lParamSort);</PRE>
+
+<P>The comparison function must return a negative value if the first item should precede the second, a positive value if the first item should follow the second, or zero if the two items are equivalent.</P>
+
+<P>The <I>lParam1</I> and <I>lParam2</I> parameters specify the item data for the two items being compared. The <I>lParamSort</I> parameter is the same as the <I>dwData</I> value.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Sort the item in reverse alphabetical order.
+static int CALLBACK 
+MyCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+{
+  // lParamSort contains a pointer to the list view control.
+  // The lParam of an item is just its index.
+  CListCtrl* pListCtrl = (CListCtrl*) lParamSort;
+  CString    strItem1 = pListCtrl-&gt;GetItemText(lParam1, 0);
+  CString    strItem2 = pListCtrl-&gt;GetItemText(lParam2, 0);
+
+  return strcmp(strItem2, strItem1);
+}
+
+void snip_CListCtrl_SortItems()
+{
+  // The pointer to my list view control.
+  CListCtrl* pmyListCtrl;
+
+  // Sort the list view items using my callback procedure.
+  pmyListCtrl-&gt;SortItems(MyCompareProc, (LPARAM) pmyListCtrl);
+}</PRE>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxcmn.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfclistctrlcolcolfinditem.htm"><B>CListCtrl::FindItem</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710745', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

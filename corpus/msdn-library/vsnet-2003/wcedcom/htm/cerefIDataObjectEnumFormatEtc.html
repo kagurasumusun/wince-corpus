@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDataObject::EnumFormatEtc</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDataObject::EnumFormatEtc"/>
+<MSHelp:RLTitle Title="IDataObject::EnumFormatEtc"/>
+<MSHelp:Keyword Index="A" Term="cerefIDataObjectEnumFormatEtc"/>
+<MSHelp:Keyword Index="K" Term="IDataObject::EnumFormatEtc"/>
+<MSHelp:Keyword Index="A" Term="cerefIDataObjectEnumFormatEtc"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756307">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefidataobjectenumformatetc"></A>IDataObject::EnumFormatEtc</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method creates an object for enumerating the <A HREF="cerefformatetc.htm">FORMATETC</A> structures for a data object. These structures are used in calls to <A HREF="cerefidataobjectgetdata.htm">IDataObject::GetData</A> or <A HREF="cerefidataobjectsetdata.htm">IDataObject::SetData</A>. </P>
+
+<PRE class="syntax"><B>HRESULT EnumFormatEtc(</B>
+<B>DWORD</B> <I>dwDirection</I><B>,</B>  
+<B>IEnumFORMATETC **</B><I>ppenumFormatetc</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwDirection </I></DT>
+
+<DD>[in] Direction of the data through a value from the enumeration <A HREF="cerefdatadir.htm">DATADIR</A>. 
+
+<PRE class="code">typedef enum tagDATADIR 
+{ 
+    DATADIR_GET = 1, 
+    DATADIR_SET = 2, 
+} DATADIR; </PRE>
+
+
+<P>The value DATADIR_GET enumerates the formats that can be passed in to a call to <B>IDataObject::GetData</B>. The value DATADIR_SET enumerates those formats that can be passed in to a call to <B>IDataObject::SetData</B>. 
+</dd>
+
+<DT><I>ppenumFormatetc </I></DT>
+
+<DD>[out] Address of the <A HREF="cerefienumformatetc.htm">IEnumFORMATETC</A><B>*</B> pointer variable that receives the interface pointer to the new enumerator object. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This method supports the standard return values E_INVALIDARG and E_OUTOFMEMORY, as well as the following values: 
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The enumerator object was successfully created. </dd>
+
+<DT>E_NOTIMPL </DT>
+
+<DD>The direction specified by <I>dwDirection</I> is not supported. </dd>
+
+<DT>OLE_S_USEREG </DT>
+
+<DD>Requests that OLE enumerate the formats from the registry. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>IDataObject::EnumFormatEtc</B> creates an enumerator object that can be used to determine all of the ways the data object can describe data in a <B>FORMATETC</B> structure and supplies a pointer to its <B>IEnumFORMATETC</B> interface. This is one of the standard enumerator interfaces. </P>
+
+<P class="label"><B>Notes to Callers</B></P>
+
+<P>Having obtained the pointer, the caller can enumerate the <B>FORMATETC</B> structures by calling the enumeration methods of <B>IEnumFORMATETC</B>. Because the formats can change over time, there is no guarantee that an enumerated format is currently supported because the formats can change over time. Accordingly, applications should treat the enumeration as a hint of the format types that can be passed. The caller is responsible for calling <B>IEnumFormatEtc::Release</B> when it is finished with the enumeration. </P>
+
+<P><B>IDataObject::EnumFormatEtc</B> is called when one of the following actions occurs: 
+
+<UL type="disc">
+	<LI>An application calls <B>OleSetClipboard</B>. OLE must determine what data to place on the Clipboard and whether it is necessary to put OLE 1 compatibility formats on the Clipboard. </li>
+
+	<LI>Data is being pasted from the Clipboard or dropped. An application uses the first acceptable format. </li>
+
+	<LI>The <B>Paste Special</B> dialog box is displayed. The target application builds the list of formats from the <B>FORMATETC</B> entries. </li>
+</UL>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<P class="label"><B>Notes to Implementers</B></P>
+
+<P>Formats can be registered statically in the registry or dynamically during object initialization. If an object has an unchanging list of formats and these formats are registered in the registry, OLE provides an implementation of a <B>FORMATETC</B> enumeration object that can enumerate formats registered under a specific CLSID in the registry. A pointer to its <B>IEnumFORMATETC</B> interface is available through a call to the helper function <B>OleRegEnumFormatEtc</B>. In this situation, therefore, you can implement the <B>EnumFormatEtc</B> method simply with a call to this function. </P>
+
+<P>EXE applications can effectively do the same thing by implementing the method to return the value OLE_S_USEREG. This return value instructs the default object handler to call <B>OleRegEnumFormatEtc</B>. Object applications that are implemented as DLL object applications cannot return OLE_S_USEREG, so <B>OleRegEnumFormatEtc</B> must be called directly.</P>
+
+<P>Private formats can be enumerated for OLE 1 objects, if they are registered with the <B>RequestDataFormats</B> or <B>SetDataFormats</B> keys in the registry. Also, private formats can be enumerated for OLE objects (all versions after OLE 1), if they are registered with the <B>GetDataFormats</B> or <B>SetDataFormats</B> keys.</P>
+
+<P>For OLE 1 objects whose servers do not have <B>RequestDataFormats</B> or <B>SetDataFormats</B> information registered in the registry, a call to <B>IDataObject::EnumFormatEtc</B> passing DATADIR_GET only enumerates the Native and Metafile formats, regardless of whether they support these formats or others. Calling <B>EnumFormatEtc</B> passing DATADIR_SET on such objects only enumerates Native, regardless of whether the object supports being set with other formats.</P>
+
+<P>The <B>FORMATETC</B> structure returned by the enumeration usually indicates a NULL target device (<I>ptd</I>). This is appropriate because, unlike the other members of <B>FORMATETC</B>, the target device does not participate in the object's decision as to whether it can accept or provide the data in either a <B>SetData</B> or <B>GetData</B> call.</P>
+
+<P>The <B>TYMED</B> member of <B>FORMATETC</B> often indicates that more than one kind of storage medium is acceptable. You should always mask and test for this by using a Boolean <B>OR</B> operator.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Objidl.h</TD>
+<TD width=15%>Objidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefienumformatetc.htm">IEnumFORMATETC</A>, <A HREF="cerefidataobjectgetdata.htm">IDataObject::GetData</A>, <A HREF="cerefidataobjectsetdata.htm">IDataObject::SetData</A>, <A HREF="cerefdatadir.htm">DATADIR</A>, <A HREF="cerefformatetc.htm">FORMATETC</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDataObject::EnumFormatEtc&nbsp;(cerefidataobjectenumformatetc.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Process Profiling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Process Profiling"/>
+<MSHelp:RLTitle Title="Process Profiling"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Process_Profiling"/>
+<MSHelp:Keyword Index="K" Term="event tracking, process profiling"/>
+<MSHelp:Keyword Index="K" Term="hardware-assisted profiling, process profiling"/>
+<MSHelp:Keyword Index="K" Term="kernel profiling, process"/>
+<MSHelp:Keyword Index="K" Term="Monte Carlo profiling, process profiling"/>
+<MSHelp:Keyword Index="K" Term="platform profiling, process profiling"/>
+<MSHelp:Keyword Index="K" Term="process profiling, overview"/>
+<MSHelp:Keyword Index="K" Term="profiling, process profiling overview"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Process_Profiling"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: event_tracking.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674889">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_process_profiling"></A>Process Profiling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Process profiling periodically examines which routine is currently running, and memorizes its name and the module it belongs to. The module name consists of the .exe or .dll file name. This analysis is not limited to the system processes (Nk.exe, Filesys.exe, Device.exe, and so on). User processes can be monitored as well.</P>
+
+<P>The profiler uses a periodic interrupt to take samples. This interrupt calls a profiler routine (<B>ProfilerHit</B>), which memorizes the Instruction Pointer (IP) of the interrupted routine or identifies it. The identification process is based on the Windows CE Table of Contents (TOC) analysis according to the address of the interrupted routine. Only modules that are part of the Windows CE image can be identified.</P>
+
+<P>The <B>ProfilerHit</B> routine can perform the identification process immediately (nonbuffered method) or defer identification until the end of the sampling period (buffered method). The nonbuffered method requires less memory but is more intrusive. Users should be aware that the identification process could last for a period of time, because it involves scanning the TOC until the address of the interrupted routine is found.</P>
+
+<P>Process profiling is only a statistical tool, but it is considered very useful in identifying where most of CPU time is spent.</P>
+
+<P class="labelproc"><B><A NAME="_wcepb_process_profilinganchor1"></A>To set up Monte Carlo process profiling</B>
+
+<OL type="1">
+	<LI>Build a profile-enabled kernel.
+<P>See <A HREF="pbtskcreatingprofile-enabledosimageforcepc.htm">Creating a Profile-Enabled OS Image for a CEPC</A>.
+</li>
+
+	<LI>Profile a user application.
+<P>The profiler can identify only those applications that are part of the Windows CE image. Such user applications will have a TOC entry and therefore will not remain unknown. But having a TOC entry is not enough to let the profiler identify the application routines. The TOC must contain a profiler section relating to the user application.
+
+<P>Including an application in a Windows CE image requires a .bib file modification: Add the application in the MODULES section of the <I>project.bib</I> file. This application can be compressed or not.
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;It is not possible to include this application in the FILES section because it will not have a TOC entry. The build process needs the .map file of the included application to create the profile header in the TOC.</BLOCKQUOTE>
+
+<P>In brief:
+
+<OL type="a">
+	<LI>Add a line in the project.bib file.</li>
+
+	<LI>Copy the .exe and .map files in the release directory.</li>
+
+	<LI>Build the image.</li>
+</OL>
+
+<P>You can verify success by examining the TOC analysis that comes from the build process. For example, does it contain a profile header?
+
+<P>Following is an extract from the TOC analysis displayed by the Build window in Platform Builder. This platform included two applications: appli1.exe and appli2.exe.
+
+<PRE class="code">Profile Header                     8034ec10  00000420h  (      1056)
+…
+nk.exe           Profile Data      8034f030  000015a8h  (      5544)
+coredll.dll      Profile Data      803505d8  00001f50h  (      8016)
+filesys.exe      Profile Data      80352528  00000b08h  (      2824)
+…
+appli1.exe       Profile Data      80359850  00000070h  (       112)
+appli2.exe       Profile Data      803598c0  00000058h  (        88)
+…
+nk.exe           Profile Syms      8035a398  00002c94h  (     11412)
+coredll.dll      Profile Syms      8035d02c  00004034h  (     16436)
+filesys.exe      Profile Syms      80361060  00001830h  (      6192)
+…
+appli1.exe       Profile Syms      80370a88  000000c0h  (       192)
+appli2.exe       Profile Syms      80370b48  00000090h  (       144)</PRE>
+</li>
+
+	<LI>Start and stop profiling.
+<P>To launch the profiler simply call the <MSHelp:link keywords="cmrefProfileStart" TABINDEX="0">ProfileStart</MSHelp:link> routine. To stop the profiler call <MSHelp:link keywords="cmrefProfileStop" TABINDEX="0">ProfileStop</MSHelp:link>. Profiling results are analyzed and "displayed" &#0151; that is, sent to a terminal over the debug port.
+
+<P><B>ProfileStart</B> has two parameters: the sample interval in ms and the profiling mode. The sample interval can be used by the OAL routine (<B>OEMProfileTimerEnable</B>) that set up the <B>ProfilerHit</B> calling period. CEPC profiling implementation does not take care of this parameter. The profiling mode can take the following values:
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Profiling mode</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>PROFILE_KCALL</TD>
+<TD width=66%>Kernel call profiling.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>PROFILE_OBJCALL</TD>
+<TD width=66%>Object call profiling.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>PROFILE_BUFFER</TD>
+<TD width=66%>Buffered profiling.</TD>
+</TR>
+</table></div>
+
+<P>The first three values are mutually exclusive. 
+</li>
+</OL>
+
+<P class="label"><B>Example of process profiling results</B></P>
+
+<P>The following table of data is produced by process profiling on a Windows CE image that includes and runs a user application <I>appli1</I>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;Profiling analysis does not differentiate among overloaded C++ methods. For example, <code class="ce">int myMethod()</code> and <code class="ce">void myMethod()</code> will both be identified as <code class="ce">?myMethod()</code>.</BLOCKQUOTE>
+
+<P>This simple application essentially has two threads &#0151; one is awaiting the event that the other sets.</P>
+
+<P>The following data is produced by process profiling on a Windows CE image that is based on a sample configuration that includes and runs a user application <I>appli1</I>. </P>
+
+<PRE class="code">Total samples recorded = 25561
+Module        Hits        Percent
+------------  ----------  -------
+appli1.exe         17764     69.4
+nk.exe              7729     30.2
+coredll.dll           68      0.2
+
+Hits       Percent Address  Module       Routine
+---------- ------- -------- ------------:---------------------
+     17715      69 00011040 appli1.exe  :?DoNothingThread1
+      6530      25 8020e50c nk.exe      :_KCall
+       314       1 80218332 nk.exe      :_ObjectCall
+       313       1 80217f42 nk.exe      :_GetHandleType
+       180       0 8020e424 nk.exe      :_Int20SyscallHandler
+       157       0 80212916 nk.exe      :_SC_WaitForMultiple
+       106       0 8021870e nk.exe      :_ServerCallReturn
+        87       0 8020f678 nk.exe      :_SC_EventModify
+        43       0 00011620 appli1.exe  :_SetEvent
+        39       0 01df320a coredll.dll :_xxx_EventModify
+        24       0 802248fb nk.exe      :_SchedLogGetProcessName
+        14       0 80217e9a nk.exe      :_GetObjectPtrByType
+        12       0 01df3d65 coredll.dll :_UserBlockingBegin
+        10       0 01df3d6f coredll.dll :_UserBlockingEnd
+         7       0 01df3278 coredll.dll :_xxx_WaitForSingleObject
+         3       0 000110e0 appli1.exe  :?DoNothingThread2
+         3       0 00011644 appli1.exe  :_EventModify
+         1       0 80204864 nk.exe      :_PICEnableInterrupt
+         1       0 80204f52 nk.exe      :_GetTimerPeriod</PRE>
+
+<P class="label"><B>Additional details</B>
+
+<UL type="disc">
+	<LI>OAL role
+<P>It is the responsibility of the OAL to periodically call <B>ProfilerHit</B> &#0151; typically by setting up a periodic ISR. <B>ProfilerHit</B> can be called only within the OAL. Applications have no access to it.
+
+<P>The OAL needs to provide two functions: 
+
+<UL type="disc">
+	<LI><B>OEMProfileTimerEnable</B>, called by the kernel when the profiler is launched</li>
+
+	<LI><B>OEMProfileTimerDisable</B>, called by the kernel when the profiler is stopped</li>
+</UL>
+</li>
+
+	<LI><B>ProfilerHit</B> routine
+<P><MSHelp:link keywords="cmrefProfilerHit" TABINDEX="0">ProfilerHit</MSHelp:link> is the kernel routine in charge of taking the profiling samples. It can only be called within the OAL, and has only one parameter &#0151; the address of the interrupted function. This address can be obtained by using the <MSHelp:link keywords="cmrefGetEPC" TABINDEX="0">GetEPC</MSHelp:link> function, which returns the IP of the interrupted routine.
+</li>
+
+	<LI>Buffered versus nonbuffered profiling
+<P>Samples can be analyzed immediately (nonbuffered) or stored in a buffer till the end of the profiling period (buffered). By default, the profiler (<B>ProfilerHit</B>) will perform the analysis immediately (nonbuffered). To defer this analysis, the user must set the profiling flags accordingly in <B>ProfileStart</B>.
+
+<P>When buffered profiling is enabled, the profiler will allocate memory from the shared memory pool at launch time and will free it at the end of the profiling period. Each time <B>ProfilerHit</B> is called, it stores the routine address (<I>ProfilerHit</I> parameter) and the current process TOC entry index. If the buffer is full, the samples will be discarded. The sample analysis will be performed when the profiling is stopped by a call to <B>ProfileStop</B>.
+
+<P>The sample analysis proceeds as follows:
+
+<UL type="disc">
+	<LI>Find the interrupted module and routine (TOC analysis)</li>
+
+	<LI>If the module has no TOC then increment the UNKNOWN process counter</li>
+
+	<LI>If the module has a TOC entry but no profiling header (map file has not been provided during the build image process or the module is compressed), increment the process hit counter (this counter belongs to the TOC of the module)</li>
+
+	<LI>Otherwise increment the routine hit counter (this counter belongs to the TOC profile header of the module)</li>
+</UL>
+</li>
+</UL>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Process%20Profiling&nbsp;(_wcepb_process_profiling.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

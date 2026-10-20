@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDialog::OnCancel</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CDialog::OnCancel"/>
+<MSHelp:RLTitle Title="CDialog::OnCancel"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDialogcolcolOnCancel"/>
+<MSHelp:Keyword Index="K" Term="OnCancel method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDialogcolcolOnCancel"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cdialog.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710174">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcdialogcolcoloncancel"></A>CDialog::OnCancel</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework when the user chooses the <B>Cancel</B> button or presses the ESC key in a modal or modeless dialog box. </P>
+
+<PRE class="syntax"><B>virtual void OnCancel( );</B><I> </I></PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Override this method to perform <B>Cancel</B> button action. The default simply closes a modal dialog box by calling <B>EndDialog</B> and causing <B>DoModal</B> to return IDCANCEL.</P>
+
+<P>If you implement the <B>Cancel</B> button in a modeless dialog box, you must override the <B>OnCancel</B> method and call <B>DestroyWindow</B> from within it. Do not call the base-class method, because it calls <B>EndDialog</B>, which makes the dialog box invisible but does not destroy it.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// MyDialog.cpp
+#include "MyDialog.h"
+
+void CMyDialog::OnCancel() 
+{
+  // TODO: Add extra cleanup.
+  
+  // Ensure that you reset all the values to the ones before 
+  // modification. This handler is called when the user does not 
+  // want to save the changes.
+  
+  if ( AfxMessageBox("Are you sure you want to abort the changes?", 
+      MB_YESNO) == IDNO )
+    return; // Give the user a chance if the Cancel button is accidently
+            // hit. If the user says No, return. Do not reset. If the user
+            // says Yes, reset the values and close the dialog.
+
+  m_nMyValue = m_nPrevValue;
+  m_pMyString = NULL; 
+
+  CDialog::OnCancel();
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcdialogcolcolonok.htm"><B>CDialog::OnOK</B></A>, <A HREF="aflrfcdialogcolcolenddialog.htm"><B>CDialog::EndDialog</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710174', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

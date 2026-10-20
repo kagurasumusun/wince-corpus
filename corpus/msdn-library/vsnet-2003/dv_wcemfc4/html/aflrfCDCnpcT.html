@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CDC"/>
+<MSHelp:RLTitle Title="CDC"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDCnpcT"/>
+<MSHelp:Keyword Index="K" Term="CDC class"/>
+<MSHelp:Keyword Index="K" Term="CDC class, overview"/>
+<MSHelp:Keyword Index="K" Term="device contexts, encapsulating functionality of"/>
+<MSHelp:Keyword Index="K" Term="display, encapsulating device context functionality"/>
+<MSHelp:Keyword Index="K" Term="encapsulating, device context functionality"/>
+<MSHelp:Keyword Index="K" Term="printers, encapsulating device context functionality"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDCnpcT"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cdc.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710063">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcdcnpct"></A>CDC</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This class encapsulates the functionality of a Windows&nbsp;CE <I>device context</I>, which is a graphics device interface&#0150;managed structure containing information about the operating modes and current selections of a device, such as a display or printer.</P>
+
+<P>Do all drawing through the methods of a <B>CDC</B> object. The class provides methods for device-context operations, working with drawing tools, type-safe graphics device interface (GDI) object selection, and working with colors and palettes. It also provides methods for getting and setting drawing attributes; mapping; working with the viewport; working with the window extent; converting coordinates; working with regions; clipping; drawing lines; and drawing simple shapes, ellipses, and polygons. Methods are also provided for drawing text, working with fonts, using printer escapes, scrolling, and playing metafiles.</P>
+
+<P>To use a <B>CDC</B> object, construct it, and call the methods that parallel Windows functions that use device contexts.</P>
+
+<P>For specific uses, the Microsoft Foundation Class Library for Windows&nbsp;CE provides several classes derived from <B>CDC</B>. <B>CPaintDC</B> encapsulates calls to <B>BeginPaint</B> and <B>EndPaint</B>. <B>CClientDC</B> manages a display context associated with the client area of a window. <B>CWindowDC</B> manages a display context associated with an entire window, including its frame and controls. <B>CMetaFileDC</B> associates a device context with a metafile.</P>
+
+<P><B>CDC</B> provides two methods, <B>GetLayout</B> and <B>SetLayout</B>, for reversing the layout of a device context, which does not inherit its layout from a window. Right-to-left orientation is necessary for applications written for languages such as Arabic or Hebrew, in which the character layout is right to left.</P>
+
+<P><B>CDC</B> contains two device contexts, <B>m_hDC</B> and <B>m_hAttribDC</B>, that refer to the same device on the creation of a <B>CDC</B> object. <B>CDC</B> directs all output GDI calls to <B>m_hDC</B> and most attribute GDI calls to <B>m_hAttribDC</B>. An example of an attribute call is <B>GetTextColor</B>; <B>SetTextColor</B> is an output call.</P>
+
+<P>For example, the framework uses these two device contexts to implement a <B>CMetaFileDC</B> object that sends output to a metafile while reading attributes from a physical device. Print preview is implemented in the framework in a similar fashion. You can also use the two device contexts in the same way in your application-specific code.</P>
+
+<P>There are times when you may need text-metric information from both the <B>m_hDC</B> and <B>m_hAttribDC</B> device contexts. The following pairs of functions provide this capability:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>Uses m_hAttribDC</TH>
+<TH width=57%>Uses m_hDC</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>GetTextExtent</B></TD>
+<TD width=57%><B>GetOutputTextExtent</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>GetTabbedTextExtent</B></TD>
+<TD width=57%><B>GetOutputTabbedTextExtent</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>GetTextMetrics</B></TD>
+<TD width=57%><B>GetOutputTextMetrics</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>GetCharWidth</B></TD>
+<TD width=57%><B>GetOutputCharWidth</B></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>MFC for Windows&nbsp;CE supports the following<B> </B>methods of the <B>CDC</B> class differently than standard MFC:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::BitBlt</B></TD>
+<TD width=56%><B>CDC::GetMapMode</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::DrawEdge</B></TD>
+<TD width=56%><B>CDC::MaskBlt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::DrawText</B></TD>
+<TD width=56%><B>CDC::Polygon</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::ExtTextOut</B></TD>
+<TD width=56%><B>CDC::PolyPolygon</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::GetDeviceCaps</B></TD>
+<TD width=56%><B>CDC::SelectStockObject</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::GetHalftoneBrush</B></TD>
+<TD width=56%><B>CDC::StretchBlt</B></TD>
+</TR>
+</table></div>
+
+<P>The following methods do not do anything in Windows&nbsp;CE. They are included for compatibility with existing MFC code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::DPtoLP</B></TD>
+<TD width=56%><B>CDC::GetWindowExt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::GetViewportExt</B></TD>
+<TD width=56%><B>CDC::GetWindowOrg</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CDC::GetViewportOrg</B></TD>
+<TD width=56%><B>CDC::LPtoDP</B></TD>
+</TR>
+</table></div>
+
+<P>MFC for Windows&nbsp;CE does not support the following methods of the <B>CDC</B> class:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=44%><B>AbortPath</B></TD>
+<TD width=56%><B>GetWindow</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>AddMetaFileComment</B></TD>
+<TD width=56%><B>GrayString</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>AngleArc</B></TD>
+<TD width=56%><B>HIMETRICtoDP</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>Arc</B></TD>
+<TD width=56%><B>HIMETRICtoLP</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>ArcTo</B></TD>
+<TD width=56%><B>InvertRgn</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>BeginPath</B></TD>
+<TD width=56%><B>LPtoHIMETRIC</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>Chord</B></TD>
+<TD width=56%><B>OffsetViewportOrg</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CloseFigure</B></TD>
+<TD width=56%><B>OffsetWindowOrg</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CreateDC</B></TD>
+<TD width=56%><B>PaintRgn</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>CreateIC</B></TD>
+<TD width=56%><B>Pie</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>DrawEscape</B></TD>
+<TD width=56%><B>PlayMetaFile</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>DrawState</B></TD>
+<TD width=56%><B>PlgBlt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>DPtoHIMETRIC</B></TD>
+<TD width=56%><B>PolyBezier</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>EndPath</B></TD>
+<TD width=56%><B>PolyBezierTo</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>EnumObjects</B></TD>
+<TD width=56%><B>PolyDraw</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>Escape</B></TD>
+<TD width=56%><B>PtVisible</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>ExtFloodFill</B></TD>
+<TD width=56%><B>QueryAbort</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>FillPath</B></TD>
+<TD width=56%><B>ResetDC</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>FillRgn</B></TD>
+<TD width=56%><B>ScaleViewportExt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>FlattenPath</B></TD>
+<TD width=56%><B>ScaleWindowExt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>FloodFill</B></TD>
+<TD width=56%><B>SelectClipPath</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>FrameRgn</B></TD>
+<TD width=56%><B>SetArcDirection</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetArcDirection</B></TD>
+<TD width=56%><B>SetBoundsRect</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetAspectRatioFilter</B></TD>
+<TD width=56%><B>SetColorAdjustment</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetBoundsRect</B></TD>
+<TD width=56%><B>SetMapMode</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetCharABCWidths</B></TD>
+<TD width=56%><B>SetMapperFlags</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetCharWidth</B></TD>
+<TD width=56%><B>SetMiterLimit</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetColorAdjustment</B></TD>
+<TD width=56%><B>SetPixelV</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetCurrentPalette</B></TD>
+<TD width=56%><B>SetPolyFillMode</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetFontData</B></TD>
+<TD width=56%><B>SetStretchBltMode</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetGlyphOutline</B></TD>
+<TD width=56%><B>SetTextAlign</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetKerningPairs</B></TD>
+<TD width=56%><B>SetTextCharacterExtra</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetMiterLimit</B></TD>
+<TD width=56%><B>SetTextJustification</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetOutlineTextMetrics</B></TD>
+<TD width=56%><B>SetViewportOrg</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetOutputTabbedTextExtent</B></TD>
+<TD width=56%><B>SetViewportExt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetOutputCharWidth</B></TD>
+<TD width=56%><B>SetWindowOrg</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetPath</B></TD>
+<TD width=56%><B>SetWindowExt</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetPolyFillMode</B></TD>
+<TD width=56%><B>StrokeAndFillPath</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetTabbedTextExtent</B></TD>
+<TD width=56%><B>StrokePath</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetTextAlign</B></TD>
+<TD width=56%><B>TabbedTextOut</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetTextCharacterExtra</B></TD>
+<TD width=56%><B>TextOut</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetROP2</B></TD>
+<TD width=56%><B>UpdateColors</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><B>GetStretchBltMode</B></TD>
+<TD width=56%><B>WidenPath</B></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcpaintdc.htm"><B>CPaintDC</B></A>, <A HREF="aflrfcwindowdc.htm"><B>CWindowDC</B></A>, <A HREF="aflrfcclientdc.htm"><B>CClientDC</B></A>, <A HREF="aforigraphicaldrawingclasses.htm">Graphical Drawing Classes</A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710063', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

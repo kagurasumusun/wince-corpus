@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 2: Setting Up the Vertex Buffer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 2: Setting Up the Vertex Buffer"/>
+<MSHelp:RLTitle Title="Step 2: Setting Up the Vertex Buffer"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dx3d_Step_2_Setting_Up_the_Vertex_Buffer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: dx3d_concepts6_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680286">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dx3d_step_2_setting_up_the_vertex_buffer"></A>Step 2: Setting Up the Vertex Buffer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Now that the custom vertex format is defined, it is time to initialize the vertices. The Vertices sample project does this by calling the application-defined function <B>InitVB</B> after creating the required Microsoft&reg; Direct3D&reg; objects. The following code fragment initializes the values for three custom vertices.</P>
+
+<PRE class="code">CUSTOMVERTEX g_Vertices[] =
+{
+    { 150.0f,  50.0f, 0.5f, 1.0f, 0xffff0000, }, // x, y, z, rhw, color
+    { 250.0f, 250.0f, 0.5f, 1.0f, 0xff00ff00, },
+    {  50.0f, 250.0f, 0.5f, 1.0f, 0xff00ffff, },
+};</PRE>
+
+<P>The preceding code fragment fills three vertices with the points of a triangle and specifies which color each vertex will emit. The first point is at (150, 50) and emits the color red (0xffff0000). The second point is at (250, 250) and emits the color green (0xff00ff00). The third point is at (50, 250) and emits the color blue-green (0xff00ffff). Each of these points has a depth value of 0.5 and an RHW of 1.0. For more information on this vector format see <A HREF="_wcesdk_dx3d_transformed_and_lit_vertices.htm">Transformed and Lit Vertices</A>.</P>
+
+<P>The next step is to call <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DDevice8__CreateVertexBuffer" TABINDEX="0">IDirect3DDevice8::CreateVertexBuffer</MSHelp:link> to create a vertex buffer as shown in the following code fragment.</P>
+
+<PRE class="code">if( FAILED( g_pd3dDevice-&gt;CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX),
+                                              0 /* Usage */, D3DFVF_CUSTOMVERTEX,
+                                              D3DPOOL_DEFAULT, &amp;g_pVB ) ) )
+    return E_FAIL;</PRE>
+
+<P>The first two parameters of <B>CreateVertexBuffer</B> tell Direct3D the desired size and usage for the new vertex buffer. The next two parameters specify the vector format and memory location for the new buffer. The vector format here is D3DFVF_CUSTOMVERTEX, which is the FVF that the sample code specified earlier. The D3DPOOL_DEFAULT flag tells Direct3D to create the vertex buffer in the memory allocation that is most appropriate for this buffer. The final parameter is the address of the vertex buffer to create.</P>
+
+<P>After creating a vertex buffer, it is filled with data from the custom vertices as shown in the following code fragment.</P>
+
+<PRE class="code">VOID* pVertices;
+if( FAILED( g_pVB-&gt;Lock( 0, sizeof(g_Vertices), (BYTE**)&amp;pVertices, 0 ) ) )
+    return E_FAIL;
+memcpy( pVertices, g_Vertices, sizeof(g_Vertices) );
+g_pVB-&gt;Unlock();</PRE>
+
+<P>The vertex buffer is first locked by calling <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DVertexBuffer8__Lock" TABINDEX="0">IDirect3DVertexBuffer8::Lock</MSHelp:link>. The first parameter is the offset into the vertex data to lock, in bytes. The second parameter is the size of the vertex data to lock, in bytes. The third parameter is the address of a BYTE pointer, filled with a pointer to vertex data. The fourth parameter tells the vertex buffer how to lock the data.</P>
+
+<P>The vertices are then copied into the vertex buffer using <B>memcpy</B>. After the vertices are in the vertex buffer, a call is made to <MSHelp:link keywords="_wcesdk_dx3d_IDirect3DVertexBuffer8__Unlock" TABINDEX="0">IDirect3DVertexBuffer8::Unlock</MSHelp:link> to unlock the vertex buffer. This mechanism of locking and unlocking is required because the vertex buffer may be in device memory.</P>
+
+<P>Now that the vertex buffer is filled with the vertices, it is time to render the display, as described in <A HREF="_wcesdk_dx3d_step_3_rendering_the_display.htm">Step 3: Rendering the Display</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%202:%20Setting%20Up%20the%20Vertex%20Buffer&nbsp;(_wcesdk_dx3d_step_2_setting_up_the_vertex_buffer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

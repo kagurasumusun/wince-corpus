@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFrameWnd</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CFrameWnd"/>
+<MSHelp:RLTitle Title="CFrameWnd"/>
+<MSHelp:Keyword Index="A" Term="aflrfCFrameWnd"/>
+<MSHelp:Keyword Index="K" Term="CFrameWnd class"/>
+<MSHelp:Keyword Index="K" Term="CFrameWnd class, overview"/>
+<MSHelp:Keyword Index="A" Term="aflrfCFrameWnd"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cframwnd.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710451">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcframewnd"></A>CFrameWnd</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This class encapsulates the functionality of a Windows CE single document interface (SDI) frame window. A frame window is a window that frames an application. In Windows CE, it usually contains a view window and a command bar.</P>
+
+<P>To create a useful frame window for your application, derive a class from <B>CFrameWnd</B>. Add member variables to the derived class to store data specific to your application. Implement message-handler methods and a message map in the derived class to specify what happens when messages are directed to the window. </P>
+
+<P>There are three ways to construct a frame window:
+
+<UL type="disc">
+	<LI>Directly,  using <A HREF="aflrfcframewndcolcolcreate.htm"><B>Create</B></A>.</li>
+
+	<LI>Directly,  using <A HREF="aflrfcframewndcolcolloadframe.htm"><B>LoadFrame</B></A>.</li>
+
+	<LI>Indirectly,  using a document template.</li>
+</UL>
+
+<P>Before you call either <B>Create</B> or <B>LoadFrame</B>, you must construct the frame-window object on the heap using the Microsoft eMbedded Visual C++ <B>new</B> operator. Before calling <B>Create</B>, you can also register a window class with the <A HREF="aflrfafxregisterwndclass.htm"><B>AfxRegisterWndClass</B></A> global function to set the icon and class styles for the frame.</P>
+
+<P>Use the <B>Create</B> method to pass the creation parameters for the frame as immediate arguments.</P>
+
+<P><B>LoadFrame</B> requires fewer arguments than <B>Create</B>, and instead retrieves most of its default values from resources, including the caption, icon, accelerator table, and menu of the frame. To be accessible by <B>LoadFrame</B>, all these resources must have the same resource ID. For example, <B>IDR_MAINFRAME</B>.</P>
+
+<P>When a <B>CFrameWnd</B> object contains views and documents, they are created indirectly by the framework instead of directly by the programmer. The <B>CDocTemplate</B> object integrates the creation of the frame, the creation of the containing views, and the connection of the views to the appropriate document. The parameters of the <B>CDocTemplate</B> constructor specify the <B>CRuntimeClass</B> of the three classes involved: document, frame, and view. A <B>CRuntimeClass</B> object is used by the framework to dynamically create new frames when specified by the user; for example, by using the File New command.</P>
+
+<P>A frame-window class derived from <B>CFrameWnd</B> must be declared with <B>DECLARE_DYNCREATE</B> in order for the above <B>RUNTIME_CLASS</B> mechanism to work correctly.</P>
+
+<P>A <B>CFrameWnd</B> contains default implementations to perform the following functions of a main window in a typical application for Windows:
+
+<UL type="disc">
+	<LI>A <B>CFrameWnd</B> frame window keeps track of a currently active view that is independent of the Windows active window or the current input focus. When the frame is reactivated, the active view is notified by calling <B>CView::OnActivateView</B>.</li>
+
+	<LI>Command messages and many common frame-notification messages, including those handled by the <B>OnSetFocus</B>, <B>OnHScroll</B>, and <B>OnVScroll</B> functions of <B>CWnd</B>, are delegated by a <B>CFrameWnd</B> frame window to the currently active view.</li>
+
+	<LI>The currently active view can determine the caption of the frame window. This feature can be disabled by turning off the FWS_ADDTOTITLE style bit of the frame window.</li>
+
+	<LI>A <B>CFrameWnd</B> frame window manages the positioning of the control bars, views, and other child windows inside the  client area of the frame window. A frame window also does idle-time updating of toolbar and other control-bar buttons. A <B>CFrameWnd</B> frame window also has default implementations of commands for toggling on and off the toolbar and status bar.</li>
+
+	<LI>A <B>CFrameWnd</B> frame window manages the main menu bar. When a pop-up menu is displayed, the frame window uses the <B>UPDATE_COMMAND_UI</B> mechanism to determine which menu items should be enabled, disabled, or checked. When the user selects a menu item, the frame window updates the status bar with the message string for that command.</li>
+
+	<LI>A <B>CFrameWnd</B> frame window has an optional accelerator table that automatically translates keyboard accelerators.</li>
+
+	<LI>A <B>CFrameWnd</B> frame window has an optional help ID set with <B>LoadFrame</B> that is used for context-sensitive help. A frame window is the main orchestrator of semimodal states such as context-sensitive help (SHIFT+F1) and print-preview modes.</li>
+
+	<LI>A <B>CFrameWnd</B> frame window will open a file dragged from the File Manager and dropped on the frame window.</li>
+
+	<LI>If the frame window is the main application window, that is, <B>CWinThread::m_pMainWnd</B>, when the user closes the application, the frame window prompts the user to save any modified documents, for <B>OnClose</B> and <B>OnQueryEndSession</B>.</li>
+
+	<LI>If the frame window is the main application window, the frame window is the context for running WinHelp. Closing the frame window will shut down Winhelp.exe if it was launched for help for this application.</li>
+</UL>
+
+<P>Do not use the Microsoft eMbedded Visual C++ <B>delete</B> operator to destroy a frame window. Use <B>CWnd::DestroyWindow</B> instead. The <B>CFrameWnd</B> implementation of <B>PostNcDestroy</B> will delete the C++ object when the window is destroyed. When the user closes the frame window, the default <B>OnClose</B> handler will call <B>DestroyWindow</B>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>One of the most interesting new features in Windows CE is command bars, which combines the functionality of a menu bar and a tool bar. MFC for Windows CE supports command bars with the following new methods, which have been added to the <B>CFrameWnd</B> class:
+
+<UL type="disc">
+	<LI><A HREF="aflrfcframewndcolcoladdadornments.htm"><B>CFrameWnd::AddAdornments</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcoladdbitmap.htm"><B>CFrameWnd::AddBitmap</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcoladdcomboboxstring.htm"><B>CFrameWnd::AddComboBoxString</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcolgetcombocount.htm"><B>CFrameWnd::GetComboCount</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcolgetcombocursel.htm"><B>CFrameWnd::GetComboCurSel</B></A><A HREF="aflrfcframewndcolcolgetheight.htm"><B>GetHeight</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcolinsertbuttons.htm"><B>CFrameWnd::InsertButtons</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcolinsertcombobox.htm"><B>CFrameWnd::InsertComboBox</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcolinsertmenu.htm"><B>CFrameWnd::InsertMenu</B></A></li>
+
+	<LI><A HREF="aflrfcframewndcolcolsetcombocursel.htm"><B>CFrameWnd::SetComboCurSel</B></A></li>
+</UL>
+
+<P>MFC for Windows CE also supports a new data member of the <B>CFrameWnd</B> class. The <B>m_hCommandBar</B> data member is the window handle to the command bar of the frame window.</P>
+
+<P>MFC for Windows CE supports the <A HREF="aflrfcframewndcolcolloadframe.htm"><B>CFrameWnd::LoadFrame</B></A> method of the <B>CFrameWnd</B> class differently than the standard MFC.</P>
+
+<P>MFC for Windows CE does not support the following methods of the <B>CFrameWnd</B> class:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=48%><B>DockControlBar</B></TD>
+<TD width=52%><B>NegotiateBorderSpace</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>EnableDocking</B></TD>
+<TD width=52%><B>OnContextHelp</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>FloatControlBar</B></TD>
+<TD width=52%><B>OnSetPreviewMode</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>GetControlBar</B></TD>
+<TD width=52%><B>RecalcLayout</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>GetDockState</B></TD>
+<TD width=52%><B>SaveBarState</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>GetMessageBar</B></TD>
+<TD width=52%><B>SetDockState</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>GetMessageString</B></TD>
+<TD width=52%><B>SetMessageText</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>LoadAccelTable</B></TD>
+<TD width=52%><B>ShowControlBar</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%><B>LoadBarState</B></TD>
+<TD width=52%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcwnd.htm"><B>CWnd</B></A>, <A HREF="aflrfcview.htm"><B>CView</B></A>, <A HREF="aflrfcdoctemplate.htm"><B>CDocTemplate</B></A>, <A HREF="aflrfcruntimeclass.htm"><B>CRuntimeClass</B></A>, <A HREF="aforiframewindowsandsplitterwindows.htm"><B>Frame Windows and Splitter Windows</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710451', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MEMORY Section</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MEMORY Section"/>
+<MSHelp:RLTitle Title="MEMORY Section"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_MEMORY_Section"/>
+<MSHelp:Keyword Index="K" Term=".bib file, MEMORY section"/>
+<MSHelp:Keyword Index="K" Term="bib file, MEMORY section"/>
+<MSHelp:Keyword Index="K" Term="binary images, binary image builder file MEMORY section"/>
+<MSHelp:Keyword Index="K" Term="configuration files, MEMORY section"/>
+<MSHelp:Keyword Index="K" Term="image configuration files, MEMORY section"/>
+<MSHelp:Keyword Index="K" Term="MEMORY section of .bib file"/>
+<MSHelp:Keyword Index="K" Term="memory, .bib file"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_MEMORY_Section"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679748">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_memory_section"></A>MEMORY Section</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The kernel requires a memory table to identify the following information:
+
+<UL type="disc">
+	<LI>A region of memory as either RAM or ROM.</li>
+
+	<LI>The amount of RAM available for applications.</li>
+</UL>
+
+<P>The MEMORY section of a .bib file reserves MEMORY regions by name. Each MEMORY region entry has the following columnar format.</P>
+
+<PRE class="syntax"><I>Name        Address        Size        Type</I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Name</I></DT>
+
+<DD>Identifies the name of the MEMORY region. There is no naming convention for this string. However, the name must be unique. There is one predefined name called RESERVE. You can use the RESERVE section name multiple times. RESERVE specifies a hole in a ROM image.</dd>
+
+<DT><I>Address</I></DT>
+
+<DD>Specifies the hexadecimal address in memory where the MEMORY region begins.</dd>
+
+<DT><I>Size</I></DT>
+
+<DD>Specifies the size, in hexadecimal bytes, of the MEMORY region.</dd>
+
+<DT><I>Type</I></DT>
+
+<DD>Specifies the type of memory. The following table shows the values for type of memory. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Value</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>RAM</TD>
+<TD width=82%>Specifies a region of RAM available to running processes and the RAM-based Windows CE-based file system. The region must be contiguous.
+<P>Do not reserve memory in the middle of a RAM section. Doing so creates two noncontiguous regions of memory, which is the maximum supported by Windows CE. If you need to reserve memory in the middle of your RAM allocation, a portion of free RAM is reported in the Config.bib file and the rest is reported when the kernel calls <B>OEMGetExtensionDRAM</B> or <B>pNKEnumExtensionDRAM</B>.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>RAMIMAGE</TD>
+<TD width=82%>Specifies that the region should be treated like ROM. This memory- type value is useful when loading the ROM image into RAM during the development process or when burning the image onto a single ROM. The kernel copies all writable sections for an application into RAM and fixes the memory addresses prior to starting the application process. 
+<P>There can be only one RAMIMAGE section per .bin file. RAMIMAGE can be specified only once in your Config.bib file. The name that is used to describe a RAMIMAGE section must be the same name used in the .bib file that specifies the modules and files to add to the OS image.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>RESERVED</TD>
+<TD width=82%>Specifies that a region of RAM is reserved. Currently, Romimage.exe ignores this field, so it functions only as a comment. This memory might be a video frame buffer or a direct memory access (DMA) buffer. Do not overlap reserved regions with other memory regions.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<PRE class="code">MEMORY 
+  NK        9f800000  00800000  RAMIMAGE 
+; Only specify one RAMIMAGE section
+; Reserve 4K at reset vector for boot loader and diagnostics
+  RESERVE    9fc00000    00001000
+  RAM       80080000  00780000  RAM 
+; Common RAM regions
+  AUD_MDD    80002000  00000800  RESERVED
+  DISPLAY    80008000  00013000  RESERVED
+  DRV_GLB    80020000  00001000  RESERVED
+  DBGSER_DMA  80022000  00002000  RESERVED
+  SER_DMA    80024000  00002000  RESERVED
+  IR_DMA    80026000  00002000  RESERVED</PRE>
+
+<P>The memory region for NK starts at the address 0x9f800000 and is 8 MB. The RAM type indicates that the region should be treated like RAM and starts at the address 0x80080000. Six memory regions are specified as reserved. These include the audio DMA buffer, AUD_MDD, the display-frame buffer, DISPLAY, and the driver global memory region, DRV_GLB. The six memory regions are used, but are not part of the image or RAM space. </P>
+
+<P>In the MEMORY section, you can also specify a memory region that is not filled with image data. This memory region uses the memory name RESERVE and specifies no memory type name. This option is useful for implementing original equipment manufacturer (OEM) diagnostics at the reset vector. Using RESERVE, you can specify up to 10 independent regions in a single image. In the previous example, 4 KB of image space is reserved, starting at the address 0x9fc00000.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cmrefOEMGetExtensionDRAM" TABINDEX="0">OEMGetExtensionDRAM</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefPNKEnumExtensionDRAM" TABINDEX="0">pNKEnumExtensionDRAM</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MEMORY%20Section&nbsp;(_wcepb_memory_section.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

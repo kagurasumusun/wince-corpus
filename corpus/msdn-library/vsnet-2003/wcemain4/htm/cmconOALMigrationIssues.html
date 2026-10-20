@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OAL Migration Issues</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OAL Migration Issues"/>
+<MSHelp:RLTitle Title="OAL Migration Issues"/>
+<MSHelp:Keyword Index="A" Term="cmconOALMigrationIssues"/>
+<MSHelp:Keyword Index="K" Term="OAL, migrating from version 2.12"/>
+<MSHelp:Keyword Index="A" Term="cmconOALMigrationIssues"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: migration_issues.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801714">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconoalmigrationissues"></A>OAL Migration Issues</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following table describes migration issues for the OAL.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=37%>Issue</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>All microprocessors: <MSHelp:link keywords="cerefGetIdleTime" TABINDEX="0">GetIdleTime</MSHelp:link></TD>
+<TD width=63%>The support of this function requires that you declare and calculate the following variables in the OAL.
+<PRE class="code">// translation constant in 1 ms units
+extern DWORD idleconv;
+// 64-bit idle time in ms
+extern DWORD curridlehigh, curridlelow; </PRE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>All microprocessors</TD>
+<TD width=63%>In Windows CE .NET, the <MSHelp:link keywords="cmrefOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link> function name is common to all microprocessors.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>X86: <MSHelp:link keywords="cmrefIOCTL_HAL_REBOOT" TABINDEX="0">IOCTL_HAL_REBOOT</MSHelp:link></TD>
+<TD width=63%>In Windows CE .NET, the x86 microprocessor includes code that enables a device with this microprocessor to soft reset to the startup routine or to the Eboot boot loader startup routine.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>X86: <MSHelp:link keywords="cmrefOEMFlushCache" TABINDEX="0">OEMFlushCache</MSHelp:link></TD>
+<TD width=63%>The <B>OEMFlushCache</B> flush function is needed for all x86 platforms. The kernel calls this function when the <A HREF="cmrefcachesync.htm">CacheSync</A> function is called.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SHx: SH3DSP</TD>
+<TD width=63%>In Windows CE .NET, you need to declare the following variable: export_SH3DSP. Set the data to the following value.
+<PRE class="code">_SH3DSP   .data.l 0</PRE>
+
+<P>The SH3DSP variable is used to identify an SH3 microprocessor with DSP support. Setting the value to 0 indicates there is no DSP present on the SH3 processor and 1 indicates there the DSP is present.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SHx: SH4CacheLines</TD>
+<TD width=63%>This variable describes the number of cache lines supported by the SH4 microprocessor.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SHx: nested interrupts</TD>
+<TD width=63%>In the SHx architecture, the kernel uses the <MSHelp:link keywords="cmrefIntrPrio" TABINDEX="0">IntrPrio</MSHelp:link> structure that provides information on nested interrupts. The structure provides the kernel with the information on what interrupts are masked when the current interrupt is being handled. 
+<P>To gain access to the structure, the following variable must be declared in the OAL: <CODE>extern BYTE IntrPrio[];</CODE></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>MIPS: nested interrupts</TD>
+<TD width=63%>In the MIPS architecture, the kernel uses the <B>IntrPriority</B> and <MSHelp:link keywords="cgrefIntrMask" TABINDEX="0">IntrMask</MSHelp:link> structures to provide information about nested interrupts. The structures provide the kernel with the information about what interrupts are masked when the current interrupt is being handled. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><MSHelp:link keywords="cmrefIOCTL_QUERY_PHYSICALMEM" TABINDEX="0">IOCTL_QUERY_PHYSICALMEM</MSHelp:link></TD>
+<TD width=63%>You need to implement this IOCTL to support applications such as the kernel debugger.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>ARM: <MSHelp:link keywords="cmrefOEMARMCacheMode" TABINDEX="0">OEMARMCacheMode</MSHelp:link></TD>
+<TD width=63%>This function allows you to change the cache bits configurations in the page table entries for only the ARM processors. These bits determine cache mode and write buffer usage. The ARM kernels still default to their previous settings but in Windows CE .NET you can change those settings if desired, and the ARM microprocessor supports the change. This function is required in every ARM OAL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>ARM: <MSHelp:link keywords="cmrefOEMInterruptHandlerFIQ" TABINDEX="0">OEMInterruptHandlerFIQ</MSHelp:link></TD>
+<TD width=63%>Windows CE .NET enables the routing of the Fast Interrupt reQuest (FIQ) OAL. To facilitate the routing, you need to implement the following required function. 
+<PRE class="code">void OEMInterruptHandlerFIQ(void);</PRE>
+
+<P>This function must be part of the your OAL for any ARM build to succeed, even if it is just a stub.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>ARM: <MSHelp:link keywords="cmrefOEMInterruptHandler" TABINDEX="0">OEMInterruptHandler</MSHelp:link></TD>
+<TD width=63%>Windows CE .NET enables nesting support if you require it. The kernel calls the <B>OEMInterruptHandler</B> function when a normal interrupt occurs. You need to determine if nesting is required. 
+<P>The following is a code example of the function.</P>
+
+<PRE class="code">int OEMInterruptHandler(unsigned int ra)</PRE>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefGetIdleTime" TABINDEX="0">GetIdleTime</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefOEMIdle" TABINDEX="0">OEMIdle</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefOEMFlushCache" TABINDEX="0">OEMFlushCache</MSHelp:link></P>
+
+<P><A HREF="cmrefcachesync.htm">CacheSync</A></P>
+
+<P><MSHelp:link keywords="cmrefIntrPrio" TABINDEX="0">IntrPrio</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cgrefIntrMask" TABINDEX="0">IntrMask</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefOEMARMCacheMode" TABINDEX="0">OEMARMCacheMode</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefOEMInterruptHandlerFIQ" TABINDEX="0">OEMInterruptHandlerFIQ</MSHelp:link></P>
+
+<P><MSHelp:link keywords="cmrefOEMInterruptHandler" TABINDEX="0">OEMInterruptHandler</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;OAL%20Migration%20Issues&nbsp;(cmconoalmigrationissues.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Command and Vertex Buffer Allocation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Command and Vertex Buffer Allocation"/>
+<MSHelp:RLTitle Title="Command and Vertex Buffer Allocation"/>
+<MSHelp:Keyword Index="A" Term="cxconCommandVertexBufferAllocation"/>
+<MSHelp:Keyword Index="K" Term="buffers, Direct3D command buffers"/>
+<MSHelp:Keyword Index="K" Term="buffers, Direct3D vertex buffers"/>
+<MSHelp:Keyword Index="K" Term="command buffers%2C Direct3D, allocation"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, primitive drawing and state changes"/>
+<MSHelp:Keyword Index="K" Term="primitive drawing%2C Direct3D, command and vertex buffers"/>
+<MSHelp:Keyword Index="K" Term="vertex buffers%2C Direct3D, allocation"/>
+<MSHelp:Keyword Index="A" Term="cxconCommandVertexBufferAllocation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664963">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconcommandvertexbufferallocation"></A>Command and Vertex Buffer Allocation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>There are three types of buffers used in Direct3D:
+
+<UL type="disc">
+	<LI>Implicit vertex buffers (IVBs) are created for internal use only; that is, applications are unaware of IVBs. One IVB is always created after context creation. Direct3D stores vertex data in IVBs. </li>
+
+	<LI>Explicit vertex buffers (EVBs) are created only in response to an application request. Direct3D then stores vertex data in EVBs.</li>
+
+	<LI>Command buffers are created for internal use only; that is, applications are unaware of command buffers. Direct3D stores command data in command buffers. </li>
+</UL>
+
+<P>Implicit vertex buffers are special vertex buffers used internally by Direct3D for batching. They are created during device initialization and can be multibuffered. They are always read/write so they should not be put in video memory. This type of buffer is marked by the absence of both the DDSCAPS2_VERTEXBUFFER and DDSCAPS2_COMMANDBUFFER flags.</P>
+
+<P>Explicit vertex buffers are created and controlled by the application. These cannot be multibuffered and cannot be put into local or nonlocal video memory unless the DDSCAPS_WRITEONLY flag is set. Explicit vertex buffers are marked with DDSCAPS_VERTEXBUFFER.</P>
+
+<P>Command buffers are used by Direct3D to batch commands. They can be multibuffered and are used for all APIs except for TLVERTEX or unclipped execute-buffer API calls. This type of buffer is marked by the flag DDSCAPS2_COMMANDBUFFER. They are always write-only, though no explicit flag is set and they never contain invalid instructions.</P>
+
+<P>By default, the Direct3D run time allocates all of these buffers. IVBs and command buffers are accessed through the surfaces with which they are associated. All buffers are passed to the driver's <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback.</P>
+
+<H3 class="dtH3">Driver-Allocated Vertex and Command Buffers</H3>
+
+<P>A Direct3D driver can optionally perform the allocation of vertex and command buffers. This is done by fielding a <B>DD_D3DBUFCALLBACKS</B> structure and pointing the <B>lpD3DBufCallbacks</B> member of the <A HREF="_dxce_ddhal_ddhalinfo.htm">DDHALINFO</A> structure at it. The callbacks reported in the <B>DD_D3DBUFCALLBACKS</B> structure include:
+
+<UL type="disc">
+	<LI><B>CanCreateD3DBuffer</B></li>
+
+	<LI><B>CreateD3DBuffer</B></li>
+
+	<LI><B>DestroyD3DBuffer</B></li>
+
+	<LI><B>LockD3DBuffer</B></li>
+
+	<LI><B>UnlockD3DBuffer</B></li>
+</UL>
+
+<P>These functions are called in the same way as the <I>Xxx</I><B>Surface</B> callbacks (such as <A HREF="_dxce_ddhal_cancreatesurface.htm">CanCreateSurface</A>) and only when the DDSCAPS_EXECUTEBUFFER flag is set. The buffer creation flags are DDSCAPS_WRITEONLY, DDSCAPS2_VERTEXBUFFER, and DDSCAPS2_COMMANDBUFFER. </P>
+
+<P>Drivers determine the type of buffer being requested by checking the <B>ddsCaps</B> member of the <A HREF="_dxce_ddhal_ddrawi_ddrawsurface_lcl.htm">DDRAWI_DDRAWSURFACE_LCL</A> structure passed to the <B>CanCreateExecuteBuffer</B> and <B>CreateExecuteBuffer</B> callback for the following flags:
+
+<UL type="disc">
+	<LI>DDSCAPS_VERTEXBUFFER indicates that the driver should allocate an explicit vertex buffer.</li>
+
+	<LI>DDSCAPS_COMMANDBUFFER indicates that the driver should allocate a command buffer.</li>
+
+	<LI>If neither flag is set, the driver should allocate an implicit vertex buffer. </li>
+</UL>
+
+<P>Drivers can allocate vertex buffers and command buffers using existing execute buffer callbacks. The driver should expose video memory heaps, even if they do their own heap management. This can be done by exposing a fake heap, which reports the appropriate size. Direct3D will assume the driver can blit with outstanding locks to video memory. </P>
+
+<P>The driver can internally allocate N vertex and command buffers and cycle through these buffers. Direct3D fills a given pair while the hardware asynchronously renders from the other queued buffers. This is very useful with direct memory access (DMA). </P>
+
+<P>Buffers in a multibuffering set can be in different memory types. To do this, the driver is called to create the first buffer. It can create the set immediately and return the first buffer in the set to Direct3D. For each call to <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, if the D3DHALDP2_SWAPVERTEXBUFFER or D3DHALDP2_SWAPCOMMANDBUFFER flag is set, the driver should return a new buffer. If the returned buffer is in video memory, the corresponding D3DHALDP2_VIDMEMVERTEXBUF or D3DHALDP2_VIDMEMCOMMANDBUF flag should be set.</P>
+
+<P>Occasionally, Direct3D will request the minimum size for the next buffer. If the size is too large, the driver should allocate the buffer in a backing surface. If the size is too small, the driver is permitted to provide a larger buffer. The driver should keep track of how many buffers and what memory types they are and clean up everything on exit.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconprimitivedrawingstatechanges.htm">Primitive Drawing and State Changes</A></P>
+
+<P><A HREF="cxconcommandvertexbuffers.htm">Command and Vertex Buffers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Command%20and%20Vertex%20Buffer%20Allocation&nbsp;(cxconcommandvertexbufferallocation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_USB_Basic_Transfer_Verification_Running_the_Test"/>
+<MSHelp:Keyword Index="K" Term="USB Build Verification test (DDTK), running"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: usbbvt.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddtk_usb_basic_transfer_verification_running_the_test"></A>Running the Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The architecture of the USB client driver relies on a separate Device Driver Loader/TUX Extender DLL module (DDLX), which is used to automate the large number of USB test cases. </P>
+
+<P>The following command line shows the syntax for using Tux.exe and Ddlx.dll to run the test, where <I>test_case</I> is the specific test case or range of test cases to run.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d ddlx.dll &#0150;c usbbvt.dll -x <I>test_case</I></PRE>
+
+<P>The following command line shows the syntax for using Tux.exe and Ddlx.dll to run the entire test.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d ddlx.dll &#0150;c usbbvt.dll</PRE>
+
+<P>The following command line shows the syntax for outputting a list of all available test cases. </P>
+
+<PRE class="code">tux &#0150;o &#0150;l &#0150;d ddlx.dll &#0150;c usbbvt.dll </PRE>
+
+<P>Usbbvt.dll uses the <B>RegisterClientSettings</B> API to register itself as the client driver that will be loaded when the Intel I80930Ax test board is connected. This registration is performed either during the connection of the unknown device, which occurs when the USB subsystem presents the user with a dialog prompt for the driver DLL name (Usbbvt.dll), or during execution of the Usbload.exe utility. </P>
+
+<P>The following command line shows the syntax for installing the Usbbvt.dll driver.</P>
+
+<PRE class="code">s usbload.exe usbbvt.dll</PRE>
+
+<P>Once registered, the client driver is not loaded until a USB device is connected. At that time, USB enumerates the device and uses callback to notify Usbbvt.dll of the event. The USB client driver then accepts control of the device and callback because it is now fully installed in memory.</P>
+
+<P>Once Usbbvt.dll is installed as an Intel I80930Ax test board client driver, any corresponding devices inserted from that point on will use it as a client driver. Usbbvt.dll does not affect any devices that have already been connected before its registration.</P>
+
+<P>The following command line shows the syntax for listing the currently registered USB drivers.</P>
+
+<PRE class="code">s usbload.exe</PRE>
+
+<P>The registry entries for Usbbvt.dll that are installed and reported by the Usbload.exe utility are as follows:</P>
+
+<PRE class="code">[USB]
+     [LoadClients]
+         [1118_37642]
+             [Default]
+                 [0_0_0]
+                     [USBBVT I80930AE Driver]
+                         SZ: DLL = usbbvt
+     [ClientDrivers]
+         [USBBVT I80930AE Driver]</PRE>
+
+<P>After it is no longer needed, the Usbbvt.dll client driver can be unloaded with the Usbload.exe utility. This is necessary so that normal USB functionality can resume. All devices that were using the driver must be disconnected to fully remove it from memory.</P>
+
+<P>The following command line shows the syntax for uninstalling the Usbbvt.dll driver:</P>
+
+<PRE class="code">s usbload.exe usbbvt.dll unload</PRE>
+
+<P>The following table shows the test cases.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=19%>Test Case</TH>
+<TH width=81%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1001</TD>
+<TD width=81%>Bulk endpoint-loopback transfer test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1002</TD>
+<TD width=81%>Interrupt endpoint-loopback transfer test</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1003</TD>
+<TD width=81%>Isochronous endpoint-loopback transfer test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1004</TD>
+<TD width=81%>Run all endpoint-loopback transfers at same time.</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20the%20Test&nbsp;(_wceddtk_usb_basic_transfer_verification_running_the_test.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

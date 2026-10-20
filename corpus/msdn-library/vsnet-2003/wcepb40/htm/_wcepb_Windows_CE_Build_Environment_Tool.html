@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Windows CE Build Environment Tool</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Windows CE Build Environment Tool"/>
+<MSHelp:RLTitle Title="Windows CE Build Environment Tool"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Windows_CE_Build_Environment_Tool"/>
+<MSHelp:Keyword Index="K" Term="Build Environment tool"/>
+<MSHelp:Keyword Index="K" Term="command-line tools, Windows CE Build Environment tool"/>
+<MSHelp:Keyword Index="K" Term="tools, Windows CE Build Environment tool"/>
+<MSHelp:Keyword Index="K" Term="Wince.bat"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Windows_CE_Build_Environment_Tool"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: tools.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_677585">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_windows_ce_build_environment_tool"></A>Windows CE Build Environment Tool</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Wince.bat prepares the development workstation build environment by using three input parameters to determine the build environment, the location of the source files used during the build process, and the files created during the build process.</P>
+
+<P>When Wince.bat is executed in the command prompt build window, it uses the following three input parameters to set the environment variables specific to the Windows CE project. 
+
+<UL type="disc">
+	<LI>%_TGTCPU% </li>
+
+	<LI>%_TGTPROJ%</li>
+
+	<LI>%_TGTPLAT%</li>
+</UL>
+
+<P>These variables are used throughout the build process to build the appropriate targets.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>If Setdrive.exe or Setdrv.bat fails, Wince.bat fails.</BLOCKQUOTE>
+
+<P>If the following environment variables are not set before Wince.bat is run, Wince.bat sets them to their default values.</P>
+
+<PRE class="code">set _FLATRELEASEDIR=%_WINCEROOT%\release
+set _PROJECTROOT=%_PUBLICROOT%\%_TGTPROJ%</PRE>
+
+<P>%_WINCEROOT% must be set before running Wince.bat. Otherwise, Wince.bat reports an error and exits.</P>
+
+<P>Wince.bat continues to set a series of environment variables. In addition, Wince.bat calls several batch files, which can also contain environment variables. The following table shows the batch files that Wince.bat calls.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Batch file</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Setenv.bat</TD>
+<TD width=66%>Sets private environment variables for the build window. This must be in the %_WINCEROOT%\Developr\%USERNAME% directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_TGTPLAT%.bat</TD>
+<TD width=66%>Sets platform-dependent environment variables related to the platform. This must be in the %_WINCEROOT%\Platform\%_TGTPLAT% directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_TGTPROJ%.bat</TD>
+<TD width=66%>Sets project-dependent environment variables. Each configuration and demonstration project folder in the Public directory contains a batch file named after the corresponding project. This must be in the %_PROJECTROOT% directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_WINCEROOT%\Setdrv.bat</TD>
+<TD width=66%>Sets the development workstation drive for the Windows CE project.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_WINCEROOT%\Public\Common\Oak\Misc\Etkenv.bat</TD>
+<TD width=66%>Unconditionally sets IMGNODEBUGGER to 1.</TD>
+</TR>
+</table></div>
+
+<P>These optional batch files allow further customization of the build process independent of the default settings in Wince.bat. Wince.bat<SMALL> </SMALL>validates individual environment variables, but does not ensure that the combination of parameters matches. See the environment variable descriptions, outlined in the "Environment Variables" section, before modifying Wince.bat or the local batch files that are used by Wince.bat.</P>
+
+<P>After the environment variables are set, Wince.bat creates the %_FLATRELEASEDIR% directory. Wince.bat then checks for the presence of certain .bif files in the %_FLATRELEASEDIR% directory that contain the current parameters of your Windows&nbsp;CE project. The following table shows the .bif files and their location.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Build information file</TH>
+<TH width=66%>Location</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_TGTPROJ%.bif</TD>
+<TD width=66%>%_FLATRELEASEDIR%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_TGTPLAT%.bif</TD>
+<TD width=66%>%_FLATRELEASEDIR%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_TGTCPU%.bif</TD>
+<TD width=66%>%_FLATRELEASEDIR%</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>%_TGTPROJ%.bif</TD>
+<TD width=66%>Platform\%_TGTPLAT%</TD>
+</TR>
+</table></div>
+
+<P>If these .bif files are not present, Wince.bat creates the .bif files in the %_FLATRELEASEDIR% directory and continues setting the build environment. </P>
+
+<P>If these .bif files exist, Wince.bat uses their presence as a flag to indicate that a %_FLATRELEASEDIR% directory exists. Wince.bat checks that the current build variables, %_TGTCPU%, %_TGTPROJ%, and %_TGTPLAT%, are compatible with the current build process. If they are not compatible, Wince.bat displays a warning message and does not automatically copy built features to the %_FLATRELEASEDIR% directory. </P>
+
+<PRE class="syntax"><B>wince</B> [<B>-h</B>] [<I>_TGTCPU</I>] [<I>_TGTPROJ</I>] [<I>_TGTPLAT</I>] [<I>PRIVATE_OPTIONS</I>]</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The parameters for <B>wince</B> are case sensitive.</BLOCKQUOTE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><B>-h</B></DT>
+
+<DD>Displays a Help file for Wince.bat.</dd>
+
+<DT><I>_TGTCPU</I></DT>
+
+<DD>The specific CPU model that the build will target. The following list contains the valid parameters: 
+
+<UL type="disc">
+	<LI>ARMV4</li>
+
+	<LI>ARMV4T</li>
+
+	<LI>ARMV4I</li>
+
+	<LI>MIPS16</li>
+
+	<LI>MIPSII</li>
+
+	<LI>MIPSII_FP</li>
+
+	<LI>MIPSIV</li>
+
+	<LI>MIPSIV_FP</li>
+
+	<LI>SH3</li>
+
+	<LI>SH4</li>
+
+	<LI>X86</li>
+
+	<LI>NT</li>
+
+	<LI>NTANSI</li>
+</UL>
+</dd>
+
+<DT><I>_TGTPROJ</I></DT>
+
+<DD>The project directory name that the build will use. You may define your own project setting.</dd>
+
+<DT><I>_TGTPLAT</I></DT>
+
+<DD>The platform that the build will target. Currently, target device(s) are available and can be found in the %_WINCEROOT%\Platform\Cepc directory. You may define your own platform setting. The following list contains the valid parameters: 
+
+<UL type="disc">
+	<LI>NOPLAT</li>
+
+	<LI>DESKTOP</li>
+
+	<LI>DESKTOP_SDK</li>
+</UL>
+
+
+<P>If set, NOPLAT causes the OS to be built without building the platform.
+</dd>
+
+<DT><I>PRIVATE_OPTIONS</I></DT>
+
+<DD>Any additional parameters are passed without interpretation to Setenv.bat.</dd>
+</DL>
+
+<H4 class="dtH4">Error Messages</H4>
+
+<DL>
+<DT>This build window is incompatible with your current release directory. The WINCEREL variable is being forced off to prevent releasing any binaries automatically. You must do a "buildrel" to reinitialize the release directory for the current configuration.</DT>
+
+<DD>If one type of binary is copied into the Release directory and Wince.bat is run with parameters that are not compatible with the existing binaries, Wince.bat issues this error message and terminates the build process. To have multiple active release directories, either modify Setenv.bat to assign a different directory to the %_FLATRELEASEDIR% environment variable or delete the existing directory, %_WINCEROOT%\Release.</dd>
+</DL>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code example shows how to use Wince.bat to set up a project environment for a member of the x86 CPU family. The project directory is Myproj and is targeted for the CEPC development platform.</P>
+
+<PRE class="code">wince x86 MYPROJ CEPC</PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Wince.bat sets many environment variables for the Windows&nbsp;CE build environment. </P>
+
+<P>Before running Wince.bat, verify that the three input parameters have valid names and are presented in their correct order. The input parameters are case sensitive.</P>
+
+<P>Run the command prompt build windows to verify that the environment variables are valid. Be sure that _WINCEROOT is set.</P>
+
+<P>Run Wince.bat from a command prompt window that executes from %_WINCEROOT%\Public\Common\Oak\Misc.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbtskbuildingcepcosimageforusewithethernetcard_cmdline.htm">Building a CEPC OS Image for Use with an Ethernet Card</A></P>
+
+<P><A HREF="pbtskbuildingplatformusingbuilddemotool.htm">Building a Platform Using the Build Demo Tool</A></P>
+
+<P><A HREF="_wcepb_environment_variables.htm">Environment Variables</A></P>
+
+<P><A HREF="_wcepb_set_environment_variable_tool.htm">Set Environment Variable Tool</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Windows%20CE%20Build%20Environment%20Tool&nbsp;(_wcepb_windows_ce_build_environment_tool.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

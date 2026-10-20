@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::AllocSurface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPE::AllocSurface"/>
+<MSHelp:RLTitle Title="GPE::AllocSurface"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_GPE_AllocSurface"/>
+<MSHelp:Keyword Index="K" Term="GPE, AllocSurface"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_GPE_AllocSurface"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: display_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673881">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_gpe_allocsurface"></A>GPE::AllocSurface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method is called when the driver must allocate storage for surface pixels.</P>
+
+<PRE class="syntax"><B>SCODE GPE::AllocSurface(  </B>
+<B>GPESurf **</B><I>ppSurf</I><B>, </B>
+<B>int </B><I>width</I><B>, </B>
+<B>int </B><I>height</I><B>, </B>
+<B>EGPEFormat </B><I>format</I><B>, </B>
+<B>int </B><I>surfaceFlags</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppSurf</I></DT>
+
+<DD>[out] Pointer to the memory allocated by the <B>GPE::AllocSurface</B> function.</dd>
+
+<DT><I>width</I></DT>
+
+<DD>[in] Width, in pixels, of the surface to allocate.</dd>
+
+<DT><I>height</I></DT>
+
+<DD>[in] Height, in pixels, of the surface to allocate.</dd>
+
+<DT><I>format</I></DT>
+
+<DD>[in] Format of the surface.</dd>
+
+<DT><I>surfaceFlags</I></DT>
+
+<DD>[in] One of the flags GPE_REQUIRE_VIDEO_MEMORY or GPE_PREFER_VIDEO_MEMORY, which specify where to allocate the memory</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If GPE_REQUIRE_VIDEO_MEMORY is set in the <I>surfaceFlags</I> parameter, the call returns one of two error values: if the available video memory is insufficient, the call returns E_NOT_ENOUGH_MEMORY, whereas if the allocation is inappropriate for video memory, such as an incorrect pixel format, the call returns E_INVALID_PARAMETER.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Display drivers allocate surfaces at initialization time for the video frame buffer, and possibly the cursor, when the graphics device interface (GDI) calls the <B>DrvCreateDeviceBitmap</B> function. <B>GPE::AllocSurface</B>, a required method, implements surface allocation within the driver.</P>
+
+<P>For video memory allocation, the driver should implement a class, derived from <A HREF="_wceddk_gpesurf.htm">GPESurf</A>, that contains extra information, such as a pointer to the allocator used when freeing the memory. Refer to the <A HREF="_wceddk_node2d.htm">Node2D</A> class for information on a supplied memory allocator that can be used for rectangular allocation requirements.</P>
+
+<P>The following code example shows the system memory allocation for this method.</P>
+
+<PRE class="code">*ppSurf = new GPESurf( width, height, format );
+if( *ppSurf )
+  return S_OK;
+return E_NOT_ENOUGH_MEMORY;</PRE>
+
+<P>The <B>surfaceFlags</B> member can contain GPE_REQUIRE_VIDEO_MEMORY or GPE_PREFER_VIDEO_MEMORY, although neither is required. For GPE_PREFER_VIDEO_MEMORY, the driver should, if possible, allocate the surface from video memory. Otherwise, the driver should use system memory.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>Gpe.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_gpesurf.htm">GPESurf</A>, <A HREF="_wceddk_node2d.htm">Node2D</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;GPE::AllocSurface&nbsp;(_wceddk_gpe_allocsurface.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

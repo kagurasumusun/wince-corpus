@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMessageMap</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CMessageMap"/>
+<MSHelp:RLTitle Title="CMessageMap"/>
+<MSHelp:Keyword Index="A" Term="ealrfCMessageMap"/>
+<MSHelp:Keyword Index="K" Term="CMessageMap class"/>
+<MSHelp:Keyword Index="K" Term="CMessageMap class, overview"/>
+<MSHelp:Keyword Index="K" Term="message maps (ATL), allowing access to"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_CMessageMap"/>
+<MSHelp:Keyword Index="A" Term="ealrfCMessageMap"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cmessmap.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_706608">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Active&nbsp;Template&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ealrfcmessagemap"></A>CMessageMap</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This abstract base class allows message maps in an object to be accessed by another object. An object must be derived from <B>CMessageMap</B> to expose its message maps.</P>
+
+<P>ATL for Windows CE uses <B>CMessageMap</B> to support contained windows and dynamic message map chaining. </P>
+
+<PRE class="syntax"><B>class ATL_NO_VTABLE CMessageMap</B><I> </I></PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The following example shows how the contained window is declared, and since the class contains a <A HREF="ealrfccontainedwindow.htm"><B>CContainedWindow</B></A> object it is shown deriving from <B>CMessageMap</B>. Finally, through <A HREF="ealrfccomcontrol.htm"><B>CComControl</B></A>, the <B>CAtlEdit</B> class automatically derives from <B>CMessageMap</B>.</P>
+
+<PRE class="code">class CAtlEdit : public CComControl&lt;CAtlEdit&gt;, ...
+               // CComControl derives from CWindowImpl,
+               // which derives from CMessageMap
+{
+public:
+   // Declare a contained window data member.
+   CContainedWindow m_EditCtrl;
+
+   // Initialize the contained window:
+   // 1. Pass "EDIT" to specify that the contained 
+   //    window should be based on the standard 
+   //    Windows Edit box
+   // 2. Pass 'this' pointer to specify that CAtlEdit 
+   //    contains the message map to be used for the 
+   //    contained window's message processing.
+   // 3. Pass the identifier of the message map. In
+   //    this case, '1' identifies the message map
+   //    declared with ALT_MSG_MAP(1).
+   CAtlEdit() : m_EditCtrl(_T("EDIT"), this, 1)
+   {
+      m_bWindowOnly = TRUE;
+   }
+
+   // Declare the default message map.
+   BEGIN_MSG_MAP(CAtlEdit)
+      MESSAGE_HANDLER(WM_PAINT, OnPaint)
+      ...
+   // Declare an alternate message map,
+   // identified by '1'.
+   ALT_MSG_MAP(1)
+      MESSAGE_HANDLER(WM_CHAR, OnChar)
+   END_MSG_MAP()
+
+   ...
+};</PRE>
+
+<P>Because the contained window, <B>m_EditCtrl</B>, will use a message map in the containing class, <B>CAtlEdit</B> derives from <B>CMessageMap</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Atlwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ealrfcdynamicchain.htm"><B>CDynamicChain</B></A>, <A HREF="ealrfbeginusmsgusmap.htm"><B>BEGIN_MSG_MAP</B></A>, <A HREF="ealrfaltusmsgusmap.htm"><B>ALT_MSG_MAP</B></A><B> </B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_706608', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

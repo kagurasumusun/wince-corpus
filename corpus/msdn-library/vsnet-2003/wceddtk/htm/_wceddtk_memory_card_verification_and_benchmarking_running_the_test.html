@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_Memory_Card_Verification_and_Benchmarking_Running_the_Test"/>
+<MSHelp:Keyword Index="K" Term="Memory Card Verification and Benchmarking test (DDTK), running"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: rwall.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddtk_memory_card_verification_and_benchmarking_running_the_test"></A>Running the Test</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following command line shows the syntax for using Tux.exe to run the test, where <I>test_case</I> is the specific test case or range of test cases to run.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d rw_all &#0150;x<I> test_case</I></PRE>
+
+<P>The following command line shows the syntax for using Tux.exe to run the entire test.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d rw_all</PRE>
+
+<P>After each test case finishes, a status report is displayed indicating whether it passed, failed, skipped, or aborted. After all of the specified test cases have finished, a summary of results is displayed.</P>
+
+<P>Before running this test, be aware that any information stored on the card is destroyed. The program will write to and read from every sector on the disk, without preserving the prior contents. This test tests each PC card that is inserted in the system, assigning one thread to each card.</P>
+
+<P>This test communicates directly with the device drivers, which sit below the file system and FAT layers. If there are file system problems, you may be able to isolate the problem to a specific layer. </P>
+
+<P>The Rw_all.dll test cases differ only in the number of sectors that are read or written per I/O burst. Because of the overhead in running the test, the more sectors you read or write at once, the faster the test will run. For example, processing one sector at a time is not as efficient as processing 128 sectors at a time.</P>
+
+<P>Because none of these test cases stress the device driver, it is safe to choose any one of them. You may attribute any failures to defective hardware.</P>
+
+<P>This test starts by outputting basic information about the PC card. This information contains the name of the device opened, the handle of the device, the number of sectors, and the number of bytes per sector. Cylinder, head, sector, and flag information is not given, because it is not applicable to this test. In the following screen shot, the number inside the square brackets indicates which thread is sending the status message.</P>
+
+<PRE class="code">[2] Attempting to open DSK2:
+[1] Attempting to open DSK1:
+[2] rw_all successfully opened DSK2:, hDsk=0x21E7BB1E.
+[1] rw_all successfully opened DSK1:, hDsk=0x01E7BAFE.
+[2] rw_all: Total sectors: 3936, Bytes per sector: 512.
+[1] rw_all: Total sectors: 20480, Bytes per sector: 512.</PRE>
+
+<P>If the device driver does not return an error, the test indicates, in milliseconds, how many sectors were written to and how long it took. Next, a message indicating that the program is attempting to read back those sectors is displayed. If the device driver does not return an error, the program attempts to verify the data. The following screen shot shows the output. </P>
+
+<PRE class="code">[2] Attempting to write sectors 0 through 127.
+[1] Attempting to write sectors 0 through 127.
+[2] Successfully wrote 128 sectors in 516 ms.
+[1] Successfully wrote 128 sectors in 514 ms.
+[2] Attempting to read sectors 0 through 127.
+[1] Attempting to read sectors 0 through 127.
+[1] Successfully read 128 sectors in 280 ms.
+[1] Attempting to write sectors 128 through 255.
+[2] Successfully read 128 sectors in 318 ms.</PRE>
+
+<P>If this pattern of successfully writing and reading of sectors continues to the end of the disk, the test outputs a short report on the access times, and then returns a passing value to Tux.exe. If the test passes, you can assume that the driver and the card are working properly. You should also take into consideration any timing issues that may arise; for example, a linear flash card will take much longer to finish a write operation. A successful test is shown in the following screen shot.</P>
+
+<PRE class="code">[1] Min Write Time: 393 ms, Max Write Time: 561 ms, Ave Write Time: 402 ms.
+[1] Min Read Time: 171 ms, Max Read Time: 371 ms, Ave Read Time: 180 ms.</PRE>
+
+<P>The following table shows the test cases.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%>Test Case</TH>
+<TH width=78%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1001</TD>
+<TD width=78%>Write and read all sectors 1 sector at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1002</TD>
+<TD width=78%>Write and read all sectors 4 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1003</TD>
+<TD width=78%>Write and read all sectors 16 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1004</TD>
+<TD width=78%>Write and read all sectors 32 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1005</TD>
+<TD width=78%>Write and read all sectors 64 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1006</TD>
+<TD width=78%>Write and read all sectors 128 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1007</TD>
+<TD width=78%>Write and read all sectors 5 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1008</TD>
+<TD width=78%>Write and read all sectors 13 sectors at a time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>1009</TD>
+<TD width=78%>Write and read all sectors 129 sectors at a time.</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, April 05, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Running%20the%20Test&nbsp;(_wceddtk_memory_card_verification_and_benchmarking_running_the_test.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

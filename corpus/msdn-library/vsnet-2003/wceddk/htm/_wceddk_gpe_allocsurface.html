@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::AllocSurface</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPE::AllocSurface"/>
+<MSHelp:RLTitle Title="GPE::AllocSurface"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_GPE_AllocSurface"/>
+<MSHelp:Keyword Index="K" Term="GPE, AllocSurface method"/>
+<MSHelp:Keyword Index="K" Term="methods, AllocSurface"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: intf_1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_gpe_allocsurface"></A>GPE::AllocSurface</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method is called when the driver must allocate storage for surface pixels.</P>
+
+<PRE class="syntax"><B>SCODE GPE::AllocSurface(&nbsp;&nbsp;</B>
+<B>GPESurf **</B><I>ppSurf</I><B>, </B>
+<B>int </B><I>width</I><B>, </B>
+<B>int </B><I>height</I><B>, </B>
+<B>EGPEFormat </B><I>format</I><B>,&nbsp;&nbsp;</B>
+<B>int </B><I>surfaceFlags</I><B> );</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>ppSurf</I></DT>
+
+<DD>[OUT] Pointer to the memory allocated by the <B>AllocSurface</B> function.</dd>
+
+<DT><I>width</I></DT>
+
+<DD>[IN] Width, in pixels, of the surface to allocate.</dd>
+
+<DT><I>height</I></DT>
+
+<DD>[IN] Height, in pixels, of the surface to allocate.</dd>
+
+<DT><I>format</I></DT>
+
+<DD>Format of the surface.</dd>
+
+<DT><I>surfaceFlags</I></DT>
+
+<DD>[IN] One of the flags GPE_REQUIRE_VIDEO_MEMORY or GPE_PREFER_VIDEO_MEMORY, which specify where to allocate the memory</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>If GPE_REQUIRE_VIDEO_MEMORY is set in the <I>surfaceFlags</I> parameter, the call returns one of two error values: if the available video memory is insufficient, the call returns E_NOT_ENOUGH_MEMORY, whereas if the allocation is inappropriate for video memory, such as an incorrect pixel format, the call returns E_INVALID_PARAMETER.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>For video memory allocation, the driver should implement a class, derived from <B>GPESurf</B>, that contains extra information, such as a pointer to the allocator used when freeing the memory. Refer to the <B>Node2D</B> class for information on a supplied memory allocator that can be used for rectangular allocation requirements.</P>
+
+<P>The following code example shows the system memory allocation for this method.</P>
+
+<PRE class="code">*ppSurf = new GPESurf( width, height, format );
+if( *ppSurf )
+  return S_OK;
+return E_NOT_ENOUGH_MEMORY;</PRE>
+
+<P>The <I>surfaceFlags</I> member can contain GPE_REQUIRE_VIDEO_MEMORY or GPE_PREFER_VIDEO_MEMORY, although neither is required. For GPE_PREFER_VIDEO_MEMORY, the driver should, if possible, allocate the surface from video memory. Otherwise, the driver should use system memory.</P>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;GPE::AllocSurface&nbsp;(_wceddk_gpe_allocsurface.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

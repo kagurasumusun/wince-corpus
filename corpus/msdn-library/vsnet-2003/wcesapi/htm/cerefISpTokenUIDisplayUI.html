@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISpTokenUI::DisplayUI</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ISpTokenUI::DisplayUI"/>
+<MSHelp:RLTitle Title="ISpTokenUI::DisplayUI"/>
+<MSHelp:Keyword Index="A" Term="cerefISpTokenUIDisplayUI"/>
+<MSHelp:Keyword Index="K" Term="ISpTokenUI, DisplayUI"/>
+<MSHelp:Keyword Index="A" Term="cerefISpTokenUIDisplayUI"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_interfaces_engine_level_resource.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822210">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefisptokenuidisplayui"></A>ISpTokenUI::DisplayUI</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>ISpTokenUI::DisplayUI</B> displays the UI associated with the object token.</P>
+
+<P>The best-practice for using <A HREF="cerefisptokenui.htm">ISpTokenUI</A> is to call <A HREF="cerefisptokenuiisuisupported.htm">ISpTokenUI::IsUISupported</A> with a specific UI type before calling <B>DisplayUI</B>.</P>
+
+<P>The call to <B>DisplayUI</B> is synchronous, so the call will not return until the UI has been closed.</P>
+
+<PRE class="syntax"><B>[local] HRESULT DisplayUI(</B>
+<B>HWND </B><I>hwndParent</I><B>,</B>
+<B>const WCHAR *</B><I>pszTitle</I><B>,</B>
+<B>const WCHAR *</B><I>pszTypeOfUI</I><B>,</B>
+<B>void *</B><I>pvExtraData</I><B>,</B>
+<B>ULONG </B><I>cbExtraData</I><B>,</B>
+<B>ISpObjectToken *</B><I>pToken</I><B>,</B>
+<B>IUnknown *</B><I>punkObject</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hwndParent</I></DT>
+
+<DD>[in] Specifies the handle of the parent window. </dd>
+
+<DT><I>pszTitle</I></DT>
+
+<DD>[in] Address of a null-terminated string containing the window title to display on the UI. This value can be set to NULL to indicate that the TokenUI object should use its default window title. </dd>
+
+<DT><I>pszTypeOfUI</I></DT>
+
+<DD>[in] Address of a null-terminated string containing the UI type to display. </dd>
+
+<DT><I>pvExtraData</I></DT>
+
+<DD>[in] Pointer to additional information needed for the object. The <A HREF="cerefisptokenui.htm">ISpTokenUI</A> object implementer dictates the format and use of the data provided. </dd>
+
+<DT><I>cbExtraData</I></DT>
+
+<DD>[in] Size, in bytes, of the ExtraData. The ISp TokenUI object implementer dictates the format and use of the data provided. </dd>
+
+<DT><I>pToken</I></DT>
+
+<DD>[in] Address of the ISpObjectToken containing the object token identifier. See the Remarks section. </dd>
+
+<DT><I>punkObject</I></DT>
+
+<DD>[in] Address of the <MSHelp:link keywords="cerefIUnknown" TABINDEX="0">IUnknown</MSHelp:link> interface pointer. See the Remarks section. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>S_OK</TD>
+<TD width=50%>Function completed successfully.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>S_FALSE</TD>
+<TD width=50%>The UI is supported but not with the current run time environment or parameters.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_INVALIDARG</TD>
+<TD width=50%>One or more arguments are invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_POINTER</TD>
+<TD width=50%>Invalid or bad pointer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>FAILED(hr)</TD>
+<TD width=50%>Error returned by UI object.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>When asking a token to display a particular piece of UI, the token can require extra functionality that only it understands. Common implementation practice for accessing this functionality is to QueryInterface off of a known IUnknown interface or create the object associated a known ISpObjectToken instance. The caller of ISpTokenUI::DisplayUI can set punkObject with the necessary IUnknown interface or set pToken with the necessary ISpObjectToken interface. For example, asking to display Speech Recognition Training UI requires that a specific SR Engine be used.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of <B>ISpTokenUI::DisplayUI</B> using <A HREF="cerefspdui_audiovolume.htm">SPDUI_AudioVolume</A>.</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+// get the default input audio object token
+hr = SpGetDefaultTokenFromCategoryId(SPCAT_AUDIOIN, &amp;cpObjectToken);
+// Check hr
+
+// get the object token's UI
+hr = cpObjectToken-&gt;QueryInterface(&amp;cpTokenUI);
+// Check hr
+
+// Check if default audio input object has UI for volume
+hr = cpTokenUI-&gt;IsUISupported(SPDUI_AudioVolume, NULL, NULL, NULL, &amp;fSupported);
+    // Check hr
+
+// if fSupported == TRUE, then default audio input object has UI for Volume
+
+// Display the default audio input object's Volume UI 
+hr = cpTokenUI-&gt;DisplayUI(MY_HWND, MY_AUDIO_DIALOG_TITLE, SPDUI_AudioVolume, NULL, NULL, cpObjectToken, NULL);
+// Check hr</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=18%>Include</TH>
+<TH width=18%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.1 and later</TD>
+<TD width=17%>Sapiddk.idl</TD>
+<TD width=18%>Sapiddk.h</TD>
+<TD width=18%>&nbsp;</TD>
+</TR>
+</table></div>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ISpTokenUI::DisplayUI&nbsp;(cerefisptokenuidisplayui.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Modifying Configuration Files to Add a Feature to a Platform</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Modifying Configuration Files to Add a Feature to a Platform"/>
+<MSHelp:RLTitle Title="Modifying Configuration Files to Add a Feature to a Platform"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Toaddafeaturebuiltwithbuildexeusingdirsandsourcesfilestoaplatform"/>
+<MSHelp:Keyword Index="K" Term="command-line procedures, adding features built with Build.exe to platforms"/>
+<MSHelp:Keyword Index="K" Term="dirs files, adding features built using dirs files to platforms"/>
+<MSHelp:Keyword Index="K" Term="procedures - command-line, adding features built with Build.exe to platforms"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_IDE_Toaddafeaturebuiltwithbuildexeusingdirsandsourcesfilestoaplatform"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: pb_cmdlineprocedures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720477">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_toaddafeaturebuiltwithbuildexeusingdirsandsourcesfilestoaplatform"></A>Modifying Configuration Files to Add a Feature to a Platform</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This procedure explains how to modify source code configuration files and image configuration files to add a feature to a platform.
+
+<OL type="1">
+	<LI>Create a separate directory for the feature. 
+<P>The following code example shows how to create the directory called MyComp. 
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;If you are modifying a platform project directory created using the IDE, the IDE names a subdirectory <B>wince400</B>. Typically, platform project directories created by hand do not contain a wince400 subdirectory.</BLOCKQUOTE>
+
+<PRE class="code">cd %_WINCEROOT%\Public\<I>MyProj</I>\wince400
+mkdir Mycomp </PRE>
+</li>
+
+	<LI>Copy the Catalog Feature files into this new directory. For information about Catalog Feature files, see <A HREF="pbconaddingitemstocatalog.htm">Catalog Customization</A>.</li>
+
+	<LI>Modify or create a dirs file in the <I>MyProj</I>\wince400 directory to include the feature directory. 
+<P>The following code example shows a dirs file that includes the <I>MyProj</I> directory.
+
+<PRE class="code">DIRS = \
+<I>MyProj</I></PRE>
+</li>
+
+	<LI>Create a sources file in the <I>MyProj</I>\wince400\MyComp directory to include the feature code files. 
+<P>The following code example shows some macro variables that your feature may use.
+
+<PRE class="code">TARGETNAME=MyComp
+TARGETTYPE=PROGRAM
+TARGETLIBS=$(_COMMONSDKROOT)\lib\$(_CPUINDPATH)\coredll.lib
+SOURCES=MyComp.c
+EXEENTRY=WinMain</PRE>
+</li>
+
+	<LI>Create a makefile file in the <I>MyProj</I>\wince400\MyComp directory. 
+<P>The following code example shows the only executable line in the .mak file.
+
+<PRE class="code">!Include $(_MAKEENVROOT)\makefile.def</PRE>
+</li>
+
+	<LI>Modify the Project.bib file in the <I>MyProj</I>\wince400\Oak\Files directory to include an entry for the executable file. 
+<P>The following code example shows a possible entry in the Project.bib file:
+
+<PRE class="code">MODULES
+;  Name          Path                                 Memory   Type
+:  ------------  --------------------------------------------------
+mycomp.exe       $(_FLATRELEASEDIR)\mycomp.exe        NK       S</PRE>
+
+<P>This entry loads the Mycomp.exe output file in an area in memory called NK. The file is loaded as a system file in the Windows CE OS image. If you want the feature to start at a particular time during startup, you also must modify the Project.reg file in the <I>MyProj</I>\Wince400\Oak\Files directory.
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_customizing_a_platform.htm">Platform Customization</A></P>
+
+<P><A HREF="_wcepb_adding_a_feature_to_the_platform.htm">Additions to a Platform</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Modifying%20Configuration%20Files%20to%20Add%20a%20Feature%20to%20a%20Platform&nbsp;(_wcepb_toaddafeaturebuiltwithbuildexeusingdirsandsourcesfilestoaplatform.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::MaskBlt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdc_maskblt"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cdc_maskblt"></A><SUP></SUP>CDC::MaskBlt</H1>
+
+<P>This method combines the color data for the source and destination bitmaps using the specified mask and raster operation.</P>
+
+<PRE class=syntax><B>BOOL MaskBlt (
+int</B> <I>x</I>, <B>
+int</B> <I>y</I>, <B>
+int</B> <I>nWidth</I>, <B>
+int</B> <I>nHeight</I>, <B>
+CDC* </B><I>pSrcDC</I>, <B>
+int</B> <I>xSrc</I>, <B>
+int</B> <I>ySrc</I>, <B>
+CBitmap&amp; </B><I>maskBitmap</I>, <B>
+int</B> <I>xMask</I>, <B>
+int</B> <I>yMask</I>, <B>
+DWORD</B> <I>dwRop</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>x</I></DT>
+
+<DD>The logical x-coordinate of the upper-left corner of the destination rectangle.</DD>
+
+<DT><I>y</I></DT>
+
+<DD>The logical y-coordinate of the upper-left corner of the destination rectangle.</DD>
+
+<DT><I>nWidth</I></DT>
+
+<DD>The width, in logical units, of the destination rectangle and source bitmap.</DD>
+
+<DT><I>nHeight</I></DT>
+
+<DD>The height, in logical units, of the destination rectangle and source bitmap.</DD>
+
+<DT><I>pSrcDC</I></DT>
+
+<DD>Identifies the device context from which the bitmap is to be copied. It must be zero if the <I>dwRop</I> parameter specifies a raster operation that does not include a source.</DD>
+
+<DT><I>xSrc</I></DT>
+
+<DD>The logical x-coordinate of the upper-left corner of the source bitmap.</DD>
+
+<DT><I>ySrc</I></DT>
+
+<DD>The logical y-coordinate of the upper-left corner of the source bitmap.</DD>
+
+<DT><I>maskBitmap</I></DT>
+
+<DD>Identifies the monochrome mask bitmap combined with the color bitmap in the source device context.</DD>
+
+<DT><I>xMask</I></DT>
+
+<DD>The horizontal pixel offset for the mask bitmap specified by the <I>maskBitmap</I> parameter.</DD>
+
+<DT><I>yMask</I></DT>
+
+<DD>The vertical pixel offset for the mask bitmap specified by the <I>maskBitmap</I> parameter.</DD>
+
+<DT><I>dwRop</I></DT>
+
+<DD>Specifies foreground and background ternary raster operation codes, which the function uses to control the combination of source and destination data. The background raster operation code is stored in the high byte of the high word of this value. The foreground raster operation code is stored in the low byte of the high word of this value. The low word of this value is ignored, and should be zero. The macro <B>MAKEROP4</B> creates such combinations of foreground and background raster operation codes. See the <B>BitBlt</B> method for a list of common raster operation codes.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>A value of 1 in the mask specified by <I>maskBitmap</I> indicates that the foreground raster operation code specified by <I>dwRop</I> should be applied at that location. A value of zero in the mask indicates that the background raster operation code specified by <I>dwRop</I> should be applied at that location. If the raster operations require a source, the mask rectangle must cover the source rectangle. If it does not, the function fails. If the raster operations do not require a source, the mask rectangle must cover the destination rectangle. If it does not, the function fails.</P>
+
+<P>If a rotation or shear transformation is in effect for the source device context when this function is called, an error occurs. However, other types of transformations are allowed.</P>
+
+<P>If the color formats of the source, pattern, and destination bitmaps differ, this function converts the pattern or source format, or both, to match the destination format. If the mask bitmap is not a monochrome bitmap, an error occurs. When an enhanced metafile is being recorded, an error occurs and the function returns zero if the source device context identifies an enhanced-metafile device context. Not all devices support <B>MaskBlt</B>. An application should call <B>GetDeviceCaps</B> to determine whether a device supports this function. If no mask bitmap is supplied, this function behaves exactly like <B>BitBlt</B>, using the foreground raster operation code. The pixel offsets in the mask bitmap map to the point (0,0) in the bitmap of the source device context. This is useful for cases in which a mask bitmap contains a set of masks; an application can apply any of them to a mask-blitting task by adjusting the pixel offsets and rectangle sizes sent to <B>MaskBlt</B>.</P>
+
+<P>The only raster operations Windows&nbsp;CE supports in the <I>dwRop</I> parameter are SRCCOPY and SRCINVERT, without a mask and 0xCCAA0000, with a mask.</P>
+
+<P>Windows&nbsp;CE 1.0 only supports two bit per pixel (maximum) gray scale graphics. When performing a bit-block transfer that converts two bit-per-pixel (2 bpp) to one bit-per-pixel (1 bpp), Windows&nbsp;CE 1.0 maps the background color to white, and all other colors to black. When converting from 1 bpp to 2 bpp, it maps white to white and black to black, as expected.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdc_5.htm"><B>CDC::BitBlt</B></A>, <A HREF="cdc_37.htm"><B>CDC::GetDeviceCaps</B></A>, <A HREF="cdc_91.htm"><B>CDC::StretchBlt</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

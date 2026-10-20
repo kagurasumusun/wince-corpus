@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::BitBlt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CDC::BitBlt"/>
+<MSHelp:RLTitle Title="CDC::BitBlt"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDCcolcolBitBlt"/>
+<MSHelp:Keyword Index="K" Term="BitBlt method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCDCcolcolBitBlt"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cdc.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710068">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcdccolcolbitblt"></A>CDC::BitBlt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method copies a bitmap from the source device context to the device context.</P>
+
+<PRE class="syntax"><B>BOOL BitBlt ( 
+int</B> <I>x</I>, <B>
+int</B> <I>y</I>, <B>
+int</B> <I>nWidth</I>, <B>
+int</B> <I>nHeight</I>, <B>
+CDC*</B> <I>pSrcDC</I>, <B>
+int</B> <I>xSrc</I>, <B>
+int</B> <I>ySrc</I>, <B>
+DWORD</B> <I>dwRop</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>x</I></DT>
+
+<DD>The logical x-coordinate of the upper-left corner of the destination rectangle.</dd>
+
+<DT><I>y</I></DT>
+
+<DD>The logical y-coordinate of the upper-left corner of the destination rectangle.</dd>
+
+<DT><I>nWidth</I></DT>
+
+<DD>The width, in logical units, of the destination rectangle and source bitmap.</dd>
+
+<DT><I>nHeight</I></DT>
+
+<DD>The height, in logical units, of the destination rectangle and source bitmap.</dd>
+
+<DT><I>pSrcDC</I></DT>
+
+<DD>Pointer to a <B>CDC</B> object that identifies the device context from which the bitmap is copied. It must be <B>NULL</B> if <I>dwRop</I> specifies a raster operation that does not include a source.</dd>
+
+<DT><I>xSrc</I></DT>
+
+<DD>The logical x-coordinate of the upper-left corner of the source bitmap.</dd>
+
+<DT><I>ySrc</I></DT>
+
+<DD>The logical y-coordinate of the upper-left corner of the source bitmap.</dd>
+
+<DT><I>dwRop</I></DT>
+
+<DD>The raster operation to perform. Raster-operation codes define how the GDI combines colors in output operations that involve a brush, a possible source bitmap, and a destination bitmap. </dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The application can align the windows or client areas on byte boundaries to ensure that the <B>BitBlt</B> operations occur on byte-aligned rectangles. Set the CS_BYTEALIGNWINDOW or CS_BYTEALIGNCLIENT flags when you register the window classes. </P>
+
+<P><B>BitBlt</B> operations on byte-aligned rectangles are faster than <B>BitBlt</B> operations on rectangles that are not byte aligned. To specify class styles such as byte-alignment for your device context, you must register a window class rather than relying on the Microsoft Foundation classes to do it. Use the global function <B>AfxRegisterWndClass</B>.</P>
+
+<P>The GDI transforms <I>nWidth</I> and <I>nHeight</I>, once by using the destination device context, and once by using the source device context. If the resulting extents do not match, the GDI uses the Windows <B>StretchBlt</B> function to compress or stretch the source bitmap as necessary.</P>
+
+<P>If destination, source, and pattern bitmaps do not have the same color format, the <B>BitBlt</B> function converts the source and pattern bitmaps to match the destination. The foreground and background colors of the destination bitmap are used in the conversion. </P>
+
+<P>When the <B>BitBlt</B> function converts a monochrome bitmap to color, it sets white bits (1) to the background color and black bits (0) to the foreground color. The foreground and background colors of the destination device context are used. To convert color to monochrome, <B>BitBlt</B> sets pixels that match the background color to white and sets all other pixels to black. <B>BitBlt</B> uses the foreground and background colors of the color device context to convert from color to monochrome.</P>
+
+<P>Not all device contexts support <B>BitBlt</B>. To check whether a given device context supports <B>BitBlt</B>, use the <B>GetDeviceCaps</B> method and specify the <B>RASTERCAPS</B> index.</P>
+
+<P>Windows&nbsp;CE supports only the following raster operations in the <I>dwRop</I> parameter:
+
+<UL type="disc">
+	<LI>SRCAND</li>
+
+	<LI>SRCCOPY</li>
+
+	<LI>SRCINVERT</li>
+
+	<LI>SRCPAINT</li>
+</UL>
+
+<P>Windows&nbsp;CE 1.0 only supports two bit&#0150;per-pixel (maximum) gray scale graphics. When performing a bit-block transfer that converts two bit-per-pixel (2 bpp) to one bit-per-pixel (1 bpp), Windows&nbsp;CE 1.0 maps the background color to white, and all other colors to black. When converting from 1 bpp to 2 bpp, it maps white to white and black to black.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>See the example for <A HREF="aflrfcdccolcolcreatecompatibledc.htm"><B>CDC::CreateCompatibleDC</B></A>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcdccolcolgetdevicecaps.htm"><B>CDC::GetDeviceCaps</B></A>, <A HREF="aflrfcdccolcolpatblt.htm"><B>CDC::PatBlt</B></A>, <A HREF="aflrfcdccolcolsettextcolor.htm"><B>CDC::SetTextColor</B></A>, <A HREF="aflrfcdccolcolstretchblt.htm"><B>CDC::StretchBlt</B></A>, <A HREF="aflrfafxregisterwndclass.htm"><B>AfxRegisterWndClass</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710068', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComClassFactory2</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomclassfactory2"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ccomclassfactory2"></A>CComClassFactory2</H1>
+
+<P>This class implements the <B>IClassFactory2</B> interface, which is an extension of <B>IClassFactory</B>. <B>IClassFactory2</B> controls object creation through a license. A class factory executing on a licensed machine can provide a run-time license key. This license key allows an application to instantiate objects when a full machine license does not exist.</P>
+
+<PRE class=syntax><B>template&lt; class</B> <I>license</I><B> &gt;
+class CComClassFactory2 : public IClassFactory2,
+public CComObjectRootEx&lt; CComGlobalsThreadModel &gt;,
+public </B><I>license </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>license</I></DT>
+
+<DD>A class that implements the following static functions:
+
+<UL type=disc>
+	<LI><B>static BOOL VerifyLicenseKey( BSTR </B><I>bstr</I><B> );</B></LI>
+
+	<LI><B>static BOOL GetLicenseKey( DWORD </B><I>dwReserved</I><B>, BSTR* </B><I>pBstr</I><B> );</B></LI>
+
+	<LI><B>static BOOL IsLicenseValid( );</B></LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>ATL objects normally acquire a class factory by deriving from <A HREF="cccclass.htm"><B>CComCoClass</B></A>. This class includes the macro <B>DECLARE_CLASSFACTORY</B>, which declares <B>CComClassFactory</B> as the default class factory. To use <B>CComClassFactory2</B>, specify the <B>DECLARE_CLASSFACTORY2</B> macro in the class definition of your object. For example:</P>
+
+<PRE>class CMyClass : ..., public CComCoClass&lt; ... &gt;
+{
+public:
+   DECLARE_CLASSFACTORY2(CMyLicense)
+
+   ...
+};
+</PRE>
+
+<P><B>CMyLicense</B>, the template parameter to <B>CComClassFactory2</B>, must implement the static functions <B>VerifyLicenseKey</B>, <B>GetLicenseKey</B>, and <B>IsLicenseValid</B>. The following is an example of a simple license class:</P>
+
+<PRE>class CMyLicense
+{
+protected:
+   static BOOL VerifyLicenseKey(BSTR bstr)
+   {
+      USES_CONVERSION;
+      return !lstrcmp(OLE2T(bstr), _T("My run-time license key"));
+   }
+
+   static BOOL GetLicenseKey(DWORD dwReserved, BSTR* pBstr)
+   {
+      USES_CONVERSION;
+      *pBstr = SysAllocString( T2OLE(_T("My run-time license key")));
+      return TRUE;
+   }
+
+   static BOOL IsLicenseValid() {  return TRUE; }
+};
+</PRE>
+
+<P><B>CComClassFactory2</B> derives from both <B>CComClassFactory2Base</B> and <I>license</I>. <B>CComClassFactory2Base</B>, in turn, derives from <B>IClassFactory2</B> and <B>CComObjectRootEx&lt; CComGlobalsThreadModel &gt;</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccomcfat.htm"><B>CComClassFactoryAutoThread</B></A>, <A HREF="cccfs.htm"><B>CComClassFactorySingleton</B></A>, <A HREF="ccomrtex.htm"><B>CComObjectRootEx</B></A>, <A HREF="ccglobtm.htm"><B>CComGlobalsThreadModel</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

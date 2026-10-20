@@ -1,0 +1,378 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating an Application Installation Package in Microsoft Windows CE 2.1</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating an Application Installation Package in Microsoft Windows CE 2.1"/>
+<MSHelp:RLTitle Title="Creating an Application Installation Package in Microsoft Windows CE 2.1"/>
+<MSHelp:Keyword Index="A" Term="appin21"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, AppInstall"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, application manager"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, CAB Wizard"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, creating application installation package"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, supported processors and devices"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, supporting multiple devices"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, WCE Load"/>
+<MSHelp:Keyword Index="A" Term="appin21"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="This article explains how Application Installation (AppInstall) is used to install a Windows CE-based application onto a Windows CE-based device."><meta name="keywords" content="Windows CE 2.1, application installation package, AppInstall, supporting multiple devices"><META name="rtfFileName" content="appin21.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="Application Installation (AppInstall) is used to install a Microsoft Windows CE-based application onto a Windows CE-based device. AppInstall is specifically targeted to creating a setup program that supports multiple devices. (8 printed pages)">
+<META NAME="msdnID" CONTENT="_661429">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="appin21"></A>Creating an Application Installation Package in Microsoft Windows CE 2.1</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>June 2000</P>
+
+<P><B>Summary:</B> Application Installation (AppInstall) is used to install a Microsoft® Windows® CE&#0150;based application onto a Windows CE&#0150;based device. AppInstall is specifically targeted to creating a setup program that supports multiple devices. (8 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#appin21_overview">Overview</A><CODE><BR>
+</CODE><A HREF="#appin21_multi">Supporting Multiple Devices</A><CODE><BR>
+</CODE><A HREF="#appin21_palm">Supporting Different Windows CE Versions for Palm-size PCs</A><CODE><BR>
+</CODE><A HREF="#appin21_process">Supported Processors and Devices</A></P>
+
+<H2 class="dtH1"><A NAME="appin21_overview"></A>Overview</H2>
+
+<P>AppInstall supports multiple installation methods, such as desktop-to-device, web-to-device, storage card-to-device, and device-to-device.</P>
+
+<P>AppInstall contains three components:
+
+<UL type="disc">
+	<LI>CAB Wizard (CabWiz) is the desktop tool that packages application binaries into a single Windows CE .cab file, which is the file format for distributing multiple files. CabWiz is used by the application developer and is part of the Windows CE software development kit (SDK). </li>
+
+	<LI>Application Manager (CeAppMgr) is the desktop Microsoft Windows CE Services component that provides a desktop-to-device application management tool. Application Manager is responsible for adding and removing applications on the Windows CE&#0150;based device, and for deleting the application files from the desktop computer. Application Manager is used by both the application developer and the end user. It is included with every installation of Windows CE Services. </li>
+
+	<LI>WCELoad is the Windows CE tool that unpacks a Windows CE .cab file to install an application on a device, and is included with most Windows CE&#0150;based devices. WCELoad is used by the end user. </li>
+</UL>
+
+<P>The Application Installation documentation is part of the Windows CE SDK Programmer's Guide. This documentation includes samples of the input file to CabWiz (the CabWiz .inf file) and the input file to CeAppMgr (the CeAppMgr .ini file).</P>
+
+<P>The CabWiz .inf file is a modified version of the Win32® .inf file format. For more information on the Win32 .inf file format, see the Win32 Platform SDK.</P>
+
+<P>This paper describes how to create a setup program that supports multiple devices and assumes knowledge of the Windows CE CabWiz .inf file format.</P>
+
+<H2 class="dtH1"><A NAME="appin21_multi"></A>Supporting Multiple Devices</H2>
+
+<P>The CabWiz .inf file is the setup script file that specifies the files to copy and the registry settings to make. CabWiz uses the application developer's .inf file and the application binaries to create one or more .cab files. </P>
+
+<P>If the application is device-independent, for example, a set of help files, then a single .cab file that is device-independent can be created. If the application contains device-specific files, for example, .exe or .dll files, then multiple .cab files can be created with a single CabWiz .inf setup file. Each .cab file supports a specific device. The method to create multiple platform-specific .cab files from a single CabWiz .inf file is to use platform labels and the CEDevice key in the CabWiz .inf file.</P>
+
+<P>The platform labels tell CabWiz how many .cab files to generate, where to get the CPU-specific binary files, and the platform information to incorporate into the .cab file. The Application Manager uses this information to determine the appropriate .cab file to install on the end user's device.</P>
+
+<P>Platform labels are unique labels that are appended to specific sections in the CabWiz .inf file, for example, HPC_SH3, PPC_MIPS, or HPCPRO_ARM. The CEDevice section differentiates the platforms, which allows for device-specific information, the processor type, the device types, Handheld PC or Palm-size PC support, and the Windows CE version support. These platform labels also need to be specified in the command-line parameters when invoking CabWiz.</P>
+
+<P>The following example from a CabWiz.inf file supports multiple platforms. This example only displays the CEDevice and SourceDisksNames sections.</P>
+
+<PRE class="code">[CEDevice.HPC_SH3] ; targeted to the H/PC with the SH3 
+processorProcessorType = 10003 ; processor value for SH3
+UnsupportedPlatforms = Palm PC,Jupiter ; this .cab will not install on 
+Palm-size PC or H/PC with Pro Edition software
+[CEDevice.PPC_MIPS] ; targeted to Palm-size PC with the MIPS processor
+ProcessorType = 4000 ; processor value for MIPS R3900
+UnsupportedPlatforms = HPC,Jupiter ; this .cab will not install on H/PC 
+or H/PC with Pro Edition software
+[CEDevice.HPCPRO_ARM] ; targeted to H/PC with Pro Edition software and 
+the StrongARM processor
+ProcessorType = 2577 ; processor value for ARM 
+UnsupportedPlatforms = Palm PC,HPC ; this .cab will not install on 
+Palm-size PC or H/PC
+[SourceDisksNames] ; source dir for CPU-independent files for all created .cab files
+1 = ,"common files",,common
+[SourceDisksNames.HPC_SH3] ; source dir for H/PC SH3 files
+2 = ,"HPC SH3 files",,hpc\sh3
+[SourceDisksNames.PPC_MIPS] ; source dir for Palm-size PC MIPS files
+2 = ,"PPC MIPS files",,ppc\mips
+[SourceDisksNames.HPCPRO_ARM] ; source dir for H/PC with Pro Edition 
+software ARM files
+2 = ,"HPCPro ARM files",,hpcpro\arm
+[SourceDisksFiles]
+; help and readme
+MyApp.HTM = 1
+MyApp.TXT = 1
+; application binary
+MyApp.EXE = 2
+MyApp.DLL = 2</PRE>
+
+<P>In the CEDevice section, the preceding example creates three .cab files:
+
+<UL type="disc">
+	<LI>HPC_SH3.cab, for the Handheld PC using the SH3 processor. </li>
+
+	<LI>PPC_MIPS.cab, for the Palm-size PC using the MIPS processor. </li>
+
+	<LI>HPCPRO_ARM.cab, for the Handheld PC running Pro Edition software using the ARM processor. </li>
+</UL>
+
+<P>In the SourceDisksNames and SourceDisksFiles sections, the source directory for device-independent common files (such as readme or help files) is in the .\common directory and is referenced with a file identifier of 1. The source directory for the device-specific files¾the .exe and .dll files¾are located in the various platform-specific directories (for example, .\hpc\sh3) and are referenced with a directory identifier of 2.</P>
+
+<P>CabWiz must be invoked with the appropriate platform labels, for example:</P>
+
+<BLOCKQUOTE class="dtBlock">
+<I>Cabwiz.exe "&lt;INF_path&gt;\MyApp.INF" /cpu HPC_SH3 PPC_MIPS HPCPRO_ARM.</I></BLOCKQUOTE>
+
+<P>CabWiz creates three device-specific .cab files:
+
+<UL type="disc">
+	<LI>MyApp.HPC_SH3.cab </li>
+
+	<LI>MyApp.PPC_MIPS.cab </li>
+
+	<LI>MyApp.HPCPRO_ARM.cab </li>
+</UL>
+
+<P>With a single CabWiz .inf file, the application developer can create multiple device-specific .cab files. These .cab files can be directly downloaded to the device. For example, an end user can use Pocket Internet Explorer on a Windows CE&#0150;based device to download the appropriate .cab file and run the file on the device to install the application.</P>
+
+<P>To support a desktop installation, the application developer can use the Application Manager to automatically download the appropriate .cab file to the end user's device. The application developer can write a single desktop setup program that registers the application with AppManager by specifying all the .cab files in the CeAppMgr .ini file. </P>
+
+<P>The following example shows the CeAppMgr .ini file MyApp.ini:</P>
+
+<PRE class="code">[CEAppManager]
+Version = 1.0 ; this is the CeAppMgr .ini version, not the app version
+Component = MyApplication
+[MyApplication]
+Description = Sample Windows CE application
+CabFiles = MyApp.HPC_SH3.cab,MyApp.PPC_SH3.cab,MyApp.HPCPRO_ARM.cab
+; note that there are no extra spaces between the list of .cab files</PRE>
+
+<P>Invoking CeAppMgr with the .ini file registers the application and its associated .cab files. The end user can download the application on the next connection.</P>
+
+<PRE class="code">&lt;path&gt;\CEAppMgr.exe "&lt;INI_path&gt;\MyApp.INI"</PRE>
+
+<H2 class="dtH1"><A NAME="appin21_palm"></A>Supporting Different Windows CE Versions for Palm-size PCs</H2>
+
+<P>Currently, two types of Palm-size PCs are available: the black-and-white version running Windows CE version 2.1 and the color version running Windows CE version 2.11. Both devices use "Palm PC" in the code as the device type name.</P>
+
+<P>The application developer needs to write two CabWiz .inf files with different application names and create two CeAppMgr .ini files, which will appear as separate applications in the CeAppMgr user interface. However, a single desktop setup program can be used to install the two sets of applications.</P>
+
+<P>The following code, MyApp_BW.inf, is for the black-and-white Palm-size PC:</P>
+
+<PRE class="code">[CEStrings]
+AppName = "My Sample App (b&amp;w)"
+; other values omitted...
+;
+; Black-and-white Palm-size PC on the 2.1 version of Windows CE
+;
+[CEDevice.PPC_BW_SH3] ; targeted to Palm-size PC black-and-white 
+devices with the SH3 processor
+ProcessorType = 10003
+UnsupportedPlatforms = HPC,Jupiter
+VersionMin = 2.1 ; Windows CE version for black-and-white Palm-size PC 
+is 2.1
+VersionMax = 2.1
+[CEDevice.PPC_BW_MIPS] ; targeted to black-and-white Palm-size PC 
+devices with the MIPS processor
+ProcessorType = 4000
+UnsupportedPlatforms = HPC,Jupiter
+VersionMin = 2.1 ; Windows CE version for black-and-white Palm-size PC 
+is 2.1
+VersionMax = 2.1</PRE>
+
+<P>The following code, MyApp_CLR.inf, is for the color Palm-size PC:</P>
+
+<PRE class="code">[CEStrings]
+AppName = "My Sample App (color)"
+; other values omitted...
+;
+; Color Palm-size PC on the 2.11 version of the Windows CE
+;
+[CEDevice.PPC_CLR_SH3] ; targeted to Palm-size PC color devices with 
+the SH3 processor
+ProcessorType = 10003
+UnsupportedPlatforms = HPC,Jupiter
+VersionMin = 2.11 ; Windows CE OS version for Palm-size PC color 
+devices is 2.11
+VersionMax = 2.11
+[CEDevice.PPC_CLR_MIPS] ; targeted to Palm-size PC color devices with 
+the MIPS processor
+ProcessorType = 4000
+UnsupportedPlatforms = HPC,Jupiter
+VersionMin = 2.11 ; Windows CE OS version for Palm-size PC color 
+devices is 2.11
+VersionMax = 2.11</PRE>
+
+<P>The following code, MyApp_CLR.inf, is for the color Palm-size PC:</P>
+
+<PRE class="code">[CEStrings]
+AppName = "My Sample App (color)"
+; other values omitted...
+;
+; Color Palm-size PC on the 2.11 version of the Windows CE
+;
+[CEDevice.PPC_CLR_SH3] ; targeted to Palm-size PC color devices with 
+the SH3 processor
+ProcessorType = 10003
+UnsupportedPlatforms = HPC,Jupiter
+VersionMin = 2.11 ; Windows CE OS version for Palm-size PC color 
+devices is 2.11
+VersionMax = 2.11
+[CEDevice.PPC_CLR_MIPS] ; targeted to Palm-size PC color devices with 
+the MIPS processor
+ProcessorType = 4000
+UnsupportedPlatforms = HPC,Jupiter
+VersionMin = 2.11 ; Windows CE OS version for Palm-size PC color devices is 2.11
+VersionMax = 2.11</PRE>
+
+<P>CabWiz needs to be invoked with the appropriate platform labels, for example:</P>
+
+<BLOCKQUOTE class="dtBlock">
+<I>Cabwiz.exe "&lt;INF_path&gt;\MyApp_BW.INF" /cpu PPC_BW_SH3 PPC_BW_MIPS.</I></BLOCKQUOTE>
+
+<P>This creates two .cab files: 
+
+<UL type="disc">
+	<LI>MyApp_BW.PPC_BW_SH3.cab </li>
+
+	<LI>MyApp_BW.PPC_BW_MIPS.cab </li>
+</UL>
+
+<P>Invoking CabWiz with the appropriate platform labels for the other .inf file:</P>
+
+<BLOCKQUOTE class="dtBlock">
+<I>Cabwiz.exe "&lt;INF_path&gt;\MyApp_CLR.INF" /cpu PPC_CLR_SH3 PPC_CLR_MIPS creates two .cab files:</I></BLOCKQUOTE>
+
+<UL type="disc">
+	<LI>MyApp_CLR.PPC_CLR_SH3.cab </li>
+
+	<LI>MyApp_CLR.PPC_CLR_MIPS.cab </li>
+</UL>
+
+<P>Each set of files requires its own CeAppMgr .ini file, as follows:</P>
+
+<P>MyApp_BW.ini:</P>
+
+<PRE class="code">[CEAppManager]
+Version = 1.0
+Component = MyApplication
+[MyApplication]
+Description = Sample Windows CE application (black and white)
+CabFiles = MyApp_BW.PPC_BW_SH3.cab,MyApp_BW.PPC_BW_MIPS.cab </PRE>
+
+<P>MyApp_CLR.ini:</P>
+
+<PRE class="code">[CEAppManager]
+Version = 1.0
+Component = MyApplication
+[MyApplication]
+Description = Sample Windows CE application (color)
+CabFiles = MyApp_CLR.PPC_CLR_SH3.cab,MyApp_CLR.PPC_CLR_MIPS.cab </PRE>
+
+<P>The application developer can then write a single desktop setup program to register both the black-and-white and color versions with a single CeAppMgr call.</P>
+
+<PRE class="code">&lt;path&gt;\CEAppMgr.exe "&lt;INI_path&gt;\MyApp_BW.ini"
+"&lt;INI_path&gt;\MyApp_CLR.ini"</PRE>
+
+<H2 class="dtH1"><A NAME="appin21_process"></A>Supported Processors and Devices</H2>
+
+<P>The following processors are currently available in Windows CE devices:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=19%>Processor name</TH>
+<TH width=81%>Processor type value (to use in the CabWiz .inf file)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>SH3</TD>
+<TD width=81%>10003</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>MIPS</TD>
+<TD width=81%>4000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>ARM</TD>
+<TD width=81%>2577</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>For MIPS processors, use the R3900 binaries, which can run on all MIPS R3xxx and R4xxx processors, in the .cab file.</BLOCKQUOTE>
+
+<P>The following platform names and Windows CE version numbers are currently used in Windows CE&#0150;based devices.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=63%>Device Name</TH>
+<TH width=15%>Platform Name (used in CabWiz .inf file)</TH>
+<TH width=22%>Windows CE Version (used in CabWiz .inf file)</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=63%>Handheld PC running Windows CE 1.0</TD>
+<TD colspan=2 width=37%>Not supported by AppInstall. Use PPCLoad version 1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=63%>Handheld PC running Windows CE 2.0</TD>
+<TD width=15%>"HPC"</TD>
+<TD width=22%>2.0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=63%>Handheld PC running Microsoft Windows CE, Handheld PC Professional Edition, version 3.0</TD>
+<TD width=15%>"Jupiter"</TD>
+<TD width=22%>2.11</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=63%>Palm-size PC - Black &amp; White</TD>
+<TD width=15%>"Palm PC"</TD>
+<TD width=22%>2.1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=63%>Palm-size PC - Color</TD>
+<TD width=15%>"Palm PC"</TD>
+<TD width=22%>2.11</TD>
+</TR>
+</table></div>
+
+<P><I>The information contained in this document represents the current view of Microsoft Corporation on the issues discussed as of the date of publication. Because Microsoft must respond to changing market conditions, it should not be interpreted to be a commitment on the part of Microsoft, and Microsoft cannot guarantee the accuracy of any information presented after the date of publication. This document is for informational purposes only.</I></P>
+
+<P><I>This White Paper is for informational purposes only. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, IN THIS DOCUMENT.</I></P>
+
+<P><I>Java is a trademark of Sun Microsystems, Inc.</I></P>
+
+<P><I>Other product and company names mentioned herein may be the trademarks of their respective owners.</I></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661429', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

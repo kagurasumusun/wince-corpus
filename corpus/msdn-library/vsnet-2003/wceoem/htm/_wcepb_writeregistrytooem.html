@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WriteRegistryToOEM</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WriteRegistryToOEM"/>
+<MSHelp:RLTitle Title="WriteRegistryToOEM"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_WriteRegistryToOEM"/>
+<MSHelp:Keyword Index="K" Term="WriteRegistryToOEM"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: oal_f.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_writeregistrytooem"></A>WriteRegistryToOEM</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function enables writing the registry file to persistent storage defined by the OEM.</P>
+
+<PRE class="syntax"><B>BOOL WriteRegistryToOEM ( </B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B> 
+<B>LPBYTE</B> <I>lpData</I><B>,</B> 
+<B>DWORD</B> <I>cbData </I><B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>dwFlags</I></DT>
+
+<DD>Read options specified by the system; currently, the only flag is REG_WRITE_BYTES_START, which indicates the start of the new registry file.</dd>
+
+<DT><I>lpData</I></DT>
+
+<DD>Pointer to a buffer allocated by the OS and filled with registry bytes. Your <B>WriteRegistryToOEM</B> function retrieves the bytes and saves them in persistent storage.</dd>
+
+<DT><I>cbData</I></DT>
+
+<DD>The number of bytes in the buffer <I>lpData</I> passed in by the OS. When set to 0, then end-of-file has been reached.</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>TRUE indicates success; FALSE indicates failure.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The OS exposes a global pointer named pWriteRegistryToOEM that is available in the OAL. To support persistent storage of the registry, you must implement the function <B>WriteRegistryToOEM</B> and assign the address of the function to pWriteRegistryToOEM. When the OS is instructed to flush the registry, the OS checks for a valid pWriteRegistryToOEM. If pWriteRegistryToOEM is valid, the OS continues to call this function to send bytes to the OEM implemented function until it returns FALSE (an error occurred) or the OS completes the flush.</P>
+
+<P>The registry is notified that it needs to be flushed when <B>RegFlushKey</B> is called by an application.</P>
+
+<P>Only a fully saved registry can be restored; attempting to restore a partial registry produces unpredictable results. If you try to save a partial registry, <I>cbData</I> is never set to 0. Then, when <B>WriteRegistryToOEM</B> is called, an error should be returned because the registry file is incomplete.</P>
+
+<P>If you implement this function, you should document its support for your specific target device. Because the data format used by this function is different than the format used by <B>RegCopyFile</B>, the data can not be exchanged.</P>
+
+<P class="label"><B>Requirements </B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>2.10 and later</TD>
+<TD width=18%>Pkfuncs.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcepb_pwriteregistrytooem.htm">pWriteRegistryToOEM</A>, <A HREF="_wcepb_readregistryfromoem.htm"><B>ReadRegistryFromOEM</B></A>, <MSHelp:link keywords="_wcesdk_win32_RegFlushKey" TABINDEX="0"><B>RegFlushKey</B></MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, July 09, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WriteRegistryToOEM&nbsp;(_wcepb_writeregistrytooem.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Download Instructions from the Server</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Download Instructions from the Server"/>
+<MSHelp:RLTitle Title="Download Instructions from the Server"/>
+<MSHelp:Keyword Index="A" Term="ceconDownloadInstructionsFromServer"/>
+<MSHelp:Keyword Index="K" Term="Device Management, download instructions"/>
+<MSHelp:Keyword Index="K" Term="Device Management, sample download instructions"/>
+<MSHelp:Keyword Index="K" Term="Device Management, schema for download instructions"/>
+<MSHelp:Keyword Index="K" Term="Device Management, XML elements for download instructions"/>
+<MSHelp:Keyword Index="A" Term="ceconDownloadInstructionsFromServer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: device_management_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_822163">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cecondownloadinstructionsfromserver"></A>Download Instructions from the Server</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The download instructions are an XML document and contain information about one or more downloads and each download can include the download of one or more files. Download instructions can optionally include the command line of a program to run after the download is completed.</P>
+
+<H3 class="dtH3">Optional and Required Installs</H3>
+
+<P>By default, the device will only automatically install items that are marked as Required="YES".</P>
+
+<P>In order to install optional applications, the control panel UI on the device opens the Client database and searches through it for each entry that is set to Required="NO". Each entry where Required is set to NO is added to the List of available applications in the UI.</P>
+
+<P>When the user selects an application to download, the UI adds this Package ID to a Server Request List. The device then sends the package request to the server. The server responds with the XML download instructions and the device schedules a download task. The status of the item is set to downloading in the client database.</P>
+
+<H3 class="dtH3">Download Instructions XML Elements</H3>
+
+<P>The following table shows the download instructions from the server XML elements.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Element</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="cerefrdm-operationelement.htm">RDM-Operation Element</A></TD>
+<TD width=65%>Topmost element in the XML data. All other elements are nested within it.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="cerefcontentselement.htm">Contents Element</A></TD>
+<TD width=65%>Contains descriptions and instructions for a given offering.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="cerefdownloadelement.htm">Download Element</A></TD>
+<TD width=65%>Used to describe a download offering.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="cerefcopyfileelement.htm">CopyFile Element</A></TD>
+<TD width=65%>Used to describe the bits that the client should download.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="cerefpostinstallelement.htm">PostInstall Element</A></TD>
+<TD width=65%>Used to tell the client to run a specific command.</TD>
+</TR>
+</table></div>
+
+<H3 class="dtH3">Download Instructions Schema</H3>
+
+<P>The following schema shows the download instructions from the server.</P>
+
+<PRE class="code">&lt;RDM-Operation&gt;
+   &lt;Contents ID="Unique ID of this task"&gt;
+      &lt;Download
+         StartTime="Start time (in GMT)"
+         DeltaTime="Reoccurrence interval"
+         Type="Type of task - Download or Poll. Default=Download"
+         Flags="Connection type flags"
+         Required="Yes|No. Default=No" &gt;
+         &lt;CopyFile
+            Url="Source URL for this file"
+            Dest="Where to download this file to"
+            Signature="Signature of the file as signed by a server in the TSL" /&gt;
+         &lt;PostInstall
+            Command="command line to run" /&gt;
+      /&gt;
+   /&gt;
+/&gt;</PRE>
+
+<H3 class="dtH3">Download Instructions Sample</H3>
+
+<P>The following code example shows download instructions from the server.</P>
+
+<PRE class="code">&lt;RDM-Operation&gt;
+   &lt;Contents ID="FE046C21-9272-49e0-83D7-8975566184F0"&gt;
+      &lt;Download 
+         StartTime="2001-10-31 15:30:00" 
+         DeltaTime="0000-00-07 00:00:00" 
+         Flags="05 00 00 00" 
+         Required="Yes"&gt;
+         &lt;CopyFile Url="https://server/drop/secpatch.cab" Dest="\temp\secpatch.cab" /&gt; 
+         &lt;PostInstall Command="\temp\secpatch.cab" /&gt; 
+      &lt;/Download&gt;
+   &lt;/Contents&gt;
+&lt;/RDM-Operation&gt;</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cecondevicemanagementoperation.htm">Device Management Operation</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Download%20Instructions%20from%20the%20Server&nbsp;(cecondownloadinstructionsfromserver.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

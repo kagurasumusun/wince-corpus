@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleControl::OnFontChanged</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COleControl::OnFontChanged"/>
+<MSHelp:RLTitle Title="COleControl::OnFontChanged"/>
+<MSHelp:Keyword Index="A" Term="aflrfCOleControlcolcolOnFontChanged"/>
+<MSHelp:Keyword Index="K" Term="OnFontChanged method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCOleControlcolcolOnFontChanged"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="colectrl.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_711024">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcolecontrolcolcolonfontchanged"></A>COleControl::OnFontChanged</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework when the stock <B>Font</B> property is changed. The default implementation calls <B>COleControl::InvalidateControl</B>. If the control is subclassing a Windows control, the default implementation also sends a WM_SETFONT message to the control window.</P>
+
+<P>Override this function if you want notification after this property changes.</P>
+
+<PRE class="syntax"><B>virtual void OnFontChanged( );</B><I> </I></PRE>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Sample for the ActCtrl.cpp.
+
+void CSampleActCtrl::OnFontChanged() 
+{
+&nbsp;&nbsp;//////////////////////////////////////////////////////////
+&nbsp;&nbsp;// Always set it to the container's font
+&nbsp;&nbsp;if (m_MyEdit.m_hWnd != NULL)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;IFontDisp* pFontDisp = NULL;
+&nbsp;&nbsp;&nbsp;&nbsp;IFont *pFont = NULL;
+&nbsp;&nbsp;&nbsp;&nbsp;HRESULT hr;
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the container's FontDisp interface.
+&nbsp;&nbsp;&nbsp;&nbsp;pFontDisp = AmbientFont();
+&nbsp;&nbsp;&nbsp;&nbsp;if (pFontDisp)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hr = pFontDisp-&gt;QueryInterface(IID_IFont, (LPVOID *) &amp;pFont);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (FAILED(hr))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pFontDisp-&gt;Release();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;HFONT hFont = NULL;
+&nbsp;&nbsp;&nbsp;&nbsp;if (pFont)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pFont-&gt;get_hFont(&amp;hFont);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_MyEdit.SendMessage(WM_SETFONT, (WPARAM)hFont, 0L);
+&nbsp;&nbsp;&nbsp;&nbsp;}
+
+&nbsp;&nbsp;&nbsp;&nbsp;pFontDisp-&gt;Release();
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Invalidate the control.
+&nbsp;&nbsp;m_MyEdit.Invalidate();
+&nbsp;&nbsp;m_MyEdit.UpdateWindow();
+&nbsp;&nbsp;///////////////////////////////////////////////////////////
+&nbsp;&nbsp;
+&nbsp;&nbsp;COleControl::OnFontChanged();
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcolecontrolcolcolgetfont.htm"><B>COleControl::GetFont</B></A><B>, <A HREF="aflrfcolecontrolcolcolinternalgetfont.htm">COleControl::InternalGetFont</A>, <A HREF="aflrfcolecontrolcolcolinvalidatecontrol.htm">COleControl::InvalidateControl</A> </B></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_711024', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

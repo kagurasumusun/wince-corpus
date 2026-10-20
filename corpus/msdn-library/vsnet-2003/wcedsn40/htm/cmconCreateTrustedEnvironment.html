@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Create a Trusted Environment</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Create a Trusted Environment"/>
+<MSHelp:RLTitle Title="Create a Trusted Environment"/>
+<MSHelp:Keyword Index="A" Term="cmconCreateTrustedEnvironment"/>
+<MSHelp:Keyword Index="K" Term="security, creating a trusted environment"/>
+<MSHelp:Keyword Index="K" Term="security, operating system level"/>
+<MSHelp:Keyword Index="K" Term="security, trusted environment"/>
+<MSHelp:Keyword Index="K" Term="trusted environment, see security"/>
+<MSHelp:Keyword Index="A" Term="cmconCreateTrustedEnvironment"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_secur.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_801902">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconcreatetrustedenvironment"></A>Create a Trusted Environment</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Microsoft&reg; Windows&reg; CE devices send, receive, and process information that requires protection from potentially unsafe applications. To protect your device, you can implement security measures that prevent the OS from loading unknown modules, restricts access to system application programming interfaces (APIs), and prevents write access to parts of the system registry. You can designate a module as trusted or not trusted when certifying applications. The kernel can use this information to prevent unauthorized applications from loading or limit their access to the system.</P>
+
+<P>To create a trusted environment, you must implement the following functions: 
+
+<UL type="disc">
+	<LI><B>OEMCertifyModuleInit</B></li>
+
+	<LI><B>OEMCertifyModule </B></li>
+</UL>
+
+<P>Before the kernel loads an application, the <B>OEMCertifyModule</B> function verifies the application signature to protect your system from unfamiliar applications. This ensures that the Windows CE&#0150;based platform loads an application only if it contains a valid digital signature. The following table further describes the functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Function</TH>
+<TH width=38%>Description</TH>
+<TH width=30%>Return value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>OEMCertifyModuleInit</B></TD>
+<TD width=38%>Enables the OS loader to notify the OEM that a new module is being loaded. Allows the OEM to decide whether to verify the module for safety.</TD>
+<TD width=30%>TRUE or FALSE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>OEMCertifyModule</B></TD>
+<TD width=38%>Allows the OS loader to pass the module code (for example, DLL, EXE, and OCX) to the OEM for verification that it is safe to run on the system.</TD>
+<TD width=30%>OEM_CERTIFY_TRUST 
+<P>OEM_CERTIFY_RUN </P>
+
+<P>OEM_CERTIFY_FALSE </P>
+</TD>
+</TR>
+</table></div>
+
+<P>The following table describes the return values for <B>OEMCertifyModule</B> function.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Return value</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>OEM_CERTIFY_TRUST </TD>
+<TD width=68%>Fully trusted application to perform any operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>OEM_CERTIFY_RUN </TD>
+<TD width=68%>Trusted application to run, but restricted from making any privileged function calls. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>OEM_CERTIFY_FALSE </TD>
+<TD width=68%>Not trusted and therefore not allowed to run. </TD>
+</TR>
+</table></div>
+
+<P>An <B>OEMCertifyModule</B> function can perform any type of check on the module that is loading. For example, the function may perform a cyclic redundancy check or a certificate check. When a dynamic-link library (DLL) loads into the address space of an .exe file, the trust level of the .exe file determines the final access level. For example, when an .exe file with the OEM_CERTIFY_RUN trust level tries to load a DLL that has a higher trust level (OEM_CERTIFY_TRUST), the final trust level of the DLL is OEM_CERTIFY_RUN. On the other hand, when the .exe file tries to load a DLL that has a lower trust level, the DLL will fail to load.</P>
+
+<P>The following table shows the different combinations of .exe file and DLL trust levels.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>EXE trust</TH>
+<TH width=33%>DLL trust</TH>
+<TH width=34%>Final DLL trust</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=34%>OEM_CERTIFY_RUN </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=34%>OEM_CERTIFY_RUN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=34%>DLL fails to load </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=34%>OEM_CERTIFY_TRUST </TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>When you implement the trusted security model, untrusted drivers will fail to load. The OEM must verify all third-party drivers as trusted. </BLOCKQUOTE>
+
+<P>The simplest implementation of the trusted model uses the <B>OEMCertifyModule </B>function to return OEM_CERTIFY_RUN for all applications. This allows applications that are not part of the ROM MODULES section of the image to run, but they are restricted from making privileged function calls. By using the <B>OEMCertifyModule</B> implementation, at run time, you do not have to specify which applications are trusted. If OEM_CERTIFY_FALSE is returned, applications in RAM will not be able to run. Regardless of which implementation of the trusted model you choose, <B>OEMCertifyModuleInit</B> or <B>OEMCertifyModule</B>, the operating system files in the ROM MODULES section of the image will always run with full privileges.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Create%20a%20Trusted%20Environment&nbsp;(cmconcreatetrustedenvironment.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

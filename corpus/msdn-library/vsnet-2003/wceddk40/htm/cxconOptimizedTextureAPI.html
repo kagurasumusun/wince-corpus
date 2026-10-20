@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Optimized Texture API</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Optimized Texture API"/>
+<MSHelp:RLTitle Title="Optimized Texture API"/>
+<MSHelp:Keyword Index="A" Term="cxconOptimizedTextureAPI"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, texture management"/>
+<MSHelp:Keyword Index="K" Term="texture%2C Direct3D, optimized textures"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664971">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconoptimizedtextureapi"></A>Optimized Texture API</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Three new capabilities indicate the level of optimization that can be applied to a DirectDrawSurface object. In DirectX 6.0 and beyond, only textures can be marked with these caps bits. The optimized surface paradigm may be extended in the future to cover other types of surfaces, although the semantics may not be the same as for textures.</P>
+
+<P>To address these issues as cleanly as possible, three new flags are provided in the <MSHelp:link keywords="_wcesdk_IDirectDraw4_CreateSurface_ddraw" TABINDEX="0">DirectDraw4::CreateSurface</MSHelp:link> method. When none of these three flags is specified, the decision whether to patch or swizzle is left entirely up to the driver. These flags are as follows:
+
+<DL>
+<DT>DDSCAPS2_HINTDYNAMIC</DT>
+
+<DD>Indicates to the driver that this surface will be locked very frequently, (for example, once per frame) for use such as streaming video or procedural textures. This cap should work for <I>all</I> driver-enumerated texture surface formats. The driver should avoid any transformation for these textures, especially if it requires some overhead.</dd>
+
+<DT>DDSCAPS2_HINTSTATIC</DT>
+
+<DD>This indicates to the driver that the surface can be reordered/retiled/swizzled in the <MSHelp:link keywords="_wcesdk_IDirectDrawSurface5_Blt_ddraw" TABINDEX="0">IdirectDrawSurface5::Blt</MSHelp:link> methods (described in the Direct3D SDK and DirectDraw SDK documentation, respectively). This operation will not change the size of the texture. It is relatively fast, and symmetrical, because the application may still lock these bits (although it will take a performance hit when doing so). Drivers are not allowed to fail locks on these surfaces and therefore cannot use lossy compression techniques. MIP map surfaces can be interleaved in this case.
+
+<P>This cap is not intended to force swizzling under any circumstances, especially those in which no performance benefit will arise. In particular, some texel formats may silently fail to swizzle. 
+</dd>
+
+<DT>DDSCAPS2_OPAQUE</DT>
+
+<DD>This indicates to the driver that this surface will not be accessed by the application again. This flag behaves like the DDSCAPS2_HINTSTATIC flag, but with the addition of allowing actual compression using a hardware-specific compression scheme. This operation is relatively slow, but should allow simple, symmetric compression schemes (such as YUV 4:2:0, or color cell compression) to be used, providing compression ratios from 2 to 6x. Asymmetric schemes such as VQ should not be used here because they will result in unacceptable benchmarks.
+
+<P>The driver can interleave MIP map textures arbitrarily. This technique should probably only be requested outside of internal rendering loops such as when textures are loaded from disk. Heap size reports after such a texture is loaded will reflect the reduced memory consumption if compression was applied. It should be remembered that there is additional header overhead on textures and therefore compressing many small textures will not save as much memory as might be expected.
+
+
+<P>In general, there is no guarantee about texture compression ratio, or compression quality implied by this flag.
+
+
+<P>Surfaces created with this flag will fail in the following cases:
+
+
+<UL type="disc">
+	<LI>Calls to the <MSHelp:link keywords="_wcesdk_IDirectDrawSurface5_Lock_ddraw" TABINDEX="0">IdirectDrawSurface5::Lock</MSHelp:link> method will fail.</li>
+
+	<LI>Calls to the <MSHelp:link keywords="_wcesdk_IDirectDrawSurface5_GetDC_ddraw" TABINDEX="0">IdirectDrawSurface5::GetDC</MSHelp:link> method will fail. Both methods are described in the DirectDraw SDK documentation.</li>
+
+	<LI>Subrectangle blits to such surfaces will fail.</li>
+
+	<LI>All blits from such surfaces will fail. </li>
+</UL>
+
+
+<P>The only way to put data into such surfaces is with a full surface blit call.
+</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconoptimizedtextures.htm">Optimized Textures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Optimized%20Texture%20API&nbsp;(cxconoptimizedtextureapi.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

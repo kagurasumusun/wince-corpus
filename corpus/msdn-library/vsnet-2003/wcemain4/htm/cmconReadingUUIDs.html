@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Reading UUIDs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Reading UUIDs"/>
+<MSHelp:RLTitle Title="Reading UUIDs"/>
+<MSHelp:Keyword Index="A" Term="cmconReadingUUIDs"/>
+<MSHelp:Keyword Index="K" Term="UUIDs, reading"/>
+<MSHelp:Keyword Index="A" Term="cmconReadingUUIDs"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: thinclient.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_760392">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconreadinguuids"></A>Reading UUIDs</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>For the Windows Thin Client to have read access to a UUID, you must follow a short coding procedure.</P>
+
+<P class="labelproc"><B>To read a UUID</B>
+
+<UL type="disc">
+	<LI>Implement the <B>KernelIoControl</B> function that reads the UUID from nonvolatile memory. The control code that is specified for reading a UUID is IOCTL_HAL_GET_UUID.
+<P>The following code example shows how to read a UUID.
+
+<PRE class="code">BOOL GetUUID () 
+{
+  GUID myUUID;
+  BOOL bRetVal;
+  DWORD dwBytesReturned;
+
+  bRetVal = KernelIoControl (IOCTL_HAL_GET_UUID, NULL, 0, &amp;myUUID, 
+                             sizeof (myUUID), &amp;dwBytesReturned);
+  if (!bRetVal) 
+  {
+    RETAILMSG(1, TEXT("KernelIoControl call failed!\r\n"));
+    return FALSE;
+  }
+
+  RETAILMSG(
+    1,
+    TEXT("UUID: %08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X\r\n"),
+    myUUID.Data1,
+    myUUID.Data2,
+    myUUID.Data3,
+    myUUID.Data4[0],
+    myUUID.Data4[1],
+    myUUID.Data4[2],
+    myUUID.Data4[3],
+    myUUID.Data4[4],
+    myUUID.Data4[5],
+    myUUID.Data4[6],
+    myUUID.Data4[7]);
+
+  return TRUE;
+}</PRE>
+</li>
+</UL>
+
+<P>You also must implement the section of code in the OEM Adaptation Layer (OAL) to handle the call to the <B>KernelIoControl</B> function.</P>
+
+<P class="labelproc"><B>To implement the OAL code for the CEPC platform</B>
+
+<UL type="disc">
+	<LI>In the Oemioctl.c file, add code to the <B>OEMIoControl</B> function to handle the IOCTL_HAL_GET_UUID call.
+<P>The following code example demonstrates the added code.
+
+<PRE class="code">BOOL
+OEMEthInit(EDBG_ADAPTER *pAdapter)
+{
+.......
+
+// Save out local mac address.
+memcpy ((char *)wLocalMAC, pAdapter-&gt;Addr.wMAC, sizeof(wLocalMAC));
+
+EdbgOutputDebugString("Debug Ethernet card initialized, MAC Address:%B:%B:%B:%B:%B:%B\r\n",
+pAdapter-&gt;Addr.wMAC[0] &amp; 0x00FF, pAdapter-&gt;Addr.wMAC[0] &gt;&gt; 8,
+pAdapter-&gt;Addr.wMAC[1] &amp; 0x00FF, pAdapter-&gt;Addr.wMAC[1] &gt;&gt; 8,
+pAdapter-&gt;Addr.wMAC[2] &amp; 0x00FF, pAdapter-&gt;Addr.wMAC[2] &gt;&gt; 8 );
+
+........
+} 
+BOOL OEMIoControl (DWORD dwIoControlCode, LPVOID lpInBuf, 
+                   DWORD nInBufSize, LPVOID lpOutBuf, 
+                   DWORD nOutBufSize, LPDWORD lpBytesReturned)
+{
+  
+  BOOL retval = FALSE;
+  DWORD len;
+
+  DEBUGMSG(0, TEXT("+OEMIoControl %X\r\n"), dwIoControlCode);
+
+  switch (dwIoControlCode) 
+  {
+case IOCTL_HAL_GET_UUID :
+if (lpOutBuf &amp;&amp; (nOutBufSize &gt;= sizeof(GUID))) {
+if (lpBytesReturned) {
+*lpBytesReturned = sizeof(GUID);
+}
+// OEM's with unique ID hardware can return the value here.
+
+// If the platform does not have any unique ID settings.
+// Then attempt to use the Kernel Ethernet Debug address if non-zero
+if (wLocalMAC[0] | wLocalMAC[1] | wLocalMAC[2]) {
+memcpy(lpOutBuf, (char *)wLocalMAC, sizeof(GUID));
+return TRUE;
+} else {
+SetLastError (ERROR_NOT_SUPPORTED);
+return FALSE;
+}
+} else {
+SetLastError (ERROR_NOT VALID_PARAMETER);
+return FALSE;
+} 
+    case IOCTL_HAL_GET_DEVICE_INFO:
+      if (nInBufSize == 4) 
+      {
+        switch (*(LPDWORD)lpInBuf) 
+        {  
+          ...
+        }             
+      }
+    ...
+  }
+  ...
+}</PRE>
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconuuidretrieval.htm">UUID Retrieval</A></P>
+
+<P><A HREF="cmconimplementinguuid.htm">Working with UUIDs</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Reading%20UUIDs&nbsp;(cmconreadinguuids.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

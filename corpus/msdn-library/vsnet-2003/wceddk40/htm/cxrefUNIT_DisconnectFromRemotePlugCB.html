@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>UNIT_DisconnectFromRemotePlugCB</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="UNIT_DisconnectFromRemotePlugCB"/>
+<MSHelp:RLTitle Title="UNIT_DisconnectFromRemotePlugCB"/>
+<MSHelp:Keyword Index="A" Term="cxrefUNIT_DisconnectFromRemotePlugCB"/>
+<MSHelp:Keyword Index="K" Term="UNIT_DisconnectFromRemotePlugCB"/>
+<MSHelp:Keyword Index="A" Term="cxrefUNIT_DisconnectFromRemotePlugCB"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: 1394_ufd_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758882">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefunit_disconnectfromremoteplugcb"></A>UNIT_DisconnectFromRemotePlugCB</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is called by the unit filter driver when a request has arrived requesting that your subunit disconnect from a particular remote plug, which is one previously connected through <A HREF="cxrefunit_connecttoremoteplugcb.htm">UNIT_ConnectToRemotePlugCB</A>. </P>
+
+<PRE class="syntax"><B>NTSTATUS (*UNIT_DisconnectFromRemotePlugCB)(</B>
+<B>PVOID </B><I>Context</I><B>, </B>
+<B>HANDLE </B><I>Plug</I><B>,</B>
+<B>PVOID </B><I>Request</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Context</I></DT>
+
+<DD>[in] An opaque value that the subunit driver provided when utilizing the UNIT_CMD_REGISTER_SUBUNIT command.</dd>
+
+<DT><I>Plug</I></DT>
+
+<DD>[in] The <B>HANDLE</B> value of the remote plug to disconnect from. This will be the same handle presented in a previous <B>UNIT_ConnectToRemotePlugCB</B> call, and the subunit driver must determine which particular SESSION_ID to disconnect.</dd>
+
+<DT><I>Request</I></DT>
+
+<DD>[in] An opaque value that the virtual subunit should save, to be passed into <A HREF="cxrefioctl_unit_disconnection_request_processed.htm">IOCTL_UNIT_DISCONNECTION_REQUEST_PROCESSED</A>, if this callback request is not completed immediately.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the operation was successful, the subunit should return STATUS_SUCCESS. If the virtual subunit could not complete processing on this request immediately, it can return STATUS_PENDING, in which case it must send down an IOCTL_UNIT_DISCONNECTION_REQUEST_PROCESSED later to permit the unit driver to complete the overall AV/C request. Otherwise, an appropriate error code should be returned. Any error code will cause the request from the external device to be rejected.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This call is the essential inverse of the <B>UNIT_ConnectToRemotePlugCB</B> call. </P>
+
+<P>The subunit is not required to purely match <B>UNIT_ConnectToRemotePlugCB</B> calls with <B>UNIT_DisconnectFromRemotePlugCB</B> calls. The subunit may disconnect these connections whenever it chooses. It is only during the process of disconnection, after it has successfully completed an <A HREF="cxrefioctl_stream_stop_session.htm">IOCTL_STREAM_STOP_SESSION</A>, whenever it chooses to disconnect, that the Subunit driver is required to issue an <A HREF="cxrefioctl_unit_dereference_connection_plug.htm">IOCTL_UNIT_DEREFERENCE_CONNECTION_PLUG</A> request.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>Avc_unit.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefunit_connecttoremoteplugcb.htm">UNIT_ConnectToRemotePlugCB</A>, <A HREF="cxrefioctl_unit_disconnection_request_processed.htm">IOCTL_UNIT_DISCONNECTION_REQUEST_PROCESSED</A>, <A HREF="cxrefioctl_stream_stop_session.htm">IOCTL_STREAM_STOP_SESSION</A>, <A HREF="cxrefioctl_unit_dereference_connection_plug.htm">IOCTL_UNIT_DEREFERENCE_CONNECTION_PLUG</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;UNIT_DisconnectFromRemotePlugCB&nbsp;(cxrefunit_disconnectfromremoteplugcb.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

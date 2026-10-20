@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>PCI Serial Driver Loading</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="PCI Serial Driver Loading"/>
+<MSHelp:RLTitle Title="PCI Serial Driver Loading"/>
+<MSHelp:Keyword Index="A" Term="cxconPCISerialDriverLoading"/>
+<MSHelp:Keyword Index="K" Term="device drivers, loading PCI serial drivers"/>
+<MSHelp:Keyword Index="K" Term="drivers, PCI serial"/>
+<MSHelp:Keyword Index="K" Term="loading, PCI serial drivers"/>
+<MSHelp:Keyword Index="K" Term="PCI serial drivers, loading"/>
+<MSHelp:Keyword Index="A" Term="cxconPCISerialDriverLoading"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverloadingmodel.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753257">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconpciserialdriverloading"></A>PCI Serial Driver Loading</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>In this example, the PCI bus driver starts enumerating the PCI bus and comes across a PCI serial device. It has the properties shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Subkey</TH>
+<TH width=80%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Class</B></TD>
+<TD width=80%>0x7</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>SubClass</B></TD>
+<TD width=80%>0x0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>ProgIF</B></TD>
+<TD width=80%>0x2</TD>
+</TR>
+</table></div>
+
+<P>The PCI bus driver examines the registry subkeys of <B>Drivers\PCI</B> and finds a match for these values under the <B>Drivers\PCI\Template\Serial</B> key. The <B>VendorID</B>, <B>DeviceID</B>, and so on of the device are used to find a more exact match first. In other words, if the key <B>Drivers\PCI\Template\SerialSpecial</B> listed values <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B>, and <B>DeviceID</B> that exactly matched those of the device, then that driver description would be used instead of the <B>Drivers\PCI\Template\Serial</B> description because it more closely matches the device's identifiers.</P>
+
+<P>The PCI bus driver knows about subkeys of the form <B>Drivers\PCI\Template\<I>DriverName</I></B> and <B>Drivers\PCI\Instance\<I>DriverNameX</I></B>. The <B>Template</B> key describes driver information to enable the PCI bus driver to load the appropriate driver for a device. <B>Template</B> describes general information like <B>Dll</B> and <B>Order</B>. Template does not describe specific information such as <B>MemBase</B> and <B>MemLen</B>, which is where the device exists on the bus. The <B>Instance</B> key provides specific information about a particular instance of a device. When the PCI bus driver discovers a device, it finds a matching <B>Template</B> key and copies this information to a corresponding <B>Instance</B> key, and keeps track of the particular instance. For example, the first instance of a device will be <B>DriverName1</B> and the second instance will be <B>DriverName2</B>. If instance-specific information is desired to be set ahead of time, you fill out the values to set under the <B>Instance</B> key.</P>
+
+<H2 class="dtH2">Serial Subkey Initial State</H2>
+
+<P>The following registry entry shows the initial state for the <B>Drivers\PCI\Template\Serial</B> key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\Serial]
+    "Dll"="Com16550.Dll"
+    "Class"=dword:07
+    "SubClass"=dword:00
+    "ProgIF"=dword:02
+    "VendorID"=multi_sz:"0AF0","B320","B320"
+    "DeviceID"=multi_sz:"0020","0300","0302"
+    "Prefix"="COM"
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Template\Serial\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on PCI"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1\Unimodem]
+    "FriendlyName"="Serial Cable on COM1:"</PRE>
+
+<H2 class="dtH2">Serial Subkey Final State</H2>
+
+<P>The template information is provided for the Serial and Unimodem device drivers. Instance-specific information is provided to indicate the Unimodem's <B>FriendlyName</B>. When the PCI bus driver discovers the device that matches the serial <B>Template</B> information, it copies all of the <B>Template</B> information over to the <B>PCI\Instance\Serial1</B> key. Any subkeys, such as <B>Unimodem,</B> are copied as well. Any existing values under the <B>PCI\Instance\Serial1</B> key are not changed. This allows registry values to be set ahead of time for a particular instance of a device. The PCI bus driver also fills out standard location and resource information to place under the <B>Instance</B> key. The <B>Instance</B> values obtained from the device are always set by the PCI bus driver and will overwrite values that are already set under a particular I<B>nstance</B> key. These values include the matching values such as <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B>, <B>DeviceID</B>, and so on. These values also include <B>Irq</B>, <B>SysIntr</B>, <B>MemBase</B>, <B>MemLen</B>, <B>IoBase</B>, <B>IoLen</B>, <B>BusNumber</B>, <B>DeviceNumber</B>, and <B>FunctionNumber</B>.</P>
+
+<P>The <B>Instance</B> values are copied over from the <B>Template</B> along with the generated <B>IoBase</B>, <B>IoLen</B>, <B>Irq</B>, and <B>SysIntr</B> values. The <B>Template</B> for Unimodem is also copied, but the existing <B>FriendlyName</B> retains its value. </P>
+
+<P>A device can be fixed to a location in terms of <B>MemBase</B>, <B>IoBase</B>, <B>BusNumber</B>, <B>DeviceNumber</B>, and so on by filling out these values in an <B>Instance</B> key in the initial registry. The PCI bus driver examines both <B>Template</B> and <B>Instance</B> information when searching for a registry key that matches the discovered device. If the location information is already set in the <B>Instance</B> key, the PCI bus driver will use those values to configure the device. This mechanism is used retain device information when a warm boot occurs, for example if the RAM-based registry persists, or for systems with a persistent registry so that the system remains configured in the same way as it was before the warm boot. All the matching values must be filled out in the <B>Instance</B> key in order for this to work. The required matching values include <B>Class</B>, <B>SubClass</B>, <B>ProgIF</B>, <B>VendorID</B>, <B>DeviceID</B>, <B>SubsystemVendorID</B>, <B>SubsystemID</B>, <B>RevisionID</B>, <B>BusNumber</B>, <B>DeviceNumber</B> and <B>FunctionNumber</B>. Of course, <B>MemBase</B>, <B>MemLen</B>, <B>IoBase</B>, and the <B>IoLen</B> values, along with <B>Irq</B> and <B>SysIntr</B> must have valid values as well, although they are not used for matching an <B>Instance</B> key to a device.</P>
+
+<P>The following registry entry shows the resulting state for the <B>Drivers\PCI\Instance\Serial1</B> key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1]
+    "InstanceIndex"=dword:1
+    "Dll"="Com16550.Dll"
+    "Prefix"="COM"
+    "Priority"=dword:0
+    "Class"=dword:7
+    "SubClass"=dword:0
+    "ProgIF"=dword:2
+    "VendorID"=dword:B320
+    "DeviceID"=dword:300
+    "RevisionID"=dword:0
+    "SubVendorID"=dword:B330
+    "SubSystemID"=dword:300
+    "InterfaceType"=dword:5
+    "BusNumber"=dword:0
+    "DeviceNumber"=dword:2
+    "FunctionNumber"=dword:0
+    "IoBase"=dword:D2F8
+    "IoLen"=dword:8
+    "Irq"=dword:9
+    "SysIntr"=dword:19 
+[HKEY_LOCAL_MACHINE\Drivers\PCI\Instance\Serial1\Unimodem]
+    "Tsp"="Unimodem.dll"
+    "DeviceType"=dword:0
+    "FriendlyName"="Serial Cable on COM3:"
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicedriverloadingprocess.htm">Device Driver Loading Process</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;PCI%20Serial%20Driver%20Loading&nbsp;(cxconpciserialdriverloading.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

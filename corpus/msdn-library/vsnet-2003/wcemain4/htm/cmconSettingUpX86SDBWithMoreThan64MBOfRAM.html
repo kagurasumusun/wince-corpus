@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting up an x86 SDB with more than 64 MB of RAM</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Setting up an x86 SDB with more than 64 MB of RAM"/>
+<MSHelp:RLTitle Title="Setting up an x86 SDB with more than 64 MB of RAM"/>
+<MSHelp:Keyword Index="A" Term="cmconSettingUpX86SDBWithMoreThan64MBOfRAM"/>
+<MSHelp:Keyword Index="K" Term="board support packages, x86 SDB"/>
+<MSHelp:Keyword Index="K" Term="platforms, building for x86 SDB"/>
+<MSHelp:Keyword Index="K" Term="x86, setting up SDB with more than 64 MB of RAM"/>
+<MSHelp:Keyword Index="A" Term="cmconSettingUpX86SDBWithMoreThan64MBOfRAM"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: setupx86.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_802003">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconsettingupx86sdbwithmorethan64mbofram"></A>Setting up an x86 SDB with more than 64 MB of RAM</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> code that determines whether it should look for additional memory keys off the memory end address is specified in Config.bib. If you change Config.bib, this check may be skipped. Currently the RAM end address is 28 MB, unless it is a non-U.S. image or you specify an IMGRAM* variable.</P>
+
+<P>Assuming Config.bib is the default 28 MB, otherwise change <B>OEMInit</B> by searching for IsDRAM in Cfwpc.c, the following steps show how to set up an x86 SDB with more than 64 MB of RAM.
+
+<OL type="1">
+	<LI>In %_WINCEROOT%\Public\Common\Oak\Csp\i486\Inc\Pc.h, change <code class="ce">CEPC_EXTRA_RAM_SIZE</code> to a value equal to the total amount of RAM you want to support minus the amount assumed by Config.bib; 28 MB is the default. 
+<P>For example, to support 128 MB of RAM, change the value to <code class="ce">0x6400000</code>. The default is <code class="ce">0x2400000</code>.
+</li>
+
+	<LI>In %_WINCEROOT%\Public\Common\Oak\Csp\i486\Oal\OEMInit.asm, change the first entry of <B>_OEMAddressTable</B> to map the total amount of memory to be supported. 
+<P>The default value is <code class="ce">0x04000000</code>, which is 64 MB. To support 128 MB of RAM, change the value to <code class="ce">0x8000000</code>.
+</li>
+
+	<LI>Build i486oal.lib with the following commands.
+<PRE class="code">cd %_WINCEROOT%\Public\Common\Oak\Csp\i486\Oal
+build -c
+sysgen i486oal</PRE>
+</li>
+
+	<LI>Build that platform with the following commands.
+<PRE class="code">cd %_WINCEROOT%\Platform\&lt;Platform&gt;\Kernel\Buildexe
+set WINCEREL=1
+build &#0150;c
+makeimg</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This is the minimal set of commands.</BLOCKQUOTE>
+</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbconsettingupx86sdbhardware.htm">Setting up the x86 SDB Hardware</A></P>
+
+<P><A HREF="pbconcreatingbootdiskforx86sdb.htm">Creating a Boot Disk for an x86 SDB</A></P>
+
+<P><A HREF="pbcondownloadingimagetox86sdb.htm">Downloading the x86 SDB OS Image</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Setting%20up%20an%20x86%20SDB%20with%20more%20than%2064%20MB%20of%20RAM&nbsp;(cmconsettingupx86sdbwithmorethan64mbofram.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

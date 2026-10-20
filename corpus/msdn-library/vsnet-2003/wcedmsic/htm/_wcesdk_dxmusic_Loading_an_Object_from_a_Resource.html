@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Loading an Object from a Resource</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Loading an Object from a Resource"/>
+<MSHelp:RLTitle Title="Loading an Object from a Resource"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Loading_an_Object_from_a_Resource"/>
+<MSHelp:Keyword Index="K" Term="loaders%2C DirectMusic, loading objects from resources"/>
+<MSHelp:Keyword Index="K" Term="objects, DirectMusic"/>
+<MSHelp:Keyword Index="K" Term="resources, loading DirectMusic objects from"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Loading_an_Object_from_a_Resource"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680648">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_loading_an_object_from_a_resource"></A>Loading an Object from a Resource</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Loading an object from a resource, or from some other location in memory, is done like loading an object from a file. For more information, see <A HREF="_wcesdk_dxmusic_loading_an_object_from_a_file.htm">Loading an Object from a File</A>. In this case, however, the <B>wszName</B>, <B>guidObject</B>, and <B>wszFileName</B> members of the <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_OBJECTDESC" TABINDEX="0">DMUS_OBJECTDESC</MSHelp:link> structure are irrelevant. Instead, you must obtain a pointer to the block of memory occupied by the object, and its size, and put these in the <B>pbMemData</B> and <B>llMemLength</B> members respectively, of the <B>DMUS_OBJECTDESC</B> structure. You must also set the DMUS_OBJ_MEMORY flag in the <B>dwFlags</B> member.</P>
+
+<P>The memory cannot be released once <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link> has been called because the loader keeps the pointer to the memory internally to facilitate caching data. If you want to clear it out, call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__SetObject" TABINDEX="0">IDirectMusicLoader::SetObject</MSHelp:link> with the same <B>DMUS_OBJECTDESC</B> descriptor, but with NULL in <B>pbMemData</B>. This is not an issue when loading from a resource because resource memory is not freed.</P>
+
+<P>The following code example loads a MIDI file from a resource into a segment.</P>
+
+<PRE class="code">HRESULT LoadMidi(HMODULE hMod, WORD ResourceID)
+{
+    HRESULT              hr;
+    DMUS_OBJECTDESC      ObjDesc;
+    IDirectMusicSegment* pSegment = NULL; 
+ 
+    HRSRC hFound = FindResource(hMod, 
+            MAKEINTRESOURCE(ResourceID), RT_RCDATA);
+    HGLOBAL hRes = LoadResource(hMod, hFound);
+ 
+    ObjDesc.dwSize = sizeof(DMUS_OBJECTDESC);
+    ObjDesc.guidClass = CLSID_DirectMusicSegment;
+    ObjDesc.dwValidData = DMUS_OBJ_CLASS | DMUS_OBJ_MEMORY;
+    ObjDesc.pbMemData = (BYTE *) LockResource(hRes);
+    ObjDesc.llMemLength = SizeofResource(hMod, hFound);
+ 
+    hr = m_pDXPerformance-&gt;m_pLoader-&gt;GetObject(
+            &amp;ObjDesc, IID_IDirectMusicSegment2, 
+            (void**) &amp;m_pSegment );
+ 
+    return hr;
+}</PRE>
+
+<P>Objects referred to by other objects must be loaded first. For example, if you load a segment that contains a reference to a style, the style must already be loaded for the segment to play correctly. You can also call <B>DirectMusicLoader::SetObject</B> on the style so that the segment can find it.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Loading%20an%20Object%20from%20a%20Resource&nbsp;(_wcesdk_dxmusic_loading_an_object_from_a_resource.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

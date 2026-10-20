@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CHeaderCtrl::DrawItem</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CHeaderCtrl::DrawItem"/>
+<MSHelp:RLTitle Title="CHeaderCtrl::DrawItem"/>
+<MSHelp:Keyword Index="A" Term="aflrfCHeaderCtrlcolcolDrawItem"/>
+<MSHelp:Keyword Index="K" Term="DrawItem method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCHeaderCtrlcolcolDrawItem"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="chdrctrl.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710503">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcheaderctrlcolcoldrawitem"></A>CHeaderCtrl::DrawItem</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework when a visual aspect of an owner-draw header control changes. The <I>itemAction</I> member of the <B>DRAWITEMSTRUCT</B> structure defines the drawing action that is to be performed.</P>
+
+<PRE class="syntax"><B>virtual void DrawItem( 
+LPDRAWITEMSTRUCT </B><I>lpDrawItemStruct</I> <B>);</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpDrawItemStruct</I></DT>
+
+<DD>Specifies a pointer to a <A HREF="aflrfdrawitemstruct.htm"><B>DRAWITEMSTRUCT</B></A> structure describing the item to be painted.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>By default, this method does nothing. Override this method to implement drawing for an owner-draw <B>CHeaderCtrl</B> object.</P>
+
+<P>The application should restore all graphics device interface (GDI) objects selected for the display context supplied in <I>lpDrawItemStruct</I> before this method terminates.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// NOTE: CMyHeaderCtrl is a class derived from CHeaderCtrl.
+// The CMyHeaderCtrl object was created as follows:
+//
+//  CMyHeaderCtrl myHeader;
+//  myHeader.Create(WS_CHILD|WS_VISIBLE|HDS_HORZ,
+//     CRect(10, 10, 600, 50), pParentWnd, 1);
+
+// This example implements the DrawItem method for a 
+// CHeaderCtrl-derived class that draws every item as a
+// 3D button using the text color red.
+void CMyHeaderCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
+{
+  // This code only works with header controls.
+  ASSERT(lpDrawItemStruct-&gt;CtlType == ODT_HEADER);
+
+  HDITEM hdi;
+  TCHAR  lpBuffer[256];
+
+  hdi.mask = HDI_TEXT;
+  hdi.pszText = lpBuffer;
+  hdi.cchTextMax = 256;
+
+  GetItem(lpDrawItemStruct-&gt;itemID, &amp;hdi);
+
+  // Draw the button frame.
+  ::DrawFrameControl(lpDrawItemStruct-&gt;hDC, 
+    &amp;lpDrawItemStruct-&gt;rcItem, DFC_BUTTON, DFCS_BUTTONPUSH);
+
+  // Draw the text items using the text color red.
+  COLORREF crOldColor = ::SetTextColor(lpDrawItemStruct-&gt;hDC,
+    RGB(255,0,0));
+  ::DrawText(lpDrawItemStruct-&gt;hDC, lpBuffer, strlen(lpBuffer),
+    &amp;lpDrawItemStruct-&gt;rcItem, DT_SINGLELINE|DT_VCENTER|DT_CENTER);
+  ::SetTextColor(lpDrawItemStruct-&gt;hDC, crOldColor);
+}</PRE>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxcmn.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcwndcolcolondrawitem.htm"><B>CWnd::OnDrawItem</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710503', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

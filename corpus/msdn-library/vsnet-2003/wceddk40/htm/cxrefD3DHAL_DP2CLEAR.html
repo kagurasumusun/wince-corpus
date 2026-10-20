@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DHAL_DP2CLEAR</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DHAL_DP2CLEAR"/>
+<MSHelp:RLTitle Title="D3DHAL_DP2CLEAR"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2CLEAR"/>
+<MSHelp:Keyword Index="K" Term="D3DHAL_DP2CLEAR"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2CLEAR"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665237">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefd3dhal_dp2clear"></A>D3DHAL_DP2CLEAR</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure contains all of the information that the driver needs to perform hardware-assisted clearing on the rendering target, depth buffer or stencil buffer.</P>
+
+<PRE class="syntax"><B>typedef struct _D3DHAL_DP2CLEAR {</B>
+<B>  DWORD</B>      <I>dwFlags</I><B>;</B>
+<B>  DWORD</B>      <I>dwFillColor</I><B>;</B>
+<B>  D3DVALUE</B>   <I>dvFillDepth</I><B>;</B>
+<B>  DWORD</B>      <I>dwFillStencil</I><B>;</B>
+<B>  RECT</B>       <I>Rects[1]</I><B>;</B>
+<B>} D3DHAL_DP2CLEAR, *LPD3DHAL_DP2CLEAR;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwFlags</B></DT>
+
+<DD>Specifies what buffer(s) the driver should clear. This member can be a bitwise OR of the following values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DCLEAR_TARGET</TD>
+<TD width=64%>The driver should clear the context's render target to the color specified by the <B>dwFillColor</B> member.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DCLEAR_STENCIL</TD>
+<TD width=64%>The driver should clear the context's stencil buffer to the value specified by the <B>dwFillStencil</B> member.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DCLEAR_ZBUFFER</TD>
+<TD width=64%>The driver should clear the context's depth buffer to the depth specified by the <B>dwFillDepth</B> member.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>D3DCLEAR_COMPUTERECTS</TD>
+<TD width=64%>If this flag is set, the specified rectangles should be clipped against the current viewport. Furthermore, it is possible that when D3DCLEAR_COMPUTERECTS is specified the number of rectangles to clear can be zero (the number of rectangles to clear can be found in the <B>wStateCount</B>/<B>wPrimtiveCount</B> union of the <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure for the clear). In this case the entire viewport should be cleared.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><B>dwFillColor</B></DT>
+
+<DD>Specifies the color that the driver should clear the context's render target to.</dd>
+
+<DT><B>dvFillDepth</B></DT>
+
+<DD>Specifies the value that the driver should use to set the depth in the context's depth buffer. This member can be a value in the interval 0.0 to 1.0. The driver should convert this value to an integer using the <B>dwZBitMask</B> member of the depth buffer's <MSHelp:link keywords="_wcesdk_DDPIXELFORMAT_ddraw" TABINDEX="0">DDPIXELFORMAT</MSHelp:link> structure.</dd>
+
+<DT><B>dwFillStencil</B></DT>
+
+<DD>Specifies the value that the driver should clear the context's stencil buffer to. This member can be an integer in the interval 0 to 2<SUP>n</SUP>-1, where <I>n</I> is the number of bits in the stencil buffer.</dd>
+
+<DT><B>Rects</B></DT>
+
+<DD>Specifies the rectangular areas of the buffer that the driver should clear. The rectangles are specified in screen coordinates. This member of the structure contains the first rectangle area to be blitted. The <B>wStateCount</B> member of the <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> contains the total number of rectangle areas to be blitted. The other (<B>wStateCount</B>-1) RECT structures required will follow the <B>D3DHAL_DP2CLEAR</B> structure without any padding.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This structure is used with the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor24">D3DDP2OP_CLEAR</A> command token to replace the legacy <B>D3dClear</B> and <B>D3dClear2</B> callbacks.</P>
+
+<P>When the number of rectangles is zero, the <B>D3DHAL_DP2CLEAR</B> data structure still includes space for a single RECT. Thus, the size of this single RECT should be included when advancing to the next DP2 instruction. However, the contents of the RECT in this case are undefined and the driver should not attempt to read them.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>D3dhal.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A>, <MSHelp:link keywords="_wcesdk_DDPIXELFORMAT_ddraw" TABINDEX="0">DDPIXELFORMAT</MSHelp:link>, <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor24">D3DDP2OP_CLEAR</A>, <A HREF="cxrefd3dhal_xxxstructures.htm">D3DHAL_XXX Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DHAL_DP2CLEAR&nbsp;(cxrefd3dhal_dp2clear.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

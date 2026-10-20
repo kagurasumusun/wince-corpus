@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>C or C++ References in MIPS Inline Assembly</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="C or C++ References in MIPS Inline Assembly"/>
+<MSHelp:RLTitle Title="C or C++ References in MIPS Inline Assembly"/>
+<MSHelp:Keyword Index="A" Term="ccrefCOrCReferencesInMIPSInlineAssembly"/>
+<MSHelp:Keyword Index="K" Term="inline assembly, C or C++ References in MIPS"/>
+<MSHelp:Keyword Index="K" Term="MIPS, C or C++ References in MIPS Inline Assembly"/>
+<MSHelp:Keyword Index="A" Term="ccrefCOrCReferencesInMIPSInlineAssembly"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: mipscom.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_813387">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ccrefcorcreferencesinmipsinlineassembly"></A>C or C++ References in MIPS Inline Assembly</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Inline assembly statements refer to C or C++ expressions and objects in several ways:
+
+<UL type="disc">
+	<LI>Arguments in an __asm statement
+<P>Inline assembly statements cannot refer to C or C++ expressions using direct reference such as the following:
+
+<PRE class="code">int myint = 0;
+__asm("add v0, a0, myint"); // error: Undefined symbol in expression.</PRE>
+
+<P>Instead, pass the value of the C or C++ expression as arguments in an __asm statement. The following example shows how to do this.
+
+<PRE class="code">int myint = 0;
+__asm("add v0, a0, %0", myint);</PRE>
+
+<P>You can pass multiple arguments to the __asm statement. The following example shows how to pass multiple arguments.
+
+<PRE class="code">#include &lt;stdio.h&gt;
+int sum(a, b)
+{
+    return a+b;
+}
+int main()
+{
+    int myint = 100;
+    int result;
+    __asm("add v0, %0, %1", myint, sum(200, 300));
+    __asm("sw v0, 0(%0)", &amp;result);
+    printf("result = %d\n", result);
+    return 0;
+}</PRE>
+</li>
+
+	<LI>Code label or object
+<P>Any code label or object, except for static labels, can be passed as an argument to an <B>__asm</B> string in which the arguments are represented by the placeholders %0, %1, %2, and so on. . For example, both of the following <B>_asm</B> statements are valid: 
+
+<PRE class="code"><B>__asm</B>("add %0, %1", sum, val * base); 
+<B>__asm</B>("swl %t0, (%0)", &amp;buffer [3]); </PRE>
+</li>
+</UL>
+
+<P>The compiler evaluates an <B>__asm</B> string with arguments in the same way it evaluates a function call. The compiler first generates instructions that load the indicated expressions as arguments. It handles arguments in an <B>__asm</B> statement in the same manner as function arguments, which are defined by a platform's calling standard. </P>
+
+<P>After the compiler generates instructions to load the arguments, if any, it assembles the actual instruction itself. A single instruction in an <B>__asm</B> statement may therefore cause multiple instructions to be generated. Judicious use of the argument placeholders enables you to control the order of evaluation. Expressions are evaluated in the order in which they are passed to the <B>__asm</B> statement. For example, consider the following <B>__asm</B> statement: </P>
+
+<PRE class="code"><B>__asm</B>("add %1, %0", height * get_coord (&amp;i), arr[i]); </PRE>
+
+<P>In this statement, the expression <B>height * get_coord (&amp;i)</B> is evaluated first, and therefore might affect the value of the later expression <B>arr[i]</B>. The placeholders %0 and %1 can appear in any order in the instruction string. </P>
+
+<P>Because the <B>__asm</B> statement follows the standard MIPS calling conventions, and because each individual <B>__asm</B> statement is treated as a function call, you do not need to worry about preserving arguments in the current function. The <B>__asm</B> statements do not corrupt the arguments in the surrounding function. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ccrefthe_asmkeywordinmipsinlineassembly.htm">The _asm Keyword in MIPS Inline Assembly</A></P>
+
+<P><A HREF="ccsammips__asmstatementregisters.htm">MIPS __asm Statement Registers</A></P>
+
+<P><A HREF="_clmips_cref_restrictions_to_mips___asm_statements.htm">Restrictions to MIPS __asm Statements</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, October 08, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;C%20or%20C++%20References%20in%20MIPS%20Inline%20Assembly&nbsp;(ccrefcorcreferencesinmipsinlineassembly.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

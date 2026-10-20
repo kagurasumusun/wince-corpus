@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>A Simple VBCE Task Manager</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="A Simple VBCE Task Manager"/>
+<MSHelp:RLTitle Title="A Simple VBCE Task Manager"/>
+<MSHelp:Keyword Index="A" Term="cetaskman"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Visual Basic, Windows CE Toolkit for"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Windows CE Toolkit for Visual Basic (VBCE), task manager"/>
+<MSHelp:Keyword Index="K" Term="task manager, VBCE (Microsoft Windows CE Toolkit for Visual Basic)"/>
+<MSHelp:Keyword Index="K" Term="task manager, Windows CE Toolkit for Visual Basic (VBCE)"/>
+<MSHelp:Keyword Index="K" Term="VBCE (Microsoft Windows CE Toolkit for Visual Basic), task manager"/>
+<MSHelp:Keyword Index="A" Term="cetaskman"/>
+<MSHelp:Attr Name="DevLang" Value="VB"/>
+<MSHelp:Attr Name="DevLangVers" Value="kbLangVB"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="VB"/>
+<MSHelp:Attr Name="ProductVers" Value="kbVBp"/>
+<MSHelp:Attr Name="Product" Value="VC"/>
+<MSHelp:Attr Name="ProductVers" Value="kbVC"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="In addition to several ancillary Microsoft Windows® CE development techniques, the Visual Basic® Task Manager sample demonstrates three fundamental concepts: creation of a Windows CE Automation object in Visual C++®; use of the Windows CE Automation object from Visual Basic; and manipulation of system and task resources in Windows CE."><meta name="keywords" content="Microsoft Windows CE, Microsoft Windows CE Toolkit for Visual Basic, Microsoft Windows CE Toolkit for Visual Basic (VBCE), VBCE (Microsoft Windows CE Toolkit for Visual Basic), Microsoft Windows CE Toolkit for Visual Basic (VBCE) task manager, task manager for Windows CE Toolkit for Visual Basic (VBCE), VBCE (Microsoft Windows CE Toolkit for Visual Basic) task manager, VBCE task manager, VBCE"><META name="rtfFileName" content="cetaskman.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_661584">
+
+<SCRIPT SRC="MS-HELP:/../commoner/samp/smplmgr.js"></SCRIPT>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cetaskman"></A>A Simple VBCE Task Manager</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Matt Woodward<BR>
+Microsoft Corporation</P>
+
+<P>July 1999</P>
+
+<P><B>Summary:</B> In addition to several ancillary Microsoft Windows® CE development techniques, the Visual Basic® Task Manager sample demonstrates three fundamental concepts: creation of a Windows CE Automation object in Visual C++®; use of the Windows CE Automation object from Visual Basic; and manipulation of system and task resources in Windows CE. (8 printed pages)</P>
+
+<P>Click <A HREF="http://download.microsoft.com/download/wince/Utility/1/WIN98MeXP/EN-US/5308.exe">here</A> to download the sample associated with this article from the Downloads Center.</P>
+
+<P>Developers familiar with building applications for the Windows desktop or server platforms will find that building applications for Windows CE involves little additional training. Windows CE contains a subset of the Win32® API found on traditional Windows machines, giving developers a similar programming model and interface for constructing compelling mobile solutions for the next generation of computing devices.</P>
+
+<H2 class="dtH1"><A NAME="cetaskman_over"></A>Overview</H2>
+
+<P>In addition to several ancillary Windows CE development techniques, the Visual Basic Task Manager sample demonstrates three fundamental concepts:
+
+<UL type="disc">
+	<LI>Creation of a Windows CE Automation object in Visual C++.</li>
+
+	<LI>Use of the Windows CE Automation object from Visual Basic.</li>
+
+	<LI>Manipulation of system and task resources in Windows CE.</li>
+</UL>
+
+<P>After building the user interface, an Automation object is used for interfacing with the Windows Toolhelp APIs to retrieve and manage system processes. Visual Basic’s Declare statement is then used to interface to custom functions that are defined in a DLL, as well as directly calling Win32 APIs. Using an appropriate combination of these technologies, you can create a wide variety of programs that utilize the full functionality of the Windows CE operating system.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>The sample application does not work under Windows CE Emulation because the emulation environments do not support the Toolhelp APIs.</BLOCKQUOTE>
+
+<H2 class="dtH1"><A NAME="cetaskman_sample"></A>The Sample Program</H2>
+
+<P>The sample program consists of a small window containing a tab control. On the first tab is the process list. Each process’s executable file name, process identifier thread count, and image base address are listed in a list view control. The list is automatically updated whenever a process is started or terminated, or process information changes.</P>
+
+<P>The second tab is a memory monitor. A graph of current memory usage and total available memory is maintained on this tab. You can use the memory monitor tab for monitoring system memory usage and detecting memory leaks in your running programs. Please note that, because system memory usage is constantly changing, several passes over a potentially leaky piece of code may be required to determine whether a memory leak exists or not.</P>
+
+<P class="fig"><CODE><IMG SRC="cetaskman1.gif" ALT="" BORDER=0><BR>
+<IMG SRC="cetaskman2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. Task Manager sample application task and memory tabs</B></P>
+
+<P>Finally, a pair of Visual Basic PictureBox controls are used to create a status bar at the bottom of the application. This status bar contains an updated display of the total memory available on the system, as well as the current memory usage.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Warning&nbsp;&nbsp;&nbsp;</B>Terminating processes can result in unexpected results, including loss of data or machine lockups. With this program, you can terminate any process, so please be careful. If you do accidentally terminate a system process, you can press the reset button on your Windows CE device to return your device operation to normal.</BLOCKQUOTE>
+
+<P>Code for the Visual Basic Task Manager is written using a combination of the Windows CE Toolkit for Visual C++ (VCCE) and the Windows CE Toolkit for Visual Basic (VBCE).</P>
+
+<H2 class="dtH1"><A NAME="cetaskman_works"></A>How It Works</H2>
+
+<P>When the program starts, the frames and controls on the frames are resized to fit the current geometry of the form. On devices that have larger displays, the program displays in one basic size. On other devices, including the Palm-Size PC, the form is displayed maximized in full-screen mode.</P>
+
+<H3 class="dtH1">Creating a Windows CE Automation Object</H3>
+
+<P>Windows CE Automation objects are COM controls that exist on the Windows CE device. Currently, only the Windows CE Toolkit for Visual C++ can be used to construct COM Automation objects for Windows CE-based devices. However, once created, Automation objects can be used from both Visual C++ and Visual Basic applications.</P>
+
+<H4 class="dtH1">Automation objects</H4>
+
+<P>An Automation object can be created to interface to a hardware device, for example a traffic controller. A traffic light object might have methods such as <B>LetEastWestGo</B>, and <B>LetNorthSouthGo</B>. It might support events for the traffic sensors in the street such as EastWestTrafficWaiting and NorthSouthTrafficWaiting. Using these methods and events, a simple traffic light controller could be developed.</P>
+
+<P>An Automation object can also be used to put a simple interface on a protocol. For example, an object could be designed that makes requests to a stock quote service using TCP/IP. Since network traffic can take time, a multithreaded object could be used to allow your user interface code to react while a request is being made. This object might have methods like <B>GetQuote(Symbol As String)</B> and fire events like QuoteReceived(Symbol As String, Quote as Currency). When a requested quote is received, the user interface can be updated.</P>
+
+<P>Automation objects can be used to extend the Windows CE Toolkit for Visual Basic whenever a rich object interface to a piece of software, hardware, GUI, or anything else you can imagine is needed.</P>
+
+<H4 class="dtH1">Automation task manager</H4>
+
+<P>The process list is maintained within an Automation object called <B>ProcInfo</B>. The <B>ProcInfo</B> object is a multithreaded object that asynchronously fires events back to the Visual Basic program to notify the program that something in the process list has changed. Whenever this event is fired, the list view is updated with the new process information.</P>
+
+<P class="fig"><CODE><IMG SRC="cetaskman3.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. Automation task manager</B></P>
+
+<P>The method <B>CProcesses::ThreadFunc</B> controls the thread that does most of the work in the <B>ProcInfo</B> object. Every four seconds, the thread wakes up, locks down its resources temporarily and rebuilds the process list. As it is rebuilding the list, it is looking for changes in the list. If any changes are detected, an event is fired by the control. This event is received in the Visual Basic program in the Module1 (taskman.bas) in the subroutine Processes_Changed. Processes_Changed calls the <B>frmTask.DisplayProcesses</B> that updates the process list in the form.</P>
+
+<PRE class="code">void CProcesses::ThreadFunc()
+{
+   InternalAddRef();
+
+   while(1)
+   {
+      HRESULT hr;
+      Sleep(2000);
+      
+      LockSnapshot();
+      if(m_fThreadTerminate)
+      {
+         m_fThreadTerminate = FALSE;
+         m_tidUpdate = 0;
+         UnlockSnapshot();
+         InternalRelease();
+         ExitThread(0);
+         return;
+      }
+
+      hr = BuildSnapshot();
+      UnlockSnapshot();
+      
+      if(m_fNotifyChanges &amp;&amp; hr == S_OK)
+      {
+         // Call ATL-generated code to fire event
+         Fire_Changed();
+      }
+      
+   }
+}
+</PRE>
+
+<P>It should be noted that this notification is only fired when the process list changes, not every two seconds. This technique of notification can be used for many things, including external hardware devices that have a feedback mechanism.</P>
+
+<H3 class="dtH1">Calling Automation Objects from Visual Basic</H3>
+
+<P>In order to use <B>ProcInfo</B> in your Visual Basic program, you must first create it. Since <B>ProcInfo</B> fires events, you should use the <B>CreateObjectWithEvents</B> function. <B>CreateObjectWithEvents</B> is unique to Windows CE development in Visual Basic, and allows you to dynamically create objects that fire events and be able to receive those events in your Visual Basic code. You can see how <B>ProcInfo</B> is created in the <B>Form_Load</B> method.</P>
+
+<PRE class="code">‘ create the object which browses the processes
+‘ Processes_ is the prefix of the event handler subroutines
+Set Processes = CreateObjectWithEvents(“Processes.Processes.1”, _
+“Processes_”)
+</PRE>
+
+<P>For further convenience, you can enable Visual Basic’s IntelliSense® feature on your newly created object by having Visual Basic load the type library for your object. This file is created when you build the <B>Automation</B> object in Visual C++. The file ends with the .tlb extension. Choose Project-&gt;References, and click the <B>Browse…</B> button.</P>
+
+<P>In the base of your ProcInfo project, if you have already built it, you will find the file ProcInfo.tlb. Open this file in the browse dialog. When you have completed this step, the <B>ProcInfo</B> object will have full IntelliSense support.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>Since the ProcInfo.tlb file will not exist the first time you load your Visual Basic project, you may get an error message. Ignore this message and load the type library using the method described above.</BLOCKQUOTE>
+
+<H3 class="dtH1">Memory Information and Task Manipulation</H3>
+
+<P>The memory information provided in this sample is generated using the Win32 API GlobalMemoryStatus. You can see the implementation of the two functions called by Visual Basic in ProcInfo.cpp in the <B>MemConsumed</B> and <B>MemTotal</B> functions. In the <B>MemConsumed</B> function, for example, the GlobalMemoryStatus API is invoked, returning data on the amount of memory currently in use by the system.</P>
+
+<PRE class="code">long MemConsumed()
+{
+   MEMORYSTATUS MemStatus;
+   
+   MemStatus.dwLength = sizeof(MemStatus);
+
+   GlobalMemoryStatus(&amp;MemStatus);
+
+   return MemStatus.dwTotalPhys - MemStatus.dwAvailPhys;
+}
+</PRE>
+
+<P>The task information is stored in the list view control. The key of the item is the actual process ID. The Visual Basic program passes this handle back to the <B>ProcInfo</B> object, where it is a simple task to use <B>OpenProcess</B> to terminate the process.</P>
+
+<PRE class="code">STDMETHODIMP CProcesses::TerminateProcess(long ProcessID)
+{
+   HANDLE hProcess;
+
+   hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, ProcessID);
+
+   if(hProcess != NULL)
+   {
+      ::TerminateProcess(hProcess, 0);
+   }
+
+   return S_OK;
+}
+</PRE>
+
+<H3 class="dtH1">Accessing Win32 API Functionality Without Automation</H3>
+
+<P>Applications built using the Windows CE Toolkit for Visual Basic are able to call some DLL functions through the Declare syntax. Declare is used to describe to Visual Basic any function or subroutine written in a DLL. Since applications built using VBCE’s Declare syntax cannot pass and retrieve structures, some APIs, like GlobalMemoryStatus, can be difficult to access.</P>
+
+<P>Formerly, an <B>Automation</B> object was required to access these APIs. While useful for some things, an <B>Automation</B> object is overkill for simple API access. To this end, writing small DLLs to access APIs that cannot be reached from Visual Basic programs can be extremely useful.</P>
+
+<P>Typically, a DLL that contains a very small amount of code like <B>MemConsumed</B> and <B>MemTotal</B> can be less than 5 kilobytes (K) in size, providing compact and powerful access to Win32 API functions. <B>MemConsumed</B> and <B>MemTotal</B> have been included in the ProcInfo DLL only for convenience.</P>
+
+<P>Creating a DLL like this is easily supported by VCCE. Simply run VCCE, select the <B>New</B> item from the <B>File</B> menu, and navigate to the <B>Projects</B> tab in the resulting dialog box. Then select the <B>WCE Dynamic-Link Library</B> project type. When VCCE asks what type of DLL to create, choose “A DLL that exports some symbols.”</P>
+
+<P>This provides the base DLL functionality for you to add your own functions, such as <B>MemConsumed</B> and <B>MemTotal</B>. From Visual Basic, you can use Declare to access APIs or functions contained in user-created DLLs.</P>
+
+<H2 class="dtH1"><A NAME="cetaskman_run"></A>Running the Sample</H2>
+
+<H3 class="dtH1">Building the DLL</H3>
+
+<P>First, start Visual C++ and load the Workspace for the ProcInfo component.</P>
+
+<P>To build the ProcInfo DLL, connect your Windows CE device to your desktop computer using Windows CE Services. Once you have a connection, choose the proper OS, CPU, and device in the ComboBoxes in the toolbar. From the build menu, select Build ProcInfo.DLL. The DLL will be automatically downloaded to your device and registered. It will then be ready for invocation from either a Visual Basic or a Visual C++ application.</P>
+
+<H3 class="dtH1">Running the Visual Basic Program</H3>
+
+<P>In order to run the sample on your Windows CE-base device, you must first compile and download the application to the remote device. Remember, the application only works on a physical device, as emulation does not support the necessary APIs used in the sample.</P>
+
+<P>Start Visual Basic and load the appropriate TaskMan project for your device class.</P>
+
+<P>In project properties, make sure the proper device is selected. Press the <B>Play</B> button and wait a moment for the application to be downloaded and executed.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661584', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+<script>addSample( "5308", "5308");</script>
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDispEventImpl</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="vcrefidispeventimpl"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_idispeventimpl"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_idispeventimpl"></A>IDispEventImpl</H1>
+
+<P>This class implements the <B>IDispEventImpl</B> interface, which provides support for connection points for an ATL COM object. Your COM object provides an event sink map which maps these connection points.</P>
+
+<P><B>IDispEventImpl</B> provides a way of implementing an event dispinterface without requiring you to supply implementation code for every method/event on that interface. <B>IDispEventImpl</B> provides implementations of the <B>IDispatch</B> methods. You only need to supply implementations for the events that you are interested in handling.</P>
+
+<PRE class=syntax><B>template
+&lt;UINT </B><I>nID</I><B>,
+class </B><I>T</I><B>,
+const IID* </B><I>pdiid</I><B> = &amp;IID_NULL,
+const GUID* </B><I>plibid</I><B> = &amp;GUID_NULL,
+WORD </B><I>wMajor</I><B> = 0,
+WORD </B><I>wMinor</I><B> = 0,
+class </B><I>tihclass</I><B> = CComTypeInfoHolder&gt;
+class ATL_NO_VTABLE IDispEventImpl :
+public IDispEventSimpleImpl&lt;</B><I>nID</I><B>, </B><I>T</I><B>, </B><I>pdiid</I><B>&gt;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nID</I></DT>
+
+<DD>A unique identifier for the source object. When <B>IDispEventImpl</B> is the base class for a composite control, use the resource ID of the desired contained control for this parameter. In other cases, use an arbitrary positive integer.</DD>
+
+<DT><I>T</I></DT>
+
+<DD>The user class, which is derived from <B>IDispEventImpl</B>.</DD>
+
+<DT><I>pdiid</I></DT>
+
+<DD>The pointer to the IID of the event dispinterface implemented by this class. This interface must be defined in the type library denoted by <I>plibid</I>, <I>wMajor</I>, and <I>wMinor</I>.</DD>
+
+<DT><I>plibid</I></DT>
+
+<DD>A pointer to the type library that defines the dispatch interface pointed to by <I>pdiid</I>. If <B>&amp;GUID_NULL</B>, the type library will be loaded from the object sourcing the events.</DD>
+
+<DT><I>wMajor</I></DT>
+
+<DD>The major version of the type library. The default value is 0.</DD>
+
+<DT><I>wMinor</I></DT>
+
+<DD>The minor version of the type library. The default value is 0.</DD>
+
+<DT><I>tihclass</I></DT>
+
+<DD>The class used to manage the type information for <I>T</I>. The default value is a class of type <B>CComTypeInfoHolder</B>; however, you can override this template parameter by providing a class of a type other than <B>CComTypeInfoHolder</B>.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>IDispEventImpl</B> works in conjunction with the event sink map in your class to route events to the appropriate handler function. </P>
+
+<P><B>To use this class:</B>
+
+<UL type=disc>
+	<LI>Add a <B>SINK_ENTRY</B> or <B>SINK_ENTRY_EX</B> macro to the event sink map for each event on each object that you want to handle.
+<P>When using <B>IDispEventImpl</B> as a base class of a composite control, you can call <B>AtlAdviseSinkMap</B> to establish and break the connection with the event sources for all entries in the event sink map. In other cases, or for greater control, call <B>DispEventAdvise</B> to establish the connection between the source object and the base class. Call <B>DispEventUnadvise</B> to break the connection.
+</LI>
+</UL>
+
+<P>You must derive from <B>IDispEventImpl</B> (using a unique value for <I>nID</I>) for each object for which you need to handle events. You can reuse the base class by unadvising against one source object then advising against a different source object, but the maximum number of source objects that can be handled by a single object at one time is limited by the number of <B>IDispEventImpl</B> base classes.</P>
+
+<P><B>IDispEventImpl</B> gets type information about the interface from a type library rather than having it supplied as a pointer to a <B>_ATL_FUNC_INFO</B> structure. </P>
+
+<P><B>IDispEventImpl</B> provides its own implementation of <B>IUnknown::QueryInterface</B> enabling each <B>IDispEventImpl</B> base class to act as a separate COM identity while still allowing direct access to class members in your main COM object.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h.<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="idisptch.htm"><B>IDispatchImpl</B></A>, <A HREF="atlapi2_38.htm"><B>SINK_ENTRY</B></A>, <A HREF="atlapi2_39.htm"><B>SINK_ENTRY_EX</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

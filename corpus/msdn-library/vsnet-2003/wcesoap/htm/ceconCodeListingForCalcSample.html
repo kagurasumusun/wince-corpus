@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Code Listing for the Calc Sample</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Code Listing for the Calc Sample"/>
+<MSHelp:RLTitle Title="Code Listing for the Calc Sample"/>
+<MSHelp:Keyword Index="A" Term="ceconCodeListingForCalcSample"/>
+<MSHelp:Keyword Index="A" Term="ceconCodeListingForCalcSample"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: soap_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_802112">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconcodelistingforcalcsample"></A>Code Listing for the Calc Sample</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following code example shows a simple calculation routine similar to the one found in <A HREF="ceconsoapsampleapplications.htm">SOAP Sample Applications</A>, except that the following sample does not require Microsoft Foundation Classes (MFC) in the platform image. </P>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;mssoap.h&gt;
+LPTSTR WRAPPER_ELEMENT_NAMESPACE = _T("http://tempuri.org/message/");
+#define CHK_HR(x) if(FAILED(x)) goto Done;
+void Add()
+{
+   ISoapSerializer *pSerializer = NULL;
+   ISoapReader     *pReader = NULL;
+   ISoapConnector  *pConnector = NULL;
+   VARIANT varEndPointURL;
+   VARIANT varSoapAction;
+   VARIANT varInConnectorStream;
+   VARIANT varOutReaderStream;
+   VARIANT_BOOL varBoolSucceeded;
+   
+   BSTR szResult = NULL;
+   
+   IStream *pInStream = NULL;
+   IStream *pOutStream = NULL;
+   
+   IXMLDOMElement *pRPCResult = NULL;
+   
+   //init VARIANT's
+   VariantInit(&amp;varEndPointURL);
+   VariantInit(&amp;varSoapAction);
+   VariantInit(&amp;varInConnectorStream);
+   VariantInit(&amp;varOutReaderStream);
+   
+   // Connect to the service
+   CHK_HR(CoCreateInstance(CLSID_HttpConnector, 
+                         NULL, 
+                         CLSCTX_INPROC_SERVER, 
+                         IID_ISoapConnector, 
+                         (void **)&amp;pConnector));
+ 
+   V_VT(&amp;varEndPointURL)   = VT_BSTR;
+   V_BSTR(&amp;varEndPointURL) = SysAllocString(L"http://localhost/Calc.wsdl");
+   CHK_HR(pConnector-&gt;put_Property(L"EndPointURL", varEndPointURL));
+   
+   // Begin message
+   V_VT(&amp;varSoapAction)   = VT_BSTR;
+   V_BSTR(&amp;varSoapAction) = SysAllocString(L"http://tempuri.org/action/Calc.Add");       
+   CHK_HR(pConnector-&gt;put_Property(L"SoapAction", varSoapAction));
+   CHK_HR(pConnector-&gt;BeginMessage());
+   // Create the SoapSerializer
+   CHK_HR(CoCreateInstance(CLSID_SoapSerializer, 
+                     NULL, 
+                     CLSCTX_INPROC_SERVER, 
+                     IID_ISoapSerializer, 
+                     (void **)&amp;pSerializer));
+   // Connect the serializer to the input stream of the connector
+   CHK_HR(pConnector-&gt;get_InputStream(&amp;pInStream));
+          
+   V_VT(&amp;varInConnectorStream) = VT_UNKNOWN;
+   V_UNKNOWN(&amp;varInConnectorStream) = pInStream;
+      pInStream-&gt;AddRef();  
+        
+   CHK_HR(pSerializer-&gt;Init(varInConnectorStream));
+   // Build the SOAP Message
+   CHK_HR(pSerializer-&gt;startEnvelope(L"",L"",L""));
+   CHK_HR(pSerializer-&gt;startBody(L""));
+   CHK_HR(pSerializer-&gt;startElement(L"Add",WRAPPER_ELEMENT_NAMESPACE,L"",L"m"));
+   CHK_HR(pSerializer-&gt;startElement(L"A",L"",L"",L""));
+   CHK_HR(pSerializer-&gt;writeString(L"5"));
+   CHK_HR(pSerializer-&gt;endElement());
+   CHK_HR(pSerializer-&gt;startElement(L"B",L"",L"",L""));
+   CHK_HR(pSerializer-&gt;writeString(L"10"));
+   CHK_HR(pSerializer-&gt;endElement());
+   CHK_HR(pSerializer-&gt;endElement());
+   CHK_HR(pSerializer-&gt;endBody());
+   CHK_HR(pSerializer-&gt;endEnvelope());
+   
+   // Send the message to the Web service
+   CHK_HR(pConnector-&gt;EndMessage());      
+   // Read the response
+   CHK_HR(CoCreateInstance(CLSID_SoapReader, 
+                      NULL, 
+                      CLSCTX_INPROC_SERVER, 
+                      IID_ISoapReader, 
+                      (void **)&amp;pReader));
+   // Connect the reader to the output stream of the connector
+   CHK_HR(pConnector-&gt;get_OutputStream(&amp;pOutStream));
+   
+   V_VT(&amp;varOutReaderStream) = VT_UNKNOWN;
+   V_UNKNOWN(&amp;varOutReaderStream) = pOutStream;
+        pOutStream-&gt;AddRef();
+   
+   CHK_HR(pReader-&gt;load(varOutReaderStream, L"", &amp;varBoolSucceeded));
+   
+   CHK_HR(pReader-&gt;get_RPCResult(&amp;pRPCResult));
+   CHK_HR(pRPCResult-&gt;get_text(&amp;szResult));
+   
+   
+   // Display the result
+   wprintf(L"Answer: %s\n", szResult);
+   
+Done:
+    
+   //cleanup
+   VariantClear(&amp;varEndPointURL);
+   VariantClear(&amp;varSoapAction);
+   VariantClear(&amp;varInConnectorStream);
+   VariantClear(&amp;varOutReaderStream);
+   
+   if(pSerializer)
+      pSerializer-&gt;Release();  
+   if(pReader)
+      pReader-&gt;Release();
+   if(pConnector)
+      pConnector-&gt;Release();  
+   if(pInStream)
+      pInStream-&gt;Release();
+   if(pOutStream)
+      pOutStream-&gt;Release();
+   if(pRPCResult)
+      pRPCResult-&gt;Release();   
+      
+   if(szResult)
+      SysFreeString(szResult);
+}
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd )
+{
+   CoInitializeEx(NULL, COINIT_MULTITHREADED);
+   Add();
+   CoUninitialize();
+   return 0;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Code%20Listing%20for%20the%20Calc%20Sample&nbsp;(ceconcodelistingforcalcsample.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

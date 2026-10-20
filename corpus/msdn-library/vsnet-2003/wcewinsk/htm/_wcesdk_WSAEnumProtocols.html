@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSAEnumProtocols</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSAEnumProtocols"/>
+<MSHelp:RLTitle Title="WSAEnumProtocols"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAEnumProtocols"/>
+<MSHelp:Keyword Index="K" Term="WSAEnumProtocols"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAEnumProtocols"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720517">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_wsaenumprotocols"></A>WSAEnumProtocols</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function retrieves information about available transport protocols.</P>
+
+<PRE class="syntax"><B>int WSAEnumProtocols(</B>
+<B>LPINT</B> <I>lpiProtocols</I><B>,</B>
+<B>LPWSAPROTOCOL_INFO</B> <I>lpProtocolBuffer</I><B>,</B>
+<B>ILPDWORD</B> <I>lpdwBufferLength</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpiProtocols</I></DT>
+
+<DD>[in] Null-terminated array of <I>iProtocol</I> values. This parameter is optional; if <I>lpiProtocols</I> is NULL, information on all available protocols is returned. Otherwise, information is retrieved only for those protocols listed in the array. </dd>
+
+<DT><I>lpProtocolBuffer</I></DT>
+
+<DD>[out] Buffer that is filled with <A HREF="cerefwsaprotocol_info.htm">WSAPROTOCOL_INFO</A> structures. </dd>
+
+<DT><I>lpdwBufferLength</I></DT>
+
+<DD>[in/out] On input, the count of bytes in the <I>lpProtocolBuffer</I> buffer passed to <B>WSAEnumProtocols</B>. On output, the minimum buffer size that can be passed to <B>WSAEnumProtocols</B> to retrieve all the requested information. This routine has no ability to enumerate over multiple calls; the passed-in buffer must be large enough to hold all entries for the routine to succeed. This reduces the complexity of the API and should not pose a problem because the number of protocols loaded on a machine is typically small. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs, <B>WSAEnumProtocols</B> returns the number of protocols to be reported. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code can be retrieved by calling the <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A> function. The following table shows a list of possible error values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Error value </TH>
+<TH width=73%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSANOTINITIALISED </TD>
+<TD width=73%>A successful <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> call must occur before using the <B>WSAEnumProtocols</B> function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENETDOWN </TD>
+<TD width=73%>The network subsystem has failed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINPROGRESS </TD>
+<TD width=73%>A blocking Winsock call is in progress. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEINVAL </TD>
+<TD width=73%>One of the specified parameters was invalid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAENOBUFS </TD>
+<TD width=73%>The buffer length was too small to receive all the relevant <B>WSAPROTOCOL_INFO</B> structures and associated information. Pass in a buffer at least as large as the value returned in <I>lpdwBufferLength</I>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>WSAEFAULT </TD>
+<TD width=73%>One or more of the <I>lpiProtocols</I>, <I>lpProtocolBuffer</I>, or <I>lpdwBufferLength</I> arguments are not a valid part of the user address space. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>WSAEnumProtocols</B> function is used to discover information about the collection of transport protocols and protocol chains installed on the local machine. Because layered protocols are only usable by applications when installed in protocol chains, information on layered protocols is not included in <I>lpProtocolBuffer</I>. The <I>lpiProtocols</I> parameter can be used as a filter to constrain the amount of information provided. Often, <I>lpiProtocols</I> will be supplied as a NULL pointer that will cause the function to return information on all available transport protocols and protocol chains.</P>
+
+<P>A <B>WSAPROTOCOL_INFO</B> structure is provided in the buffer pointed to by <I>lpProtocolBuffer</I> for each requested protocol. If the supplied buffer is not large enough (as indicated by the input value of <I>lpdwBufferLength</I> ), the value pointed to by <I>lpdwBufferLength</I> will be updated to indicate the required buffer size. The application should then obtain a large enough buffer and call this <B>WSAEnumProtocols</B> again.</P>
+
+<P>The order in which the <B>WSAPROTOCOL_INFO</B> structures appear in the buffer coincides with the order in which the protocol entries were registered by the service provider using ws2.dll or with any subsequent reordering that occurred through the Windows Sockets utility or DLL supplied for establishing default TCP/IP providers.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSAEnumProtocols&nbsp;(_wcesdk_wsaenumprotocols.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

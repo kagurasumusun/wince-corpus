@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CRgn::CombineRgn</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_crgn_combinergn"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_crgn_combinergn"></A>CRgn::CombineRgn</H1>
+
+<P>This method creates a new GDI region by combining two existing regions. The regions are combined as specified by <I>nCombineMode</I>. </P>
+
+<P>The two specified regions are combined, and the resulting region handle is stored in the <B>CRgn</B> object. Therefore, whatever region is stored in the <B>CRgn</B> object is replaced by the combined region. </P>
+
+<P>Use <A HREF="crgn_4.htm"><B>CopyRgn</B></A> to simply copy one region into another region. </P>
+
+<PRE class=syntax><B>int CombineRgn(
+CRgn* </B><I>pRgn1</I><B>,
+CRgn* </B><I>pRgn2</I><B>,
+int </B><I>nCombineMode</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pRgn1</I></DT>
+
+<DD>Identifies an existing region.</DD>
+
+<DT><I>pRgn2</I></DT>
+
+<DD>Identifies an existing region.</DD>
+
+<DT><I>nCombineMode</I></DT>
+
+<DD>Specifies the operation to be performed when combining the two source regions. It can be any one of the following values:
+
+<UL type=disc>
+	<LI>RGN_AND&nbsp;&nbsp;&nbsp;Uses overlapping areas of both regions, an intersection.</LI>
+
+	<LI>RGN_COPY&nbsp;&nbsp;&nbsp;Creates a copy of region 1; it is identified by <I>pRgn1</I>.</LI>
+
+	<LI>RGN_DIFF&nbsp;&nbsp;&nbsp;Creates a region consisting of the areas of region 1, identified by <I>pRgn1</I>, that are not part of region 2, which is identified by <I>pRgn2</I>.</LI>
+
+	<LI>RGN_OR&nbsp;&nbsp;&nbsp;Combines both regions in their entirety, a union.</LI>
+
+	<LI>RGN_XOR&nbsp;&nbsp;&nbsp;Combines both regions but removes overlapping areas.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Specifies the type of the resulting region. It can be one of the following values:
+
+<UL type=disc>
+	<LI>COMPLEXREGION&nbsp;&nbsp;&nbsp;New region has overlapping borders.</LI>
+
+	<LI>ERROR&nbsp;&nbsp;&nbsp;No new region created.</LI>
+
+	<LI>NULLREGION&nbsp;&nbsp;&nbsp;New region is empty.</LI>
+
+	<LI>SIMPLEREGION&nbsp;&nbsp;&nbsp;New region has no overlapping borders.</LI>
+</UL>
+
+<H4>Example</H4>
+
+<PRE>CRgn&nbsp;&nbsp;rgnA, rgnB, rgnC;
+
+VERIFY(rgnA.CreateRectRgn( 50, 50, 150, 150 ));
+VERIFY(rgnB.CreateRectRgn( 100, 100, 200, 200 ));
+VERIFY(rgnC.CreateRectRgn( 0, 0, 50, 50 ));
+
+int nCombineResult = rgnC.CombineRgn( &amp;rgnA, &amp;rgnB, RGN_OR );
+ASSERT( nCombineResult != ERROR || nCombineResult != NULLREGION );
+
+CBrush br1, br2, br3;
+VERIFY(br1.CreateSolidBrush( RGB(255, 0, 0) ));  // rgnA Red
+VERIFY(pDC-&gt;FillRgn( &amp;rgnA, &amp;br1,));
+VERIFY(br2.CreateSolidBrush( RGB(0, 255, 0) ));  // rgnB Green
+VERIFY(pDC-&gt;FillRgn( &amp;rgnB, &amp;br2, ));
+VERIFY(br3.CreateSolidBrush( RGB(0, 0, 255) ));  // rgnC Blue
+VERIFY(pDC-&gt;FillRgn( &amp;rgnC, &amp;br3, ));
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="crgn_4.htm"><B>CRgn::CopyRgn</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

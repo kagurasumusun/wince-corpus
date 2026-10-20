@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::BltPrepare</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="GPE::BltPrepare"/>
+<MSHelp:RLTitle Title="GPE::BltPrepare"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_GPE_BltPrepare"/>
+<MSHelp:Keyword Index="K" Term="GPE, BltPrepare class"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: intf_1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_gpe_bltprepare"></A>GPE::BltPrepare</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method, which is called prior to a sequence of clipped blit operations, identifies the appropriate functions needed to perform individual blits. </P>
+
+<PRE class="syntax"><B>SCODE GPE::BltPrepare(</B>
+<B>GPEBltParms</B> <B>*</B><I>pBltParms</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>pBltParms</I></DT>
+
+<DD>Pointer to a <B>GPEBltParms</B> structure containing parameters for the blit operation.</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>S_OK indicates success.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The following code example shows the simplest acceptable implementation for <B>GPE::BltPrepare</B>. </P>
+
+<PRE class="code">pBltParms-&gt;pBlt = EmulatedBlt;
+return S_OK;</PRE>
+
+<P>This action causes the emulated blit function provided with GPE to be used for blit operations.</P>
+
+<P>For improved performance, the <B>BltPrepare</B> method can examine the characteristics of the blit and the associated surfaces defined in <B>GPEBltParms</B> to determine whether an accelerated form of the blit is used. The following code example shows how to determine the operations that are likely to be implemented in hardware.</P>
+
+<PRE class="code">if( pBltParms-&gt;pDst-&gt;InVideoMemory() &amp;&amp; pBltParms-&gt;rop4 == 0x0000 )
+  // This is a fill of BLACKNESS in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory() &amp;&amp; pBltParms-&gt;rop4 == 0xFFFF )
+  // This is a fill of WHITENESS in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;rop4 == 0xF0F0
+&amp;&amp; pBltParms-&gt;solidColor != 0xFFFFFFFF )
+  // This is a fill of a solid color in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;pSrc-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;rop4 == 0xCCCC
+&amp;&amp; !pBltParms-&gt;pLookup
+&amp;&amp; !pBltParms-&gt;pConvert )
+  // This is a source copy (SRCCOPY) between two surfaces, both in
+  // video memory, with no color translation.</PRE>
+
+<P>To accelerate these types of blit, <B>BltPrepare</B> places the address of the accelerated function in the <I>pBlt</I> member of the <B>GPEBltParms</B> structure, instead of the pointer to the <B>EmulatedBlt</B> function. For operations such as solid color fills, the driver can prepare the hardware. For example, the driver can place a solid color into the appropriate register of the hardware. This eliminates the need to repeat the same action in every call to the accelerated blit handler.</P>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;GPE::BltPrepare&nbsp;(_wceddk_gpe_bltprepare.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

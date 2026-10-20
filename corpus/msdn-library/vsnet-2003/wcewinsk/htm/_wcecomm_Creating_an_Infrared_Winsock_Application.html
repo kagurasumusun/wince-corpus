@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating an Infrared Winsock Application</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating an Infrared Winsock Application"/>
+<MSHelp:RLTitle Title="Creating an Infrared Winsock Application"/>
+<MSHelp:Keyword Index="A" Term="_wcecomm_Creating_an_Infrared_Winsock_Application"/>
+<MSHelp:Keyword Index="K" Term="applications, infrared Winsock 1.1 applications"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: winsock.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_732008">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcecomm_creating_an_infrared_winsock_application"></A>Creating an Infrared Winsock Application</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Some Winsock functions work differently with IrDA than with TCP/IP. The main differences are described in this section.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;You cannot open more than 80 IR sockets simultaneously. If more than 80 IR sockets are open at the same time a <MSHelp:link keywords="_wcesdk_Win32_HeapAlloc" TABINDEX="0">HeapAlloc</MSHelp:link> failure will result.</BLOCKQUOTE>
+
+<P>Conventional Winsock name service is best suited to fixed networks, in which the group of devices that can accept a socket connection is relatively static. Conversely, IrDA is designed to handle browsing for resources within range. It works in an extemporary manner, and devices disconnect and connect frequently as they move in and out of range.</P>
+
+<P>Because of these differences, IrSock does not use the conventional Winsock name service functions. Instead, name service is incorporated into the communication stream.</P>
+
+<P>The IrDA discovery process on Win9x operates differently than it does with Windows NT and Windows CE. The following Winsock API calls are required for discovery on Windows 95/98:
+
+<OL type="1">
+	<LI>Put the IrDA device into discovery mode by calling setsockopt(hIrdaSock, SOL_IRLMP, IRLMP_DISCOVERY_MODE, &amp;Mode, sizeof(Mode)); where Mode is an unsigned int whose value is not zero. </li>
+
+	<LI>Call the winsock function <B>recv</B>(hIrdaSock, (char *)&amp;DevList, <B>sizeof</B>(DevList), 0); where DevList is an array of DEVICELIST (see af_irda.h). </li>
+
+	<LI>Call <B>setsockopt</B>(hIrdaSock, SOL_IRLMP, IRLMP_DISCOVERY_MODE, &amp;Mode, <B>sizeof</B>(Mode); where Mode is zero. This disables discovery mode.</li>
+</OL>
+
+<P>In contrast, the IrDA discovery process on Windows NT and Windows CE requires one winsock function call: getsockopt(hIrdaSock, SOL_IRLMP, IRLMP_ENUMDEVICES, &amp;DevList, &amp;DevListLen).</P>
+
+<P>Addressing is based on <I>Logical Service Access Point Selectors</I> (LSAP-SELs), numbered from 1 through 127. Because of the small range of values available, it is usually better not to bind sockets directly to an LSAP-SEL. Instead, the <I>Information Access Service</I> (IAS) provides a means for dynamic binding of sockets to LSAP-SELs.</P>
+
+<P>To use IAS, a server application binds a socket to an IAS service name. The client application uses the service name when using the <B>connect</B> function. Neither application must be notified of the LSAP-SEL assigned by the IAS.</P>
+
+<P>Windows CE includes socket options to access the unique features of the IrDA protocol, IRLMP_IAS_SET, IRMP_IRLPT_MODE, and IRLMP_EXCLUSIVE_MODE.</P>
+
+<P>IRLMP_IAS_SET enables an application to set a single class in the local IAS. The application specifies the class to set, the attribute, and the attribute type. The application must allocate a buffer of the necessary size for the passed parameters. </P>
+
+<P>The basic procedure for using IrSock is similar to that for Winsock. IrSock uses only the TCP stream socket connection-oriented communication method. Server applications and client applications have different procedures.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>You must include the Af_irda.h header file in your application to access IrSock features in the Winsock functions.</BLOCKQUOTE>
+
+<P class="labelproc"><B>To create and use a socket with a server application</B>
+
+<OL type="1">
+	<LI>Open a stream socket with <A HREF="_wcesdk_socket.htm">socket</A>. Use AF_IRDA for the address format parameter, <B>SOCK_STREAM</B> for the <I>type</I> and NULL for the <I>protocol</I> parameter.</li>
+
+	<LI>Bind the service name to the socket with <A HREF="_wcesdk_bind.htm">bind</A>. Pass a <B>SOCKADDR_IRDA</B> structure for the <I>address</I> parameter.</li>
+
+	<LI>Listen for an incoming client connection with <A HREF="_wcesdk_listen_function.htm">listen</A>.</li>
+
+	<LI>Accept an incoming client with <A HREF="_wcesdk_accept_function.htm">accept</A>.</li>
+
+	<LI>Use <A HREF="_wcesdk_send.htm">send</A> and <A HREF="_wcesdk_recv.htm">recv</A> to communicate with the client. </li>
+
+	<LI>Close the socket with the <A HREF="_wcesdk_closesocket.htm">closesocket</A> function.</li>
+</OL>
+
+<P>For an example of an Infrared Sockets server application, see <A HREF="_wcecomm_infrared_sockets_server.htm">Infrared Sockets Server</A>. </P>
+
+<P class="labelproc"><B>To create and use a socket with a client application</B>
+
+<OL type="1">
+	<LI>Open a stream socket with <B>socket</B>, as with the server application. Use AF_IRDA for the address format parameter, <B>SOCK_STREAM</B> for the <I>type</I> and NULL for the <I>protocol</I> parameter</li>
+
+	<LI>Search for the server, and retrieve its identifier with <A HREF="_wcesdk_getsockopt.htm">getsockopt</A>.</li>
+
+	<LI>Connect to the server with the <A HREF="_wcesdk_connect_function.htm">connect</A> function using <B>SOCKADDR_IRDA</B> for the <I>name</I> parameter.</li>
+
+	<LI>Use <B>send</B> and <B>recv</B> to communicate with the server.</li>
+
+	<LI>Close the socket with <B>closesocket</B>.</li>
+</OL>
+
+<P>For an example of an Infrared Sockets client application, see <A HREF="_wcecomm_infrared_sockets_client.htm">Infrared Sockets Client</A>.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>When using Microsoft Windows 98 as a server and Windows CE as a client, <A HREF="_wcesdk_getsockopt.htm">getsockopt</A> can be used to locate the corresponding device address. However, when using Windows CE as the server and Windows 98 as the client, you must use <A HREF="_wcesdk_setsockopt.htm">setsockopt</A> in the client application to set a discovery mode so that the Windows CE server application can first receive a device information packet.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcecomm_infrared_sockets_server.htm">Infrared Sockets Server</A></P>
+
+<P><A HREF="_wcecomm_infrared_sockets_client.htm">Infrared Sockets Client</A></P>
+
+<P><A HREF="_wcecomm_developing_a_winsock_application.htm">Winsock Application Development</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20an%20Infrared%20Winsock%20Application&nbsp;(_wcecomm_creating_an_infrared_winsock_application.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

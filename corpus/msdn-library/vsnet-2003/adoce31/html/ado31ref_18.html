@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Append (Tables)</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="Append (Tables)"/>
+<MSHelp:RLTitle Title="Append (Tables)"/>
+<MSHelp:Keyword Index="A" Term="ado31ref_18"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce31_append_tables_"></A><SUP></SUP>Append (Tables)</H1>
+
+<P>This method adds a new <B>Table</B> object to the <B>Tables</B> collection.</P>
+
+<H4>Syntax</H4>
+
+<PRE class=syntax>Tables.Append Table</PRE>
+
+<H4>Parameters </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Parameter</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Table</TD>
+<TD width=50%>A <B>Variant</B> value containing a reference to the <B>Table</B> to append or the name of the table to create and append</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Return Values </H4>
+
+<P>None</P>
+
+<H4>Remarks</H4>
+
+<P>An error will occur if the provider does not support creating tables.</P>
+
+<H4>Example</H4>
+
+<P>The following code demonstrates how to use <B>Append</B> (Table).</P>
+
+<PRE>Dim m_cat, m_col, tbl, col, strConn, stTableName, stColumnName, stExp, stAct
+
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_cat = CreateObject("adoxce.catalog.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_col = CreateObject("adoxce.column.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set tbl = CreateObject("adoxce.table.3.1")
+&nbsp;&nbsp;&nbsp;&nbsp;Set col = CreateObject("adoxce.column.3.1")
+
+&nbsp;&nbsp;&nbsp;&nbsp;'strConn = "provider=microsoft.sqlserver.oledb.ce.1.0;data source=pubs.db;"
+&nbsp;&nbsp;&nbsp;&nbsp;strConn = "provider=microsoft.jet.oledb.4.0;data source=temp.mdb;"
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.ActiveConnection = strConn
+
+&nbsp;&nbsp;&nbsp;&nbsp;stTableName = "ColAppScen18"
+&nbsp;&nbsp;&nbsp;&nbsp;If adox_ExistsTable(m_cat, stTableName)
+
+m_cat.Tables.Delete stTableName
+&nbsp;&nbsp;&nbsp;&nbsp;End If
+
+&nbsp;&nbsp;&nbsp;&nbsp;tbl.Name = stTableName
+
+&nbsp;&nbsp;&nbsp;&nbsp;stColumnName = "Column1"
+&nbsp;&nbsp;&nbsp;&nbsp;m_col.Name = stColumnName
+&nbsp;&nbsp;&nbsp;&nbsp;m_col.Type = adSmallInt
+
+&nbsp;&nbsp;&nbsp;&nbsp;tbl.Columns.Append m_col
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables.Append tbl
+
+&nbsp;&nbsp;&nbsp;&nbsp;'create a new column
+&nbsp;&nbsp;&nbsp;&nbsp;col.Name = "Column2"
+&nbsp;&nbsp;&nbsp;&nbsp;col.Type = adSmallInt
+
+&nbsp;&nbsp;&nbsp;&nbsp;'Set parentcatalog
+&nbsp;&nbsp;&nbsp;&nbsp;col.ParentCatalog = m_cat
+
+&nbsp;&nbsp;&nbsp;&nbsp;col.Properties.Refresh
+
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables(stTableName).Columns.Append col
+
+&nbsp;&nbsp;&nbsp;&nbsp;stExp = "Column2"
+&nbsp;&nbsp;&nbsp;&nbsp;stAct = m_cat.Tables(stTableName).Columns(1).Name
+
+&nbsp;&nbsp;&nbsp;&nbsp;'cleanup
+&nbsp;&nbsp;&nbsp;&nbsp;m_cat.Tables.Delete stTableName
+&nbsp;&nbsp;&nbsp;&nbsp;Set tbl = Nothing
+&nbsp;&nbsp;&nbsp;&nbsp;Set col = Nothing
+&nbsp;&nbsp;&nbsp;&nbsp;Set m_cat = Nothing
+
+End Sub
+
+Function adox_ExistsTable(cat, stName)
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;Dim bFound, tbl
+
+&nbsp;&nbsp;&nbsp;&nbsp;bFound = False
+&nbsp;&nbsp;&nbsp;&nbsp;For Each tbl In cat.Tables
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If UCase(tbl.Name) = UCase(stName) Then
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bFound = True
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Exit For
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End If
+&nbsp;&nbsp;&nbsp;&nbsp;Next
+
+&nbsp;&nbsp;&nbsp;&nbsp;adox_ExistsTable = bFound
+
+End Function
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

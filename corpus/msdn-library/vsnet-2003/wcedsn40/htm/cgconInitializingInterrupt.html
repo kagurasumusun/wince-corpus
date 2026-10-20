@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Initializing an Interrupt</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Initializing an Interrupt"/>
+<MSHelp:RLTitle Title="Initializing an Interrupt"/>
+<MSHelp:Keyword Index="A" Term="cgconInitializingInterrupt"/>
+<MSHelp:Keyword Index="K" Term="initialization, interrupts"/>
+<MSHelp:Keyword Index="K" Term="interrupts, initializing"/>
+<MSHelp:Keyword Index="K" Term="ISRs, initializing interrupts"/>
+<MSHelp:Keyword Index="K" Term="OAL, initializing interrupts"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, initializing interrupts"/>
+<MSHelp:Keyword Index="A" Term="cgconInitializingInterrupt"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748528">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconinitializinginterrupt"></A>Initializing an Interrupt</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE initializes an interrupt either in <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> or as part of device driver initialization. Part of the interrupt initialization can also include the creation of an IST.</P>
+
+<P>The kernel begins the interrupt initialization process by calling <B>OEMInit</B>. Use <B>OEMInit</B> to register an ISR by calling the <MSHelp:link keywords="cmrefHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function. <B>HookInterrupt</B> associates an ISR with a hardware IRQ. Further, you must use <B>OEMInit</B> to register the interrupts for the system timer because subsequent code, such as the scheduler, relies on a system timer.</P>
+
+<P>Some device drivers may require handling that cannot be completed in an ISR. When Windows CE calls the initialization function for these types of device drivers, you can use <MSHelp:link keywords="cmrefInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link> to register an event handle with the interrupt identifier returned by the ISR of the target device. The initialization function of the device driver can then set up an IST for the interrupt by calling the <MSHelp:link keywords="_wcesdk_win32_CreateThread" TABINDEX="0">CreateThread</MSHelp:link> function. The main loop of the thread should wait on the event by using the <MSHelp:link keywords="cerefWaitForSingleObject" TABINDEX="0">WaitForSingleObject</MSHelp:link> function. Do not use <B>WaitForMultipleObjects</B>. The main loop should also process the interrupt. </P>
+
+<P>If you create a thread in the driver initialization routine, you should set the appropriate priority level of the thread with the <MSHelp:link keywords="_wcesdk_CeSetThreadPriority" TABINDEX="0">CeSetThreadPriority</MSHelp:link> function. This provides the appropriate scheduling times. When the IST has a higher priority than the interrupted thread, Windows CE interrupts the thread and runs the IST immediately. The thread priorities can range from 0 through 255, with 0 as the highest priority. The choice of the IST priority level is dependent upon the environment in which the IST needs to run. These environmental factors include the number of threads, relative priority of threads, and the amount of interrupt handling.</P>
+
+<P>The following code example shows the functions that a device driver initialization routine typically calls to create an event and a thread associated with an ISR.</P>
+
+<PRE class="code">// Create an event and a thread, and then associate them. 
+hEvent = CreateEvent(...)
+
+// Get the event handle, register the interrupt, and then
+// associate it with the event.
+InterruptInitialize(SYSINTR_SERIAL, hEvent, ...) 
+
+// Create the thread for the IST, passing it the event handle.
+// The IST code calls WaitOnSingleObject, so give it the event handle.
+hThd = CreateThread(..., MyISTRoutine, hEvent, ...) 
+CeSetThreadPriority(hThd, 152);</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconimplementingisr.htm">Implementing an ISR</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Initializing%20an%20Interrupt&nbsp;(cgconinitializinginterrupt.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

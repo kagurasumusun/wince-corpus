@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Hive-Based Registry Setup</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Hive-Based Registry Setup"/>
+<MSHelp:RLTitle Title="Hive-Based Registry Setup"/>
+<MSHelp:Keyword Index="A" Term="Hive-BasedRegistrySetupInstructions"/>
+<MSHelp:Keyword Index="K" Term="hive-based registries, setup"/>
+<MSHelp:Keyword Index="K" Term="registries, hive-based setup"/>
+<MSHelp:Keyword Index="A" Term="cgconHive-BasedRegistrySetupInstructionsBetaTwo"/>
+<MSHelp:Keyword Index="A" Term="Hive-BasedRegistrySetupInstructions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_file.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748768">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="hive-basedregistrysetupinstructions"></A>Hive-Based Registry Setup</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The hive-based registry is available for use with any file system.</P>
+
+<P>The first step in setting up the hive-based registry is to add the Hive-based Registry Catalog entry to your device configuration.</P>
+
+<P>The greater part of the setup required for the hive-based registry involves preparing the proper registry settings. These settings govern the device boot sequence. For information on the device boot sequence, see <MSHelp:link keywords="_wcefiles_Registry_Startup_Sequence" TABINDEX="0">Registry Startup Sequence</MSHelp:link>.</P>
+
+<P>Check the following settings in the Platform.reg file:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "SystemHive"="&lt;your system hive location&gt;"
+    "Start DevMgr"=dword:&lt;your value&gt;</PRE>
+
+<P><B>SystemHive</B> is the location and name of the system hive file. Do not include the name of the file system on which the file will be stored; the system will decide which file system to use based on other registry settings. Typically, this is a simple location such as <B>"System.hv"</B> or <B>"Documents and Settings\System.hv"</B>.</P>
+
+<P><B>Start DevMgr</B> is a Boolean indicating whether or not to start the Device Manager so it can start the drivers necessary to reach the registry hives. A value of 1 causes the Device Manager to start; 0 keeps the Device Manager from starting. The only case in which the Device Manager should not start is if you want to store the hives in the object store, which causes the hives to be lost on a cold boot. Typically, the hives are stored outside RAM so it is necessary to start the Device Manager.</P>
+
+<P>The value of <B>DefaultUser</B>, a REG_SZ value in <B>HKEY_LOCAL_MACHINE\init\BootVars</B>, determines the default user hive to load. <B>DefaultUser</B> is set to the name of the user to use as the default profile when the system boots. If it is an existing user, the appropriate user hive is loaded. If it is a new user, the user profile is created.</P>
+
+<P>OEMs can set the following value.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\init\BootVars]
+    "DefaultUser"="&lt;username&gt;"</PRE>
+
+<P>For more information on how to log in other users, see <A HREF="cgconenablinguserprofiles.htm">User Profile Setup</A> and <A HREF="cgconuserprofilestorage.htm">User Profile Storage</A>.
+
+<OL type="1">
+	<LI>Make sure all registry entries necessary for starting drivers in the first boot phase to access the persistent file system where the hives are stored are wrapped in the comments:
+<PRE class="code">; HIVE BOOT SECTION
+&lt;your registry settings&gt;
+; END HIVE BOOT SECTION</PRE>
+
+<P>These tags are commands that tell the ROM registry builder to add the entries to the boot hive.
+</li>
+
+	<LI>Set this flag bit on each driver that is loaded during the first boot phase:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\...]
+    "Flags"=dword:1000</PRE>
+
+<P>The flags are a bitmask to <B>OR</B> with any existing settings. This flag tells the device manager to load your driver in the first boot phase with the boot registry, and not to load it a second time in the second boot phase with the system registry. It prevents the driver from being started twice.
+</li>
+
+	<LI>Set the <B>MountFlags</B> registry value equal to <B>DWORD:2</B>. Set this value on the Storage Manager profile of the file system driver for the media that contains the registry. This indicates that the file system contains the registry.
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\<I>&lt;ProfileName&gt;</I>\&lt;<I>FileSystemName&gt;</I>]
+    "MountFlags"=dword:2</PRE>
+</li>
+
+	<LI>The following is an example of a final registry setup for enabling a hive-based registry:
+<PRE class="code">; HIVE BOOT SECTION
+;TRUEFFS driver, UNAND flash
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TrueFFS]
+    "Flags"=dword:1000    ;tell device mgr not to load driver again during 2nd boot phase
+    "Dll"="TrueFFS.dll"
+; Other TrueFFS registry settings here
+
+[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\TRUEFFS_UNAND\FATFS]
+    "MountFlags"=dword:2    ;indicates that file system contains the registry
+; END HIVE BOOT SECTION</PRE>
+</li>
+</OL>
+
+<P>Finally, you should decide whether a registry flushing mechanism is necessary. Outstanding registry data will be flushed on a suspend/resume cycle and any time the system goes through a software shutdown. However, data may be lost if power is suddenly removed. If a software shutdown is not always an option, you may need to create a thread that periodically flushes data. To ensure that data is not lost, call <MSHelp:link keywords="cerefRegFlushKey" TABINDEX="0">RegFlushKey</MSHelp:link>. This will flush any unsaved changes in the hive to the persistent file. It will not damage anything to call <B>RegFlushKey</B> when no data has changed; in that case, the file will not be touched. <B>RegFlushKey</B> should be called on both the system hive <B>HKEY_LOCAL_MACHINE</B> and the user hive <B>HKEY_CURRENT_USER</B>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcefiles_Registry_Startup_Sequence" TABINDEX="0">Registry Startup Sequence</MSHelp:link></P>
+
+<P><A HREF="cgconhive-basedregistry.htm">Hive-Based Registry</A></P>
+
+<P><A HREF="cgcontroubleshootingregistryimplementation.htm">Troubleshooting the Hive-Based Registry</A></P>
+
+<P><A HREF="cgconpersistingdatawithhive-basedregistry.htm">Persisting Data with the Hive-Based Registry</A></P>
+
+<P><A HREF="cgconupgradinghive-basedregistry.htm">Upgrading the Hive-Based Registry</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Hive-Based%20Registry%20Setup&nbsp;(hive-basedregistrysetupinstructions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

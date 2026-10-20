@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertyPage::OnOK</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertypage_onok"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertypage_onok"></A>CPropertyPage::OnOK</H1>
+
+<P>This method is called by the framework when the user chooses either the <B>OK</B> or <B>Apply Now</B> button, immediately after the framework calls <B>OnKillActive</B>. Override this method to implement additional behavior specific to the currently active page when the user dismisses the entire property sheet.</P>
+
+<P>When the user chooses either the <B>OK</B> or the <B>Apply Now</B> button, the framework receives the PSN_APPLY notification from the property page. The call to <B>OnOK</B> will not  be made if you call <A HREF="cpropsht_15.htm"><B>CPropertySheet::PressButton</B></A> because the property page does not send the notification in that case.</P>
+
+<P>The default implementation of this method marks the page as clean to reflect that the data was updated in the <B>OnKillActive</B> method.</P>
+
+<PRE class=syntax><B>virtual void OnOK( );</B><I> </I></PRE>
+
+<H4>Example</H4>
+
+<PRE>// Accept the new color selection and dismiss the CPropertySheet
+// dialog. The object in the view will be painted with the new selected
+// color. CColorPage is a CPropertyPage-derived class.
+void CColorPage::OnOK()
+{
+&nbsp;&nbsp;// Store the new selected color to a member variable of
+&nbsp;&nbsp;// document class.  m_Color is a member varible of CColorPage
+&nbsp;&nbsp;// and it stores the new selected color.  doc-&gt;m_Color is
+&nbsp;&nbsp;// the color saved in the document class and it is the color
+&nbsp;&nbsp;// used by the view class.
+&nbsp;&nbsp;CFrameWnd* frame = (CFrameWnd*) AfxGetMainWnd();
+&nbsp;&nbsp;CPSheetDoc* doc = (CPSheetDoc*) frame-&gt;GetActiveDocument();
+&nbsp;&nbsp;doc-&gt;m_Color = m_Color;
+
+&nbsp;&nbsp;// Tell the view to paint with the new selected color.
+&nbsp;&nbsp;CView* view = frame-&gt;GetActiveView();
+&nbsp;&nbsp;view-&gt;Invalidate();
+
+&nbsp;&nbsp;CPropertyPage::OnOK();
+}
+
+// The default MFC implementation of OnApply() would call OnOK().
+BOOL CColorPage::OnApply()
+{
+&nbsp;&nbsp;return CPropertyPage::OnApply();
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdialog_14.htm"><B>CDialog::OnOK</B></A>, <A HREF="cproppg_7.htm"><B>CPropertyPage::OnKillActive</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

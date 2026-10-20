@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fread</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fread"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_fread.htm", "fread")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_fread"></A>fread</H1>
+
+<P>Reads data from a stream.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fread</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>size_t fread( void</B> *<I>buffer</I>, <B>size_t</B> <I>size</I>, <B>size_t</B> <I>count</I>, <B>FILE</B> *<I>stream</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>buffer</I></DT>
+
+<DD>Storage location for data</dd>
+
+<DT><I>size</I></DT>
+
+<DD>Item size in bytes</dd>
+
+<DT><I>count</I></DT>
+
+<DD>Maximum number of items to be read</dd>
+
+<DT><I>stream</I></DT>
+
+<DD>Pointer to FILE structure</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P><B>fread</B> returns the number of full items actually read, which may be less than count if an error occurs or if the end of the file is encountered before reaching count. Use the <B>feof</B> or <B>ferror</B> function to distinguish a read error from an end-of-file condition. If size or count is 0, <B>fread</B> returns 0 and the buffer contents are unchanged.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>fread</B> function reads up to count items of size bytes from the input stream and stores them in buffer. The file pointer associated with stream (if there is one) is increased by the number of bytes actually read. If the given stream is opened in text mode, carriage return&#0150;linefeed pairs are replaced with single linefeed characters. The replacement has no effect on the file pointer or the return value. The file-pointer position is indeterminate if an error occurs. The value of a partially read item cannot be determined.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FREAD.C: This program opens a file named FREAD.OUT and
+ * writes 25 characters to the file. It then tries to open
+ * FREAD.OUT and read in 25 characters. If the attempt succeeds,
+ * the program displays the number of actual items read.
+ */
+
+#include &lt;stdio.h&gt;
+
+void main( void )
+{
+   FILE *stream;
+   char list[30];
+   int  i, numread, numwritten;
+
+   /* Open file in text mode: */
+   if( (stream = fopen( "fread.out", "w+t" )) != NULL )
+   {
+      for ( i = 0; i &lt; 25; i++ )
+         list[i] = (char)('z' - i);
+      /* Write 25 characters to stream */
+      numwritten = fwrite( list, sizeof( char ), 25, stream );
+      printf( "Wrote %d items\n", numwritten );
+      fclose( stream );
+
+   }
+   else
+      printf( "Problem opening the file\n" );
+
+   if( (stream = fopen( "fread.out", "r+t" )) != NULL )
+   {
+      /* Attempt to read in 25 characters */
+      numread = fread( list, sizeof( char ), 25, stream );
+      printf( "Number of items read = %d\n", numread );
+      printf( "Contents of buffer = %.25s\n", list );
+      fclose( stream );
+   }
+   else
+      printf( "File could not be opened\n" );
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Wrote 25 items
+Number of items read = 25
+Contents of buffer = zyxwvutsrqponmlkjihgfedcb</PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fwrite.htm"><B>fwrite</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

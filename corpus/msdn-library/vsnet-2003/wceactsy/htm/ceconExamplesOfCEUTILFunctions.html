@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Examples of CEUTIL Functions</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Examples of CEUTIL Functions"/>
+<MSHelp:RLTitle Title="Examples of CEUTIL Functions"/>
+<MSHelp:Keyword Index="A" Term="ceconExamplesOfCEUTILFunctions"/>
+<MSHelp:Keyword Index="K" Term="ActiveSync, CEUTIL functions"/>
+<MSHelp:Keyword Index="K" Term="CEUTIL DLL, functions"/>
+<MSHelp:Keyword Index="A" Term="ceconExamplesOfCEUTILFunctions"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: activesync_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759323">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconexamplesofceutilfunctions"></A>Examples of CEUTIL Functions</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following code example shows how to enumerate device partnerships and get the path for the file synchronization folder.</P>
+
+<PRE class="code">#include "ceutil.h"
+
+void Example1 (void)
+{
+  // This code runs on the desktop (or host) computer, and not on the
+  // Windows CE&#0150;based device, so set the project settings accordingly.
+
+  HCESVC svc          = NULL;
+  HCESVC svcSync      = NULL;
+  HCESVC svcProfile   = NULL;
+  DWORD  ProfilesEnum = 0;
+  DWORD  ProfileID    = 0;
+
+  while (SUCCEEDED (CeSvcEnumProfiles (&amp;hsvc, cProfilesEnum, &amp;nProfileID)))
+  {
+     if (nProfileID != (DWORD) - 1)
+     {
+         if (SUCCEEDED (CeSvcOpenEx (hsvcProfile,
+                                     TEXT("Services\\Synchronization"),
+                                     FALSE, &amp;hsvcSync)))
+         {
+             TCHAR szPath[MAX_PATH];
+
+             if (SUCCEEDED (CeSvcGetString (hsvcSync, TEXT("Briefcase Path"),
+                                            szPath,
+                                            sizeof(szPath)/sizeof(TCHAR))))
+             {
+                 // Found a path to use.
+                 // Your code to complete tasks goes here.
+             }
+
+             CeSvcClose (hsvcSync);
+         }
+
+         CeSvcClose (hsvcProfile);
+     }
+  }
+
+  cProfilesEnum++;
+}
+
+// The following code example shows how to add a custom menu.
+
+  HCESVC hsvcMyMenu = NULL;
+
+  if (SUCCEEDED (CeSvcOpen (CESVC_CUSTOM_MENUS, TEXT ("MyApp"),
+                            TRUE, &amp;hsvcMyMenu)))
+  {
+      CeSvcSetString (hsvcMyMenu, TEXT ("DisplayName"),
+                      TEXT ("&amp;My Calculator"));
+
+      CeSvcSetString (hsvcMyMenu, TEXT ("Command"), TEXT ("calc.exe"));
+
+      CeSvcSetString (hsvcMyMenu, TEXT ("StatusHelp"),
+                      TEXT ("Displays calculator"));
+
+      CeSvcSetDword  (hsvcMyMenu, TEXT ("Version"), 0x00020000);
+
+      CeSvcClose     (hsvcMyMenu);
+  }</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Examples%20of%20CEUTIL%20Functions&nbsp;(ceconexamplesofceutilfunctions.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

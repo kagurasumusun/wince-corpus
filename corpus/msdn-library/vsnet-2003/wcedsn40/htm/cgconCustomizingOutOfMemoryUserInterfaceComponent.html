@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Customizing the Out of Memory User Interface Component</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Customizing the Out of Memory User Interface Component"/>
+<MSHelp:RLTitle Title="Customizing the Out of Memory User Interface Component"/>
+<MSHelp:Keyword Index="A" Term="cgconCustomizingOutOfMemoryUserInterfaceComponent"/>
+<MSHelp:Keyword Index="K" Term="components, customizing Out of Memory UI component"/>
+<MSHelp:Keyword Index="K" Term="customizing, Out of Memory UI component"/>
+<MSHelp:Keyword Index="K" Term="memory, customizing Out of Memory component"/>
+<MSHelp:Keyword Index="K" Term="Out of Memory UI component, customizing"/>
+<MSHelp:Keyword Index="K" Term="UI, customizing Out of Memory component"/>
+<MSHelp:Keyword Index="K" Term="user interface, customizing Out of Memory component"/>
+<MSHelp:Keyword Index="A" Term="cgconCustomizingOutOfMemoryUserInterfaceComponent"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_custm.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748642">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconcustomizingoutofmemoryuserinterfacecomponent"></A>Customizing the Out of Memory User Interface Component</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Out of Memory User Interface (Oomui) component controls the appearance of the Graphics, Windowing, and Events Subsystem (GWES) out-of-memory handler and lets a user, or the system itself, take action to prevent data loss or other problems related to out of memory conditions.</P>
+
+<P>By default, Oomui displays a window indicating that the system memory is insufficient for the task being performed. The user is then prompted take action to free some memory, for example, by closing applications or moving some memory currently allocated to the object store so it can be used by the program. </P>
+
+<P>By replacing Oomui with a custom out of memory component, you can adjust this window to the screen size of your device. You can also add functionality to this component, for example, to cause the system to automatically close noncritical applications and perform other system cleanup tasks in the absence of a user.</P>
+
+<P>To customize the Oomui component, modify and rebuild the code located in %_WINCEROOT%\Public\Common\Oak\Drivers\Oomui. An out of memory UI component must implement the following functions, as defined by the Oomui.h header file:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="cmrefOomUI_CreateNotRespondingWindow" TABINDEX="0">OomUI_CreateNotRespondingWindow</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_CreateOomWindow" TABINDEX="0">OomUI_CreateOomWindow</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_FShowOomWindow" TABINDEX="0">OomUI_FShowOomWindow</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_Initialize" TABINDEX="0">OomUI_Initialize</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_NotRespondingWndProc" TABINDEX="0">OomUI_NotRespondingWndProc</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_OnShow" TABINDEX="0">OomUI_OnShow</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_OomWndProc" TABINDEX="0">OomUI_OomWndProc</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUI_SetWindowsInfo" TABINDEX="0">OomUI_SetWindowsInfo</MSHelp:link></li>
+</UL>
+
+<P>In addition, the Oomui component uses the following functions:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="cmrefOomUICallback_CloseWindow" TABINDEX="0">OomUICallback_CloseWindow</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUICallback_IsCritical" TABINDEX="0">OomUICallback_IsCritical</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cmrefOomUICallback_NonClientPaint" TABINDEX="0">OomUICallback_NonClientPaint</MSHelp:link></li>
+</UL>
+
+<P>The thread that runs the <B>Out of Memory</B> window runs at priority THREAD_PRIORITY_HIGHEST by default. When an out of memory condition occurs and the <B>Out of Memory</B> window is displayed, no lower priority threads are allowed to run. Preventing all lower priority threads from running causes all applications to be suspended so that they do not continue to consume memory while the <B>Out of Memory</B> window is displayed. You should avoid making calls that use a large amount of memory and that try to communicate with other threads. These calls may fail or lock up because of the unusual state of the system.</P>
+
+<P>You can set the priority of the thread that runs the <B>Out of Memory</B> window by setting the <B>HKEY_LOCAL_MACHINE\SYSTEM\GWE\ThreadPriorities\Oom</B> registry key to the priority level that you want. The following code example shows how to set this registry key.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\SYSTEM\GWE\ThreadPriorities]
+    "Oom"=dword:fb</PRE>
+
+<P>When the system is in a state of normal operation and memory is not low, the thread that runs the <B>Out of Memory</B> window is not in a message loop. This means that the Oomui component should not create any windows other than those specifically requested by the system.</P>
+
+<P>Because user input is necessary for interaction with the <B>Out of Memory</B> window, device driver threads running in drivers such as the keyboard and touch screen drivers need to run at a priority of THREAD_PRIORITY_HIGHEST.</P>
+
+<P>When an out of memory condition occurs, the operating system (OS) calls the <B>DdsiTouchPanelSetMode</B> touch driver function with <I>iIndex</I> equal to TPSM_PRIORITY_HIGH_ID just before the <B>Out of Memory</B> window becomes active. At this time, the touch driver should raise its priority to THREAD_PRIORITY_HIGHEST. When complete, the out of memory process will call the <B>DdsiTouchPanelSetMode</B> touch driver function, setting <I>iIndex</I> to TPSM_PRIORITY_NORMAL_ID and <I>lpInput</I> to NULL. The touch driver should then return its priority to THREAD_PRIORITY_NORMAL. For more information about <B>DdsiTouchPanelSetMode</B>, see the Windows CE driver documentation.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Customizing%20the%20Out%20of%20Memory%20User%20Interface%20Component&nbsp;(cgconcustomizingoutofmemoryuserinterfacecomponent.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

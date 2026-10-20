@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sources File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sources File"/>
+<MSHelp:RLTitle Title="Sources File"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Sources_File"/>
+<MSHelp:Keyword Index="K" Term="macros, macro definitions for source code in subdirectories"/>
+<MSHelp:Keyword Index="K" Term="samples, sources file"/>
+<MSHelp:Keyword Index="K" Term="source code, sources file"/>
+<MSHelp:Keyword Index="K" Term="sources file, overview"/>
+<MSHelp:Keyword Index="K" Term="sources file, sample"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Sources_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679710">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_sources_file"></A>Sources File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A <I>sources file</I> is a text file that sets the macro definitions for the source code in a subdirectory. Build.exe uses these macro definitions to determine how to compile and link the source code. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The directory and file names used in the code examples in this section are samples that demonstrate the way to set up a sources file. You would choose different names for any sources files and directories that you create.</BLOCKQUOTE>
+
+<P>The following code example shows the placement of the common sources file, Sources.cmn, and other sources files in a sample directory.</P>
+
+<PRE class="code">\Public
+  \MyProj
+    Sources.cmn
+    Dirs
+    \Proj2
+      Dirs
+      Makefile
+      Sources
+      Proj2.cpp
+      Proj2.h
+    . . .</PRE>
+
+<P>The following table shows the macro variables for the sources file in the MyProj\Proj<I>2</I> directory. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=46%>Macro</TH>
+<TH width=54%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>TARGETNAME</B>=Proj2</TD>
+<TD width=54%>Defines the base name of the file to be built. Build.exe creates a file named Proj2.<I>extension</I>, where <I>extension</I> may be .lib, .dll, or .exe.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>TARGETTYPE</B>=PROGRAM</TD>
+<TD width=54%>Defines the type of file, and hence the extension in that file's name. PROGRAM generates an .exe file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>TARGETLIBS</B>=$(_COMMONSDKROOT)\lib\$(_CPUINDPATH)\Coredll.lib</TD>
+<TD width=54%>Defines the libraries to be linked.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>SOURCES=</B>Proj2.cpp \</TD>
+<TD width=54%>Defines the source code files to compile. Header files do not need to be on the SOURCES line if they are included inside other files. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%><B>EXEENTRY</B>=WinMain</TD>
+<TD width=54%>Defines the entry point for the .exe file. WinMain sets the entry point for a Windows application.</TD>
+</TR>
+</table></div>
+
+<P>Your source code tree can optionally include Sources.cmn. Any macro variables in a common sources file apply to all sources files in that directory and its associated subdirectories. </P>
+
+<P>The Platform Builder sample code includes a common sources file in each of the following directories:
+
+<UL type="disc">
+	<LI>%_WINCEROOT%\Public\Common</li>
+
+	<LI>%_WINCEROOT%\Platform\Cepc</li>
+</UL>
+
+<P>The following code example shows the contents of Public\Common\Sources.cmn. These macro definitions apply to every sources file in the Public\Common directory.</P>
+
+<PRE class="code">Sample SOURCES.CMN from \Common
+WINCEOEM=1
+WINCEPROJ=COMMON
+WINCETREE=winceos
+WARNISERROR=1</PRE>
+
+<P>After Build.exe parses the sources file, Nmake.exe incorporates the sources file into the common makefile file, Makefile.def. Build.exe follows only the macro assignments and ignores any other lines, such as conditional Nmake.exe statements. Conditional statements in sources files are not supported. The following code example shows that Build.exe ignores the first, second, fourth, and sixth lines, and appends the <B>SOURCES</B> macro twice.</P>
+
+<PRE class="code"># Bad example
+!IF  "$(LOCALE)" ==  "0409"
+  SOURCES= $(SOURCES) us-src.c
+!ELSE
+  SOURCES= $(SOURCES) inter-src.c
+!ENDIF</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sources%20File&nbsp;(_wcepb_sources_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

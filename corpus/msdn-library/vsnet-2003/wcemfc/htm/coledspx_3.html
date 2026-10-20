@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleDispatchException::m_strDescription</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_coledispatchexception_m_strdescription"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_coledispatchexception_m_strdescription"></A>COleDispatchException::m_strDescription</H1>
+
+<P>This data member contains a verbal error description, such as Disk full. This data member is set by the <B>AfxThrowOleDispatchException</B> function when an exception is thrown.</P>
+
+<PRE class=syntax><B>CString m_strDescription;</B><I> </I></PRE>
+
+<H4>Example</H4>
+
+<PRE>void CTestView::OnBatterylife()
+{
+&nbsp;&nbsp;COleDispatchDriver disp;
+&nbsp;&nbsp;COleException *e = new COleException;
+&nbsp;&nbsp;
+&nbsp;&nbsp;try {
+&nbsp;&nbsp;&nbsp;&nbsp;// Create instance of Microsoft System Information Control
+&nbsp;&nbsp;&nbsp;&nbsp;// by using ProgID.
+&nbsp;&nbsp;&nbsp;&nbsp;if (disp.CreateDispatch("SYSINFO.Sysinfo.1", e))
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Call BatteryLifePercent.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;short nBatteryLifePercent;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disp.InvokeHelper(0x03, DISPATCH_PROPERTYGET, VT_I2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void*)&amp;nBatteryLifePercent, NULL);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (nBatteryLifePercent == 255)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Battery Life % unknown");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CString cStr;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr.Format("Battery Life is at %d%%",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nBatteryLifePercent);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(cStr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw e;
+
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;//Catch control-specific exceptions.
+&nbsp;&nbsp; catch (COleDispatchException * e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CString cStr;
+
+&nbsp;&nbsp;&nbsp;&nbsp;if (!e-&gt;m_strSource.IsEmpty())
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr = e-&gt;m_strSource + " - ";
+&nbsp;&nbsp;&nbsp;&nbsp;if (!e-&gt;m_strDescription.IsEmpty())
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr += e-&gt;m_strDescription;
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr += "unknown error";
+
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(cStr, MB_OK,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(e-&gt;m_strHelpFile.IsEmpty())? 0:e-&gt;m_dwHelpContext);
+
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;//Catch all MFC exceptions, including COleExceptions.
+&nbsp;&nbsp;// OS exceptions will not be caught.
+&nbsp;&nbsp; catch (CException *e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%s(%d): OLE Execption caught: SCODE = %x",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__FILE__, __LINE__, COleException::Process(e));
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="coledspx_2.htm"><B>COleDispatchException::m_dwHelpContext</B></A>, <A HREF="coledspx_6.htm"><B>COleDispatchException::m_wCode</B></A>, <A HREF="funct_63.htm"><B>AfxThrowOleDispatchException</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

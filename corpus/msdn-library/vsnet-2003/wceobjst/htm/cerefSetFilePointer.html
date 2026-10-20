@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SetFilePointer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SetFilePointer"/>
+<MSHelp:RLTitle Title="SetFilePointer"/>
+<MSHelp:Keyword Index="A" Term="cerefSetFilePointer"/>
+<MSHelp:Keyword Index="K" Term="SetFilePointer"/>
+<MSHelp:Keyword Index="A" Term="cerefSetFilePointer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: fileio.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753356">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefsetfilepointer"></A>SetFilePointer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function moves the file pointer of an open file. A remote application programming interface (RAPI) version of this function exists, and it is called <MSHelp:link keywords="cerefCeSetFilePointerRAPI" TABINDEX="0">CeSetFilePointer (RAPI)</MSHelp:link>. </P>
+
+<PRE class="syntax"><B>DWORD</B> <B>SetFilePointer( </B>
+<B>HANDLE</B> <I>hFile</I><B>, </B>
+<B>LONG</B> <I>lDistanceToMove</I><B>, </B>
+<B>PLONG</B> <I>lpDistanceToMoveHigh</I><B>, </B>
+<B>DWORD</B> <I>dwMoveMethod</I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hFile</I></DT>
+
+<DD>[in] Handle to the file whose file pointer is to be moved. The file handle must have been created with GENERIC_READ or GENERIC_WRITE access to the file. </dd>
+
+<DT><I>lDistanceToMove</I></DT>
+
+<DD>Low-order 32 bits of a signed value that specifies the number of bytes to move the file pointer. If <I>lpDistanceToMoveHigh</I> is not NULL, <I>lpDistanceToMoveHigh</I> and <I>lDistanceToMove</I> form a single 64-bit signed value that specifies the distance to move. If <I>lpDistanceToMoveHigh</I> is NULL, <I>lDistanceToMove</I> is a 32-bit signed value. A positive value for <I>lDistanceToMove </I>moves the file pointer forward in the file, and a negative value moves the file pointer backward.</dd>
+
+<DT><I>lpDistanceToMoveHigh</I></DT>
+
+<DD>Not supported; must be NULL or point to a value of 0.</dd>
+
+<DT><I>dwMoveMethod</I></DT>
+
+<DD>[in] Specifies the starting point for the file pointer move. This parameter can be one of the following values. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Value</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>FILE_BEGIN</TD>
+<TD width=73%>The starting point is zero or the beginning of the file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>FILE_CURRENT</TD>
+<TD width=73%>The starting point is the current value of the file pointer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>FILE_END</TD>
+<TD width=73%>The starting point is the current end-of-file position.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The new file pointer indicates success. If the function fails, the return value is 0xFFFFFFFF. To get extended error information, call <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>. However, because 0xFFFFFFFF is a valid value for the new file pointer, you must check <B>GetLastError</B> to determine whether an error occurred. If an error occurred, <B>GetLastError</B> returns a value other than NO_ERROR. For a code example that illustrates this point, see the Remarks section.</P>
+
+<P>If the new file pointer would have been a negative value, the function fails, the file pointer is not moved, and the code returned by <B>GetLastError</B> is ERROR_NEGATIVE_SEEK.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>You cannot use the <B>SetFilePointer</B> function with a handle to a nonseeking device, such as a communications device. </P>
+
+<P>You can use the <B>SetFilePointer</B> function to query the current file pointer position. To do this, specify a move method of FILE_CURRENT and a distance of zero.</P>
+
+<P>You should be careful when setting the file pointer in a multithreaded application. For example, an application whose threads share a file handle, update the file pointer, and read from the file must protect this sequence by using a critical section object or mutex object. For more information about these objects, see <MSHelp:link keywords="_wcesdk_Working_with_Processes_and_Threads" TABINDEX="0">Processes and Threads</MSHelp:link>.</P>
+
+<P>It is not an error to set the file pointer to a position beyond the end of the file. The size of the file does not increase until you call the <B>SetEndOfFile</B> or <B>WriteFile</B> function. A write operation increases the size of the file to the file pointer position plus the size of the buffer written, leaving the intervening bytes uninitialized. </P>
+
+<P>If the return value is 0xFFFFFFFF, an application must call <B>GetLastError</B> to determine whether the function has succeeded or failed. The following sample code shows this point.</P>
+
+<PRE class="code">// Try to move hFile's file pointer some distance 
+dwPtr = SetFilePointer (hFile, lDistance, NULL, FILE_BEGIN) ; 
+
+if (dwPtr == 0xFFFFFFFF) // Test for failure
+{ 
+ // Obtain the error code 
+ dwError = GetLastError() ; 
+ 
+ // Deal with failure 
+ // . . . 
+ 
+} // End of error handler</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;SetFilePointer</B> cannot be used to move the file pointer beyond the maximum file size, which is 0xFFFFFFFF. If <B>SetFilePointer</B> is called to move the pointer beyond 0xFFFFFFFF, the pointer is set at 0xFFFFFFFF. In this case the return value will be 0xFFFFFFFF, but <B>GetLastError</B> will return NO_ERROR.</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+You can use <B>SetFilePointer</B> to determine the length of a file. To do this, use FILE_END for <I>dwMoveMethod</I> and seek to location zero. The file offset returned is the length of the file. However, this practice can have unintended side effects, such as the failure to save the current file pointer so that the program can return to that location. It is simpler and safer to use <B>GetFileSize</B> instead.</BLOCKQUOTE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Winbase.h</TD>
+<TD width=20%>Coredll.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_Working_with_Processes_and_Threads" TABINDEX="0">Processes and Threads</MSHelp:link>, <MSHelp:link keywords="cerefCeSetFilePointerRAPI" TABINDEX="0">CeSetFilePointer (RAPI)</MSHelp:link>, <A HREF="cerefgetfilesize.htm">GetFileSize</A>, <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>, <A HREF="cerefreadfile.htm">ReadFile</A>, <A HREF="cerefsetendoffile.htm">SetEndOfFile</A>, <A HREF="cerefwritefile.htm">WriteFile</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SetFilePointer&nbsp;(cerefsetfilepointer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

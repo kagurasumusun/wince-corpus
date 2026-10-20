@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MSMQMessage.MaxTimeToReceive</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MSMQMessage.MaxTimeToReceive"/>
+<MSHelp:RLTitle Title="MSMQMessage.MaxTimeToReceive"/>
+<MSHelp:Keyword Index="A" Term="cerefMSMQMessageMaxTimeToReceive"/>
+<MSHelp:Keyword Index="K" Term="MSMQMessage, MaxTimeToReceive"/>
+<MSHelp:Keyword Index="A" Term="cerefMSMQMessageMaxTimeToReceive"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: msmq_com_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_752122">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefmsmqmessagemaxtimetoreceive"></A>MSMQMessage.MaxTimeToReceive</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This property specifies a time limit, in seconds, for the message to be retrieved from the target queue. This includes the time spent getting to the destination queue plus the time spent waiting in the queue before it is retrieved by an application.</P>
+
+<PRE class="syntax"><B>HRESULT get_MaxTimeToReceive( </B>
+<B>long *</B><I>plMaxTimeToReceive</I> 
+<B>);</B>
+
+<B>HRESULT put_MaxTimeToReceive( </B>
+<B>long</B> <I>lMaxTimeToReceive</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>plMaxTimeToReceive </I>or<I> lMaxTimeToReceive</I></DT>
+
+<DD>Time limit, in seconds, for the message to be retrieved from the target queue. The default value is INFINITE.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table describes the common return values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Value</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>S-OK</TD>
+<TD width=73%>Success</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>E_INVALIDARG</TD>
+<TD width=73%>One or more arguments are invalid</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>E_NOTIMPL</TD>
+<TD width=73%>The function contains no implementation</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>E_OUTOFMEMORY</TD>
+<TD width=73%>Out of memory</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>MaxTimeToReceive</B> sets the message's time-to-be-received timer. If the time-to-be-received timer expires before the message is removed from the queue, Message Queuing discards the message, sending it to the dead-letter queue if the message's <B>MSMQMessage.Journal</B> property is set to MQMSG_DEADLETTER.</P>
+
+<P>Message Queuing can also send a negative acknowledgment message back to the sending application if the message's <B>MSMQMessage.Ack</B> property is set accordingly and the message is not retrieved before the timer expires.</P>
+
+<P>Once a message arrives at the queue, <B>MaxTimeToReceive</B> can be used to find out how much time remains in the time-to-be-received timer.</P>
+
+<P>Message Queuing uses two message timers: time-to-reach-queue and time-to-be-received. If the time-to-be-received timer is set to a value less than the time-to-reach-queue timer, the time-to-be-received timer takes precedence over the time-to-reach-queue timer.</P>
+
+<P>Message Queuing automatically uses the time-to-be-received timer of the first message when several messages are sent in a transaction. </P>
+
+<P>When Message Queuing creates an acknowledgment message, it always sets the message's time-to-be-received timer to INFINITE.</P>
+
+<P>When a message is sent from an independent client computer, the time-to-be-received timer starts ticking as soon as the send operation succeeds, even if the client computer is offline.</P>
+
+<P>When using dependent client computers, make sure the clock on the client computer is in sync with the clock on the server running MSMQ. If these two clocks are not synchronized, you may see unpredictable behavior when sending messages with the time-to-be-received timer set.</P>
+
+<P class="label"><B>Equivalent API Function Property</B></P>
+
+<P>When using API function calls, the time-to-be-received timer of the message can be set and retrieved using the <A HREF="cerefpropid_m_time_to_be_received.htm">PROPID_M_TIME_TO_BE_RECEIVED</A> message property.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=18%>Mqoai.h</TD>
+<TD width=15%>Mqoai.h</TD>
+<TD width=20%>Mqoa.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefmsmqmessage.htm">MSMQMessage</A>, <A HREF="cerefmsmqmessageack.htm">MSMQMessage.Ack</A>, <A HREF="cerefmsmqmessagejournal.htm">MSMQMessage.Journal</A>, <A HREF="cerefpropid_m_time_to_be_received.htm">PROPID_M_TIME_TO_BE_RECEIVED</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MSMQMessage.MaxTimeToReceive&nbsp;(cerefmsmqmessagemaxtimetoreceive.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

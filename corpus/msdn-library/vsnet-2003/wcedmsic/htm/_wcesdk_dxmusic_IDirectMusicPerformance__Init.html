@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirectMusicPerformance::Init</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IDirectMusicPerformance::Init"/>
+<MSHelp:RLTitle Title="IDirectMusicPerformance::Init"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicPerformance__Init"/>
+<MSHelp:Keyword Index="K" Term="IDirectMusicPerformance, Init"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_IDirectMusicPerformance__Init"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: dxmusic_interfaces.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_687759">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_idirectmusicperformance__init"></A>IDirectMusicPerformance::Init</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method associates the performance with a DirectMusic object and a DirectSound object.</P>
+
+<PRE class="syntax"><B>HRESULT Init(</B>
+<B>IDirectMusic **</B><I>ppDirectMusic</I><B>,</B>
+<B>LPDIRECTSOUND </B><I>pDirectSound</I><B>,</B>
+<B>HWND </B><I>hWnd</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppDirectMusic</I></DT>
+
+<DD>Address of a variable containing the <A HREF="_wcesdk_dxmusic_idirectmusic.htm">IDirectMusic</A> interface pointer to be assigned to the performance, if one already exists. The reference count of the interface is incremented. Ports passed to the <A HREF="_wcesdk_dxmusic_idirectmusicperformance__addport.htm">IDirectMusicPerformance::AddPort</A> method must be created from this DirectMusic object.
+
+<P>If the variable contains NULL, a DirectMusic object is created, and the interface pointer is returned.
+
+
+<P>If <I>ppDirectMusic</I> is NULL, a DirectMusic object is created and used internally by the performance.
+</dd>
+
+<DT><I>pDirectSound</I></DT>
+
+<DD>Address of a <MSHelp:link keywords="_wcesdk_IDirectSound_dsound" TABINDEX="0">IDirectSound</MSHelp:link> interface to use by default for wave output. If this value is NULL, DirectMusic creates a DirectSound object. There should, however, only be one DirectSound object per process. If your application uses DirectSound separately, it should pass in that interface here, or to <A HREF="_wcesdk_dxmusic_idirectmusic__setdirectsound.htm">IDirectMusic::SetDirectSound</A> if the application creates the DirectMusic object explicitly.</dd>
+
+<DT><I>hWnd</I></DT>
+
+<DD>Window handle to be used for the creation of DirectSound. This parameter can be NULL, in which case the foreground window is used. See Remarks.
+
+<P>This parameter is ignored if <I>pDirectSound</I> is not NULL, in which case the application is responsible for setting the window handle in a call to <MSHelp:link keywords="_wcesdk_IDirectSound_SetCooperativeLevel_dsound" TABINDEX="0">IDirectSound::SetCooperativeLevel</MSHelp:link>.
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If the method succeeds, the return value is S_OK.</P>
+
+<P>If it fails, the method can return one of the following error values:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_dmus_e_already_inited">DMUS_E_ALREADY_INITED</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_outofmemory">E_OUTOFMEMORY</A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_dxmusic_return_values.htm#_wcesdk_dxmusic_e_pointer">E_POINTER</A></TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This method should be called only once; it must be called before the performance can play.</P>
+
+<P>A DirectMusic object can be associated with the performance in any of the following ways:
+
+<UL type="disc">
+	<LI>The application creates its own DirectMusic object and gives it to the performance by passing the address of the <B>IDirectMusic</B> pointer in <I>ppDirectMusic</I>. In this case, the <I>pDirectSound</I> and <I>hWnd</I> parameters are ignored because the application is responsible for calling <A HREF="_wcesdk_dxmusic_idirectmusic__setdirectsound.htm">IDirectMusic::SetDirectSound</A>. </li>
+
+	<LI>The application allows the performance to create the DirectMusic object and wants a pointer to that object. In this case, *<I>ppDirectMusic</I> is NULL on entry, and contains the <B>IDirectMusic</B> pointer on exit.</li>
+
+	<LI>The application allows the performance to initialize itself and does not need a DirectMusic object pointer. In this case, <I>ppDirectMusic</I> is NULL.</li>
+</UL>
+
+<P>The performance must be terminated by using the <A HREF="_wcesdk_dxmusic_idirectmusicperformance__closedown.htm">IDirectMusicPerformance::CloseDown</A> method before being released.</P>
+
+<P>You can pass NULL in the <I>hWnd</I> parameter to pass the current foreground window handle to DirectSound. However, do not assume that the application window will be in the foreground during initialization. In general, the top-level application window handle is passed to DirectMusic, DirectSound, and DirectDraw. See the Remarks for <MSHelp:link keywords="_wcesdk_IDirectSound_SetCooperativeLevel_dsound" TABINDEX="0">IDirectSound::SetCooperativeLevel</MSHelp:link>. </P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=21%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=19%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=21%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>Dmusici.h</TD>
+<TD width=19%>Dmusic.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_dxmusic_Creating_the_Performance" TABINDEX="0">Creating the Performance</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_Integrating_DirectMusic_and_DirectSound" TABINDEX="0">Integrating DirectMusic and DirectSound</MSHelp:link>, <A HREF="_wcesdk_dxmusic_idirectmusic.htm">IDirectMusic</A>, <MSHelp:link keywords="_wcesdk_IDirectSound_dsound" TABINDEX="0">IDirectSound</MSHelp:link>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__addport.htm">IDirectMusicPerformance::AddPort</A>, <A HREF="_wcesdk_dxmusic_idirectmusicperformance__closedown.htm">IDirectMusicPerformance::CloseDown</A>, <A HREF="_wcesdk_dxmusic_idirectmusic__setdirectsound.htm">IDirectMusic::SetDirectSound</A>, <MSHelp:link keywords="_wcesdk_IDirectSound_SetCooperativeLevel_dsound" TABINDEX="0">IDirectSound::SetCooperativeLevel</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IDirectMusicPerformance::Init&nbsp;(_wcesdk_dxmusic_idirectmusicperformance__init.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

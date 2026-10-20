@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Erasing the Object Store</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Erasing the Object Store"/>
+<MSHelp:RLTitle Title="Erasing the Object Store"/>
+<MSHelp:Keyword Index="A" Term="cgconErasingObjectStore"/>
+<MSHelp:Keyword Index="K" Term="erasing, object store"/>
+<MSHelp:Keyword Index="K" Term="object store, erasing"/>
+<MSHelp:Keyword Index="A" Term="cgconErasingObjectStore"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748566">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconerasingobjectstore"></A>Erasing the Object Store</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The object store for Windows CE is persistent across warm boots as long as the boot process does not cause other code that changes the contents of RAM, such as hardware initialization code, to get executed. On occasion, you may want to completely erase the object store by triggering a cold reboot. For example, you may create a prototype that tests the cold system boot process. While an application can call the <A HREF="cgrefsetcleanrebootflag.htm">SetCleanRebootFlag</A><B> </B>function to perform a cold boot, you can also implement the following procedure in the boot process.</P>
+
+<P class="labelproc"><B>To erase the object store during the boot process</B>
+
+<OL type="1">
+	<LI>Include the Romldr.h file in your OAL code.</li>
+
+	<LI>Declare the following variable in your OAL.
+<PRE class="code">extern ROMHDR *const volatile pTOC;</PRE>
+
+<P>The <B>ulRAMFree</B> member of the <B>ROMHDR </B>structure identifies the start of free memory. The <B>UlRAMFree</B> location also identifies the start of the object store information.
+</li>
+
+	<LI>Signal a cold boot in <A HREF="cmrefoeminit.htm">OEMInit</A> by setting the first three <B>DWORD</B> variables starting at pTOC-&gt;ulRAMFree, to 0.
+<P>The following code example shows how to set the first three <B>DWORD</B> variables to 0. 
+
+<PRE class="code">memset(pTOC-&gt;ulRAMFree,0,sizeof(DWORD)*3)</PRE>
+</li>
+</OL>
+
+<P>Setting the first three <B>DWORDs</B> to 0 during <B>OEMInit</B> ensures that a cold boot of the object store occurs during the boot process.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>The ability to erase the object store during the boot process is only available in Windows CE version 3.0.</BLOCKQUOTE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcompletingoal.htm">Completing an OAL</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Erasing%20the%20Object%20Store&nbsp;(cgconerasingobjectstore.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

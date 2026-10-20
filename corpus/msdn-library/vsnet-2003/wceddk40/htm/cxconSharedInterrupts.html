@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Shared Interrupts</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Shared Interrupts"/>
+<MSHelp:RLTitle Title="Shared Interrupts"/>
+<MSHelp:Keyword Index="A" Term="cxconSharedInterrupts"/>
+<MSHelp:Keyword Index="K" Term="interrupts, shared"/>
+<MSHelp:Keyword Index="A" Term="cxconSharedInterrupts"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758577">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconsharedinterrupts"></A>Shared Interrupts</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Interrupt lines run from a signaling device, through prioritization logic, to a microprocessor. There are a finite number of inputs on the interrupt controllers and as such, lines might be shared. The hardware designer determines this. </P>
+
+<P>When interrupts are shared, all the microprocessor knows is that it was interrupted, but does not necessarily know what interrupted it. </P>
+
+<P>To determine which device caused the interrupt, the operating system's exception handler may need to examine device-specific registers that indicate the state of a given device's interrupt line. The Microsoft&reg; Windows&reg; CE .NET OS provides a mechanism to register routines with the kernel that will be invoked automatically when a shared interrupt occurs. This routine is exposed as an entry point in a DLL that the kernel loads into its NK.exe process. This entry point is called during interrupt processing so it has all of the same restrictions as device power up and power down handlers do. For security reasons, the kernel will not allow the DLL to depend on imports on other DLLs so it cannot link, for example, with Coredll.</P>
+
+<P>Because most devices indicate interrupt activity in a single register, possibly modified by a mask, the sample installable ISR handler, GIISR.dll, is adequate for many devices in practice. If necessary, you can write your own installable ISR handler to implement more complex interrupt detection.</P>
+
+<P>The ISR routine hooked to an interrupt at <MSHelp:link keywords="cmrefOEMInit" TABINDEX="0">OEMInit</MSHelp:link> time needs to call <MSHelp:link keywords="cmrefNKCallIntChain" TABINDEX="0">NKCallIntChain</MSHelp:link>, a kernel function, to walk a list of installed ISRs for the interrupt that is being signaled. If the first ISR determines that its associated device is asserting the interrupt, it performs any work it needs to and then returns the SYSINTR mapped to the interrupt. Alternatively, the ISR may decide that no further processing by the IST is necessary, in which case it returns SYSINTR_NOP. Otherwise, if the ISR determines that its associated device is not asserting the interrupt, it returns SYSINTR_CHAIN, which causes <B>NKCallIntChain</B> to call the next ISR in the chain. The order of installing ISRs is important because it implies priority. The ISR first on the chain has priority over the succeeding ISRs on the chain.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconenablingpcibusdriverinstallableisrsonplatform.htm">PCI Device Support</A></P>
+
+<P><MSHelp:link keywords="cmconInstallableISRs" TABINDEX="0">Installable ISRs</MSHelp:link></P>
+
+<P><A HREF="cxconinstallableisrs.htm">Installable ISRs with Drivers</A></P>
+
+<P><A HREF="cxconinterruptprocessingcomponents.htm">Interrupt Processing Components</A> </P>
+
+<P><A HREF="cxconinterruptnotifications.htm">Interrupt Notifications</A> </P>
+
+<P><A HREF="cxconnestedinterrupts.htm">Nested Interrupts</A> </P>
+
+<P><A HREF="cxconinterruptmasking.htm">Interrupt Masking</A></P>
+
+<P><A HREF="cxconinterrupthandlerregistration.htm">Interrupt Handler Registration</A> </P>
+
+<P><A HREF="cxconinterruptprocessing.htm">Interrupt Processing</A> </P>
+
+<P><A HREF="cxconinterrupthandlerderegistration.htm">Interrupt Handler Deregistration</A> </P>
+
+<P><A HREF="cxconreal-timeprioritysystem.htm">Real-Time Priority System</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Shared%20Interrupts&nbsp;(cxconsharedinterrupts.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Preprocessing Using a .mak File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Preprocessing Using a .mak File"/>
+<MSHelp:RLTitle Title="Preprocessing Using a .mak File"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Using_a_mak_File_for_Preprocessing"/>
+<MSHelp:Keyword Index="K" Term=".mak files - preprocessing using, overview"/>
+<MSHelp:Keyword Index="K" Term="mak files, preprocessing using"/>
+<MSHelp:Keyword Index="K" Term="Nmake.exe, preprocessing using .mak files"/>
+<MSHelp:Keyword Index="K" Term="preprocessing, using .mak files"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Using_a_mak_File_for_Preprocessing"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: nmake.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_677332">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_using_a_mak_file_for_preprocessing"></A>Preprocessing Using a .mak File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>You can control the Nmake.exe session by using preprocessing directives and expressions. Preprocessing directives can be placed in the .mak file or in Tools.ini. Using directives, you can conditionally process your .mak file, display error messages, include other .mak files, undefine a macro, and turn certain options on or off.</P>
+
+<P>Preprocessing directives are not case-sensitive. The initial exclamation point (<B>!</B>) must appear at the beginning of the line. Zero or more spaces or tabs can appear after the exclamation point, for indentation.
+
+<DL>
+<DT><B>!CMDSWITCHES</B> {<B>+</B> | <B>&#0150;</B>} <I>option</I></DT>
+
+<DD>Turns each <I>option</I> listed on or off. Spaces or tabs must appear before the plus (<B>+)</B> or minus (<B>&#0150;</B>) operator; none can appear between the operator and the option letters. Letters are not case-sensitive and are specified without a slash mark ( / ). To turn some options on and others off, use a separate <B>!CMDSWITCHES</B> preprocessor directive for each option.
+
+<P>Only <B>/D</B>, <B>/I</B>, <B>/N</B>, and <B>/S</B> can be used in a .mak file. In Tools.ini, all options are allowed except <B>/F</B>, <B>/HELP</B>, <B>/NOLOGO</B>, <B>/X</B>, and <B>/?</B>. Changes specified in a description block do not take effect until the next description block. This directive updates <B>MAKEFLAGS</B>; changes are inherited during recursion if <B>MAKEFLAGS</B> is specified.
+</dd>
+
+<DT><B>!ERROR</B> <I>text</I></DT>
+
+<DD>Displays <I>text</I> in error U1050, then stops Nmake.exe, even if <B>/K</B>, <B>/I</B>, <B>.IGNORE</B>, <B>!CMDSWITCHES</B>, or the hyphen (<B>-</B>) command modifier is used. Spaces or tabs before <I>text</I> are ignored.</dd>
+
+<DT><B>!MESSAGE</B> <I>text</I></DT>
+
+<DD>Displays <I>text</I> to standard output. Spaces or tabs before <I>text</I> are ignored.</dd>
+
+<DT><B>!INCLUDE</B> [<B>&lt;</B>]<I>FileName</I>[<B>&gt;</B>]</DT>
+
+<DD>Reads <I>FileName</I> as a .mak file and then continues with the current .mak file. Nmake.exe searches for <I>FileName</I> first in the specified or current directory, then recursively through directories of any parent .mak files, and then, if <I>FileName</I> is enclosed by angle brackets (&lt; &gt;), in directories specified by the <B>INCLUDE</B> macro, which is initially set to the <B>INCLUDE</B> environment variable. This is useful to pass <B>.SUFFIXES</B> settings, <B>.PRECIOUS</B>, and inference rules to recursive .mak files.</dd>
+
+<DT><B>!IF</B> <I>ConstantExpression</I></DT>
+
+<DD>Processes statements between <B>!IF</B> and the next <B>!ELSE</B> or <B>!ENDIF</B>, if <I>ConstantExpression</I> evaluates to a nonzero value.</dd>
+
+<DT><B>!IFDEF</B> <I>MacroName</I></DT>
+
+<DD>Processes statements between <B>!IFDEF</B> and the next <B>!ELSE</B> or <B>!ENDIF</B>, if <I>MacroName</I> is defined. A null macro is considered to be defined.</dd>
+
+<DT><B>!IFNDEF</B> <I>MacroName</I></DT>
+
+<DD>Processes statements between <B>!IFNDEF</B> and the next <B>!ELSE</B> or <B>!ENDIF</B>, if <I>MacroName</I> is not defined.</dd>
+
+<DT><B>!ELSE</B>[<B>IF</B> <I>ConstantExpression </I>| <B>IFDEF</B> <I>MacroName</I> | <B>IFNDEF</B> <I>MacroName</I>]</DT>
+
+<DD>Processes statements between <B>!ELSE</B> and the next <B>!ENDIF</B> if the prior <B>!IF</B>, <B>!IFDEF</B>, or <B>!IFNDEF</B> statement evaluated to zero. The optional keywords give further control of preprocessing.</dd>
+
+<DT><B>!ELSEIF</B></DT>
+
+<DD>Synonym for <B>!ELSE IF</B>.</dd>
+
+<DT><B>!ELSEIFDEF</B></DT>
+
+<DD>Synonym for <B>!ELSE IFDEF</B>.</dd>
+
+<DT><B>!ELSEIFNDEF</B></DT>
+
+<DD>Synonym for <B>!ELSE IFNDEF</B>.</dd>
+
+<DT><B>!ENDIF</B></DT>
+
+<DD>Marks the end of an <B>!IF</B>, <B>!IFDEF</B>, or <B>!IFNDEF</B> block. Any text after <B>!ENDIF</B> on the same line is ignored.</dd>
+
+<DT><B>!UNDEF</B> <I>MacroName</I></DT>
+
+<DD>Undefines <I>MacroName</I>.</dd>
+</DL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcepb_commands_in_a_mak_file.htm">Commands in a .mak File</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Preprocessing%20Using%20a%20.mak%20File&nbsp;(_wcepb_using_a_mak_file_for_preprocessing.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

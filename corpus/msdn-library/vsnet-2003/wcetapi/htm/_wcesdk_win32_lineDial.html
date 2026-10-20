@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineDial</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="lineDial"/>
+<MSHelp:RLTitle Title="lineDial"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_lineDial"/>
+<MSHelp:Keyword Index="K" Term="lineDial"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_lineDial"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: tapi2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665760">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_win32_linedial"></A>lineDial</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function dials the specified dialable number on the specified call. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineDial(</B>
+<B>HCALL </B><I>hCall</I><B>,</B>
+<B>LPCWSTR </B><I>lpszDestAddress</I><B>,</B>
+<B>DWORD </B><I>dwCountryCode</I><B> </B>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hCall </I></DT>
+
+<DD>A handle to the call on which a number is to be dialed. The application must be an owner of the call. The call state of <I>hCall </I>can be any state except idle and disconnected. </dd>
+
+<DT><I>lpszDestAddress</I> </DT>
+
+<DD>The destination to be dialed using the standard dialable number format. </dd>
+
+<DT><I>dwCountryCode</I> </DT>
+
+<DD>The country/region code of the destination. This is used by the implementation to select the call progress protocols for the destination address. If a value of 0 is specified, a service provider-defined default call progress protocol is used. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns a positive request identifier if the function is completed asynchronously, or a negative error number if an error occurs. The <I>dwParam2</I> parameter of the corresponding <A HREF="_wcesdk_win32_line_reply.htm">LINE_REPLY</A> message is zero if the function succeeds or it is a negative error number if an error occurs. Possible return values are as follows: 
+
+<UL type="disc">
+	<LI>LINEERR_ADDRESSBLOCKED</li>
+
+	<LI>LINEERR_INVALPOINTER</li>
+
+	<LI>LINEERR_DIALBILLING</li>
+
+	<LI>LINEERR_NOMEM</li>
+
+	<LI>LINEERR_DIALDIALTONE</li>
+
+	<LI>LINEERR_NOTOWNER</li>
+
+	<LI>LINEERR_DIALPROMPT</li>
+
+	<LI>LINEERR_OPERATIONFAILED</li>
+
+	<LI>LINEERR_DIALQUIET</li>
+
+	<LI>LINEERR_OPERATIONUNAVAIL</li>
+
+	<LI>LINEERR_INVALCALLHANDLE</li>
+
+	<LI>LINEERR_RESOURCEUNAVAIL</li>
+
+	<LI>LINEERR_INVALCALLSTATE</li>
+
+	<LI>LINEERR_UNINITIALIZED</li>
+
+	<LI>LINEERR_INVALCOUNTRYCODE</li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>If LINEERR_INVALADDRESS is returned, no dialing has been done. If LINEERR_DIALBILLING, LINEERR_DIALQUIET, LINEERR_DIALDIALTONE, or LINEERR_DIALPROMPT is returned, none of the actions otherwise performed by <B>lineDial</B> have occurred. For example, none of the dialable addresses prior to the offending character has been dialed, no hookswitch state has changed, and so on. </P>
+
+<P>The <B>lineDial</B> function is used for dialing on an existing call appearance. For example, after a call has been set up for transfer or conference, a consultation call is automatically allocated, and the <B>lineDial</B> function would be used to perform the dialing of this consultation call. The <B>lineDial</B> function can be invoked multiple times in the course of multistage dialing, if the line's device capabilities allow it. Also, multiple addresses can be provided in a single dial string separated by CRLF. Service providers that provide inverse multiplexing can establish individual physical calls with each of the addresses and can return a single call handle to the aggregate of all calls to the application. All addresses would use the same country/region code. </P>
+
+<P>Dialing is considered complete after the address has been passed to the service provider; not after the call is finally connected. Service providers that provide inverse multiplexing can allow multiple addresses to be provided at once. The service provider sends LINE_CALLSTATE messages to the application to inform it about the progress of the call. To abort a call attempt while a call is being established, the invoking application should use <A HREF="_wcesdk_win32_linedrop.htm">lineDrop</A>. </P>
+
+<P>An application can set the <I>lpszDestAddress</I> parameter of the <B>lineDial</B> function to the address of an empty string to indicate that dialing is complete, but only if the previous calls to the <B>lineMakeCall</B> and <B>lineDial</B> functions have had the strings specified by <I>lpszDestAddress</I> terminated with semicolons. </P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Tapi.h</TD>
+<TD width=16%>Tapi.h</TD>
+<TD width=20%>Tapi32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_win32_linedrop.htm">lineDrop</A>, <A HREF="_wcesdk_win32_linemakecall.htm">lineMakeCall</A>, <A HREF="_wcesdk_win32_line_callstate.htm">LINE_CALLSTATE</A>, <A HREF="_wcesdk_win32_line_reply.htm">LINE_REPLY</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;lineDial&nbsp;(_wcesdk_win32_linedial.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Step 3: Load the Music Elements</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Step 3: Load the Music Elements"/>
+<MSHelp:RLTitle Title="Step 3: Load the Music Elements"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_3__Load_the_Music_Elements"/>
+<MSHelp:Keyword Index="K" Term="music elements, loading (DirectMusic Tutorial 3)"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Step_3__Load_the_Music_Elements"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts2_tutorials.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_690675">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_step_3__load_the_music_elements"></A>Step 3: Load the Music Elements</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The next step in setting up the DirectMusic functionality of the DMDonuts sample application is to load the music elements &#0151; styles, templates, motifs, chordmaps, and bands &#0151; from file. Like the previous step, this one is carried out in the <B>InitializeGame</B> function.</P>
+
+<P>First the application creates the loader object.</P>
+
+<PRE class="code">if (!SUCCEEDED(::CoCreateInstance(
+            CLSID_DirectMusicLoader,
+            NULL,
+            CLSCTX_INPROC, 
+            IID_IDirectMusicLoader,
+            (void**)&amp;gpLoader
+        )))
+{
+    return CleanupAndExit("Could not create a loader object");
+}
+ </PRE>
+
+<P>Then it sets the search directory for all object types and enables the object cache. This second call simply confirms the default cache status.</P>
+
+<PRE class="code">hr = E_FAIL;
+ 
+/ * The GetSearchPath function gets the media directory 
+    from the registry and returns it in wszSearchPath. */
+ 
+if (GetSearchPath(wszSearchPath))
+{
+    hr = gpLoader-&gt;SetSearchDirectory(
+           GUID_DirectMusicAllTypes, wszSearchPath, FALSE);
+}
+ 
+/* If that directory does not exist, try the current directory. */
+ 
+if (FAILED(hr))
+{
+    hr = gpLoader-&gt;SetSearchDirectory(GUID_DirectMusicAllTypes,
+            L".", FALSE);
+}
+if (FAILED(hr))
+{
+    return CleanupAndExit("Could not set the search directory \
+            for the DirectMusic loader");
+}
+gpLoader-&gt;EnableCache(GUID_DirectMusicAllTypes, TRUE);
+ </PRE>
+
+<P>The following code snippet loads the style named Donuts, which is in the Donuts.sty file. Because the application has not called <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__ScanDirectory" TABINDEX="0">IDirectMusicLoader::ScanDirectory</MSHelp:link> to build a database of objects that can be loaded by internal name, the first call to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link> will fail. The fallback procedure is to identify the object by file name and call <B>GetObject</B> again.</P>
+
+<PRE class="code">IDirectMusicObject* pObject = NULL;
+DMUS_OBJECTDESC ObjectDescript;
+ 
+ObjectDescript.dwSize = sizeof(DMUS_OBJECTDESC);
+ObjectDescript.guidClass = CLSID_DirectMusicStyle;
+wcscpy(ObjectDescript.wszName, L"Donuts");
+ObjectDescript.dwValidData = DMUS_OBJ_CLASS | DMUS_OBJ_NAME;
+ 
+if (!SUCCEEDED(gpLoader-&gt;GetObject(&amp;ObjectDescript,
+        IID_IDirectMusicStyle, (void**)&amp;gapStyle[1])))
+{
+    wcscpy(ObjectDescript.wszFileName, L"Donuts.sty");
+    ObjectDescript.dwValidData = DMUS_OBJ_CLASS | DMUS_OBJ_FILENAME;
+    if (!SUCCEEDED(gpLoader-&gt;GetObject(&amp;ObjectDescript,
+            IID_IDirectMusicStyle, (void**)&amp;gapStyle[1])))
+    {
+        return CleanupAndExit("Could not load style object 1");
+    }
+}
+ </PRE>
+
+<P>The <B>InitializeGame</B> function then goes on to load another style and two templates in similar fashion.</P>
+
+<P>The next step is to initialize an array of motifs that will be used to mark certain events in the game. Each motif is contained in a style and is obtained by calling the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicStyle__GetMotif" TABINDEX="0">IDirectMusicStyle::GetMotif</MSHelp:link> method, which creates a segment for the motif. The method must be supplied with the internal name of the motif, as in the following example from Donuts.cpp. </P>
+
+<PRE class="code">WCHAR awszMotifs[NUM_MOTIFS][64];
+ 
+wcscpy(awszMotifs[MOTIF_BOUNCE], L"Bounce");
+.
+.
+.
+hr = gapStyle[0]-&gt;GetMotif(awszMotifs[MOTIF_BOUNCE],
+        &amp;(gapMotif[0][MOTIF_BOUNCE]));
+ </PRE>
+
+<P>If you look at the complete code, you will see that the application loads two sets of motifs with the same names, one set from the Donuts style and the other from Donutz. DMDonuts switches between these two styles as the player moves from level to level. When a <I>gapMotif</I> is played, its first index is determined by the value of the global <I>gnCurrentStyle</I>, ensuring that it is the correct motif for that level.</P>
+
+<P>The application now initializes four chordmaps for each style. These are obtained from separate files.</P>
+
+<PRE class="code">WCHAR awszChordMap[NUM_STYLES][NUM_CHORDMAP][64];
+wcscpy(awszChordMap[0][0], L"minaeo.per");
+wcscpy(awszChordMap[0][1], L"minfunc.per");
+wcscpy(awszChordMap[0][2], L"mipedpt.per");
+wcscpy(awszChordMap[0][3], L"tension.per");
+wcscpy(awszChordMap[1][0], L"dianoble.per");
+wcscpy(awszChordMap[1][1], L"minpedpt.per");
+wcscpy(awszChordMap[1][2], L"mippjazz.per");
+wcscpy(awszChordMap[1][3], L"minjazz.per");
+
+ObjectDescript.guidClass = CLSID_DirectMusicChordMap;
+ObjectDescript.dwValidData = DMUS_OBJ_CLASS | DMUS_OBJ_FILENAME;
+
+for (short n = 0; n &lt; NUM_STYLES; n++)
+{
+    for (short m = 0; m &lt; NUM_CHORDMAP; m++)
+    {
+        if (hr == S_OK)
+        {
+            wcscpy(ObjectDescript.wszFileName,
+                    awszChordMap[n][m]);
+            hr = gpLoader-&gt;GetObject(&amp;ObjectDescript,
+                    IID_IDirectMusicChordMap,
+                   (void**)&amp;gapChordMap[n][m]);
+        }
+    }
+}
+
+if (hr != S_OK)
+{
+    return CleanupAndExit("Could not load a ChordMap");
+}</PRE>
+
+<P>The last elements to be retrieved from the styles are the bands. Each style has two different bands: one for when the player's ship is not shielded and one for when it is. Note that the names of the bands are allocated differently than were the motifs and chordmaps &#0151; each is a <B>BSTR</B> rather than a local array of <B>WCHAR</B> &#0151; but the effect is the same, because in the Win32&reg; API a <B>BSTR</B> is a pointer to a <B>WCHAR</B> array.</P>
+
+<P>As each band is loaded, it is downloaded to the performance, making available the DLS data for its instruments.</P>
+
+<PRE class="code">BSTR bstrDefault = SysAllocString(L"Default 2");
+BSTR bstrShields = SysAllocString(L"Shields");
+ 
+for (n = 0; n &lt; NUM_STYLES; n++)
+{
+    if (hr == S_OK)
+    {
+        hr = gapStyle[n]-&gt;GetBand(bstrShields, &amp;gapShieldBand[n]);
+    }
+    if (hr == S_OK)
+    {
+        hr = gapShieldBand[n]-&gt;Download(gpPerformance);
+    }
+    if (hr == S_OK)
+    {
+        hr = gapStyle[n]-&gt;GetBand(bstrDefault, &amp;gapDefaultBand[n]);
+    }
+    if (hr == S_OK)
+    {
+        hr = gapDefaultBand[n]-&gt;Download(gpPerformance);
+    }
+}
+
+SysFreeString(bstrDefault);
+SysFreeString(bstrShields);</PRE>
+
+<P>After some error-checking code, the <B>InitializeGame</B> function goes on to create segments from the four bands it has obtained. These segments will be used to play the band changes at the appropriate times. Once the segments have been created, the band interfaces are released.</P>
+
+<PRE class="code">for (n = 0; n &lt; NUM_STYLES; n++)
+{
+    if (hr == S_OK)
+    {
+        hr = gapShieldBand[n]-&gt;CreateSegment(&amp;gapShieldSegment[n]);
+    }
+    if (hr == S_OK)
+    {
+        hr = gapDefaultBand[n]-&gt;CreateSegment(&amp;gapDefaultSegment[n]);
+    }
+    apShieldBand[n]-&gt;Release();
+    apDefaultBand[n]-&gt;Release();
+}</PRE>
+
+<P>Next: <A HREF="_wcesdk_dxmusic_step_4__set_up_notifications.htm">Step 4: Set Up Notifications</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Step%203:%20Load%20the%20Music%20Elements&nbsp;(_wcesdk_dxmusic_step_3__load_the_music_elements.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

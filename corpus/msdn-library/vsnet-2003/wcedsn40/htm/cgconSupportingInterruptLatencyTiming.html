@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supporting Interrupt Latency Timing</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Supporting Interrupt Latency Timing"/>
+<MSHelp:RLTitle Title="Supporting Interrupt Latency Timing"/>
+<MSHelp:Keyword Index="A" Term="cgconSupportingInterruptLatencyTiming"/>
+<MSHelp:Keyword Index="K" Term="interrupts, interrupt latency timing"/>
+<MSHelp:Keyword Index="K" Term="kernel, interrupt latency timing"/>
+<MSHelp:Keyword Index="K" Term="OAL, interrupt latency timing"/>
+<MSHelp:Keyword Index="K" Term="timing, interrupt latency timing"/>
+<MSHelp:Keyword Index="A" Term="cgconSupportingInterruptLatencyTiming"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757227">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconsupportinginterruptlatencytiming"></A>Supporting Interrupt Latency Timing</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P class="labelproc"><B>To support interrupt latency timing</B>
+
+<OL type="1">
+	<LI>Implement <A HREF="cmrefioctl_hal_iltiming.htm">IOCTL_HAL_ILTIMING</A> support in <A HREF="cmrefoemiocontrol.htm">OEMIoControl</A>. This code is hardware independent and can be copied from any of the sample platforms. It includes the global variables <I>fIntrTime</I>, <I>dwIsrTime1</I>, <I>dwIsrTime2</I>, and <I>wNumInterrupts</I>, among others that should all be copied.</li>
+
+	<LI><A HREF="cmrefoeminterruptenable.htm">OEMInterruptEnable</A> should return success for SYSINTR_TIMING without actually performing an action.</li>
+
+	<LI>Implement <A HREF="cmrefperfcountsincetick.htm">PerfCountSinceTick</A> and <A HREF="cgconperfcountfreq.htm">PerfCountFreq</A>. <B>PerfCountSinceTick</B> is the number of counter ticks that have elapsed since the latest timer interrupt occurred.</li>
+
+	<LI>All ISRs must check <B>fIntrTime</B>, one of the global variables, at their entry point. If this variable is set, the ISR should set dwIsrTime1 to <B>PerfCountSinceTick</B> and increment <I>wNumInterrupts</I>.</li>
+
+	<LI>If <I>fIntrTime</I> is set, the timer ISR should decrement <I>dwIntrTimeCountdown </I>and return SYSINTR_TIMING if it is zero. Otherwise, it should return SYSINTR_RESCHED or SYSINTR_NOP as normal. Once it is zero, <I>dwIntrTimeCountdown </I>should be reloaded from dwIntrTimeCountdownRef; this variable is initialized through an IOCTL_HAL_ILTIMING message.</li>
+
+	<LI>When it returns SYSINTR_TIMING, the timer ISR needs to set <I>dwIsrTime2</I> to <B>PerfCountSinceTick</B>.</li>
+</OL>
+
+<P>The sample implementation of <A HREF="cmrefoemidle.htm">OEMIdle</A> already checks <I>fIntrTime</I> and handles interrupt latency timing as a special case.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconinterruptlatencytiming.htm">Interrupt Latency Timing</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Supporting%20Interrupt%20Latency%20Timing&nbsp;(cgconsupportinginterruptlatencytiming.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

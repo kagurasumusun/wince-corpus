@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Keyboard Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Keyboard Drivers"/>
+<MSHelp:RLTitle Title="Keyboard Drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconKeyboardDrivers"/>
+<MSHelp:Keyword Index="K" Term="drivers, keyboard"/>
+<MSHelp:Keyword Index="K" Term="input, keyboard"/>
+<MSHelp:Keyword Index="K" Term="keyboard drivers, development overview"/>
+<MSHelp:Keyword Index="K" Term="Unicode, character generation by keyboard driver"/>
+<MSHelp:Keyword Index="A" Term="cxconKeyboardDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: keyboard_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_731912">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconkeyboarddrivers"></A>Keyboard Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The keyboard driver converts input from the keyboard hardware into keyboard events that the driver enters into the input system. The driver is also responsible for generating the proper Unicode characters from these keyboard events. The keyboard driver is divided into components, which facilitate development of keyboard drivers for international keyboard layouts. Some keyboard drivers need to have keys generate multiple virtual keys. This is useful on smaller platforms that do not have the all of the physical keys normally present on desktop workstations. Some of the keys have multiple function, modified functions, or both. The driver generates virtual keys based on the state of particular physical keys and modifier keys such as SHIFT, ALT, and so on. </P>
+
+<P>Generally, you should implement the keyboard driver as a layered driver. The upper layer, or MDD, maps scan codes to virtual key codes, generates character data associated with VK codes, and then packages keyboard messages and puts them in the system message queue. The lower layer, or PDD, retrieves scan codes from hardware.</P>
+
+<P>The keyboard driver is different from other device drivers in that it is language dependent. The <B>ScanCodeToVKeyEx</B> function is responsible for translating between hardware dependent scan codes and standard Windows virtual keys. This function will be dependent on the particular hardware and keyboard layout for the language. The <A HREF="_wceddk_keybddrivervkeytounicode.htm">KeybdDriverVKeyToUnicode</A> function is responsible for generating the correct Unicode character based on the state of the virtual keys. This function is dependent only on the keyboard layout for the language. Both of these functions are based on translation tables; also known as, keyboard mappings, which you can customize for different languages. You can create your own <A HREF="cmconkeyboardmapping.htm">Keyboard Mappings</A> or customize the existing keyboard mappings, if necessary.</P>
+
+<P>The input system loads the keyboard driver at startup time. When the input system starts, it retrieves the name of the keyboard driver dynamic-link library (DLL) from the <B>HKEY_LOCAL_MACHINE\Hardware\DeviceMap\KEYBD\Drivername</B> registry key. If no entry is found, the input system uses the default name, Keybddr.dll. It then loads the DLL and verifies that all required entry points exist. Then, the input system calls the <A HREF="_wceddk_keybddriverinitialize.htm">KeybdDriverInitialize</A> function to perform a one-time initialization. In this function, the driver saves a local copy of the input system callback function. The <A HREF="_wceddk_keybdpdd_initializedriver.htm">KeybdPdd_InitializeDriver</A> function is also called to perform any hardware-specific initialization. It then starts the interrupt service thread (IST) to handle keyboard interrupts. This thread calls the <MSHelp:link keywords="cmrefInterruptInitialize" TABINDEX="0">InterruptInitialize</MSHelp:link> function to register an event for the SYSINTR_KEYBOARD interrupt. It then waits for the event to be signaled. When the event is signaled, the IST calls the <A HREF="_wceddk_keybdpdd_getevent.htm">KeybdPdd_GetEvent</A> function. It then sends the key events returned from the lower layer to the input system using the callback function provided by the input system when the <B>KeybdDriverInitialize</B> function was called. The input system pulls the keyboard event from the queue and calls back to the driver's <B>KeybdDriverVKeyToUnicode</B> routine. The driver analyzes the specified key event and the virtual key state and generates the corresponding characters. The input system then sends the virtual key and the characters to the appropriate application. The keyboard driver must add the flags KEYBD_DEVICE_SILENT or KEYBD_DEVICE_SILENT_REPEAT to the virtual key codes it submits to the input system in order to suppress audible key clicks.</P>
+
+<P>The <A HREF="_wceddk_keybddrivergetinfo.htm">KeybdDriverGetInfo</A> and <A HREF="_wceddk_keybddriversetmode.htm">KeybdDriverSetMode</A> functions get and set information about the keyboard. When the main input thread processes a keyboard-connection event, the thread calls the <B>KeybdDriverGetInfo</B> function to get the virtual-key-to-Unicode data supplied by the driver. The thread also allocates the required memory for the virtual key state data and any extra data required by the driver. Next, it calls the <A HREF="_wceddk_keybddriverinitstates.htm">KeybdDriverInitStates</A> function to initialize the memory.</P>
+
+<P>The <B>KeybdDriverInitializeEx</B>, <B>KeybdEventCallbackEx</B>, <B>KeybdPdd_GetEventEx</B>, and <B>KeybdPdd_InitializeDriverEx</B> functions replace the non-EX versions of these functions. The Ex functions provide support for Terminal Server Client by handling extra scancode information that the Terminal Server Protocol requires. The sample keyboard drivers on all platforms use the Ex versions. For more information on sample keyboard drivers, see <A HREF="cxconkeyboarddriversupport.htm">Keyboard Driver Samples</A>.</P>
+
+<P>When the keyboard IST wakes up to service a keyboard interrupt, there is a call to <B>KeybdPdd_GetEventEx</B> to retrieve the generated keyboard scan codes and the translated virtual key codes.</P>
+
+<P>For each valid keyboard event, the IST checks if a key is pressed or released. If a key is pressed, it calls <B>KeybdDriverRemapVKeyDownEx </B>to handle virtual key remapping. If a key is released, it calls <B>KeybdDriverRemapVKeyUpEx</B>.</P>
+
+<P>In <B>KeybdDriverRemapVKeyDownEx</B>, the function checks to see if the virtual key is a numeric keypad key and if the NUMLOCK key is active and a SHIFT key is pressed. If true, the function remaps the keypad virtual key to fake SHIFT key releases in the remap virtual key buffer. Then, adds a virtual code for the keypad key when the NUMLOCK key is not active. </P>
+
+<P>When you release the keypad key, <B>KeybdDriverRemapVKeyUpEx</B> is called. The function sends the keypad key release. Then, it re-enables the original SHIFT key state by sending fake SHIFT key presses. </P>
+
+<P>The following table shows the upper layer, or MDD, keyboard driver functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=38%>Function</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="_wceddk_keybddrivergetinfo.htm">KeybdDriverGetInfo</A></TD>
+<TD width=62%>Retrieves information about the keyboard and driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="_wceddk_keybddriversetmode.htm">KeybdDriverSetMode</A></TD>
+<TD width=62%>Sets mode information for the keyboard device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="_wceddk_keybddriverinitialize.htm">KeybdDriverInitialize</A></TD>
+<TD width=62%>Performs a one-time-only keyboard driver initialization.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="cxrefkeybddriverinitializeex.htm">KeybdDriverInitializeEx</A></TD>
+<TD width=62%>Performs a one-time-only keyboard driver initialization.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="_wceddk_keybddrivervkeytounicode.htm">KeybdDriverVKeyToUnicode</A></TD>
+<TD width=62%>Generates the appropriate Unicode characters and shift state flags for a specified virtual key, key state array, and driver state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="_wceddk_keybddriverinitstates.htm">KeybdDriverInitStates</A></TD>
+<TD width=62%>Initializes the virtual key state and driver specific state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><A HREF="_wceddk_keybddriverpowerhandler.htm">KeybdDriverPowerHandler</A></TD>
+<TD width=62%>Handles system power-state change notifications.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the lower layer, or PDD, keyboard driver functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_keybdpdd_dllentry.htm">KeybdPdd_DllEntry</A></TD>
+<TD width=50%>Called by the upper layer on DLL state changes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_keybdpdd_getevent.htm">KeybdPdd_GetEvent</A></TD>
+<TD width=50%>Called by the upper layer to retrieve keyboard events after the SYSINTR_KEYBD signal is sent.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefkeybdpdd_geteventex.htm">KeybdPdd_GetEventEx</A></TD>
+<TD width=50%>Called by the upper layer to retrieve keyboard events after the SYSINTR_KEYBD signal is sent.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_keybdpdd_initializedriver.htm">KeybdPdd_InitializeDriver</A></TD>
+<TD width=50%>Called by the keyboard driver upper layer to initialize the keyboard hardware.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefkeybdpdd_initializedriverex.htm">KeybdPdd_InitializeDriverEx</A></TD>
+<TD width=50%>Called by the keyboard driver upper layer to initialize the keyboard hardware.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_keybdpdd_powerhandler.htm">KeybdPdd_PowerHandler</A></TD>
+<TD width=50%>Called by the upper layer on system power state changes.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows other keyboard driver functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wceddk_keybdeventcallback.htm">KeybdEventCallback</A></TD>
+<TD width=50%>Prototype of the callback function passed to the <B>KeybdDriverInitialize</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefkeybdeventcallbackex.htm">KeybdEventCallbackEx</A></TD>
+<TD width=50%>Prototype of the callback function passed to the <B>KeybdDriverInitialize</B> function.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconkeyboarddriversupport.htm">Keyboard Driver Samples</A></P>
+
+<P><A HREF="cxconkeyboarddriverregistrysettings.htm">Keyboard Driver Registry Settings</A></P>
+
+<P><A HREF="cmconkeyboardmapping.htm">Keyboard Mappings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Keyboard%20Drivers&nbsp;(cxconkeyboarddrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

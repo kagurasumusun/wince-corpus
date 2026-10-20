@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Protocol Driver Unbinding Operations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Protocol Driver Unbinding Operations"/>
+<MSHelp:RLTitle Title="Protocol Driver Unbinding Operations"/>
+<MSHelp:Keyword Index="A" Term="cxrefProtocolDriverUnbindingOperations"/>
+<MSHelp:Keyword Index="K" Term="NDIS, protocol driver unbinding operations"/>
+<MSHelp:Keyword Index="K" Term="protocol drivers, unbinding operations"/>
+<MSHelp:Keyword Index="K" Term="unbinding, NDIS protocol drivers"/>
+<MSHelp:Keyword Index="A" Term="cxrefProtocolDriverUnbindingOperations"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ndis_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758537">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefprotocoldriverunbindingoperations"></A>Protocol Driver Unbinding Operations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>A protocol driver unbinds from an underlying NIC by calling <A HREF="_wceddk_ndiscloseadapter.htm">NdisCloseAdapter</A>. If a protocol driver registers a <A HREF="cxrefprotocolunbindadapter.htm">ProtocolUnbindAdapter</A> function, NDIS will call this function if the underlying NIC is no longer available. For instance, if the NIC timed out, an attempt to reset the NIC failed to make it operational, and NDIS called the <A HREF="cxrefminiporthalt.htm">MiniportHalt</A> function of the NIC driver for the malfunctioning NIC, NDIS will subsequently call the overlying protocol driver's <B>ProtocolUnbindAdapter</B> function.</P>
+
+<P>If a protocol driver does not register this function, an unbind operation can originate in the driver's <A HREF="cxrefprotocolstatus.htm">ProtocolStatus</A> function, as the result of receiving a status of NDIS_STATUS_CLOSING at <I>GeneralStatus</I>. A protocol driver also should unbind from an adapter during initialization if some action subsequent to opening an adapter, such as allocating a required resource, fails, and the driver needs to unbind because it cannot carry out network operations on the binding. </P>
+
+<P>If a protocol driver registers a <B>ProtocolUnbindAdapter</B>, this function calls <B>NdisCloseAdapter</B>. However, the protocol must not de-allocate all its binding-specific resources until it calls <A HREF="_wceddk_ndiscompleteunbindadapter.htm">NdisCompleteUnbindAdapter</A>. If the protocol driver does not provide a <B>ProtocolUnbindAdapter</B> function, but calls <B>NdisCloseAdapter</B>, it can de-allocate any previously allocated resources when either <B>NdisCloseAdapter</B> returns NDIS_STATUS_SUCCESS, or, if <B>NdisCloseAdapter</B> returns NDIS_STATUS_PENDING, when <A HREF="cxrefprotocolcloseadaptercomplete.htm">ProtocolCloseAdapterComplete</A> is called. </P>
+
+<P>NDIS delays calling <B>ProtocolCloseAdapterComplete</B> until all outstanding requests on the binding are complete. Once the close request completes, the <I>ProtocolBindingContext</I> handle the protocol driver allocated to represent the binding becomes invalid.</P>
+
+<P>Before returning synchronously from <B>ProtocolUnbindAdapter</B> or before completing the unbind operation asynchronously with <B>NdisCompleteUnbindAdapter</B>, the driver must do the following: 
+
+<UL type="disc">
+	<LI>Finish cleaning up any state that it maintains for the binding </li>
+
+	<LI>Release any resources that it allocated to establish the binding </li>
+
+	<LI>Call <B>NdisCloseAdapter</B> </li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconprotocoldrivers.htm">Protocol Drivers</A></P>
+
+<P><A HREF="cxrefminiporthalt.htm">MiniportHalt</A></P>
+
+<P><A HREF="_wceddk_ndiscloseadapter.htm">NdisCloseAdapter</A></P>
+
+<P><A HREF="_wceddk_ndiscompleteunbindadapter.htm">NdisCompleteUnbindAdapter</A></P>
+
+<P><A HREF="cxrefprotocolcloseadaptercomplete.htm">ProtocolCloseAdapterComplete</A> </P>
+
+<P><A HREF="cxrefprotocolstatus.htm">ProtocolStatus</A></P>
+
+<P><A HREF="cxrefprotocolunbindadapter.htm">ProtocolUnbindAdapter</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Protocol%20Driver%20Unbinding%20Operations&nbsp;(cxrefprotocoldriverunbindingoperations.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

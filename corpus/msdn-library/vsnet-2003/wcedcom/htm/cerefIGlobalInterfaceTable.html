@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IGlobalInterfaceTable</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IGlobalInterfaceTable"/>
+<MSHelp:RLTitle Title="IGlobalInterfaceTable:IUnknown"/>
+<MSHelp:Keyword Index="A" Term="cerefIGlobalInterfaceTable"/>
+<MSHelp:Keyword Index="K" Term="IGlobalInterfaceTable"/>
+<MSHelp:Keyword Index="K" Term="IGlobalInterfaceTable, interface definition"/>
+<MSHelp:Keyword Index="A" Term="cerefIGlobalInterfaceTable"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748448">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefiglobalinterfacetable"></A>IGlobalInterfaceTable:IUnknown</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This interface allows any apartment in a process to get access to an interface implemented on an object in any other apartment in the process. The three methods allow you to do the following: 
+
+<UL type="disc">
+	<LI>Register an interface as a global (process-wide) interface. </li>
+
+	<LI>Get a pointer to that interface from any other apartment through a cookie. </li>
+
+	<LI>Revoke the global registration of an interface. </li>
+</UL>
+
+<P>The <B>IGlobalInterfaceTable</B> interface is an efficient way for a process to store an interface pointer in a memory location that can be accessed from multiple apartments within the process, such as process-wide variables and agile (free-threaded marshaled) objects containing interface pointers to other objects. </P>
+
+<P>An agile object is unaware of the underlying COM infrastructure in which it runs&#0151;in other words, what apartment, context, and thread it is executing on. The object may be holding on to interfaces that are specific to an apartment or context. For this reason, calling these interfaces from wherever the agile component is executing may not always work properly. The global interface table avoids this problem by guaranteeing that a valid proxy (or direct pointer) to the object is used, based on where the agile object is executing. </P>
+
+<P>The global interface table is not portable across process or machine boundaries, so it cannot be used in place of the normal parameter-passing mechanism. </P>
+
+<H4 class="dtH4">When to Implement</H4>
+
+<P>You should not implement this interface. The standard implementation provides complete thread-safe functionality.</P>
+
+<H4 class="dtH4">When to Use</H4>
+
+<P>Use this interface when an interface implemented on an object in one apartment must be stored in memory accessible for use by other apartments. To create the global interface table object and get a pointer to this interface, make the following call.</P>
+
+<PRE class="code">CoCreateInstance(CLSID_StdGlobalInterfaceTable,
+                            NULL,
+                            CLSCTX_INPROC_SERVER,
+                            IID_IGlobalInterfaceTable,
+                            (void **)&amp;gpGIT)</PRE>
+
+<BLOCKQUOTE class="dtBlock">
+<B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>When creating the global interface table object using the above call, you must link to the library Uuid.lib. This will resolve the external symbols CLSID_StdGlobalInterfaceTable and IID_IGlobalInterfaceTable.</BLOCKQUOTE>
+
+<P>There is a single instance of the global interface table per process, so all calls to this function in a process return the same instance. </P>
+
+<P>After calling the <A HREF="cerefcocreateinstance.htm">CoCreateInstance</A> function, register the interface you want to make available process-wide from the apartment in which it resides with a call to the <A HREF="cerefiglobalinterfacetableregisterinterfaceinglobal.htm">IGlobalInterfaceTable::RegisterInterfaceInGlobal</A> method. This supplies a pointer to a "cookie" (through the <I>pdwCookie</I> parameter) that identifies the interface and its location. An apartment that wants a pointer to this interface then calls the <A HREF="cerefiglobalinterfacetablegetinterfacefromglobal.htm">IGlobalInterfaceTable::GetInterfaceFromGlobal</A> method with this cookie, and the implementation then supplies an interface pointer to the calling apartment. To revoke the interface's global registration, any apartment may call the <A HREF="cerefiglobalinterfacetablerevokeinterfacefromglobal.htm">IGlobalInterfaceTable::RevokeInterfaceFromGlobal</A> method.</P>
+
+<P>A simple example of its use would be when you want to pass an interface pointer on an object in a single-threaded apartment (STA) to a worker thread in another apartment. Rather than having to marshal it into a stream and pass the stream to the worker thread as a thread parameter, this interface allows you simply to pass a cookie.</P>
+
+<P>When you register the interface in the global interface table, you get a cookie that you can use instead of passing the actual pointer whenever you need to pass the pointer either to a non-method parameter that is going to another apartment (as a parameter to <MSHelp:link keywords="_wcesdk_win32_ThreadProc" TABINDEX="0">ThreadProc</MSHelp:link> through <MSHelp:link keywords="_wcesdk_Win32_CreateThread" TABINDEX="0">CreateThread</MSHelp:link>) or to in-process memory accessible outside your apartment.</P>
+
+<P>Care is required because using global interfaces places the extra burden on the programmer for managing problems such as race conditions and mutual exclusion, which are associated with accessing global state from multiple threads simultaneously.</P>
+
+<H4 class="dtH4">Methods in Vtable Order</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>IUnknown method</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="cerefiunknownqueryinterface.htm">QueryInterface</A></TD>
+<TD width=57%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="cerefiunknownaddref.htm">AddRef</A></TD>
+<TD width=57%>Increments reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="cerefiunknownrelease.htm">Release</A></TD>
+<TD width=57%>Decrements reference count. </TD>
+</TR>
+</table></div>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=43%>IGlobalInterfaceTable method</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="cerefiglobalinterfacetableregisterinterfaceinglobal.htm">RegisterInterfaceInGlobal</A></TD>
+<TD width=57%>Permits access to a given interface from any apartment in a process. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="cerefiglobalinterfacetablerevokeinterfacefromglobal.htm">RevokeInterfaceFromGlobal</A></TD>
+<TD width=57%>Revokes the registration of a global (process-wide) interface. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="cerefiglobalinterfacetablegetinterfacefromglobal.htm">GetInterfaceFromGlobal</A></TD>
+<TD width=57%>Gives the calling apartment access to an interface registered as global. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Objidl.h</TD>
+<TD width=15%>Objidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_Win32_CreateThread" TABINDEX="0">CreateThread</MSHelp:link>, <MSHelp:link keywords="_wcesdk_win32_ThreadProc" TABINDEX="0">ThreadProc</MSHelp:link>, <A HREF="cerefiglobalinterfacetablegetinterfacefromglobal.htm">IGlobalInterfaceTable::GetInterfaceFromGlobal</A>, <A HREF="cerefiglobalinterfacetableregisterinterfaceinglobal.htm">IGlobalInterfaceTable::RegisterInterfaceInGlobal</A>, <A HREF="cerefiglobalinterfacetablerevokeinterfacefromglobal.htm">IGlobalInterfaceTable::RevokeInterfaceFromGlobal</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IGlobalInterfaceTable&nbsp;(cerefiglobalinterfacetable.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

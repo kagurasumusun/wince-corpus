@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Playing a MIDI File with Custom Instruments</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Playing a MIDI File with Custom Instruments"/>
+<MSHelp:RLTitle Title="Playing a MIDI File with Custom Instruments"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Playing_a_MIDI_File_with_Custom_Instruments"/>
+<MSHelp:Keyword Index="K" Term="downloadable sounds%2C DirectMusic, playing MIDI file with custom instruments"/>
+<MSHelp:Keyword Index="K" Term="instruments%2C DirectMusic, playing MIDI files with custom instruments"/>
+<MSHelp:Keyword Index="K" Term="MIDI, DirectMusic MIDI files"/>
+<MSHelp:Keyword Index="K" Term="sound, DirectMusic downloadable sounds"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Playing_a_MIDI_File_with_Custom_Instruments"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_playing_a_midi_file_with_custom_instruments"></A>Playing a MIDI File with Custom Instruments</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>By default, when you play a MIDI file, the instruments used are those in the Roland GM/GS Sound Set, contained in the Gm.dls file. However, you can play a MIDI file, using instruments from any collection.</P>
+
+<P>To do so, first load the collection, as described in <A HREF="_wcesdk_dxmusic_loading_a_collection.htm">Loading a Collection</A>, obtaining a pointer to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicCollection" TABINDEX="0">IDirectMusicCollection</MSHelp:link> interface. Then call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetParam" TABINDEX="0">IDirectMusicSegment::SetParam</MSHelp:link> on the MIDI segment to establish a connection between the segment and the collection.</P>
+
+<P>The following code example shows how the connection is made.</P>
+
+<PRE class="code">/* Assume that pSegment was created from a MIDI file
+   and that pLoadedCollection is a valid IDirectMusicCollection 
+   pointer. */
+ 
+HRESULT hr = pSegment-&gt;SetParam(GUID_ConnectToDLSCollection,
+        0xFFFFFFFF, 0, 0,
+        (void*)pLoadedCollection);</PRE>
+
+<P>As with any other collection, instruments to be used in playing a MIDI file must be downloaded before the segment is played, unless automatic downloading has been enabled. For more information about automatic downloading, see <A HREF="_wcesdk_dxmusic_setting_and_retrieving_global_parameters.htm">Setting and Retrieving Global Parameters</A> and <A HREF="_wcesdk_dxmusic_downloading_and_unloading_bands.htm">Downloading and Unloading Bands</A>.</P>
+
+<P>If instruments are not being downloaded automatically, you must download them by calling <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetParam" TABINDEX="0">IDirectMusicSegment::SetParam</MSHelp:link>, as in the following code example.</P>
+
+<PRE class="code">/* pSegment is an IDirectMusicSegment pointer, and pPerformance 
+   is a valid pointer to IDirectMusicPerformance. */
+ 
+pSegment-&gt;SetParam(GUID_Download, 0xFFFFFFFF, 0, 0, (void *) pPerformance);</PRE>
+
+<P>For more information about downloading by using <B>SetParam</B>, see <A HREF="_wcesdk_dxmusic_setting_and_retrieving_track_parameters.htm">Setting and Retrieving Track Parameters</A>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;</b>&nbsp;&nbsp;When a custom collection is attached to a MIDI segment, the connection to the GM collection is not broken. For example, suppose you load a collection containing a single instrument that has a patch number of 12 and connect this to the segment. MIDI channels with any patch number other than 12 continue to be played by the appropriate instruments in the GM collection.</BLOCKQUOTE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Playing%20a%20MIDI%20File%20with%20Custom%20Instruments&nbsp;(_wcesdk_dxmusic_playing_a_midi_file_with_custom_instruments.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

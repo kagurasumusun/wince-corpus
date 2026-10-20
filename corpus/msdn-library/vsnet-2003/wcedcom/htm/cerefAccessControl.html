@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COM Access Control</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="COM Access Control"/>
+<MSHelp:RLTitle Title="COM Access Control"/>
+<MSHelp:Keyword Index="A" Term="cerefAccessControl"/>
+<MSHelp:Keyword Index="K" Term="access control, COM"/>
+<MSHelp:Keyword Index="K" Term="COM, access control"/>
+<MSHelp:Keyword Index="A" Term="cerefAccessControl"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: com_security.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747865">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefaccesscontrol"></A>COM Access Control</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>After a successful authentication, the access check is performed against the access list. The access list is created from the <A HREF="ceref[hkey_local_machinesoftwaremicrosoftole].htm">DefaultAccessPermission</A> registry settings, or provided programmatically through the <B>DCOMAccessControl</B> object during server initialization. If the access check is successful, the user is granted access to the computer as a whole. No access check is performed for local activations; access requests are granted automatically.</P>
+
+<P>Windows CE contains a <B>DCOMAccessControl</B> object that the DCOM run time uses for all internal security checking. By default, the <B>DCOMAccessControl</B> object is initialized with the contents of the <A HREF="ceconappidkey.htm">AccessPermission</A> and <B>DefaultAccessPermission</B> registry keys. Alternatively, the registry keys can be supplied programmatically through the <B>CoInitializeSecurity</B> function. User authentication is based on NTLM verification of user name and password. A list of user names can be used to determine the access privileges of each user. This process is described in the following topics. </P>
+
+<P>On Windows CE, the application that is modifying security settings in the registry must call the <A HREF="cerefupdatedcomsettings.htm">UpdateDCOMSettings</A> function to have DCOM Security Support reload its configuration. </P>
+
+<P>Also, all DCOM components that are already running must be reloaded for new settings to take effect on them. For example, if a user were to change the<A HREF="ceconappidkey.htm"> LaunchPermission</A> and <B>AccessPermission</B> registry keys for a particular component, and the component had already been launched, the component would need to be reloaded for permissions to take effect.</P>
+
+<P>The<I> </I><B>EnableRemoteConnect</B><I> </I>and <B>LegacyMutualAthentication</B><I> </I>registry settings are not supported in Windows CE and, if they are present, they are ignored.</P>
+
+<P>The<I> </I><A HREF="ceref[hkey_local_machinesoftwaremicrosoftole].htm">DefaultAccessPermission</A>, <A HREF="ceref[hkey_local_machinesoftwaremicrosoftole].htm">DefaultLaunchPermission</A>, <A HREF="ceconappidkey.htm">AccessPermission</A>, and <A HREF="ceconappidkey.htm">LaunchPermission</A> keys hold a REG_BINARY value that contains the access-control list (ACL) of the principals who can launch classes on the current system. The following code example shows the structure of the ACL.</P>
+
+<PRE class="code">typedef struct {
+    WORD  wVersion;
+    WORD  wPad;
+    GUID  gClass;
+    WCHAR szPerms[1];
+} Permissions;</PRE>
+
+<P>The <B>wVersion</B> member should be set to = 3.</P>
+
+<P>The <B>gClass</B> member contains the globally unique identifier (GUID) of the <B>AccessControl</B> object and should be set to CLSID_DCOMAccessControl. This value is ignored in the <B>LaunchPermission</B> and <B>DefaultLaunchPermission</B> keys.</P>
+
+<P>The <B>szPerms</B> member is an access string that <B>AccessControl::Load</B> receives from the <B>IStream</B> interface. The following code example shows the BNF syntax used by <B>szPerms</B>.</P>
+
+<PRE class="code">szPerms := ""
+szPerms := AccessList
+AccessList := IndividualControl
+AccessList := IndividualControl;AccessList
+IndividualControl := Principal
+IndividualControl := -Principal
+Principal := @groupname
+Principal := username
+Principal := @star
+star := *</PRE>
+
+<H2 class="dtH2">Examples</H2>
+
+<P>The following string allows user1 and user2 and the administrator group and restricts the user3 user and the villains group.</P>
+
+<PRE class="code">"user1;user2;-user3;@administrators;-@villains"</PRE>
+
+<P>Strings are interpreted sequentially &#0151; in other words, if user1 is a member of the group1 group, the following strings will allow user1.</P>
+
+<PRE class="code">user1
+@group1
+@group1;user1
+user1;@group1
+@group1;-user1
+user1;-@group1
+user1;-user1
+*;-user1;-@group1</PRE>
+
+<P>The following strings will restrict user1.</P>
+
+<PRE class="code">-user1
+-@group1
+-user1;@group1
+-@group1;user1
+-user1;user1
+-user1;*</PRE>
+
+<P>This syntax incorporates the following rules:
+
+<UL type="disc">
+	<LI>Group names are prefixed with the at sign (@).</li>
+
+	<LI>User names or groups are prefixed with a hyphen (-) to disallow access.</li>
+
+	<LI>The wildcard character asterisk (*) or at sign and asterisk (@*) allows all users, while the wildcard character hyphen and asterisk (-*) or hyphen, at sign, and asterisk (-@*) denies all users. The wildcard character asterisk (*) is a group and must be marked as such. Parsers inside DCOM understand both the at sign and asterisk (@*) and the asterisk (*) syntax, but they always use the at sign and asterisk (@*) syntax themselves.</li>
+</UL>
+
+<P>Also, to be able to use the remote functionality of DCOM, the access credentials of the user must be set in <B>HKEY_CURRENT_USER\Comm\Ident</B>. The computer name should be set to a unique value on the local network in <B>HKEY_LOCAL_MACHINE\Ident</B>. For NTLM authentication to work, the domain must be configured in <B>HKEY_LOCAL_MACHINE\Comm\Redir</B>, as shown in the following code example.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code"><code class="ce">[HKEY_LOCAL_MACHINE\Ident]
+</code>    <code class="ce">Name=WinCEDCOMServer</code>
+    <code class="ce">Desc=DCOM server box</code>
+    <code class="ce">OrigName=WinCE</code>
+<code class="ce">[HKEY_LOCAL_MACHINE\Comm\Redir]</code>
+    <code class="ce">DefaultDomain=REDMOND</code></PRE>
+
+<P>For more registry settings information, see <A HREF="corefcomregistrykeys.htm">COM Registry Settings</A>. For more information about local and pass-through authentication, as well as usage and configuration, see <MSHelp:link keywords="ceconSecuritySupportProviderInterface" TABINDEX="0">Security Support Provider Interface</MSHelp:link>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;COM%20Access%20Control&nbsp;(cerefaccesscontrol.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxLoadLibrary</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="AfxLoadLibrary"/>
+<MSHelp:RLTitle Title="AfxLoadLibrary"/>
+<MSHelp:Keyword Index="A" Term="aflrfAfxLoadLibrary"/>
+<MSHelp:Keyword Index="K" Term="AfxLoadLibrary function"/>
+<MSHelp:Keyword Index="A" Term="aflrfAfxLoadLibrary"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="funct.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697678">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfafxloadlibrary"></A>AfxLoadLibrary</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>Use <B>AfxLoadLibrary</B> to map a DLL module. It returns a handle that can be used in <B>GetProcAddress</B> to get the address of a DLL function. <B>AfxLoadLibrary</B> can also be used to map other executable modules.</P>
+
+<P>Each process maintains a reference count for each loaded library module. This reference count is incremented each time <B>AfxLoadLibrary</B> is called and is decremented each time <B>AfxFreeLibrary</B> is called. When the reference count reaches zero, the module is unmapped from the address space of the calling process and the handle is no longer valid. </P>
+
+<P>Be sure to use <B>AfxLoadLibrary</B> and <B>AfxFreeLibrary</B> (instead of the Win32 functions <B>LoadLibrary</B> and <B>FreeLibrary</B>) if your application uses multiple threads. Using <B>AfxLoadLibrary</B> and <B>AfxFreeLibrary</B> insures that the startup and shutdown code that executes when the extension DLL is loaded and unloaded does not corrupt the global MFC state.</P>
+
+<PRE class="syntax"><B>HINSTANCE AFXAPI AfxLoadLibrary(</B> 
+<B>LPCTSTR </B><I>lpszModuleName</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>lpszModuleName</I></DT>
+
+<DD>Points to a null-terminated string that contains the name of the module (either a .DLL or .EXE file). The name specified is the filename of the module.
+
+<P>If the string specifies a path but the file does not exist in the specified directory, the function fails. 
+
+
+<P>If a path is not specified and the filename extension is omitted, the default extension .DLL is appended. However, the filename string can include a trailing point character (.) to indicate that the module name has no extension. When no path is specified, the function searches for the file in the following sequence: 
+
+
+<UL type="disc">
+	<LI>The directory from which the application loaded. </li>
+
+	<LI>The current directory.</li>
+
+	<LI><B>Windows 95/98:</B> The Windows system directory. <B>Windows NT:</B> The 32-bit Windows system directory. The name of this directory is SYSTEM32.</li>
+
+	<LI><B>Windows NT only:</B> The 16-bit Windows system directory. There is no Win32 function that obtains the path of this directory, but it is searched. The name of this directory is SYSTEM.</li>
+
+	<LI>The Windows directory. </li>
+
+	<LI>The directories that are listed in the PATH environment variable. </li>
+</UL>
+</dd>
+</DL>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>If the function succeeds, the return value is a handle to the module. If the function fails, the return value is NULL.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// The following shows how to create a MDI based application
+// using a generic CView derived class that is implemented in
+// a dynamically loaded MFC Extension DLL.
+
+typedef CRuntimeClass * (*GETDLLVIEW)();
+
+BOOL CMyApp::InitInstance()
+{
+&nbsp;&nbsp;// ....
+&nbsp;&nbsp;// Standard AppWizard generated initalization excluded.
+&nbsp;&nbsp;// ...
+
+&nbsp;&nbsp;// Register the application's document templates.  Document
+&nbsp;&nbsp;// templates serve as the connection between documents,
+&nbsp;&nbsp;// frame windows, and views.
+
+    
+&nbsp;&nbsp;//Load MFC Extension DLL based view class.
+&nbsp;&nbsp;m_hViewDll = AfxLoadLibrary("myview.dll");
+&nbsp;&nbsp;if (!m_hViewDll)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Error: Cannot find component \"MyView.Dll\"");
+&nbsp;&nbsp;&nbsp;&nbsp;return FALSE;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;GETDLLVIEW GetView = (GETDLLVIEW) GetProcAddress(m_hViewDll,
+&nbsp;&nbsp;&nbsp;&nbsp; "GetView");
+&nbsp;&nbsp;ASSERT (GetView != NULL);
+
+&nbsp;&nbsp;CMultiDocTemplate* pDocTemplate;
+&nbsp;&nbsp;pDocTemplate = new CMultiDocTemplate(
+&nbsp;&nbsp;&nbsp;&nbsp;IDR_MYTYPE,
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS(CMyDoc),
+&nbsp;&nbsp;&nbsp;&nbsp;// Custom MDI child frame.
+&nbsp;&nbsp;&nbsp;&nbsp;RUNTIME_CLASS(CChildFrame), 
+&nbsp;&nbsp;&nbsp;&nbsp;//Call our DLL function to return view class.
+&nbsp;&nbsp;&nbsp;&nbsp;GetView());          
+&nbsp;&nbsp;AddDocTemplate(pDocTemplate);
+
+&nbsp;&nbsp;// ....
+&nbsp;&nbsp;// Standard AppWizard generated initalization excluded.
+&nbsp;&nbsp;// ...
+&nbsp;&nbsp;
+&nbsp;&nbsp;return TRUE;
+}
+
+
+int CMyApp::ExitInstance() 
+{
+&nbsp;&nbsp;
+&nbsp;&nbsp;if (m_hViewDll)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxFreeLibrary(m_hViewDll);
+&nbsp;&nbsp;&nbsp;&nbsp;m_hViewDll = NULL;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;return CWinApp::ExitInstance();
+}</PRE>
+
+<P class="label"><B>Requirements</B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdll_.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfafxfreelibrary.htm"><B>AfxFreeLibrary</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697678', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

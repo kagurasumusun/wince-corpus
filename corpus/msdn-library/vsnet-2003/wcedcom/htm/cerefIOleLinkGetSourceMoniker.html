@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleLink::GetSourceMoniker</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IOleLink::GetSourceMoniker"/>
+<MSHelp:RLTitle Title="IOleLink::GetSourceMoniker"/>
+<MSHelp:Keyword Index="A" Term="cerefIOleLinkGetSourceMoniker"/>
+<MSHelp:Keyword Index="K" Term="IOleLink, GetSourceMoniker"/>
+<MSHelp:Keyword Index="A" Term="cerefIOleLinkGetSourceMoniker"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: com_interfaces2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756296">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefiolelinkgetsourcemoniker"></A>IOleLink::GetSourceMoniker</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This method retrieves the moniker identifying the link source of a linked object.</P>
+
+<PRE class="syntax"><B>HRESULT GetSourceMoniker(</B>
+<B>IMoniker **</B><I>ppmk</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>ppmk </I></DT>
+
+<DD>[out] Address of the <A HREF="cerefimonikeriunknown.htm">IMoniker</A><B>*</B> pointer variable that receives the interface pointer to an absolute moniker that identifies the link source. When successful, the implementation must call <A HREF="cerefiunknownaddref.htm">IUnknown::AddRef</A> on <I>*ppmk</I>; it is the caller's responsibility to call <A HREF="cerefiunknownrelease.htm">IUnknown::Release</A>. If an error occurs, the implementation must set <I>*ppmk</I> to NULL. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The moniker was returned successfully. </dd>
+
+<DT>MK_E_UNAVAILABLE </DT>
+
+<DD>No moniker is available. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The linked object stores both an absolute and a relative moniker for the link source. If the relative moniker is non-NULL and a moniker is available for the compound document, <B>IOleLink::GetSourceMoniker</B> returns the moniker created by composing the relative moniker onto the end of the compound document's moniker. Otherwise, it returns the absolute moniker or, if an error occurs, NULL.</P>
+
+<P>The container specifies the absolute moniker when it calls one of the <B>OleCreateLink</B> functions to create a link. The application can call <A HREF="cerefiolelinksetsourcemoniker.htm">IOleLink::SetSourceMoniker</A> or <A HREF="cerefiolelinksetsourcedisplayname.htm">IOleLink::SetSourceDisplayName</A> to change the absolute moniker. In addition, the linked object automatically updates the monikers whenever it successfully binds to the link source or when it is bound to the link source and it receives a rename notification through the <A HREF="cerefiadvisesinkonrename.htm">IAdviseSink::OnRename</A> method.</P>
+
+<P>To determine whether the platform supports this interface, see <A HREF="ceconlistingsupportedapisforcom.htm">Determining Supported COM APIs</A>.</P>
+
+<P class="label"><B>Notes to Callers</B></P>
+
+<P>Your container application can call <B>IOleLink::GetSourceMoniker</B> to display the current source of a link in the <B>Links</B> dialog box. Note that this requires your container to use the <A HREF="cerefimonikergetdisplayname.htm">IMoniker::GetDisplayName</A> method to get the display name of the moniker. If you would rather get the display name directly, your container can call <B>IOleLink::GetSourceDisplayName</B> instead of <B>IOleLink::GetSourceMoniker</B>.</P>
+
+<P>If you use the <B>OleUIEditLinks</B> function to display the <B>Links</B> dialog box, you must implement the <B>IOleUILinkContainer</B> interface. The dialog box calls your implementations of <B>IOleUILinkContainer::GetLinkSource</B> to get the string it should display. Your implementation of that method can call <B>IOleLink::GetSourceMoniker</B>. </P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>Oleidl.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefimonikeriunknown.htm">IMoniker</A>, <A HREF="cerefiadvisesinkonrename.htm">IAdviseSink::OnRename</A>, <A HREF="cerefimonikergetdisplayname.htm">IMoniker::GetDisplayName</A>, <A HREF="cerefiolelinksetsourcedisplayname.htm">IOleLink::SetSourceDisplayName</A>, <A HREF="cerefiolelinksetsourcemoniker.htm">IOleLink::SetSourceMoniker</A>, <A HREF="cerefiunknownaddref.htm">IUnknown::AddRef</A>, <A HREF="cerefiunknownrelease.htm">IUnknown::Release</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IOleLink::GetSourceMoniker&nbsp;(cerefiolelinkgetsourcemoniker.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

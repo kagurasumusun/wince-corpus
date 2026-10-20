@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDispEventImpl::GetIDsOfNames</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="vcsmpidispeventimplgetidsofnames"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_idispeventimplgetidsofnames"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_idispeventimplgetidsofnames"></A>IDispEventImpl::GetIDsOfNames</H1>
+
+<P>This method maps a single member and an optional set of argument names to a corresponding set of integer <B>DISPID</B>s, which can be used on subsequent calls to <B>IDispatch::Invoke</B>.</P>
+
+<PRE class=syntax><B>STDMETHOD ( GetIDsOfNames )(
+REFIID </B><I>riid</I><B>,
+LPOLESTR* </B><I>rgszNames</I><B>,
+UINT </B><I>cNames</I><B>,
+LCID </B><I>lcid</I><B>,
+DISPID* </B><I>rgdispid</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>riid</I></DT>
+
+<DD>Reserved for future use. Must be IID_NULL.</DD>
+
+<DT><I>rgszNames</I></DT>
+
+<DD>Passed-in array of names to be mapped.</DD>
+
+<DT><I>cNames</I></DT>
+
+<DD>Count of the names to be mapped.</DD>
+
+<DT><I>lcid</I></DT>
+
+<DD>The locale context in which to interpret the names.</DD>
+
+<DT><I>rgdispid</I><B> </B></DT>
+
+<DD>Caller-allocated array, each element of which contains an identifier (ID) corresponding to one of the names passed in the <I>rgszNames</I> array. The first element represents the member name. The subsequent elements represent each of the member parameters.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The return value obtained from the returned <B>HRESULT</B> is one of the following:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>Return value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>S_OK</TD>
+<TD width=66%>Success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>E_OUTOFMEMORY</TD>
+<TD width=66%>Out of memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>DISP_E_UNKNOWNNAME</TD>
+<TD width=66%>One or more of the names were not known. The returned array of DISPIDs contains DISPID_UNKNOWN for each entry that corresponds to an unknown name.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>DISP_E_UNKNOWNLCID</TD>
+<TD width=66%>The locale identifier (LCID) was not recognized.</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Remarks</H4>
+
+<P>An <B>IDispatch</B> implementation can associate any positive integer ID value with a given name. Zero is reserved for the default, or <B>Value</B> property; &#0150;1 is reserved to indicate an unknown name; and other negative values are defined for other purposes. For example, if <B>GetIDsOfNames</B> is called, and the implementation does not recognize one or more of the names, it returns DISP_UNKNOWNNAME, and the <I>rgDispId</I> array contains DISPID_UNKNOWN for the entries that correspond to the unknown names.</P>
+
+<P>The member and parameter DISPIDs must remain constant for the lifetime of the object. This allows a client to obtain the DISPIDs once, and cache them for later use.</P>
+
+<P>When <B>GetIDsOfNames</B> is called with more than one name, the first name (<I>rgszNames</I>[0]) corresponds to the member name, and subsequent names correspond to the names of the member parameters.</P>
+
+<P>The same name may map to different DISPIDs, depending on context. For example, a name may have a DISPID when it is used as a member name with a particular interface, a different ID as a member of a different interface, and different mapping for each time it appears as a parameter.</P>
+
+<P>The implementation of <B>GetIDsOfNames</B> is case insensitive. Users that need case-sensitive name mapping should use type information interfaces to map names to DISPIDs, rather than call <B>GetIDsOfNames</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h.<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="idsetimp_2.htm"><B>IDispEventImpl::GetFuncInfoFromId</B></A>, </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

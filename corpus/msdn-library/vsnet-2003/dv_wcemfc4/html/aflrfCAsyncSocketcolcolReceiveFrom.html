@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::ReceiveFrom</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CAsyncSocket::ReceiveFrom"/>
+<MSHelp:RLTitle Title="CAsyncSocket::ReceiveFrom"/>
+<MSHelp:Keyword Index="A" Term="aflrfCAsyncSocketcolcolReceiveFrom"/>
+<MSHelp:Keyword Index="K" Term="ReceiveFrom method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCAsyncSocketcolcolReceiveFrom"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="casyncso.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_709755">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcasyncsocketcolcolreceivefrom"></A>CAsyncSocket::ReceiveFrom</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method reads incoming data on a possibly connected socket and captures the address from which the data was sent. </P>
+
+<P>Call this method to receive a datagram and store the source address in the <B>SOCKADDR</B> structure or in <I>rSocketAddress</I>. </P>
+
+<PRE class="syntax"><B>int ReceiveFrom( 
+void* </B><I>lpBuf</I><B>, 
+int </B><I>nBufLen</I><B>, 
+CString&amp; </B><I>rSocketAddress</I><B>, 
+UINT&amp; </B><I>rSocketPort</I><B>, 
+int </B><I>nFlags</I><B> = 0 );
+</B>
+<B>int ReceiveFrom( 
+void* </B><I>lpBuf</I><B>, 
+int </B><I>nBufLen</I><B>, 
+SOCKADDR* </B><I>lpSockAddr</I><B>, 
+int* </B><I>lpSockAddrLen</I><B>, 
+int </B><I>nFlags</I><B> = 0 );</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpBuf</I></DT>
+
+<DD>A buffer for the incoming data.</dd>
+
+<DT><I>nBufLen</I></DT>
+
+<DD>The length of <I>lpBuf</I> in bytes.</dd>
+
+<DT><I>rSocketAddress</I></DT>
+
+<DD>Reference to a <B>CString</B> object that receives a dotted number IP address.</dd>
+
+<DT><I>rSocketPort</I></DT>
+
+<DD>Reference to a <B>UINT</B> that stores a port.</dd>
+
+<DT><I>lpSockAddr</I></DT>
+
+<DD>A pointer to a <B>SOCKADDR</B> structure that holds the source address upon return.</dd>
+
+<DT><I>lpSockAddrLen</I></DT>
+
+<DD>A pointer to the length of the source address in <I>lpSockAddr</I> in bytes.</dd>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies the way in which the call is made. The semantics of this function are determined by the socket options and the <I>nFlags</I> parameter. The latter is constructed by combining any of the following values with the C++ <B>OR</B> operator:
+
+<UL type="disc">
+	<LI>MSG_PEEK&nbsp;&nbsp;&nbsp;Peek at the incoming data. The data is copied into the buffer but is not removed from the input queue.</li>
+
+	<LI>MSG_OOB&nbsp;&nbsp;&nbsp;Process out-of-band data.</li>
+</UL>
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>If no error occurs, <B>ReceiveFrom</B> returns the number of bytes received. If the connection is closed, it returns zero. Otherwise,, a value of <B>SOCKET_ERROR</B> is returned, and a specific error code can be retrieved by calling <B>GetLastError</B>. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</dd>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</dd>
+
+<DT>WSAEFAULT</DT>
+
+<DD>The <I>lpSockAddrLen</I> argument is invalid: the <I>lpSockAddr</I> buffer is too small to accommodate the peer address.</dd>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</dd>
+
+<DT>WSAEINVAL</DT>
+
+<DD>The socket has not been bound with <B>Bind</B>.</dd>
+
+<DT>WSAENOTCONN</DT>
+
+<DD>The socket is not connected (<B>SOCK_STREAM</B> only).</dd>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</dd>
+
+<DT>WSAEOPNOTSUPP</DT>
+
+<DD><B>MSG_OOB</B> was specified, but the socket is not of type <B>SOCK_STREAM</B>.</dd>
+
+<DT>WSAESHUTDOWN</DT>
+
+<DD>The socket has been shut down. It is not possible to call <B>ReceiveFrom</B> on a socket after <B>ShutDown</B> has been invoked with <I>nHow</I> set to zero or two.</dd>
+
+<DT>WSAEWOULDBLOCK</DT>
+
+<DD>The socket is marked as nonblocking and the <B>ReceiveFrom</B> operation would block.</dd>
+
+<DT>WSAEMSGSIZE</DT>
+
+<DD>The datagram is too large to fit into the specified buffer and has been truncated.</dd>
+
+<DT>WSAECONNABORTED</DT>
+
+<DD>The virtual circuit was aborted due to timeout or other failure.</dd>
+
+<DT>WSAECONNRESET</DT>
+
+<DD>The virtual circuit was reset by the remote side.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>For sockets of type <B>SOCK_STREAM</B>, as much information as is available up to the size of the buffer supplied is returned. If the socket is configured for in-line reception of out-of-band data (socket option <B>SO_OOBINLINE</B>) and out-of-band data is unread, only out-of-band data is returned. The application can use the <B>IOCtl</B> <B>SIOCATMARK</B> option or <B>OnOutOfBandData</B> to determine whether any more out-of-band data remains to be read. The <I>lpSockAddr</I> and <I>lpSockAddrLen</I> parameters are ignored for <B>SOCK_STREAM</B> sockets. </P>
+
+<P>For datagram sockets, data is extracted from the first queued datagram, up to the size of the buffer supplied. If the datagram is larger than the buffer supplied, the buffer is filled with the first part of the message, the excess data is lost, and <B>ReceiveFrom</B> returns a value of <B>SOCKET_ERROR</B> with the error code set to <B>WSAEMSGSIZE</B>. </P>
+
+<P>If <I>lpSockAddr</I> is nonzero and the socket is of type <B>SOCK_DGRAM</B>, the network address of the socket which sent the data is copied to the corresponding <B>SOCKADDR</B> structure. The value pointed to by <I>lpSockAddrLen</I> is initialized to the size of this structure, and is modified on return to indicate the actual size of the address stored there. If no incoming data is available at the socket, the <B>ReceiveFrom</B> call waits for data to arrive unless the socket is nonblocking. In this case, a value of <B>SOCKET_ERROR</B> is returned with the error code set to <B>WSAEWOULDBLOCK</B>. The <B>OnReceive</B> callback can be used to determine when more data arrives. </P>
+
+<P>If the socket is of type <B>SOCK_STREAM</B> and the remote side has shut down the connection gracefully, a <B>ReceiveFrom</B> completes immediately with 0 bytes received.</P>
+
+<H4 class="dtH4">Requirements</H4>
+
+<P><B>Windows CE versions:</B> 2.0 and later<BR>
+<B>Header file:</B> Declared in Afxsock.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcasyncsocketcolcolcreate.htm"><B>CAsyncSocket::Create</B></A>, <A HREF="aflrfcasyncsocketcolcolreceive.htm"><B>CAsyncSocket::Receive</B></A>, <A HREF="aflrfcasyncsocketcolcolsend.htm"><B>CAsyncSocket::Send</B></A>,<A HREF="aflrfafxsocketinit.htm"><B>AFXSOCKETINIT</B></A>,<A HREF="aflrfsockaddr.htm"><B>SOCKADDR</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_709755', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

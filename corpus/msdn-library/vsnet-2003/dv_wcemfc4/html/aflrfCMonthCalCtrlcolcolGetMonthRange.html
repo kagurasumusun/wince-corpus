@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMonthCalCtrl::GetMonthRange</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CMonthCalCtrl::GetMonthRange"/>
+<MSHelp:RLTitle Title="CMonthCalCtrl::GetMonthRange"/>
+<MSHelp:Keyword Index="A" Term="aflrfCMonthCalCtrlcolcolGetMonthRange"/>
+<MSHelp:Keyword Index="K" Term="GetMonthRange method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCMonthCalCtrlcolcolGetMonthRange"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cmonclct.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710853">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcmonthcalctrlcolcolgetmonthrange"></A>CMonthCalCtrl::GetMonthRange</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves date information, using <B>SYSTEMTIME</B> structures, that represents the high and low limits of a display in a month calendar control.</P>
+
+<P>This method implements the behavior of the Windows CE message MCM_GETMONTHRANGE. </P>
+
+<P>In the MFC for Windows CE implementation of <B>GetMonthRange</B>, you can specify <B>COleDateTime</B> usage, a <B>CTime</B> usage, or a <B>SYSTEMTIME</B> structure usage.</P>
+
+<PRE class="syntax"><B>int GetMonthRange( 
+COleDateTime&amp; </B><I>refMinRange</I><B>, 
+COleDateTime&amp; </B><I>refMaxRange</I><B>, 
+DWORD </B><I>dwFlags</I><B> ) 
+const;</B><I> </I>
+
+<B>int GetMonthRange( 
+CTime&amp;</B> <I>refMinRange</I>, 
+<B>CTime&amp;</B> <I>refMaxRange</I>, 
+<B>DWORD</B> <I>dwFlags</I> <B>) 
+const;</B><I> </I>
+
+<B>int GetMonthRange( 
+LPSYSTEMTIME</B> <I>pMinRange</I>, 
+<B>LPSYSTEMTIME</B> <I>pMaxRange</I>, 
+<B>DWORD</B> <I>dwFlags</I> <B>) 
+const;</B><I> </I></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>refMinRange</I></DT>
+
+<DD>Specifies a reference to a <A HREF="aflrfcoledatetime.htm"><B>COleDateTime</B></A> or <A HREF="aflrfctime.htm"><B>CTime</B></A> object containing the minimum date allowed.</dd>
+
+<DT><I>refMaxRange</I></DT>
+
+<DD>Specifies a reference to a <B>COleDateTime</B> or <B>CTime</B> object containing the maximum date allowed.</dd>
+
+<DT><I>pMinRange</I></DT>
+
+<DD>Specifies a pointer to a <A HREF="aflrfsystemtime.htm"><B>SYSTEMTIME</B></A> structure containing the date at the lowest end of the range.</dd>
+
+<DT><I>pMaxRange</I></DT>
+
+<DD>Specifies a pointer to a <B>SYSTEMTIME</B> structure containing the date at the highest end of the range.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Value specifying the scope of the range limits to be retrieved. This value must be one of the following.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Value</TH>
+<TH width=73%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>GMR_DAYSTATE </TD>
+<TD width=73%>Include preceding and trailing months of visible range that are only partially displayed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>GMR_VISIBLE </TD>
+<TD width=73%>Include only those months that are entirely displayed. </TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Value</H4>
+
+<P>An integer that represents the range, in months, spanned by the two limits indicated by <I>refMinRange</I> and <I>refMaxRange</I> in the first and second versions, or <I>pMinRange</I> and <I>pMaxRange</I> in the third version.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">void CDatesDlg::OnButton2() 
+{
+  // Gain a pointer to the control
+
+  CMonthCalCtrl* pCtrl = (CMonthCalCtrl*) GetDlgItem(IDC_MONTHCALENDAR1);
+  ASSERT(pCtrl != NULL);
+
+  // First, we must find the visible range. The array we pass to the
+  // SetDayState() function must be large enough to hold days for all
+  // of the visible months. Even if a month is _partially_ visible,
+  // we must have MONTHDAYSTATE data for it in the array we pass.
+  // GetMonthRange() returns the range of days currently visible in
+  // the control, along with a count of visible months. This array
+  // will be up to 2 months larger than the number of "pages" visible
+  // in the control.
+
+  SYSTEMTIME timeFrom;
+  SYSTEMTIME timeUntil;
+  int nCount = pCtrl-&gt;GetMonthRange(&amp;timeFrom, &amp;timeUntil, GMR_DAYSTATE);
+
+  // Allocate the state array based on the return value.
+
+  LPMONTHDAYSTATE pDayState;
+  pDayState = new MONTHDAYSTATE[nCount];
+  memset(pDayState, 0, sizeof(MONTHDAYSTATE) * nCount);
+
+  // Find the first fully visible month.
+
+  int nIndex = (timeFrom.wDay == 1) ? 0 : 1;
+
+  // Set the 4th day, 19th day, and 26th day of the first
+  // _fully_ visible month as bold.
+
+  pDayState[nIndex] |= 1 &lt;&lt; 3;  // 4th day
+  pDayState[nIndex] |= 1 &lt;&lt; 18;  // 19th day
+  pDayState[nIndex] |= 1 &lt;&lt; 25;  // 25th day
+
+  // Set state and clean up
+
+  VERIFY(pCtrl-&gt;SetDayState(nCount, pDayState));
+  delete [] pDayState;
+}</PRE>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Windows CE versions:</B> 2.10 and later<BR>
+<B>Header file:</B> Declared in Afxdtctl.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfcmonthcalctrlcolcolgetrange.htm"><B>CMonthCalCtrl::GetRange</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710853', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

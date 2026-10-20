@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Mounting an Installable File System as the Root</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Mounting an Installable File System as the Root"/>
+<MSHelp:RLTitle Title="Mounting an Installable File System as the Root"/>
+<MSHelp:Keyword Index="A" Term="cgconMountingExternalFileSystemAsRoot"/>
+<MSHelp:Keyword Index="K" Term="external file system, mounting as root"/>
+<MSHelp:Keyword Index="K" Term="installable file system, mounting as root"/>
+<MSHelp:Keyword Index="A" Term="cgconMountingExternalFileSystemAsRoot"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_file.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756412">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconmountingexternalfilesystemasroot"></A>Mounting an Installable File System as the Root</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic describes an addition to the ROM-only file system component, which allows an external file system to be mounted as the root of the entire file system. This means that files and subdirectories of the external file system appear directly off the root (\). Other external volumes such as \NETWORK or \Hard Disk will retain those names and calls into those volumes will be routed as they have always been.</P>
+
+<P>Mounting an external file system as \ enables two new advantages:
+
+<UL type="disc">
+	<LI>The ability to store files and directories off \, as if it were the RAM-based file system. Other external volumes still have the same paths. Files in ROM are stored in \Windows.</li>
+
+	<LI>The choice of shadowing \Windows. The file shadowing is accomplished by routing all \Windows calls to the mounted root file system. The ROM then becomes unavailable.</li>
+</UL>
+
+<P>When drivers are loaded and file systems are mounted, the desired file system is registered in a special way to indicate that it should become the root. Before that point, all file API calls accessing files or directories in paths off of the root, except those in ROM, will fail.</P>
+
+<P>To register a file system as the root, set the following flag in the registry to specify the file system.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\&lt;Your File System&gt;]
+    "MountFlags" = dword:4</PRE>
+
+<P>Only one file system may be registered as the root. After one root file system is registered, any subsequent file system making the attempt will still be registered, but will not become the root. A different file system may be registered as the root by first deregistering the previous root file system. At that point, there will be no root file system and the directory \Windows will no longer be shadowed.</P>
+
+<P>The file system has the option of shadowing the \Windows (ROM) directory. In this case, all files from the FILES section of ROM should be copied onto the mounted file system before it is mounted as the root. Files from the MODULES section, typically executables and dynamic-link libraries, will still be accessed directly from ROM by the loader, if they are not present on the mounted root file system.</P>
+
+<P>To cause the root file system to shadow the \Windows directory, the <B>MountFlags</B> registry setting must be set to the bitwise OR of the root flag (4) and the shadow flag (8). The following example shows how the value is assigned.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\StorageManager\Profiles\&lt;Your File System&gt;]
+    "MountFlags"=dword:C</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Mounting%20an%20Installable%20File%20System%20as%20the%20Root&nbsp;(cgconmountingexternalfilesystemasroot.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

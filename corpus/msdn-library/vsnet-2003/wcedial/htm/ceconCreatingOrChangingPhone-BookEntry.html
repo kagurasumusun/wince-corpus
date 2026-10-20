@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating or Changing a Phone-Book Entry</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Creating or Changing a Phone-Book Entry"/>
+<MSHelp:RLTitle Title="Creating or Changing a Phone-Book Entry"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingOrChangingPhone-BookEntry"/>
+<MSHelp:Keyword Index="K" Term="phone-book, creating or changing RAS entries"/>
+<MSHelp:Keyword Index="K" Term="RAS, creating or changing phone-book entries"/>
+<MSHelp:Keyword Index="A" Term="ceconCreatingOrChangingPhone-BookEntry"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: ras_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_693869">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconcreatingorchangingphone-bookentry"></A>Creating or Changing a Phone-Book Entry</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P class="labelproc"><B>To use the RasSetEntryProperties function to create or change registry phone-book entries</B>
+
+<OL type="1">
+	<LI>Call <A HREF="cerefrasvalidateentryname.htm">RasValidateEntryName</A> to be sure that the name does not exist.</li>
+
+	<LI>If you are editing an existing entry, call <A HREF="cerefrasgetentryproperties.htm">RasGetEntryProperties</A> to retrieve the existing configuration.</li>
+
+	<LI>Call <A HREF="cerefrassetentryproperties.htm">RasSetEntryProperties</A> to set the new configuration. The parameters should be set as follows:
+<UL type="disc">
+	<LI>The <I>lpszName</I> parameter should point to the null-terminated string containing the entry name in the <I>lpszEntry </I>parameter<I>. </I>If the existing name matches an existing entry, <B>RasSetEntryProperties</B> modifies the entry properties. If the entry does not exist, the function creates a new entry.</li>
+
+	<LI>The <I>lpszEntry </I>parameter should point to a <A HREF="cerefrasentry.htm">RASENTRY</A> structure, which should be filled with data for the connection, including the telephone number, device type, and name.</li>
+
+	<LI>The <I>lpbDeviceInfo</I> and <I>dwDeviceInfoSize</I> parameters can be used to set Telephony API (TAPI) device configuration data.</li>
+</UL>
+</li>
+</OL>
+
+<H2 class="dtH2">Creating a Phone-Book Entry Example</H2>
+
+<P>The following code example shows how to create a phone-book entry.</P>
+
+<PRE class="code">int CreateRasEntry (LPTSTR lpszName)
+{
+  DWORD dwSize,
+        dwError;
+  TCHAR szError[100];
+  RASENTRY RasEntry;
+  RASDIALPARAMS  RasDialParams;
+
+  // Validate the format of a connection entry name.
+  if (dwError = RasValidateEntryName (NULL, lpszName))
+  {
+    wsprintf (szError, TEXT("Unable to validate entry name.")
+              TEXT(" Error %ld"), dwError);  
+
+    return FALSE;
+  }
+
+  // Initialize the RASENTRY structure.
+  memset (&amp;RasEntry, 0, sizeof (RASENTRY));
+
+  dwSize = sizeof (RASENTRY);
+  RasEntry.dwSize = dwSize;
+
+  // Retrieve the entry properties.
+  if (dwError = RasGetEntryProperties (NULL, TEXT(""),      
+                      (LPBYTE)&amp;RasEntry, &amp;dwSize, NULL, NULL))  
+  {
+    wsprintf (szError, TEXT("Unable to read default entry properties.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  // Insert code here to fill the RASENTRY structure.
+  // ...
+  
+  // Create a new phone-book entry.
+  if (dwError = RasSetEntryProperties (NULL, lpszName, 
+                      (LPBYTE)&amp;RasEntry, sizeof (RASENTRY), NULL, 0))
+  {
+    wsprintf (szError, TEXT("Unable to create the phonebook entry.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  // Initialize the RASDIALPARAMS structure.
+  memset (&amp;RasDialParams, 0, sizeof (RASDIALPARAMS));
+  RasDialParams.dwSize = sizeof (RASDIALPARAMS);
+  _tcscpy (RasDialParams.szEntryName, lpszName);
+  
+  // Insert code here to fill up the RASDIALPARAMS structure.
+  // ...
+
+  // Change the connection data.
+  if (dwError = RasSetEntryDialParams (NULL, &amp;RasDialParams, FALSE))
+  {
+    wsprintf (szError, TEXT("Unable to set the connection information.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  return TRUE;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Creating%20or%20Changing%20a%20Phone-Book%20Entry&nbsp;(ceconcreatingorchangingphone-bookentry.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

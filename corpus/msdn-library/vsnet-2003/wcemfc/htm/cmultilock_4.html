@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMultiLock::Lock</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmultilock_lock"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cmultilock_lock"></A><SUP></SUP>CMultiLock::Lock</H1>
+
+<P>This method gains access to one or more of the resources controlled by the synchronization objects supplied to the <B>CMultiLock </B>constructor. If <I>bWaitForAll </I>is <B>FALSE</B>, <B>Lock</B> will return as soon as one or more of the synchronization objects becomes signaled. Windows CE does not currently support <I>bWaitForAll </I>as <B>TRUE</B>, in which case <B>Lock</B> would return successfully as soon as <B>all</B> the synchronization objects become signaled simultaneously.</P>
+
+<P>If <B>Lock</B> is not able to return immediately, it will wait for no more than the number of milliseconds specified in the <I>dwTimeOut </I>parameter before returning. If <I>dwTimeOut</I> is <B>INFINITE</B>, <B>Lock</B> will not return until access to an object is gained or a condition specified in <I>dwWakeMask</I> was met. Otherwise, if <B>Lock</B> was able to acquire a synchronization object, it will return successfully; if not, it will return failure.</P>
+
+<PRE class=syntax><B>DWORD Lock(
+DWORD </B><I>dwTimeOut</I><B> = INFINITE,
+BOOL </B><I>bWaitForAll</I><B> = WCE_IF( FALSE, TRUE),
+DWORD </B><I>dwWakeMask </I><B>= 0 );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwTimeOut</I></DT>
+
+<DD>Specifies the amount of time to wait for the synchronization object to be available (signaled). If <B>INFINITE</B>, <B>Lock</B> will wait until the object is signaled before returning.</DD>
+
+<DT><I>bWaitForAll</I></DT>
+
+<DD>Specifies whether all objects waited on must become signaled at the same time before returning. If <B>FALSE</B>, <B>Lock</B> will return when any one of the objects waited on is signaled.
+
+<P>Window CE does not currently support <I>bWaitForAll</I><B> = TRUE</B>, which is the default value in standard MFC.
+</DD>
+
+<DT><I>dwWakeMask</I></DT>
+
+<DD>Specifies other conditions that are allowed to abort the wait. </DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>If <B>Lock</B> fails, it returns &#0150;1. If successful, it returns one of the following values:
+
+<UL type=disc>
+	<LI>Between WAIT_OBJECT_0 and WAIT_OBJECT_0 + (number of objects &#0150;1)
+<P>If <I>bWaitForAll </I>is <B>FALSE</B>, the return value &#0150; WAIT_OBJECT_0 is the index in the array of objects of the object that is signaled (available). If <I>bWaitForAll </I>is <B>TRUE</B>, all objects are signaled (available).
+</LI>
+
+	<LI>WAIT_OBJECT_0 + (number of objects)
+<P>An event specified in <I>dwWakeMask</I> is available in the input queue of the thread.
+</LI>
+
+	<LI>Between WAIT_ABANDONED_0 and WAIT_ABANDONED_0 + (number of objects &#0150;1)
+<P>If <I>bWaitForAll </I>is <B>FALSE</B>, the return value &#0150; WAIT_ABANDONED_0 is the index in the array of objects of the abandoned mutex object that satisfied the wait. If <I>bWaitForAll </I>is <B>TRUE</B>, all objects are signaled, and at least one of the objects is an abandoned mutex object.
+</LI>
+
+	<LI>WAIT_TIMEOUT
+<P>The timeout interval specified in <I>dwTimeOut </I>expired without the wait succeeding.
+</LI>
+</UL>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 3.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxmt.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

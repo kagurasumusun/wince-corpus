@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IssueIsochTransfer</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IssueIsochTransfer"/>
+<MSHelp:RLTitle Title="IssueIsochTransfer"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_IssueIsochTransfer"/>
+<MSHelp:Keyword Index="K" Term="IssueIsochTransfer"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_IssueIsochTransfer"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: usb_reference.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_673199">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_issueisochtransfer"></A>IssueIsochTransfer</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function initiates an isochronous transfer with a USB device.</P>
+
+<PRE class="syntax"><B>USB_TRANSFER</B> <B>IssueIsochTransfer(</B>
+<B>USB_PIPE</B> <I>hPipe</I><B>,</B>
+<B>LPTRANSFER_NOTIFY_ROUTINE</B> <I>lpStartAddress</I><B>,</B>
+<B>LPVOID</B> <I>lpvNotifyParameter</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>DWORD</B> <I>dwStartingFrame</I><B>,</B>
+<B>DWORD</B> <I>dwFrames</I><B>,</B>
+<B>LPCDWORD</B> <I>lpdwLengths</I><B>,</B>
+<B>LPVOID</B> <I>lpvBuffer</I><B>,</B>
+<B>ULONG</B> <I>uBufferPhysicalAddress</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hPipe</I></DT>
+
+<DD>[in] Handle to an open USB pipe.</dd>
+
+<DT><I>lpStartAddress</I></DT>
+
+<DD>[in] Pointer to the address of a callback routine, or NULL if no callback routine is necessary. Any value other than NULL causes this function to act asynchronously, that is, to return immediately, before the transfer is complete, as if USB_NO_WAIT had been included in <I>dwFlags</I>.</dd>
+
+<DT><I>lpvNotifyParameter</I></DT>
+
+<DD>[in] Pointer to the parameter to pass to a callback routine.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Flags for the transfer. Some flags are specific to isochronous transfers. USB_START_ISOCH_ASAP starts transfer as soon as possible, instead of specifying a starting frame. USB_COMPRESS_ISOCH guarantees, for IN transfers, that data is copied contiguously to the user buffer, instead of being fragmented if the amount of data is less than the maximum requested for a particular frame. USB_COMPRESS_ISOCH only works if you do not specify a physical address. USB_NO_WAIT causes the function to act asynchronously. These flags shown in the following list are declared in the Usbtypes.h header file.
+
+<UL type="disc">
+	<LI>USB_IN_TRANSFER</li>
+
+	<LI>USB_OUT_TRANSFER</li>
+
+	<LI>USB_NO_WAIT</li>
+
+	<LI>USB_SHORT_TRANSFER_OK</li>
+
+	<LI>USB_START_ISOCH_ASAP</li>
+
+	<LI>USB_COMPRESS_ISOCH</li>
+
+	<LI>USB_SEND_TO_DEVICE</li>
+
+	<LI>USB_SEND_TO_INTERFACE</li>
+
+	<LI>USB_SEND_TO_ENDPOINT</li>
+
+	<LI>USB_DONT_BLOCK_FOR_MEM</li>
+</UL>
+</dd>
+
+<DT><I>dwStartingFrame</I></DT>
+
+<DD>[in] Specifies the frame number on which transfer starts.</dd>
+
+<DT><I>dwFrames</I></DT>
+
+<DD>[in] Specifies the number of frames in transfer.</dd>
+
+<DT><I>lpdwLengths</I></DT>
+
+<DD>[in/out] Pointer to an array of lengths, one entry per frame. Do not free this until the transfer completes.</dd>
+
+<DT><I>lpvBuffer</I></DT>
+
+<DD>[in/out] Pointer to a data buffer. If a physical buffer address is specified, this must contain the virtual address of the buffer. Do not free this until the transfer completes.</dd>
+
+<DT><I>uBufferPhysicalAddress</I></DT>
+
+<DD>[in/out] Specifies the physical address, which may be NULL, of the data buffer.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>A USB_TRANSFER handle indicates success. NULL indicates failure.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function initiates an isochronous transfer to a USB device on the specified endpoint. Because isochronous transfers must be executed continuously, a sequence of buffers is provided, one of which is transferred for each frame. There is no limit on the number of buffers that may be provided, though each one must be less than or equal to the maximum packet size for the endpoint.</P>
+
+<P>If a USB client driver calls <B>IssueIsochTransfer</B> with the USB_NO_WAIT flag and with a callback function specified in <I>lpStartAddress</I>, then the USB client driver must not call <A HREF="_wceddk_closetransfer.htm">CloseTransfer</A> or <A HREF="_wceddk_aborttransfer.htm">AbortTransfer</A> before the isochronous transfer has completed, that is, before the callback function has been invoked.</P>
+
+<P><B>IssueIsochTransfer</B> behaves either synchronously or asynchronously, depending on the value you provide for <I>lpStartAddress</I> and whether <I>dwFlags</I> contains the USB_NO_WAIT flag, as shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=22%><I>lpStartAddress</I></TH>
+<TH width=35%><I>dwFlags</I> | USB_NO_WAIT</TH>
+<TH width=43%>Behavior</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>NULL</TD>
+<TD width=35%>0</TD>
+<TD width=43%>Synchronous</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>NULL</TD>
+<TD width=35%>USB_NO_WAIT</TD>
+<TD width=43%>Asynchronous</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Non-NULL</TD>
+<TD width=35%>0</TD>
+<TD width=43%>Asynchronous</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Non-NULL</TD>
+<TD width=35%>USB_NO_WAIT</TD>
+<TD width=43%>Asynchronous</TD>
+</TR>
+</table></div>
+
+<P>When behaving asynchronously, the function will invoke your callback function, if one is specified in <I>lpStartAddress</I>, when the transfer is complete.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>2.10 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=16%>Usbd.hpp</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_aborttransfer.htm">AbortTransfer</A>, <A HREF="_wceddk_closetransfer.htm">CloseTransfer</A>, <A HREF="_wceddk_getisochresults.htm">GetIsochResults</A>, <A HREF="_wceddk_gettransferstatus.htm">GetTransferStatus</A>, <A HREF="_wceddk_istransfercomplete.htm">IsTransferComplete</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IssueIsochTransfer&nbsp;(_wceddk_issueisochtransfer.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStorageImpl::Save</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ipersiststorageimpl_save"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_istorage" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wceatl_ipersiststorageimpl_save"></A>IPersistStorageImpl::Save</H1>
+
+<P>This method saves the properties of an object. The ATL implementation delegates to the <B>IPersistStreamInit</B> interface. When <B>Save</B> is first called, it creates a stream named Contents on the specified storage. This stream is then used in later calls to <B>Save</B> and in calls to <B>Load</B>.</P>
+
+<P>This method saves an object, and any nested objects it contains, into the specified storage. It also places the object into NoScribble mode. Thus the object cannot write to its storage until a subsequent call to the <B>IPersistStorageImpl::SaveCompleted</B> method returns the object to Normal mode.</P>
+
+<P>If the storage object is the same as the one it was loaded or created from, the save operation may be able to write incremental changes to the storage object. Otherwise, a full save must be done.</P>
+
+<P>This method recursively calls the <B>IPersistStorageImpl::Save</B> method, the <B>OleSave</B> function, or the <B>IStorage::CopyTo</B> method to save its nested objects.</P>
+
+<P>This method does not call the <B>IStorage::Commit</B> method. Nor does it write the <B>CLSID</B> to the storage object. Both of these tasks are the responsibilities of the caller.</P>
+
+<PRE class=syntax><B>STDMETHOD ( Save )(
+IStorage* </B><I>pStorage</I><B>,
+BOOL </B><I>fSameAsLoad</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStorage</I></DT>
+
+<DD>[in] IStorage pointer to the storage into which the object is to be saved.</DD>
+
+<DT><I>fSameAsLoad</I></DT>
+
+<DD>[in]Indicates whether the specified storage is the current one, which was passed to the object by one of the following calls
+
+<UL type=disc>
+	<LI><B>IPersistStorageImpl::InitNew</B> when it was created. </LI>
+
+	<LI><B>IPersistStorageImpl::Load</B> when it was loaded. </LI>
+
+	<LI><B>IPersistStorageImpl::SaveCompleted</B> when it was saved to a storage different from its current storage. </LI>
+</UL>
+
+
+<P>This parameter is set to <B>FALSE</B> when performing a <B>Save As</B> or <B>Save A Copy To</B> operation or when performing a full save. In the latter case, this method saves to a temporary file, deletes the original file, and renames the temporary file.
+
+
+<P>This parameter is set to <B>TRUE</B> to perform a full save in a low-memory situation or to perform a fast incremental save in which only the dirty components are saved.
+</DD>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The object was successfully saved. </DD>
+
+<DT>STG_E_MEDIUMFULL </DT>
+
+<DD>The object was not saved because of a lack of space on the disk. </DD>
+
+<DT>E_FAIL </DT>
+
+<DD>The object could not be saved due to errors other than a lack of disk space. </DD>
+</DL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="iperstor_8.htm"><B>IPersistStorageImpl::SaveCompleted</B></A>, <A HREF="JavaScript:hhobj_1.Click()"><B>IStorage</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CScrollView</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cscrollview"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cscrollview"></A>CScrollView</H1>
+
+<P>This class is a <B>CView</B> with scrolling capabilities. </P>
+
+<P>You can handle standard scrolling yourself in any class derived from <B>CView</B> by overriding the message-mapped <A HREF="cwnd_120.htm"><B>OnHScroll</B></A> and <A HREF="cwnd_148.htm"><B>OnVScroll</B></A> methods. But <B>CScrollView</B> adds the following features to its <B>CView</B> capabilities:
+
+<UL type=disc>
+	<LI>It manages window and viewport sizes and mapping modes. </LI>
+
+	<LI>It scrolls automatically in response to scroll-bar messages. </LI>
+
+	<LI>It scrolls automatically in response to messages from the keyboard, a non-scrolling mouse, or the IntelliMouse wheel.</LI>
+</UL>
+
+<P>To take advantage of automatic scrolling, derive your view class from <B>CScrollView</B> instead of from <B>CView</B>. When the view is first created, if you want to calculate the size of the scrollable view based on the size of the document, call the <B>SetScrollSizes</B> method from your override of either <A HREF="cview_9.htm"><B>CView::OnInitialUpdate</B></A> or <A HREF="cview_16.htm"><B>CView::OnUpdate</B></A>. You must write your own code to query the size of the document.</P>
+
+<P>The call to the <B>SetScrollSizes</B> method sets the mapping mode, the total dimensions of the scroll view, and the amounts to scroll horizontally and vertically for the view. All sizes are in logical units. The logical size of the view is usually calculated from data stored in the document, but in some cases you may want to specify a fixed size. For examples of both approaches, see <A HREF="cscrolvw_11.htm"><B>CScrollView::SetScrollSizes</B></A>.</P>
+
+<P>You specify the amounts to scroll horizontally and vertically in logical units. By default, if the user clicks a scroll bar shaft outside of the scroll box, <B>CScrollView</B> scrolls a page. If the user clicks a scroll arrow at either end of a scroll bar, <B>CScrollView</B> scrolls a line. By default, a page is 1/10 of the total size of the view; a line is 1/10 of the page size. Override these default values by passing custom sizes in the <B>SetScrollSizes</B> method. For example, you might set the horizontal size to some fraction of the width of the total size and the vertical size to the height of a line in the current font.</P>
+
+<P>Instead of scrolling, <B>CScrollView</B> can automatically scale the view to the current window size. In this mode, the view has no scroll bars and the logical view is stretched or shrunk to exactly fit the client area of the window. To use this scale-to-fit capability, call <A HREF="cscrolvw_10.htm"><B>CScrollView::SetScaleToFitSize</B></A>. Call either <B>SetScaleToFitSize</B> or <B>SetScrollSizes</B>, but not both.</P>
+
+<P>Before the <B>OnDraw</B> method of your derived view class is called, <B>CScrollView</B> automatically adjusts the viewport origin for the <B>CPaintDC</B> device-context object that it passes to <B>OnDraw</B>.</P>
+
+<P>To adjust the viewport origin for the scrolling window, <B>CScrollView</B> overrides <A HREF="cview_10.htm"><B>CView::OnPrepareDC</B></A>. This adjustment is automatic for the <B>CPaintDC</B> device context that <B>CScrollView</B> passes to <B>OnDraw</B>, but you must call <B>CScrollView::OnPrepareDC</B> yourself for any other device contexts you use, such as a <B>CClientDC</B>. You can override <B>CScrollView::OnPrepareDC</B> to set the pen, background color, and other drawing attributes, but call the base class to do scaling.</P>
+
+<P>Scroll bars can appear in three places relative to a view, as shown in the following cases:
+
+<UL type=disc>
+	<LI>Standard window-style scroll bars can be set for the view using the WS_HSCROLL and WS_VSCROLL Windows Styles.  </LI>
+
+	<LI>Scroll-bar controls can also be added to the frame containing the view, in which case the framework forwards WM_HSCROLL and WM_VSCROLL messages from the frame window to the currently active view. </LI>
+
+	<LI>The framework also forwards scroll messages from a <B>CSplitterWnd</B> splitter control to the currently active splitter pane, a view. When placed in a <A HREF="csplitt.htm"><B>CSplitterWnd</B></A> with shared scroll bars, a <B>CScrollView</B> object will use the shared ones rather than creating its own.</LI>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>Because MFC for Windows CE only supports the MM_TEXT map mode, it supports the following<B> </B>methods of the <B>CScrollView</B> class differently than standard MFC:
+
+<UL type=disc>
+	<LI><A HREF="cscrolvw_10.htm"><B>CScrollView::SetScaleToFitSize</B></A><B> </B></LI>
+
+	<LI><A HREF="cscrolvw_11.htm"><B>CScrollView::SetScrollSizes</B></A></LI>
+
+	<LI><A HREF="cscrolvw_5.htm"><B>CScrollView::GetDeviceScrollSizes</B></A></LI>
+</UL>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cview.htm"><B>CView</B></A>, <A HREF="csplitt.htm"><B>CSplitterWnd</B></A>, <A HREF="compare_20.htm"><B>View Classes</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

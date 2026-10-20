@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportTransferData</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MiniportTransferData"/>
+<MSHelp:RLTitle Title="MiniportTransferData"/>
+<MSHelp:Keyword Index="A" Term="cxrefMiniportTransferData"/>
+<MSHelp:Keyword Index="K" Term="MiniportTransferData"/>
+<MSHelp:Keyword Index="A" Term="cxrefMiniportTransferData"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_upper_edge_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_678756">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefminiporttransferdata"></A>MiniportTransferData</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function is a required function in network adapter drivers that do not indicate multipacket receives and/or media-specific information with <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A> and in those that do not support WAN media.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS MiniportTransferData(</B>
+<B>PNDIS_PACKET</B> <I>Packet</I><B>,</B>
+<B>PUINT</B> <I>BytesTransferred</I><B>,</B><I>
+</I><B>NDIS_HANDLE</B> <I>MiniportAdapterContext</I><B>,</B>
+<B>NDIS_HANDLE</B> <I>MiniportReceiveContext</I><B>,</B>
+<B>UINT</B> <I>ByteOffset</I><B>,</B>
+<B>UINT</B> <I>BytesToTransfer</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>Packet</I></DT>
+
+<DD>[out] Points to a packet descriptor with chained buffers into which <B>MiniportTransferData </B>should copy the received data.</dd>
+
+<DT><I>BytesTransferred</I></DT>
+
+<DD>[out] Points to a variable that <B>MiniportTransferData</B> sets to the number of bytes it copied into the packet. This value is meaningless if <B>MiniportTransferData</B> returns NDIS_STATUS_PENDING.</dd>
+
+<DT><I>MiniportAdapterContext</I></DT>
+
+<DD>[in] Specifies the handle to a miniport-allocated context area in which the driver maintains per-network adapter state, set up by <A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>.</dd>
+
+<DT><I>MiniportReceiveContext</I></DT>
+
+<DD>[in] Specifies the context handle previously passed to <B>NdisM<I>XXX</I>IndicateReceive</B>. The miniport can examine this value to determine which receive to copy.</dd>
+
+<DT><I>ByteOffset</I></DT>
+
+<DD>[in] Specifies the offset within the received packet at which <B>MiniportTransferData</B> should begin the copy. If the entire packet is be copied, <I>ByteOffset</I> is zero.</dd>
+
+<DT><I>BytesToTransfer</I></DT>
+
+<DD>[in] Specifies how many bytes to copy. The sum of <I>ByteOffset</I> and <I>BytesToTransfer</I> should be less than or equal to the packet size that was specified in the miniport’s receive indication. This value can be zero.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The following table shows the values that <B>MiniportTransferData</B> can return.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NDIS_STATUS_SUCCESS</TD>
+<TD width=70%><B>MiniportTransferData</B> copied the requested data into the protocol-supplied packet, and it set <I>BytesTransferred</I> to the number of bytes copied.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NDIS_STATUS_PENDING</TD>
+<TD width=70%>The driver will complete the transfer asynchronously with a call to <A HREF="cxrefndismtransferdatacomplete.htm">NdisMTransferDataComplete</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NDIS_STATUS_FAILURE</TD>
+<TD width=70%>Either the data could not be copied or the input transfer range was invalid.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>MiniportTransferData</B> copies the contents of the received packet to a given protocol-allocated packet.</P>
+
+<P>NDIS calls <B>MiniportTransferData</B> when a <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A> function calls <A HREF="cxtskndistransferdata.htm">NdisTransferData</A>. The media header associated with a packet cannot be copied; only the data portion of a packet can be copied. The range passed to <B>NdisTransferData</B> never includes the media header. Usually, the <I>ByteOffset</I> input to <B>MiniportTransferData</B> excludes data that the miniport already indicated in the lookahead buffer.</P>
+
+<P>A miniport must be prepared to copy a given packet more than once. If its network adapter supports reading a given packet only once, the miniport must copy each received network packet to a staging buffer.</P>
+
+<P><B>MiniportTransferData</B> can call <A HREF="_wceddk_ndisquerypacket.htm">NdisQueryPacket</A> to determine how many buffer descriptors the allocating protocol has provided. The protocol is responsible for supplying a packet descriptor that accommodates the transfer it requested. <B>MiniportTransferData</B> can call <A HREF="_wceddk_ndisquerybuffer.htm">NdisQueryBuffer</A> to determine how much data to copy into each protocol-supplied buffer.</P>
+
+<P><B>MiniportTransferData</B> can fail a request if the given <I>ByteOffset</I> and <I>BytesToTransfer</I> exceed the packet size originally indicated. Alternatively, <B>MiniportTransferData</B> can simply transfer all available data starting at any valid <I>ByteOffset</I>.</P>
+
+<P>Because <B>MiniportTransferData</B> is asynchronous, a miniport that has this function cannot deliver receive indications while a transfer is pending. If <B>MiniportTransferData</B> returns NDIS_STATUS_PENDING, the miniport must call <B>NdisMTransferDataComplete</B> when the transfer is complete.</P>
+
+<P>A driver that indicates packets with <B>NdisMIndicateReceivePacket</B> does not need a <B>MiniportTransferData</B> function because such a driver always indicates full packets to bound protocols.</P>
+
+<P>Interrupts are still disabled when <B>MiniportTransferData</B> is called.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>Externs.h</TD>
+<TD width=16%>Externs.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportinitialize.htm">MiniportInitialize</A>, <A HREF="_wceddk_ndisgetfirstbufferfrompacket.htm">NdisGetFirstBufferFromPacket</A>, <A HREF="_wceddk_ndisgetnextbuffer.htm">NdisGetNextBuffer</A>, <A HREF="_wceddk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A>, <A HREF="_wceddk_ndismovememory.htm">NdisMoveMemory</A>, <A HREF="cxrefndismtransferdatacomplete.htm">NdisMTransferDataComplete</A>, <A HREF="_wceddk_ndisquerybuffer.htm">NdisQueryBuffer</A>, <A HREF="_wceddk_ndisquerypacket.htm">NdisQueryPacket</A>, <A HREF="cxtskndistransferdata.htm">NdisTransferData</A>, <A HREF="cxrefprotocolreceive.htm">ProtocolReceive</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MiniportTransferData&nbsp;(cxrefminiporttransferdata.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

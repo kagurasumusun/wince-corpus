@@ -1,0 +1,701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Building DMA Drivers for the Windows CE .NET Emulator</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Building DMA Drivers for the Windows CE .NET Emulator"/>
+<MSHelp:RLTitle Title="Building DMA Drivers for the Windows CE .NET Emulator"/>
+<MSHelp:Keyword Index="A" Term="builddmadriver"/>
+<MSHelp:Keyword Index="K" Term="direct memory access (DMA) interfaces, Windows CE .NET Emulator"/>
+<MSHelp:Keyword Index="K" Term="DMA (direct memory access) interfaces, Windows CE .NET Emulator"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Emulator, DMA interfaces"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Emulator, Platform Builder"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwinembed"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="kbNetFramewk"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbNetFramewk"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" CONTENT="How to use the Windows CE .NET Emulator and its DMA interfaces. Details the steps needed to build desktop and Emulator code that communicates using the Emulator's DMA interface."><meta name="keywords" content="Windows CE .NET 4.1 Emulator, Platform Builder, DMA, DMA drivers, DMA interfaces"><META name="rtfFileName" content="builddmadriver.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Mike Hall">
+<META NAME="Date" CONTENT="2002-07-01">
+<META NAME="msdnID" CONTENT="_830128">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="builddmadriver"></A>Building DMA Drivers for the Windows CE .NET Emulator</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Mike Hall <BR>
+Microsoft Corporation</P>
+
+<P>July 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.1 with Platform Builder 4.1</P>
+
+<H4 class="dtH1">Abstract</H4>
+
+<P>The Microsoft Windows CE .NET Emulator ships with a number of built-in drivers, including Display, Audio, Keyboard/Mouse, Network, and Serial. It is possible to extend the list of available drivers by using the Windows CE Emulator direct memory access (DMA) interfaces. For example, you may be building a device that has an attached GPS receiver, which on the final device would communicate using a stream driver on GPS1:. This paper details the steps needed to build desktop and Emulator code that communicates using the Emulator's DMA interface. (18 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#builddmadriver_topic1">Introduction</A> <BR>
+<A HREF="#builddmadriver_topic2">The Emulator</A> <BR>
+<A HREF="#builddmadriver_topic3">Desktop COM Interfaces</A> <BR>
+<A HREF="#builddmadriver_topic4">Emulator Code</A> <BR>
+<A HREF="#builddmadriver_topic5">Conclusion</A> <BR>
+<A HREF="#builddmadriver_topic6">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="builddmadriver_topic1"></A>Introduction</H2>
+
+<P>The Microsoft&#174; Windows&#174; CE .NET Emulator can assist developers with building a customized Windows CE .NET-based operating system image in two ways. It gives you the ability to configure, build, download and debug a customized Windows CE .NET-based operating system image without needing customized hardware. In fact, the selection of operating system components, building a customized shell, and writing applications can all take place while your hardware reference platform is being built. This reduces your development timeline. The Windows CE .NET Emulator also gives you the ability to build a customized operating system image and a custom Software Development Kit (SDK), which exposes the supported APIs for your platform. This can be shipped to your customers so that they can start writing applications for your device even before they have final hardware.</P>
+
+<P><B>Emulated Hardware</B></P>
+
+<P>The Windows CE .NET Emulator ships with support for a number of built in devices that you might find on a physical hardware platform. The following is a list of the drivers that are supported by the Windows CE .NET Emulator through Microsoft Platform Builder 4.0 and later:
+
+<UL type="disc">
+	<LI><B>Parallel Port</B>
+<P>Provides a parallel port that you can map directly to an LPT port on your development workstation.
+</li>
+
+	<LI><B>Serial Port</B>
+<P>Provides two serial ports that you can map to communications (COM) ports on your development workstation or have the output redirected to a file.
+</li>
+
+	<LI><B>Ethernet Support</B>
+<P>If you enable Ethernet support, keep in mind that the Emulator supports a single Ethernet card using shared Internet Protocol (IP). You must use an Ethernet card that can serve as the Ethernet card for a physical Windows CE&#0150;based target device. The Emulator uses the Ethernet card on your development workstation and emulates a DEC 21040 Ethernet card. However, the card on the development workstation does not require a driver for Windows CE. There are two forms of networking supported by the Emulator that ships with Windows CE.NET 4.1 and later: NAT (outgoing only) connections and the Virtual Switch, which allows both incoming and outgoing connections.
+</li>
+
+	<LI><B>Display</B>
+<P>You can specify a size for the Emulator display that is as small as 120 by 80 pixels or as large as 1024 by 768 pixels. You can specify a color depth of 8, 16, or 32 bits per pixel.
+</li>
+
+	<LI><B>Keyboard and Mouse</B>
+<P>Supports a standard keyboard and a PS/2 mouse
+</li>
+
+	<LI><B>Audio</B>
+<P>Provides basic support for audio, including audio input, audio output, microphone input, and line output. Full duplex audio is not supported at this time.
+</li>
+</UL>
+
+<P>You may be interested in building and testing an application within the Windows CE .NET Emulator that would talk to a custom hardware device, perhaps a GPS unit. In this situation, it would be useful to build a device driver that exposes the same interfaces as the final hardware device within the Emulator and provides data to applications running within the Emulator. For example, a GPS device may provide a stream of latitude and longitude data or an application may use a stream driver that is exposed as "GPS1:" on the device to get at the GPS data. Using the Emulator direct memory access (DMA) driver architecture, it is possible to build the above scenario. An application running within the Emulator would not know (or need to know) whether it is talking to a real, connected device, or whether the data is being streamed from a desktop application over a DMA interface into the Emulator.</P>
+
+<P>It is also possible to make use of your desktop computer's built in serial, parallel, and Ethernet connections within the Emulator. If you have a serial connect GPS unit, then you could easily talk to this using your desktop's built-in serial port from your Windows CE .NET-based Emulator application.</P>
+
+<P>Using the GPS scenario outlined above, there are two or three components you need to build, depending on how you want to implement the solution:
+
+<UL type="disc">
+	<LI><B>Desktop application:</B> The desktop application is responsible for spooling captured or live GPS data into the Emulator using the Emulator's DMA interface.</li>
+
+	<LI><B>Windows CE .NET Emulator Driver: </B>This is an optional component. You can build an application that talks directly to the DMA interfaces within the Emulator. However, it may be preferable to build a driver that hides the DMA interfaces from a calling application. In this case, the application code will not need to change when moved to the final device.</li>
+
+	<LI><B>Windows CE .NET Emulator Application: </B>This is the application that will make use of the GPS data. It could talk directly to the DMA interface, if required. It is better to hide the DMA calls in a driver so that the application will be portable between the Emulator and the final hardware device.</li>
+</UL>
+
+<P>The interface to the DMA transport is exposed through COM interfaces on the desktop. These can also be used to start or stop an emulation session and to enumerate Emulator sessions.</P>
+
+<H2 class="dtH1"><A NAME="builddmadriver_topic2"></A>The Emulator</H2>
+
+<P>This section examines how you can use the Emulator on a development computer. This includes the location of Emulator files and how to start the Emulator from the command line.</P>
+
+<P>The Windows CE .NET Emulator (Emulator.exe) is located by default in the following folder: C:\Program Files\Common Files\Microsoft Shared\Windows CE Tools\Platman\bin.</P>
+
+<P><A NAME="builddmadriver_topic2a"></A>The following table shows the command line options that the Emulator supports. You can, for example, set the screen resolution and color depth used by the Emulator or enable support for serial or parallel desktop passthrough.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Option</TH>
+<TH width=39%>Parameters</TH>
+<TH width=32%>Default Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/Video</TD>
+<TD width=39%>&lt;pixelwidth&gt; x &lt;pixelheight&gt; x &lt;bitdepth&gt;</TD>
+<TD width=32%>480x300x16</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/MemorySize</TD>
+<TD width=39%>&lt;memory size in megabytes&gt;</TD>
+<TD width=32%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/Ethernet</TD>
+<TD width=39%>'true' or 'false'</TD>
+<TD width=32%>false</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/SerialPort1</TD>
+<TD width=39%>'none' or 'com1' to 'com4' or 'file:'&lt;filename&gt;</TD>
+<TD width=32%>none</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/SerialPort2</TD>
+<TD width=39%>'none' or 'com1' to 'com4' or 'file:'&lt;filename&gt;</TD>
+<TD width=32%>none</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/ParallelPort</TD>
+<TD width=39%>'none' or 'lpt1' or 'lpt2'</TD>
+<TD width=32%>none</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/CEImage</TD>
+<TD width=39%>&lt;pathname of CE image, such as NK.BIN&gt;</TD>
+<TD width=32%>NK.bin</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/Skin</TD>
+<TD width=39%>&lt;pathname of skin file&gt;</TD>
+<TD width=32%>-</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/VMID</TD>
+<TD width=39%>&lt;guid&gt;</TD>
+<TD width=32%>If no GUID is specified, a new GUID will be created and assigned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/VMName</TD>
+<TD width=39%>&lt;window name&gt;</TD>
+<TD width=32%>Virtual CEPC</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>/Help</TD>
+<TD width=39%>-</TD>
+<TD width=32%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<P>Microsoft eMbedded Visual C++&#174; 4.1 ships with support for the STANDARDSDK platform. This is an Emulator image that can be used to build and test C, C++, Microsoft Foundation Classes (MFC), and Active Template Libraries (ATL) for Windows CE-based applications. The STANDARDSDK operating system image is located in the C:\Program Files\Windows CE Tools\wce410\STANDARDSDK\Emulation folder. This image is typically called NK.BIN when built from Platform Builder.</P>
+
+<P>You will notice that the STANDARDSDK image file is called NK.CEM (CE Emulator). This is simply a renamed NK.BIN file.</P>
+
+<P>You can launch the STANDARDSDK Emulator image from the command line, as shown below. This assumes that you are launching the Emulator image from C:\Program Files\Common Files\Microsoft Shared\Windows CE Tools\Platman\bin, the folder containing Emulator.exe.</P>
+
+<P>Emulator /CEImage "C:\Program Files\Windows CE Tools\wce410\STANDARDSDK\Emulation\nk.cem" /Video 800x200x16</P>
+
+<P>This command line will launch the Emulator with the following options:
+
+<UL type="disc">
+	<LI><B>/CEImage</B> "C:\Program Files\Windows CE Tools\wce410\STANDARDSDK\Emulation\nk.cem". This will load the STANDARDSDK image. The quotes are used because the command line includes spaces. This assumes that the standard SDK components have been installed to the default location. This can be used as an example of how to load an Emulator NK.BIN from any location on your development computer.</li>
+
+	<LI><B>/Video</B> 800x200x16&#151;This will load the Windows CE image at 800x200 resolution. At 16-bit color depth, 800x200 is not a typical device resolution. However, this does prove the point that you can set the resolution of the Emulator.</li>
+</UL>
+
+<P>You may have built a Windows CE .NET-based platform that targets the Emulator, and are able to download and debug this image using Platform Builder. However, the image does not appear to load correctly when loaded using the Emulator command line, as shown earlier, or when launched from an image created using the <A href="http://msdn.microsoft.com/downloads/sample.asp?url=/MSDN-FILES/027/001/891/msdncompositedoc.xml">Windows CE .NET Emulation Kit Creator</A>. The image does not load because it is paused waiting for the Platform Builder debugger to connect using the Kernel Independent Transport Layer (KITL). The following illustration shows how to work around this issue using Platform Builder by simply selecting <B>Platform | Settings | Build Options</B>, disabling "Enable KITL", and rebuilding your operating system image.</P>
+
+<P class="fig"><CODE><IMG SRC="builddmadriver_fig1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1.</B></P>
+
+<H2 class="dtH1"><A NAME="builddmadriver_topic3"></A>Desktop COM Interfaces</H2>
+
+<P>This section provides an overview of the COM interfaces exposed by the Emulator on your development computer. The sample code used in this paper has been built using Microsoft Visual Studio&#174; .NET and the code samples use console-based applications with ATL support.</P>
+
+<P>These are interfaces exposed by the Windows CE .NET Emulator:
+
+<UL type="disc">
+	<LI><B>IVirtualMachineManager</B></li>
+
+	<LI><B>IVirtualTransport</B></li>
+</UL>
+
+<P>The <I>IVirtualMachineManager</I> interface gives desktop applications the ability to control the Emulator. Virtual machines can be enumerated, started, stopped, reset, and saved.</P>
+
+<P>The <I>IVirtualTransport</I> interface gives desktop applications the ability to communicate with the Windows CE operating system running inside the Emulator.</P>
+
+<P>The location of VCEComInterfaces.idl, VCEComInterfaces_i.c, and VCEComInterfaces.h, which contain the definitions and globally unique identifiers (GUIDs) of the <I>IVirtualTransport</I> and <I>IVirtualMachinemanager</I> interfaces can be found in the Platform Manager SDK folder, which is installed with Windows CE .NET, and is located here:</P>
+
+<P>C:\Program Files\Common Files\Microsoft Shared\Windows CE Tools\Platman\sdk\platman\include</P>
+
+<H3 class="dtH1">Enumerating Emulator Sessions</H3>
+
+<P>It is important to understand the difference between a session, and a running Emulator. Using the <I>IVirtualMachineManager</I> interfaces, you can enumerate all Emulator sessions. This can include both running (currently executing code), and saved state (not executing code) sessions. You can query each session to determine the name of the session (Emulator window, caption bar text), and whether the session is currently running. Each session is uniquely identified by a GUID. The session GUID is used in subsequent calls to <I>IVirtualTransport</I> functions. This gives you the ability to work with multiple Emulator sessions from a single desktop application.</P>
+
+<H3 class="dtH1">IVirtualMachineManager</H3>
+
+<P>Here is an outline of the steps used to enumerate Emulator sessions. This is achieved using the <I>IVirtualMachineManager</I> interface.
+
+<UL type="disc">
+	<LI><code class="ce">CoInitialize</code>&#151;Initializes COM</li>
+
+	<LI><code class="ce">GetVirtualMachineCount</code>&#151;Returns the number of sessions</li>
+
+	<LI><code class="ce">EnumerateVirtualMachines</code>&#151;Returns an array of session GUIDs</li>
+
+	<LI>For each session GUID, calls&#151;
+<UL type="disc">
+	<LI><code class="ce">IsVirtualMachineRunning</code>&#151;Determines whether a session is running (executing code)</li>
+
+	<LI><code class="ce">GetVirtualMachineName</code>&#151;If you started the session using the command line (/VMID option), you could compare against the GUID you used to start the session rather than the Emulator window caption text</li>
+</UL>
+</li>
+
+	<LI><code class="ce">CoUninitialize</code>&#151;Closes the COM library on the current thread</li>
+</UL>
+
+<P>You would typically save the GUID for the session you are interested in working with. This will be used in subsequent calls to the <I>IVirtualTransport</I> interface.</P>
+
+<P>The following code shows how the IVirtualMachineManager APIs may be used to enumerate and display session names.</P>
+
+<PRE class="code">// NOTE: you need to #include the following files - VCEComInterfaces.h
+  VCEComInterfaces_i.c
+
+boolean  bIsVMRunning;  // check to see if session is running
+CComPtr &lt; IVirtualMachineManager &gt; piVirtualMachineManager;
+ULONG  ulTotalVM;  // Count of total Sessions
+GUID *  GUIDEnumVM;  // Pointer to array of session GUID's
+HRESULT  hr;
+
+LPOLESTR pszBuffer=(LPOLESTR)CoTaskMemAlloc(MAX_PATH*2);
+
+char pszAnsiBuffer[MAX_PATH]; // used to display the Session name.
+
+piVirtualMachineManager.CoCreateInstance(CLSID_VirtualMachineManager);
+
+// Get a count of the number of VM Sessions
+// NOTE:  GetVirtualMachineCount does not tell us the number of RUNNING VM 
+  sessions,
+// rather it tells us the number of sessions existing on the PC.
+hr = piVirtualMachineManager-&gt;GetVirtualMachineCount ( &amp;ulTotalVM );
+
+if ( SUCCEEDED ( hr ) )
+ {
+  if ( ulTotalVM )
+  {
+   GUIDEnumVM = new GUID [ulTotalVM];  // create space for the GUID's
+   if (!GUIDEnumVM) // check memory allocation
+    return FALSE;
+
+   // fill in the GUID array &#0150; we then walk the array getting the session
+     name
+   piVirtualMachineManager-&gt;EnumerateVirtualMachines ( &amp;ulTotalVM, 
+     GUIDEnumVM );
+
+   // Traverse through all the VM sessions
+   //
+   for ( int i = 0; i &lt; (int) ulTotalVM; i++ )
+   {
+    bIsVMRunning = FALSE;
+    // Get bIsVMRunning status for this instance of the emulator
+    hr = piVirtualMachineManager-&gt;IsVirtualMachineRunning( 
+&amp;GUIDEnumVM[i], &amp;bIsVMRunning );
+    if ( SUCCEEDED ( hr ) &amp;&amp; TRUE == bIsVMRunning )
+    {
+     // Get the sessions caption text
+     piVirtualMachineManager-&gt;GetVirtualMachineName(&amp;GUIDEnumVM[i], 
+       &amp;pszBuffer);
+     // Convert to ANSI, and output to the user.
+     wcstombs(pszAnsiBuffer,pszBuffer,MAX_PATH);
+     printf("Emulator Found - %s\n",pszAnsiBuffer);
+     // we could store the GUID GUIDEnumVM[i] for later use.
+    }
+   }
+   delete [] GUIDEnumVM;
+   CoTaskMemFree(pszBuffer);
+  }
+}
+</PRE>
+
+<H3 class="dtH1">IVirtualMachineManager&#151;Functions</H3>
+
+<P>The following APIs are exposed from the <I>IVirtualMachineManager</I> interface:</P>
+
+<PRE class="code">HRESULT GetVirtualMachineCount( 
+[out, retval] ULONG* numberOfVMs );
+</PRE>
+
+<P><code class="ce">GetVirtualMachineCount</code>&#151;Gets a count of all virtual machines, whether they are running or not.</P>
+
+<PRE class="code">HRESULT EnumerateVirtualMachines(
+    [in, out] ULONG* numberOfVMs,
+    [out, size_is(*numberOfVMs)] GUID virtualMachineID[] );
+</PRE>
+
+<P><code class="ce">EnumerateVirtualMachines</code>&#151;Gets an array of GUIDs of all virtual machines available, including both virtual machines that are running and those that have been saved.</P>
+
+<PRE class="code">HRESULT IsVirtualMachineRunning(
+    [in]     GUID*   virtualMachineID,
+    [out, retval] boolean*   isRunning );
+</PRE>
+
+<P><code class="ce">IsVirtualMachineRunning</code>&#151;Tests if a virtual machine is running or not and returns an error, if an unknown machine ID is found. Running means the virtual machine is in a powered-up state and is executing code. The virtual machine might be booting an operating system, but it is running. It is also possible for a virtual machine to exist, but not yet be powered up. In that case, this function will return false. Use 'EnumerateVirtualMachines' to determine if a machine exists or not and if the virtual machine is running code.</P>
+
+<PRE class="code">HRESULT ResetVirtualMachine(
+    [in] GUID* virtualMachineID,
+    [in] boolean hardReset );
+</PRE>
+
+<P><code class="ce">ResetVirtualMachine</code>&#151;Resets a virtual machine, either a hard or soft reset. A soft reset does not clear memory, and it does not reload the Windows CE image. The Emulator will jump to the Emulator entry point and start executing after resetting the hardware devices.</P>
+
+<PRE class="code">HRESULT CreateVirtualMachine( [in] LPOLESTR commandLine );
+</PRE>
+
+<P><code class="ce">CreateVirtualMachine</code>&#151;Starts a new virtual machine using command line parameters. See the <A HREF="#builddmadriver_topic2a">description of the command line options</A>.</P>
+
+<PRE class="code">HRESULT ShutdownVirtualMachine(
+    [in] GUID*   virtualMachineID,
+    [in] boolean   saveMachine );
+</PRE>
+
+<P><code class="ce">ShutdownVirtualMachine</code>&#151;Shuts down a virtual machine, optionally saving the state.</P>
+
+<PRE class="code">HRESULT RestoreVirtualMachine(
+     [in] GUID*      virtualMachineID );
+</PRE>
+
+<P><code class="ce">RestoreVirtualMachine</code>&#151;Restores a previously saved virtual machine.</P>
+
+<PRE class="code">HRESULT DeleteVirtualMachine(
+     [in] GUID*      virtualMachineID );
+</PRE>
+
+<P><code class="ce">DeleteVirtualMachine</code>&#151;Deletes a previously saved virtual machine.</P>
+
+<PRE class="code">HRESULT GetVirtualMachineName(
+    [in] GUID*      virtualMachineID,
+    [out] LPOLESTR*   virtualMachineName );
+</PRE>
+
+<P><code class="ce">GetVirtualMachineName</code>&#151;Returns the name of a virtual machine's window.</P>
+
+<PRE class="code">HRESULT SetVirtualMachineName(
+    [in] GUID*      virtualMachineID,
+    [in] LPOLESTR   virtualMachineName );
+</PRE>
+
+<P><code class="ce">SerVirtualMachineName</code>&#151;Sets the name of a virtual machine's window (the Emulator's caption bar).</P>
+
+<H3 class="dtH1">IVirtualTransport</H3>
+
+<P>The <I>IVirtualMachineManager</I> interface is primarily used to get the GUID for a running Emulator session. Once you have the GUID, you can then make use of the <I>IVirtualTransport</I> interface to send data to, and receive data from, an application or driver that is running within the Emulator. You could store multiple GUIDs from the <I>IVirtualMachineManager::EnumerateVirtualMachines( )</I> function, and therefore communicate with multiple running Emulator sessions.</P>
+
+<P>Here is an outline of the steps used to write data to an Emulator session using the <I>IVirtualTransport</I> interface. This assumes that COM has been initialized, and that the IVirtualMachineManager interface has been used to obtain a GUID for a running Emulator session.
+
+<UL type="disc">
+	<LI>Initialize( );&#151;Initializes the interface.</li>
+
+	<LI>Create( GUID, DmaChannel, &amp;TransportID );&#151;Creates a TransportID used in the calls to Send and Receive.</li>
+
+	<LI>Send( TransportID, Buffer, ByteCount, Timeout );&#151;Sends data from the desktop application to the Emulator DMA channel.</li>
+
+	<LI>Receive ( TransportID, buffer, &amp;ByteCount, Timeout);&#151;Receives data back from the Emulator.</li>
+
+	<LI>Delete( TransportID );</li>
+
+	<LI>TearDown( );</li>
+</UL>
+
+<P>The calls that are interesting from the above list are Create( ), Send( ), and Receive( ).</P>
+
+<P>The call to Create( ) requires the following parameters:
+
+<UL type="disc">
+	<LI>A valid GUID, perhaps obtained from a call to IVirtualMachineManager::EnumerateVirtualMachines( )</li>
+
+	<LI>DmaChannel, valid parameter range between 1 and 7, dma channel 0 is reserved by KITL. It is possible for multiple applications to be using the same DMA channel. The DMA channel used within the desktop application should match the DMA channel used witching the Windows CE application or driver.</li>
+
+	<LI>TransportID&#151;This is a return value from the Create( ) call. The Transport ID is used in subsequent calls to the Send( ) and Receive( ) functions.</li>
+</UL>
+
+<P>The Send( ) function uses the following parameters:
+
+<UL type="disc">
+	<LI>TransportID&#151;Obtained from a call to Create( ).</li>
+
+	<LI>LPBYTE ( Buffer )&#151;Pointer to the data buffer (maximum size 4 KB).</li>
+
+	<LI>byteCount&#151;The number of bytes to be sent.</li>
+
+	<LI>timeout&#151;Milliseconds before the Send function fails.</li>
+</UL>
+
+<P>The Receive( ) function uses the following parameters:
+
+<UL type="disc">
+	<LI>TransportID&#151;Obtained from a call to Create( ).</li>
+
+	<LI>LPBYTE ( Buffer )&#151;Pointer to the data buffer (maximum size 4 KB).</li>
+
+	<LI>&amp;byteCount&#151;Initial size of the buffer. This will reflect the number of bytes returned from the Receive( ) call. Receive is not a blocking call. The Receive function will timeout after 'timeout milliseconds' have passed. You need to check the number of bytes returned to be sure of having data from the Emulator.</li>
+
+	<LI>timeout&#151;Milliseconds before the Receive function fails.</li>
+</UL>
+
+<P>The transport is capable of transmitting 4 KB packets of data at a time. The transport is much like other hardware transports. It does not guarantee packet delivery or in-order delivery. Packets will generally arrive in order unless the throughput becomes very large.</P>
+
+<P>Because the desktop application will not know whether the Emulator application or driver is running, it is useful to have the desktop application wait on an initial message from the Emulator application or driver before spooling data. You will see how this works in a code sample below.</P>
+
+<P>The following sample assumes that you have a valid GUID from a call to IVirtualMachineManager::EnumerateVirtualMachines( ) stored in the variable m_GUIDVirtualMachineGuid, and further assumes that the desktop application will be started first. If you examine the code below, you will notice that you initially wait on an 'ACK' message from the Emulator application or driver to acknowledge that the Emulator application or driver has been started. You then write a buffer back to the Emulator 'Start' that could be the initial packet within a data stream of GPS data.</P>
+
+<PRE class="code">static const int DMA_CHANNEL = 6;
+static const int BUFFER_SIZE = 8;
+
+CComPtr &lt; IVirtualTransport &gt; m_piVirtualTransport; // interface pointer
+GUID                          m_GUIDVirtualMachineGuid; // GUID for the 
+  emulator session
+ULONG    m_ulTransportId; // Transport ID that is assigned in 
+  m_piVirtualTransport-&gt;Create( )
+HRESULT    hr;     // HRESULT
+char     cAck[BUFFER_SIZE]; // Ansi buffer to convert 'CE' string
+BYTE     inBuffer[BUFFER_SIZE]; // Used to receive data from the emulator 
+USHORT     usLenRead;  // Num bytes read from DMA interface
+
+// use IVirtualMachineManager::EmumerateVirtualMachines( ) to populate 
+  m_GUIDVirtualMachineGuid
+hr = m_piVirtualTransport.CoCreateInstance( CLSID_VirtualTransport );
+// initialize the IVirtualTransport Interface
+hr = m_piVirtualTransport-&gt;Initialize( );
+// Create returns a TransportID for the given GUID and DMA_CHANNEL (in 
+  this example, DMA_CHANNEL == 6)
+// the TransportID is used as the first parameter in calls to Send( ) and 
+  Receive( ).
+Hr = m_piVirtualTransport-&gt;Create(&amp;m_GUIDVirtualMachineGuid,
+  DMA_CHANNEL,&amp;m_ulTransportId);
+
+// Waiting on Emulator Application to start…
+// or, receiving data from the Emulator application/driver
+while ( 1 )
+{
+  inBuffer[0] = '\0';
+  cAck[0] = '\0';
+  usLenRead = BUFFER_SIZE;
+
+  // Call Receive, passing the TransportID and Buffer, timeout is 5000ms
+  hr = m_piVirtualTransport-&gt;Receive( m_ulTransportId, inBuffer, 
+    &amp;usLenRead, 5000 );
+
+  // convert results to Ansi string (Windows CE is Unicode).  
+ wcstombs(cAck, (WCHAR *) inBuffer, BUFFER_SIZE );
+  // Compare with 'ACK', used in this example to initiate the sending of 
+    data to the emulator
+  if ( !strncmp(cAck, "ACK",3) )
+    {
+    // Emulator application/driver is now running &#0150; we can start sending 
+      data to the emulator
+    break;
+  }
+ Sleep( 500 );
+}
+
+// Write data to Emulator application/driver
+strcpy((char*)inBuffer,"Start");
+// use Send( ), passing the TransportID, buffer, number of bytes, and
+  timeout
+hr = m_piVirtualTransport-&gt;Send(m_ulTransportId,inBuffer,
+  BUFFER_SIZE,5000);
+// We could wait on additional 'ACK' messages to control data flow from
+  the desktop application
+</PRE>
+
+<H3 class="dtH1">IVirtualTransport&#151;Functions</H3>
+
+<P>The following APIs are exposed from the <I>IVirtualTransport</I> interface.</P>
+
+<PRE class="code">HRESULT Initialize( );
+</PRE>
+
+<P>Always call Initialize() to prepare the virtual transport for use.</P>
+
+<PRE class="code">HRESULT TearDown( );
+</PRE>
+
+<P>When done with the transport, call TearDown. Among other actions, TearDown will call Delete() for any transports you created using the Create() member function.</P>
+
+<PRE class="code">HRESULT Create(
+    [in] GUID*   virtualMachineID,
+    [in] ULONG   dmaChannel,
+    [out] ULONG*   transportID );
+</PRE>
+
+<P>Creates a new transport channel and returns an ID used in subsequent calls to the transport.</P>
+
+<P>The 'virtualMachineID' is the GUID of the virtual machine to which you want to connect. For example, if you start up a virtual machine with <code class="ce">IvirtualMachineManager::CreateVirtualMachine()</code>, you would pass the command line option /VMID with a GUID to identify that virtual machine. Pass the same GUID in here to connect to that specific virtual machine. You can also use a value returned by EnumerateVirtualMachines(). The connection will fail if the virtual machine is not running.</P>
+
+<P>The 'dmaChannel' indicates which dmaChannel you want to use. Valid options are 0&#0150;7. Channel 0 is reserved for KITL. This is used by Platform Builder to communicate directly with the Windows CE kernel. The Emulator side implementation operates on IRQ 14 and resides in the file HALDMAKITL.C located here: C:\WINCE400\PLATFORM\EMULATOR\KERNEL\HAL.</P>
+
+<P>Channels 1 through 7 are implemented on the Emulator side using the DMA driver operating on IRQ 15. This is a stream-interface driver available to applications and drivers running in the Windows CE .NET Emulator.</P>
+
+<PRE class="code">HRESULT Delete( [in] ULONG transportID );
+Deletes a transport channel.
+
+HRESULT Advise( [in] IVirtualTransportSink* transportSink );
+Installs a callback for receiving data from the Emulator. Every time a
+  packet arrives the sink will be called.
+
+HRESULT Send(
+   [in]   ULONG   transportID,
+   [in, size_is(byteCount)] const BYTE* dataBuffer,
+   [in]    USHORT   byteCount,
+   [in]    ULONG   timeout );
+Sends data across the transport into the Emulator.
+
+HRESULT Receive(
+   [in]   ULONG    transportID,
+[out, size_is(*byteCount), length_is(*byteCount)]                 BYTE*
+  dataBuffer,
+   [in, out]   USHORT* byteCount,
+   [in]   ULONG   timeout );
+</PRE>
+
+<P>Polls for data received from the transport. On input, byteCount should contain the size of the buffer pointed to by dataBuffer. On output, byteCount will contain the actual number of bytes copied into the buffer. This member function can be used instead of installing a callback sink. However, it will degrade the performance of the Emulator because every time it is called, it takes cycles away from the time the Emulator has to run the virtual machine.</P>
+
+<H2 class="dtH1"><A NAME="builddmadriver_topic4"></A>Emulator Code</H2>
+
+<P>The Emulator exposes a DMA device driver that Windows CE-based applications can use to access the DMA transport. The device driver is exposed as a stream interface driver called Dmatrans.dll. Using Dumpbin.exe, which is a command line tool that ships with Windows CE .NET, you can list the exposed functions for dmatrans. These are listed below.</P>
+
+<PRE class="code">Dump of file dmatrans.dll
+    ordinal hint RVA      name
+          1    0 000018D2 DMA_Close
+          2    1 0000183D DMA_Deinit
+          3    2 00001ACE DMA_IOControl
+          4    3 000016DD DMA_Init
+          5    4 00001853 DMA_Open
+          6    5 00001ADA DMA_PowerDown
+          7    6 00001AD5 DMA_PowerUp
+          8    7 000019D8 DMA_Read
+          9    8 00001ADF DMA_Seek
+         10    9 0000191D DMA_Write
+</PRE>
+
+<P>The DMA driver is exposed through the Platform Builder catalog. This feature is called <I>DMA trans</I> and is automatically added to a Windows CE .NET Emulator platform.</P>
+
+<P class="fig"><CODE><IMG SRC="builddmadriver_fig2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2.</B></P>
+
+<P>Applications or drivers that use the DMA driver use the standard Microsoft Win32&#174; file I/O functions (CreateFile, ReadFile, WriteFile, CloseHandle) to read and write data to the Windows-based desktop application. The DMA transport provides event-driven notification when data is available to be read. In order to use this, a named event must be created with a name corresponding to the proper DMA channel, for example, channel6. The event is set when data is ready to be read. A thread can be created to wait until data is ready and then consume it.</P>
+
+<P>The following code shows how the DMA driver is used by an application or driver running within the Emulator to communicate with a running desktop application, and it shows both read and write operations being used. The DMA channel number and named event being used in this sample must match the channel number being used by the desktop application. Here is what you are doing in the code below:
+
+<UL type="disc">
+	<LI>CreateFile(L"DMA6:",&nbsp;.&nbsp;.&nbsp;.&nbsp;);&#151;Gets a file handle that can be used for subsequent read/write operations.</li>
+
+	<LI>CreateEvent(&nbsp;.&nbsp;.&nbsp;.&nbsp;,L"channel6");&#151;Gets a named event handle. This is used to wait for data available notification from the desktop.</li>
+
+	<LI>WriteFile(hFile,L"ACK",&nbsp;.&nbsp;.&nbsp;.&nbsp;);&#151;Informs the desktop application that you are running by sending an 'ACK' message. This could be any string. In this case, you are sending an acknowledgement. This sample assumes that the desktop application is started first.</li>
+
+	<LI>WaitForSingleObject(&nbsp;.&nbsp;.&nbsp;.&nbsp;);&#151;Waits for notification that data has been sent by the desktop application and is therefore available to be read.</li>
+
+	<LI>ReadFile(hFile,&nbsp;.&nbsp;.&nbsp;.&nbsp;);&#151;Reads the data from the desktop application.</li>
+
+	<LI>CloseHandle(hFile);&#151;You are done with the DMA transport.</li>
+</UL>
+
+<P>static const int BUFFER_SIZE = 8;</P>
+
+<PRE class="code">{
+  TCHAR tcBuffer[10];  // used in MessageBox, and Ansi conversion
+  BYTE buffer[10];  // receive buffer for desktop data
+  DWORD dwBytes;  // number of bytes 'read' from desktop application
+  DWORD dwWritten;  // number of bytes 'written' to desktop application
+
+  // DMA Interface is exposed as a Stream driver within emulation
+  // use the same DMA Channel on the desktop and emulator
+  HANDLE hFile=CreateFile(L"DMA6:", GENERIC_READ | GENERIC_WRITE, 0, NULL,
+  OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+  // check for valid File Handle &#0150; return if invalid
+  if (INVALID_HANDLE_VALUE == hFile) {
+    OutputDebugString(L"Failed to open DMA6:\n");
+    return;
+  }
+
+  // create an event - we wait on this to get data from the desktop
+  // channel must match the DMA channel number used in the CreateFile call
+  HANDLE g_hDataReadyEvent = CreateEvent( NULL, FALSE, FALSE, L"channel6" 
+    );
+
+  // Send notification to Desktop application that we're running...
+  // Should start the desktop application first !.
+  WriteFile(hFile,L"ACK",6,&amp;dwWritten,NULL);
+
+  // wait for data to be available
+  WaitForSingleObject( g_hDataReadyEvent, INFINITE );
+  // now read the data from the desktop application...
+  // note that DMA transfers are always 0x1000 bytes
+  ReadFile(hFile,buffer,0x1000,&amp;dwBytes,NULL);
+
+  // convert the desktop string to Unicode
+  mbstowcs( tcBuffer, (char*) buffer, BUFFER_SIZE );
+  // and display to the user
+  OutputDebugString(tcBuffer);
+ 
+  // Close the file handle
+  CloseHandle(hFile);
+}
+</PRE>
+
+<P>The sample code above could easily be wrapped into a driver, perhaps "GPS.DLL", which handles all read and write operations to the underlying DMA transport. A host Windows CE application would not need to know that the GPS data it is requesting is actually being spooled by a desktop Win32-based application rather than a physically connected GPS device. As shown above, it is possible to write a Windows CE-based application that talks directly to the DMA interface.</P>
+
+<H2 class="dtH1"><A NAME="builddmadriver_topic5"></A>Conclusion</H2>
+
+<P>This paper describes the DMA interfaces exposed by the Windows CE .NET Emulator. The interfaces can be used to simulate additional hardware within the emulation environment and can be used by application developers to accelerate development of a product while hardware is being developed. The Windows CE .NET Emulator can also be configured to use a development computer's serial, parallel, and Ethernet connections, which provides a flexible development platform for Windows CE .NET-based designs.</P>
+
+<H2 class="dtH1"><A NAME="builddmadriver_topic6"></A>For More Information</H2>
+
+<P>For the latest information about Windows CE .NET, visit <A href="http://msdn.microsoft.com//windows/embedded">http://www.microsoft.com/windows/embedded</A>.</P>
+
+<P>The online documentation and context-sensitive Help included with Windows CE .NET also provides comprehensive background information and instructions for using Windows CE .NET.</P>
+
+<P>Related Reading:</P>
+
+<P><A href="http://msdn.microsoft.com//mspress/books/19.asp">Inside COM</A> (ISBN 1-57231-349-8)</P>
+
+<P><A HREF="http://www.wordware.com/Merchant2/merchant.mv?Screen=PROD&Store_Code=wwpub&Product_Code=1556227043">Developer's Workshop to COM and ATL 3.0</A> (ISBN 1-55622-704-3)</P>
+
+<P><A HREF="http://www.mrbunny.com/mbgtax.html">Mr. Bunny's Guide to ActiveX</A> (ISBN 0-201-48536-2)</P>
+
+<H4 class="dtH1">To access the online documentation for Windows CE .NET</H4>
+
+<OL type="1">
+	<LI>Start Platform Builder.</li>
+
+	<LI>Select <B>Contents</B> on the <B>Help</B> menu to view the documentation.</li>
+</OL>
+
+<P>You can also visit the <MSHelp:link keywords="pb_start" TABINDEX="0">product documentation for Windows CE .NET</MSHelp:link> on MSDN&#174;.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_830128', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

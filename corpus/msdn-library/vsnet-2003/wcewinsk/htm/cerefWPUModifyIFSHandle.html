@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WPUModifyIFSHandle</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WPUModifyIFSHandle"/>
+<MSHelp:RLTitle Title="WPUModifyIFSHandle"/>
+<MSHelp:Keyword Index="A" Term="cerefWPUModifyIFSHandle"/>
+<MSHelp:Keyword Index="K" Term="WPUModifyIFSHandle"/>
+<MSHelp:Keyword Index="A" Term="cerefWPUModifyIFSHandle"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715133">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwpumodifyifshandle"></A>WPUModifyIFSHandle</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function receives a (possibly) modified IFS handle from Ws2_32.dll.</P>
+
+<PRE class="syntax"><B>SOCKET WPUModifyIFSHandle(</B>
+<B>DWORD</B><I> dwCatalogEntryId</I><B>,</B>
+<B>SOCKET</B><I> ProposedHandle</I><B>,</B>
+<B>LPINT</B><I> lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>dwCatalogEntryId</I></DT>
+
+<DD>[in] Descriptor identifying the calling service provider.</dd>
+
+<DT><I>ProposedHandle</I></DT>
+
+<DD>[in] IFS handle allocated by the provider.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] Pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Because Windows CE does not support IFS this function always returns <I>ProposedHandle</I>. If <I>ProposedHandle</I> is an invalid socket this function sets the error code WSAEINVAL.</P>
+
+<P class="label"><B>Error Codes</B></P>
+
+<P>WSAEINVAL. Proposed handle is not valid.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>WPUModifyIFSHandle </B>handle allows the Ws2_32.dll to streamline its internal operations by returning a possibly modified version of the supplied IFS handle. It is guaranteed that the returned handle is indistinguishable from the proposed handle as far as the operating system is concerned. IFS providers must call this function before returning any newly created socket descriptor to a service provider. The service provider will only use the modified handle for any subsequent socket operations.</P>
+
+<P>This routine is only used by IFS providers whose socket descriptors are real IFS handles.</P>
+
+<P class="label"><B>Layered Service Provider Considerations</B></P>
+
+<P>This procedure may also be used by a layered provider that is layered on top of a base IFS provider and wants to expose the base provider's socket handles as its own instead of creating them with a <A HREF="cerefwpucreatesockethandle.htm">WPUCreateSocketHandle</A> call. A layered provider that wants to pass through the IFS socket handles it receives from the next layer in the chain can call <B>WPUModifyIFSHandle</B>, passing its own catalog entry ID as <I>dwCatalogEntryId</I>. This informs the Windows Sockets DLL that this layer, and not the next layer, should be the target for SPI calls involving that socket handle.</P>
+
+<P>If it takes this approach, a layered provider should observe the following limitations:
+
+<UL type="disc">
+	<LI>The provider should expose base provider entry points for <A HREF="cerefwspsend.htm">WSPSend</A> and <A HREF="cerefwsprecv.htm">WSPRecv</A> in the procedure dispatch table it returns at the time of <A HREF="cerefwspstartup.htm">WSPStartup</A> to make sure the Windows Sockets SPI client's access to these functions is as efficient as possible.</li>
+
+	<LI>The provider cannot rely on its <B>WSPSend</B> and <B>WSPRecv</B> functions being invoked for all I/O, particularly in the case of the I/O system functions <MSHelp:link keywords="cerefReadFile" TABINDEX="0">ReadFile</MSHelp:link> and <MSHelp:link keywords="cerefWriteFile" TABINDEX="0">WriteFile</MSHelp:link>. These functions would bypass the layered provider and invoke the base IFS provider's implementation directly even if the layered provider puts its own entry points for these functions into the procedure dispatch table.</li>
+
+	<LI>The provider cannot rely on any ability to post-process overlapped I/O using <B>WSPSend</B>, <A HREF="cerefwspsendto.htm">WSPSendTo</A>, <B>WSPRecv</B>, <A HREF="cerefwsprecvfrom.htm">WSPRecvFrom</A>, or <A HREF="cerefwspioctl.htm">WSPIoctl</A>. Post-processing notification may happen through completion ports and bypass the layered provider entirely. A layered provider has no way to determine that a completion port was used or determine what port it is. The layered provider has no way to insert itself into the notification sequence.</li>
+
+	<LI>The provider should pass through all overlapped I/O requests directly to the base provider using the original overlapped parameters (for example, the <A HREF="cerefwsaoverlapped.htm">WSAOVERLAPPED</A> structure and completion routine pointer). The provider should expose the base provider entry point for <A HREF="cerefwspgetoverlappedresult.htm">WSPGetOverlappedResult</A>. Because some overlapped I/O requests can bypass the layered provider completely, the layered provider cannot reliably mark <B>WSAOVERLAPPED</B> structures to determine which ones it can report results for, and which ones would have to be passed through to the underlying provider's <B>WSPGetOverlappedResult</B>. This effectively means that <B>WSPIoctl</B> has to be a pass-through operation to the underlying provider.</li>
+</UL>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwpucreatesockethandle.htm">WPUCreateSocketHandle</A>, <A HREF="cerefwsprecv.htm">WSPRecv</A>, <A HREF="cerefwspsend.htm">WSPSend</A>, <A HREF="cerefwspioctl.htm">WSPIoctl</A>, <A HREF="cerefwsaoverlapped.htm">WSAOVERLAPPED</A>, <A HREF="cerefwspgetoverlappedresult.htm">WSPGetOverlappedResult</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WPUModifyIFSHandle&nbsp;(cerefwpumodifyifshandle.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

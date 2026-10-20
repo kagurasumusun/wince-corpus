@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Enumerator</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Enumerator"/>
+<MSHelp:RLTitle Title="Registry Enumerator"/>
+<MSHelp:Keyword Index="A" Term="cxconRegistryEnumerator"/>
+<MSHelp:Keyword Index="K" Term="device driver loading model, registry enumerator"/>
+<MSHelp:Keyword Index="K" Term="device drivers, enumerating devices from registry entries"/>
+<MSHelp:Keyword Index="K" Term="drivers, enumerating from registry entries"/>
+<MSHelp:Keyword Index="K" Term="enumerating, device drivers from registry entries"/>
+<MSHelp:Keyword Index="K" Term="registry enumerator"/>
+<MSHelp:Keyword Index="A" Term="cxconRegistryEnumerator"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverloadingmodel.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821466">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconregistryenumerator"></A>Registry Enumerator</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Registry Enumerator (RegEnum.dll) exports the <B>Init</B> and <B>Deinit</B> functions. It finds new devices by reading entries from the registry. It is re-entrant; the Device Manager can call it again while a previous invocation is still active, and supports hierarchical usage so it can load itself over a different registry key. When it gets unloaded, it unloads anything it directly loaded.</P>
+
+<P>The Device Manager loads the Registry Enumerator by checking <B>HKEY_LOCAL_MACHINE\Drivers\<I>RootKey</I></B> to determine the key where to start the driver loading process. The default value of <B><I>RootKey</I></B> is <B>Drivers</B>. The Device Manager loads the driver indicated by that key, which is typically RegEnum.dll.</P>
+
+<P>The Registry Enumerator examines its root key, which is the registry key passed to it, by looking for subkeys that describe drivers to load. The following list shows what subkeys these keys contain:
+
+<UL type="disc">
+	<LI>Built-in or native devices.</li>
+
+	<LI>ISA devices.</li>
+
+	<LI>The PCI bus.</li>
+
+	<LI>Virtual devices such as the Network Driver Interface Specification (NDIS).</li>
+
+	<LI>Optional protocol elements such as Simple Network Management Protocol (SNMP) or Point-to-Point Protocol (PPP).</li>
+
+	<LI>Other non-enumerable operating system (OS) components. </li>
+</UL>
+
+<P>RegEnum.dll examines the first level of keys just below the key passed to it, according to the <B>Order</B> registry subkey. It invokes <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> on each subkey it finds.</P>
+
+<P>Each subkey can have any values typically interpreted by <B>ActivateDeviceEx</B> or by the driver ultimately getting loaded. Additionally, each subkey can have an <B>Order</B> value between 0 and 255. The smallest <B>Order</B> value gets loaded first. If there is no <B>Order</B> value, the driver will get loaded after drivers with defined <B>Orders</B>.</P>
+
+<P>The entry point of the driver is constructed from the <B>Prefix</B> value if the driver exposes a stream interface, or is <B>Init</B> if no <B>Prefix</B> value exists. For example, a serial driver with <B>Prefix</B> equal to COM will have an entry point of <A HREF="_wceddk_com_init.htm">COM_Init</A>. If there is no <B>Prefix</B> value, then the entry point is <B>Init</B>. </P>
+
+<P>As the Registry Enumerator initializes the system, it traverses the subkeys of <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B>, or where ever the <B>HKEY_LOCAL_MACHINE\Drivers\RootKey</B> value points, one by one, and initializes a driver for each entry. It loads the DLL indicated by the DLL value, and then creates a subkey for the driver under <B>HKEY_LOCAL_MACHINE\Drivers\Active</B>. Then it calls the <B>Init</B> function or the driver's entry point and passes in a string containing that subkey.</P>
+
+<P>Using the string it gets, the <B><I>XXX</I>_Init</B> routine can call <MSHelp:link keywords="cerefRegOpenKeyEx" TABINDEX="0">RegOpenKeyEx</MSHelp:link> to get a handle for this key, and then call <MSHelp:link keywords="cerefRegQueryValueEx" TABINDEX="0">RegQueryValueEx</MSHelp:link> to look up the key value, which will contain the string corresponding to the registry key that Device Manager originally encountered under <B>HKEY_LOCAL_MACHINE\Drivers\BuiltIn</B>.</P>
+
+<P>It is common for device driver writers to include other values in their registry key. These values can indicate other things such as the I/O port address, the IRQ setting, the DMA settings, or any other type of additional information needed.</P>
+
+<P>The following is an example of a registry key for a device called SAMPLE; you can find other examples in the Platform.reg file for your platform:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Sample]
+    "Dll" = "sampledev.Dll"
+    "Prefix" = "SAMPLE"
+    "Index" = dword:1
+    "Order" = dword:0
+    "FriendlyName" = "Sample Controller"
+    "Ioctl" = dword:0</PRE>
+
+<P>Using the above registry settings, the Device Manager creates a new key. Then it calls <B>SAMPLE_Init</B>, and passes in a pointer to the new key. <B>SAMPLE_Init</B> then calls <B>RegOpenKeyEx</B> to get a handle for the key. Then it calls <B>RegQueryValueEx</B> to get the string "\Drivers\BuiltIn\Sample". <B><I>XXX</I>_Init</B> can then use this string to open that key and get at other information placed there. For non-stream drivers, if there is no <B>Prefix</B> value, <B>Init</B> is the assumed entry point. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondevicedriverloadingmodel.htm">Device Driver Loading Model</A></P>
+
+<P><A HREF="cxconinterfaceclasses.htm">Device Interface Classes</A></P>
+
+<P><A HREF="cxcondevicenotifications.htm">Device Interface Notifications</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20Enumerator&nbsp;(cxconregistryenumerator.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

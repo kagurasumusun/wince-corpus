@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSAStringToAddress</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSAStringToAddress"/>
+<MSHelp:RLTitle Title="WSAStringToAddress"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAStringToAddress"/>
+<MSHelp:Keyword Index="K" Term="WSAStringToAddress"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_WSAStringToAddress"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_720540">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_wsastringtoaddress"></A>WSAStringToAddress</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function converts a numeric string to a <A HREF="cerefsockaddr.htm">sockaddr</A> structure suitable for passing to Windows Sockets routines that take such a structure.</P>
+
+<PRE class="syntax"><B>INT WSAStringToAddress(</B>
+<B>LPTSTR</B> <I>AddressString</I><B>,</B>
+<B>INT</B> <I>AddressFamily</I><B>,</B>
+<B>LPWSAPROTOCOL_INFO</B> <I>lpProtocolInfo</I><B>,</B>
+<B>LPSOCKADDR</B> <I>lpAddress</I><B>,</B>
+<B>LPINT</B> <I>lpAddressLength</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>AddressString</I></DT>
+
+<DD>[in] Pointer to the null-terminated human-readable numeric string to convert.</dd>
+
+<DT><I>AddressFamily</I></DT>
+
+<DD>[in] Address family to which the string belongs.</dd>
+
+<DT><I>lpProtocolInfo</I></DT>
+
+<DD>[in] (optional) <A HREF="cerefwsaprotocol_info.htm">WSAPROTOCOL_INFO</A> structure associated with the provider to be used. If this is NULL, the call is routed to the provider of the first protocol supporting the indicated <I>AddressFamily</I>.</dd>
+
+<DT><I>lpAddress</I></DT>
+
+<DD>[out] Buffer that is filled with a single <B>sockaddr</B>.</dd>
+
+<DT><I>lpAddressLength</I></DT>
+
+<DD>[in/out] Length of the <I>Address</I> buffer. Returns the size of the resultant <B>sockaddr</B> structure. If the supplied buffer is not large enough, the function fails with a specific error of WSAEFAULT and this parameter is updated with the required size in bytes. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The return value for <B>WSAStringToAddress</B> is zero if the operation was successful. Otherwise, the value SOCKET_ERROR is returned, and a specific error number can be retrieved by calling <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>. The following table shows a list of possible error values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Error value </TH>
+<TH width=65%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEFAULT </TD>
+<TD width=65%>The specified <I>Address</I> buffer is too small. Pass in a larger buffer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSAEINVAL </TD>
+<TD width=65%>Unable to translate the string into a <B>sockaddr</B>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSANOTINITIALIZED </TD>
+<TD width=65%>ws2.dll has not been initialized. The application must first call <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A> before calling any Windows Sockets functions. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>WSA NOT ENOUGH MEMORY </TD>
+<TD width=65%>There was insufficient memory to perform the operation. </TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <B>WSAStringToAddress</B> function converts alphanumeric addresses to <B>sockaddr</B> structures. <B>WSAStringToAddress</B> is the protocol-independent equivalent of the BSD <A HREF="_wcesdk_inet_ntoa.htm">inet_ntoa</A> function.</P>
+
+<P>Any missing components of the address will be defaulted to a reasonable value, if possible. For example, a missing port number will default to zero. If the caller wants the translation to be done by a particular provider, it should supply the corresponding <B>WSAPROTOCOL_INFO</B> structure in the <I>lpProtocolInfo</I> parameter.</P>
+
+<P>The <B>WSAStringToAddress</B> function fails (and returns WSAEINVAL) if the <B>sin_family</B> member of the <B>SOCKADDR_IN</B> structure, which is passed in the <I>lpAddress</I> parameter in the form of a <B>sockaddr</B> structure, is not set to AF_INET.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=21%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=15%>Winsock2.h</TD>
+<TD width=21%>Ws2.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefsockaddr.htm">sockaddr</A>, <A HREF="cerefsockaddr_irda.htm">SOCKADDR_IRDA</A>, <A HREF="_wcesdk_wsagetlasterror.htm">WSAGetLastError</A>, <A HREF="_wcesdk_wsastartup.htm">WSAStartup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSAStringToAddress&nbsp;(_wcesdk_wsastringtoaddress.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

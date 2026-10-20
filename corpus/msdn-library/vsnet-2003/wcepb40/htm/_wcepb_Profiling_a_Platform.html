@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Platform Profiling</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Platform Profiling"/>
+<MSHelp:RLTitle Title="Platform Profiling"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Profiling_a_Platform"/>
+<MSHelp:Keyword Index="K" Term="event tracking, platform profiling"/>
+<MSHelp:Keyword Index="K" Term="hardware-assisted profiling, platform profiling"/>
+<MSHelp:Keyword Index="K" Term="kernel profiling, platform"/>
+<MSHelp:Keyword Index="K" Term="Monte Carlo profiling, platform profiling"/>
+<MSHelp:Keyword Index="K" Term="platform profiling, overview"/>
+<MSHelp:Keyword Index="K" Term="profiling, platform profiling overview"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Profiling_a_Platform"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: event_tracking.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674877">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_profiling_a_platform"></A>Platform Profiling</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Windows CE supports three profiling techniques to measure operating system performance on a targeted platform.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Profiling technique</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Instrumented kernel</TD>
+<TD width=70%>Computes minimum, maximum, and average time where preemption is disabled in the kernel.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Monte Carlo</TD>
+<TD width=70%>Counts/measures per-routine CPU occupation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>Hardware-assisted</TD>
+<TD width=70%>Tracks process/thread creation and destruction and thread context switches; makes time measurements.</TD>
+</TR>
+</table></div>
+
+<P>Instrumented kernel and Monte Carlo profiling depend on a profile-enabled build of the kernel.</P>
+
+<P class="label"><B>Profile-enabled kernel</B></P>
+
+<P>The profile-enabled kernel is the same as a release kernel, with the addition of timing-related functions. Instrumented kernel profiling and Monte Carlo profiling work together to profile the performance of the Windows CE kernel and OS features running on a target device. Building a profile-enabled kernel requires setting the appropriate environment variables. For more information, see <A HREF="pbtskcreatingprofile-enabledosimageforcepc.htm">Creating a Profile-Enabled OS Image for a CEPC</A>.</P>
+
+<P>To support instrumented kernel profiling and Monte Carlo profiling, you must implement the <MSHelp:link keywords="cmrefOEMProfileTimerDisable" TABINDEX="0">OEMProfileTimerDisable</MSHelp:link> and <MSHelp:link keywords="cmrefOEMProfileTimerEnable" TABINDEX="0">OEMProfileTimerEnable</MSHelp:link> functions in your OEM adaptation layer (OAL) using Platform Builder. The kernel calls these functions to perform the profiling. You then enable these two profiling methods by calling the <MSHelp:link keywords="cmrefProfileStart" TABINDEX="0">ProfileStart</MSHelp:link> and <MSHelp:link keywords="cmrefProfileStop" TABINDEX="0">ProfileStop</MSHelp:link> functions. For more information, see <A HREF="pbtskimplementingprofiling.htm">Implementing Profiling</A>.</P>
+
+<P class="label"><B>Instrumented kernel profiling</B></P>
+
+<P>Instrumented kernel profiling analyzes kernel calls. These are kernel routines during which the kernel turns off thread scheduling preemption and does not allow other threads to run. The worst-case time that a real-time thread is kept from running can be characterized as the worst-case kernel call time in the kernel. These times do not represent interrupt service routine (ISR) execution times, but they do represent lower-priority thread execution times, such as interrupt service threads (IST). Instrumented kernel profiling also provides the duration of the <B>NextThread</B> kernel call. This is the amount of time the kernel spends setting up the IST. </P>
+
+<P>Instrumented kernel profiling records all kernel call times, including minimum, maximum, and average times. The instrumented kernel is useful for reporting possible worst-case times. It profiles all scheduling latencies &#0151; those cases where an IST is ready to run but is blocked while execution continues within a noninterruptible portion of the kernel.</P>
+
+<P class="label"><B>Monte Carlo profiling</B></P>
+
+<P>Monte Carlo profiling involves interrupting the system at a high rate and recording the interrupted address. By interrupting at a high rate, the samples give a good representation of what routines are running most of time. For more information, see <A HREF="_wcepb_monte_carlo_profiling.htm">Monte Carlo Profiling</A>.</P>
+
+<P class="label"><B>Hardware-assisted profiling</B></P>
+
+<P>Windows CE also supports hardware-assisted profiling, including an application programming interface (API) library that supports process-level tracking. You can use this library to write an application that can be notified when a process or thread is created or terminated, or when a thread is scheduled to run.</P>
+
+<P>You can use the information that the system passes to the application to perform custom profiling functions. To enable hardware-assisted profiling, assign function addresses to global pointers in the OAL. The kernel uses these pointers to pass information to the functions that you implement in the OAL.</P>
+
+<P>You can also obtain performance measurements from an application using the <MSHelp:link keywords="_wcesdk_Win32_GetThreadTimes" TABINDEX="0">GetThreadTimes</MSHelp:link> and <MSHelp:link keywords="cerefQueryPerformanceCounter" TABINDEX="0">QueryPerformanceCounter</MSHelp:link> functions.</P>
+
+<P>For more information, see <A HREF="_wcepb_hardware_assisted_profiling.htm">Hardware-Assisted Profiling</A>.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cmconReal-TimePerformance" TABINDEX="0">Real-Time Performance</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Platform%20Profiling&nbsp;(_wcepb_profiling_a_platform.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

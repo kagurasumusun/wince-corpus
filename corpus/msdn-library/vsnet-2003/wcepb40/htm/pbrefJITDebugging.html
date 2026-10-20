@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Just-in-Time Debugging</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Just-in-Time Debugging"/>
+<MSHelp:RLTitle Title="Just-in-Time Debugging"/>
+<MSHelp:Keyword Index="A" Term="pbrefJITDebugging"/>
+<MSHelp:Keyword Index="K" Term="debugging, just-in-time debugging"/>
+<MSHelp:Keyword Index="K" Term="JIT debugging, overview"/>
+<MSHelp:Keyword Index="K" Term="just-in-time debugging, overview"/>
+<MSHelp:Keyword Index="A" Term="pbrefJITDebugging"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: debugging_platform.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679658">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="pbrefjitdebugging"></A>Just-in-Time Debugging</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Microsoft Windows CE .NET supports just-in-time (JIT) Debugging. The ability to debug crashed code, at the moment where the OS would typically terminate the relevant process, is known as just-in-time debugging. This feature is useful in situations where an OS developer is faced with a halted OS on a stand-alone Windows CE&#0150;based device. If the OS has been set up for JIT debugging beforehand, the developer can respond to the system crash by connecting the device to a development workstation running the IDE, and debug the kernel or any running application. </P>
+
+<P>In past versions of Platform Builder, there was only one way to debug an OS. The kernel had to contain the static library Kernel Debugger Stub (KdStub) in order to work with the kernel debugger. KdStub would require that there be a connection to a development workstation running the IDE. If no connection existed, the system would not boot. In order to debug a Windows CE&#0150;based device, an OS developer would have to have KdStub in their image, and they would have to have the device constantly connected to the development workstation. These requirements made it difficult to debug relatively rare system errors.</P>
+
+<P>In addition, if the device was connected to a development workstation, all exceptions passed immediately to the debugger. Because of this behavior, applications were unable to handle their own exceptions. Exceptions that might have been handled routinely by the application's exception handler would pass to the kernel debugger, and would be indistinguishable from more problematic exceptions. </P>
+
+<P>These debugging complications have been eliminated with the current version of Platform Builder. KdStub no longer requires a connection to another development workstation in order to boot the OS, and applications are now given an opportunity to handle their exceptions. </P>
+
+<P>Exceptions are now handled as follows: 
+
+<UL type="disc">
+	<LI>When KdStub encounters an exception, it immediately checks to see if there is currently a KITL debugger connection to a development workstation running the IDE. 
+<UL type="disc">
+	<LI>If a connection exists, then the kernel debugger receives the exception. </li>
+
+	<LI>If no connection exists, then this first chance exception is passed back to the application that generated it. The application's exception handler is given a chance to handle this exception. </li>
+</UL>
+</li>
+
+	<LI>If the application does not handle the exception, a second-chance exception passes to KdStub. This is an opportunity for JIT Debugging. Once KdStub receives the second-chance exception, it checks again for a KITL connection to the host. 
+<UL type="disc">
+	<LI>If a connection now exists, then the kernel debugger takes the exception. </li>
+
+	<LI>If there is still no connection, KdStub waits for a KITL connection to be made. At this point, the user can set up a KITL connection between the Windows CE&#0150;based device and the host; once this connection is made, the target device can be debugged.</li>
+</UL>
+</li>
+</UL>
+
+<P>In this JIT debugging scenario, the OS of the Windows CE-based device will freeze, as it waits for a KITL connection to be made. No message will be sent to signify this freeze to a user; indeed, in some situations, there may not even be a user interface. The nature of this response has implications for how the OS developer will want to set up JIT debugging.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbconplatformapplicationdebugging.htm">Platform and Application Debugging</A></P>
+
+<P><A HREF="pbtsksettingupjitdebugging.htm">JIT Debugging Setup</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Just-in-Time%20Debugging&nbsp;(pbrefjitdebugging.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

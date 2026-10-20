@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CEdit</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cedit"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cedit"></A><SUP></SUP>CEdit</H1>
+
+<P>This class encapsulates the functionality of a Windows CE edit control, which is a rectangular child window in which a user can enter text.</P>
+
+<P>You can create an edit control either from a dialog template or directly in your code. In both cases, first call the constructor <B>CEdit</B> to construct the <B>CEdit</B> object, then call the <B>Create</B> method to create the Windows edit control and attach it to the <B>CEdit</B> object. </P>
+
+<P>Construction can be a one-step process in a class derived from <B>CEdit</B>. Write a constructor for the derived class and call <B>Create</B> from within the constructor.</P>
+
+<P><B>CEdit</B> inherits significant functionality from <B>CWnd</B>. To set and retrieve text from a <B>CEdit</B> object, use the <B>CWnd</B> methods <B>SetWindowText</B> and <B>GetWindowText</B>, which set or get the entire contents of an edit control, even if it is a multiline control. Text lines in a multiline control are separated by <B>\r\n</B> character sequences. Also, if an edit control is multiline, get and set part of the control text by calling the <B>CEdit</B> methods <B>GetLine</B>, <B>SetSel</B>, <B>GetSel</B>, and <B>ReplaceSel</B>. </P>
+
+<P>If you want to handle Windows notification messages sent by an edit control to its parent, usually a class derived from <B>CDialog</B>, add a message-map entry and message-handler method to the parent class for each message.</P>
+
+<P>Each message-map entry takes the following form:</P>
+
+<PRE class=syntax><B>ON_Notification(</B> <I>id, memberFxn</I> <B>)</B></PRE>
+
+<P>where <I>id</I> specifies the child window identifier of the edit control sending the notification, and <I>memberFxn</I> is the name of the parent method you have written to handle the notification.</P>
+
+<P>The function prototype for the parent is as follows:</P>
+
+<PRE class=syntax><B>afx_msg</B> void memberFxn<B>( );</B></PRE>
+
+<P>Following is a list of potential message-map entries and a description of the cases in which they would be sent to the parent:
+
+<UL type=disc>
+	<LI>ON_EN_CHANGE&nbsp;&nbsp;&nbsp;The user has taken an action that may have altered text in an edit control. Unlike the EN_UPDATE notification message, this notification message is sent after Windows updates the display.</LI>
+
+	<LI>ON_EN_ERRSPACE&nbsp;&nbsp;&nbsp;The edit control cannot allocate enough memory to meet a specific request.</LI>
+
+	<LI>ON_EN_HSCROLL&nbsp;&nbsp;&nbsp;The user clicks the horizontal scroll bar of an edit control. The parent window is notified before the screen is updated.</LI>
+
+	<LI>ON_EN_KILLFOCUS&nbsp;&nbsp;&nbsp;The edit control loses the input focus.</LI>
+
+	<LI>ON_EN_MAXTEXT&nbsp;&nbsp;&nbsp;The current insertion has exceeded the specified number of characters for the edit control and has been truncated. Also sent when an edit control does not have the ES_AUTOHSCROLL style and the number of characters to be inserted would exceed the width of the edit control. Also sent when an edit control does not have the ES_AUTOVSCROLL style and the total number of lines resulting from a text insertion would exceed the height of the edit control.</LI>
+
+	<LI>ON_EN_SETFOCUS&nbsp;&nbsp;&nbsp;Sent when an edit control receives the input focus.</LI>
+
+	<LI>ON_EN_UPDATE&nbsp;&nbsp;&nbsp;The edit control is about to display altered text. Sent after the control has formatted the text but before it screens the text so that the window size can be altered, if necessary.</LI>
+
+	<LI>ON_EN_VSCROLL&nbsp;&nbsp;&nbsp;The user clicks the vertical scroll bar of an edit control. The parent window is notified before the screen is updated.</LI>
+</UL>
+
+<P>If you create a <B>CEdit</B> object within a dialog box, the <B>CEdit</B> object is automatically destroyed when the user closes the dialog box.</P>
+
+<P>If you create a <B>CEdit</B> object from a dialog resource using the dialog editor, the <B>CEdit</B> object is automatically destroyed when the user closes the dialog box.</P>
+
+<P>If you create a <B>CEdit</B> object within a window, you may also need to destroy it. If you create the <B>CEdit</B> object on the stack, it is destroyed automatically. If you create the <B>CEdit</B> object on the heap by using the <B>new</B> function, you must call <B>delete</B> on the object to destroy it when the user terminates the Windows edit control. If you allocate any memory in the <B>CEdit</B> object, override the <B>CEdit</B> destructor to dispose of the allocations.</P>
+
+<H4>Remarks</H4>
+
+<P>MFC for Windows CE does not support the following methods of the standard MFC <B>ClassName</B> class:
+
+<UL type=disc>
+	<LI><B>CEdit::GetHandle</B></LI>
+
+	<LI><B>CEdit::SetHandle</B></LI>
+</UL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd.htm"><B>CWnd</B></A>, <A HREF="cbutton.htm"><B>CButton</B></A>, <A HREF="ccombobx.htm"><B>CComboBox</B></A>, <A HREF="clistbox.htm"><B>CListBox</B></A>, <A HREF="cscrlbar.htm"><B>CScrollBar</B></A>, <A HREF="cstatic.htm"><B>CStatic</B></A>, <A HREF="cdialog.htm"><B>CDialog</B></A>, <A HREF="cedit_7.htm"><B>Create</B></A>, <A HREF="cwnd_193.htm"><B>SetWindowText</B></A>, <A HREF="cwnd_79.htm"><B>GetWindowText</B></A>, <A HREF="compare_15.htm">Control Classes</A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

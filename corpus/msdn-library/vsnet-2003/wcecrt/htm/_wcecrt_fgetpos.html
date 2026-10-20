@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fgetpos</TITLE>
+<SCRIPT SRC="vs70link.js"></SCRIPT><SCRIPT SRC="vs70.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fgetpos"/>
+</xml>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY">
+
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>C&nbsp;Run-time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+</div>
+<DIV id="nstext" valign="bottom">
+<!--Preliminary Statement-->
+<font color=ff0000 size="1"><i>This is preliminary documentation and subject to change.</i></font>
+<br>
+<!--Feedback Link-->
+<p><font size="1"><i><script>writefeedbacklinkex("Talisker_Beta1", "_wcecrt_fgetpos.htm", "fgetpos")</script></i></font></p>
+<br>
+<H1 class="dtH1"><A NAME="_wcecrt_fgetpos"></A>fgetpos</H1>
+
+<P>Gets a stream’s file-position indicator.</P>
+
+<P class="fineprint"></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fgetpos</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+</table></div>
+
+<P class="fineprint"></P>
+
+<PRE class="syntax"><B>int fgetpos(
+FILE</B> *<I>stream</I>,
+<B>fpos_t</B> *<I>pos</I> <B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Target stream</dd>
+
+<DT><I>pos</I></DT>
+
+<DD>Position-indicator storage</dd>
+</DL>
+
+<P class="label"><B>Libraries</B></P>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>If successful, <B>fgetpos</B> returns 0. On failure, it returns a nonzero value.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>The <B>fgetpos</B> function gets the current value of the stream argument’s file-position indicator and stores it in the object pointed to by pos. The <B>fsetpos</B> function can later use information stored in <B>pos</B> to reset the stream argument’s pointer to its position at the time <B>fgetpos</B> was called. The <B>pos</B> value is stored in an internal format and is intended for use only by <B>fgetpos</B> and <B>fsetpos</B>.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* FGETPOS.C: This program opens a file and reads
+ * bytes at several different locations.
+ *
+ * Place this code in a file called FGETPOS.C and then
+ * put the file in your project directory.
+ */
+
+#include &lt;stdio.h&gt;
+
+void main( void )
+{
+   FILE   *stream;
+   fpos_t pos;
+   char   buffer[20];
+
+   if( (stream = fopen( "fgetpos.c", "rb" )) == NULL )
+      printf( "Trouble opening file\n" );
+   else
+   {
+      /* Read some data and then check the position. */
+      fread( buffer, sizeof( char ), 10, stream );
+      if( fgetpos( stream, &amp;pos ) != 0 )
+         printf( "fgetpos error" );
+      else
+      {
+         fread( buffer, sizeof( char ), 10, stream );
+         printf( "10 bytes at byte %I64d: %.10s\n", pos, buffer );
+      }
+
+   /* Set a new position and read more data */
+   pos = 140;
+   if( fsetpos( stream, &amp;pos ) != 0 )
+      printf( "fsetpos error" );
+
+   fread( buffer, sizeof( char ), 10, stream );
+   printf( "10 bytes at byte %I64d: %.10s\n", pos, buffer );
+   fclose( stream );
+   }
+}</PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">10 bytes at byte 10: .C: This p
+10 bytes at byte 140: .C and the
+ </PRE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcecrt_fsetpos.htm"><B>fsetpos</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Thursday, February 01, 2001</font></center>
+</div>
+</BODY>
+</HTML>

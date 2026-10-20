@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VirtualFree</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="VirtualFree"/>
+<MSHelp:RLTitle Title="VirtualFree"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Win32_VirtualFree"/>
+<MSHelp:Keyword Index="K" Term="VirtualFree"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Win32_VirtualFree"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: memman.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_668088">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_win32_virtualfree"></A>VirtualFree</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function releases or decommits, or both, a region of pages within the virtual address space of the calling process. </P>
+
+<PRE class="syntax"><B>BOOL</B> <B>VirtualFree(</B>
+<B>LPVOID</B> <I>lpAddress</I><B>, </B>
+<B>DWORD</B> <I>dwSize</I><B>, </B>
+<B>DWORD</B> <I>dwFreeType </I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>lpAddress</I></DT>
+
+<DD>Pointer to the base address of the region of pages to be freed. If the <I>dwFreeType</I> parameter includes the MEM_RELEASE flag, this parameter must be the base address returned by the <A HREF="_wcesdk_win32_virtualalloc.htm">VirtualAlloc</A> function when the region of pages was reserved. </dd>
+
+<DT><I>dwSize</I></DT>
+
+<DD>Specifies the size, in bytes, of the region to be freed. If the <I>dwFreeType</I> parameter includes the MEM_RELEASE flag, this parameter must be zero. Otherwise, the region of affected pages includes all pages containing one or more bytes in the range from the <I>lpAddress</I> parameter to <I>lpAddress</I>+<I>dwSize</I>. This means that a 2-byte range straddling a page boundary causes both pages to be freed. </dd>
+
+<DT><I>dwFreeType</I></DT>
+
+<DD>Specifies the type of free operation. One, but not both, of the flags shown in the following table can be specified. 
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=30%>Value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>MEM_DECOMMIT</TD>
+<TD width=70%>Decommits the specified region of committed pages. An attempt to decommit an uncommitted page will not cause the function to fail. This means that a range of committed or uncommitted pages can be decommitted without having to worry about a failure.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>MEM_RELEASE</TD>
+<TD width=70%>Releases the specified region of reserved pages. If this flag is specified, the <I>dwSize</I> parameter must be zero or the function fails.</TD>
+</TR>
+</table></div>
+
+</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>VirtualFree</B> can perform one of the following operations:
+
+<UL type="disc">
+	<LI>Decommit a region of committed or uncommitted pages.</li>
+
+	<LI>Release a region of reserved pages.</li>
+
+	<LI>Decommit and release a region of committed or uncommitted pages.</li>
+</UL>
+
+<P>To release a region of pages, the entire range of pages must be in the same state (all reserved or all committed) and the entire region originally reserved by the <B>VirtualAlloc</B> function must be released at the same time. If only part of the pages in the original reserved region are committed, you must first call <B>VirtualFree</B> to decommit the committed pages and then call <B>VirtualFree</B> again to release the entire block.</P>
+
+<P>Pages that have been released are free pages available for subsequent allocation operations. Attempting to read from or write to a free page results in an access violation exception.</P>
+
+<P><B>VirtualFree</B> can decommit an uncommitted page. This means that a range of committed or uncommitted pages can be decommitted without having to worry about a failure. Decommitting a page releases its physical storage, either in memory or in the paging file on disk. If a page is decommitted but not released, its state changes to reserved and it can be committed again by a subsequent call to <B>VirtualAlloc</B>. Attempting to read from or write to a reserved page results in an access violation exception.</P>
+
+<P>The current state of the entire range of pages must be compatible with the type of free operation specified by the <I>dwFreeType</I> parameter. Otherwise, the function fails and no pages are released or decommitted.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Winbase.h</TD>
+<TD width=20%>Coredll.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>, <A HREF="_wcesdk_win32_localalloc.htm">LocalAlloc</A>, <A HREF="_wcesdk_win32_virtualalloc.htm">VirtualAlloc</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;VirtualFree&nbsp;(_wcesdk_win32_virtualfree.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

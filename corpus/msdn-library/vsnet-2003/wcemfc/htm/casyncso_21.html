@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::OnSend</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_onsend"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_casyncsocket_onsend"></A>CAsyncSocket::OnSend</H1>
+
+<P>This method is called by the framework to notify the socket that it can send data by calling the <B>Send</B> method. </P>
+
+<PRE class=syntax><B>virtual void OnSend(
+int </B><I>nErrorCode </I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nErrorCode</I></DT>
+
+<DD>The most recent error on a socket. The following error codes apply to the <B>OnSend</B> method:
+
+<UL type=disc>
+	<LI>0&nbsp;&nbsp;&nbsp;The function executed successfully.</LI>
+
+	<LI>WSAENETDOWN&nbsp;&nbsp;&nbsp;The Windows CE Sockets implementation detected that the network subsystem failed.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// CMyAsyncSocket is derived from CAsyncSocket and defines the
+// following variables:
+// &nbsp;&nbsp;CString&nbsp;&nbsp;&nbsp;&nbsp;m_sendBuffer;   //for async send
+// &nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;m_nBytesSent;
+// &nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;m_nBytesBufferSize;
+
+void CMyAsyncSocket ::OnSend(int nErrorCode)
+{
+&nbsp;&nbsp;while (m_nBytesSent &lt; m_nBytesBufferSize)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;int dwBytes;
+
+&nbsp;&nbsp;&nbsp;&nbsp;if ((dwBytes = Send((LPCTSTR)m_sendBuffer + m_nBytesSent,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_nBytesBufferSize - m_nBytesSent)) == SOCKET_ERROR)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (GetLastError() == WSAEWOULDBLOCK) break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCHAR szError[256];
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsprintf(szError, "Server Socket failed to send: %d",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GetLastError());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox (szError);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_nBytesSent += dwBytes;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+&nbsp;&nbsp;if (m_nBytesSent == m_nBytesBufferSize)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_nBytesSent = m_nBytesBufferSize = 0;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_sendBuffer = "";
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;CAsyncSocket::OnSend(nErrorCode);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_16.htm"><B>CAsyncSocket::OnAccept</B></A>, <A HREF="casyncso_17.htm"><B>CAsyncSocket::OnClose</B></A>, <A HREF="casyncso_18.htm"><B>CAsyncSocket::OnConnect</B></A>, <A HREF="casyncso_19.htm"><B>CAsyncSocket::OnOutOfBandData</B></A>, <A HREF="casyncso_20.htm"><B>CAsyncSocket::OnReceive</B></A>, <A HREF="casyncso_24.htm"><B>CAsyncSocket::Send</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

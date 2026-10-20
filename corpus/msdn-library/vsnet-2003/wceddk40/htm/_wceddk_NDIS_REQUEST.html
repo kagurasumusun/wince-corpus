@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_REQUEST</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_REQUEST"/>
+<MSHelp:RLTitle Title="NDIS_REQUEST"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_REQUEST"/>
+<MSHelp:Keyword Index="K" Term="NDIS_REQUEST"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_NDIS_REQUEST"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_674065">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_ndis_request"></A>NDIS_REQUEST</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure specifies a packet set up by NDIS or by a protocol for a call to the <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A> function. NDIS submits these requests to the underlying driver's <A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A> or <A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A> function.</P>
+
+<PRE class="syntax"><B>typedef struct _ NDIS_REQUEST {</B>
+<B>UCHAR</B> <I>MacReserved[16]</I><B>;</B>
+<B>NDIS_REQUEST_TYPE</B> <I>RequestType</I><B>;</B>
+<B>union _DATA {</B>
+<B>   struct QUERY_INFORMATION {</B>
+<B>      NDIS_OID</B> <I>Oid</I><B>;</B>
+<B>      PVOID</B> <I>InformationBuffer</I><B>;</B>
+<B>      UINT</B> <I>InformationBufferLength</I><B>;</B>
+<B>      UINT</B> <I>BytesWritten</I><B>;</B>
+<B>      UINT</B> <I>BytesNeeded</I><B>;</B>
+<B>   } QUERY_INFORMATION;</B>
+<B>   struct SET_INFORMATION {</B>
+<B>      NDIS_OID</B> <I>Oid</I><B>;</B>
+<B>      PVOID</B> <I>InformationBuffer</I><B>;</B>
+<B>      UINT</B> <I>InformationBufferLength</I><B>;</B>
+<B>      UINT</B> <I>BytesRead</I><B>;</B>
+<B>      UINT</B> <I>BytesNeeded</I><B>;</B>
+<B>   } SET_INFORMATION;</B>
+<B>} DATA;</B>
+<B>} NDIS_REQUEST, *PNDIS_REQUEST;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>MacReserved[16]</B></DT>
+
+<DD>Specifies a 16-byte area reserved for the underlying driver.</dd>
+
+<DT><B>RequestType</B></DT>
+
+<DD>Specifies the request type as one of the following <B>NDIS_REQUEST_TYPE</B> values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=39%>Value</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestQueryInformation</TD>
+<TD width=61%>Specifies a query-information request. NDIS forwards such a request to the underlying driver's <B>MiniportQueryInformation</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestSetInformation</TD>
+<TD width=61%>Specifies a set-information request. NDIS forwards such a request to the underlying driver's <B>MiniportSetInformation</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestQueryStatistics</TD>
+<TD width=61%>Specifies a query-statistics request. For most statistics queries, NDIS satisfies the request itself. Otherwise, NDIS forwards such requests to the underlying driver's <B>MiniportQueryInformation</B> function. This type of request originates in a user-mode application, never in a protocol driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestOpen</TD>
+<TD width=61%>This type is obsolete. A protocol driver calls <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A> instead.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestClose</TD>
+<TD width=61%>This type is obsolete. A protocol driver calls <A HREF="_wceddk_ndiscloseadapter.htm">NdisCloseAdapter</A> instead.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestSend</TD>
+<TD width=61%>This type is obsolete. A protocol driver calls <A HREF="_wceddk_ndissend.htm">NdisSend</A> or <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A> instead.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestTransferData</TD>
+<TD width=61%>This type is obsolete. A protocol driver calls <A HREF="cxtskndistransferdata.htm">NdisTransferData</A> instead.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestReset</TD>
+<TD width=61%>This type is obsolete. A protocol driver calls <A HREF="_wceddk_ndisreset.htm">NdisReset</A> instead.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestGeneric1</TD>
+<TD width=61%>Specifies a NIC-driver-specific request.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestGeneric2</TD>
+<TD width=61%>Specifies a NIC-driver-specific request.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestGeneric3</TD>
+<TD width=61%>Specifies a NIC-driver-specific request.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>NdisRequestGeneric4</TD>
+<TD width=61%>Specifies a NIC-driver-specific request.</TD>
+</TR>
+</table></div>
+
+
+
+<P>For the NdisRequestQueryInformation, NdisRequestSetInformation, and NdisRequestQueryStatistics values, the <B>OID_XXX</B> specified in the <B>Oid</B> member must be compatible with the type of operation requested.
+</dd>
+
+<DT><B>Oid</B></DT>
+
+<DD>Pointer to the object identifier for the requested operation. The value is an <B>OID_XXX</B> code.</dd>
+
+<DT><B>InformationBuffer</B></DT>
+
+<DD>Pointer to an information buffer into which the underlying driver or NDIS returns the requested information for queries or from which the underlying driver reads caller-supplied information for sets.</dd>
+
+<DT><B>InformationBufferLength</B></DT>
+
+<DD>Specifies the size, in bytes, of the information buffer. The object identifier determines the required buffer length.</dd>
+
+<DT><B>BytesWritten</B></DT>
+
+<DD>Specifies the number of bytes that the underlying driver or NDIS transfers into the information buffer for query-information requests. If <B>NdisRequest</B> returns NDIS_STATUS_INVALID_LENGTH, the value of this member is meaningless.</dd>
+
+<DT><B>BytesRead</B></DT>
+
+<DD>Specifies the number of bytes that the underlying driver read from the information buffer for set-information requests.</dd>
+
+<DT><B>BytesNeeded</B></DT>
+
+<DD>Specifies the number of bytes needed to return query information or to carry out the set operation requested by the given <B>OID_XXX</B> code.
+
+<P>If <B>NdisRequest</B> returns NDIS_STATUS_SUCCESS, the value of this member is meaningless. If the <B>InformationBufferLength</B> member is too small for the given object identifier on a query, this member indicates how large a buffer is required to satisfy the request. If the information buffer does not contain sufficient data for the given object identifier on a set request, this member indicates how much data is required.
+</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This structure contains a <B>DATA</B> substructure for each type of operation that a protocol driver can request of an underlying driver. Before calling <B>NdisRequest</B>, the protocol fills in the relevant members of the substructure that represents the query or set operation that it specified in the <B>Oid</B> member. NDIS or the underlying driver fills in the remaining members before it returns control to the caller.</P>
+
+<P>The <B>NdisRequestGenericXXX</B> request type values are available for NIC drivers that create their own internal requests. To indicate a requested operation, an NIC driver sets an internal variable to one of these types.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndis.h</TD>
+<TD width=16%>Ndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_ndiscloseadapter.htm">NdisCloseAdapter</A>, <A HREF="_wceddk_ndismqueryinformationcomplete.htm">NdisMQueryInformationComplete</A>, <A HREF="_wceddk_ndismsetinformationcomplete.htm">NdisMSetInformationComplete</A>, <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A>, <A HREF="_wceddk_ndisreset.htm">NdisReset</A>, <A HREF="_wceddk_ndissend.htm">NdisSend</A>, <A HREF="_wceddk_ndissendpackets.htm">NdisSendPackets</A>, <A HREF="cxtskndistransferdata.htm">NdisTransferData</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_REQUEST&nbsp;(_wceddk_ndis_request.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

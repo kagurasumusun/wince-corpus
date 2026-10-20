@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Caching Objects</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Caching Objects"/>
+<MSHelp:RLTitle Title="Caching Objects"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Caching_Objects"/>
+<MSHelp:Keyword Index="K" Term="loaders%2C DirectMusic, caching objects"/>
+<MSHelp:Keyword Index="K" Term="objects, DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Caching_Objects"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680650">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_caching_objects"></A>Caching Objects</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When an object is cached, the same interface pointer is always returned by the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__GetObject" TABINDEX="0">IDirectMusicLoader::GetObject</MSHelp:link> method. </P>
+
+<P>Caching is used extensively in the file-loading process to resolve links to objects. If an object is not found in the cache, it has to be reloaded, even if it already exists. For example, two segments could refer to the same style. When the first segment loads, it calls the loader to get the style. The style in turn creates a style object, loads it from disk, stores a pointer to the style in the cache, and returns it to the segment. If caching is enabled, when the second segment loads, it asks for the style, and the loader immediately returns it. Then, both segments point to the same style. If caching is disabled, the second segment's request for the style causes a duplicate style to be loaded from the file. This is very inefficient.</P>
+
+<P>Another example, <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicBand" TABINDEX="0">IDirectMusicBand</MSHelp:link> counts on the loader to keep the General MIDI DLS collection cached. Every time it comes across a GM instrument, it gets the collection from the loader by requesting it with GUID_DefaultGMCollection. If caching for CLSID_DirectMusicCollection is disabled, every patch change in a MIDI file causes a separate copy of the entire GM collection to be created.</P>
+
+<P>By default, caching is enabled for all object classes. You can disable caching for an object class, or for all objects, by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__EnableCache" TABINDEX="0">IDirectMusicLoader::EnableCache</MSHelp:link> method. This method can also be used to re-enable caching for any or all object classes.</P>
+
+<P>If you want to clear the cache without disabling future caching, use the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__ClearCache" TABINDEX="0">IDirectMusicLoader::ClearCache</MSHelp:link> method.</P>
+
+<P>To cache a single object, pass it to the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__CacheObject" TABINDEX="0">IDirectMusicLoader::CacheObject</MSHelp:link> method. You can remove it from the cache, ensuring that it will be loaded again on the next call to <B>GetObject</B>, by using the <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicLoader__ReleaseObject" TABINDEX="0">IDirectMusicLoader::ReleaseObject</MSHelp:link> method.</P>
+
+<P>Call <B>ReleaseObject</B> on a cached object, particularly a segment, before destroying the object by calling its own <B>Release</B> method. If you do not, a copy of the object remains in the cache, along with certain state information. In the case of a segment, any instance that you later create will be loaded from the cache, and its start point and loop points will be the same as they were when the previous instance was destroyed.</P>
+
+<P>With judicious use of <B>CacheObject</B>, <B>ReleaseObject</B>, and <B>EnableCache</B>, you can have the objects that you do not need released, while the others remain in the cache.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Caching%20Objects&nbsp;(_wcesdk_dxmusic_caching_objects.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

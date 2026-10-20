@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Drivers"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRDrivers"/>
+<MSHelp:Keyword Index="K" Term="1394 virtual VCR drivers, development overview"/>
+<MSHelp:Keyword Index="K" Term="IEEE 1394 virtual VCR drivers, development overview"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_vvcr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758797">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconieee1394virtualvcrdrivers"></A>IEEE 1394 Virtual VCR Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The Virtual VCR Subunit stands as an example of how a Virtual Subunit might be written. It is only one form of implementation, favoring a certain type of design. It is not intended to be a pure tutorial or a completed module suitable for release in a commercial product. </P>
+
+<P>The Virtual VCR Driver could have been implemented one of two straightforward ways. With the first model, the model is broken into two components. The first component is the WDM-based Virtual Subunit Driver, AVC_VVCR. This component deals with the underlying protocols responsible for managing a Virtual Subunit and a Virtual VCR Subunit in specific. It does not, however, actually carry out any tasks related to streaming media or emulating a VCR. Instead, those tasks are handled by the second component, the Virtual VCR Application. The application deals with media, streaming, emulating a tape mechanism, Stop, Rewind, Fast Forward, Play, and so on, and depends on the AVC_VVCR Driver, or the underlying AVC_STREAM driver, to carry out the details in its high-level tasks. Quite specifically, part of the processing is done inside a WDM Driver, and part of the processing is done inside of an application.</P>
+
+<P>With the second model, all of the functionality of the Virtual VCR is encapsulated within the Virtual VCR Driver. No application is involved. All of the processing is done within a WDM Driver.</P>
+
+<P>Both models have advantages. The first model is more convenient to application writers, who wish to limit their understanding of the internals of IEEE 1394. It also does not hardcode a particular Virtual VCR Mechanism emulation or implementation, and extends actual control of the Virtual VCR Mechanism directly to the Application. The second model's primary advantage is that it is much simpler to write. Breaking asynchronous events and tasks across the boundary between WDM and Applications while taking into account issues such as that an application could exit without ever completing all pending AV/C Requests presents some painful design issues, not to mention a significant amount of code to act merely as glue. </P>
+
+<P>The Virtual VCR Driver as provided in Microsoft&reg; Windows&reg; CE .NET actually implements the first model. This is neither a recommendation that other Virtual Subunits be necessarily implemented in the same manner, nor a recommendation not to. The developer should take their needs into account before deciding on an implementation strategy. </P>
+
+<P>AVC_VVCR is only included in an IABASE or HLBASE build, that is, the module itself and the registry entries associated with enabling it in the WDM hierarchy, if the configuration environment variable SYSGEN_1394_AVC_VCR_VIRTUAL is set at the time when Sysgen is processed.</P>
+
+<H2 class="dtH2">IEEE 1394 Virtual VCR Driver API Definition</H2>
+
+<P>The API set for the Virtual VCR driver is primarily the APIs defined by the <A HREF="cxrefieee1394streamingfilterdriverguide.htm">Streaming Filter Driver</A> and IOCTLs related to control of the Virtual VCR. As many asynchronous operations can be occurring at once, it is recommend that consumers of the Virtual VCR Driver make generous use of Overlapped I/O, a feature typically invalid for Windows CE, but supported by WDM and all of the associated IEEE 1394 device drivers. The following table shows the Virtual VCR IOCTLs.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>IOCTL</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_vvcr_complete.htm">IOCTL_VVCR_COMPLETE</A> </TD>
+<TD width=50%>This control code permits the caller to complete asynchronous requests previously returned to the caller from IOCTL_VVCR_EVENT.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_vvcr_event.htm">IOCTL_VVCR_EVENT</A></TD>
+<TD width=50%>This control code permits the caller to receive notifications from the virtual VCR Driver about events that have occurred.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_vvcr_query_state.htm">IOCTL_VVCR_QUERY_STATE</A></TD>
+<TD width=50%>This control code permits the caller to iterate through the plugs preallocated by the driver due to registry settings.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_vvcr_set_mechanism_position.htm">IOCTL_VVCR_SET_MECHANISM_POSITION</A></TD>
+<TD width=50%>This control code permits the caller to notify the virtual VCR driver of the tape's current position.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_vvcr_set_mechanism_state.htm">IOCTL_VVCR_SET_MECHANISM_STATE</A></TD>
+<TD width=50%>This control code permits the caller to notify the virtual VCR driver of the tape mechanism's current state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_vvcr_set_mechanism_track_number.htm">IOCTL_VVCR_SET_MECHANISM_TRACK_NUMBER</A></TD>
+<TD width=50%>This control code permits the caller to notify the Virtual VCR Driver of the tape's current track number.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394virtualvcrdriverarchitecture.htm">IEEE 1394 Virtual VCR Driver Architecture</A></P>
+
+<P><A HREF="cxconieee1394virtualvcrdriversamples.htm">IEEE 1394 Virtual VCR Driver Samples</A></P>
+
+<P><A HREF="cxconieee1394virtualvcrdriverregistrysettings.htm">IEEE 1394 Virtual VCR Driver Registry Settings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Virtual%20VCR%20Drivers&nbsp;(cxconieee1394virtualvcrdrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

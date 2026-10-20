@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Database File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Database File"/>
+<MSHelp:RLTitle Title="Database File"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Database_File"/>
+<MSHelp:Keyword Index="K" Term=".db file, database file"/>
+<MSHelp:Keyword Index="K" Term="configuration files, database file"/>
+<MSHelp:Keyword Index="K" Term="database file, overview"/>
+<MSHelp:Keyword Index="K" Term="db file see database file"/>
+<MSHelp:Keyword Index="K" Term="file, database file"/>
+<MSHelp:Keyword Index="K" Term="Makeimg.exe, database file"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Database_File"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: configuration_file_types.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_679755">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_database_file"></A>Database File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The database (.db) files define any databases in the Windows CE-based object store. When you cold boot your target device, Makeimg uses .db files to create default databases. To include an existing database with an application that you have developed for the target device or application, you can modify either Platform.db or Project.db. </P>
+
+<P>To define or modify a database for an application, update the Project.db file with the following syntax.</P>
+
+<PRE class="syntax"><B>Database</B> : "<I>db_name</I>" : <I>hex_type</I> : <I>num_sort_order</I> : <I>&lt;sort order specifier&gt; 1</I>
+<B>Record</B> :
+<B>Field</B> : <I>field_hex_propid</I> : <I>value</I>
+<B>End</B>
+<B>End</B> <B>Database</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>db_name </I></DT>
+
+<DD>This parameter specifies the database name.</dd>
+
+<DT><I>hex_type</I></DT>
+
+<DD>This parameter specifies a hexadecimal-type identifier for the database, which allows you to search for the database.</dd>
+
+<DT><I>num_sort_order</I></DT>
+
+<DD>This parameter specifies the number of sort orders (indexes) for the database. The maximum number of sort orders is 4.</dd>
+
+<DT>&lt;sort order specifier&gt; </DT>
+
+<DD>A sort order specifier can be described in one of two ways:
+
+<UL type="disc">
+	<LI>Single &#0150; Single property sort order.
+<P>This sample shows a sort order on a single property.
+
+<P>&lt; db_hex_propid&gt; : &lt;hex flags&gt;
+</li>
+
+	<LI>Multiple &#0150; A sort order with one or more properties.
+<P>This sample shows a sort order on one or more, up to three, properties. Specifying a &lt;num sort properties&gt; value of 1 is the same as the Single case above.
+
+<P>[ &lt;num sort properties&gt; : &lt; db_hex_propid 1&gt; : &lt;hex flags 1&gt; ... ]
+</li>
+</UL>
+</dd>
+
+<DT><I>db_hex_propid</I></DT>
+
+<DD>This parameter specifies the property identifier for a database sort order. The <I>db_hex_propid</I> parameter must be followed by a <I>hex_flags</I> parameter.</dd>
+
+<DT><I>hex_flags</I></DT>
+
+<DD>This parameter defines the sort flags used to create a database sort order. The following flags are available:
+
+<UL type="disc">
+	<LI>0 
+<P>Specifies ascending, case-sensitive, and unknown properties last
+</li>
+
+	<LI>1 
+<P>Specifies descending order
+</li>
+
+	<LI>2 
+<P>Specifies case-insensitive
+</li>
+
+	<LI>4 
+<P>Specifies unknown properties first
+</li>
+</UL>
+
+
+<P>In addition, hexadecimal flags can be any combination of the first three sort order types. For example, 3 specifies descending order and case-insensitive.
+
+
+<P>The <I>hex_flags</I> parameters must be preceded by a <I>db_hex_propid </I>parameter.
+</dd>
+
+<DT><I>field_hex_propid</I></DT>
+
+<DD>This parameter specifies the property identifier of the field.</dd>
+
+<DT><I>value</I></DT>
+
+<DD>This parameter defines a string or a hexadecimal DWORD.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <I>db_hex_propid</I> and <I>hex_flags</I> parameters are used as a pair to describe one database sort order. Multiple pairs may be used; the number of sort orders specified must match the count given in <I>num_sort_order</I>. 
+
+<DL>
+<DT>See documentation for the Windows CE-based database APIs for more details about property identifiers and sorting. </DT>
+</DL>
+
+<P>When updating the .db files, you can use <B>IF</B> and <B>ENDIF</B> conditional blocks and, optionally, the <B>NOT</B> (!) operator. The use of these conditionals is identical to their use in .dat files, as described previously. Use the semicolon (;) to start a line of comments.</P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>A database for business contacts is created with a hexadecimal identifier of 1B and has three sort indexes. Each of these indexes, as defined by the property identifiers 4001001f, 40020002, and 40030002, uses case-insensitive sort order. The first record for the database contains six fields, each defined with its own property identifier and assigned a value.</P>
+
+<PRE class="code">Database: "Contacts Database" : 1B : 3 : 4001001f : 2 : 40020002 : 2 : 40030002 : 2 
+Record :
+Field : 4001001f : "Contact 1"
+Field : 40020002 : 0
+Field : 40030002 : 1
+Field : 40040002 : 0
+Field : 40050002 : 0
+Field : 40060002 : 0
+End
+Record :
+Field : 4001001f : "Contact 2"
+Field : 40020002 : 0
+Field : 40030002 : 1
+Field : 40040002 : 0
+Field : 40050002 : 0
+Field : 40060002 : 0
+End</PRE>
+
+<P>This is equivalent to the following examples.</P>
+
+<PRE class="code">Database: "Contacts Database" : 1B : 3 : [ 1 : 4001001f : 2 ] : 40020002 : 2 : 40030002 : 2 
+Record :
+Field : 4001001f : "Contact 1"
+Field : 40020002 : 0
+Field : 40030002 : 1
+Field : 40040002 : 0
+Field : 40050002 : 0
+Field : 40060002 : 0
+End
+Record :
+Field : 4001001f : "Contact 2"
+Field : 40020002 : 0
+Field : 40030002 : 1
+Field : 40040002 : 0
+Field : 40050002 : 0
+Field : 40060002 : 0
+End
+
+Database : "People3" : 3039
+  : 4 : [ 3 : 0065001F : 2 : 0066001F : 4 : 00670002 : 0 ]
+      : [ 1 : 00670002 : 1 ]
+      : [ 1 : 00680002 : 4 ]
+      : [ 1 : 006A0013 : 1 ]
+Record : 
+Field : 0065001F : "Smith"
+Field : 0066001F : "Bob"
+Field : 00670002 : 22
+Field : 006A0013 : 4E20
+End Record
+Record : 
+Field : 0065001F : "Smith"
+Field : 0066001F : "Mary"
+Field : 00670002 : 16
+Field : 006A0013 : EA60
+End Record
+End Database</PRE>
+
+<P>Here is an equivalent way of describing the database header.</P>
+
+<PRE class="code">Database : "People3" : 3039
+  : 4 : [ 3 : 0065001F : 2 : 0066001F : 4 : 00670002 : 0 ]
+      : 00670002 : 1
+      : 00680002 : 4
+      : 006A0013 : 1</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Database%20File&nbsp;(_wcepb_database_file.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

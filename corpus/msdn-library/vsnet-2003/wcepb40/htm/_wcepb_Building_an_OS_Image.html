@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Platform Building</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Platform Building"/>
+<MSHelp:RLTitle Title="Platform Building"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Building_an_OS_Image"/>
+<MSHelp:Keyword Index="K" Term="Buildrel.bat"/>
+<MSHelp:Keyword Index="K" Term="Cebuild.bat, platform building"/>
+<MSHelp:Keyword Index="K" Term="command line, building platforms using"/>
+<MSHelp:Keyword Index="K" Term="IDE, building platforms using Platform Builder IDE"/>
+<MSHelp:Keyword Index="K" Term="Makeimg.exe, building OS images with"/>
+<MSHelp:Keyword Index="K" Term="OS images, building platforms"/>
+<MSHelp:Keyword Index="K" Term="Platform Builder, building platforms using Platform Builder IDE"/>
+<MSHelp:Keyword Index="K" Term="platforms, building using Platform Builder IDE"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_Building_an_OS_Image"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: building_os.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_675017">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcepb_building_an_os_image"></A>Platform Building</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>After you have configured your platform, you can build a platform using the Platform Builder integrated development environment (IDE). </P>
+
+<P>The build options available from the <B>Build</B> menu are context-sensitive and depend on the objects selected in the Workspace window. For example, the options available for source code files will be different than those available for features, projects, or platforms.</P>
+
+<P>Before you build a platform using the IDE, you need to select an active configuration. If you copy a platform from another computer that is based on microprocessors that are not installed on the current computer, the corresponding configurations will be unavailable in the <B>Select Active Configuration</B> list on the <B>Build</B> toolbar.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>When you change the settings for a platform, these changes apply only to the active configuration selected in the <B>Platform Settings</B> dialog box. If you select a different active configuration when you build the platform, these setting changes will not be incorporated into the build.</BLOCKQUOTE>
+
+<P>The Platform Builder build system creates an operating system (OS) image in four stages. These stages are the Sysgen phase, the Feature Build phase, the Release Copy phase, and the Make Image phase. The build system generates header files, links modules, copies the resulting modules to a release directory, and generates a binary image file. Most of the source code files supplied with Platform Builder is precompiled into static libraries. These static libraries, as well as code supplied by you or a third-party vendor, are combined into a binary file called Nk.bin, which can be downloaded to your target device. The <B>Build Platform</B> command on the <B>Build</B> menu executes all of the build phases in sequence.</P>
+
+<P>Each feature you select from the Catalog has a corresponding Sysgen variable. If a feature is included in your platform, the IDE sets the corresponding Sysgen variable during the Sysgen phase of the build process. The build system uses these variables to link the corresponding static libraries into modules. The system also filters the system header files, creating headers that only contain prototypes for the functions exported by your platform. Import libraries for the system modules are also created during this phase. The filtered headers and import libraries make up the SDK. The board support package (BSP) is built at the end of the Sysgen phase.</P>
+
+<P>After the Sysgen phase, the Feature Build phase is run. During this phase, all user features including Platform Builder project (.pbp) files, dirs files, sources files, and makefiles (.mak) files are compiled and built.</P>
+
+<P>During the Release Copy phase, the build system copies all the files you need to make an OS image to the Release directory. The modules and files created during the Sysgen phase are copied to this directory first, followed by the files created by the Feature Build phase.</P>
+
+<P>At the beginning of the Make Image phase, the project-specific files, which include Project.bib, Project.dat, Project.db, and Project.reg, are copied to the Release directory. The information contained on the <B>BIBInfo</B> tab of the <B>Platform Settings</B> dialog box is then added for each module or file. </P>
+
+<P>During the Make Image phase, the files in the Release directory are combined in the binary image file Nk.bin. The Make Image phase corresponds to the <B>Make Image</B> command on the <B>Build</B> menu. If you modify the project-specific files or the <B>BIBInfo</B> information, or otherwise modify the files contained in the Release directory, you will need to run the <B>Make Image</B> command again before the changes will be reflected in your image.</P>
+
+<P>The <B>Generate Platform Headers</B> and <B>Regenerate Platform Headers</B> commands on the <B>Build</B> menu execute the Sysgen phase of the build process. <B>Regenerate Platform Headers</B> performs a clean, deleting any files built during a previous Sysgen phase, before running a new Sysgen cycle. The <B>Build Platform</B> and <B>Rebuild Platform</B> commands act in the same way.</P>
+
+<P><B>Build Selected Feature(s)</B> allows you to build just those features and projects highlighted in the FeatureView window. You can use the <B>Batch Build</B> command to build multiple build configurations. The <B>Compile</B>, <B>Build project</B>, and <B>Rebuild All</B> commands are available in the FileView window and are used when working with projects.</P>
+
+<P>The <B>Stop Build</B> command on the <B>Build</B> menu can be used at any time during a build and will stop the build as soon as the build system reaches the end of the current executing command or the next phase. You can run the <B>Clean</B> command to remove any intermediate and output files.</P>
+
+<P>Using the <B>Custom Build</B> tab on the <B>Platform Settings</B> dialog box, you can assign custom actions and environment variables to projects and files. Actions are available during the Feature Build and Release Copy phases. Environment variables are available during the Feature Build and Make Image phases.</P>
+
+<P>The following table shows the actions available to build system.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=31%>Action</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#BUILD(DIR, …)</TD>
+<TD width=69%>Builds all the source code in the subdirectories specified in the dirs file. The dirs file is located in the directory specified after the comma.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#BUILD(SOURCES, …)</TD>
+<TD width=69%>Executes the macro defined in the sources file located in the directory specified after the comma.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#BUILD(MAK, …)</TD>
+<TD width=69%>Sends compiler and linker variables defined in the makefile project at the location specified to the build system.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#CUSTOM(…,…)</TD>
+<TD width=69%>Executes the custom command specified.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#SRCCODE(DIR,…)</TD>
+<TD width=69%>Allows you to browse, from the FeatureView window, to the files in the subdirectories listed in the dirs file. The dirs file is located in the directory specified after the comma.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#SRCCODE(SOURCES,…)</TD>
+<TD width=69%>Allows you to browse, from the FeatureView window, to the files used by the sources file. The files are defined in the sources file in the directory specified after the comma.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>#SRCCODE(MAK,…)</TD>
+<TD width=69%>Allows you to browse, from the FeatureView window, the files used by the makefile.</TD>
+</TR>
+</table></div>
+
+<P>Environment variables and actions are executed on a per project basis during the Feature Build phase. This means that environment variables set in one project will not affect variables defined by another project. In all other build phases, variables are defined globally. For more information about custom build options, see <MSHelp:link keywords="pburfCustomBuildTab" TABINDEX="0">Custom Build Tab</MSHelp:link>.</P>
+
+<P>You can also use the <B>Environment</B> tab on the <B>Platform Settings</B> dialog box to set environment variables. For information about this dialog box, see <MSHelp:link keywords="pburfPlatformSettingsDialogBox" TABINDEX="0">Platform Settings Dialog Box</MSHelp:link>.</P>
+
+<P>All feature groups must be resolved before you build your platform. If Platform Builder encounters unresolved feature groups in a platform, the <B>Feature Resolution</B> dialog box is displayed, and you must choose the appropriate implementation before the build process can continue. </P>
+
+<P>You must rename <I>Myplatform</I>\%_WINCEROOT% to build a platform copied from another workstation with a different %_WINCEROOT% than your workstation. </P>
+
+<P>For example, on the original workstation, %_WINCEROOT% is set to Wince410 while %_WINCEROOT% is set to <I>MyInstall </I>on your workstation, and you copy MyPlatform\Wince410 from the original workstation to <I>MyInstall</I>\Public on your workstation. In this example, you would rename the platform directory from %_WINCEROOT%\Public\MyPlatform\Wince410 to %_WINCEROOT%\Public\MyPlatform\<I>MyInstall</I>. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="pbtskbuildingplatform.htm">Building a Platform</A></P>
+
+<P><A HREF="pbtskbuildingcepcosimageforusewithethernetcard.htm">Building a CEPC OS Image for use with an Ethernet Card</A></P>
+
+<P><A HREF="pbtskremakingosimage.htm">Making an OS Image</A></P>
+
+<P><A HREF="pbtskcreatingplatformheaderfiles.htm">Generating Platform Header Files</A></P>
+
+<P><A HREF="pbtskdeletingfilescreatedbybuildprocess.htm">Deleting Files Created by the Build Process</A></P>
+
+<P><A HREF="pbtskresolvingfeature.htm">Resolving a Feature</A></P>
+
+<P><A HREF="pbtskbuildingselectednon-coreosfeatures.htm">Building Selected Non-Core OS Features</A></P>
+
+<P><A HREF="_wcepb_build_demo_tool.htm">Build Demo Tool</A></P>
+
+<P><A HREF="_wcepb_configuration_file_types.htm">Platform Configuration Files</A></P>
+
+<P><A HREF="_wcepb_customizing_a_platform.htm">Platform Customization</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Platform%20Building&nbsp;(_wcepb_building_an_os_image.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Virtual VCR Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Virtual VCR Driver Registry Settings"/>
+<MSHelp:RLTitle Title="IEEE 1394 Virtual VCR Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRDriverRegistrySettings"/>
+<MSHelp:Keyword Index="K" Term="registry settings, IEEE 1394 virtual VCR drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394VirtualVCRDriverRegistrySettings"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_vvcr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759085">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconieee1394virtualvcrdriverregistrysettings"></A>IEEE 1394 Virtual VCR Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Virtual subunits require registry entries to ensure that they are automatically enumerated by WDM. Virtual instances of ISO/IEC-61883 and AVC need to be instantiated first. The IABASE and HLBASE environment variable SYSGEN_1394_AVC_VIRTUAL ensures that the correct modules are included in the build and as a result, the correct registry entries are made. The following registry entries are required.</P>
+
+<PRE class="code">; This entry is for exporting a VCR Subunit.  The virtual AV/C subunit listed
+; in the previous entry will read this registry entry and determine that we
+; wish to export a Subunit type of '4' (top five bits in the byte, so 0x20).
+; The name of the value is immaterial.
+[HKEY_LOCAL_MACHINE\WDMDrivers\{095780C3-48A1-4570-BD95-46707F78C2DC}\0002\Virtual Device List]
+    "VirtualVCR"=hex:20
+
+; This entry is related to the 'Virtual VCR' entry a few lines above.
+; AV/C determines the MatchingDeviceId by simply using VAVC\TYP_# where
+; # is the subunit type in hex.
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}\0000]
+    "MatchingDeviceId"="VAVC\\TYP_4"
+    "Dll"="AVC_VVCR.DLL"
+    "FriendlyName"="AV/C Virtual VCR Subunit"</PRE>
+
+<P>The first entry refers to the GUID for the AVC Driver, <B>{095780C3-48A1-4570-BD95-46707F78C2DC}</B>. The first entry also refers to a specific instance of the driver, <B>0002</B>. <B>0000</B> and <B>0001</B> in the sample entries from Common.reg are for non-virtual instances of AV/C, which is the virtual AV/C instance of the driver. The AV/C driver looks for a list of the subunits that it exports by reading registry values under the virtual device list key. The value is the encoded version of the defined subunit type for the virtual subunit. The encoding specifics are defined in the <I>AV/C Digital Interface Command Set, General Specification</I>, available from the IEEE 1394 Trade Association, but for the simplest of forms, subunit types 0x00 through 0x1D, it is merely the type shifted left by three bits. For extended types, the value must be encoded into a series of bytes, and those bytes listed in this registry entry. The type is hexadecimal, not <B>DWORD</B>. </P>
+
+<P>The second entry refers to defining the actual virtual VCR driver itself for WDM. The GUID for the virtual VCR driver is listed as <B>{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}</B>, along with the single instance of the driver, <B>0000</B>. The Device identifier for the driver has the form <B>VAVC\TYP_#</B>, where the number listed must be the same Subunit Type defined in the previous entry, unencoded in this case.</P>
+
+<P>The first entry causes AV/C to list this as a dependant to WDM during enumeration, and the second entry will permit WDM to locate and instantiate the virtual VCR driver.</P>
+
+<P>The following registry is another virtual VCR driver registry entry.</P>
+
+<PRE class="code">; This entry is related to our VCR Subunit -- it states that the
+; Virtual VCR Subunit driver requires that we insert a driver whose 
+; MatchingDeviceId is 'AVC_STREAM' BELOW the VVCR Subunit driver when 
+; adding it to a stack.
+[HKEY_LOCAL_MACHINE\WDMDrivers\{A7F514FB-8FF1-442f-9547-F5CCDA55EAE0}]
+    "LowerFilters"=multi_sz:"AVC_STREAM"</PRE>
+
+<P>Most subunits will likely choose to leverage the streaming support provided in the AVC_STREAM driver. The above statement lists that for the virtual VCR driver, denoted by the GUID in the registry path, at least one Lower Filter Driver exists, and the only one listed is AVC_STREAM.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394virtualvcrdrivers.htm">IEEE 1394 Virtual VCR Drivers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Virtual%20VCR%20Driver%20Registry%20Settings&nbsp;(cxconieee1394virtualvcrdriverregistrysettings.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

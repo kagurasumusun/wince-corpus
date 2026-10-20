@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListBox</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CListBox"/>
+<MSHelp:RLTitle Title="CListBox"/>
+<MSHelp:Keyword Index="A" Term="aflrfCListBox"/>
+<MSHelp:Keyword Index="K" Term="CListBox class"/>
+<MSHelp:Keyword Index="K" Term="CListBox class, overview"/>
+<MSHelp:Keyword Index="A" Term="aflrfCListBox"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="clistbox.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_710629">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfclistbox"></A>CListBox</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This class encapsulates the functionality of a Windows CE list box. A Windows CE list box is a window that displays a list of character strings, such as filenames, that the user can view and select.</P>
+
+<P>In a single-selection list box, the user can select only one item. In a multiple-selection list box, a range of items can be selected. When the user selects an item, it is highlighted and the list box sends a notification message to the parent window.</P>
+
+<P>You can create a list box either from a dialog template or directly in your code. To create it directly, construct the <B>CListBox</B> object, call the <A HREF="aflrfclistboxcolcolcreate.htm"><B>Create</B></A> method to create the Windows list-box control, then attach it to the <B>CListBox</B> object. To create a list box in a dialog template, declare a list-box variable in your dialog box class, then use <B>DDX_Control</B> in your dialog box class, <B>DoDataExchange</B> function to connect the member variable to the control. ClassWizard does this for you automatically when you add a control variable to your dialog box class.</P>
+
+<P>Construction can be a one-step process in a class derived from <B>CListBox</B>. Write a constructor for the derived class and call <B>Create</B> from within the constructor.</P>
+
+<P>If you want to handle Windows notification messages sent by a list box to its parent, usually a class derived from <A HREF="aflrfcdialog.htm"><B>CDialog</B></A>, add a message-map entry and message-handler method to the parent class for each message.</P>
+
+<P>Each message-map entry takes the following form:</P>
+
+<PRE class="syntax"><B>ON_Notification(</B> <I>id</I><B>,</B> <I>memberFxn</I> <B>)</B></PRE>
+
+<P>where <I>id</I> specifies the child window ID of the list-box control sending the notification and <I>memberFxn</I> is the name of the parent method you have written to handle the notification.</P>
+
+<P>The function prototype for the parent is as follows:</P>
+
+<PRE class="syntax"><B>afx_msg</B> <B>void</B> <I>memberFxn</I><B>(</B> <B>);</B></PRE>
+
+<P>Following is a list of potential message-map entries and a description of the cases in which they would be sent to the parent:
+
+<UL type="disc">
+	<LI>ON_LBN_DBLCLK&nbsp;&nbsp;&nbsp;The user double-clicks a string in a list box. Only a list box that has the LBS_NOTIFY style will send this notification message.</li>
+
+	<LI>ON_LBN_ERRSPACE&nbsp;&nbsp;&nbsp;The list box cannot allocate enough memory to meet the request.</li>
+
+	<LI>ON_LBN_KILLFOCUS&nbsp;&nbsp;&nbsp;The list box is losing the input focus.</li>
+
+	<LI>ON_LBN_SELCANCEL&nbsp;&nbsp;&nbsp;The current list-box selection is canceled. This message is only sent when a list box has the LBS_NOTIFY style.</li>
+
+	<LI>ON_LBN_SELCHANGE&nbsp;&nbsp;&nbsp;The selection in the list box is about to change. This notification is not sent if the selection is changed by the <A HREF="aflrfclistboxcolcolsetcursel.htm"><B>CListBox::SetCurSel</B></A> method. This notification applies only to a list box that has the LBS_NOTIFY style. The LBN_SELCHANGE notification message is sent for a multiple-selection list box whenever the user presses an arrow key, even if the selection does not change.</li>
+
+	<LI>ON_LBN_SETFOCUS&nbsp;&nbsp;&nbsp;The list box is receiving the input focus.</li>
+
+	<LI>ON_WM_CHARTOITEM&nbsp;&nbsp;&nbsp;An owner-draw list box that has no strings receives a WM_CHAR message.</li>
+
+	<LI>ON_WM_VKEYTOITEM&nbsp;&nbsp;&nbsp;A list box with the LBS_WANTKEYBOARDINPUT style receives a WM_KEYDOWN message.</li>
+</UL>
+
+<P>If you create a <B>CListBox</B> object within a dialog box, through a dialog resource, the <B>CListBox</B> object is automatically destroyed when the user closes the dialog box.</P>
+
+<P>If you create a <B>CListBox</B> object within a window, you may need to destroy the <B>CListBox</B> object. If you create the <B>CListBox</B> object on the stack, it is destroyed automatically. If you create the <B>CListBox</B> object on the heap by using the <B>new</B> function, you must call <B>delete</B> on the object to destroy it when the user closes the parent window.</P>
+
+<P>If you allocate any memory in the <B>CListBox</B> object, override the <B>CListBox</B> destructor to dispose of the allocation.</P>
+
+<P>Anytime you change a listbox the changes will only be seen when the listbox is repainted. To force a repaint call:</P>
+
+<PRE class="code"><code class="ce">Invalidate();
+UpdateWindow();</code></PRE>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>MFC for Windows CE supports the <B>CListBox::InitStorage</B> and <B>CListBox::SetItemHeight</B> methods differently than the standard MFC does.</P>
+
+<P>Windows CE does not support owner-drawn list boxes, so you cannot specify ODT_LISTBOX in the <I>CtlType</I> member of a <B>DRAWITEMSTRUCT</B> or a <B>MEASUREITEMSTRUCT</B> structure.</P>
+
+<P>MFC for Windows CE does not support the <B>CListBox::Dir</B> method of the <B>ClassName</B> class.</P>
+
+<H4 class="dtH4">Requirements </H4>
+
+<P><B>Windows CE versions:</B> 1.0 and later<BR>
+<B>Header file:</B> Declared in Afxwin.h</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="aflrfclistboxcolcolinitstorage.htm"><B>CListBox::InitStorage</B></A>, <A HREF="aflrfclistboxcolcolsetitemheight.htm"><B>CListBox::SetItemHeight</B></A>, <A HREF="aflrfcwnd.htm"><B>CWnd</B></A>, <A HREF="aflrfccombobox.htm"><B>CComboBox</B></A>, <A HREF="aforicontrolclasses.htm"><B>Control Classes</B></A></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_710629', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

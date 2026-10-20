@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring Time-Outs</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Configuring Time-Outs"/>
+<MSHelp:RLTitle Title="Configuring Time-Outs"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_Configuring_Time_Outs"/>
+<MSHelp:Keyword Index="K" Term="time-outs"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbHowTo"/>
+</xml>
+<!--Filename: serial.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_configuring_time_outs"></A>Configuring Time-Outs</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>An application must always set communication time-outs using the <MSHelp:link keywords="_wcesdk_win32_COMMTIMEOUTS_str" TABINDEX="0"><B>COMMTIMEOUTS</B></MSHelp:link> structure each time it opens a communication port. If this structure is not configured, the port uses default time-outs supplied by the driver, or time-outs from a previous communication application. By assuming specific time-out settings when the settings are actually different, an application can have read/write operations that never complete or complete too often.</P>
+
+<P>When read/write operations time out, the operations complete with no error values returned to the <B>ReadFile</B> and <B>WriteFile</B> functions. To determine if an operation has timed out, verify that the number of bytes actually transferred is fewer than the number of bytes requested. For example, if the <B>ReadFile</B> function returns TRUE, but fewer bytes were read than requested, the operation has timed out.</P>
+
+<P class="labelproc"><B>To configure time-outs for a serial port</B>
+
+<OL type="1">
+	<LI>Initialize the <B>COMMITEMEOUTS</B> structure either by calling the <MSHelp:link keywords="_wcesdk_win32_GetCommTimeouts" TABINDEX="0"><B>GetCommTimeouts</B></MSHelp:link> function or by setting the members manually.</li>
+
+	<LI>Specify the maximum number of milliseconds that can elapse between two characters without a time-out occurring with the <I>ReadIntervalTimeout</I> member.</li>
+
+	<LI>Specify the read time-out multiplier with the <I>ReadTotalTimeoutMultiplier</I> member. For each read operation, this number is multiplied by the number of bytes that the read operation expects to receive.</li>
+
+	<LI>Specify the read time-out constant with the <I>ReadTotalTimeoutConstant</I> member. This member is the number of milliseconds added to the result of multiplying the total number of bytes to read by <I>ReadTotalTimeoutMultiplier</I>. The result is the number of milliseconds that must elapse before a time-out for the read operation occurs.</li>
+
+	<LI>Specify the write time-out multiplier with the <I>WriteTotalTimeoutMultiplier</I> member. For each write operation, this number is multiplied by the number of bytes that the write operation expects to receive.</li>
+
+	<LI>Specify the write time-out constant with the <I>WriteTotalTimeoutConstant</I> member. This member is the number of milliseconds added to the result of multiplying the total number of bytes to write by <I>WriteTotalTimeoutMultiplier</I>. The result is the number of milliseconds that must elapse before a time-out for the write operation occurs.</li>
+
+	<LI>Call the <MSHelp:link keywords="_wcesdk_win32_SetCommTimeouts" TABINDEX="0"><B>SetCommTimeouts</B></MSHelp:link> function to activate port time-out settings.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Since there are two timeouts, interval timeout and (total timeout constant + total timeout multiplier * number of bytes), an actual timeout is whichever timeout occurs first.</BLOCKQUOTE>
+</li>
+</OL>
+
+<P>To assist with multitasking, it is common to configure <B>COMMTIMEOUT</B> so that <B>ReadFile</B> immediately returns with the characters to be read. To do this, set <I>ReadIntervalTimeout</I> to MAXWORD and set both <I>ReadTotalTimeoutMultiplier</I> and <I>ReadTotalTimeoutConstant</I> to zero.</P>
+
+<P>The following code example shows how to configure time-outs for a serial port.</P>
+
+<PRE class="code">// Retrieve the time-out parameters for all read and write operations
+// on the port. 
+COMMTIMEOUTS CommTimeouts;
+GetCommTimeouts (hPort, &amp;CommTimeouts);
+
+// Change the COMMTIMEOUTS structure settings.
+CommTimeouts.ReadIntervalTimeout = MAXDWORD;  
+CommTimeouts.ReadTotalTimeoutMultiplier = 0;  
+CommTimeouts.ReadTotalTimeoutConstant = 0;    
+CommTimeouts.WriteTotalTimeoutMultiplier = 10;  
+CommTimeouts.WriteTotalTimeoutConstant = 1000;    
+
+// Set the time-out parameters for all read and write operations
+// on the port. 
+if (!SetCommTimeouts (hPort, &amp;CommTimeouts))
+{
+  // Could not set the time-out parameters.
+  MessageBox (hMainWnd, TEXT("Unable to set the time-out parameters"), 
+              TEXT("Error"), MB_OK);
+  dwError = GetLastError ();
+  return FALSE;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Tuesday, July 09, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Configuring%20Time-Outs&nbsp;(_wcesdk_configuring_time_outs.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStorageImpl::HandsOffStorage</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wceatl_ipersiststorageimpl_handsoffstorage"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceatl_ipersiststorageimpl_handsoffstorage"></A>IPersistStorageImpl::HandsOffStorage</H1>
+
+<P>This method instructs the object to release all storage objects and enter HandsOff mode. </P>
+
+<P>This method causes an object to release any storage objects that it is holding and to enter the HandsOff mode until a subsequent <B>IPersistStorageImpl::SaveCompleted</B> call. In HandsOff mode, the object cannot do anything and the only operation that works is a close operation.</P>
+
+<P>A container application typically calls this method during a full save or low-memory full save operation to force the object to release all pointers to its current storage. In these scenarios, the HandsOffStorage mode call comes after a call to either <B>OleSave</B> or <B>IPersistStorageImpl::Save</B>, putting the object in HandsOffAfterSave mode. Calling this method is necessary so the container application can delete the current file as part of a full save.</P>
+
+<P>A container application also calls this method when an object is in Normal mode to put the object in HandsOffFromNormal mode.</P>
+
+<P>While the component object is in either HandsOffAfterSave or HandsOffFromNormal mode, most operations on the object will fail. Thus, the container should restore the object to Normal mode as soon as possible. The container application does this by calling the <B>IPersistStorageImpl::SaveCompleted</B> method, which passes a storage pointer back to the component object for the new storage object.</P>
+
+<PRE class=syntax><B>STDMETHOD ( HandsOffStorage )( void );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>The ATL implementation returns S_OK.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="iperstor_8.htm"><B>IPersistStorageImpl::SaveCompleted</B></A>, <A HREF="iperstor_7.htm"><B>IPersistStorageImpl::Save</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+</BODY>
+</HTML>

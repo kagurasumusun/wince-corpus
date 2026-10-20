@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling KITL</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Enabling KITL"/>
+<MSHelp:RLTitle Title="Enabling KITL"/>
+<MSHelp:Keyword Index="A" Term="cgconEnablingKITLForYourBSP"/>
+<MSHelp:Keyword Index="K" Term="enabling, KITL"/>
+<MSHelp:Keyword Index="K" Term="KITL transport, enabling"/>
+<MSHelp:Keyword Index="K" Term="OAL, enabling KITL"/>
+<MSHelp:Keyword Index="K" Term="OEM adaptation layer, enabling KITL"/>
+<MSHelp:Keyword Index="A" Term="cgconEnablingKITLForYourBSP"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757218">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconenablingkitlforyourbsp"></A>Enabling KITL</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>On the device, your KITL library is linked with the kernel when the IMGNOKITL flag is not set, and not linked when IMGNOKITL is set to 1. KITL functionality can be included in both debug and retail devices, depending on your needs. It can also be configured to start on boot, called active KITL, or to start the first time a service on the device registers with KITL, called passive KITL. Passive KITL works with KITL in an inactive state until it is required. Passive KITL does not affect the overall performance of the device. For more information, see <A HREF="cgconactivepassivekitl.htm">Active and Passive KITL</A>.</P>
+
+<P>The <MSHelp:link keywords="cerefKITLTRANSPORT" TABINDEX="0">KITLTRANSPORT</MSHelp:link> structure defines a KITL transport, which provides all the KITL functionality. KITL needs to communicate with the underlining hardware including the ability to encode and decode a packet, send and receive a frame or packet, enable and disable the transport interrupt, and get and set configuration information. To enable this support, you must support the following functions on the device:
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="cerefPFN_ENCODE" TABINDEX="0">TransportEncode</MSHelp:link>
+<P>Makes a transport ready packet that KITL can later send from the transport through <B>TransportSend</B>. The implementation frames the data with transport specific and checksum information. Using an Ethernet transport, <B>TransportEncode</B> frames the packet with a User Datagram Protocol (UDP) header.
+</li>
+
+	<LI><MSHelp:link keywords="cerefPFN_DECODE" TABINDEX="0">TransportDecode</MSHelp:link>
+<P>Called when KITL receives a raw packet from the transport through<B> TransportRecv</B> to extract the data field of the packet. Using an Ethernet transport, <B>TransportDecode </B>will validate the packet, checksum, and return the pointer immediately after the UDP header.
+</li>
+
+	<LI><MSHelp:link keywords="cerefPFN_SENDFRAME" TABINDEX="0">TransportSend</MSHelp:link>
+<P>Called to send a raw packet, framed by <B>TransportEncode</B>, from the transport. KITL guarantees exclusive access to the transport when <B>TransportSend</B> is called. Using an Ethernet transport, <B>TransportSend</B> will program the hardware and place the packet on the Ethernet.
+</li>
+
+	<LI><MSHelp:link keywords="cerefPFN_RECVFRAME" TABINDEX="0">TransportRecv</MSHelp:link>
+<P>Called to receive a raw packet from the transport. KITL guarantees exclusive access to the transport when <B>TransportRecv</B> is called. Using an Ethernet transport <B>TransportRecv</B> will read from the Ethernet hardware.
+</li>
+
+	<LI><MSHelp:link keywords="cerefPFN_ENABLEINT" TABINDEX="0">TransportEnableInt</MSHelp:link>
+<P>Called to enable or disable transport interrupt.
+</li>
+
+	<LI><MSHelp:link keywords="cerefPFN_GETDEVCFG" TABINDEX="0">TransportGetDevCfg</MSHelp:link>
+<P>Called to provide device information to the debug host with the transport defining how the data appears. KITL handles the data as an opaque entity and sends it to the debug host. <B>TransportGetDevCfg</B> is only called at the initial handshake with the debug host. Using an Ethernet transport, the information usually includes IP address, MAC address, and port number.
+</li>
+
+	<LI><MSHelp:link keywords="cerefPFN_SETHOSTCFG" TABINDEX="0">TransportSetHostCfg</MSHelp:link>
+<P>Called when KITL receives the transport information of the debug host with the transport defining how the data appears. KITL handles the data as an opaque entity and <B>TransportSetHostCfg</B> can use the information to setup the transport. <B>TransportSetHostCfg</B> is only called at the initial handshake with the debug host.
+</li>
+</UL>
+
+<P>KITL is initialized by calling <MSHelp:link keywords="cerefKitlInit" TABINDEX="0">KitlInit</MSHelp:link> typically during the <A HREF="cmrefoeminit.htm">OEMInit</A> phase of the boot process. <B>KitlInit</B> must be called before any debug services can be started. As part of the <B>KitlInit</B> processing, the kernel calls the <MSHelp:link keywords="cerefOEMKitlInit" TABINDEX="0">OEMKitlInit</MSHelp:link> function to perform hardware initialization.</P>
+
+<P><B>KitlInit </B>may be called any time after the <B>KernelStart</B> function has been called, typically as part of <A HREF="cmrefoeminitdebugserial.htm">OEMInitDebugSerial</A> or <B>OEMInit</B> processing. <B>KitlInit</B> should also be called in the resume from suspend processing in <A HREF="cmrefoempoweroff.htm">OEMPowerOff</A>. The parameter <I>fStartKitl</I> tells the kernel if it should start the IST at the time of call. If <I>fStartKitl</I> is FALSE, KITL behaves in a passive mode, waiting dormant until <MSHelp:link keywords="cmrefKITLRegisterClient" TABINDEX="0">KITLRegisterClient</MSHelp:link> is called. This technique is used on test devices that require the use of just-in-time (JIT) debugging. If <I>fStartKitl</I> is TRUE, KITL will start communicating with the desktop and will block until a connection is made. Also, when <I>fStartKitl</I> is set to TRUE the default services PPSH, DBGMSG, and KDBG are started based on the configuration settings from the desktop. Because KITL is used to attach all full-function debugging tools, if an error occurs during KITL initialization, use <MSHelp:link keywords="cerefKITLOutputDebugString" TABINDEX="0">KITLOutputDebugString</MSHelp:link> to output debug messages. <B>KITLOutputDebugString</B> eventually uses an OEM supplied function in the OAL for debug messages. The kernel then calls the OEM's routine.</P>
+
+<P>During the call to <B>OEMKitlInit</B>, you provide the following information that the kernel will need to support KITL high-level functionality:
+
+<UL type="disc">
+	<LI>Completing the <B>KITLTRANSPORT</B> structure that describes what services to start on boot</li>
+
+	<LI>Whether it is a cold boot</li>
+
+	<LI>The name of the device</li>
+
+	<LI>An interrupt number for interrupt based devices</li>
+
+	<LI>The window size for default services</li>
+
+	<LI>The size of the frame header specific to your transport</li>
+
+	<LI>The size of the frame trailer specific to your transport</li>
+
+	<LI>The size of the physical buffer for default services</li>
+
+	<LI>Function pointers to the transport specific functions described above</li>
+</UL>
+
+<P>When the kernel returns from <B>OEMInit</B>, it tries to initialize the KITL interrupt by calling the <B>TransportEnableInt</B> member of the structure. <B>TransportEnableInt</B> is also called when a device resumes from a suspended state.</P>
+
+<P>Once KITL is up and running, it is in a waiting state, waiting for data to be received by the transport and waiting for device side services to send data out. The typical call sequence is shown in the following code example.</P>
+
+<PRE class="code">RecvData ()
+{
+   LockTransport ();
+   Result = KITL. TransportRecv (pData, pcbShort);
+   UnlockTransport ();
+   If (Result) {
+pData = KITL.TransportDecode (pData, pcbShort);
+   }
+}</PRE>
+
+<P class="fig"><IMG SRC="kitl.gif" ALT="" BORDER=0></P>
+
+<P>When the KITL protocol has data to send, it passes a buffer to the <B>TransportEncode</B> function that has space allocated for the header and trailer. <B>TransportEncode</B> adds the header and trailer to the frame and passes the encapsulated data back to the kernel. The kernel then calls <B>TransportSend</B> to send out the data to the desktop side, as shown in the following code sample.</P>
+
+<PRE class="code">SendData (…)
+{
+   if (KITL.TransportEncode (pData, cbShort)) {
+   // pData has room for Hdr/Tlr allocated
+      LockTransport ();
+      KITL.TransportSend (pData, cbShort + KITL.FrmHdrSize + KITL.FrmTlrSize);
+      UnlockTransport ();
+      }
+}</PRE>
+
+<P>If your KITL transport requires a timer, the KITL protocol supports a 1 second resolution timer. The timer requires a call to <MSHelp:link keywords="cerefKitlSetTimerCallback" TABINDEX="0">KitlSetTimerCallback</MSHelp:link>. The timer is a not a periodic timer and is only called once every <I>nSecs</I> seconds. If you need the timer to be called periodically, you can call <B>KitlSetTimerCallback</B> again when the timer expires. You can also request more than one timer. </P>
+
+<P>When the timer is no longer needed, call <MSHelp:link keywords="cerefKitlStopTimerCallback" TABINDEX="0">KitlStopTimerCallback</MSHelp:link> to stop the timer.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconkernelindependenttransportlayer.htm">Kernel Independent Transport Layer</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Enabling%20KITL&nbsp;(cgconenablingkitlforyourbsp.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

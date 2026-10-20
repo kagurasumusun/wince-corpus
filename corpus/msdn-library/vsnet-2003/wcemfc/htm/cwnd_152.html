@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::OpenClipboard</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_openclipboard"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_closeclipboard" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_emptyclipboard" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><A NAME="_wcemfc_cwnd_openclipboard"></A>CWnd::OpenClipboard</H1>
+
+<P>This method opens the clipboard.</P>
+
+<P>Other applications will not be able to modify the Clipboard until the <A HREF="JavaScript:hhobj_1.Click()"><B>CloseClipboard</B></A> Windows CE function is called. </P>
+
+<P>The current <B>CWnd</B> object will not become the owner of the Clipboard until the <A HREF="JavaScript:hhobj_2.Click()"><B>EmptyClipboard</B></A> Windows CE function is called.</P>
+
+<PRE class=syntax><B>BOOL OpenClipboard( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the Clipboard is opened via <B>CWnd</B>, or zero if another application or window has the Clipboard open.</P>
+
+<H4>Example</H4>
+
+<PRE>// Handler for Edit | Copy menu
+void CTestDlgView::OnEditCopy()
+{
+&nbsp;&nbsp;if ( !OpenClipboard() )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox( "Cannot open the Clipboard" );
+&nbsp;&nbsp;&nbsp;&nbsp;return;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;// Remove the current Clipboard contents
+&nbsp;&nbsp;if( !EmptyClipboard() )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox( "Cannot empty the Clipboard" );
+&nbsp;&nbsp;&nbsp;&nbsp;return;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;// ...
+&nbsp;&nbsp;// Get the currently selected data, hData handle to global memory of data
+&nbsp;&nbsp;// ...
+&nbsp;&nbsp;// For the appropriate clipboard formats...
+&nbsp;&nbsp;// where CF_?? is CF_TEXT, CF_BITMAP, etc.
+&nbsp;&nbsp;if ( ::SetClipboardData( CF_??, hData ) == NULL )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox( "Unable to set Clipboard data" );
+&nbsp;&nbsp;&nbsp;&nbsp;CloseClipboard();
+&nbsp;&nbsp;&nbsp;&nbsp;return;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;// ...
+&nbsp;&nbsp;CloseClipboard();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

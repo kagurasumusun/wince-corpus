@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Client-Side Data Flow</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Client-Side Data Flow"/>
+<MSHelp:RLTitle Title="Client-Side Data Flow"/>
+<MSHelp:Keyword Index="A" Term="ceconClient-SideDataFlow"/>
+<MSHelp:Keyword Index="K" Term="SOAP, client-side data flow"/>
+<MSHelp:Keyword Index="A" Term="ceconClient-SideDataFlow"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: soap_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749756">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="ceconclient-sidedataflow"></A>Client-Side Data Flow</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The user application sends a message to the <A HREF="cerefsoapclient.htm">SoapClient</A> object requesting an operation, in this case, the adding of two numbers. The <B>SoapClient</B> object processes this request and formulates a Simple Object Access Protocol (SOAP) request to the server. The server receives the request, performs the requested operation, and sends the result of the operation back to the client in the form of a SOAP response. The <B>SoapClient</B> object processes this SOAP response and sends a message that contains the result of the operation back to the user application. The following diagram illustrates how SOAP handles data flow on the client.</P>
+
+<P class="fig"><IMG SRC="clientside.gif" ALT="" BORDER=0></P>
+
+<H2 class="dtH2">Setting Up the SoapClient Object</H2>
+
+<P>Before being able to send operation requests to the <B>SoapClient</B> object, the user application must first instantiate this object. This object is implemented in MSSOAP1.dll.</P>
+
+<P>Upon instantiating the <B>SoapClient</B> object, the user application initializes the object by calling the <B>SoapClient.mssoapinit</B> method and passing in the following parameters:
+
+<UL type="disc">
+	<LI>The name of the Web Services Description Language (WSDL) file.</li>
+
+	<LI>The service name.</li>
+
+	<LI>The port information. A port specifies a binding to a particular communications link used to send the SOAP message. The <A HREF="ceconporttypeelement.htm">&lt;portType&gt; element</A> ties the port to a collection of operations.</li>
+</UL>
+
+<P>Internally, all the methods described in the WSDL file are bound dynamically to the <B>SoapClient</B> object during initialization. This dynamic binding allows you to call any of the methods described in the WSDL file. </P>
+
+<H2 class="dtH2">Processing Inside the SoapClient Object</H2>
+
+<P>The <B>SoapClient</B> and <B>SoapServer</B> are considered part of high-level API. In your application you use the <B>SoapClient</B> to send SOAP requests and the <B>SoapClient</B> does several things internally to send the request to the server. The following diagram illustrates how the <B>SoapClient</B> object processes the operation request from the user application, formulates a SOAP request message, and processes a SOAP response message.</P>
+
+<P class="fig"><IMG SRC="clientenv.gif" ALT="" BORDER=0></P>
+
+<P>The <A HREF="cerefwsdlreader.htm">WSDLReader</A> object loads the WSDL and Web Services Meta Language (WSML) files into a DOM and then analyzes these files. Based on this analysis, the <B>WSDLReader</B> object creates a <A HREF="cerefwsdloperation.htm">WSDLOperation</A> object for the requested operation (for example, AddNum(3, 4)). The <B>WSDLOperation</B> object then calls the <B>GetOperationParts</B> method, which returns from the DOM tree a collection of the parts defined for both the operation's input and output messages. The <B>SoapClient</B> object creates <A HREF="cerefsoapmapper.htm">SoapMapper</A> objects for each of these parts and loads the values specified in the operation request into these objects. The <A HREF="cerefsoapserializer.htm">SoapSerializer</A> object then builds the SOAP request message from the appropriate <B>SoapMapper</B> objects and sends it to the server.</P>
+
+<P>The server processes the SOAP request and returns a SOAP response to the client. From this response, the <B>SoapClient</B> object loads the result of the operation into the appropriate <B>SoapMapper</B> object and returns the result to the user application.</P>
+
+<P>The <B>WSDLReader</B>, <B>WSDLOperation</B> and <B>SoapReader</B> and so on are considered part of low-level API. Instead of using the <B>SoapClient</B> high-level API, you can use the low-level API in your application. The Calc sample applications in <A HREF="ceconsoapsampleapplications.htm">SOAP Sample Applications</A> topic provide the working samples.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="ceconserver-sidedataflow.htm">Server-Side Data Flow</A> </P>
+
+<P><A HREF="ceconaquickintroductiontowsdl.htm">A Quick Introduction to WSDL</A> </P>
+
+<P><A HREF="ceconaquickintroductiontowsml.htm">A Quick Introduction to WSML</A> </P>
+
+<P><A HREF="ceconsoapsampleapplications.htm">SOAP Sample Applications</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Client-Side%20Data%20Flow&nbsp;(ceconclient-sidedataflow.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

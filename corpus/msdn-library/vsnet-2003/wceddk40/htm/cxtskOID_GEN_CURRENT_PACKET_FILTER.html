@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OID_GEN_CURRENT_PACKET_FILTER</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="OID_GEN_CURRENT_PACKET_FILTER"/>
+<MSHelp:RLTitle Title="OID_GEN_CURRENT_PACKET_FILTER"/>
+<MSHelp:Keyword Index="A" Term="cxtskOID_GEN_CURRENT_PACKET_FILTER"/>
+<MSHelp:Keyword Index="K" Term="OID_GEN_CURRENT_PACKET_FILTER"/>
+<MSHelp:Keyword Index="A" Term="cxtskOID_GEN_CURRENT_PACKET_FILTER"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_object_identifiers.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_755432">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxtskoid_gen_current_packet_filter"></A>OID_GEN_CURRENT_PACKET_FILTER</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This object specifies the types of net packets for which a protocol receives indications from a NIC driver. </P>
+
+<P>The NIC driver reports its medium type as one for which the system provides a filter library. The following table shows the types that the packet filter combines using an inclusive OR operation. </P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Type</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_ALL_FUNCTIONAL </TD>
+<TD width=50%>All functional address packets, not just the ones in the current functional address. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_ALL_MULTICAST </TD>
+<TD width=50%>All multicast address packets, not just the ones enumerated in the multicast address list. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_ALL_LOCAL </TD>
+<TD width=50%>All packets sent by installed protocols and all packets indicated by the NIC that is identified by a given <I>NdisBindingHandle</I>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_BROADCAST </TD>
+<TD width=50%>Broadcast packets. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_DIRECTED </TD>
+<TD width=50%>Directed packets. Directed packets contain a destination address equal to the station address of the NIC. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_FUNCTIONAL </TD>
+<TD width=50%>Functional address packets sent to addresses included in the current functional address. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_GROUP </TD>
+<TD width=50%>Packets sent to the current group address. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_MAC_FRAME </TD>
+<TD width=50%>NIC driver frames that a Token Ring NIC receives. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_SMT </TD>
+<TD width=50%>SMT packets that an FDDI NIC receives. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_MULTICAST </TD>
+<TD width=50%>Multicast address packets sent to addresses in the multicast address list. <BR>
+A protocol driver can receive Ethernet (802.3) multicast packets or Token Ring (802.5) functional address packets by specifying the multicast or functional address packet type. Setting the multicast address list or functional address determines which multicast address groups the NIC driver enables. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_PROMISCUOUS </TD>
+<TD width=50%>Specifies all packets. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_PACKET_TYPE_SOURCE_ROUTING </TD>
+<TD width=50%>All source routing packets. If the protocol driver sets this bit, the NDIS library attempts to act as a source routing bridge. </TD>
+</TR>
+</table></div>
+
+<P>During a call to <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, NDIS disables packet reception, along with multicast and functional addresses.</P>
+
+<P>For a query, NDIS returns the binding filters that are combined using the OR operator.</P>
+
+<P>For a set, the specified packet filter replaces the previous packet filter for the binding. If the NIC driver previously enabled a packet type but the protocol driver does not specify that type in a new filter, the protocol driver will not receive packets of this type. </P>
+
+<P>If the NIC driver does not set a bit for a particular packet type in response to this query, the protocol driver will not receive packets of that type. Consequently, a protocol driver can disable packet reception by calling the <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A> function using a filter of 0. In these circumstances, if promiscuous mode is enabled with the NDIS_PACKET_TYPE_PROMISCUOUS bit, the protocol driver continues to receive packets even if the sending network node does not direct them to it. NDIS then sends the protocol driver all packets the NIC receives.</P>
+
+<P>Setting a specific packet filter does not alter the packet filter for other protocols that are bound to (or above) the same NIC. For example, if one bound protocol enables promiscuous mode, other bound protocols do not receive packets that they have not specifically requested with their own packet filters. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=25%>Runs on</TH>
+<TH width=17%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=19%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Windows CE OS</TD>
+<TD width=17%>.NET 4.0 and later</TD>
+<TD width=19%>Ntddndis.h</TD>
+<TD width=19%>Ntddndis.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefminiportqueryinformation.htm">MiniportQueryInformation</A>, <A HREF="cxrefndisopenadapter.htm">NdisOpenAdapter</A>, <A HREF="_wceddk_ndisrequest.htm">NdisRequest</A>, <A HREF="_wceddk_ndis_request.htm">NDIS_REQUEST</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;OID_GEN_CURRENT_PACKET_FILTER&nbsp;(cxtskoid_gen_current_packet_filter.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

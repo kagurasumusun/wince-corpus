@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Style Form</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Style Form"/>
+<MSHelp:RLTitle Title="Style Form"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Style_Form"/>
+<MSHelp:Keyword Index="K" Term="file chunks%2C DirectMusic, style forms"/>
+<MSHelp:Keyword Index="K" Term="style forms%2C DirectMusic"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Style_Form"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680660">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_style_form"></A>Style Form</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following notation shows the organization of the top-level chunk of a style file. </P>
+
+<PRE class="code">RIFF( 'DMST'
+    &lt;styh-ck&gt;       // Style header chunk
+    &lt;guid-ck&gt;       // Unique identifier
+    [&lt;UNFO-list&gt;]   // Name, author, copyright information, comments
+    [&lt;vers-ck&gt;]     // Version chunk
+    &lt;part-list&gt;...  // List of parts in the style, used by patterns
+    &lt;pttn-list&gt;...  // List of patterns in the style
+    &lt;DMBD-form&gt;...  // List of bands in the style
+    [&lt;motf-list&gt;]   // List of motifs in the style
+    [&lt;prrf-list&gt;]   // List of chord-map references in the style
+)</PRE>
+
+<P>The individual chunks and their subchunks are as follows.</P>
+
+<PRE class="code">&lt;styh-ck&gt; -&gt; styh( &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_STYLE" TABINDEX="0">DMUS_IO_STYLE</MSHelp:link>&gt; )</PRE>
+
+<P>This chunk contains the basic header information for a style. For the next three chunks, see <A HREF="_wcesdk_dxmusic_common_chunks.htm">Common Chunks</A>.</P>
+
+<P>Next, comes a chunk for each musical part in the style.</P>
+
+<PRE class="code">&lt;part-list&gt; -&gt; LIST('part'
+    &lt;prth-ck&gt;       // Part header chunk
+    [&lt;UNFO-list&gt;]
+    [&lt;note-ck&gt;]     // List of notes in the part
+    [&lt;crve-ck&gt;]     // List of curves in the part
+    )</PRE>
+
+<P>The part list includes a header, an optional UNFO chunk, and a list of notes and curves, as shown in the following example. For the UNFO list, see <A HREF="_wcesdk_dxmusic_common_chunks.htm">Common Chunks</A>.</P>
+
+<PRE class="code">&lt;prth-ck&gt; -&gt; prth( &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_STYLEPART" TABINDEX="0">DMUS_IO_STYLEPART</MSHelp:link>&gt; )
+ 
+&lt;note-ck&gt; -&gt; note(
+    &lt; DWORD &gt;  // Size of DMUS_IO_STYLENOTE
+    &lt; <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_STYLENOTE" TABINDEX="0">DMUS_IO_STYLENOTE</MSHelp:link> &gt;...
+    )
+ 
+&lt;crve-ck&gt; -&gt; crve(
+    &lt; DWORD &gt;  // Size of DMUS_IO_STYLECURVE
+    &lt; <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_STYLECURVE" TABINDEX="0">DMUS_IO_STYLECURVE</MSHelp:link> &gt;...
+    )</PRE>
+
+<P>After the part-list chunk comes the pattern-list chunk.</P>
+
+<PRE class="code">&lt;pttn-list&gt; -&gt; LIST( 'pttn'
+    &lt;ptnh-ck&gt;       // Pattern-header chunk
+    &lt;rhtm-ck&gt;       // List of rhythms for chord matching
+    [&lt;UNFO-list&gt;]
+    [&lt;mtfs-ck&gt;]     // Motif settings chunk
+    &lt;pref-list&gt;...  // List of part reference IDs
+    )</PRE>
+
+<P>The pattern list consists of the following subchunks. For the optional UNFO list, see <A HREF="_wcesdk_dxmusic_common_chunks.htm">Common Chunks</A>.</P>
+
+<PRE class="code">&lt;ptnh-ck&gt; -&gt; ptnh(
+    &lt; <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_PATTERN" TABINDEX="0">DMUS_IO_PATTERN</MSHelp:link> &gt;
+    )
+ 
+&lt;rhtm-ck&gt; -&gt; rhtm(
+    &lt; DWORD &gt;...  
+    )</PRE>
+
+<P>This chunk consists of an array of <B>DWORD</B>s, one for each measure, giving the rhythm pattern. For information about the arrangement of the bits, see the <B>dwRhythmPattern</B> member of <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_RHYTHM_PARAM" TABINDEX="0">DMUS_RHYTHM_PARAM</MSHelp:link>. </P>
+
+<PRE class="code">&lt;mtfs-ck&gt; -&gt; mtfs(
+    &lt; <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_MOTIFSETTINGS" TABINDEX="0">DMUS_IO_MOTIFSETTINGS</MSHelp:link> &gt;
+    )
+ 
+<B>&lt;</B>pref-list&gt; -&gt; LIST( 'pref'
+    &lt;prfc-ck&gt;   // Part reference chunk
+    )</PRE>
+
+<P>The pref chunk in turn consists of an array of part references.</P>
+
+<PRE class="code">&lt;prfc-ck&gt; -&gt; prfc(
+    &lt; <MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_PARTREF" TABINDEX="0">DMUS_IO_PARTREF</MSHelp:link> &gt;
+    )</PRE>
+
+<P>The last chunk in the style form is the list of chord-map references.</P>
+
+<PRE class="code">&lt;prrf-list&gt; -&gt; LIST( 'prrf'
+    &lt;DMRF-list&gt;...
+    )</PRE>
+
+<P>For more information about &lt;DMRF-list&gt;, see <A HREF="_wcesdk_dxmusic_common_chunks.htm">Common Chunks</A>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Style%20Form&nbsp;(_wcesdk_dxmusic_style_form.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

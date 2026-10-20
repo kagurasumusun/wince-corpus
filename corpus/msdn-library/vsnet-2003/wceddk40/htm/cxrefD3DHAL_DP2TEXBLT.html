@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DHAL_DP2TEXBLT</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DHAL_DP2TEXBLT"/>
+<MSHelp:RLTitle Title="D3DHAL_DP2TEXBLT"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2TEXBLT"/>
+<MSHelp:Keyword Index="K" Term="D3DHAL_DP2TEXBLT"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2TEXBLT"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665276">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefd3dhal_dp2texblt"></A>D3DHAL_DP2TEXBLT</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure is used for texture blits when <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> responds to the <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor49">D3DDP2OP_TEXBLT</A> command token.</P>
+
+<PRE class="syntax"><B>typedef struct _D3DHAL_DP2TEXBLT {</B>
+<B>  DWORD</B>   <I>dwDDDestSurface</I>;
+<B>  DWORD</B>   <I>dwDDSrcSurface</I>;
+<B>  POINT</B>   <I>pDest</I>;
+<B>  RECTL</B>   <I>rSrc</I>;
+<B>  DWORD</B>   <I>dwFlags</I>;
+<B>} D3DHAL_DP2TEXBLT, *LPD3DHAL_DP2TEXBLT;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwDDDestSurface</B></DT>
+
+<DD>Specifies the handle to the destination texture.</dd>
+
+<DT><B>dwDDSrcSurface</B></DT>
+
+<DD>Specifies the handle to the source texture.</dd>
+
+<DT><B>pDest</B></DT>
+
+<DD>Specifies the destination point where the blit should be performed; that is, the point in the destination surface (<B>dwDDDestSurface</B>) to begin the blit.</dd>
+
+<DT><B>rSrc</B></DT>
+
+<DD>Specifies the rectangle to be blitted in the source texture; that is, the source rectangle in the source surface (<B>dwDDSrcSurface</B>) to blit from.</dd>
+
+<DT><B>dwFlags</B></DT>
+
+<DD>Is reserved for system use.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="cxcond3dcreatesurfaceex.htm">D3dCreateSurfaceEx</A> callback creates the small integer handles to the textures that can be used as source and destination textures for texture blits.</P>
+
+<P>The <B>D3DHAL_DP2TEXBLT</B> structure is used with a <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor49">D3DDP2OP_TEXBLT</A> command stream token to inform the drivers to perform a blit operation from a source texture to a destination texture. A texture can also be cubic environment map. The driver should copy a rectangle specified by <B>rSrc</B> in the source texture to the location specified by <B>pDest</B> in the destination texture. The destination and source textures are identified by handles that the driver was notified with during texture-creation time. If the driver is capable of managing textures, then it is possible that the destination handle is 0. This indicates to the driver that it should preload the texture into video memory (or wherever the hardware efficiently textures from). In this case, the driver can ignore <B>rSrc</B> and <B>pDest</B>. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For MIP mapped textures, only one <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor49">D3DDP2OP_TEXBLT</A> instruction is inserted into the <B>D3dDrawPrimitives2</B> command stream. In this case, the driver is expected to blit all the MIP map levels present in the texture. The regions to be copied in MIP map sub-levels can be obtained by dividing <B>rSrc</B> and<B> pDest</B> by 2 at each level. </BLOCKQUOTE>
+
+<P>It is possible that the source and destination textures may contain different number of MIP map levels. In this case, the driver is expected to blit the common levels. For example, if a 256x256 source texture has 8 MIP map levels, and if the destination is a 64x64 texture with 6 levels, then the driver should blit the 6 corresponding levels from the source. The driver can expect the dimensions of the top MIP level of the destination texture to always be less than or equal to the dimensions of the top MIP level of the source texture. </P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The source and destination handles always refer to the top-level surfaces and never to any MIP map sub-level. Due to an error in the application, it is possible that the destination texture contains extra MIP map levels. For instance, a source 256x256 texture may contain five levels, but the destination 256x256 texture may contain eight. The driver is expected to safely handle this case, but it is not expected to produce correct results. Due to legacy application compatibility issues, Direct3D does not prevent such source/destination texture pairs from being passed on to the driver.</BLOCKQUOTE>
+
+<P>The driver can expect the pixel formats of the source and destination textures to be identical and, in general, the specified blit will be safe to perform. Other than the single case mentioned earlier, the driver should not expect to be presented with any situation that makes it impossible to perform a blit. The hope of this is to ensure that the driver's TexBlt implementation is as efficient as possible.</P>
+
+<P>If the driver wishes to perform asynchronous blits from system memory to video memory, then it should implement the Microsoft DirectDraw&reg; HAL call <B>GetSysmemBltStatus</B>, otherwise inconsistencies may arise.</P>
+
+<P>With TexBlt it is not necessary for the driver to perform any synchronization because TexBlts are always issued in the proper order along with rendering commands. Before this, it was necessary for the driver to correctly handle the case when a DirectDraw blit modified any texture that was referenced by rendering commands in any Direct3D context. When multiple contexts are present, Direct3D will not issue TexBlts. This means that the driver writer can omit synchronization code in the TexBlt code path (but will still need syncing for blits).</P>
+
+<H4 class="dtH4">Sample</H4>
+
+<P>The following pseudo code in shows how a subrectangle should be computed for consecutive MIP levels, to go to MIP level i + 1 from MIP level i: </P>
+
+<PRE class="code">rect.left &gt;&gt;= 1;
+rect.top &gt;&gt;= 1;
+DWORD right = (rect.right + 1) &gt;&gt; 1;
+DWORD bottom = (rect.bottom + 1) &gt;&gt; 1;
+rect.right = ((right - rect.left) &lt; 1) ? (rect.left + 1) : (right);
+rect.bottom = ((bottom - rect.top ) &lt; 1) ? (rect.top + 1) : (bottom); </PRE>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>D3dhal.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor49">D3DDP2OP_TEXBLT</A>, <A HREF="cxcond3dcreatesurfaceex.htm">D3dCreateSurfaceEx</A>, <A HREF="cxrefd3dhal_xxxstructures.htm">D3DHAL_XXX Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DHAL_DP2TEXBLT&nbsp;(cxrefd3dhal_dp2texblt.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

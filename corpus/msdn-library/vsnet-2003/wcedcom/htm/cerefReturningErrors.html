@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Returning Errors</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Returning Errors"/>
+<MSHelp:RLTitle Title="Returning Errors"/>
+<MSHelp:Keyword Index="A" Term="cerefReturningErrors"/>
+<MSHelp:Keyword Index="A" Term="cerefReturningErrors"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="DCOM"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: automation_interfaces1.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_747637">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefreturningerrors"></A>Returning Errors</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P><B>Invoke</B> returns DISP_E_MEMBERNOTFOUND if one of the following conditions occurs:
+
+<UL type="disc">
+	<LI>A member or parameter with the specified DISPID and matching <I>cArgs </I>cannot be found<I>,</I> and the parameter is not optional.</li>
+
+	<LI>The member is a void function, and the caller did not set <I>pVarResult</I> to NULL.</li>
+
+	<LI>The member is a read-only property, and the caller set <I>wFlags</I> to DISPATCH_PROPERTYPUT or DISPATCH_PROPERTYPUTREF.</li>
+</UL>
+
+<P>If <B>Invoke</B> finds the member, but uncovers errors in the parameter list, it returns one of several other errors. DISP_E_BAD_PARAMCOUNT means that the DISPPARAMS structure contains an incorrect number of parameters for the property or method. DISP_E_NONAMEDARGS means that <B>Invoke</B> received named parameters, but they are not supported by the member.</P>
+
+<P>DISP_E_PARAMNOTFOUND means that the correct number of parameters was passed, but the DISPID for one or more parameters was incorrect. If <B>Invoke</B> cannot convert one of the parameters to the desired type, it returns DISP_E_TYPEMISMATCH. In these two cases, if it can identify which parameter is incorrect, <B>Invoke</B> sets *<I>puArgErr</I> to the index within <I>rgvarg</I> of the parameter with the error. For example, if an Automation method expects a reference to a double-precision number as an parameter, but receives a reference to an integer, the parameter is coerced. However, if the method receives a date, <B>IDispatch::Invoke</B> returns DISP_E_TYPEMISMATCH and sets <I>*puArgErr </I>to the index of the integer in the parameter array.</P>
+
+<P>Automation provides functions to perform standard conversions of VARIANT, and these functions should be used for consistent operation. DISP_E_TYPEMISMATCH is returned only when these functions fail. </P>
+
+<H4 class="dtH4">Example</H4>
+
+<P>This code from the Lines sample file Lines.cpp implements the <B>Invoke</B> member function for the CLines class.</P>
+
+<PRE class="code">STDMETHODIMP
+CLines::Invoke(
+DISPID dispidMember,
+REFIID riid,
+LCID lcid,
+WORD wFlags,
+DISPPARAMS FAR* pDispParams,
+VARIANT FAR* pVarResult,
+EXCEPINFO FAR* pExcepInfo,
+UINT FAR* puArgErr)
+{ 
+return DispInvoke(
+this, m_ptinfo,
+dispidMember, wFlags, pDispParams,
+pVarResult, pExcepInfo, puArgErr); 
+}</PRE>
+
+<P>The following code example calls the <B>CLines::Invoke</B> member function to get the value of the <B>Color</B> property.</P>
+
+<PRE class="code">HRESULT hr;
+EXCEPINFO excepinfo;
+UINT nArgErr;
+VARIANT vRet;
+DISPPARAMS FAR* pdisp;
+OLECHAR FAR* szMember;
+DISPPARAMS dispparamsNoArgs = {NULL, NULL, 0, 0};
+
+// Initialization code omitted for brevity.
+szMember = "Color";
+hr = pdisp-&gt;GetIDsOfNames(IID_NULL, &amp;szMember, 1, LOCALE_USER_DEFAULT,
+  &amp;dispid);
+
+// Get Color property.
+hr = pdisp-&gt;Invoke(dispid, IID_NULL, LOCALE_SYSTEM_DEFAULT,
+  DISPATCH_PROPERTYGET, &amp;dispparams, &amp;vRet, &amp;excepinfo, &amp;nArgErr);</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Returning%20Errors&nbsp;(cerefreturningerrors.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CObList::CObList</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_coblist_coblist"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_coblist_coblist"></A>CObList::CObList</H1>
+
+<P>This constructor constructs an empty <B>CObject</B> pointer list. As the list grows, memory is allocated in units of <I>nBlockSize</I> entries. If a memory allocation fails, a <B>CMemoryException</B> is thrown.</P>
+
+<PRE class=syntax><B>CObList(
+int </B><I>nBlockSize</I><B> = 10 );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nBlockSize</I></DT>
+
+<DD>Specifies the memory-allocation granularity for extending the list.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<P>Below is a listing of the <B>CObject</B>-derived class <B>CAge</B> used in all the collection examples:</P>
+
+<PRE>// Simple CObject-derived class for CObList and other examples.
+class CAge : public CObject
+{
+    DECLARE_SERIAL( CAge )
+private:
+    int   m_years;
+public:
+    CAge() { m_years = 0; }
+    CAge( int age ) { m_years = age; }
+    CAge( const CAge&amp; a ) { m_years = a.m_years; } // Copy constructor
+    void Serialize( CArchive&amp; ar);
+    void AssertValid() const;
+    const CAge&amp; operator=( const CAge&amp; a )
+    {
+        m_years = a.m_years; return *this;
+    }
+    BOOL operator==(CAge a)
+    {
+        return m_years == a.m_years;
+    }
+    void* operator new(size_t nSize);
+    void* operator new(size_t nSize, LPCSTR lpszFileName, int nLine);
+    void operator delete(void* p);
+    void operator delete(void* p, LPCSTR lpszFileName, int nLine);
+#ifdef _DEBUG
+    void Dump( CDumpContext&amp; dc ) const
+    {
+        CObject::Dump( dc );
+        dc &lt;&lt; m_years;
+    }
+#endif
+};
+</PRE>
+
+<P>Below is an example of <B>CObList</B> constructor usage:</P>
+
+<PRE>CObList list( 20 );  // List on the stack with blocksize = 20.
+
+CObList* plist = new CObList; // List on the heap with default
+                              // blocksize.
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcoll.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

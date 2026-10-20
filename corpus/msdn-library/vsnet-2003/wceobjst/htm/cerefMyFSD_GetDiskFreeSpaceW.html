@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MyFSD_GetDiskFreeSpaceW</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MyFSD_GetDiskFreeSpaceW"/>
+<MSHelp:RLTitle Title="MyFSD_GetDiskFreeSpaceW"/>
+<MSHelp:Keyword Index="A" Term="cerefMyFSD_GetDiskFreeSpaceW"/>
+<MSHelp:Keyword Index="K" Term="MyFSD_GetDiskFreeSpaceW"/>
+<MSHelp:Keyword Index="A" Term="cerefMyFSD_GetDiskFreeSpaceW"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: fsd.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_753420">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefmyfsd_getdiskfreespacew"></A><I>MyFSD</I>_GetDiskFreeSpaceW</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function obtains information about the amount of space available on a disk volume in an installable file system. Applications should not call this function directly. Instead, use the corresponding standard Win32 function <A HREF="cerefgetdiskfreespaceex.htm">GetDiskFreeSpaceEx</A>. The file system driver (FSD) Manager determines the file system type and calls the <B><I>MyFSD</I>_GetDiskFreeSpaceW</B> implementation of the function.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B><I>MyFSD</I>_GetDiskFreeSpaceW( </B>
+<B>PVOLUME</B> <I>pVolume</I><B>,</B> 
+<B>PCWSTR </B><I>pwsPathName</I><B>, </B>
+<B>PDWORD </B><I>pSectorsPerCluster</I><B>,</B>
+<B>PDWORD </B><I>pBytesPerSector</I><B>, </B>
+<B>PDWORD </B><I>pFreeClusters</I><B>,</B><I> </I>
+<B>PDWORD </B><I>pClusters</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pVolume</I></DT>
+
+<DD>[in] Pointer to the value that the FSD defines in its DLL and passes to the <A HREF="cereffsdmgr_registervolume.htm">FSDMGR_RegisterVolume</A> function when registering the volume. The definition of <I>pVolume</I> can point to private structures.</dd>
+
+<DT><I>pwsPathName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that specifies a directory in the file system to return information about. Note that the concept of a <I>current directory</I> does not exist in Windows CE. You must specify the complete directory path.</dd>
+
+<DT><I>pSectorsPerCluster</I></DT>
+
+<DD>[out] Pointer to a variable that receives the number of sectors per cluster. </dd>
+
+<DT><I>pBytesPerSector</I></DT>
+
+<DD>[out] Pointer to a variable that receives the number of bytes per sector. </dd>
+
+<DT><I>pFreeClusters</I></DT>
+
+<DD>[out] Pointer to a variable that receives the total number of free clusters on the disk that are available to the user associated with the calling thread. </dd>
+
+<DT><I>pClusters</I></DT>
+
+<DD>[out] Pointer to a variable that receives the total number of clusters on the disk that are available to the user associated with the calling thread. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>An FSD exports this function if it wants to support the <B>GetDiskFreeSpaceEx</B> function. All FSD functions can be called on re-entry, therefore, FSD developers must take this into account when developing an FSD.</P>
+
+<P>The Fsdmgr component is a dynamic-link library (DLL) that manages all operating system interaction with installable files systems. Each installable file system requires an FSD, which is a DLL that exports an API needed to support an installable file system. The name of the DLL for the FSD and the names of the functions it exports start with the name of the associated installable file system. For example, if the name of file system is MyFSD, then its DLL is MyFSD.dll and its exported functions are prefaced with MyFSD_*. </P>
+
+<P>Fsdmgr provides service functions to FSDs. The <B>FSDMGR_RegisterVolume</B>, <A HREF="cereffsdmgr_createfilehandle.htm">FSDMGR_CreateFileHandle</A>, and<B> </B><A HREF="cereffsdmgr_createsearchhandle.htm">FSDMGR_CreateSearchHandle</A> functions record a <B>DWORD</B> of volume-specific data the FSD needs to keep associated with volume. This volume-specific data is passed as the first parameter of these three functions.</P>
+
+<P>Applications that access an installable file system use standard Win32 functions. For example, when an application wants to create a folder on a device that contains an installable file system, it calls <A HREF="cerefcreatedirectory.htm">CreateDirectory</A>. Fsdmgr recognizes that the path is to a device containing an installable file system and calls the appropriate function, which in the case of the MyFSD file system is <A HREF="cerefmyfsd_createdirectoryw.htm">MyFSD_CreateDirectoryW</A>. That is, the application calls <B>CreateDirectory</B>, causing Fsdmgr to call <B><I>MyFSD_</I>CreateDirectoryW</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Fsdmgr.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefcreatedirectory.htm">CreateDirectory</A>, <A HREF="cereffsdmgr_createsearchhandle.htm">FSDMGR_CreateSearchHandle</A>, <A HREF="cerefgetdiskfreespaceex.htm">GetDiskFreeSpaceEx</A>, <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>, <A HREF="cereffsdmgr_createfilehandle.htm">FSDMGR_CreateFileHandle</A>, <A HREF="cereffsdmgr_registervolume.htm">FSDMGR_RegisterVolume</A>, <A HREF="cerefmyfsd_createdirectoryw.htm">MyFSD_CreateDirectoryW</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MyFSD_GetDiskFreeSpaceW&nbsp;(cerefmyfsd_getdiskfreespacew.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

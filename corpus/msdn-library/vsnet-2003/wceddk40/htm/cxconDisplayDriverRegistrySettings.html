@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Display Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Display Driver Registry Settings"/>
+<MSHelp:RLTitle Title="Display Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="cxconDisplayDriverRegistrySettings"/>
+<MSHelp:Keyword Index="K" Term="display drivers, registry settings"/>
+<MSHelp:Keyword Index="K" Term="registry settings, display drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconDisplayDriverRegistrySettings"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: display_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750724">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcondisplaydriverregistrysettings"></A>Display Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic contains information on the display driver, removable display adapter, <A HREF="cxconenablingcleartype.htm">ClearType</A>, and <A HREF="cxconscreenrotation.htm">screen rotation</A> registry keys.</P>
+
+<H2 class="dtH2">Registry Keys for Display Drivers</H2>
+
+<P>When a platform contains a display driver, it is automatically loaded by GWES at system startup. By default, GWES loads a driver named Ddi.dll. To change the name of the default display driver, use the <B>HKEY_LOCAL_MACHINE\System\GDI\Drivers\Display</B> key to override the default display driver DLL name. The registry key should be placed in your Platform.reg file. For the sample drivers provided, this information is in %_WINCEROOT%\Public\Common\OAK\Files\Common.reg and is included for each display type associated with a BSP_DISPLAY_<I>NAME</I> environment variable. For example, the BSP_DISPLAY_PERM3 environment variable.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    Display="ddi_perm3.dll"</PRE>
+
+<P>The device driver writer can optionally include a registry key that provides additional information about the driver. This information is not used by the GDI, but may be useful to applications. It may also be useful to the driver when it supports, for example, multiple resolutions, which a user can select from a Control Panel application that is provided by the display driver writer. In this case, the driver could examine the registry to determine which resolution to set when the display driver loads. The following example shows a registry key for a native display driver that supports a Color Graphix Voyager PCMCIA-based display device. The key stores the native device driver's DLL name, screen size, and color depth.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\Display\PCARDVGA]
+    Dll="PCARDVGA.DLL"
+    CxScreen=Dword:280
+    CyScreen=Dword:F0
+    Bpp=Dword:8</PRE>
+
+<P>Also, for PCI-based display controllers, PCI bus template information should be provided. This is used by the PCI bus driver when enumerating the PCI bus and is populated, along with configuration information, in the registry's instance tree. When loaded by GWES, the display driver is provided with instance information and thus should not need to scan the PCI bus for itself or read PCI configuration information from the hardware. For more information on PCI templates, see the <A HREF="cxconenablingpcibusdriverinstallableisrsonplatform.htm">PCI Device Support</A>, <A HREF="cxcondevicedriverloadingmodel.htm">Device Driver Loading Model</A>, and <A HREF="_wceddk_including_display_drivers_in_an_os_image.htm">Display Drivers and the OS Image</A>.</P>
+
+<H2 class="dtH2">GWES Registry Settings</H2>
+
+<P>During suspend/resume operations, video frame buffer data can be lost if the RAM is not powered during suspension. As a result, the primary display and other video surfaces such as bitmaps, icons, and so on can appear to be garbage after resuming operation. To address this problem, GWES provides four different options that are selectable through a registry key. You can only choose the registry settings. The following table shows the selectable registry subkeys of <B>HKEY_LOCAL_MACHINE\SYSTEM\GWE</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=26%>Subkey</TH>
+<TH width=23%>Value</TH>
+<TH width=51%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>"PORepaint"</B></TD>
+<TD width=23%><B>dword:0</B></TD>
+<TD width=51%>The display driver handles everything. In this case, GWES does nothing and assumes that either the hardware maintains the display surface data in RAM or that other factors intervene to ensure the data is not lost.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>"PORepaint"</B></TD>
+<TD width=23%><B>dword:1</B></TD>
+<TD width=51%>GWES should save and restore the bits. GWES saves the primary display surface, which resides in video memory, in system memory that is maintained during suspend. Upon resume, the primary surface is restored. Because other surfaces can be allocated in video memory, blit operations will be faster, even though the primary surface is restored. Other surfaces such as bitmaps, icons, and so on may contain bad data when the screen is refreshed. Setting <B>PORepaint</B> equal to <B>DWORD:3</B> handles this.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>"PORepaint"</B></TD>
+<TD width=23%><B>dword:2</B></TD>
+<TD width=51%>GWES should invalidate and repaint. GWES assumes that all display surfaces live in system memory, with the exception of the primary surface, which can be in video memory. After resuming, GWES walks through the whole list of windows and invalidates each. Because the surfaces are assumed to be in system memory or at least in some form of non-volatile storage, the invalidation process restores the video RAM contents with a new image. This process is rather slow.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>"PORepaint"</B></TD>
+<TD width=23%><B>dword:3</B></TD>
+<TD width=51%>GWES and the driver need to save video memory. This option allows the driver to save other non-primary video surface data, which resides in video RAM, to some other location. During suspend, GWES makes a <B>DrvEscape</B> call to get the display driver to save all video surfaces, including the primary surface, into a non-volatile location, for example system RAM. After resuming, GWES makes another <B>DrvEscape</B> call to the display driver to get it to restore the contents of the video RAM. The mechanism for storing and the storage location are up to the display driver. GWES does not save any of the surface data directly.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Registry Keys for Removable Display Adapters</H2>
+
+<P>When a secondary display adapter is provided on removable hardware, such as a PC Card, the display driver is typically implemented as two drivers: a built-in driver that exposes the built-in DDI and a stream interface driver that exposes the stream interfaces. The stream driver must initialize the registry with the keys that allow it to be detected and loaded. When the PC Card is inserted, the Device Manager initiates a detection sequence to determine which driver should service the card. If the PC Card has a Plug and Play identifier, it is used to determine which driver to load. Otherwise, the Device Manager tries the detection functions for all the PC Card drivers that are installed on the system until one of them reports that it recognizes the PC Card. Once the correct driver is located, the Device Manager loads the driver whose name is provided as the registry key along with the detection function that succeeded in detecting the PC Card. The following example shows how the Device Manager then loads the driver, registers its special device file name, and calls the driver's <A HREF="_wceddk_xxx_init.htm">XXX_Init</A> function.</P>
+
+<PRE class="code"> [HKEY_LOCAL_MACHINE\Drivers\PCMCIA\VoyagerVGA]
+    Dll="VOYAGER.DLL"
+    Prefix="VGA"
+    Index=Dword:1
+
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect\60]
+    Dll="VOYAGER.DLL"
+    Entry="DetectVGA"</PRE>
+
+<P>Some applications need additional registry keys in order to use secondary display adapters. During initialization, the driver should update the <B>HKEY_LOCAL_MACHINE\Drivers\Display\Active</B> key with the information that is appropriate for its driver. This includes information about the built-in driver .dll name, as well as <B>BufferMode</B> and <B>Tapmode</B> information. For removable display adapters, this initialization should take place when the adapter is connected to the system and the Device Manager calls the stream interface's <B><I>XXX</I>_Init</B> function. The following example shows how this is done.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\Display\Active\Voyager]
+    Dll="PCARDVGA.DLL"
+    BufferMode=Dword:0
+    Tapmode=Dword:0</PRE>
+
+<P>The following table shows the four available values for <B>BufferMode</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmNotShared</B></TD>
+<TD width=67%>There is no common frame buffer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmTopHalf</B></TD>
+<TD width=67%>The top half of the secondary display is also shown on the system's built-in LCD display.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmSquashed</B></TD>
+<TD width=67%>A scaled-down version of the secondary display is also shown on the system's built-in LCD display.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>bmOff</B></TD>
+<TD width=67%>The system's built-in display is turned off while the driver is active.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the three available values for <B>Tapmode</B>.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>tmNone</B></TD>
+<TD width=67%>The display driver performs no conversion of any tap coordinates.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>tmScaled</B></TD>
+<TD width=67%>The display driver scales tap coordinates to match the secondary display's resolution.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>tmUndefined</B></TD>
+<TD width=67%>The display driver always reports tap coordinates of (0,0) but still reports tap events.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">ClearType Registry Keys</H2>
+
+<P>The following registry keys need to be set to enable ClearType across an OS.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Registry key</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>HKEY_LOCAL_MACHINE\SYSTEM\GDI\ClearType</B></TD>
+<TD width=65%>Enables ClearType for all applications. A non-zero value enables ClearType across the OS.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><B>HKEY_LOCAL_MACHINE\SYSTEM\GDI\Gamma</B></TD>
+<TD width=65%>Sets the contrast.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Screen Rotation Registry Keys</H2>
+
+<P><B>HKEY_LOCAL_MACHINE\SYSTEM\GDI\ROTATION\ANGLE</B> is the registry key to set the angle of rotation.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondisplaydriverarchitecture.htm">Display Driver Architecture</A></P>
+
+<P><A HREF="_wceddk_display_driver_escape_codes.htm">Display Driver Escape Codes</A></P>
+
+<P><A HREF="cxcondisplaydriveradvancedtopics.htm">Display Driver Extension</A></P>
+
+<P><A HREF="cxcondisplaydriversupport.htm">Display Driver Recommendations</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Display%20Driver%20Registry%20Settings&nbsp;(cxcondisplaydriverregistrysettings.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

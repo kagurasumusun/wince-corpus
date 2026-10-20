@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Meta-Renderer Protocol</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Meta-Renderer Protocol"/>
+<MSHelp:RLTitle Title="Meta-Renderer Protocol"/>
+<MSHelp:Keyword Index="A" Term="cxconMeta-RendererProtocol"/>
+<MSHelp:Keyword Index="K" Term="protocols, DVD-Video meta-renderer"/>
+<MSHelp:Keyword Index="A" Term="cxconMeta-RendererProtocol"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dvd_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_759226">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconmeta-rendererprotocol"></A>Meta-Renderer Protocol</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The meta-renderer follows a common protocol when its client queries for the interface. The meta-renderer takes the following steps:
+
+<OL type="1">
+	<LI>Checks that the requested interface is registered with a primary rendering interface and determines if a CLSID of the object is registered as the provider of this interface.</li>
+
+	<LI>Creates the instance of the renderer with this CLSID and queries for the <B>IBitstreamProcessor</B> interface to start the initialization sequence.</li>
+
+	<LI>Calls the <A HREF="_wceddk_ibitstreamprocessor__init.htm">IBitstreamProcessor::Init</A> method.</li>
+
+	<LI>Determines which <B>BitstreamType</B> (represented as a <B>DWORD</B> and supplied by the author of the renderer object) should be used with this renderer while rendering the media type represented by the requested primary rendering interface. <A HREF="_wceddk_ibitstreamprocessor__setbitstreamtype.htm">IBitstreamProcessor::SetBitstreamType</A> method is called with this as an argument.</li>
+
+	<LI>After <B>SetBitstreamType</B> is called, the renderer should be ready to determine how many separate data streams it will use for rendering. Each data stream is represented by the <B>IDMAChannel</B> interface. The data streams will determine low-level (contiguous physical memory-based and limited in size and alignment) data transfer functionality. The meta-renderer calls the <A HREF="_wceddk_ibitstreamprocessor__getdmachannelcount.htm">IBitstreamProcessor::GetDMAChannelCount</A> and <A HREF="_wceddk_ibitstreamprocessor__getdmachannel.htm">IBitstreamProcessor::GetDMAChannel</A> methods to enumerate and obtain all DMA channels to be used for this bit stream type.</li>
+
+	<LI> For every exposed <B>IDMAChannel</B>, the meta-renderer creates an instance of <B>Dataport</B> object, which implements high-level asynchronous data transfer from the client software including virtual memory-based and arbitrary sizes. The default <B>Dataport</B> object is provided but alternative implementations can be specified.</li>
+
+	<LI>The created collection of <B>Dataport</B>s is exposed by the meta-renderer as the <B>IDataPortCollection</B> interface and this is available for access by the client software immediately on return from the described <B>QueryInterface</B> process for primary rendering interface.</li>
+</OL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconcomarchitectureformeta-rendering.htm">COM Architecture for Meta-Rendering</A></P>
+
+<P><A HREF="cxcondvd-videorendererregistrysettings.htm">DVD-Video Renderer Registry Settings</A></P>
+
+<P><A HREF="_wceddk_directdvd_renderer_interfaces.htm">DVD-Video Renderer Interfaces</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Meta-Renderer%20Protocol&nbsp;(cxconmeta-rendererprotocol.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

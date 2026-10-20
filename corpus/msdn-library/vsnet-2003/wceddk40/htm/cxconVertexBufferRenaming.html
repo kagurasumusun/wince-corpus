@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Vertex Buffer Renaming</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Vertex Buffer Renaming"/>
+<MSHelp:RLTitle Title="Vertex Buffer Renaming"/>
+<MSHelp:Keyword Index="A" Term="cxconVertexBufferRenaming"/>
+<MSHelp:Keyword Index="K" Term="buffers, Direct3D vertex buffers"/>
+<MSHelp:Keyword Index="K" Term="vertex buffers%2C Direct3D, renaming vertex buffers"/>
+<MSHelp:Keyword Index="A" Term="cxconVertexBufferRenaming"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide2.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715391">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconvertexbufferrenaming"></A>Vertex Buffer Renaming</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic contains update information for vertex buffer creation and use.</P>
+
+<P>To improve parallelism between the driver and the runtime Direct3D supports the concept of vertex buffer "renaming". Essentially this is a double buffering scheme for vertex buffers. In certain circumstances a driver can, when passed a vertex buffer through a DDI call, modify the video memory pointer of the vertex buffer. In this way, the driver can continue to process the contents of the vertex buffer, while, at the same time, the application can lock and fill the vertex buffer. As far as the application is concerned it is using the same vertex buffer. The fact that the memory pointed to by that vertex buffer has been modified is hidden by the runtime and driver.</P>
+
+<P>Although previous versions of DirectX supported vertex buffer renaming there have been certain changes with DirectX 8.0. In previous versions of Direct3D, renaming was primarily accomplished through the <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> DDI entry point. Flags specified in <A HREF="cxrefd3dhal_drawprimitives2data.htm">D3DHAL_DRAWPRIMITIVES2DATA</A> would specify whether the driver could swap the vertex or command buffer and if so, what the required sizes of the buffers would be. However, in DirectX 8.0 vertex buffer swapping is not accomplished through <B>D3dDrawPrimitives2</B> (although calls through legacy interfaces will still exploit this mechanism) but rather through the <B>LockExecuteBuffer</B> DDI entry point.</P>
+
+<P>DirectX 8.0 defines a new lock flag, D3DLOCK_DISCARD, that when passed to the driver indicates that the caller does not require the existing contents of the driver and hence they can be discarded prior to returning the pointer to the vertex buffer data. Hence, when the driver receives a vertex buffer lock call with the D3DLOCK_DISCARD flag set it can choose to rename the vertex buffer by setting the <B>fpVidMem</B> to a new value.</P>
+
+<P>It is important to note that the D3DLOCK_DISCARD flag will not be passed to the driver by the initial retail release of Windows&reg;&nbsp;2000. The flag will be passed on Windows&nbsp;2000 Service Pack 1 (SP1) and all subsequent versions of Windows&nbsp;2000 and all versions of Windows&nbsp;98/Me.</P>
+
+<P>In DirectX 7.0 vertex buffer renaming could also be accomplished through <B>LockExecuteBuffer</B> using the flag DDLOCK_DISCARDCONTENTS. However, there were defects in the synchronization between runtime and driver on the original release of DirectX 7.0 that prevent this mechanism working correctly. However, the version of DirectX 7.0 released with DirectX 8.0 corrects this problem and vertex buffer renaming at lock time will be functional through DirectX 7.0 interfaces.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondirectx80ddisupport.htm">DirectX 8.0 DDI Support</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Vertex%20Buffer%20Renaming&nbsp;(cxconvertexbufferrenaming.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

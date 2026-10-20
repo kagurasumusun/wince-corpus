@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ICeFileFilterSite::OpenDestinationFile</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="ICeFileFilterSite::OpenDestinationFile"/>
+<MSHelp:RLTitle Title="ICeFileFilterSite::OpenDestinationFile"/>
+<MSHelp:Keyword Index="A" Term="cerefICeFileFilterSiteOpenDestinationFile"/>
+<MSHelp:Keyword Index="K" Term="ICeFileFilterSite, OpenDestinationFile"/>
+<MSHelp:Keyword Index="A" Term="cerefICeFileFilterSiteOpenDestinationFile"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="kbActiveSync"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: actsyncref.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_755244">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cereficefilefiltersiteopendestinationfile"></A>ICeFileFilterSite::OpenDestinationFile</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This<B> </B>method is called by a file filter to open a destination file.</P>
+
+<PRE class="syntax"><B>STDMETHODIMP ICeFileFilterSite::OpenDestinationFile(</B>
+<B>int</B> <I>nHowToOpenFile</I><B>,</B>
+<B>LPCSTR</B> <I>pszFullpath</I><B>,</B>
+<B>LPVOID</B> <B>*</B><I>ppObj</I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>nHowToOpenFile</I></DT>
+
+<DD>Specifies how the source file is to be opened. It is one of the following values.
+
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>PF_OPENFLAT</TD>
+<TD width=71%>Open as a flat file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>PF_OPENCOMPOUND</TD>
+<TD width=71%>Open as an OLE compound file. Note that Windows CE does not support compound files.</TD>
+</TR>
+</table></div>
+
+</dd>
+
+<DT><I>pszFullpath</I></DT>
+
+<DD>Pointer to the null-terminated string that contains the name of the file to open to override the default destination file name. If this parameter is NULL, the default destination file name is used.</dd>
+
+<DT><I>ppObj</I></DT>
+
+<DD>Pointer to an <B>LPVOID</B> variable that receives an <B>IStream</B> pointer if <I>nHowToOpenFile</I> is PF_OPENFLAT, or an <B>IStorage</B> pointer if <I>nHowToOpenFile</I> is PF_OPENCOMPOUND. This object must be released using the <A HREF="cereficefilefiltersiteclosedestinationfile.htm">ICeFileFilterSite::CloseDestinationFile</A> method before returning to Pocket Internet Explorer.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NOERROR</TD>
+<TD width=66%>Success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>HRESULT_FROM_WIN32</TD>
+<TD width=66%>Failure.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The default destination file name and path are specified in the <MSHelp:link keywords="cerefcff_destinationfile" TABINDEX="0">CFF_DESTINATIONFILE</MSHelp:link> structure is passed in to the call to <A HREF="cereficefilefilternextconvertfile.htm">ICeFileFilter::NextConvertFile</A>. The default path is temporary and is managed by Windows CE Services. For example, if the user drags a bitmap file named Tmp.bmp from the desktop computer to the mobile device, the default destination file name is Tmp.2bp.</P>
+
+<P>The following code example shows how the destination file can be modified when the file filter's <B>ICeFileFilter::NextConvertFile</B> method calls the <B>ICeFileFilterSite::OpenDestinationFile</B> method.</P>
+
+<PRE class="code">// Filter and copy Tmp.bmp on desktop computer to Tmp1.2bp on Windows CE-based device
+CFF_DESTINATIONFILE *pdf;
+IStream *pstmDst; // Open the destination file as a stream
+TCHAR szBuf[80];
+lstrcpy(szBuf, pdf-&gt;szPath); // Use default path …
+lstrcat(szBuf, TEXT("TMP1.2bp") ); // … but Modify the file name
+hres = cffs-&gt;OpenDestinationFile(PF_OPENFLAT, szBuf, (LPVOID*)&amp;pstmDst);</PRE>
+
+<P>In this example, note that the path to the directory containing the temporary destination was preserved. The reason is that, after the file filter conversion is complete &#0151; that is, <B>NextConvertFile</B> has returned ERROR_NO_MORE_ITEMS &#0151; Windows CE Services looks in <I>szPath</I> and copies all files, regardless of file or extension name, to the target folder, as directed by the user.</P>
+
+<P>The temporary destination file path must be located on the desktop computer, but the path can be modified as desired.</P>
+
+<P>Note that <B>OpenDestinationFile</B> can be called only once within a specified call to <B>ICeFileFilter::NextConvertFile</B>.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>Replfilt.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cereficefilefilternextconvertfile.htm">ICeFileFilter::NextConvertFile</A>, <A HREF="cereficefilefiltersiteclosedestinationfile.htm">ICeFileFilterSite::CloseDestinationFile</A>, <MSHelp:link keywords="cerefcff_destinationfile" TABINDEX="0">CFF_DESTINATIONFILE</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;ICeFileFilterSite::OpenDestinationFile&nbsp;(cereficefilefiltersiteopendestinationfile.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

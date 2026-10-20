@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TSPI_lineMonitorDigits</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TSPI_lineMonitorDigits"/>
+<MSHelp:RLTitle Title="TSPI_lineMonitorDigits"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_TSPI_lineMonitorDigits"/>
+<MSHelp:Keyword Index="K" Term="TSPI_lineMonitorDigits"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_TSPI_lineMonitorDigits"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: tspi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_664869">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_win32_tspi_linemonitordigits"></A>TSPI_lineMonitorDigits</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function enables and disables the unbuffered detection of digits received on the call. Each time a digit of the specified digit modes is detected, a LINE_MONITORDIGITS message is sent to the application by TAPI, indicating which digit is detected.</P>
+
+<PRE class="syntax"><B>LONG TSPIAPI TSPI_lineMonitorDigits(</B>
+<B>HDRVCALL</B> <I>hdCall</I><B>,</B>    
+<B>DWORD</B> <I>dwDigitModes</I> 
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hdCall </I></DT>
+
+<DD>The handle to the call on which digits are to be detected. The call state of <I>hdCall</I> can be any state except idle or disconnected. </dd>
+
+<DT><I>dwDigitModes</I> </DT>
+
+<DD>The digit modes that are to be monitored. A <I>dwDigitModes</I> parameter with a value of 0 cancels digit monitoring. The <I>dwDigitModes</I> parameter can have one of the LINEDIGITMODE_ constants. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Returns zero if the function succeeds, or an error number if an error occurs. Possible return values are as follows: </P>
+
+<P>LINEERR_INVALCALLHANDLE, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALCALLSTATE, LINEERR_OPERATIONFAILED, LINEERR_INVALDIGITMODE, LINEERR_RESOURCEUNAVAIL, LINEERR_NOMEM. </P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>This function returns zero (success) when digit monitoring is correctly initiated, not when digit monitoring is terminated. Digit monitoring remains in effect until it is explicitly disabled by a call to <B>TSPI</B>_<B>lineMonitorDigits</B> with <I>dwDigitModes</I> set to zero, or until the call transitions to idle. The function must return zero when digit monitoring is canceled (that is, when the <I>dwDigitModes</I> parameter is zero). The service provider must terminate digit monitoring when the call goes idle. TAPI does not spontaneously call <B>TSPI</B>_<B>lineMonitorDigits</B> to terminate monitoring.</P>
+
+<P>Although this function can be invoked in any call state, digits typically are detected only while the call is in the connected state.</P>
+
+<P>Each time a digit is detected, the service provider sends a LINE_MONITORDIGITS message to TAPI, passing the detected digit as a parameter. If both LINEDIGITMODE_DTMF and LINEDIGITMODE_DTMFEND are set in <I>dwDigitModes</I>, the two LINE_MONITORDIGITS messages are sent for each digit.</P>
+
+<P>TAPI can use <B>TSPI</B>_<B>lineMonitorDigits</B> to enable or disable unbuffered digit detection. It can use <B>TSPI</B>_<B>lineGatherDigits</B> for buffered digit detection. After buffered digit gathering is complete, a LINE_GATHERDIGITS message is sent. Both buffered and unbuffered digit detection can be enabled on the same call simultaneously.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Tapicomn.h</TD>
+<TD width=16%>Tapicomn.h</TD>
+<TD width=20%>Tapi32.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wcesdk_win32_tspi_linegetdevcaps.htm">TSPI_lineGetDevCaps</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;TSPI_lineMonitorDigits&nbsp;(_wcesdk_win32_tspi_linemonitordigits.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>bind</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="bind"/>
+<MSHelp:RLTitle Title="bind"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_bind"/>
+<MSHelp:Keyword Index="K" Term="bind"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_bind"></A>bind</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function associates a local address with a socket.</P>
+
+<PRE class="syntax"><B>int</B> <B>bind(
+SOCKET</B> <I>s</I><B>, 
+const</B> <B>struct</B> <B>sockaddr</B> <B>*</B><I>addr</I><B>, 
+int</B> <I>namelen</I><B>);</B></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor that identifies an unbound socket.</dd>
+
+<DT><I>addr</I></DT>
+
+<DD>[in] Address to assign to the socket from the <A HREF="_wcesdk_sockaddr.htm"><B>SOCKADDR</B></A> structure.</dd>
+
+<DT><I>namelen</I></DT>
+
+<DD>[in] Length of the <I>name</I>.</dd>
+</DL>
+
+<P class="label"><B>Return Values</B></P>
+
+<P>Zero indicates that no error occurred. SOCKET_ERROR indicates failure. To get a specific error value, call <B>WSAGetLastError</B>.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>For Infrared Sockets (IrSock), this function has the following additional requirements and behaviors:
+
+<UL type="disc">
+	<LI>The Af_irda.h must be explicitly included.</li>
+
+	<LI>The <A HREF="_wcesdk_sockaddr_irda.htm"><B>sockaddr_irda</B></A> structure is used in the <I>addr</I> parameter.</li>
+
+	<LI>The WSAENETDOWN error value is not supported.</li>
+
+	<LI>There is no wildcard address equivalent to INADDR_ANY. </li>
+
+	<LI><B>IrSockets</B> clients must <I>not</I> call <B>bind</B>.</li>
+
+	<LI>If the service name is of the form “LSAP-SEL<I>XXX</I>” where <I>XXX</I> is a decimal integer in the range 1-127, the address indicates a specific LSAP-SEL. LSAP-SEL<I>XXX</I> service names will cause no IAS calls. The socket will be bound directly to the specified LSAP-SEL, bypassing IAS. Windows CE reserves LSAP-SEL0 for IAS and LSAP-SEL3 for internal use.</li>
+</UL>
+
+<P>The <B>bind </B>function is used on an unconnected socket before subsequent calls to the <A HREF="_wcesdk_connect_function.htm"><B>connect</B></A> or <A HREF="_wcesdk_listen_function.htm"><B>listen</B></A> functions. It is used to bind to either connection-oriented (stream) or connectionless (datagram) sockets. When a socket is created with a call to the <A HREF="_wcesdk_socket.htm"><B>socket</B></A> function, it exists in a name space (address family), but it has no name assigned to it. Use the <B>bind</B> function to establish the local association of the socket by assigning a local name to an unnamed socket.</P>
+
+<P>A name consists of three parts when using the Internet address family: the address family, a host address, and a port number that identifies the application. </P>
+
+<P>If an application does not care what local address is assigned, specify the manifest constant value ADDR_ANY for the <B>sa_data</B> member of the <I>name</I> parameter. This allows the underlying service provider to use any appropriate network address, potentially simplifying application programming in the presence of multihomed hosts (that is, hosts that have more than one network interface and address). </P>
+
+<P>For TCP/IP, if the port is specified as zero, the service provider assigns a unique port to the application with a value between 1024 and 5000. The application can use <A HREF="_wcesdk_getsockname.htm"><B>getsockname</B></A> after calling <B>bind</B> to learn the address and the port that has been assigned to it. If the Internet address is equal to INADDR_ANY, <B>getsockname</B> may<I> not</I> necessarily supply the address until the socket is connected, since several addresses can be valid if the host is multihomed. Binding to a specific port number other than port 0 is discouraged for client applications, since there is a danger of conflicting with another socket already using that port number.</P>
+
+<P class="label"><B>Requirements</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winsock.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</BLOCKQUOTE>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="_wcesdk_connect_function.htm"><B>connect</B></A>, <A HREF="_wcesdk_listen_function.htm"><B>listen</B></A>, <A HREF="_wcesdk_getsockname.htm"><B>getsockname</B></A>, <A HREF="_wcesdk_setsockopt.htm"><B>setsockopt</B></A>, <A HREF="_wcesdk_socket.htm"><B>socket</B></A>, <A HREF="_wcesdk_sockaddr.htm"><B>SOCKADDR</B></A>, <A HREF="_wcesdk_sockaddr_in.htm"><B>SOCKADDR_IN</B></A>, <A HREF="_wcesdk_sockaddr_irda.htm"><B>SOCKADDR_IRDA</B></A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, September 30, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;bind&nbsp;(_wcesdk_bind.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

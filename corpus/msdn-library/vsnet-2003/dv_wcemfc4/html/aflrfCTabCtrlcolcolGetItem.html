@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CTabCtrl::GetItem</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CTabCtrl::GetItem"/>
+<MSHelp:RLTitle Title="CTabCtrl::GetItem"/>
+<MSHelp:Keyword Index="A" Term="aflrfCTabCtrlcolcolGetItem"/>
+<MSHelp:Keyword Index="K" Term="GetItem method [MFC for Windows CE]"/>
+<MSHelp:Keyword Index="A" Term="aflrfCTabCtrlcolcolGetItem"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="ctabctrl.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697109">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfctabctrlcolcolgetitem"></A>CTabCtrl::GetItem</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves information about a tab in a tab control.</P>
+
+<P>When the message is sent, the <I>mask</I> member specifies which attributes to return. If the <I>mask</I> member specifies the TCIF_TEXT value, the <I>pszText</I> member must contain the address of the buffer that receives the item text and the <I>cchTextMax</I> member must specify the size of the buffer.</P>
+
+<PRE class="syntax"><B>BOOL GetItem( 
+int </B><I>nItem</I><B>, 
+TCITEM* </B><I>pTabCtrlItem</I><B> ) 
+const;</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>nItem</I></DT>
+
+<DD>Specifies the zero-based index of the tab.</dd>
+
+<DT><I>pTabCtrlItem</I></DT>
+
+<DD>Specifies the pointer to a <B>TCITEM</B> structure, used to specify the information to retrieve. Also used to receive information about the tab. This structure is used with the <B>InsertItem</B>, <B>GetItem</B>, and <B>SetItem</B> methods.</dd>
+</DL>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>Returns <B>TRUE</B> if it is successful; <B>FALSE</B> if it is otherwise.</P>
+
+<P class="label"><B>Remarks</B>
+
+<DL>
+<DT><I>mask</I></DT>
+
+<DD>Value specifying which <B>TCITEM</B> structure members to retrieve or set. This member can be zero or a combination of the following values:
+
+<UL type="disc">
+	<LI>TCIF_TEXT&nbsp;&nbsp;&nbsp;The <I>pszText</I> member is valid.</li>
+
+	<LI>TCIF_IMAGE&nbsp;&nbsp;&nbsp;The <I>iImage</I> member is valid. </li>
+
+	<LI>TCIF_PARAM&nbsp;&nbsp;&nbsp;The <I>lParam</I> member is valid. </li>
+
+	<LI>TCIF_RTLREADING&nbsp;&nbsp;&nbsp;The text of <I>pszText</I> is displayed using right-to-left reading order on Hebrew or Arabic systems. </li>
+
+	<LI>TCIF_STATE&nbsp;&nbsp;&nbsp;The <I>dwState</I> member is valid. </li>
+</UL>
+</dd>
+
+<DT><I>pszText</I></DT>
+
+<DD>Pointer to a null-terminated string containing the tab text if the structure contains information about a tab. If the structure is receiving information, this member specifies the address of the buffer that receives the tab text.</dd>
+
+<DT><I>cchTextMax</I></DT>
+
+<DD>Size of the buffer pointed to by <I>pszText</I>. This member is ignored if the structure is not receiving information.</dd>
+
+<DT><I>iImage</I></DT>
+
+<DD>Index into the image list of the tab control, or  &#0150;1 if there is no image for the tab.</dd>
+
+<DT><I>lParam</I></DT>
+
+<DD>Application-defined data associated with the tab. If there are more than four bytes of application-defined data per tab, an application must define a structure and use it instead of the <B>TCITEM</B> structure. The first member of the application-defined structure must be a <B>TCITEMHEADER </B>structure. The <B>TCITEMHEADER</B> structure is identical to the <B>TCITEM</B> structure, but without the <I>lParam</I> member. The difference between the size of your structure and the size of the <B>TCITEMHEADER</B> structure should equal the number of extra bytes per tab.</dd>
+</DL>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// In this example a CTabCtrl data member, m_tabCtrl, changes the
+// text of the tabs in the tab control.  A call to GetItem is used
+// to get the current text, and then the text is changed.  A call 
+// to SetItem is used to update the tab with the new text.
+
+void CDialogDlg::OnChangeItem() 
+{
+&nbsp;&nbsp;TCITEM tcItem;
+&nbsp;&nbsp;CString pszString;
+
+&nbsp;&nbsp;//  Get text for the tab item.
+&nbsp;&nbsp;GetDlgItemText(IDC_ITEM_TEXT, pszString);
+&nbsp;&nbsp;
+&nbsp;&nbsp;//  Get the current tab item text.
+&nbsp;&nbsp;tcItem.mask = TCIF_TEXT;
+&nbsp;&nbsp;m_tabCtrl.GetItem(0, &amp;tcItem);
+&nbsp;&nbsp;
+&nbsp;&nbsp;//  Set the new text for the item.
+&nbsp;&nbsp;tcItem.pszText = pszString.GetBuffer(256);
+
+&nbsp;&nbsp;//  Set the item in the tab control.
+&nbsp;&nbsp;m_tabCtrl.SetItem(0, &amp;tcItem);
+
+}</PRE>
+
+<P class="label"><B>Requirements</B></P>
+
+<P>&nbsp;&nbsp;<B>Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfctabctrlcolcolinsertitem.htm"><B>CTabCtrl::InsertItem</B></A>, <A HREF="aflrfctabctrlcolcolsetitem.htm"><B>CTabCtrl::SetItem</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697109', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

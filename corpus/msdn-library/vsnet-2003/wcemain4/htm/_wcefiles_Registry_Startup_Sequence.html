@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Startup Sequence</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Registry Startup Sequence"/>
+<MSHelp:RLTitle Title="Registry Startup Sequence"/>
+<MSHelp:Keyword Index="A" Term="_wcefiles_Registry_Startup_Sequence"/>
+<MSHelp:Keyword Index="A" Term="_wcefiles_Registry_Startup_Sequence"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: object_store.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_823771">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcefiles_registry_startup_sequence"></A>Registry Startup Sequence</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Storing the registry on an external file system complicates the sequence of events that must occur to boot the system. For example, registry settings are needed to start the drivers that control the media on which the registry is stored. The solution is that a small boot registry hive is used to start only the few drivers necessary to reach the working system hive, which is in a persistent store such as a disk or flash chip. The boot hive is stored in ROM and so it does not change from boot to boot. Any changes made to it by drivers during boot will be propagated to the system hive when it becomes available, but on the next boot, the boot registry will revert to its ROM contents.</P>
+
+<P>The loading of drivers in the system was broken into two boot phases. In the first phase, a small set of drivers is loaded, as specified in the boot registry. These are the drivers that are necessary to reach the file system on which the system registry is stored. When the registry is fully available, the second phase takes place. In that phase another round of driver loading takes place. There are some special cases for drivers that were started in the first boot phase; they must set a particular flag to avoid being loaded a second time during the second boot phase. For more information, see <MSHelp:link keywords="Hive-BasedRegistrySetupInstructions" TABINDEX="0">Hive-Based Registry Setup</MSHelp:link>. Also, because those drivers are started with the boot registry, which is in ROM, they are started with settings that will never change. If those drivers need to be configured dynamically, they may wait for the second boot phase and then reread their registry settings, because at that point the mutable system registry is in place.</P>
+
+<P>The file system process (Filesys.exe) brings up the boot registry, starts the device manager (Device.exe), and blocks waiting for the file system containing the system registry to be ready. The device manager loads a small set of drivers as specified in the boot registry, and then blocks waiting for the system registry to be available. The driver for the file system that contains the system registry must be marked with a bootable flag so that Filesys.exe knows what file system to wait for. When it is ready, the system registry is read from that file system. At this point, the registry is ready to go and applications are started. The second boot phase begins when it becomes time to start Device.exe in the application initialization sequence; because Device.exe is already running, an event named System/BootPhase2 is set to signal the second phase of driver loading. This event causes Device.exe to re-enumerate drivers based on the system registry.</P>
+
+<P>The following illustration shows the startup sequence in detail. The order that processes run in is shown along with the periods of time that drivers are available and which registry hive is loaded at the time.</P>
+
+<P class="fig"><IMG SRC="booting.gif" ALT="" BORDER=0></P>
+
+<P>The following table describes the stages shown in the illustration.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=14%>Stage</TH>
+<TH width=86%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>A</TD>
+<TD width=86%>The kernel starts Filesys.exe.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>B</TD>
+<TD width=86%>Filesys.exe loads the boot registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>C</TD>
+<TD width=86%>Filesys.exe starts the device and blocks.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>D</TD>
+<TD width=86%>The device starts drivers based on the boot registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>E</TD>
+<TD width=86%>The device blocks and the boot file system is initialized.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>F</TD>
+<TD width=86%>Filesys.exe loads and mounts system registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>G</TD>
+<TD width=86%>Filesys.exe ready, kernel initializes using the system registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>H</TD>
+<TD width=86%>The kernel is ready and signals Filesys.exe.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>I</TD>
+<TD width=86%>Filesys.exe starts applications.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>J</TD>
+<TD width=86%>Instead of starting the device, Filesys.exe signals the BootPhase2 event.</TD>
+</TR>
+</table></div>
+
+<P>Device.exe then re-enumerates, starting drivers. Filesys.exe starts the remaining applications in the initialization key.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconadvancedregistrytopics.htm">Advanced Registry Concepts</A></P>
+
+<P><MSHelp:link keywords="Hive-BasedRegistrySetupInstructions" TABINDEX="0">Hive-Based Registry Setup</MSHelp:link></P>
+
+<P><A HREF="cmconregistryhiveromdependency.htm">Registry Hive ROM Dependency</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Registry%20Startup%20Sequence&nbsp;(_wcefiles_registry_startup_sequence.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

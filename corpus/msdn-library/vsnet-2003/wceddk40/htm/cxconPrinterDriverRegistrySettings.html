@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Printer Driver Registry Settings</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Printer Driver Registry Settings"/>
+<MSHelp:RLTitle Title="Printer Driver Registry Settings"/>
+<MSHelp:Keyword Index="A" Term="cxconPrinterDriverRegistrySettings"/>
+<MSHelp:Keyword Index="K" Term="printer drivers, registry settings"/>
+<MSHelp:Keyword Index="K" Term="registry settings, printer drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconPrinterDriverRegistrySettings"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: printer_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750632">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconprinterdriverregistrysettings"></A>Printer Driver Registry Settings</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This topic contains information on global printer, printer driver, printer port, and USB printer class driver registry settings.</P>
+
+<H2 class="dtH2">Global Printer Settings</H2>
+
+<P>The global printer settings that are stored in the registry list the I/O ports to use for printing, provide a global time-out value, and store which printer driver currently is selected as the default. The default printer driver is stored as a value for <B>DefaultPrinter</B>. The printer ports are stored as values in the <B>Ports</B> subkey.</P>
+
+<P>The following registry entry defines five printer ports, two time-out values, and the default printer driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Printers\Ports]
+    "Port1"="COM1: 9600"
+    "Port2"="COM1: 57600"
+    "Port3"="IRDA"
+    "Port4"="LPT1:"
+    "Port5"="NET0:"
+[HKEY_LOCAL_MACHINE\Printers\Settings]
+    "TimeOut"=dword:1E
+[HKEY_LOCAL_MACHINE\PrintSettings]
+    "TimeOut"=dword:2D
+[HKEY_LOCAL_MACHINE\Printers]
+    "DefaultPrinter"="PCL Laser"</PRE>
+
+<P>The values correspond to serial ports at 9,600 baud and 57,600 baud, an infrared (IR) port, a parallel port, and a network printer port. For the two COM1: ports, a baud is also specified. The port monitor parses the values to extract the baud and device file name. The new file name IRDA is reserved for the IR port, whereas COM3: is used for an additional serial port. When assigning an IR port for printing, the value of the key for the port must be the literal string "IRDA" even though this value is not in the standard format for special device file names. The names LPT1: and NET0: are reserved for parallel and network printing, respectively, although the device file name indexes in those names can be any valid value. For more information, see <A HREF="cxcondevicefilenames.htm">Device File Names</A>. </P>
+
+<P>The <B>HKEY_LOCAL_MACHINE\Printers\Settings\TimeOut</B> key is a hexadecimal number that is measured in seconds; the example is for a 30-second time-out. After the time-out period, the printer driver can display a dialog box to give the user the option to retry or cancel.</P>
+
+<P>For a printer that does not use the parallel port, such as an IR or serial printer, it is difficult to determine whether the printer has received all the data to be printed. Therefore, a time-out parameter is used to detect and report printing errors if the printer fails to give any signal that it is still active. This time-out value is stored in the <B>HKEY_LOCAL_MACHINE\PrintSettings\TimeOut</B> key. The default value is 45 seconds.</P>
+
+<P>The value stored in the <B>DefaultPrinter</B> key lists the printer that is preselected in the Common Print dialog box that applications display to users. The default printer driver, <B>PCL Laser</B>, is the name of a subkey within <B>HKEY_LOCAL_MACHINE\Printers</B>, where Windows CE can find settings for the PCL laser printer driver.</P>
+
+<H2 class="dtH2">Printer Driver Settings</H2>
+
+<P>Settings for individual printer drivers are stored in subkeys of the <B>HKEY_LOCAL_MACHINE\Printers</B> key. The registry key for a printer driver should define four keys: <B>Driver</B>, <B>High Quality</B>, <B>Draft Quality</B>, and <B>Color</B>. The <B>Driver</B> value names the DLL that contains the printer driver. The <B>High Quality</B> and <B>Draft Quality</B> values store the resolution of high-quality and draft-quality modes, if the printer supports them. Not all printers support a draft-quality mode, so the <B>Draft Quality</B> key may be omitted. The <B>High Quality</B> key must always be present, and it corresponds to the highest-quality mode of the printer. The <B>Color</B> value defines whether a printer can print in color or only in monochrome. If color is supported, this key must be set to the literal string "Color" so that the Common Print dialog box enables color printing for applications. These printer driver settings are actually used by the page setup dialog, which is shared by all applications. Printer drivers themselves should not need to look in the registry to read these values; the appropriate values will be passed to the printer driver in a device capabilities structure.</P>
+
+<P>The following example shows settings for the PCL Laser printer driver and the PCL Inkjet printer driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Printers\PCL Laser]
+    "Driver"="pcl.DLL"
+    "High Quality"="300"
+    "Draft Quality"="150"
+    "Color"="Monochrome"
+    "Version"="0x200"
+[HKEY_LOCAL_MACHINE\Printers\MaxAll Test Color Printer]
+   "Driver"="pcl.dll"
+    "High Quality"="300"
+    "Draft Quality"="75"
+    "Color"="Color"</PRE>
+
+<H2 class="dtH2">USB Printer Class Driver Registry Settings</H2>
+
+<P>USB printer class drivers also load an installable printer driver that interacts with the USB driver to perform transfers over the USB bus. As part of its initialization, it registers the port name to be used under the registry key <B>HKEY_LOCAL_MACHINE\Printers\Ports</B>. This enables the port driver in the common print dialog box. The sample USB driver registers the port name to be LPT.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients\Default\Default\7\Printer_Class]
+    "DLL"="USBPRN.DLL"
+    "Prefix"="LPT"
+[HKEY_LOCAL_MACHINE\Drivers\USB\ClientDrivers\Printer_Class]
+    "DLL"="USBPRN.DLL"
+    "Prefix"="LPT"</PRE>
+
+<H2 class="dtH2">Parallel Port Settings</H2>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Parallel]
+    "DeviceArrayIndex"=dword:0
+    "Prefix"="LPT"
+    "Dll"="Parallel.Dll"
+    "Order"=dword:0
+    "IoBase"=dword:278
+    "IoLen"=dword:C
+    "DeviceType"=dword:0
+    "FriendlyName"=LOC_FRIENDLYNAME_PARALLEL
+    "DevConfig"=hex: 10,00, 00,00, 05,00,00,00, 10,01,00,00, 00,4B,00,00, 00,00, 08, 00, 00, 00,00,00,00fids</PRE>
+
+<H2 class="dtH2">Serial Port Settings</H2>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\Serial]
+    "SysIntr"=dword:13
+    "IoBase"=dword:02F8
+    "IoLen"=dword:8
+    "DeviceArrayIndex"=dword:0
+    "Prefix"="COM"
+    "Dll"="Com16550.Dll"
+    "Order"=dword:0
+    "Priority"=dword:0</PRE>
+
+<H2 class="dtH2">IrDA Settings</H2>
+
+<P>IrDA is implemented using a serial port interface. It creates a virtual COM port interface for which the settings will be similar to a built-in serial driver as shown above.</P>
+
+<H2 class="dtH2">Network Settings</H2>
+
+<P>To install a network device follow the instructions in Platform builder documentation to install a network card. You will need the redir component to redirect printing over network connection.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_printer_drivers.htm">Printer Drivers</A></P>
+
+<P><A HREF="cxconprinterdriverresources.htm">Printer Driver Samples</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Printer%20Driver%20Registry%20Settings&nbsp;(cxconprinterdriverregistrysettings.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

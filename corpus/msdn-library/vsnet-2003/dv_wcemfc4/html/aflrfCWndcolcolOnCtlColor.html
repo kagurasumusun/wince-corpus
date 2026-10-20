@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::OnCtlColor</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::OnCtlColor"/>
+<MSHelp:RLTitle Title="CWnd::OnCtlColor"/>
+<MSHelp:Keyword Index="A" Term="aflrfCWndcolcolOnCtlColor"/>
+<MSHelp:Keyword Index="K" Term="OnCtlColor method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCWndcolcolOnCtlColor"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cwnd.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_697534">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcwndcolcolonctlcolor"></A>CWnd::OnCtlColor</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method is called by the framework when a child control is about to be drawn. Most controls send this message to their parent, usually a dialog box, to prepare the <I>pDC</I> for drawing the control using the correct colors.</P>
+
+<PRE class="syntax"><B>afx_msg HBRUSH OnCtlColor( 
+CDC* </B><I>pDC</I><B>, 
+CWnd* </B><I>pWnd</I><B>, 
+UINT </B><I>nCtlColor</I> <B>);</B><I> </I></PRE>
+
+<P class="label"><B>Parameters</B>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Contains a pointer to the display context for the child window. May be temporary.</dd>
+
+<DT><I>pWnd</I></DT>
+
+<DD>Contains a pointer to the control asking for the color. May be temporary.</dd>
+
+<DT><I>nCtlColor</I></DT>
+
+<DD>Contains one of the following values, specifying the type of control:
+
+<UL type="disc">
+	<LI>CTLCOLOR_BTN&nbsp;&nbsp;&nbsp;Button control</li>
+
+	<LI>CTLCOLOR_DLG&nbsp;&nbsp;&nbsp;Dialog box</li>
+
+	<LI>CTLCOLOR_EDIT&nbsp;&nbsp;&nbsp;Edit control</li>
+
+	<LI>CTLCOLOR_LISTBOX&nbsp;&nbsp;&nbsp;List-box control</li>
+
+	<LI>CTLCOLOR_MSGBOX&nbsp;&nbsp;&nbsp;Message box</li>
+
+	<LI>CTLCOLOR_SCROLLBAR&nbsp;&nbsp;&nbsp;Scroll-bar control</li>
+
+	<LI>CTLCOLOR_STATIC&nbsp;&nbsp;&nbsp;Static control</li>
+</UL>
+</dd>
+</DL>
+
+<P class="label"><B>Return Value</B></P>
+
+<P><B>OnCtlColor</B> must return a handle to the brush that is to be used for painting the control background.</P>
+
+<P class="label"><B>Remarks</B></P>
+
+<P>To change the text color, call the <B>SetTextColor</B> method with the desired red, green, and blue (RGB) values. </P>
+
+<P>To change the background color of a single-line edit control, set the brush handle in both the CTLCOLOR_EDIT and CTLCOLOR_MSGBOX message codes, and call the <B>CDC::SetBkColor</B> method in response to the CTLCOLOR_EDIT code.</P>
+
+<P><B>OnCtlColor</B> will not be called for the list box of a drop-down combo box because the drop-down list box is actually a child of the combo box and not a child of the window. To change the color of the drop-down list box, create a <B>CComboBox</B> with an override of <B>OnCtlColor</B> that checks for CTLCOLOR_LISTBOX in the <I>nCtlColor</I> parameter. In this handler, the <B>SetBkColor</B> method must be used to set the background color for the text.</P>
+
+<P>This method is called by the framework to allow your application to handle a Windows CE message. The parameters passed to your method reflect the parameters received by the framework when the message was received. If you call the base-class implementation of this method, that implementation will use the parameters originally passed with the message and not the parameters you supply to the method.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// This OnCtlColor handler will change the color of a static control
+// with the ID of IDC_MYSTATIC. The code assumes that the CMyDialog
+// class has an initialized and created CBrush member named m_brush.
+// The control will be painted with red text and a background
+// color of m_brush.
+
+HBRUSH CZilchDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+{
+&nbsp;&nbsp;// Call the base class implementation first! Otherwise, it may
+&nbsp;&nbsp;// undo what we are trying to accomplish here.
+&nbsp;&nbsp;HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
+
+&nbsp;&nbsp;// Are we painting the IDC_MYSTATIC control? We can use
+&nbsp;&nbsp;// CWnd::GetDlgCtrlID() to perform the most efficient test.
+&nbsp;&nbsp;if (pWnd-&gt;GetDlgCtrlID() == IDC_MYSTATIC)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Set the text color to red.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;SetTextColor(RGB(255, 0, 0));
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Set the background mode for text to transparent 
+&nbsp;&nbsp;&nbsp;&nbsp;// so background will show thru.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;SetBkMode(TRANSPARENT);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Return handle to our CBrush object.
+&nbsp;&nbsp;&nbsp;&nbsp;hbr = m_brush;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;return hbr;
+}</PRE>
+
+<P class="label"><B>Requirements</B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfcdccolcolsetbkcolor.htm"><B>CDC::SetBkColor</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_697534', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

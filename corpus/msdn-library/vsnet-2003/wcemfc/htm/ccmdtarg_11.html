@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCmdTarget::RestoreWaitCursor</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ccmdtarget_restorewaitcursor"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_ccmdtarget_restorewaitcursor"></A>CCmdTarget::RestoreWaitCursor</H1>
+
+<P>This method restores the appropriate hourglass cursor after the system cursor has changed, for example, after a message box opens and closes in the middle of a lengthy operation.</P>
+
+<PRE class=syntax><B>void RestoreWaitCursor( );</B><I> </I></PRE>
+
+<H4>Example</H4>
+
+<PRE>// This example illustrates the most common case
+// of displaying the hourglass cursor during lengthy
+// processing of a command handler implemented in a
+// CCmdTarget-derived class, such as a document or view.
+
+void CMyView::OnSomeCommand()
+{
+   BeginWaitCursor(); // Display the hourglass cursor.
+
+   // Do some lengthy processing.
+
+   EndWaitCursor(); // Remove the hourglass cursor.
+}
+
+// The next example illustrates RestoreWaitCursor.
+void CMyView::OnSomeCommand()
+{
+   BeginWaitCursor(); // Display the hourglass cursor.
+
+   // Do some lengthy processing.
+
+   // The dialog box normally changes the cursor to the standard
+   // arrow cursor and leaves the cursor as the standard arrow
+   // cursor when the dialog box closes.
+   CMyDialog dlg;
+   dlg.DoModal();
+
+   // You must call RestoreWaitCursor here to change the cursor
+   // back to the hourglass cursor.
+   RestoreWaitCursor();
+
+   // Do more lengthy processing.
+
+   EndWaitCursor(); // Remove the hourglass cursor.
+}
+
+// In the above example, the dialog was invoked between the pair of
+// calls to BeginWaitCursor and EndWaitCursor. Sometimes it may not
+// be clear whether the dialog is invoked between a pair of calls to
+// BeginWaitCursor and EndWaitCursor. You can call RestoreWaitCursor,
+// even if BeginWaitCursor was not previously called.  This case is
+// illustrated below, where CMyView::AnotherFunction does not need to
+// know whether it was called in the context of an hourglass cursor.
+void CMyView::AnotherFunction()
+{
+   // Some processing ...
+
+   CMyDialog dlg;
+   dlg.DoModal();
+   RestoreWaitCursor();
+
+   // More processing ...
+}
+
+// If the dialog is invoked from a method of a non-CCmdTarget, you can
+// call CWinApp::DoWaitCursor with a 0 parameter value to restore the
+// hourglass cursor.
+void CMyObject::AnotherFunction()
+{
+   CMyDialog dlg;
+   dlg.DoModal();
+   AfxGetApp()-&gt;DoWaitCursor(0); // Same as CCmdTarget::RestoreWaitCursor
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwaitcur.htm"><B>CWaitCursor</B></A>, <A HREF="ccmdtarg_5.htm"><B>CCmdTarget::EndWaitCursor</B></A>, <A HREF="ccmdtarg_3.htm"><B>CCmdTarget::BeginWaitCursor</B></A>, <A HREF="cwinapp_7.htm"><B>CWinApp::DoWaitCursor</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

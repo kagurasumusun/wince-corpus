@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEEE 1394 Unit Filter Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="IEEE 1394 Unit Filter Drivers"/>
+<MSHelp:RLTitle Title="IEEE 1394 Unit Filter Drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394UnitFilterDrivers"/>
+<MSHelp:Keyword Index="K" Term="1394 unit filter drivers, development overview"/>
+<MSHelp:Keyword Index="K" Term="IEEE 1394 unit filter drivers, development overview"/>
+<MSHelp:Keyword Index="A" Term="cxconIEEE1394UnitFilterDrivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_ufd.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758790">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconieee1394unitfilterdrivers"></A>IEEE 1394 Unit Filter Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The unit filter driver (AVC_UNIT) is an optional component that should be included to export functionality from your product through an AV/C subunit. An AV/C subunit that exports functionality to other devices on the IEEE 1394 bus is called a virtual subunit. The unit filter driver acts both as a central repository and an intermediary for AV/C units. The <I>AV/C Digital Interface Command Set General Specification</I> contains the definitive definition and explanation of what constitutes a unit. An AV/C compatible device on the bus contains an AV/C unit. Conceptual structures within the device that serve different purposes may be AV/C subunits. For instance, an AV/C compliant camcorder will export both a unit representing the entire camcorder as well as both a camera subunit and a VCR subunit. The unit manages details such as the power state of the device, details about which subunits it contains, and coordination over the association of serial bus plugs with subunit plugs.</P>
+
+<P>When external devices send AV/C commands to query or request that particular plugs be manipulated, they communicate with the unit filter driver. When a virtual subunit driver chooses to make itself and serial bus plugs visible to other devices on the bus, it does so by coordinating with the unit filter driver. </P>
+
+<P>The hierarchy of where the unit filter driver is enumerated by WDM, and where it lies in respect to virtual subunits is important.</P>
+
+<P>Virtual subunit drivers are enumerated by WDM as children of the AV/C driver. The <A HREF="cxrefieee1394streamingfilterdriverguide.htm">Streaming Filter Driver</A> is inserted between the virtual subunit driver and AV/C automatically as a lower filter driver definition. </P>
+
+<P>The hierarchy of where the unit filter driver is enumerated by WDM, and where it lies in respect to virtual subunits is important. </P>
+
+<P>Virtual subunit drivers are enumerated by WDM as children of the AV/C driver. Typically, the AVC_STREAM driver, the streaming filter driver, is inserted between the virtual subunit driver and AV/C automatically as a lower filter driver definition. </P>
+
+<P>AVC_UNIT is only included in an IABASE or HLBASE build with the SYSGEN_1394_AVC_VIRTUAL environment variable.</P>
+
+<H2 class="dtH2">IEEE 1394 Unit Filter Driver API Definition</H2>
+
+<P>The following table shows the unit filter driver IOCTLs.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>IOCTL</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_connection_request_processed.htm">IOCTL_UNIT_CONNECTION_REQUEST_PROCESSED</A></TD>
+<TD width=50%>Permits a subunit to notify the unit driver that it has completed processing a previous <B>UNIT_ConnectToRemotePlugCB</B> request.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_disconnection_request_processed.htm">IOCTL_UNIT_DISCONNECTION_REQUEST_PROCESSED</A></TD>
+<TD width=50%>Permits a subunit to notify the unit driver that it has completed processing a previous <B>UNIT_DisconnectFromRemotePlugCB</B> request.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_dereference_connection_plug.htm">IOCTL_UNIT_DEREFERENCE_CONNECTION_PLUG</A></TD>
+<TD width=50%>Permits a subunit to release and free any resources associated with a remote plug provided by a previous call to <B>UNIT_ConnectToRemotePlugCB</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_process_registry_plugs.htm">IOCTL_UNIT_PROCESS_REGISTRY_PLUGS</A></TD>
+<TD width=50%>Reads plug definitions from the registry and calls the allocate and free callbacks into the subunit to process them.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_query_local_plugs.htm">IOCTL_UNIT_QUERY_LOCAL_PLUGS</A></TD>
+<TD width=50%>Permits the caller to determine the state of the plugs that are associated with your registered subunit.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_allocate_local_plug.htm">IOCTL_UNIT_ALLOCATE_LOCAL_PLUG</A></TD>
+<TD width=50%>Permits the caller to allocate and export a local plug.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_free_local_plug.htm">IOCTL_UNIT_FREE_LOCAL_PLUG</A></TD>
+<TD width=50%>Permits the caller to free a previously allocated local plug.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_register_subunit.htm">IOCTL_UNIT_REGISTER_SUBUNIT</A></TD>
+<TD width=50%>Permits a subunit to provide a group of functions that the unit filter driver should call in particular situations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefioctl_unit_deregister_subunit.htm">IOCTL_UNIT_DEREGISTER_SUBUNIT</A></TD>
+<TD width=50%>Permits a subunit to remove itself from global consideration to the unit filter driver.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the unit filter driver functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefunit_allocatelocalplugcb.htm">UNIT_AllocateLocalPlugCB</A></TD>
+<TD width=50%>Must be provided by the subunit driver. It is called by the unit filter driver when an outside node has requested that a subunit allocate and connect itself to a local serial bus plug.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefunit_freelocalplugcb.htm">UNIT_FreeLocalPlugCB</A></TD>
+<TD width=50%>Provided by a subunit driver, is called by the unit filter driver when an outside node has requested that a subunit disconnect itself and free a local serial bus plug.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefunit_connecttoremoteplugcb.htm">UNIT_ConnectToRemotePlugCB</A></TD>
+<TD width=50%>Called by the unit filter driver when a request has arrived requesting that your subunit actively initiate a connection to a particular serial bus plug on a particular node.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefunit_disconnectfromremoteplugcb.htm">UNIT_DisconnectFromRemotePlugCB</A></TD>
+<TD width=50%>Called by the unit filter driver when a request has arrived requesting that your subunit disconnect from a particular remote plug, which is one previously connected through <B>UNIT_ConnectToRemotePlugCB</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefunit_openunitdevice.htm">UNIT_OpenUnitDevice</A></TD>
+<TD width=50%>Permits a subunit driver to open the appropriate unit filter driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxrefunit_closeunitdevice.htm">UNIT_CloseUnitDevice</A></TD>
+<TD width=50%>Permits a subunit driver to close and free references to the unit driver obtained in a previous call to <B>UNIT_OpenUnitDeviceObject</B>.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394unitfilterdriverarchitecture.htm">IEEE 1394 Unit Filter Driver Architecture</A></P>
+
+<P><A HREF="cxconieee1394unitfilterdriverregistrysettings.htm">IEEE 1394 Unit Filter Driver Registry Settings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;IEEE%201394%20Unit%20Filter%20Drivers&nbsp;(cxconieee1394unitfilterdrivers.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

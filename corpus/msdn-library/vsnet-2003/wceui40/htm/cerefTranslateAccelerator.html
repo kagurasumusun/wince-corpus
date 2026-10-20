@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TranslateAccelerator</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="TranslateAccelerator"/>
+<MSHelp:RLTitle Title="TranslateAccelerator"/>
+<MSHelp:Keyword Index="A" Term="cerefTranslateAccelerator"/>
+<MSHelp:Keyword Index="K" Term="TranslateAccelerator"/>
+<MSHelp:Keyword Index="A" Term="cerefTranslateAccelerator"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: keybrd_mwmgr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_754159">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cereftranslateaccelerator"></A>TranslateAccelerator</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function processes accelerator keys for menu commands. <B>TranslateAccelerator</B> translates a <MSHelp:link keywords="cerefwm_keydown" TABINDEX="0">WM_KEYDOWN</MSHelp:link> or <MSHelp:link keywords="cerefwm_syskeydown" TABINDEX="0">WM_SYSKEYDOWN</MSHelp:link> message to a <A HREF="cerefwm_command.htm">WM_COMMAND</A> message and then sends the WM_COMMAND message directly to the appropriate window procedure. <B>TranslateAccelerator</B> does not return until the window procedure has processed the message.</P>
+
+<PRE class="syntax"><B>int</B> <B>TranslateAccelerator(</B>
+<B>HWND</B> <I>hWnd</I><B>, </B>
+<B>HACCEL</B> <I>hAccTable</I><B>, </B>
+<B>LPMSG</B> <I>lpMsg </I>
+<B>);</B> </PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>hWnd</I></DT>
+
+<DD>Handle to the window whose messages are to be translated. </dd>
+
+<DT><I>hAccTable</I></DT>
+
+<DD>Handle to an accelerator table. The accelerator table must have been loaded by a call to the <A HREF="cerefloadaccelerators.htm">LoadAccelerators</A> function or created by a call to the <A HREF="cerefcreateacceleratortable.htm">CreateAcceleratorTable</A> function. </dd>
+
+<DT><I>lpMsg</I></DT>
+
+<DD>Long pointer to an <MSHelp:link keywords="cerefmsg" TABINDEX="0">MSG</MSHelp:link> structure that contains message information retrieved from the calling thread's message queue by using the <MSHelp:link keywords="cerefgetmessage" TABINDEX="0">GetMessage</MSHelp:link> or <MSHelp:link keywords="cerefpeekmessage" TABINDEX="0">PeekMessage</MSHelp:link> function. </dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <MSHelp:link keywords="cerefGetLastError" TABINDEX="0">GetLastError</MSHelp:link>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>All accelerator key messages are translated into WM_COMMAND messages; Windows CE does not support the WM_SYSCOMMAND message. </P>
+
+<P>To differentiate the message that this function sends from messages sent by menus or controls, the high-order word of the <I>wParam</I> parameter of the WM_COMMAND or WM_SYSCOMMAND message contains the value 1. </P>
+
+<P>Accelerator key combinations used to select items from the <B>window</B> menu are translated into WM_SYSCOMMAND messages; all other accelerator key combinations are translated into WM_COMMAND messages. </P>
+
+<P>When <B>TranslateAccelerator</B> returns a nonzero value and the message is translated, the application should not use the <MSHelp:link keywords="cereftranslatemessage" TABINDEX="0">TranslateMessage</MSHelp:link> function to process the message again. </P>
+
+<P>An accelerator need not correspond to a menu command. </P>
+
+<P>If the accelerator command corresponds to a menu item, the application is sent a <A HREF="cerefwm_initmenupopup.htm">WM_INITMENUPOPUP</A> message, as if the user were trying to display the menu. However, these messages are not sent if any of the following conditions exist: 
+
+<UL type="disc">
+	<LI>The window is disabled. </li>
+
+	<LI>The menu item is disabled. </li>
+
+	<LI>The accelerator key combination does not correspond to an item on the <B>window</B> menu and the window is minimized. </li>
+
+	<LI>A mouse capture is in effect. For information about mouse capture, see the <MSHelp:link keywords="_wcesdk_Win32_SetCapture" TABINDEX="0">SetCapture</MSHelp:link> function. </li>
+</UL>
+
+<P>If the specified window is the active window and no window has the keyboard focus (which is generally the case if the window is minimized), <B>TranslateAccelerator</B> translates <MSHelp:link keywords="cerefwm_syskeyup" TABINDEX="0">WM_SYSKEYUP</MSHelp:link> and WM_SYSKEYDOWN messages instead of WM_KEYUP and WM_KEYDOWN messages. </P>
+
+<P>If an accelerator keystroke occurs that corresponds to a menu item when the window that owns the menu is minimized, <B>TranslateAccelerator</B> does not send a WM_COMMAND message. However, if an accelerator keystroke occurs that does not match any of the items in the window's menu or in the <B>window</B> menu, the function sends a WM_COMMAND message, even if the window is minimized. </P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Accel.lib</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefcreateacceleratortable.htm">CreateAcceleratorTable</A>, <MSHelp:link keywords="cerefgetmessage" TABINDEX="0">GetMessage</MSHelp:link>, <A HREF="cerefloadaccelerators.htm">LoadAccelerators</A>, <MSHelp:link keywords="cerefmsg" TABINDEX="0">MSG</MSHelp:link>, <MSHelp:link keywords="cerefpeekmessage" TABINDEX="0">PeekMessage</MSHelp:link>, <MSHelp:link keywords="_wcesdk_Win32_SetCapture" TABINDEX="0">SetCapture</MSHelp:link>, <MSHelp:link keywords="cereftranslatemessage" TABINDEX="0">TranslateMessage</MSHelp:link>, <A HREF="cerefwm_command.htm">WM_COMMAND</A>, <A HREF="cerefwm_initmenupopup.htm">WM_INITMENUPOPUP</A>, <MSHelp:link keywords="cerefwm_keydown" TABINDEX="0">WM_KEYDOWN</MSHelp:link>, <MSHelp:link keywords="cerefwm_syskeydown" TABINDEX="0">WM_SYSKEYDOWN</MSHelp:link></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;TranslateAccelerator&nbsp;(cereftranslateaccelerator.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

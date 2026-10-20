@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertySheet::GetPageIndex</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertysheet_getpageindex"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cpropertysheet_getpageindex"></A>CPropertySheet::GetPageIndex</H1>
+
+<P>This method retrieves the index number of the specified page in the property sheet. For example, you would use <B>CPropertySheet::GetPageIndex</B> to get the page index in order to use <B>CPropertySheet::SetActivePage</B> or <B>CPropertySheet::GetPage</B>.</P>
+
+<PRE class=syntax><B>int GetPageIndex(
+CPropertyPage* </B><I>pPage</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pPage</I></DT>
+
+<DD>Points to the page with the index to be found. It cannot be <B>NULL</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Returns the index number of a page.</P>
+
+<H4>Example</H4>
+
+<PRE>// The code fragment below sets the last active page (i.e. the
+// active page when the propertysheet was closed) to be the first
+// visible page when the propertysheet is shown. The last active
+// page was saved in m_LastActivePage, (a member variable of
+// CDocument-derived class) when OK was selected from the
+// propertysheet. CMyPropertySheet is a CPropertySheet-derived class.
+BOOL CMyPropertySheet::OnInitDialog()
+{
+&nbsp;&nbsp;BOOL bResult = CPropertySheet::OnInitDialog();
+
+&nbsp;&nbsp;CFrameWnd* frame = (CFrameWnd*) AfxGetMainWnd();
+&nbsp;&nbsp;CPSheetDoc* doc = (CPSheetDoc*) frame-&gt;GetActiveDocument();
+&nbsp;&nbsp;SetActivePage(doc-&gt;m_LastActivePage);
+&nbsp;&nbsp;return bResult;
+}
+
+BOOL CMyPropertySheet::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+&nbsp;&nbsp;if (LOWORD(wParam) == IDOK)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CFrameWnd* frame = (CFrameWnd*) AfxGetMainWnd();
+&nbsp;&nbsp;&nbsp;&nbsp;CPSheetDoc* doc = (CPSheetDoc*) frame-&gt;GetActiveDocument();
+&nbsp;&nbsp;&nbsp;&nbsp;doc-&gt;m_LastActivePage = GetPageIndex(GetActivePage());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// or GetActiveIndex()
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;return CPropertySheet::OnCommand(wParam, lParam);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cpropsht_17.htm"><B>CPropertySheet::SetActivePage</B></A>, <A HREF="cpropsht_11.htm"><B>CPropertySheet::GetPage</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

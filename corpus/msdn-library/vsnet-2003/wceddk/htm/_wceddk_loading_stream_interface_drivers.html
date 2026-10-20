@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Loading Stream Interface Drivers</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Loading Stream Interface Drivers"/>
+<MSHelp:RLTitle Title="Loading Stream Interface Drivers"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_Loading_Stream_Interface_Drivers"/>
+<MSHelp:Keyword Index="K" Term="loading, stream interface drivers"/>
+<MSHelp:Keyword Index="K" Term="stream interface drivers, loading"/>
+<MSHelp:Keyword Index="K" Term="Device Manager, loading stream interface drivers"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbceplat30"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwince30"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: stream.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT></HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;3.0</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wceddk_loading_stream_interface_drivers"></A>Loading Stream Interface Drivers</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>There are two ways to load stream interface drivers. One involves the Device Manager, while the other is specific to applications.</P>
+
+<P>The first type of loading occurs at startup. When a Windows CE&#0150;based platform starts up, it starts the Device Manager. In turn, the Device Manager reads the contents of the <B>HKEY_LOCAL_MACHINE\Drivers\Builtin</B> key and loads any stream interface drivers listed there. For example, on many Windows CE&#0150;based platforms, the Device Manager loads the driver for built-in serial ports (Serial.dll) through this mechanism.</P>
+
+<P>The third type of loading occurs when the Device Manager cannot automatically detect the connection of a peripheral to a platform. Unrecognized devices are often serial devices because there is no automatic way for Windows CE to detect the connection of a serial device to a serial port. If the Device Manager cannot automatically recognize a peripheral, the application that needs to use the peripheral must load the peripheral's driver. The following is the standard sequence of actions for this type of loading:
+
+<OL type="1">
+	<LI>The application determines that the device driver is not loaded, either by inspecting the file system or by receiving a failure return value from the <B>CreateFile</B> function when it tries to open the device file name of the peripheral. For more information, see <A HREF="_wceddk_device_file_names.htm">Device File Names</A>.</li>
+
+	<LI>The application loads the device driver DLL. Applications have a number of options for how to do this, each of which provides different levels of infrastructure support.
+<UL type="disc">
+	<LI>To load the device driver DLL in the process' own address space, simply call <B>LoadLibrary</B> or <B>LoadDriver</B> to load the DLL just like any other DLL. <B>LoadDriver</B> is just like <B>LoadLibrary</B> except that it marks the DLL's pages as non-pageable, so they stay in RAM. Device driver DLLs loaded in this way are completely unavailable to other parts of the system; they will not have device file names associated with them, so the application will have to access the driver's stream interface functions directly, rather than through the normal file system APIs.</li>
+
+	<LI>The application can call <A HREF="_wceddk_registerdevice.htm"><B>RegisterDevice</B></A> to load the device driver in the process space of the Device Manager. <B>RegisterDevice</B> will create a device file name for the driver so that multiple applications can use it.</li>
+
+	<LI>The application can call <A HREF="_wceddk_activatedevice.htm"><B>ActivateDevice</B></A> to load the device driver. ActivateDevice handles the complex tasks of reading a device driver's registry key to get the driver's prefix, index, and other values, creates appropriate registry entries in the <B>HKEY_LOCAL_MACHINE\Drivers\Active</B> portion of the registry, calling <B>RegisterDevice</B> to load the DLL itself, and broadcasting a WM_DEVICECHANGE message to the system.</li>
+</UL>
+</li>
+
+	<LI>The application continues with its usual operation. When the application is done with the device driver, it should unload the driver by calling <B>UnLoadLibrary</B> or <B>DeactivateDevice</B> as appropriate, depending on what loading mechanism the application used. <B>DeactivateDevice</B> broadcasts a WM_DEVICECHANGE message to notify the system that the driver is being unloaded, calls <B>DeregisterDevice</B> to unload the DLL and remove the driver's device file name, and removes the driver's registry key from <B>HKEY_LOCAL_MACHINE\Drivers\Active</B>.</li>
+</OL>
+
+<P>PC Card device drivers are handled as a special case when a user connects a PC Card to a Windows CE-based platform. In this situation, the PC Card socket driver detects the card insertion event and notifies the Device Manager that it needs to load a PC Card device driver. The Device Manager uses the PC Card's Plug and Play identifier to locate the correct device driver for the PC Card. The Device Manager then checks the <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\</B> key for a subkey matching the Plug and Play identifier. If one exists, it loads the driver listed within that key. If there is no match, the Device Manager calls all of the detection functions that are listed within the <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Detect</B> key. If one of the detection functions returns a value indicating that it can handle the PC Card, the Device Manager loads and initializes that stream interface driver.</P>
+
+<P>Whenever the Device Manager loads a device driver &#0151; either at system boot time or due to a PC Card insertion &#0151; the Device Manager calls the <B>ActivateDevice</B> function for the stream interface driver and creates a numbered subkey within the <B>HKEY_LOCAL_MACHINE\Drivers\Active\</B> key to track the driver. <B>ActivateDevice</B> also locks the stream interface driver into working RAM. This prevents the driver from being swapped out and prevents any paging activity that would slow driver operation when servicing interrupts.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Monday, October 07, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;3.0&nbsp;MSDN&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Loading%20Stream%20Interface%20Drivers&nbsp;(_wceddk_loading_stream_interface_drivers.htm)&amp;body=We&nbsp;cannot&nbsp;answer&nbsp;technical&nbsp;support&nbsp;questions,&nbsp;but&nbsp;we&nbsp;welcome&nbsp;your&nbsp;suggestions&nbsp;and&nbsp;comments&nbsp;about&nbsp;the&nbsp;documentation.&nbsp;For&nbsp;technical&nbsp;support,&nbsp;see&nbsp;http://go.microsoft.com/fwlink/?linkid=3939.">Send Feedback</a> on this topic</i></font></td>
+<td align=right><font size="1"><i><a href="feedback.htm">About Sending Feedback</a></i></font></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

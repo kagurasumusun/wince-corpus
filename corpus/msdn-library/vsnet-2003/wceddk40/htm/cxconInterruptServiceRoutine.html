@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Service Routines</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Service Routines"/>
+<MSHelp:RLTitle Title="Interrupt Service Routines"/>
+<MSHelp:Keyword Index="A" Term="cxconInterruptServiceRoutine"/>
+<MSHelp:Keyword Index="K" Term="interrupt service routines"/>
+<MSHelp:Keyword Index="K" Term="interrupts, interrupt service routines"/>
+<MSHelp:Keyword Index="K" Term="ISRs"/>
+<MSHelp:Keyword Index="A" Term="cxconInterruptServiceRoutine"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: driverarchitecture.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_820316">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconinterruptserviceroutine"></A>Interrupt Service Routines</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The kernel calls interrupt service routines (ISRs) based on the call to <MSHelp:link keywords="cmrefHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link>, and the ISR returns an interrupt identifier. For more information on interrupt identifiers, see <MSHelp:link keywords="cgconDefiningInterruptIdentifier" TABINDEX="0">Defining an Interrupt Identifier</MSHelp:link>.</P>
+
+<P>An ISR might move data from a CPU register or a hardware port into a memory buffer, but in general, it should not attempt to do a lot of work. Instead, it must rely on a dedicated interrupt thread called the interrupt service thread (IST) to do the bulk of the required processing. When more processing is required, the ISR lets the kernel know this by returning a logical interrupt value other than SYSINTR_NOP. In the example shown here, the return value from the ISR is SYSINTR_KEYBOARD.</P>
+
+<P>The ISR maps a physical interrupt number to a logical interrupt value. For example, the keyboard might be associated with hardware interrupt 4 on one device and hardware interrupt 15 on another. The ISR, which is in the platform-specific OAL, translates the hardware-specific value to the Windows CE standard value of SYSINTR_KEYBOARD.</P>
+
+<P>When an ISR notifies the kernel of a specific logical interrupt value, the kernel examines an internal table to map the logical interrupt value to an event handle. An event is a standard Win32 synchronization object that serves as an alarm clock to wake up a thread when something interesting happens.</P>
+
+<P>The kernel wakes up the dedicated IST, which has been waiting on an event, by calling the Win32 function <MSHelp:link keywords="cerefPulseEvent" TABINDEX="0">PulseEvent</MSHelp:link>.</P>
+
+<P>The following table compares the situation with a single ISR and multiple ISRs.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=34%>ISR model</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Single ISR</TD>
+<TD width=66%>On all Windows CE&#0150;based platforms that support a single ISR, the name of the ISR is <MSHelp:link keywords="cmrefOEMInterruptHandler" TABINDEX="0">OEMInterruptHandler</MSHelp:link>. The role of the ISR is to examine an interrupt and determine how to handle it. An ISR needs to be extremely fast; otherwise, it slows down the operation of the device and the operation of all lower priority ISRs. An ISR must look at the cause of the interrupt to decide how to handle it. In some cases, an ISR might decide that no further handling is required because the device is disabled or data is being buffered. Nevertheless, an ISR notifies the kernel with a SYSINTR_NOP return value that no further action is required.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>Multiple ISR </TD>
+<TD width=66%>A system that supports multiple ISRs is a system that has multiple hardware interrupts on its CPU. The OAL can register handlers for each of these interrupts by calling the <MSHelp:link keywords="cmrefHookInterrupt" TABINDEX="0">HookInterrupt</MSHelp:link> function in the kernel. This function builds a table that maps hardware interrupt identifiers to specific ISR functions. When there are multiple ISRs supported, the OAL does not provide an <B>OEMInterruptHandler</B> function. Other than having to map from an IRQ to an interrupt service routine, handling interrupts with multiple ISRs is identical to handling interrupts when a single ISR is present. Another reason not to process data in the ISR is that there is no way to access the user buffer. The user mode IST routine can access this buffer.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconinterruptservicethread.htm">Interrupt Service Threads</A></P>
+
+<P><A HREF="cxconinterrupts.htm">Interrupts</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Interrupt%20Service%20Routines&nbsp;(cxconinterruptserviceroutine.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

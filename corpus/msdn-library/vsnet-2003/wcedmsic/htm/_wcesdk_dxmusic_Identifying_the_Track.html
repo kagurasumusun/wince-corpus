@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Identifying the Track</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Identifying the Track"/>
+<MSHelp:RLTitle Title="Identifying the Track"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Identifying_the_Track"/>
+<MSHelp:Keyword Index="K" Term="parameters, DirectMusic"/>
+<MSHelp:Keyword Index="K" Term="track parameters%2C DirectMusic, identifying tracks"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Identifying_the_Track"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680700">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_identifying_the_track"></A>Identifying the Track</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When you set or retrieve a parameter by using <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack__SetParam" TABINDEX="0">IDirectMusicTrack::SetParam</MSHelp:link> or <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicTrack__GetParam" TABINDEX="0">IDirectMusicTrack::GetParam</MSHelp:link>, the parameter is associated with the track on which the method is called. However, when you call <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__SetParam" TABINDEX="0">IDirectMusicPerformance::SetParam</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicPerformance__GetParam" TABINDEX="0">IDirectMusicPerformance::GetParam</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetParam" TABINDEX="0">IDirectMusicSegment::SetParam</MSHelp:link>, or <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__GetParam" TABINDEX="0">IDirectMusicSegment::GetParam</MSHelp:link>, DirectMusic needs to find the appropriate track.</P>
+
+<P>Normally, you can let DirectMusic determine which track contains the desired parameter. To do this, set <I>dwGroupBits</I> to 0xFFFFFFFF and <I>dwIndex</I> to 0. For example, the following call to <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__SetParam" TABINDEX="0">IDirectMusicSegment::SetParam</MSHelp:link> turns off the tempo track so that looping a segment does not reset the tempo.</P>
+
+<PRE class="code">pIDMSegment-&gt;SetParam(GUID_DisableTempo, 0xFFFFFFFF, 0, 0, NULL);</PRE>
+
+<P>There are times, however, when you need to identify a track. Typically, this would be the case when a segment contains multiple tracks of the same type. To set or retrieve the parameter on the desired track, you must identify it by group and index value.</P>
+
+<P>Every track belongs to one or more groups, each group being represented by a bit in the <I>dwGroupBits</I> parameter of one of the methods under discussion. (The track is assigned to a group or groups when it is inserted in the performance. For more information, see <MSHelp:link keywords="_wcesdk_dxmusic_IDirectMusicSegment__InsertTrack" TABINDEX="0">IDirectMusicSegment::InsertTrack</MSHelp:link>. In the case of segments loaded from a file, track groups are assigned by the author of the segment.) </P>
+
+<P>A track is identified by a zero-based index value within each of the groups that it belongs to. The index value is determined by the order in which the tracks were inserted.</P>
+
+<P>Suppose a segment contains the following tracks.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=14%>Track</TH>
+<TH width=86%>Group bits</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>A</TD>
+<TD width=86%>0x1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>B</TD>
+<TD width=86%>0x2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>C</TD>
+<TD width=86%>0x1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%>D</TD>
+<TD width=86%>0x3</TD>
+</TR>
+</table></div>
+
+<P>Group 1 contains tracks A, C, and D, and group 2 contains tracks B and D. If you call <B>GetParam</B> or <B>SetParam</B> with a value of 1 in <I>dwGroupBits</I> and a value of 0 in <I>dwIndex</I>, the parameter is retrieved from track A, which is the first track in group 1. If <I>dwIndex</I> is 1, the parameter is retrieved from track C, the second track in the group. Track D belongs to two groups, 1 and 2, so it can be identified as either <I>dwGroupBits</I> = 1 and <I>dwIndex</I> =2, or <I>dwGroupBits</I> = 2 and <I>dwIndex</I> = 1.</P>
+
+<P>If you set more than 1 bit in <I>dwGroupBits</I>, the parameter is retrieved from the <I>n</I>th track containing any of those bits, where <I>n</I> is the value in <I>dwIndex</I>.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Identifying%20the%20Track&nbsp;(_wcesdk_dxmusic_identifying_the_track.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample Code: Decrypting a File</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Sample Code: Decrypting a File"/>
+<MSHelp:RLTitle Title="Sample Code: Decrypting a File"/>
+<MSHelp:Keyword Index="A" Term="csconSampleCodeDecryptingFile"/>
+<MSHelp:Keyword Index="K" Term="CryptoAPI 1.0, samples"/>
+<MSHelp:Keyword Index="K" Term="cryptography, samples"/>
+<MSHelp:Keyword Index="K" Term="samples, cryptography"/>
+<MSHelp:Keyword Index="A" Term="csconSampleCodeDecryptingFile"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="Technology" Value="Crypt"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: crypto1_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_685920">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="csconsamplecodedecryptingfile"></A>Sample Code: Decrypting a File</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>If a message was encoded for a particular user, the <A HREF="cerefcryptgenkey.htm">CryptGenKey</A> function was used to create a random session key before the encryption was performed. Before decoding the message, the key BLOB containing the session key must be imported into the CSP with the <A HREF="cerefcryptimportkey.htm">CryptImportKey</A> function. This function uses the user's key exchange private key to decode the key BLOB and ensure that the originating key BLOB was created using the matching key exchange public key.</P>
+
+<P>If the message was encoded so that any password holder can access the data, <B>CryptImportKey</B> is not used. Instead, create the decryption session key with the <A HREF="cerefcryptderivekey.htm">CryptDeriveKey</A> function. You also need to supply the function with the password or other access token.</P>
+
+<P>The session key's parameters must be configured in the same way as when the encryption was performed. These parameters can be specified using the <A HREF="cerefcryptsetkeyparam.htm">CryptSetKeyParam</A> function. For example, if the salt value was changed one or more times during the encryption process, it must also be changed during the decryption process in exactly the same manner.</P>
+
+<P>The message is decoded using the <B>CryptDecrypt </B>function. If the message is too large to fit comfortably in memory, it can be decoded in sections, through multiple calls to <B>CryptDecrypt</B>.</P>
+
+<P>When the decryption is complete, be sure to destroy the session key, using the <A HREF="cerefcryptdestroykey.htm">CryptDestroyKey</A> function. In addition to destroying the key, this frees CSP resources.</P>
+
+<P>The following code example decodes the file created by the previous example of encryption. This decryption example uses the RC2 block cipher and writes out the plaintext data to a file named Test2.txt. The session key used to perform the decryption is read from the cipher file.</P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;wincrypt.h&gt;
+   
+#define BLOCK_SIZE            1000
+#define BUFFER_SIZE           1008
+
+BOOL DecryptFile (LPTSTR, LPTSTR, LPTSTR);
+
+/***********************************************************************
+
+  WinMain
+
+***********************************************************************/
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, 
+                    LPTSTR lpCmdLine, int nCmdShow)                   
+{
+  LPTSTR lpszSource  = TEXT("test.xxx");
+  LPTSTR lpszDestination = TEXT("test2.txt");
+  LPTSTR lpszPassword  = TEXT("password");
+ 
+  if (!DecryptFile (lpszSource, lpszDestination, lpszPassword)) 
+  {
+    wprintf (TEXT("Error encrypting file!\n"));
+    return 1;
+  }
+
+  return 0;
+}
+
+/***********************************************************************
+
+  DecryptFile
+
+***********************************************************************/
+BOOL DecryptFile (LPTSTR lpszSource, LPTSTR lpszDestination, 
+                  LPTSTR lpszPassword)
+{
+  FILE *hSrcFile = NULL, 
+       *hDestFile = NULL;
+
+  HCRYPTPROV hProv = 0;
+  HCRYPTHASH hHash = 0;
+  HCRYPTKEY hKey = 0;
+
+  PBYTE pbBuffer = NULL, 
+        pbKeyBlob = NULL;
+
+  BOOL bEOF = 0, 
+       bReturn = FALSE;
+
+  DWORD dwCount, 
+        dwKeyBlobLen;
+  
+  // Open the source file.
+  if ((hSrcFile = _wfopen (lpszSource, TEXT("rb"))) == NULL) 
+  {
+    wprintf (TEXT("Error opening Ciphertext file!\n"));
+    goto exit;
+  }
+
+  // Open the destination file.
+  if ((hDestFile = _wfopen (lpszDestination, TEXT("wb"))) == NULL) 
+  {
+    wprintf (TEXT("Error opening Plaintext file!\n"));
+    goto exit;
+  }
+
+  // Get the handle to the default provider.
+  if (!CryptAcquireContext (&amp;hProv, NULL, NULL, PROV_RSA_FULL, 0)) 
+  {
+    wprintf (TEXT("Error %x during CryptAcquireContext!\n"), 
+             GetLastError ());
+    goto exit;
+  }
+
+  if (lpszPassword == NULL) 
+  {
+    // Decrypt the file with the saved session key.
+
+    // Read key BLOB length from the source file and allocate memory.
+    fread (&amp;dwKeyBlobLen, sizeof (DWORD), 1, hSrcFile);
+
+    if (ferror (hSrcFile) || feof (hSrcFile)) 
+    {
+      wprintf (TEXT("Error reading file header!\n"));
+      goto exit;
+    }
+
+    if ((pbKeyBlob = (PBYTE)malloc (dwKeyBlobLen)) == NULL) 
+    {
+      wprintf (TEXT("Out of memory or improperly formatted source ")
+               TEXT("file!\n"));
+      goto exit;
+    }
+
+    // Read the key BLOB from source file.
+    fread (pbKeyBlob, 1, dwKeyBlobLen, hSrcFile);
+
+    if (ferror (hSrcFile) || feof (hSrcFile)) 
+    {
+      wprintf (TEXT("Error reading file header!\n"));
+      goto exit;
+    }
+
+    // Import the key BLOB into the CSP.
+    if (!CryptImportKey (hProv, pbKeyBlob, dwKeyBlobLen, 0, 0, &amp;hKey)) 
+    {
+      wprintf (TEXT("Error %x during CryptImportKey!\n"), 
+               GetLastError ());
+      goto exit;
+    }
+  } 
+  else
+  {
+    // Decrypt the file with a session key derived from a password.
+
+    // Create a hash object.
+    if (!CryptCreateHash (hProv, CALG_MD5, 0, 0, &amp;hHash)) 
+    {
+      wprintf (TEXT("Error %x during CryptCreateHash!\n"), 
+               GetLastError ());
+      goto exit;
+    }
+
+    // Hash in the password data.
+    if (!CryptHashData (hHash, (PBYTE)lpszPassword, 
+                        wcslen (lpszPassword), 0)) 
+    {
+      wprintf (TEXT("Error %x during CryptHashData!\n"), 
+               GetLastError ());
+      goto exit;
+    }
+
+    // Derive a session key from the hash object.
+    if (!CryptDeriveKey (hProv, CALG_RC2, hHash, 0, &amp;hKey)) 
+    {
+      wprintf (TEXT("Error %x during CryptDeriveKey!\n"), 
+               GetLastError ());
+      goto exit;
+    }
+  }
+
+  // Allocate memory.
+  if ((pbBuffer = (PBYTE)malloc (BUFFER_SIZE)) == NULL) 
+  {
+    wprintf (TEXT("Out of memory!\n"));
+    goto exit;
+  }
+
+  // Decrypt the source file and write to the destination file.
+  do 
+  {
+    // Read up to BLOCK_SIZE bytes from the source file.
+    dwCount = fread (pbBuffer, 1, BLOCK_SIZE, hSrcFile);
+
+    if (ferror (hSrcFile)) 
+    {
+      wprintf (TEXT("Error reading Ciphertext!\n"));
+      goto exit;
+    }
+
+    bEOF = feof (hSrcFile);
+
+    // Decrypt the data.
+    if (!CryptDecrypt (hKey, 0, bEOF, 0, pbBuffer, &amp;dwCount)) 
+    {
+      wprintf (TEXT("Error %x during CryptDecrypt!\n"), 
+               GetLastError ());
+      goto exit;
+    }
+
+    // Write the data to the destination file.
+    fwrite (pbBuffer, 1, dwCount, hDestFile);
+
+    if (ferror (hDestFile)) 
+    {
+      wprintf (TEXT("Error writing Plaintext!\n"));
+      goto exit;
+    }
+  } while (!bEOF);
+
+  bReturn = TRUE;
+
+  wprintf (TEXT("OK\n"));
+
+exit:
+
+  // Close the source files.
+  if (hSrcFile) 
+    fclose (hSrcFile);
+
+  // Close the destination files.
+  if (hDestFile) 
+    fclose (hDestFile);
+
+  // Free memory.
+  if (pbKeyBlob) 
+    free (pbKeyBlob);
+
+  // Free memory.
+  if (pbBuffer) 
+    free (pbBuffer);
+
+  // Destroy the session key.
+  if (hKey) 
+    CryptDestroyKey (hKey);
+
+  // Destroy the hash object.
+  if (hHash) 
+    CryptDestroyHash (hHash);
+
+  // Release the provider handle.
+  if (hProv) 
+    CryptReleaseContext (hProv, 0);
+
+  return bReturn;
+}</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Sample%20Code:%20Decrypting%20a%20File&nbsp;(csconsamplecodedecryptingfile.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

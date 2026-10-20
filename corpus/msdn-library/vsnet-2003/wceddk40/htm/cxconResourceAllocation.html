@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Resource Allocation</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Resource Allocation"/>
+<MSHelp:RLTitle Title="Resource Allocation"/>
+<MSHelp:Keyword Index="A" Term="cxconResourceAllocation"/>
+<MSHelp:Keyword Index="K" Term="registry settings, I/O Resource Manager"/>
+<MSHelp:Keyword Index="A" Term="cxconResourceAllocation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: devresmgr.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_757884">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconresourceallocation"></A>Resource Allocation</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The two resources that are pre-defined are IRQs and I/O space. The registry keys are <B>HKEY_LOCAL_MACHINE\Drivers\Resources\IRQ</B> and <B>HKEY_LOCAL_MACHINE\Drivers\Resources\IO</B>. These keys provide the initial state of the I/O Resource Manager. The following table shows their subkeys.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Subkey</TH>
+<TH width=33%>Example value</TH>
+<TH width=34%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Identifier</B></TD>
+<TD width=33%><B>DWORD:1</B></TD>
+<TD width=34%>The resource identifier, which is a label for a set of numbers, is defined in %_WINCEROOT%\Public\Common\DDK\Inc\Resmgr.h.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Minimum</B></TD>
+<TD width=33%><B>DWORD:1</B></TD>
+<TD width=34%>Smallest numbered resource of this type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Space</B></TD>
+<TD width=33%><B>DWORD:16</B></TD>
+<TD width=34%>Number of resources in the resource space.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Ranges</B></TD>
+<TD width=33%><B>"1, 3-5, 8"</B></TD>
+<TD width=34%>Comma-separated list of initially available resources ranges. The default is none.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Shared</B></TD>
+<TD width=33%><B>"4"</B></TD>
+<TD width=34%>Comma-separated list of initially available sharable resources. The default is none.</TD>
+</TR>
+</table></div>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>DWORD</B> entries are interpreted as hexadecimal constants, but the strings are parsed as lists of C-style constants..</BLOCKQUOTE>
+
+<P>The following registry keys show example I/O Resource Manager registry settings:</P>
+
+<PRE class="code">; Resources available at time of device.exe initialization.
+; Key names are descriptive; resource ids are definitive.
+; System ids are defined in ddk\inc\resmgr.h.
+; HIVE BOOT SECTION
+[HKEY_LOCAL_MACHINE\Drivers\Resources\IRQ]
+    "Identifier"=dword:1
+    "Minimum"=dword:1
+    "Space"=dword:F
+    "Ranges"="1,3-7,9-0xF"
+    "Shared"="1,3-7,9-0xF"
+
+; I/O ranges are reserved for all drivers listed in this file that are not
+; part of an expansion bus (PCI, PCMCIA, etc).  If your platform doesn't
+; have one of these peripherals you may edit this list accordingly.  This
+; sample configuration assumes that, if you have any COM port you have all of
+; the lower-numbered ones as well.
+[HKEY_LOCAL_MACHINE\Drivers\Resources\IO]
+    "Identifier"=dword:2
+    "Minimum"=dword:0
+    "Space"=dword:10000
+IF BSP_NOSERIAL
+    "Ranges"="0-0x5F,0x65-0x277,0x284-0x38F,0x392-0x3DF,0x3E2-0xFFFF"
+ENDIF ; BSP_NOSERIAL
+IF BSP_NOSERIAL !
+    "Ranges"="0-0x5F,0x65-0x277,0x284-0x2F7,0x300-0x38F,0x392-0x3DF,0x3E2-0xFFFF"
+ENDIF ; BSP_NOSERIAL !
+IF BSP_SERIAL2
+    "Ranges"="0-0x5F,0x65-0x277,0x284-0x2F7,0x300-0x38F,0x392-0x3DF,0x3E2-0x3E7,0x3F0-0xFFFF"
+ENDIF ; BSP_SERIAL2
+IF BSP_SERIAL3
+    "Ranges"="0-0x5F,0x65-0x277,0x284-0x2E7,0x2F0-0x2F7,0x300-0x38F,0x392-0x3DF,0x3E2-0x3E7,0x3F0-0xFFFF"
+ENDIF ; BSP_SERIAL3</PRE>
+
+<P>If shareable resources are available, you can request them anytime. They can only be set if the resource space is less than or equal to 32.</P>
+
+<P>You cannot have a partial allocation or a partial release of resources; therefore, the following APIs return TRUE if the entire allocation or release succeeds, or they return FALSE is the entire allocation or release fails. You can define your own resources using the following APIs.
+
+<UL type="disc">
+	<LI><MSHelp:link keywords="cerefResourceCreateList" TABINDEX="0">ResourceCreateList</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cerefResourceRelease" TABINDEX="0">ResourceRelease</MSHelp:link></li>
+
+	<LI><MSHelp:link keywords="cerefResourceRequest" TABINDEX="0">ResourceRequest</MSHelp:link></li>
+</UL>
+
+<P><B>ResourceCreateList</B> creates a new resource type, but because you can statically initialize extensions, you can easily add these extensions in the registry. Create a new subkey and specify an identifier between 0x80000 and 0xFFFFF, which are defined as RESMGR_BASE_OEM and RESMGR_MAX_OEM, respectively. You can also find these values in %_WINCEROOT%\Public\Common\DDK\Inc\Resmgr.h. </P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconresourcemanager.htm">I/O Resource Manager</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Resource%20Allocation&nbsp;(cxconresourceallocation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

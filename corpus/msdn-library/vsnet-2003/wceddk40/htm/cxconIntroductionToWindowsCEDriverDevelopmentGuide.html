@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device Driver Development</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Device Driver Development"/>
+<MSHelp:RLTitle Title="Device Driver Development"/>
+<MSHelp:Keyword Index="A" Term="cxconIntroductionToWindowsCEDriverDevelopmentGuide"/>
+<MSHelp:Keyword Index="K" Term="device drivers, development of"/>
+<MSHelp:Keyword Index="K" Term="driver development, overview"/>
+<MSHelp:Keyword Index="K" Term="drivers, developing device drivers"/>
+<MSHelp:Keyword Index="A" Term="cxconIntroductionToWindowsCEDriverDevelopmentGuide"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbOrient"/>
+</xml>
+<!--Filename: intro.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_711628">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconintroductiontowindowscedriverdevelopmentguide"></A>Device Driver Development</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Device drivers, which are included in every Microsoft&reg; Windows&reg; CE operating system (OS) image, are responsible for direct communication to devices.</P>
+
+<P>A device is a physical or logical entity that requires control, resource management, or both from the operating system (OS). A device driver is a software module that manages the operation of a device, a protocol, or a service. A device driver also manages virtual, or logical, devices. A virtual device exposes a physical device interface, even though there is no physical device associated with the device interface. A device driver for a virtual device is indistinguishable from a device driver for a physical device. In this context, virtual means that there is no physical device to manage, but a device-like interface is being exposed. File system drivers are examples of virtual device drivers.</P>
+
+<P>Typically, you can characterize drivers by the device interfaces they expose. In the simplest case, there is one interface exposed downward to the hardware, and one interface exposed upward to applications. You can refer to the interface exposed to the hardware as the hardware interface or the bus interface. The interface exposed to applications is the device interface or client interface. You can use the device interfaces to characterize the driver. Applications, other drivers, or the Device Manager can manipulate the device interfaces. The provider of that interface determines how those modules manipulate the client interface. For more information, see <A HREF="cxconinterfaceclasses.htm">Device Interface Classes</A>.</P>
+
+<P>Buses are responsible for loading the drivers for the devices on their buses. Bus enumeration is the process of examining the bus and then loading the appropriate drivers. The root bus driver is a registry enumerator. A call to <MSHelp:link keywords="cerefActivateDeviceEx" TABINDEX="0">ActivateDeviceEx</MSHelp:link> invokes the root bus driver; the Device Manager does this automatically. Bus drivers are responsible for determining which other drivers to load, and in what order to load them. For more information on driver loading, see <A HREF="cxcondevicedriverloadingmodel.htm">Device Driver Loading Model</A>.</P>
+
+<P>Different processes load different drivers. The following table shows the processes that load drivers and what drivers they load.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Process</TH>
+<TH width=50%>Drivers</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Graphics, Windowing, and Events Subsystem (GWES.exe)</TD>
+<TD width=50%>Battery drivers, display drivers, notification LED drivers, printer drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>Device Manager (Device.exe)</TD>
+<TD width=50%>Audio drivers, keyboard drivers, mouse drivers, NDIS drivers, serial drivers, PC Card drivers, USB drivers, and any other driver that exposes the stream interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>File System (FileSys.exe)</TD>
+<TD width=50%>File system drivers.</TD>
+</TR>
+</table></div>
+
+<P>Generally, devices connected to the system do not influence drivers and applications. The specific interfaces, which the drivers for those devices provide, influence drivers and applications. For example, Explorer.exe does not need to be informed that a new block device has appeared as a result of PC Card insertion, it needs to be informed when the file system volumes on that card are mounted. This causes the Device Manager to send notifications for all of the driver's defined interfaces after the driver is loaded and initialized, and then again after the driver is unloaded. For more information, see <A HREF="cxcondevicenotifications.htm">Device Interface Notifications</A>.</P>
+
+<H2 class="dtH2">Device Driver Source Code</H2>
+
+<P>The device driver source code is separated into platform dependent code, CPU support package (CSP) drivers, and common drivers. This directory structure allows you to copy a public driver to your platform directory, and then optimize and test the driver as necessary. For information on testing drivers, see <A HREF="cxcondrivertesting.htm">Driver Testing</A>.</P>
+
+<P>The following table shows the layout of the device driver source code.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Path</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>%_WINCEROOT%\Platform\%_TGTPLAT%</TD>
+<TD width=50%>This platform dependent code is specific to given platforms or standard development boards (SDBs). This directory is mainly the OAL, configuration files, and BSP drivers. You should not have to modify the platform dependent drivers in %_WINCEROOT%\Platform\%_TGTPLAT%\Drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>%_WINCEROOT%\Public\Common\OAK\CSP</TD>
+<TD width=50%>These are CSP drivers for high-integration microprocessors or microprocessor companions with many native peripherals integrated onto the microprocessor. CSP drivers include microprocessor-specific OAL drivers for real-time clocks, timers, debug Ethernet cards, and so on. SDBs with the same microprocessors can use the same set of CSP drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>%_WINCEROOT%\Public\Common\OAK\Drivers</TD>
+<TD width=50%>These common drivers for non-native peripherals. Non-native peripherals are devices that exist on a plug-in card, or are embedded in an end-user product. This is platform independent code that links with the platform dependent code to create a driver. Common drivers are not specific to a given platform or microprocessor. Any SDB can use common drivers.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcondriverarchitecture.htm">Driver Architecture</A></P>
+
+<P><A HREF="cxcondevicedriverdevelopmentinwindowscenetvswindowsce30.htm">Device Driver Improvements in Windows CE .NET</A></P>
+
+<P><A HREF="cxcondrivertools.htm">Driver Development Processes</A></P>
+
+<P><A HREF="cxcondriverdeveloping.htm">Driver Code Structure</A></P>
+
+<P><A HREF="cxcondevicemanager.htm">Device Manager</A></P>
+
+<P><A HREF="cxcondevicedriverloadingprocess.htm">Device Driver Loading Process</A></P>
+
+<P><A HREF="cxcondevicepowermanagement.htm">Power Management</A></P>
+
+<P><A HREF="cxcondriverinterfaces.htm">Drivers</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Device%20Driver%20Development&nbsp;(cxconintroductiontowindowscedriverdevelopmentguide.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

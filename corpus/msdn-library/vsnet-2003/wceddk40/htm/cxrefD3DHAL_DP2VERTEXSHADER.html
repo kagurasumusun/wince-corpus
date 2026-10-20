@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DHAL_DP2VERTEXSHADER</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DHAL_DP2VERTEXSHADER"/>
+<MSHelp:RLTitle Title="D3DHAL_DP2VERTEXSHADER"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2VERTEXSHADER"/>
+<MSHelp:Keyword Index="K" Term="D3DHAL_DP2VERTEXSHADER"/>
+<MSHelp:Keyword Index="A" Term="cxrefD3DHAL_DP2VERTEXSHADER"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665283">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefd3dhal_dp2vertexshader"></A>D3DHAL_DP2VERTEXSHADER</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This structure is only supported to set the current fixed function FVF (flexible vertex format).</P>
+
+<P>The <B>D3DHAL_DP2VERTEXSHADER</B> structure is used to set the current vertex shader, or delete a vertex shader, depending on the opcode received (<A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor46">D3DDP2OP_SETVERTEXSHADER</A> or <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor29">D3DDP2OP_DELETEVERTEXSHADER</A>) by <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>.</P>
+
+<PRE class="syntax"><B>typedef struct _D3DHAL_DP2VERTEXSHADER {</B>
+<B>  DWORD</B>   <I>dwHandle</I>;
+<B>} D3DHAL_DP2VERTEXSHADER, *LPD3DHAL_DP2VERTEXSHADER;</B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>dwHandle</B></DT>
+
+<DD>Specifies the handle assigned by the run time to the vertex shader to set or delete. For delete, the handle is guaranteed to be non-zero. For set, the supplied handle can be zero indicating that no vertex shader is currently realized. In this case the driver should invalidate all previously set streams and free any data associated with them. The run time guarantees that streams will be reinitialized with <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor42">D3DDP2OP_SETSTREAMSOURCE</A> or <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor43">D3DDP2OP_SETSTREAMSOURCEUM</A> and a new vertex shader will be selected using <B>D3DHAL_DP2VERTEXSHADER</B> before any subsequent rendering operations.</dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>All Direct3D drivers must support the <B>D3DDP2OP_SETVERTEXSHADER</B> token because it will be sent even if the driver does not support programmable vertex processing. In that case, however, the shader handle will always be an FVF code indicating fixed function processing of the vertex data. The driver should use the FVF code stored in the <B>dwHandle</B> field as the format of the vertex data in stream zero. A driver that does support programmable vertex processing must examine the handle to determine whether it refers to a shader previously created with <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor27">D3DDP2OP_CREATEVERTEXSHADER</A> or an FVF code and take the appropriate action.</P>
+
+<P>Pixel and vertex shaders are orthogonal. Thus, if a legacy FVF code is selected as the current vertex shader this does not imply legacy pixel processing. In order to reset pixel processing to a nonprogrammable mode the current pixel shader must also be set to zero. Care should be taken in the driver to only reset vertex-processing state to a fixed function mode and not pixel processing state when the vertex shader is set to an FVF code.</P>
+
+<P>When switching from fixed function vertex processing to programmable vertex processing, the values of legacy render state and matrices should be preserved. If and when a switch from programmable to fixed function vertex processing occurs (the driver receives a <B>D3DDP2OP_SETVERTEXSHADER</B> with an FVF as the shader handle), that preserved state should be restored.</P>
+
+<P>When switching between programmable shaders, any constant register that has a value specified in the definition of that shader should be set to that value. The values of all other constant registers should remain unchanged.</P>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>D3dhal.h</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor46">D3DDP2OP_SETVERTEXSHADER</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor29">D3DDP2OP_DELETEVERTEXSHADER</A>, <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor42">D3DDP2OP_SETSTREAMSOURCE</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor43">D3DDP2OP_SETSTREAMSOURCEUM</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor27">D3DDP2OP_CREATEVERTEXSHADER</A>, <A HREF="cxrefd3dhal_xxxstructures.htm">D3DHAL_XXX Structures</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DHAL_DP2VERTEXSHADER&nbsp;(cxrefd3dhal_dp2vertexshader.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

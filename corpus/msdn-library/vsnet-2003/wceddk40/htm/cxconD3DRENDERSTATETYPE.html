@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3DRENDERSTATETYPE</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3DRENDERSTATETYPE"/>
+<MSHelp:RLTitle Title="D3DRENDERSTATETYPE"/>
+<MSHelp:Keyword Index="A" Term="cxconD3DRENDERSTATETYPE"/>
+<MSHelp:Keyword Index="K" Term="D3DRENDERSTATETYPE"/>
+<MSHelp:Keyword Index="A" Term="cxconD3DRENDERSTATETYPE"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_enumerations.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_663522">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcond3drenderstatetype"></A>D3DRENDERSTATETYPE</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This enumerated type lists a variety of attributes, or render states, that the driver uses when it performs graphics rendering. These attributes include such characteristics as whether alpha blending is enabled, whether dithering is enabled, whether Direct3D lighting is used, and the type of shading to be used. </P>
+
+<P>Only render states that are specific to device drivers are included here. For more information on the render states accessible to DirectX applications, see <MSHelp:link keywords="_wcesdk_dx3d_Render_States" TABINDEX="0">Render States</MSHelp:link> in the Direct3D SDK documentation.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Enumerator</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxcond3drenderstate_scenecapture.htm">D3DRENDERSTATE_SCENECAPTURE</A></TD>
+<TD width=50%>Specifies either begin scene information or end scene information for geometric data captured within a frame.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxcond3drs_deletertpatch.htm">D3DRS_DELETERTPATCH</A></TD>
+<TD width=50%>Deletes a patch (rectangular or triangular).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cxcond3drenderstate_evictmanagedtextures.htm">D3DRENDERSTATE_EVICTMANAGEDTEXTURES</A></TD>
+<TD width=50%>Determines whether textures are evicted from memory.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>To update a particular render state, Direct3D stores information about the render state, and then calls the driver's <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A> callback routine. The information provided to the driver enables it to perform the following tasks:
+
+<UL type="disc">
+	<LI>Determine that it should update one or more render states.</li>
+
+	<LI>Identify which render states to update, and what the new render state values should be.
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;For certain render states to be honored, the driver must have previously set capability flags in the relevant member of the <A HREF="cxrefd3dprimcaps.htm">D3DPRIMCAPS</A> structure.</BLOCKQUOTE>
+</li>
+</UL>
+
+<P>In order to indicate a specific render state update, Direct3D inserts a <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A> structure into the command buffer, setting the <B>bCommand</B> member of this structure to <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor32">D3DDP2OP_RENDERSTATE</A>, and setting the <B>wStateCount</B> member of the same structure to the number of render states to be updated.</P>
+
+<P>Immediately following the D3DHAL_DP2COMMAND structure, Direct3D inserts one <A HREF="cxrefd3dhal_dp2renderstate.htm">D3DHAL_DP2RENDERSTATE</A> structure into the command buffer for each render state to be updated. The <B>RenderState</B> member of this structure identifies the render state to be changed; the new value of this render state is specified in either the <B>dwState</B> member (for <B>DWORD</B> values) or the <B>fState</B> member (for D3DVALUE values).</P>
+
+<P>The following figure shows a portion of the command buffer containing a <B>D3DDP2OP_RENDERSTATE</B> command and two <B>D3DHAL_DP2RENDERSTATE</B> structures. The first of the three structures indicates that two render states are to be updated. The second structure indicates that the D3DRENDERSTATE_FILLMODE render state is to be changed to D3DFILL_SOLID. The third structure indicates that the D3DRENDERSTATE_SHADEMODE render state should be updated to D3DSHADE_GOURAUD.</P>
+
+<P class="fig"><IMG SRC="dp2rs.gif" ALT="" BORDER=0></P>
+
+<P>See the <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTURESTAGESTATETYPE" TABINDEX="0">D3DTEXTURESTAGESTATETYPE</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTUREOP" TABINDEX="0">D3DTEXTUREOP</MSHelp:link>, and <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTUREFILTERTYPE" TABINDEX="0">D3DTEXTUREFILTERTYPE</MSHelp:link> enumerated types in the DirectX SDK documentation for complete listings of all of the enabled render state types.</P>
+
+<P>Multitexture macro ops and D3DRENDERSTATE_TEXTUREFACTOR override all of the per-texture stage blending controls (COLOR{OP,ARG1,ARG2} &amp; ALPHA{OP,ARG1,ARG2}).</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><MSHelp:link keywords="_wcesdk_dx3d_Render_States" TABINDEX="0">Render States</MSHelp:link>, <A HREF="cxcond3drenderstate_scenecapture.htm">D3DRENDERSTATE_SCENECAPTURE</A>, <A HREF="cxcond3drs_deletertpatch.htm">D3DRS_DELETERTPATCH</A>, <A HREF="cxcond3drenderstate_evictmanagedtextures.htm">D3DRENDERSTATE_EVICTMANAGEDTEXTURES</A>, <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="cxrefd3dprimcaps.htm">D3DPRIMCAPS</A>, <A HREF="cxrefd3dhal_dp2command.htm">D3DHAL_DP2COMMAND</A>, <A HREF="cxcond3dhal_dp2operation.htm#cxcond3dhal_dp2operationanchor32">D3DDP2OP_RENDERSTATE</A>, <A HREF="cxrefd3dhal_dp2renderstate.htm">D3DHAL_DP2RENDERSTATE</A>, <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTURESTAGESTATETYPE" TABINDEX="0">D3DTEXTURESTAGESTATETYPE</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTUREOP" TABINDEX="0">D3DTEXTUREOP</MSHelp:link>, <MSHelp:link keywords="_wcesdk_dx3d_D3DTEXTUREFILTERTYPE" TABINDEX="0">D3DTEXTUREFILTERTYPE</MSHelp:link>, <A HREF="cxcondirect3ddriverenumerations.htm">Direct3D Driver Enumerations</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3DRENDERSTATETYPE&nbsp;(cxcond3drenderstatetype.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

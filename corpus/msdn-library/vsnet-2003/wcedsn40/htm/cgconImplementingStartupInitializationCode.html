@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Startup and Initialization Code</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Startup and Initialization Code"/>
+<MSHelp:RLTitle Title="Implementing the Startup and Initialization Code"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingStartupInitializationCode"/>
+<MSHelp:Keyword Index="K" Term="boot loaders, startup and initialization code"/>
+<MSHelp:Keyword Index="K" Term="initialization, boot loader code"/>
+<MSHelp:Keyword Index="K" Term="startup, boot loader code"/>
+<MSHelp:Keyword Index="A" Term="cgconImplementingStartupInitializationCode"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: bootloader.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_749245">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconimplementingstartupinitializationcode"></A>Implementing the Startup and Initialization Code</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>When you port the boot loader to a target device, modify the target device initialization code in %_WINCEROOT%\Platform\<I>&lt;PLATNAME&gt;</I>\Eboot\Eboot\Main.c. The initialization code varies depending on whether the target device can boot to an image that is already on the device (for example, in flash RAM) or whether it must always boot to the boot loader.</P>
+
+<P>If a target device does not support boot selection and always boots to the boot loader, the boot loader must not corrupt the object store or system RAM.</P>
+
+<P>The boot loader uses initialization code that is similar to the OAL (or shared with the OAL). The boot loader startup function performs power-on initialization, sets up the stack, and then calls the main<B> </B>function. The startup function also sets up the microprocessor by initializing the cache and boot loader's read/write data area and checking for any hardware switches that allow entry to the boot loader's firmware monitor.</P>
+
+<P>The following code example, which describes the algorithm of the<B> </B>main boot loader function on the target device, shows the sample initialization code.</P>
+
+<PRE class="code">Initialize monitor port     // Platform-specific functions 
+Send version information through the serial port 
+Run Power On Self Test (POST) 
+
+If POST passes        // POST returns 1 
+   If autodownload  
+      Download image 
+      Jump to image entry point
+   Else 
+      Jump to existing image entry point
+   Endif
+Endif</PRE>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconcreatingstartupfunction.htm">Creating the Startup Function</A></P>
+
+<P><A HREF="cgconethernetbootloader.htm">Ethernet Boot Loader</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Implementing%20the%20Startup%20and%20Initialization%20Code&nbsp;(cgconimplementingstartupinitializationcode.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

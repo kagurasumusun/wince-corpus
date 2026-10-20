@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SPDUI_MicTraining</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="SPDUI_MicTraining"/>
+<MSHelp:RLTitle Title="SPDUI_MicTraining"/>
+<MSHelp:Keyword Index="A" Term="cerefSPDUI_MicTraining"/>
+<MSHelp:Keyword Index="K" Term="SPDUI_MicTraining"/>
+<MSHelp:Keyword Index="A" Term="cerefSPDUI_MicTraining"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: sapi_variables.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_821927">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefspdui_mictraining"></A>SPDUI_MicTraining</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>SPDUI_MicTraining defines the string for displaying a speech recognition engine's microphone training UI.</P>
+
+<P>It is not a SAPI 5 compliance requirement for a speech recognition engine to implement UI for SPDUI_MicTraining. </P>
+
+<H4 class="dtH4">When to Implement</H4>
+
+<P>When writing an SR engine for the desktop or a graphical environment, users may want to adapt the engine to the microphone before first use, or if recognition accuracy is poor. Microphone quality can greatly benefit recognition accuracy, even for a speaker-independent engine.</P>
+
+<P>Use the Speech Control Panel to change settings for all installed SAPI 5-compliant SR Engines. Choose Configure Microphone on the SR tab to adapt the microphone and directly access each SR Engine's Microphone Training UI using SPDUI_MicTraining. If the SR Engine does not have support for training UI (see ISpTokenUI::IsUISupported), then Configure Microphone will be unavailable.</P>
+
+<H4 class="dtH4">When to Access</H4>
+
+<P>The application could monitor the user's speech experience by recognition accuracy. If a user encounters too many false recognitions or recognition corrections, the application could ask the user if they would like to re-adapt the SR engine to their microphone (see ISpRecognizer::DisplayUI).</P>
+
+<P>Also, an SR Engine can send a SPEI_REQUEST_UI event to the application if the engine determines that the input is too quiet or too loud and would like the user to perform microphone training. Typically the UI type will be SPDUI_MicTraining to ensure that the SR Engine is adapted to the current input audio settings.</P>
+
+<PRE class="code">#define SPDUI_MicTraining        L"MicTraining"</PRE>
+
+<H4 class="dtH4">Example</H4>
+
+<P>The following code snippet illustrates the use of ISpTokenUI::IsUISupported using SPDUI_MicTraining.</P>
+
+<PRE class="code">HRESULT hr = S_OK;
+
+// get the default speech recognizer token
+hr = SpGetDefaultTokenFromCategoryId(SPCAT_RECOGNIZERS, &amp;cpObjectToken);
+// Check hr
+
+// get the object token's UI
+hr = cpObjectToken-&gt;QueryInterface(&amp;cpTokenUI);
+// Check hr
+
+// check if the default speech recognizer has UI for performing Microphone Training 
+hr = cpTokenUI-&gt;IsUISupported(SPDUI_MicTraining, NULL, NULL, NULL, &amp;fSupported);
+// Check hr
+
+// if fSupported == TRUE, then default speech recognizer has UI for Microphone Training 
+The following code snippet illustrates the use of ISpRecognizer::DisplayUI using SPDUI_MicTraining.
+
+HRESULT hr = S_OK;
+
+// display microphone training UI for the current recognizer
+hr = cpRecognizer-&gt;DisplayUI(MY_HWND, MY_APP_MIC_TRAINING, SPDUI_MicTraining, NULL, NULL);
+// Check hr</PRE>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;SPDUI_MicTraining&nbsp;(cerefspdui_mictraining.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

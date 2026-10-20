@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Serial Bus and Subunit Plug Association</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Serial Bus and Subunit Plug Association"/>
+<MSHelp:RLTitle Title="Serial Bus and Subunit Plug Association"/>
+<MSHelp:Keyword Index="A" Term="cxconSerialBusSubunitPlugAssociation"/>
+<MSHelp:Keyword Index="K" Term="1394 unit filter drivers, serial bus and subunit plug association"/>
+<MSHelp:Keyword Index="K" Term="IEEE 1394 unit filter drivers, serial bus and subunit plug association"/>
+<MSHelp:Keyword Index="K" Term="plugs, IEEE 1394 serial bus and subunit plug association"/>
+<MSHelp:Keyword Index="A" Term="cxconSerialBusSubunitPlugAssociation"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: 1394_ufd.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_758921">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconserialbussubunitplugassociation"></A>Serial Bus and Subunit Plug Association</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The process of establishing connections between plugs requires that the connector know the serial bus plug numbers on each unit to connect. Usually you connect to or between subunits. Serial bus plugs are general to the entire unit, usually the physical device, so the connector needs to know which serial bus plug on the given unit refers to which plug on which subunit.</P>
+
+<P>As an example, consider a camcorder. In a sample camcorder, the single unit has two subunits. These are the tape and camera subunits. The unit has two input plugs and one output plug. The tape subunit has both a source and a destination subunit plug. The camera has a single plug, a source subunit plug. Subunit plugs can be source or destination, unit plugs can be input or output. Unit plugs are effectively serial bus plugs.</P>
+
+<P>The following illustration shows the camcorder.</P>
+
+<P class="fig"><IMG SRC="ufd.gif" ALT="" BORDER=0></P>
+
+<P>If an application wishes to receive data from the camera portion of this device, it would like to connect to a source subunit plug on the camera subunit. As the subunit plugs are more conceptual than physical, the application needs to either find which serial bus plug the required subunit plug is connected to, or the application needs to cause the subunit plug to be connected to a serial bus plug. A subunit source plug cannot connect to a serial bus input plug, only to an output plug. An input plug can only be connected to a subunit destination plug. For instance, the camera's subunit source plug 0 can only connect to a serial bus output plug. These connections between unit or serial bus plugs and subunit plugs is entirely internal to the device, and do not represent external bus connections in any form. Once the connection is established, the application will be told that serial bus plug 2 on the camcorder unit is the correct target plug to connect to, and it can go about establishing a streaming session to this plug and begin transferring data.</P>
+
+<P>The plug associations between subunit plugs and serial bus plugs can be permanent. Local plugs are unit serial bus plugs. When a local plug is allocated, it is associated with a subunit plug. Local plugs allocated by a subunit at startup through <A HREF="cxrefioctl_unit_process_registry_plugs.htm">IOCTL_UNIT_PROCESS_REGISTRY_PLUGS</A>, are permanent. If this is the case, an external connecting application only needs to determine which serial bus plug to connect to. If the plug is not permanent, an external connecting application needs to request that the subunit establish an association between a subunit plug and a serial bus plug first. Depending on the AV/C commands used to do this, you may need to free the associations that are no longer used.</P>
+
+<P>The unit filter driver takes care of most of the details in dealing with external requests for these types of issues and utilizes a set of callbacks into the virtual subunit driver to effect the individual changes. </P>
+
+<P>Of the four callbacks that a virtual subunit must provide to the unit filter driver when it registers itself, these two have to do with making or breaking associations between serial bus and subunit plugs:
+
+<UL type="disc">
+	<LI><A HREF="cxrefunit_allocatelocalplugcb.htm">UNIT_AllocateLocalPlugCB</A></li>
+
+	<LI><A HREF="cxrefunit_freelocalplugcb.htm">UNIT_FreeLocalPlugCB</A></li>
+</UL>
+
+<P><B>UNIT_AllocateLocalPlugCB</B> and <B>UNIT_FreeLocalPlugCB</B> are called to request that the virtual subunit driver make or break associations between a particular subunit plug and a serial bus plug. When called, the virtual subunit should internally decide whether to create a new association, to limit itself only to reusing permanent plugs or to some combination therein.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconieee1394unitfilterdriverarchitecture.htm">IEEE 1394 Unit Filter Driver Architecture</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Serial%20Bus%20and%20Subunit%20Plug%20Association&nbsp;(cxconserialbussubunitplugassociation.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

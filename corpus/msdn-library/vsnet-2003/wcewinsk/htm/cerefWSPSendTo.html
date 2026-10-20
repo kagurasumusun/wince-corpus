@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WSPSendTo</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="WSPSendTo"/>
+<MSHelp:RLTitle Title="WSPSendTo"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPSendTo"/>
+<MSHelp:Keyword Index="K" Term="WSPSendTo"/>
+<MSHelp:Keyword Index="A" Term="cerefWSPSendTo"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: winsock2spi_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715181">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cerefwspsendto"></A>WSPSendTo</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function sends data to a specific destination using overlapped I/O.</P>
+
+<PRE class="syntax"><B>int WSPSendTo(</B>
+<B>SOCKET </B><I>s</I><B>,</B>
+<B>LPWSABUF </B><I>lpBuffers</I><B>,</B>
+<B>DWORD </B><I>dwBufferCount</I><B>,</B>
+<B>LPDWORD </B><I>lpNumberOfBytesSent</I><B>,</B>
+<B>DWORD </B><I>dwFlags</I><B>,</B>
+<B>const struct sockaddr FAR *</B><I>lpTo</I><B>,</B>
+<B>int </B><I>iTolen</I><B>,</B>
+<B>LPWSAOVERLAPPED </B><I>lpOverlapped</I><B>,</B>
+<B>LPWSAOVERLAPPED_COMPLETION_ROUTINE</B><I> lpCompletionRoutine</I><B>,</B>
+<B>LPWSATHREADID </B><I>lpThreadId</I><B>,</B>
+<B>LPINT </B><I>lpErrno </I>
+<B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] A descriptor identifying a socket.</dd>
+
+<DT><I>lpBuffers</I></DT>
+
+<DD>[in] A pointer to an array of <A HREF="cerefwsabuf.htm">WSABUF</A> structures. Each <B>WSABUF </B>structure contains a pointer to a buffer and the length of the buffer. This array must remain valid for the duration of the send operation.</dd>
+
+<DT><I>dwBufferCount</I></DT>
+
+<DD>[in] The number of <B>WSABUF</B> structures in the <I>lpBuffers </I>array.</dd>
+
+<DT><I>lpNumberOfBytesSent</I></DT>
+
+<DD>[out] A pointer to the number of bytes sent by this call.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Specifies the way in which the call is made.</dd>
+
+<DT><I>lpTo</I></DT>
+
+<DD>[in] An optional pointer to the address of the target socket.</dd>
+
+<DT><I>iTolen</I></DT>
+
+<DD>[in] The size of the address in <I>lpTo</I>.</dd>
+
+<DT><I>lpOverlapped</I></DT>
+
+<DD>[in] A pointer to a <A HREF="cerefwsaoverlapped.htm">WSAOVERLAPPED</A> structure (ignored for nonoverlapped sockets).</dd>
+
+<DT><I>lpCompletionRoutine</I></DT>
+
+<DD>[in] A pointer to the completion routine called when the send operation has been completed (ignored for nonoverlapped sockets).</dd>
+
+<DT><I>lpThreadId</I></DT>
+
+<DD>[in] A pointer to a <A HREF="cerefwsathreadid.htm">WSATHREADID</A> structure to be used by the provider in a subsequent call to <A HREF="cerefwpuqueueapc.htm">WPUQueueApc</A>. The provider should store the referenced <B>WSATHREADID</B> structure (not the pointer to same) until after the <B>WPUQueueApc</B> function returns.</dd>
+
+<DT><I>lpErrno</I></DT>
+
+<DD>[out] A pointer to the error code.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>If no error occurs and the receive operation has completed immediately, <B>WSPSendTo</B> returns zero. Note that in this case the completion routine, if specified, will have already been queued. Otherwise, a value of SOCKET_ERROR is returned, and a specific error code is available in <I>lpErrno</I>. The error code WSA_IO_PENDING indicates that the overlapped operation has been successfully initiated and that completion will be indicated at a later time. Any other error code indicates that no overlapped operation was initiated and no completion indication will occur.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Error value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAENETDOWN</TD>
+<TD width=56%>Network subsystem has failed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEACCES</TD>
+<TD width=56%>Requested address is a broadcast address, but the appropriate flag was not set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEINTR</TD>
+<TD width=56%>(Blocking) call was canceled through <A HREF="cerefwspcancelblockingcall.htm">WSPCancelBlockingCall</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEINPROGRESS</TD>
+<TD width=56%>Blocking Windows Sockets call is in progress, or the service provider is still processing a callback function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEFAULT</TD>
+<TD width=56%>The <I>lpBuffers </I>or <I>lpTo </I>parameters are not part of the user address space, or the <I>lpTo </I>parameter is too small.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAENETRESET</TD>
+<TD width=56%>Connection has been broken due to keep-alive activity detecting a failure while the operation was in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAENOBUFS</TD>
+<TD width=56%>Windows Sockets provider reports a buffer deadlock.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAENOTCONN</TD>
+<TD width=56%>Socket is not connected (connection-oriented sockets only).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAENOTSOCK</TD>
+<TD width=56%>Descriptor is not a socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEOPNOTSUPP</TD>
+<TD width=56%>MSG_OOB was specified, but the socket is not stream-style such as type <B>SOCK_STREAM</B>, OOB data is not supported in the communication domain associated with this socket, MSG_PARTIAL is not supported, or the socket is unidirectional and supports only receive operations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAESHUTDOWN</TD>
+<TD width=56%>Socket has been shut down; it is not possible to use <B>WSPSendTo</B> on a socket after <A HREF="cerefwspshutdown.htm">WSPShutdown</A> has been invoked with <I>how</I> set to SD_SEND or SD_BOTH.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEWOULDBLOCK</TD>
+<TD width=56%>Overlapped sockets: there are too many outstanding overlapped I/O requests.
+<P>Nonoverlapped sockets: The socket is marked as nonblocking and the send operation cannot be completed immediately.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEMSGSIZE</TD>
+<TD width=56%>Socket is message oriented, and the message is larger than the maximum supported by the underlying transport.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEINVAL</TD>
+<TD width=56%>Socket has not been bound with <A HREF="cerefwspbind.htm">WSPBind</A>, or the socket is not created with the overlapped flag.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAECONNABORTED</TD>
+<TD width=56%>Virtual circuit was terminated due to a time-out or other failure.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAECONNRESET</TD>
+<TD width=56%>Virtual circuit was reset by the remote side.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEADDRNOTAVAIL</TD>
+<TD width=56%>Remote address is not a valid address (for example, ADDR_ANY).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEAFNOSUPPORT</TD>
+<TD width=56%>Addresses in the specified family cannot be used with this socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAEDESTADDRREQ</TD>
+<TD width=56%>Destination address is required.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSAENETUNREACH</TD>
+<TD width=56%>Network cannot be reached from this host at this time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>WSA_OPERATION_ABORTED</TD>
+<TD width=56%>Overlapped operation has been canceled due to the closure of the socket.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P><B>WSPSendTo</B> is typically used on a connectionless socket specified by <I>s</I> to send a datagram contained in one or more buffers to a specific peer socket identified by the <I>lpTo</I> parameter. Even if the connectionless socket has been previously connected to a specific address with the <A HREF="_wcesdk_connect_function.htm">connect</A> function, <I>lpTo</I> overrides the destination address for that particular datagram only. On a connection-oriented socket, the <I>lpTo</I> and <I>iToLen </I>parameters are ignored; in this case the <B>WSPSendTo</B> function is equivalent to <B>WSPSend</B>.</P>
+
+<P>For overlapped sockets (created using <B>WSPSocket</B> with flag WSA_FLAG_OVERLAPPED) this will occur using overlapped I/O, unless both <I>lpOverlapped</I> and <I>lpCompletionRoutine</I> are NULL in which case the socket is treated as a nonoverlapped socket. A completion indication will occur (invocation of the completion routine or setting of an event object) when the supplied buffer(s) have been consumed by the transport. If the operation does not complete immediately, the final completion status is retrieved through the completion routine or <A HREF="cerefwspgetoverlappedresult.htm">WSPGetOverlappedResult</A>.</P>
+
+<P>For nonoverlapped sockets, the parameters <I>lpOverlapped</I>,<I> lpCompletionRoutine</I>, and <I>lpThreadId</I> are ignored and <B>WSPSendTo</B> adopts the regular synchronous semantics. Data is copied from the supplied buffers into the transport's buffer. If the socket is nonblocking and stream oriented, and there is not sufficient space in the transport's buffer, <B>WSPSendTo</B> will return with only part of the Windows Sockets SPI client's buffers having been consumed. Given the same buffer situation and a blocking socket, <B>WSPSendTo</B> will block until all of the Windows Sockets SPI client's buffer contents have been consumed.</P>
+
+<P>The array of <A HREF="cerefwsabuf.htm">WSABUF</A> structures pointed to by the <I>lpBuffers</I> parameter is transient. If this operation completes in an overlapped manner, it is the service provider's responsibility to capture these <B>WSABUF</B> structures before returning from this call. This enables applications to build stack-based <B>WSABUF</B> arrays.</P>
+
+<P>For message-oriented sockets, care must be taken not to exceed the maximum message size of the underlying transport, which can be obtained by getting the value of socket option SO_MAX_MSG_SIZE. If the data is too long to pass atomically through the underlying protocol the error WSAEMSGSIZE is returned, and no data is transmitted.</P>
+
+<P>Note that the successful completion of a <B>WSPSendTo</B> does not indicate that the data was successfully delivered.</P>
+
+<P><I>iFlags</I> can be used to influence the behavior of the function invocation beyond the options specified for the associated socket. That is, the semantics of this function are determined by the socket options and the <I>dwFlags</I> parameter. The latter is constructed by using the bitwise OR operator with any of the following values.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=32%>Value</TH>
+<TH width=68%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>MSG_DONTROUTE</TD>
+<TD width=68%>Specifies that the data should not be subject to routing. A Windows Sockets service provider can choose to ignore this flag.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>MSG_OOB</TD>
+<TD width=68%>Sends OOB data (stream-style socket such as <B>SOCK_STREAM</B> only).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%>MSG_PARTIAL</TD>
+<TD width=68%>Specifies that <I>lpBuffers</I> only contains a partial message. Note that the error code WSAEOPNOTSUPP will be returned by transports that do not support partial message transmissions.</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Overlapped Socket I/O</B></P>
+
+<P>If an overlapped operation completes immediately, <B>WSPSendTo</B> returns a value of zero and the <I>lpNumberOfBytesSent</I> parameter is updated with the number of bytes sent. If the overlapped operation is successfully initiated and will complete later, <B>WSPSendTo</B> returns SOCKET_ERROR and indicates error code WSA_IO_PENDING. In this case, <I>lpNumberOfBytesSent</I> is not updated. When the overlapped operation completes the amount of data transferred is indicated either through the <I>cbTransferred</I> parameter in the completion routine (if specified), or through the <I>lpcbTransfer</I> parameter in <A HREF="cerefwspgetoverlappedresult.htm">WSPGetOverlappedResult</A>.</P>
+
+<P>Providers must allow this function to be called from within the completion routine of a previous <A HREF="cerefwsprecv.htm">WSPRecv</A>, <A HREF="cerefwsprecvfrom.htm">WSPRecvFrom</A>, <A HREF="cerefwspsend.htm">WSPSend</A> or <A HREF="#cerefwspsendto">WSPSendTo</A> function. However, for a given socket, I/O completion routines cannot be nested. This permits time-sensitive data transmissions to occur entirely within a preemptive context.</P>
+
+<P>The <I>lpOverlapped</I> parameter must be valid for the duration of the overlapped operation. If multiple I/O operations are simultaneously outstanding, each must reference a separate overlapped structure. The following code sample shows the <A HREF="cerefwsaoverlapped.htm">WSAOVERLAPPED</A> structure format.</P>
+
+<PRE class="code">typedef struct _WSAOVERLAPPED {
+  DWORD       Internal;        // reserved
+  DWORD       InternalHigh;    // reserved
+  DWORD       Offset;          // reserved
+  DWORD       OffsetHigh;      // reserved
+  WSAEVENT    hEvent;
+} WSAOVERLAPPED, FAR * LPWSAOVERLAPPED;</PRE>
+
+<P>If the <I>lpCompletionRoutine</I> parameter is NULL, the service provider signals the <I>hEvent</I> member of <I>lpOverlapped</I> when the overlapped operation completes if it contains a valid event object handle. Windows Sockets SPI clients can use <A HREF="cerefwspgetoverlappedresult.htm">WSPGetOverlappedResult</A> to wait or poll on the event object.</P>
+
+<P>If <I>lpCompletionRoutine</I> is not NULL, the <I>hEvent</I> member is ignored and can be used by the Windows Sockets SPI client to pass context information to the completion routine. A client that passes a non-NULL <I>lpCompletionRoutine</I> and later calls <B>WSAGetOverlappedResult</B> for the same overlapped I/O request may not set the <I>fWait</I> parameter for that invocation of <B>WSAGetOverlappedResult</B> to TRUE. In this case the usage of the <I>hEvent</I> member is undefined, and attempting to wait on the <I>hEvent</I> member would produce unpredictable results.</P>
+
+<P>It is the service provider's responsibility to arrange for invocation of the client specified&#0150;completion routine when the overlapped operation completes. Because the completion routine must be executed in the context of the same thread that initiated the overlapped operation, it cannot be invoked directly from the service provider. The Ws2_32.dll offers an asynchronous procedure call (APC) mechanism to facilitate invocation of completion routines.</P>
+
+<P>A service provider arranges for a function to be executed in the proper thread by calling <A HREF="cerefwpuqueueapc.htm">WPUQueueApc</A>. This function can be called from any process and thread context, even a context different from the thread and process that was used to initiate the overlapped operation.</P>
+
+<P><B>WPUQueueApc</B> takes as input parameters a pointer to a <A HREF="cerefwsathreadid.htm">WSATHREADID</A> structure (supplied to the provider through the <I>lpThreadId </I>input parameter), a pointer to an APC function to be invoked, and a 32-bit context value that is subsequently passed to the APC function. Because only a single 32-bit context value is available, the APC function itself cannot be the client specified&#0150;completion routine. The service provider must instead supply a pointer to its own APC function, which uses the supplied context value to access the needed result information for the overlapped operation, and then invokes the client specified&#0150;completion routine.</P>
+
+<P>The following code sample shows the prototype for the client-supplied completion routine.</P>
+
+<PRE class="code">void CALLBACK CompletionRoutine (
+  IN DWORD <I>dwError</I>,
+  IN DWORD <I>cbTransferred</I>,
+  IN LPWSAOVERLAPPED <I>lpOverlapped</I>,
+  IN DWORD <I>dwFlags</I> 
+);</PRE>
+
+<P><B>CompletionRoutine</B> is a placeholder for a client-supplied function name. <I>dwError</I> specifies the completion status for the overlapped operation as indicated by <I>lpOverlapped</I>. <I>cbTransferred</I> specifies the number of bytes sent. No flag values are currently defined and the <I>dwFlags</I> value will be zero. This function does not return a value.</P>
+
+<P>The completion routines can be called in any order, though not necessarily in the same order that the overlapped operations are completed. However, the service provider guarantees to the client that posted buffers are sent in the same order they are supplied.</P>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>Ws2spi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cerefwspsocket.htm">WSPSocket</A>, <A HREF="cerefwspgetoverlappedresult.htm">WSPGetOverlappedResult</A>, <A HREF="cerefwpuqueueapc.htm">WPUQueueApc</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;WSPSendTo&nbsp;(cerefwspsendto.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

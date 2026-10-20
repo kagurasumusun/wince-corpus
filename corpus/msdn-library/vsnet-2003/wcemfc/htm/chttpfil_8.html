@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CHttpFile::QueryInfo</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_chttpfile_queryinfo"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_chttpfile_queryinfo"></A><SUP></SUP>CHttpFile::QueryInfo</H1>
+
+<P>This method returns response or request headers from an HTTP request. Use this method only after a successful call to <B>SendRequest</B> or on a <B>CHttpFile</B> object successfully created by <B>OpenURL</B>.</P>
+
+<PRE class=syntax><B>BOOL QueryInfo( </B>
+<B>DWORD</B> <I>dwInfoLevel</I>,
+<B>LPVOID</B> <I>lpvBuffer</I>,
+<B>LPDWORD</B> <I>lpdwBufferLength</I>,
+<B>LPDWORD</B> <I>lpdwIndex</I> = <B>NULL</B> <B>)
+const</B>;
+
+<B>BOOL</B> <B>QueryInfo</B>(
+<B>DWORD</B> <I>dwInfoLevel</I>,
+<B>CString</B>&amp;<I> str</I>,
+<B>LPDWORD</B> <I>dwIndex</I> <B>= NULL</B> <B>)
+const</B>;
+
+<B>BOOL</B> <B>QueryInfo(
+DWORD</B> <I>dwInfoLevel</I>,
+<B>SYSTEMTIME</B>*<I> pSysTime</I>,
+<B>LPDWORD</B> <I>dwIndex</I> = <B>NULL</B> <B>)
+const;
+</B>
+<B>BOOL QueryInfo(
+DWORD </B><I>dwInfoLevel</I><B>,
+DWORD&amp; </B><I>dwResult</I><B>, </B>
+<B>LPDWORD </B><I>dwIndex</I><B> = NULL )
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwInfoLevel</I></DT>
+
+<DD>Specifies a combination of the attribute to query and the following flags that specify the type of information requested:
+
+<UL type=disc>
+	<LI>HTTP_QUERY_CUSTOM&nbsp;&nbsp;&nbsp;Finds the header name and returns this value in <I>lpvBuffer</I> on output. HTTP_QUERY_CUSTOM throws an assertion if the header is not found.</LI>
+
+	<LI>HTTP_QUERY_FLAG_REQUEST_HEADERS&nbsp;&nbsp;&nbsp;Typically, the application queries the response headers, but an application can also query request headers by using this flag. </LI>
+
+	<LI>HTTP_QUERY_FLAG_SYSTEMTIME&nbsp;&nbsp;&nbsp;For those headers whose value is a date/time string, such as <CODE>Last-Modified-Time</CODE>, this flag returns the header value as a standard Windows CE <B>SYSTEMTIME</B> structure that does not require the application to parse the data. If you use this flag, you may want to use the <B>SYSTEMTIME</B> override of the function.</LI>
+
+	<LI>HTTP_QUERY_FLAG_NUMBER&nbsp;&nbsp;&nbsp;For those headers whose value is a number, such as the status code, this flag returns the data as a 32-bit number. </LI>
+</UL>
+
+
+<P>See the Remarks section for a list of the possible values.
+</DD>
+
+<DT><I>lpvBuffer</I></DT>
+
+<DD>Specifies a pointer to the buffer that receives the information.</DD>
+
+<DT><I>lpdwBufferLength</I></DT>
+
+<DD>On entry, this points to a value containing the length of the data buffer, in number of characters or bytes. See the Remarks section for more detailed information about this parameter.</DD>
+
+<DT><I>lpdwIndex</I></DT>
+
+<DD>Specifies a pointer to a zero-based header index. Can be <B>NULL</B>. Use this flag to enumerate multiple headers with the same name. On input, <I>lpdwIndex</I> indicates the index of the specified header to return. On output, <I>lpdwIndex</I> indicates the index of the next header. If the next index cannot be found, ERROR_HTTP_HEADER_NOT_FOUND is returned. </DD>
+
+<DT><I>str</I></DT>
+
+<DD>Specifies a reference to the <A HREF="cstring.htm"><B>CString</B></A> object receiving the returned information.</DD>
+
+<DT><I>dwIndex</I></DT>
+
+<DD>Specifies an index value. See <I>lpdwIndex</I>.</DD>
+
+<DT><I>pSysTime</I></DT>
+
+<DD>Specifies a pointer to a Windows CE <A HREF="struct_30.htm"><B>SYSTEMTIME</B></A> structure.</DD>
+
+<DT><I>dwResult</I></DT>
+
+<DD>Specifies the value of the result.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if successful; otherwise, it is zero. If the call fails, the Windows CE function <B>GetLastError</B> may be called to determine the cause of the error.</P>
+
+<H4>Remarks</H4>
+
+<P>You can retrieve the following types of data from <B>QueryInfo</B>:
+
+<UL type=disc>
+	<LI>strings&#0151;default</LI>
+
+	<LI><B>SYSTEMTIME</B>&#0151;for Data: Expires: etc, headers</LI>
+
+	<LI><B>DWORD</B> (for STATUS_CODE, CONTENT_LENGTH, etc.)</LI>
+</UL>
+
+<P>When a string is written to the buffer, and the method succeeds, <I>lpdwBufferLength</I> contains the length of the string in characters minus 1 for the terminating <B>NULL</B> character.</P>
+
+<P>The possible <I>dwInfoLevel</I> values include:
+
+<UL type=disc>
+	<LI>HTTP_QUERY_MIME_VERSION</LI>
+
+	<LI>HTTP_QUERY_CONTENT_TYPE</LI>
+
+	<LI>HTTP_QUERY_CONTENT_TRANSFER_ENCODING</LI>
+
+	<LI>HTTP_QUERY_CONTENT_ID</LI>
+
+	<LI>HTTP_QUERY_CONTENT_DESCRIPTION</LI>
+
+	<LI>HTTP_QUERY_CONTENT_LENGTH</LI>
+
+	<LI>HTTP_QUERY_ALLOWED_METHODS</LI>
+
+	<LI>HTTP_QUERY_PUBLIC_METHODS</LI>
+
+	<LI>HTTP_QUERY_DATE</LI>
+
+	<LI>HTTP_QUERY_EXPIRES</LI>
+
+	<LI>HTTP_QUERY_LAST_MODIFIED</LI>
+
+	<LI>HTTP_QUERY_MESSAGE_ID</LI>
+
+	<LI>HTTP_QUERY_URI</LI>
+
+	<LI>HTTP_QUERY_DERIVED_FROM</LI>
+
+	<LI>HTTP_QUERY_LANGUAGE</LI>
+
+	<LI>HTTP_QUERY_COST</LI>
+
+	<LI>HTTP_QUERY_WWW_LINK</LI>
+
+	<LI>HTTP_QUERY_PRAGMA</LI>
+
+	<LI>HTTP_QUERY_VERSION</LI>
+
+	<LI>HTTP_QUERY_STATUS_CODE</LI>
+
+	<LI>HTTP_QUERY_STATUS_TEXT</LI>
+
+	<LI>HTTP_QUERY_RAW_HEADERS</LI>
+
+	<LI>HTTP_QUERY_RAW_HEADERS_CRLF</LI>
+</UL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxinet.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

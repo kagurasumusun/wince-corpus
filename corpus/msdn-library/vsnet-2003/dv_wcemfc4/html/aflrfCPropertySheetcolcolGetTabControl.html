@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertySheet::GetTabControl</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="CPropertySheet::GetTabControl"/>
+<MSHelp:RLTitle Title="CPropertySheet::GetTabControl"/>
+<MSHelp:Keyword Index="A" Term="aflrfCPropertySheetcolcolGetTabControl"/>
+<MSHelp:Keyword Index="K" Term="GetTabControl method"/>
+<MSHelp:Keyword Index="A" Term="aflrfCPropertySheetcolcolGetTabControl"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="cpropsht.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_696654">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Foundation&nbsp;Class&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="aflrfcpropertysheetcolcolgettabcontrol"></A>CPropertySheet::GetTabControl</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>This method retrieves a pointer to a tab control which allows the application to make changes to the tab control. For example, call this method if you want to add bitmaps to each of the tabs during initialization.</P>
+
+<PRE class="syntax"><B>CTabCtrl* GetTabControl( ) 
+const;</B><I> </I></PRE>
+
+<P class="label"><B>Return Value</B></P>
+
+<P>Returns a pointer to a tab control.</P>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">// Create and associate a tooltip control to the tab control of 
+// CMyPropertySheet. CMyPropertySheet is a CPropertySheet-derived
+// class.
+BOOL CMyPropertySheet::OnInitDialog() 
+{
+&nbsp;&nbsp;BOOL bResult = CPropertySheet::OnInitDialog();
+&nbsp;&nbsp;
+&nbsp;&nbsp;// Create a tooltip control. m_ToolTipCtrl is a member variable
+&nbsp;&nbsp;// of type CToolTipCtrl* in CMyPropertySheet class.  It is 
+&nbsp;&nbsp;// initialized to NULL in the constructor, and destroyed in the 
+&nbsp;&nbsp;// destructor of CMyPropertySheet class.
+&nbsp;&nbsp;m_ToolTipCtrl = new CToolTipCtrl;
+&nbsp;&nbsp;if (!m_ToolTipCtrl-&gt;Create(this))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE("Unable To create ToolTip\n");           
+&nbsp;&nbsp;&nbsp;&nbsp;return bResult;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Associate the tooltip control to the tab control
+&nbsp;&nbsp;// of CMyPropertySheet.
+&nbsp;&nbsp;CTabCtrl* tab = GetTabControl();
+&nbsp;&nbsp;tab-&gt;SetToolTips(m_ToolTipCtrl);
+
+&nbsp;&nbsp;// Get the bounding rectangle of each tab in the tab control of the
+&nbsp;&nbsp;// property sheet. Use this rectangle when registering a tool with 
+&nbsp;&nbsp;// the tool tip control. IDS_FIRST_TOOLTIP is the first ID string 
+&nbsp;&nbsp;// resource that contains the text for the tool.
+&nbsp;&nbsp;int count = tab-&gt;GetItemCount();
+&nbsp;&nbsp;int id = IDS_FIRST_TOOLTIP;
+&nbsp;&nbsp;for (int i = 0; i &lt; count; i++)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;id += i;
+&nbsp;&nbsp;&nbsp;&nbsp;CRect r;
+&nbsp;&nbsp;&nbsp;&nbsp;tab-&gt;GetItemRect(i, &amp;r);
+&nbsp;&nbsp;&nbsp;&nbsp;VERIFY(m_ToolTipCtrl-&gt;AddTool(tab, id, &amp;r, id));
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Activate the tooltip control.
+&nbsp;&nbsp;m_ToolTipCtrl-&gt;Activate(TRUE);
+
+&nbsp;&nbsp;return bResult;
+}
+
+// Override PreTranslateMessage() so RelayEvent() can be 
+// called to pass a mouse message to CMyPropertySheet's 
+// tooltip control for processing.
+BOOL CMyPropertySheet::PreTranslateMessage(MSG* pMsg) 
+{
+&nbsp;&nbsp;if (NULL != m_ToolTipCtrl)            
+&nbsp;&nbsp;&nbsp;&nbsp;m_ToolTipCtrl-&gt;RelayEvent(pMsg);
+&nbsp;&nbsp;
+&nbsp;&nbsp;return CPropertySheet::PreTranslateMessage(pMsg);
+}</PRE>
+
+<P class="label"><B>Requirements </B></P>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h</P>
+
+<P class="label"><B>See Also</B></P>
+
+<P><A HREF="aflrfctabctrlcolcolctabctrl.htm"><B>CTabCtrl::CTabCtrl</B></A> </P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_696654', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

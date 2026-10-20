@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Printer Driver Architecture</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Printer Driver Architecture"/>
+<MSHelp:RLTitle Title="Printer Driver Architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconPrinterDriverArchitecture"/>
+<MSHelp:Keyword Index="K" Term="architecture, printer drivers"/>
+<MSHelp:Keyword Index="K" Term="printer drivers, architecture"/>
+<MSHelp:Keyword Index="A" Term="cxconPrinterDriverArchitecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: printer_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_750633">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconprinterdriverarchitecture"></A>Printer Driver Architecture</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The port monitor manages all communication between printer drivers and physical communication ports on a Windows CE&#0150;based platform. Therefore, the printer driver does not need to support different types of printer ports explicitly; due to the port monitor's management, the driver automatically works with any type of printer port. The port monitor supports serial ports, infrared ports, parallel ports, and network printing. Printer drivers should call the port monitor APIs, instead of calling low-level communication APIs directly.</P>
+
+<P>Port monitor APIs take handle-based parameters. This allows multiple applications to use the APIs simultaneously.</P>
+
+<P>The following table shows the port monitor functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_getprinterinfo.htm">GetPrinterInfo</A></TD>
+<TD width=67%>Retrieves information about the capabilities of a printer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_printerclose.htm">PrinterClose</A></TD>
+<TD width=67%>Closes a handle to a printer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_printeropen.htm">PrinterOpen</A></TD>
+<TD width=67%>Opens a handle to a printer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_printersend.htm">PrinterSend</A></TD>
+<TD width=67%>Sends blocks of data to a printer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_reportprinterstatus.htm">ReportPrinterStatus</A></TD>
+<TD width=67%>Returns the status of a printer or printing operation that is in progress.</TD>
+</TR>
+</table></div>
+
+<P>The following table shows the functions that printer drivers must implement.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Function</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvcopybits.htm">DrvCopyBits</A></TD>
+<TD width=67%>Translates between device-managed raster surfaces and graphics device interface (GDI) standard format bitmaps.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvdisablepdev.htm">DrvDisablePDEV</A></TD>
+<TD width=67%>Used by MGDI to notify a driver that the specified <B>PDEV</B> structure is no longer needed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvdisablesurface.htm">DrvDisableSurface</A></TD>
+<TD width=67%>Used by the GDI to notify a driver that the surface created by the <B>DrvEnableSurface</B> function for the current device is no longer needed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvenabledriver.htm">DrvEnableDriver</A></TD>
+<TD width=67%>The initial driver entry point exported by the driver DLL for devices that link directly to GWES, such as display drivers and printer drivers. It fills a <B>DRVENABLEDATA</B> structure with the driver version number and calling addresses of functions supported by the driver</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvenablepdev.htm">DrvEnablePDEV</A></TD>
+<TD width=67%>Enables a device context for drawing and returns device metrics for the target printer or display device in a <B>GDIINFO</B> structure. Printer drivers call a display driver's <B>DrvEnablePDEV</B> function to create and initialize the device context, and then substitute the printer's device metrics before returning the device context to the GDI for bitmap rendering.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvenablesurface.htm">DrvEnableSurface</A></TD>
+<TD width=67%>Sets up a surface to be drawn on and associates it with a specified <B>PDEV.</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvenddoc.htm">DrvEndDoc</A></TD>
+<TD width=67%>Called by the GDI to finish or abort a print job.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="cxrefdrvgetmodes.htm">DrvGetModes</A></TD>
+<TD width=67%>Lists the modes supported by a specified device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvstartdoc.htm">DrvStartDoc</A></TD>
+<TD width=67%>Called by the GDI to start a print job.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><A HREF="_wceddk_drvstartpage.htm">DrvStartPage</A></TD>
+<TD width=67%>Called by the GDI to start printing the next page of a print job.</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="_wceddk_printer_drivers.htm">Printer Drivers</A></P>
+
+<P><A HREF="cxconprintspooling.htm">Print Spooling</A></P>
+
+<P><A HREF="cxconprinterdriverresources.htm">Printer Driver Samples</A></P>
+
+<P><A HREF="cxconprinterdriverregistrysettings.htm">Printer Driver Registry Settings</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Printer%20Driver%20Architecture&nbsp;(cxconprinterdriverarchitecture.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

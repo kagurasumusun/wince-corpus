@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDIS_TAPI_SET_CALL_PARAMS</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:RLTitle Title="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Keyword Index="K" Term="NDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Keyword Index="A" Term="cxrefNDIS_TAPI_SET_CALL_PARAMS"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: ndis_structures.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_756747">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxrefndis_tapi_set_call_params"></A>NDIS_TAPI_SET_CALL_PARAMS</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The<B> NDIS_TAPI_SET_CALL_PARAMS</B> structure is used by <A HREF="cxrefoid_tapi_set_call_params.htm">OID_TAPI_SET_CALL_PARAMS</A> when it requests the miniport driver to set certain call parameters for an existing call. </P>
+
+<P>Support for this request is mandatory. </P>
+
+<PRE class="syntax"><B>typedef struct _NDIS_TAPI_SET_CALL_PARAMS { </B>
+<B>  IN ULONG</B>  <I>ulRequestID</I><B>;</B> 
+  <B>IN HDRV_CALL</B>  <I>hdCall</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulBearerMode</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulMinRate</I><B>;</B> 
+  <B>IN ULONG</B>  <I>ulMaxRate</I><B>;</B> 
+  <B>IN BOOLEAN</B>  <I>bSetLineDialParams</I><B>;</B> 
+  <B>IN LINE_DIAL_PARAMS</B>  <I>LineDialParams</I><B>;</B> 
+<B>} NDIS_TAPI_SET_CALL_PARAMS, *PNDIS_TAPI_SET_CALL_PARAMS; </B></PRE>
+
+<H4 class="dtH4">Members</H4>
+
+<DL>
+<DT><B>ulRequestID </B></DT>
+
+<DD>Reserved. </dd>
+
+<DT><B>hdCall </B></DT>
+
+<DD>Specifies the miniport driver's handle to the call for which the remaining parameters are to be changed. </dd>
+
+<DT><B>ulBearerMode </B></DT>
+
+<DD>Specifies the new bearer mode for the call. This member can have only one of the following LINEBEARERMODE flags set: 
+
+<UL type="disc">
+	<LI>LINEBEARERMODE_VOICE </li>
+
+	<LI>LINEBEARERMODE_SPEECH </li>
+
+	<LI>LINEBEARERMODE_MULTIUSE </li>
+
+	<LI>LINEBEARERMODE_DATA </li>
+
+	<LI>LINEBEARERMODE_ALTSPEECHDATA </li>
+
+	<LI>LINEBEARERMODE_NONCALLSIGNALING </li>
+</UL>
+</dd>
+
+<DT><B>ulMinRate </B></DT>
+
+<DD>Specifies a lower bound for the call's new data rate. The value of this member is not validated by NDISTAPI before the miniport driver is called. 
+
+<P>This value indicates that the caller is willing to accept a new rate as low as this one. 
+</dd>
+
+<DT><B>ulMaxRate </B></DT>
+
+<DD>Specifies an upper bound for the call's new data rate. The value of this member is not validated by NDISTAPI before the miniport driver is called. 
+
+<P>This value indicates the maximum data rate the caller would like. 
+
+
+<P>Equal values for the <B>ulMinRate</B> and <B>ulMaxRate</B> members indicate that the caller requires an exact rate. 
+</dd>
+
+<DT><B>bSetLineDialParams </B></DT>
+
+<DD>Specifies whether the following dialing parameters should be used for the call. If this member is FALSE, the call's current dialing parameters should be used and the next member should be ignored. </dd>
+
+<DT><B>LineDialParams </B></DT>
+
+<DD>This structure specifies the new dial parameters for the call. </dd>
+</DL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The <A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A> function can return one of the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_SUCCESS</li>
+
+	<LI>NDIS_STATUS_PENDING</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALCALLHANDLE</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALCALLSTATE</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALBEARERMODE</li>
+
+	<LI>NDIS_STATUS_TAPI_BEARERMODEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_TAPI_INVALRATE</li>
+
+	<LI>NDIS_STATUS_TAPI_RATEUNAVAIL</li>
+
+	<LI>NDIS_STATUS_TAPI_RESOURCEUNAVAIL </li>
+
+	<LI>NDIS_STATUS_FAILURE</li>
+</UL>
+
+<H4 class="dtH4">Requirements </H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>.NET 4.0 and later</TD>
+<TD width=19%>Ndistapi.h</TD>
+<TD width=16%>Ntddndis.h and Ndistapi.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxrefoid_tapi_set_call_params.htm">OID_TAPI_SET_CALL_PARAMS</A>, <A HREF="cxrefminiportsetinformation.htm">MiniportSetInformation</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;NDIS_TAPI_SET_CALL_PARAMS&nbsp;(cxrefndis_tapi_set_call_params.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Injecting a DLL into a Process Space</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Injecting a DLL into a Process Space"/>
+<MSHelp:RLTitle Title="Injecting a DLL into a Process Space"/>
+<MSHelp:Keyword Index="A" Term="cmconInjectingDLLIntoProcessSpace"/>
+<MSHelp:Keyword Index="K" Term="DLLs, injecting into process space"/>
+<MSHelp:Keyword Index="K" Term="kernel, injecting DLLs into process space"/>
+<MSHelp:Keyword Index="A" Term="cmconInjectingDLLIntoProcessSpace"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: os_kern.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_751125">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cmconinjectingdllintoprocessspace"></A>Injecting a DLL into a Process Space</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>There are times when a DLL needs to be automatically added to a process space to perform some required action. This could be a debugging tool that wants to track some actions. If neither the source code nor the ability to build the code is available, you are limited to what kinds of debugging you can perform. The kernel has the ability to load a DLL into every process space. This is similar to functionality in Windows XP.</P>
+
+<P>To enable this process, the name of the DLL can be added to the following registry key.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE\SYSTEM\KERNEL
+    "InjectDLL" = REG_MULTI_SZ : "MyDLL1.DLL","MyDLL2.DLL", …</PRE>
+
+<P>The data type is a REG_MULTI_SZ or array of strings, which can list more than one DLL. The name of the DLL can contain the full path and file name or just the file name.</P>
+
+<P>Applications that install DLLs to be injected into a process should only append or remove their specific DLL from the registry.</P>
+
+<P>When a process is created and all implicitly linked DLLs are loaded, the kernel will load each DLL listed in "InjectDLL". Failure to load the DLL will not result in the failure of the application to launch. A DLL could fail to load if the DLL returns false in <MSHelp:link keywords="_wcesdk_win32_DllMain" TABINDEX="0">DllMain</MSHelp:link> or if the application is a trusted and the DLL being loaded is not. DLLs can check in <B>DLLMain</B> to determine what process they are being loaded into by calling <MSHelp:link keywords="_wcesdk_GetModuleFileName" TABINDEX="0">GetModuleFileName</MSHelp:link> (NULL, <I>&amp;Filename</I>, <I>nSize</I>).</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cmconloader.htm">Loader</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Injecting%20a%20DLL%20into%20a%20Process%20Space&nbsp;(cmconinjectingdllintoprocessspace.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

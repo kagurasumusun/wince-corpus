@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Chord-map Form</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Chord-map Form"/>
+<MSHelp:RLTitle Title="Chord-map Form"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Chord_map_Form"/>
+<MSHelp:Keyword Index="K" Term="chord maps%2C DirectMusic, forms"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dxmusic_Chord_map_Form"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: dxmusic_concepts1_overview.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_680658">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="_wcesdk_dxmusic_chord_map_form"></A>Chord-map Form</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The following notation shows the organization of the top-level chunk, or form, of a chord-map file. </P>
+
+<PRE class="code">RIFF( 'DMPR'
+    &lt;perh-ck&gt;       // Chord-map header chunk
+    [ &lt;guid-ck&gt; ]   // GUID chunk
+    [ &lt;vers-ck&gt; ]   // Version chunk
+    [ &lt;UNFO-list&gt; ] // UNFO list
+    &lt;chdt-ck&gt;       // Chord data chunk
+    &lt;chpl-list&gt;     // Chord palette
+    &lt;cmap-list&gt;     // Chord graph
+    &lt;spsq-list&gt;     // Signpost list
+)</PRE>
+
+<P>Each of the items &#0151; with the exception of the GUID chunk, version chunk, and UNFO list &#0151; is required. For more information, see <A HREF="_wcesdk_dxmusic_common_chunks.htm">Common Chunks</A>.</P>
+
+<P>The required chunks and their subchunks are as follows.</P>
+
+<PRE class="code">&lt;perh-ck&gt; -&gt; perh( &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_CHORDMAP" TABINDEX="0">DMUS_IO_CHORDMAP</MSHelp:link>&gt; )</PRE>
+
+<P>This is the basic header information for a chord map. </P>
+
+<PRE class="code">&lt;chdt-ck&gt; -&gt; chdt(
+    &lt;WORD&gt;    // Size of DMUS_IO_CHORDMAP_SUBCHORD
+    &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_CHORDMAP_SUBCHORD" TABINDEX="0">DMUS_IO_CHORDMAP_SUBCHORD</MSHelp:link>&gt;... 
+    )</PRE>
+
+<P>The &lt;chdt-ck&gt; chunk contains a <B>WORD</B>, indicating the number of bytes per subchord followed by an array of unique subchords. The subchord identifiers referred to in other parts of this file all correspond directly to an index into this array.</P>
+
+<PRE class="code">&lt;chpl-list&gt; -&gt; LIST( 'chpl' 
+    &lt;chrd-list&gt;... 
+    )</PRE>
+
+<P>This list contains the chord palette. Currently there must be exactly 24 items in this list.</P>
+
+<PRE class="code">&lt;chrd-list&gt; -&gt; LIST( 'chrd'
+    &lt;UNAM-ck&gt;    // Chord name  
+    &lt;sbcn-ck&gt;    // Subchord indexes
+    )</PRE>
+
+<P>This list contains the basic chord information. This information is the chord's name and a list of identifiers for its subchords.</P>
+
+<PRE class="code">&lt;UNAM-ck&gt; -&gt; UNAM ( &lt;WCHAR&gt;... )</PRE>
+
+<P>The UNAM chunk stores the name of the chord.</P>
+
+<PRE class="code">&lt;sbcn-ck&gt; -&gt; sbcn( &lt;WORD&gt;... )</PRE>
+
+<P>The sbcn chunk contains one or more subchord identifiers. These correspond directly to an index into the array found in &lt;chdt-ck&gt;. Currently a maximum of four chords is supported.</P>
+
+<PRE class="code">&lt;cmap-list&gt;  -&gt;  LIST( 'cmap' 
+    &lt;choe-list&gt;... 
+    )</PRE>
+
+<P>The cmap list contains the entire chord connection graph for the chord map. The bulk of the data for the chord map resides in this chunk.</P>
+
+<PRE class="code">&lt;choe-list&gt; -&gt; LIST( 'choe'
+    &lt;cheh-ck&gt;      // Chord entry data
+    &lt;chrd-list&gt;    // Chord data; see above.
+    &lt;ncsq-ck&gt;      // Next chord list
+    )</PRE>
+
+<P>The choe list contains data for a single entry in the chord graph, along with pointers to all the chords that can occur next in the chord graph.</P>
+
+<PRE class="code">&lt;cheh-ck&gt; -&gt; cheh( &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_CHORDENTRY" TABINDEX="0">DMUS_IO_CHORDENTRY</MSHelp:link>&gt; )</PRE>
+
+<P>This is the chord entry header. The identifier in the structure is the identifier for the chord connection graph, not a subchord identifier.</P>
+
+<PRE class="code">&lt;ncsq-ck&gt; -&gt; ncsq (
+    &lt;WORD&gt;         // Size of DMUS_IO_NEXTCHORD
+    &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_NEXTCHORD" TABINDEX="0">DMUS_IO_NEXTCHORD</MSHelp:link>&gt;... 
+    )</PRE>
+
+<P>The ncsq chunk contains data that connects one chord in the connection graph to another. Each chord in the connection graph is represented by a 16-bit identifier.</P>
+
+<PRE class="code">&lt;spsq-list&gt; -&gt; LIST( 'spsq' 
+    &lt;spst-list&gt;... 
+    )</PRE>
+
+<P>The spsq list contains data for each of the signposts.</P>
+
+<PRE class="code">&lt;spst-list&gt;  -&gt;  LIST( 'spst'
+    &lt;spsh-ck&gt;
+    &lt;chrd-list&gt;  // Chord data; see above.
+    [ &lt;cade-list&gt; ]
+    )</PRE>
+
+<P>The spst list contains data for a single signpost, consisting of a header, chord information, and optional cadence chords.</P>
+
+<PRE class="code">&lt;cade-list&gt; -&gt; LIST( 'cade' 
+    &lt;chrd-list&gt;... 
+    )</PRE>
+
+<P>The cade list contains the chord information for cadence chords. Currently, there is support for up to two cadence chords in this list. Any additional chords or other information is ignored.</P>
+
+<PRE class="code">&lt;spsh-ck&gt; -&gt; spsh(
+    &lt;<MSHelp:link keywords="_wcesdk_dxmusic_DMUS_IO_CHORDMAP_SIGNPOST" TABINDEX="0">DMUS_IO_CHORDMAP_SIGNPOST</MSHelp:link>&gt; 
+)</PRE>
+
+<P>Finally, the spsh chunk contains the signpost data.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Chord-map%20Form&nbsp;(_wcesdk_dxmusic_chord_map_form.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

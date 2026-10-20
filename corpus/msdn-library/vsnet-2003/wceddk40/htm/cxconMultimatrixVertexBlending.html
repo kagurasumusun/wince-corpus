@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Multimatrix Vertex Blending</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Multimatrix Vertex Blending"/>
+<MSHelp:RLTitle Title="Multimatrix Vertex Blending"/>
+<MSHelp:Keyword Index="A" Term="cxconMultimatrixVertexBlending"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="hardware, Direct3D hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="lighting%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="multimatrix vertex blending, Direct3D"/>
+<MSHelp:Keyword Index="K" Term="transformation%2C Direct3D, hardware transform and lighting"/>
+<MSHelp:Keyword Index="K" Term="vertex blending%2C Direct3D, multimatrix vertex blending"/>
+<MSHelp:Keyword Index="A" Term="cxconMultimatrixVertexBlending"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: d3d_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_665082">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconmultimatrixvertexblending"></A>Multimatrix Vertex Blending</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Multimatrix vertex blending is a technique for rendering objects with smoothly blended skin joints. While this particular technique is not common in current software, some kind of smooth-skinning is currently used by most games involving animated characters.</P>
+
+<P>A variety of geometry blending techniques exist. The technique described here is a form of geometry blending. This technique blends vertices across the joints of segmented articulated models, providing increased realism with reduced polygon count. As the joint changes in each frame, the geometry pipeline updates the positions of nearby vertices to smoothly blend between the segments at that joint. This capability can operate between segments that are related by joint types other than rotations, such as translations, scales, shears, or any combination that can be represented by a 4X4 transformation matrix.</P>
+
+<P>The general principle is to extend the typical segmented character by blending mesh vertices at joints.</P>
+
+<P>Segmented models are considered to be built up from segments, or coordinate systems, each defined by a transformation matrix. Traditionally, each vertex of a mesh is considered to belong to only a single segment. This paradigm has been extended to allow vertices to have partial membership in other segments. Each vertex near the joint between two or more segments can have a skin weight <I>Beta value</I>, representing the proportion by which it actually belongs to the other segments.</P>
+
+<P>When used in classic hierarchical modeling, the root segment gets no blending. It is always a rigid body because there is no other transform with which to blend. The skin weight Beta is defined as the proportion of the parent coordinate system that is to be used. This will be 0.0 over the entire object if it is entirely rigid-body. </P>
+
+<P>The Beta will be 1.0 for those portions that are rigidly attached to the parent segment. This will drop as the proportion of the parent segment's contribution to the blend drops. There must be some set of points with 1.0 in them (and 0.0) in order to maintain geometric continuity between several segments. </P>
+
+<P>Multimatrix vertex blending allows smooth skin blending to be performed by updating the position of each vertex, without requiring a separate 4X4 transform to be specified for each vertex. It addresses the common case of a continuous smooth surface and yet requires only one additional value —the skin weight Beta — per vertex, minimizing additional bandwidth requirements.</P>
+
+<P>The specified vertex position data is transformed by all active world matrices, and the results are blended together using corresponding vertex weights.</P>
+
+<P>The same steps are performed for any normal present in the vertex. This produces a single vertex (with position and normal) that is then fed into the rest of the pipeline for conventional lighting and clipping. See <A HREF="cxconmultimatrixvertexblendingalgorithm.htm">Multimatrix Vertex Blending Algorithm</A> for more details.</P>
+
+<P>Characters can often contain the majority of the polygons in a scene, and are a key performance issue. Geometry pipelines that do not handle smooth-skinning well will have difficulty with a majority of the content.</P>
+
+<P>Furthermore, the number of characters visible is one of the most highly variable components of the scene. This has serious impact on frame-rate leveling behavior. For interactive applications, level frame rate is more important than high average frame rate, making efficient character rendering a very critical feature.</P>
+
+<P>Vertex blending must be performed after transformations. If blending is not integrated into the rendering pipeline, the transformations must be performed twice: once for skinning and once for rendering.</P>
+
+<P>Integrating vertex blending into the geometry pipeline allows this case to be handled with a single traversal of the vertex data, which makes it just as fast as unblended vertices in bandwidth limited cases.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconhardwaretransformlighting.htm">Hardware Transform and Lighting</A></P>
+
+<P><A HREF="cxconvertexblending.htm">Vertex Blending</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Multimatrix%20Vertex%20Blending&nbsp;(cxconmultimatrixvertexblending.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

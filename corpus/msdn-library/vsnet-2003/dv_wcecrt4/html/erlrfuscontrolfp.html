@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_controlfp</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="_controlfp"/>
+<MSHelp:RLTitle Title="_controlfp"/>
+<MSHelp:Keyword Index="A" Term="erlrfuscontrolfp"/>
+<MSHelp:Keyword Index="K" Term="_controlfp function"/>
+<MSHelp:Keyword Index="K" Term="other math and floating point functions, _controlfp"/>
+<MSHelp:Keyword Index="K" Term="run-time library [C for Windows CE .NET], _controlfp"/>
+<MSHelp:Keyword Index="A" Term="erlrfuscontrolfp"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<META name="rtfFileName" content="crt2.rtf">
+<META NAME="save" CONTENT="history">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../commoner/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_698749">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;C&nbsp;Run-Time&nbsp;Library&nbsp;for&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="erlrfuscontrolfp"></A>_controlfp</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div>
+<P>Get and set the floating-point control word.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=27%>Routine</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>_controlfp</B></TD>
+<TD width=73%>&lt;float.h&gt;</TD>
+</TR>
+</table></div>
+
+<PRE class="syntax"><B>unsigned int _controlfp( unsigned int</B> <I>new</I>, <B>unsigned</B> <B>int</B> <I>mask</I><B> );</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>new</I></DT>
+
+<DD>New control-word bit values</dd>
+
+<DT><I>mask</I></DT>
+
+<DD>Mask for new control-word bits to set</dd>
+</DL>
+
+<H4 class="dtH4">Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>The bits in the value returned indicate the floating-point control state. See Float.h for a complete definition of the bits returned by <B>_control87</B>.</P>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>The _<B>control87</B> function gets and sets the floating-point control word. The floating-point control word allows the program to change the precision, rounding, and infinity modes in the floating-point math package. You can also mask or unmask floating-point exceptions using _<B>control87</B>. If the value for mask is equal to 0, _<B>control87</B> gets the floating-point control word. If mask is nonzero, a new value for the control word is set: For any bit that is on (equal to 1) in mask, the corresponding bit in new is used to update the control word. In other words, <B>fpcntrl</B> = ((<B>fpcntrl</B> &amp; ~<B>mask</B>) | (<B>new</B> &amp; <B>mask</B>)) where <B>fpcntrl</B> is the floating-point control word.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b>&nbsp;&nbsp;&nbsp;The run-time libraries mask all floating-point exceptions by default.</BLOCKQUOTE>
+
+<P>_<B>controlfp</B> is a platform-independent, portable version of _<B>control87</B>. It is nearly identical to the _<B>control87</B> function on Intel (x86) platforms and is also supported by the MIPS and ALPHA platforms. To ensure that your floating-point code is portable to MIPS or ALPHA, use _<B>controlfp</B>. If you are targeting x86 platforms, use either _<B>control87</B> or _<B>controlfp</B>. </P>
+
+<P>The difference between _<B>control87</B> and _<B>controlfp</B> is the way these two functions treat DENORMAL values. For Intel (x86) platforms, _<B>control87</B> can set and clear the DENORMAL OPERAND exception mask. ALPHA platforms do not support this exception, and _<B>controlfp</B> does not modify the DENORMAL OPERAND exception mask. The following example demonstrates the difference:</P>
+
+<PRE class="code">_control87( _EM_INVALID, _MCW_EM ); // DENORMAL is unmasked by this call
+_controlfp( _EM_INVALID, _MCW_EM ); // DENORMAL exception mask remains unchanged</PRE>
+
+<P>The possible values for the mask constant (mask) and new control values (new) are shown in Hexadecimal Values table. Use the portable constants listed below (_MCW_EM, _EM_INVALID, and so forth) as arguments to these functions, rather than supplying the hexadecimal values explicitly.</P>
+
+<P>SH, MIPS, StrongARM, and other platforms support the DENORMAL input and output values in software. The default behavior of Windows CE on these platforms is to flush the DENORMAL input and output values to zero. <B>_controlfp</B> provides a new mask to preserve and flush the input and output DENORMAL values.</P>
+
+<P>Intel (x86) platforms support the DENORMAL input and output values in hardware. The behavior is to preserve DENORMAL values. _<B>control87</B> does not provide a mask to change this behavior. The following example demonstrates this difference:</P>
+
+<PRE class="code">controlfp( _DN_SAVE, _MCW_DN);&nbsp;&nbsp;// Denormal values preserved by software on ALPHA. NOP on x86
+controlfp( _DN_FLUSH, _MCW_DN);&nbsp;&nbsp;// Denormal values flushed to zero by hardware on Alpha. Ignored on x86</PRE>
+
+<P class="label"><B>Hexadecimal Values</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=18%>Mask</TH>
+<TH width=25%>Hex Value</TH>
+<TH width=33%>Constant</TH>
+<TH width=24%>Hex Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>_MCW_DN (Denormal control)</TD>
+<TD width=25%>0x03000000</TD>
+<TD width=33%>_DN_SAVE
+<P>_DN_FLUSH</P>
+</TD>
+<TD width=24%>0x00000000
+<P>0x01000000</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>_MCW_EM (Interrupt exception)</TD>
+<TD width=25%>0x0008001F</TD>
+<TD width=33%>_EM_INVALID
+<P>_EM_DENORMAL</P>
+
+<P>_EM_ZERODIVIDE</P>
+
+<P>_EM_OVERFLOW</P>
+
+<P>_EM_UNDERFLOW</P>
+
+<P>_EM_INEXACT</P>
+</TD>
+<TD width=24%>0x00000010
+<P>0x00080000</P>
+
+<P>0x00000008</P>
+
+<P>0x00000004</P>
+
+<P>0x00000002</P>
+
+<P>0x00000001</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>_MCW_IC (Infinity control)</TD>
+<TD width=25%>0x00040000</TD>
+<TD width=33%>_IC_AFFINE
+<P>_IC_PROJECTIVE</P>
+</TD>
+<TD width=24%>0x00040000
+<P>0x00000000</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>_MCW_RC (Rounding control)</TD>
+<TD width=25%>0x00000300</TD>
+<TD width=33%>_RC_CHOP
+<P>_RC_UP</P>
+
+<P>_RC_DOWN</P>
+
+<P>_RC_NEAR</P>
+</TD>
+<TD width=24%>0x00000300
+<P>0x00000200</P>
+
+<P>0x00000100</P>
+
+<P>0x00000000</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>_MCW_PC (Precision control)</TD>
+<TD width=25%>0x00030000</TD>
+<TD width=33%>_PC_24 (24 bits)
+<P>_PC_53 (53 bits)</P>
+
+<P>_PC_64 (64 bits)</P>
+</TD>
+<TD width=24%>0x00020000
+<P>0x00010000</P>
+
+<P>0x00000000</P>
+</TD>
+</TR>
+</table></div>
+
+<P class="label"><B>Example</B></P>
+
+<PRE class="code">/* CNTRL87.C: This program uses _control87 to output the control 
+ * word, set the precision to 24 bits, and reset the status to 
+ * the default.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;float.h&gt;
+
+void main( void )
+{
+   double a = 0.1;
+
+   /* Show original control word and do calculation. */
+   printf( "Original: 0x%.4x\n", _control87( 0, 0 ) );
+   printf( "%1.1f * %1.1f = %.15e\n", a, a, a * a );
+
+   /* Set precision to 24 bits and recalculate. */
+   printf( "24-bit:   0x%.4x\n", _control87( _PC_24, MCW_PC ) );
+   printf( "%1.1f * %1.1f = %.15e\n", a, a, a * a );
+
+   /* Restore to default and recalculate. */
+   printf( "Default:  0x%.4x\n", 
+          _control87( _CW_DEFAULT, 0xfffff ) );
+   printf( "%1.1f * %1.1f = %.15e\n", a, a, a * a );
+}
+ </PRE>
+
+<P class="label"><B>Output</B></P>
+
+<PRE class="code">Original: 0x9001f
+0.1 * 0.1 = 1.000000000000000e-002
+24-bit:   0xa001f
+0.1 * 0.1 = 9.999999776482582e-003
+Default:  0x001f
+0.1 * 0.1 = 1.000000000000000e-002</PRE>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_698749', 'VSDOCS@MICROSOFT.COM')">Send feedback on this topic to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="vxmscCopyright" TABINDEX="0">&copy; Microsoft Corporation. All rights reserved.</MSHelp:link></p>Topic Version 7.1.2277.1013 
+</div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

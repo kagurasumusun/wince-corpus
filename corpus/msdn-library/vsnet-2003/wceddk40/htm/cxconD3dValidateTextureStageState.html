@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>D3dValidateTextureStageState</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="D3dValidateTextureStageState"/>
+<MSHelp:RLTitle Title="D3dValidateTextureStageState"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dValidateTextureStageState"/>
+<MSHelp:Keyword Index="K" Term="D3dValidateTextureStageState"/>
+<MSHelp:Keyword Index="A" Term="cxconD3dValidateTextureStageState"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbSyntax"/>
+</xml>
+<!--Filename: d3d_functions.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_663535">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxcond3dvalidatetexturestagestate"></A>D3dValidateTextureStageState</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>This function returns the number of passes where the hardware can perform the blending operations specified in the current state.</P>
+
+<PRE class="syntax"><B>DWORD</B>
+  <B>(APIENTRY *LPD3DHAL_VALIDATETEXTURESTAGESTATECB)(</B>
+     <B>LPD3DHAL_VALIDATETEXTURESTAGESTATEDATA</B>   <I>pvtssd</I>
+     <B>);</B></PRE>
+
+<H4 class="dtH4">Parameters</H4>
+
+<DL>
+<DT><I>pvtssd</I></DT>
+
+<DD>Points to a <A HREF="cxrefd3dhal_validatetexturestagestatedata.htm">D3DHAL_VALIDATETEXTURESTAGESTATEDATA</A> structure that contains the information required for the driver to determine and return the number of passes required to perform the blending operations.</dd>
+</DL>
+
+<H4 class="dtH4">Return Values</H4>
+
+<P>This function returns one of the following callback codes:
+
+<UL type="disc">
+	<LI><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor2">DDHAL_DRIVER_HANDLED</A></li>
+
+	<LI><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor3">DDHAL_DRIVER_NOTHANDLED</A></li>
+</UL>
+
+<H4 class="dtH4">Remarks</H4>
+
+<P>Direct3D drivers that support texturing must implement <B>D3dValidateTextureStageState</B>.</P>
+
+<P>The driver's implementation of this function must evaluate the current texture state for all texture stages associated with the context. If the driver's hardware can perform the specified blending operations, then the driver should return the number of passes on the state data that its hardware requires. If the hardware cannot perform the specified blending operations, then the driver should return one of the following error codes in the <B>ddrval</B> member of the following structure.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=48%>Error code</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_CONFLICTINGTEXTUREFILTER</TD>
+<TD width=52%>The hardware cannot do both trilinear filtering and multitexturing at the same time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_TOOMANYOPERATIONS</TD>
+<TD width=52%>The hardware cannot handle the specified number of operations.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_UNSUPPORTEDALPHAARG</TD>
+<TD width=52%>The hardware does not support a specified alpha argument.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_UNSUPPORTEDALPHAOPERATION</TD>
+<TD width=52%>The hardware does not support a specified alpha operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_UNSUPPORTEDCOLORARG</TD>
+<TD width=52%>The hardware does not support a specified color argument.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_UNSUPPORTEDCOLOROPERATION</TD>
+<TD width=52%>The hardware does not support a specified color operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_UNSUPPORTEDFACTORVALUE</TD>
+<TD width=52%>The hardware does not support a D3DTA_TFACTOR greater than 1.0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>D3DERR_WRONGTEXTUREFORMAT</TD>
+<TD width=52%>The hardware does not support the current state in the selected texture format.</TD>
+</TR>
+</table></div>
+
+<P>Direct3D calls <B>D3dValidateTextureStageState</B> in response to an application request through a call to <B>IDirect3DDevice7::ValidateDevice</B>. The number of passes returned by the driver is propagated back to the application, which can then decide whether it will proceed with rendering using the current state or if it must change the blending operations to render faster or to render at all. There are no limits to the number of passes that a driver can return.</P>
+
+<P>A driver that returns more than one pass is responsible for properly executing the passes on all state and primitive data when rendering.</P>
+
+<H4 class="dtH4">Requests that are likely to fail D3dValidateTextureStageState:</H4>
+
+<UL type="disc">
+	<LI>Using diffuse iterated values, either as an ARG, or the BLENDDIFFUSE operation is sparsely supported on current hardware. Many parts can introduce only iterated color data at the last texture operation stage.</li>
+
+	<LI>Trying to specify the texture for each stage as its arg1 in preference to arg2.</li>
+
+	<LI>Attempting to use diffuse or scalar values at arbitrary multitexture blending stages. For many cards, these values can be used only at the final texture blending state; for others, only at the first stage.</li>
+
+	<LI>Attempting to do more in the first texture than merely replicate alpha to color channels or invert the input. For many cards, the blending units associated with the first texture are incapable of handling operations more complex than these. The following samples try to use only the second texture's blending unit, if it is possible to do so. The first unit is presumed to be in its default state in the samples.
+<PRE class="code">dev.SetTextureStageState( n, D3DTSS_COLORARG1, D3DTA_TEXTURE );  *
+dev.SetTextureStageState( n, D3DTSS_COLOROP, D3DTOP_SELECTARG1 ); *</PRE>
+</li>
+
+	<LI>Performing operations for the output alpha that are more intricate than, or substantially different from, the operations specified for the color channels is less likely to be supported.</li>
+
+	<LI>Attempting to use D3DTA_TFACTOR and D3DTA_DIFFUSE simultaneously. Some hardware does not support this.</li>
+
+	<LI>Attempting the simultaneous use of multiple textures and MIP mapped trilinear filtering. Many cards do not support these operations at the same time. If trilinear filtering has been requested for a texture involved in multitexture operations and it fails validation, turn off trilinear and try again. In this case it may be best to do multipass rendering instead.
+<P>Syntax used in the equations describing these operations.
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=24%>Expression</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>TexN (N = 0, 1, 2)</TD>
+<TD width=76%>Texture bound to texture stage N</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Ctex</TD>
+<TD width=76%>This texture's RGB </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Atex</TD>
+<TD width=76%>This texture's Alpha</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Cin</TD>
+<TD width=76%>Current color value RGB (output of previous operation)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Ain</TD>
+<TD width=76%>Current color value Alpha (output of previous operation)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Cdif</TD>
+<TD width=76%>DIFFUSE color value RGB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Adif</TD>
+<TD width=76%>DIFFUSE color value Alpha</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Cfact</TD>
+<TD width=76%>FACTOR, a scalar value specified at API level RGB</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%>Afact</TD>
+<TD width=76%>FACTOR, a scalar value specified at API level Alpha</TD>
+</TR>
+</table></div>
+</li>
+</UL>
+
+<H4 class="dtH4">Requirements</H4>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=20%>Defined in</TH>
+<TH width=20%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Windows CE OS</TD>
+<TD width=20%>.NET 4.0 and later</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor2">DDHAL_DRIVER_HANDLED</A>, <A HREF="cxconreturncodesfordirect3ddrivercallbacks.htm#cxconreturncodesfordirect3ddrivercallbacksanchor3">DDHAL_DRIVER_NOTHANDLED</A>, <A HREF="cxcond3ddrawprimitives2.htm">D3dDrawPrimitives2</A>, <A HREF="cxrefd3dhal_validatetexturestagestatedata.htm">D3DHAL_VALIDATETEXTURESTAGESTATEDATA</A>, <A HREF="cxcondirect3ddriverfunctions.htm">Direct3D Driver Functions</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;D3dValidateTextureStageState&nbsp;(cxcond3dvalidatetexturestagestate.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CException::GetErrorMessage</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cexception_geterrormessage"/>
+</xml>
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wcemfc_cexception_geterrormessage"></A><SUP></SUP>CException::GetErrorMessage</H1>
+
+<P>This method provides text about an error that has occurred. For example, call <B>GetErrorMessage</B> to retrieve a string describing the error that caused MFC to throw a <B>CFileException</B> when writing to a <A HREF="cfile.htm"><B>CFile</B></A> object.</P>
+
+<P><B>GetErrorMessage</B> will not copy more than <I>nMaxError &#0150;1</I> characters to the buffer, and it always adds a trailing null to end the string. If the buffer is too small, the error message may be truncated.</P>
+
+<PRE class=syntax><B>virtual BOOL GetErrorMessage(
+LPTSTR </B><I>lpszError</I><B>,
+UINT </B><I>nMaxError</I><B>,
+PUINT </B><I>pnHelpContext</I><B> = NULL );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszError</I></DT>
+
+<DD>Specifies a pointer to a buffer that will receive an error message.</DD>
+
+<DT><I>nMaxError</I></DT>
+
+<DD>Specifies the maximum number of characters the buffer can hold, including the <B>NULL</B> terminator.</DD>
+
+<DT><I>pnHelpContext</I></DT>
+
+<DD>Specifies the address of a <B>UINT</B> that will receive the help context identifier. If <B>NULL</B>, no identifier will be returned.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero if no error message text is available.</P>
+
+<H4>Example</H4>
+
+<PRE>CFile fileInput;
+CFileException ex;
+
+// Try to open a file for reading.
+// The file will absolutely not
+// exist because there are too many explicit
+// directories in the name.
+// If the call to Open() fails, ex will be
+// initialized with exception
+// information. The call to ex.GetErrorMessage()
+// will retrieve an appropriate message describing
+// the error, and we will add our own text
+// to make sure the user is completely sure what
+// went wrong.
+
+if (!fileInput.Open(_T("\\Too\\Many\\Bad\\Dirs.DAT"), CFile::modeRead, &amp;ex))
+{
+&nbsp;&nbsp;TCHAR&nbsp;&nbsp;szCause[255];
+&nbsp;&nbsp;CString strFormatted;
+
+&nbsp;&nbsp;ex.GetErrorMessage(szCause, 255);
+
+&nbsp;&nbsp;// In real situations, it is
+&nbsp;&nbsp;// appropriate to read this from
+&nbsp;&nbsp;// a string resource so it would be easy to
+&nbsp;&nbsp;// localize.
+
+&nbsp;&nbsp;strFormatted = _T("The data file could not be opened because of this error: ");
+&nbsp;&nbsp;strFormatted += szCause;
+
+&nbsp;&nbsp;AfxMessageBox(strFormatted);
+}
+else
+{
+&nbsp;&nbsp;// The file was opened, so complete whatever work
+&nbsp;&nbsp;// with the fileInput which
+&nbsp;&nbsp;// we were planning.
+&nbsp;&nbsp;// :
+
+&nbsp;&nbsp;fileInput.Close();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cexceptn_5.htm"><B>CException::ReportError</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+</BODY>
+</HTML>

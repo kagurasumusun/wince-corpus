@@ -1,0 +1,551 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Architecture in Microsoft Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Architecture in Microsoft Windows CE .NET"/>
+<MSHelp:RLTitle Title="Interrupt Architecture in Microsoft Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="winceinterruptarch"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Interrupts, installable ISRs"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Interrupts, interrupt service thread (IST)"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Interrupts, ISR latencies"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Interrupts, IST latencies"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET Interrupts, OEM adaption layer (OAL)"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET, interrupt architecture"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="WinCE"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbwince"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" CONTENT="Explores the scenarios for dealing with Windows CE .NET interrupt architecture from both the original equipment manufacturer (OEM) and application developers."><meta name="keywords" content="Windows CE .NET, interrupt architecture, OEM adaption layer (OAL), installable ISRs, interrupt service thread (IST)"><META name="rtfFileName" content="winceinterruptarch.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Nat Frampton">
+<META NAME="Date" CONTENT="2002-07-01">
+<META NAME="msdnID" CONTENT="_830569">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="winceinterruptarch"></A>Interrupt Architecture in Microsoft Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Nat Frampton, Windows Embedded MVP <BR>
+President, Real Time Development Corp.</P>
+
+<P>July 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET 4.0 <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Windows CE .NET 4.0 applications developers<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Platform Builder version 4.0</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#winceinterruptarch_topic1">Overview</A> <BR>
+<A HREF="#winceinterruptarch_topic2">Interrupt Architecture</A> <BR>
+<A HREF="#winceinterruptarch_topic3">OAL ISR Handling</A> <BR>
+<A HREF="#winceinterruptarch_topic4">Installable ISRs</A> <BR>
+<A HREF="#winceinterruptarch_topic5">IST Interrupt Handling</A> <BR>
+<A HREF="#winceinterruptarch_topic6">Contributors to Latencies</A> <BR>
+<A HREF="#winceinterruptarch_topic7">Conclusions</A></P>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic1"></A>Overview</H2>
+
+<P>With Microsoft Windows CE .NET, Microsoft has advanced the interrupt architecture of Windows CE. The operating system's (OS) ability to deal with shared interrupts greatly extends the ability of Windows CE .NET to support many interrupt architectures. This article explores the scenarios for dealing with interrupts from both the original equipment manufacturer (OEM) and application developers. OEM adaptation layer (OAL) interrupt service routine (ISR) Handling is explored. Installable ISRs are presented, including a simple shell to get started. Interrupt service thread (IST) interrupt handling is presented along with a template for initialization and execution. Finally, sources of latencies for both ISR and ISTs are examined. (14 printed pages)</P>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic2"></A>Interrupt Architecture</H2>
+
+<P>The first step in exploring the interrupt architecture of Microsoft&#174; Windows&#174; CE .NET is defining an overall model of the hardware, kernel, OAL and thread interactions during an interrupt. The following diagram is an overall picture of these different levels of responsibility and the transitions that cause changes of state.</P>
+
+<P class="fig"><CODE><IMG SRC="winceinterruptarch_fig1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1.</B></P>
+
+<P>The diagram represents the major transitions during an interrupt with time increasing to the right of the diagram. The bottom most layer of the diagram is the hardware and the state of the interrupt controller. The next layer is the kernel interactions during interrupt servicing. The OAL describes the board support package (BSP) responsibilities. The top most layer represents the application or driver thread interactions needed to service an interrupt. The diagram represents the interactions during a single interrupt; representing the new ability of Windows CE .NET to have shared interrupts.</P>
+
+<P>The activity starts with an interrupt represented by the line at the left most section of the chart. An exception is generated causing the kernel ISR vector to be loaded onto the processor. The kernel ISR interacts with the hardware disabling all equal and lower priority interrupts on all processors except for the ARM and Strong ARM architectures. The kernel then vectors to the OAL ISR that has been registered for that particular interrupt. The OAL ISR then can either directly handle the interrupt or can use NKCallIntChain to walk a list of installed ISRs. The main ISR or any of the installed ISRs then performs any work and returns the mapped interrupt called SYSINTR for that device. If the ISR determines that its associated device is not causing the interrupt the ISR returns SYSINTR_CHAIN, which causes <I>NKCallIntChain( )</I> to walk the ISR list to the next interrupt in the chain. The ISRs are called in the order that they were installed creating a priority on the calling list.</P>
+
+<P>Once the single ISR or its associated chain of ISRs has been called the return values can be one of the following:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=50%>Return Value</TH>
+<TH width=50%>Action</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSINTR_NOP</TD>
+<TD width=50%>Interrupt is not associated with any registered ISR for a device. Kernel enables all other interrupts.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSINTR</TD>
+<TD width=50%>Interrupt is associated with a known registered ISR and device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>SYSINTR_RESCHED</TD>
+<TD width=50%>Interrupt was the result of a timer expiration requesting an OS reschedule.</TD>
+</TR>
+</table></div>
+
+<P>The SYSINTR return value is of highest interest to our discussion. Upon completion of the ISR the kernel re-enables all interrupts on the processor except for the identified interrupt. The kernel then signals the event that has been associated with the SYSINTR value.</P>
+
+<P>The IST of a driver or application is then able to run assuming that it is the highest priority thread that is ready to run. The IST communicates with the associated device and reads any necessary data from the device completing its interrupt interaction. The IST then signals its completion with a call to <I>InterruptDone( )</I> with the associated SYSINTR value.</P>
+
+<P>The kernel, upon receiving the InterruptDone for the SYSINTR value, then re-enables the designated interrupt. This is the first point at which another interrupt for this device can be received.</P>
+
+<P>This is a fast and furious look through the interrupt sequence of activities inside Windows CE .NET. We will now examine each of these components and their responsibilities in detail.</P>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic3"></A>OAL ISR Handling</H2>
+
+<P>The OAL ISR is the basic interrupt handler that is part of the platform. The following is an actual ISR for an X86 platform. Profiling and ILTiming support has been removed. The X86 ISR is representative of all of the Windows CE-based platforms. It demonstrates a single ISR that handles all interrupts on the system.</P>
+
+<P>The ISR's goal is to hand back to the kernel a SYSINTR number for the associated device that has caused the interrupt. The ISR performs the following sequence of activities.
+
+<UL type="disc">
+	<LI>Gets the current hardware interrupt from the <B>PICGetCurrentInterrupt</B> ( PIC)</li>
+
+	<LI>If the interrupt is <B>INTR_TIMER0</B> (System Timer)
+<UL type="disc">
+	<LI>Updates the <B>CurMSec</B> keeping time for the OS</li>
+
+	<LI>Check to see if a reboot address has been registered (<B>RebootHandler</B>)</li>
+</UL>
+</li>
+
+	<LI>If the interrupt is <B>INTR_RTC</B>
+<UL type="disc">
+	<LI>The ISR checks to see if an alarm has expired (<B>SYSINTR_RTC_ALARM</B>)</li>
+</UL>
+</li>
+
+	<LI>If the Interrupt is less that the <B>INTR_MAXIMUM</B>
+<UL type="disc">
+	<LI>Call the Interrupt chain (<B>NKCallIntrChain</B>)</li>
+
+	<LI>Sets the return value from the <B>NKCallIntrChain</B> to the return value</li>
+
+	<LI>If the interrupt chain did not claim the interrupt: (<B>SYSINTR_CHAIN</B>)
+<P>Map the current hardware interrupt (<B>OEMTranslateIRQ</B>)
+
+<P>If the interrupt was registered with <B>HookInterrupt</B> in <B>OEMInit </B>
+
+<P>Return the <B>SYINTR</B> value from <B>OEMTranslateIRQ</B>
+
+<P>If the interrupt was not registered return <B>SYSINTR_NOP</B>
+</li>
+
+	<LI>Enables all but the current interrupt.(<B>PICEnableInterrupt</B>)</li>
+
+	<LI>Does the proper end of interrupt to signal the <B>PIC</B> that the interrupt is done (<B>EOI</B>)</li>
+</UL>
+</li>
+
+	<LI>The ISR returns one of the following:
+<UL type="disc">
+	<LI><B>SYSINTR_NOP</B>&#151;No ISR claimed the interrupt</li>
+
+	<LI><B>SYSINTR_RESCHED</B>&#151;Reschedule Timer has expired</li>
+
+	<LI><B>SYSINTR</B>&#151;ISR has claimed the interrupt</li>
+
+	<LI><B>SYSINTR_RTC_ALARM</B>&#151;Alarm has expired</li>
+</UL>
+</li>
+</UL>
+
+<PRE class="code">ULONG PeRPISR(void)
+{
+ULONG ulRet = SYSINTR_NOP;
+UCHAR ucCurrentInterrupt;
+
+ucCurrentInterrupt = PICGetCurrentInterrupt();
+
+if (ucCurrentInterrupt == INTR_TIMER0) {
+
+            CurMSec += SYSTEM_TICK_MS;
+            CurTicks.QuadPart += TIMER_COUNT;
+
+            if ((int) (CurMSec - dwReschedTime) &gt;= 0)
+                ulRet = SYSINTR_RESCHED;
+        }
+
+        //
+        // Check if a reboot was requested.
+        //
+        if (dwRebootAddress) {
+          RebootHandler();
+        }
+
+   } else if (ucCurrentInterrupt == INTR_RTC) {
+          UCHAR cStatusC;
+         // Check to see if this was an alarm interrupt
+          cStatusC = CMOS_Read( RTC_STATUS_C);
+          if((cStatusC &amp; (RTC_SRC_IRQ)) == (RTC_SRC_IRQ))
+                ulRet = SYSINTR_RTC_ALARM;
+      } else if (ucCurrentInterrupt &lt;= INTR_MAXIMUM) {  
+          // We have a physical interrupt ID, return a SYSINTR_ID
+
+          // Call interrupt chain to see if any installed ISRs handle this
+  // interrupt
+          ulRet = NKCallIntChain(ucCurrentInterrupt);
+
+          if (ulRet == SYSINTR_CHAIN) {
+            ulRet = OEMTranslateIrq(ucCurrentInterrupt);
+           if (ulRet != -1)
+             PICEnableInterrupt(ucCurrentInterrupt, FALSE);
+           else
+              ulRet = SYSINTR_NOP;
+          } else {
+            PICEnableInterrupt(ucCurrentInterrupt, FALSE);
+          }
+      }
+
+      if (ucCurrentInterrupt &gt; 7 || ucCurrentInterrupt == -2) {
+          __asm {
+                mov al, 020h    ; Nonspecific EOI
+                out 0A0h, al
+          }
+      }
+     __asm {
+          mov al, 020h        ; Nonspecific EOI
+          out 020h, al
+      }
+
+      return ulRet;
+}
+</PRE>
+
+<P>If an ISR has not been installed for an interrupt that has been initialized with HookInterrupt in OEMInit in the OAL, the ISR will return the proper SYSINTR value.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>You are not required to install an installable ISR for an interrupt if the device can be serviced through IST interactions only. Enabling the interrupt through a call to <B>HookInterrupt</B> in the <B>OAL's</B> <B>OEMInit</B> is sufficient.</BLOCKQUOTE>
+
+<P>The ISR code is a very small and fast piece of code. Its execution time will directly affect the latencies for interrupts throughout the system. A change to the Interrupt architecture that was introduced in Windows CE 3.0 was the ability to <B>Nest Interrupts</B>. At the point that the OAL ISR is entered, all higher priority interrupts have been enabled. The ISR may be preempted. Scenarios where timing within the ISR is critical may require interrupts to be disabled for that period of time. As with ISR execution time, this time when interrupts are turned off will increase the worst-case latencies for your platform.</P>
+
+<P>At the point the ISR has handed back a SYSINTR associated with a particular device, the kernel then signals the IST to wake up. The IST interrupt handling code within a driver or application is responsible for concluding the interrupt interaction.</P>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic4"></A>Installable ISRs</H2>
+
+<P>Installable ISRs were created in response to the openness that Windows CE .NET has brought to the embedded space. No longer is the OEM completely responsible for the platform and the application code. The embedded space now contains platform providers and application developers. If a new device were added to an open bus by an application developer on a platform using Windows CE 3.0, the OEM would have to convince the OEM to add the ISR to the platform.</P>
+
+<P>To install an ISR into a platform there are two required steps:
+
+<OL type="1">
+	<LI>Call the LoadIntChainHandler function to load the DLL containing the ISR code.</li>
+
+	<LI>The ISR must be coded to respond with a SYSINTR_&nbsp;.&nbsp;.&nbsp;.&nbsp;response as in the OAL ISR.</li>
+</OL>
+
+<P>The LoadIntChainHandler function loads the ISR dynamic-link library (DLL) into the kernel's address space. This implies that the code cannot call any non-kernel functions including any C-language runtime library functions. Remember that some structure-to-structure assignments degrade into a memcpy call and all code must be reviewed to ensure that no requirements of external libraries, even if they are created by the compiler, are necessary.</P>
+
+<P>The following source code example demonstrates a basic shell for creating an installable ISR. There are four functions:
+
+<UL type="disc">
+	<LI><B>DLLEntry</B>&#151;Receives the process and thread attach messages</li>
+
+	<LI><B>InfoCopy</B>&#151;A copy routine that is used when doing any structure assignments</li>
+
+	<LI><B>IOControl</B>&#151;Handler for any IST calls with <B>KernelLibIOControl</B></li>
+
+	<LI><B>ISRHandler</B>&#151;Actual ISR</li>
+</UL>
+
+<PRE class="code">BOOL __stdcall  DllEntry(   HINSTANCE hinstDll,
+        DWORD dwReason,
+        LPVOID lpReserved )
+{
+     if (dwReason == DLL_PROCESS_ATTACH) {}
+
+     if (dwReason == DLL_PROCESS_DETACH) {}
+
+     return TRUE;
+}
+
+// The compiler generates a call to memcpy() for assignments of large 
+  objects.
+// Since this library is not linked to the CRT, define our own copy 
+  routine.
+void  InfoCopy( PVOID  dst, PVOID  src, DWORD size  )
+{
+    while (size--) {
+*((PBYTE)dst)++ = *((PBYTE)src)++;
+}
+}
+
+BOOL IOControl(     DWORD   InstanceIndex,
+         DWORD   IoControlCode, 
+          LPVOID  pInBuf, 
+          DWORD   InBufSize,
+         LPVOID  pOutBuf, 
+          DWORD   OutBufSize, 
+          LPDWORD pBytesReturned ) 
+{
+switch (IoControlCode) {
+
+    case IOCTL_DEMO_DRIVER:  
+            // Your I/O Code Here
+            return TRUE;
+            break;
+
+    default:
+            // Invalid IOCTL
+            return FALSE;
+}
+    
+return TRUE;
+}
+
+DWORD   ISRHandler(  DWORD InstanceIndex  )
+{
+  BYTE  Value;
+
+Value = READ_PORT_UCHAR((PUCHAR)IntrAddress );
+
+// If interrupt bit set, return corresponding SYSINTR
+if ( Value &amp; 0x01 )
+{
+  return SYSINTR_DEMO;
+}
+else
+{
+  return SYSINTR_CHAIN;
+}
+}
+</PRE>
+
+<P>The ISR handler code uses a port I/O call to check the status of the device. Your scenario may require a much more complex interrogation. If the device is not the source of the interrupt, the return value will be SYSINTR_CHAIN. This return value tells the NKChainIntr function that our device was not the source of the interrupt and that other ISRs in the chain should be evaluated. If a valid SYSINTR is returned by the ISR, then NKChainIntr will immediately return and not call any other ISRs on the list. This provides a priority ordering. The first loaded installable ISR is loaded first on the list, or highest priority, subsequent installable ISRs are then added to the bottom of the list. The highest priority installable ISR in the chain should be installed first for both priority and speed of execution.</P>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic5"></A>IST Interrupt Handling</H2>
+
+<P>Dealing with interrupts from either an application or driver, requires a two-step process. First, the interrupt must be initialized with an associated event. Second, the IST must wait on the interrupt event in response to interrupts from the kernel.</P>
+
+<H3 class="dtH1">Interrupt Initialization</H3>
+
+<P>The following is example code for setting up and associating an IST with a particular interrupt. The key steps in initialising an interrupt are:
+
+<UL type="disc">
+	<LI>Creating an Event</li>
+
+	<LI>Getting the System Interrupt number for your IRQ</li>
+
+	<LI>Creating an interrupt thread (IST) that is <B>suspended</B></li>
+
+	<LI>Calling <B>InterruptInitialize</B> to create an association of the IRQ-&gt;Event
+<UL type="disc">
+	<LI>Creating an IST that is not suspended may cause <B>InterruptInitialize</B> to fail because the event is already being waited on</li>
+</UL>
+</li>
+
+	<LI>Set the thread priority to the appropriate priority</li>
+
+	<LI>Resuming the IST</li>
+</UL>
+
+<PRE class="code">Void SetupInterrupt( void )
+{
+// Create an event
+//
+g_hevInterrupt = CreateEvent(NULL, FALSE, FALSE, NULL);
+if (g_hevInterrupt == NULL) 
+{
+    RETAILMSG(1, (TEXT("DEMO: Event creation failed!!!\r\n")));
+    return;
+}
+
+// Have the OAL Translate the IRQ to a system irq
+//
+fRetVal    = KernelIoControl( IOCTL_HAL_TRANSLATE_IRQ, 
+                &amp;dwIrq,
+                sizeof( dwIrq ),
+                &amp;g_dwSysInt,
+                sizeof( g_dwSysInt ),
+                NULL );
+
+// Create a thread that waits for signaling
+//
+g_fRun  = TRUE;
+g_htIST      = CreateThread(NULL,  // Security
+          0,     // No Stack Size
+          ThreadIST,  // Interrupt Thread                NULL,    // No
+  Parameters
+          CREATE_SUSPENDED, // Create Suspended
+          &amp;dwThreadID  // Thread Id
+          );
+
+// Set the thread priority &#0150; arbitrarily 5
+//
+m_nISTPriority = 5;
+if( !CeSetThreadPriority( g_htIST, m_nISTPriority ))
+{
+    RETAILMSG(1,(TEXT("DEMO: Failed setting Thread Priority.\r\n")));
+    return;
+}
+
+// Initialize the interrupt
+//
+if ( !InterruptInitialize(g_dwSysInt,g_hevInterrupt,NULL,0) ) 
+{
+    RETAILMSG (1, (TEXT("DEMO: InterruptInitialize failed!!!\r\n")));
+    return;
+}
+
+// Get the thread started
+//
+ResumeThread( g_htIST );
+
+}
+</PRE>
+
+<P>It is important to note that the call to InterruptInitialize takes only the SYSINTR value and the event. The kernel does not know or care about the thread that will be waiting on the event. This allows for a variety of application and driver architectures. A simple main loop of an application could initialize an interrupt and then immediately wait on the event. Only a single event can be associated with an interrupt. The event cannot be used in a call to WaitForMultipleObjects. We will look at a simple thread to service the interrupt. This is the standard solution for most implementations.</P>
+
+<H3 class="dtH1">IST-Interrupt Service Routine</H3>
+
+<P>Example code for an IST is presented in this section. The key components to this IST interrupt handling thread are:
+
+<UL type="disc">
+	<LI>Waiting for the Interrupt Event.</li>
+
+	<LI>Confirming that we have a pulsed event from the OS.</li>
+
+	<LI>Do any board level interrupt processing necessary to complete the interrupt. In our example we confirm the interrupt.</li>
+
+	<LI>Handling the interrupt in the shortest time possible.</li>
+
+	<LI>Create CELOGDATA to be viewed in Kernel Tracker.</li>
+
+	<LI>Check to see if the <B>g_fPRRunning</B> flag is set and then set the <B>g_hevPRStart</B> Event.</li>
+
+	<LI>Call InterruptDone(). 
+<UL type="disc">
+	<LI>The OS will not provide another interrupt on this IRQ until InterruptDone is called.</li>
+</UL>
+</li>
+
+	<LI>Waiting for the Interrupt Event again.</li>
+</UL>
+
+<PRE class="code">DWORD  WINAPI  ThreadIST( LPVOID lpvParam )
+{
+  DWORD  dwStatus;
+  BOOL  fState = TRUE;
+
+  // Always chec the running flag
+  //
+  while( g_fRun )
+  {
+    dwStatus  = WaitForSingleObject(g_hevInterrupt, INFINITE);
+
+    // Check to see if we are finished
+    //
+    if(!g_fRun ) return 0;
+
+    // Make sure we have the object
+    //
+    if( dwStatus == WAIT_OBJECT_0 )
+    {
+
+      // Do all interrupt processing to complete the interaction
+      // with the board so we can receive another interrupt.
+      //
+      if (!( READ_REGISTER_ULONG(g_pBoard Register) &amp; INTR_MASK))
+      {
+        RETAILMSG(1, (TEXT("DEMO: Interrupt...")));
+        g_dwInterruptCount ++;
+      }
+
+      // Finish the interrupt
+      //
+      InterruptDone( g_dwSysInt );
+
+    }
+  }
+
+  return 0;
+}
+</PRE>
+
+<P>This sample reads a ULONG register to determine the interrupt state. You can simply replace this section of code with your code. It is very critical that the IST process be as simple as possible. If future processing on the data from the device needs to be done:
+
+<UL type="disc">
+	<LI>Get the data from the device as quickly as possible in the IST.</li>
+
+	<LI>Create an event to signal a lower priority thread to do the work.</li>
+
+	<LI>Immediate return, with InterruptDone, from the IST.</li>
+
+	<LI>Have the lower priority thread process the data further.</li>
+
+	<LI>Place FIFOs between the IST and the lower priority thread to handle overruns.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic6"></A>Contributors to Latencies</H2>
+
+<P>From the diagram of the interrupt architecture in Windows CE .NET, the interactions of the hardware, kernel, OAL and driver/application threads are demonstrated. Microsoft has provided several tools including ILTiming, CEBench and Kernel Tracker, to help you evaluate the performance of Windows CE .NET on your platform. An understanding of the contributions to both ISR and IST latency help to target areas of investigation.</P>
+
+<H3 class="dtH1">ISR Latencies</H3>
+
+<P>As can be seen in the <B>Interrupt Architecture Diagram </B>earlier in this paper, the ISR latency is defined as the time from when an interrupt occurred to the time the OAL ISR first executes. Since the interrupt does not cause an exception into the processor if interrupts are turned off, the first contributor to latency is the total time interrupts are turned off in the system. Interrupts for a processor are checked at the beginning of each machine instructions. If a long string move instruction is called, this can lock out interrupts, causing the second source of latency, which is the amount of time a BUS access locks out the processor. The third contributor is the amount of time it takes the kernel to vector to the OAL ISR handler. This is a process context switch. ISR Latency Contributors are:
+
+<UL type="disc">
+	<LI>Time Interrupts are turned off.</li>
+
+	<LI>Time BUS Instructions lockout the processor.</li>
+
+	<LI>Execution time of the Kernel ISR plus Vector Time to OAL ISR.</li>
+</UL>
+
+<H3 class="dtH1">IST Latencies</H3>
+
+<P>The IST latency as shown in the architecture diagram earlier in this paper is the amount of time from when an interrupt occurs to the time when the first line of code in the IST is executed. This differs from the output of the Microsoft measurement tools in Windows CE .NET. The Microsoft tools have the IST latency as the time from the end of the OAL ISR execution to the beginning of the IST. Since the standard ISR takes very little time you will need to add the ISR and IST latencies from the Microsoft measurement tools to get the IST latencies as defined in the Interrupt Architecture Diagram. </P>
+
+<P>The first contributor to IST latencies is the ISR latencies as defined earlier in this paper. The second contributor is the ISR execution time. This time can be a variable based on the length of the calling chain for shared interrupts. For low latency scenarios it is not necessary to call the <B>NKCallIntChain</B> on interrupts that will never be shared.</P>
+
+<P>The kernel functions in Windows CE, such as the scheduler, are called KCALLS. During these KCALLs a software flag is set to let the scheduler know that it cannot be interrupted at this time. ISRs will still be called but return values to reschedule the OS or schedule an IST are delayed until the KCALL is completed. The non-preemptable time is the third contributor to IST latency. Finally the kernel must schedule the IST. This context switch is the last contributor to latency. IST Latency Contributors are: 
+
+<UL type="disc">
+	<LI>ISR Latency Time </li>
+
+	<LI>OAL ISR Execution Time</li>
+
+	<LI>Time when the OS is in a KCALL</li>
+
+	<LI>Time to schedule the IST</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="winceinterruptarch_topic7"></A>Conclusions</H2>
+
+<P>With Windows CE .NET, Microsoft has advanced the Windows CE interrupt architecture. The ability of the OS to deal with shared interrupts greatly extends the ability of Windows CE .NET to support many interrupt architectures. Knowledge of this interrupt architecture greatly speeds up the investigation times into driver and latency issues. A model of the operating system interaction is the key to this understanding. Shared interrupts have greatly increased the openness of Windows CE .NET supporting the platform provider and application developer scenarios that are pervasive from company to company or within companies. Understanding latency sources will help in diagnosis of driver and real-time issues. The interrupt structure in Windows CE .NET is well defined and understandable. In short, "No, it's not magic!"</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_830569', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Certificate Enrollment in Windows CE .NET</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Certificate Enrollment in Windows CE .NET"/>
+<MSHelp:RLTitle Title="Certificate Enrollment in Windows CE .NET"/>
+<MSHelp:Keyword Index="A" Term="certificateenrollment"/>
+<MSHelp:Keyword Index="K" Term="Certificate Enrollment, Windows CE .NET with Platform Builder"/>
+<MSHelp:Keyword Index="K" Term="Windows CE .NET with Platform Builder, certificate enrollment"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenet"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="CertSrv"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbCertSrv"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Attr Name="TargetOS" Value="Windows"/>
+</xml>
+<meta name="description" content="Learn about the certificate enrollment process and various options for acquiring a digital certificate for public key-based services and applications in Windows CE .NET."><meta name="keywords" content="Windows CE .NET, certificate enrollment, Platform Builder"><META name="rtfFileName" content="certificateenrollment.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Author" CONTENT="Marcus Ash, Igor Dvorkin &amp; 2 more">
+<META NAME="Date" CONTENT="2002-08-23">
+<META NAME="msdnID" CONTENT="_835570">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="certificateenrollment"></A>Certificate Enrollment in Windows CE .NET</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Marcus Ash, Igor Dvorkin, David Cross, and Maricia Alforque<BR>
+Microsoft Corporation</P>
+
+<P>August 2002</P>
+
+<P>Applies to:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;Microsoft&#174; Windows&#174; CE .NET version 4.0 with Platform Builder</P>
+
+<P><B>Summary:</B> Learn about the certificate enrollment process and various options for acquiring a digital certificate for public key-based services and applications in Windows CE .NET. (9 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#certificateenrollment_intro">Introduction</A> <BR>
+<A HREF="#certificateenrollment_using">Using the Enrollment Client Sample</A> <BR>
+<A HREF="#certificateenrollment_auth">Authenticating the Client</A> <BR>
+<A HREF="#certificateenrollment_creating">Creating a PKCS #10 Request</A> <BR>
+<A HREF="#certificateenrollment_posting">Posting the Request</A> <BR>
+<A HREF="#certificateenrollment_retrieving">Retrieving the Certificate</A> <BR>
+<A HREF="#certificateenrollment_environment">Creating an Enrollment Environment</A> <BR>
+<A HREF="#certificateenrollment_configuring">Configuring Enroll.exe</A> <BR>
+<A HREF="#certificateenrollment_modifying">Modifying the ASP Page</A> <BR>
+<A HREF="#certificateenrollment_other">Other Enrollment Options</A> <BR>
+<A HREF="#certificateenrollment_smart">Smart Card Enrollment</A> <BR>
+<A HREF="#certificateenrollment_more">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_intro"></A>Introduction</H2>
+
+<P>Microsoft&#174; Windows&#174;<CODE>&nbsp;</CODE>CE public key-based services and applications require a digital certificate. This certificate and its associated private key establish a trusted identity for an entity using the public key-based services and applications. Certificate enrollment involves a client and a certificate authority. The client is responsible for initiating the enrollment request and with providing all the necessary information to the certificate authority. The certificate authority is responsible for validating the request and issuing a certificate.</P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_using"></A>Using the Enrollment Client Sample</H2>
+
+<P>Windows&nbsp;CE .NET provides a code sample that illustrates the client role for certificate enrollment. The sample is used to obtain a certificate for a Windows&nbsp;CE device from a Microsoft Windows&nbsp;2000 or Windows Server 2003 with Web enrollment support installed. For the sample, the certificate authority is a Windows&nbsp;2000 Certificate Server. The client sample is Enroll.exe and it is located in the %_WINCEROOT%\Public\Common\SDK\Samples\Enroll directory.</P>
+
+<P>For more information about the Microsoft Certificate Server, see <A HREF="http://go.microsoft.com/fwlink/?LinkId=9119">Windows 2000 Certificate Services</A> and <A HREF="http://go.microsoft.com/fwlink/?LinkId=9120">Step by Step Guide for Setting up a Certificate Authority</A> technical articles in Microsoft TechNet.</P>
+
+<P>The enrollment process between the client, the sample, Enroll.exe, and the certificate authority, Windows&nbsp;2000 Certificate Server, involves the following steps:
+
+<OL type="1">
+	<LI>Authenticating the client or user. </li>
+
+	<LI>Creating a PCKS #10 request. </li>
+
+	<LI>Posting the request. </li>
+
+	<LI>Retrieving the certificate. </li>
+</OL>
+
+<P>In a Windows desktop environment, Microsoft Certificate Services provide a set of customizable active server pages (ASP) to handle the various stages of certificate enrollment. Most of these pages communicate with a Windows desktop client through the Certificate Enrollment Control. The Certificate Enrollment Control is a Microsoft ActiveX&#174; control that handles all of the client side operations in an enrollment scenario. The ASP pages combined with the Certificate Enrollment Control provide an Internet browser-based enrollment sample. However, many Windows&nbsp;CE devices do not have a browser and still require certificate enrollment capabilities. Because of that constraint, the Enroll.exe sample provides the capability for enrollment in an environment that does not include a fully functional browser.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note</b><CODE>&nbsp;&nbsp;&nbsp;</CODE>Windows&nbsp;CE platform does not contain the Xenroll.dll, therefore it does not support the Icenroll interface available on the standard Windows platform.</BLOCKQUOTE>
+
+<P>The Windows&nbsp;CE enrollment scheme is based on standard Internet and Internet Engineering Task Force (IETF) protocols and can interact with the Windows&nbsp;2000 Certificate Server without requiring added customization of the supplied templates and sample ASP pages. The following diagram illustrates the basic architecture and components for the enrollment sample included in Windows&nbsp;CE .NET.</P>
+
+<P class="fig"><CODE><IMG SRC="certificateenrollment01.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1.</B></P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_auth"></A>Authenticating the Client</H2>
+
+<P>Before a client can request a certificate, the client must be authenticated. Internet Information Server (IIS) authenticates the client by impersonating the client to the Microsoft Certificate Server and prevents anonymous access to the Certificate Server Web Enrollment pages. If the user credentials are not stored in the Windows&nbsp;CE client through the Credential Manager, the server prompts the client for credentials. You can also specify the user credentials in the enrollment configuration file, Enroll.cfg. For more information on enrollment configuration options, see the <A HREF="#certificateenrollment_configuring">Configuring Enroll.exe</A> topic.</P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_creating"></A>Creating a PKCS #10 Request</H2>
+
+<P>Next, Enroll.exe creates a base64-encoded PKCS #10 certificate request message and sends it to the Windows&nbsp;2000 Certificate Server. The Windows&nbsp;CE enrollment client generates a public and private key pair if one does not already exist. Then the client generates and signs a PKCS #10 certificate request using the private key.</P>
+
+<P>The PKCS #10 certificate request contains the following information:
+
+<UL type="disc">
+	<LI><B>Subject Name</B>. This name is often a placeholder, because a Microsoft enterprise certificate authority will populate the <I>subjectname</I> and <I>subaltname</I> information automatically based on the credentials of the authenticated user and the information stored in the Active Directory. When using a standalone certificate authority, you must specify the subject information in the request and manually validate this information.</li>
+
+	<LI><B>User public key</B>. This public key corresponds to the requestor's private key.</li>
+</UL>
+
+<P>To simplify the enrollment process, Microsoft Certificate Services supports Active Directory-based certificate templates that reduce the amount of information a user has to provide. Instead of filling out a number of fields and specifying several parameters, the user can use a template that specifies most of the parameters required for a certificate. Various default templates include certificates for Client Authentication, Server Authentication, and Code Signing. The user selects the desired certificate template and the enrollment options available in the enrollment configuration file.</P>
+
+<P>For more information about the default templates, see the <A HREF="http://go.microsoft.com/fwlink/?LinkId=9119">Windows 2000 Certificate Services</A> article in Microsoft TechNet.</P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_posting"></A>Posting the Request</H2>
+
+<P>The enrollment client posts the request over HTTP to the Certfnsh.asp page. IIS acts as the registration authority to the certificate authority to enable Web-enrollment methods. IIS uses CertCli.dll, a Windows&nbsp;2000 Certificate Server component, to submit the request to the certificate services on behalf of the authenticating user. Note that Enroll.exe specifically uses the Certfnsh.asp page to post the request. Enroll.exe behaves as if the default sample ASP pages were not modified. If you modify the default ASP pages, see the <A HREF="#certificateenrollment_modifying">Modifying the ASP Pages</A> topic.</P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_retrieving"></A>Retrieving the Certificate</H2>
+
+<P>When the certificate authority has successfully processed the request and the certificate has been issued, the certificate request ID is returned to the client. The client posts a message to the Windows&nbsp;2000 Certificate Server that includes the request ID for the certificate and the encoding type. This is specified by the CERT_PICKUP_TEMPLATE option in the <A HREF="#certificateenrollment_configuring">enrollment configuration file</A> and can be modified if the default page layout is changed.</P>
+
+<P>Then the certificate is encoded and transmitted to the client over HTTP. On the client-side, Enroll.exe loads the certificate in the store specified in the enrollment configuration file; by default this is the "My Certificates" store. The certificate is associated with its private key by setting the CRYPT_KEY_PROV_INFO certificate property. Any certificate-aware application can now access this certificate from the store.</P>
+
+<P>Note that Enroll.exe does not handle PKCS #7 messages. Individual certificates are retrieved from the Windows&nbsp;2000 Certificate Server and do not include the issuer certificates packaged in a PKCS #7 message. However, you can add code to Enroll.exe to support PKCS #7 messages. Also, you can manually add the issuer certificates into the appropriate store using CryptoAPI 2.0 functions or using the certificate control panel applet provided in Platform Builder.</P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_environment"></A>Creating an Enrollment Environment</H2>
+
+<P>To create an enrollment environment between your Windows&nbsp;CE device and a Windows&nbsp;2000 Certificate Server, complete the following setup. The setup makes these assumptions:
+
+<UL type="disc">
+	<LI>You have a default Windows&nbsp;2000 Certificate Server already configured. For more information, see <A HREF="http://go.microsoft.com/fwlink/?LinkId=9120">Step-by-Step Guide for Setting up a Certificate Authority</A> technical article in Microsoft TechNet.</li>
+
+	<LI>You have not changed the Enroll.exe sample.</li>
+
+	<LI>You have specified the correct configuration options in the Enroll.cfg file.</li>
+</UL>
+
+<P class="label"><B>To prepare a Windows&nbsp;CE device for enrollment</B>
+
+<OL type="1">
+	<LI>Start Platform Builder.</li>
+
+	<LI>Create a platform for your Windows&nbsp;CE .NET device.</li>
+
+	<LI>Ensure that the following variables are set in the platform:
+<UL type="disc">
+	<LI>SYSGEN_WININET</li>
+
+	<LI>SYSGEN_AUTH_NTLM</li>
+</UL>
+</li>
+
+	<LI>Build the platform.
+<P>Enroll.exe is included in the flat release directory.
+</li>
+
+	<LI>Download the platform and the Enroll.exe to your Windows&nbsp;CE device.</li>
+</OL>
+
+<P>You are now ready to obtain a certificate for the Windows CE device.</P>
+
+<P class="label"><B>To obtain a certificate</B>
+
+<OL type="1">
+	<LI>Make sure that your device is connected to the network.</li>
+
+	<LI>From the <B>Start</B> menu, point to <B>Run</B>.</li>
+
+	<LI>In the <B>Run</B> dialog box, type <B>enroll -s&lt;name&gt;</B>, where <B>&lt;name&gt;</B> is the name of a certificate server on the Windows&nbsp;XP network, and then choose <B>OK</B>.
+<P>If the Windows&nbsp;CE client does not have the user credentials stored, a Windows logon dialog box appears. The -s option with Enroll.exe causes the application to ignore the configuration file.
+
+<P>You can use the -f option with Enroll.exe if you want to use the configuration values specified in Enroll.cfg file. Make sure that you specified the correct configuration options.
+</li>
+
+	<LI>Type your Windows networking user name, domain, and password, and then choose <B>OK</B>.</li>
+</OL>
+
+<P class="label"><B>To verify the certificate</B>
+
+<OL type="1">
+	<LI>From the <B>Start</B> menu, point to <B>Settings</B>, and then choose <B>Control Panel</B>.</li>
+
+	<LI>In <B>Control Panel</B>, point to <B>Certificates</B>, and then choose <B>My Certificates</B>.</li>
+</OL>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_configuring"></A>Configuring Enroll.exe</H2>
+
+<P>Several details of the enrollment can be configured without modifying the source code of Enroll.exe. These options are specified in a configuration file, Enroll.cfg, which is passed as a command line parameter to Enroll.exe.</P>
+
+<P>The following command line causes Enroll.exe to read its settings from the text file Enroll.cfg:</P>
+
+<PRE class="code">Enroll.exe &#0150;fenroll.cfg
+</PRE>
+
+<P>The following table describes the supported options in the configuration file and specifies the default values of Enroll.exe.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Option</TH>
+<TH width=33%>Description</TH>
+<TH width=34%>Default Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>SERVER</TD>
+<TD width=33%>Name of the Internet Information Server (IIS) Web server front end to the certificate authority.</TD>
+<TD width=34%>No default value. You must provide the server name.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>USERNAME</TD>
+<TD width=33%>User requesting the certificate (domain\user).</TD>
+<TD width=34%>No default value. You must provide the user name in the domain\userName format.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>PASSWORD</TD>
+<TD width=33%>User password.</TD>
+<TD width=34%>This is mainly for testing purposes. For security reasons, storing the password is not recommended.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CERT_STORE</TD>
+<TD width=33%>Name of the CryptoAPI system certificate store where the certificate will be saved. </TD>
+<TD width=34%>MY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>KEY_CONTAINER_NAME</TD>
+<TD width=33%>Name of CryptoAPI key container. </TD>
+<TD width=34%>No default value. If you do not specify a key container name, the application uses the default unnamed key container.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>KEY_PROVIDER_NAME</TD>
+<TD width=33%>Name of cryptographic service provider to use.</TD>
+<TD width=34%>Default PROV_RSA_FULL cryptographic service provider type. In most cases this is the Microsoft Enhanced Cryptographic Provider 1.0.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DW_KEY_SPEC</TD>
+<TD width=33%>Type of public key to use.
+<P>1: Key Exchange</P>
+
+<P>2: Signature</P>
+</TD>
+<TD width=34%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DW_FLAGS</TD>
+<TD width=33%>Hexadecimal flags passed in to <B>CryptGenKey</B>. The only flag that may be of interest is 0x1 (CRYPT_EXPORTABLE). This flag marks the private key as exportable.</TD>
+<TD width=34%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DW_PROV_TYPE</TD>
+<TD width=33%>Parameter to <B>CryptAcquireContext </B>specifying the type of cryptographic service provider.</TD>
+<TD width=34%>1(PROV_RSA_FULL)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CERT_OTHER_ATTRIBS</TD>
+<TD width=33%>The certificate Attrib field in the certificate request. This is used to specify the certificate template name. This string must be URL content encoded.
+<P>For example, if you want to use ClientAuth certificate template, then the new string is CertificateTemplate%3AClientAuth%0D%0A.</P>
+
+<P>For more information, refer to the Certfnsh.asp page and the <A HREF="http://go.microsoft.com/fwlink/?LinkId=9119">Windows 2000 Certificate Services</A> article in Microsoft TechNet.</P>
+</TD>
+<TD width=34%>CertificateTemplate%3AUserSignature%0D%0A</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_modifying"></A>Modifying the ASP Page</H2>
+
+<P>If you modify the default location of Certfnsh.asp page, you must specify the new location through the CERT_REQ_PAGE option in the enrollment configuration file. By default, Enroll.exe expects Windows 2000 Certificate Server to provide Certfnsh.asp. The following code shows the default Enroll.exe certificate request:</P>
+
+<PRE class="code">?TargetStoreFlags=0&amp;Mode=newreq&amp;SaveCert=yes&amp;CertRequest=XXXX&amp;CertAttrib=
+  CertificateTemplate%3AUserSignature%0D%0A
+</PRE>
+
+<P>The<code class="ce"> XXXX </code>is the base64 URL encoded certificate request.</P>
+
+<P>Enroll.exe expects Certfnsh.asp to display a page containing the request number to pickup the issued certificate. The following example shows the default text in the Web page returned by Certfnsh.asp:</P>
+
+<PRE class="code">certnew.cer?XXX=###&amp;XXX
+</PRE>
+
+<P>The<code class="ce"> XXX </code>is any variable length text and <CODE>###</CODE> is the certificate request ID passed to CERT_PICKUP_TEMPLATE.</P>
+
+<P>If you modify Certfnsh.asp, you must change the <B>BuildPutRequest</B> and <B>ParseWebPageToFindReqNo</B> functions in Crypt_web.cpp to match the changes. The Crypt_web.cpp file is located in the %_WINCEROOT%\Public\Common\SDK\Samples\Enroll directory.</P>
+
+<P>If you change the default location of Certnew.cer, you must specify the new location through the CERT_PICKUP_TEMPLATE option in the enrollment configuration file. By default, Enroll.exe expects Windows 2000 Certificate Server to provide Certnew.cer. The following example shows the default request to pickup the certificate:</P>
+
+<PRE class="code">?ReqId=###&amp;Enc=b64
+</PRE>
+
+<P>The<code class="ce"> ### </code>is the certificate request ID returned from Certfnsh.asp. Enroll.exe expects a valid base64 encoded certificate.</P>
+
+<P>If you modify Certnew.cer, you must change the <B>GetCertFromWebBrowser</B> function in Crypt_web.cpp to match the changes.</P>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_other"></A>Other Enrollment Options</H2>
+
+<P>The following table describes the other enrollment options:</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Enrollment option</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Control panel applet</TD>
+<TD width=59%>You can use the control panel applet to import a certificate and a private key on your platform. To import it onto a Windows&nbsp;CE device, the private key must be in the Private Key (.pvk) format.
+<P>Note that Windows&nbsp;2000 and Windows&nbsp;XP certificate export wizards do not support the .pvk files. However, Windows&nbsp;2000 Certificate Services supports the ability to export private keys to a .pvk file through an advanced certificate request. For more information, see the <A HREF="http://go.microsoft.com/fwlink/?LinkId=9119">Windows 2000 Certificate Services</A> article in Microsoft TechNet.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Custom enrollment client</TD>
+<TD width=59%>To create a custom enrollment client for other certificate authorities, you can leverage CryptoAPI 2.0 functions and other Enroll.exe functionalities.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>Smart card</TD>
+<TD width=59%>Smart cards provide the flexibility of enrollment from any client device that supports smart cards, such as a desktop PC. You can import a certificate onto Windows&nbsp;CE and keep the associated private key on the smart card. This method provides an extra layer of security and prevents the problem of having multiple copies of the private key when you have exportable keys that you import to Windows&nbsp;CE from a private key file.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="certificateenrollment_smart"></A>Smart Card Enrollment</H2>
+
+<P>A certificate solution based on smart cards requires a Windows&nbsp;CE Cryptographic Service Provider (CSP) for the specific type of smart card. A typical smart card CSP fulfills the following requirements:
+
+<UL type="disc">
+	<LI>Exposes a CSP interface compatible with the Microsoft RSA provider (RSAENH.DLL).</li>
+
+	<LI>Uses the smart card to save private keys securely.</li>
+
+	<LI>Uses the smart card to perform private key operations such as key exchange and digital signing.</li>
+
+	<LI>Restricts access to private key operations with a user-supplied PIN.</li>
+
+	<LI>Optionally, saves the user certificate on the smart card, by implementing the KP_CERTIFICATE key property. This capability allows the smart card to be used on a different machine.</li>
+</UL>
+
+<P>Smart card certificate enrolment can be done from either a Windows-based desktop PC or a Windows&nbsp;CE device using a tool like Enroll.exe. You should save the certificate to the smart card if possible. On first use, the Windows&nbsp;CE device should extract the certificates stored on the smart card and saves them to the local system store for use by applications. The Windows&nbsp;CE certificate control panel applet is capable of performing this step.</P>
+
+<H3 class="dtH1"><A NAME="certificateenrollment_more"></A>For More Information</H3>
+
+<P>For more information about the Microsoft Certificate Server, see the following Microsoft TechNet technical articles:
+
+<UL type="disc">
+	<LI><A HREF="http://go.microsoft.com/fwlink/?LinkId=9119">Windows 2000 Certificate Services</A></li>
+
+	<LI><A HREF="http://go.microsoft.com/fwlink/?LinkId=9120">Step-by-Step Guide for Setting up a Certificate Authority</A></li>
+
+	<LI><A HREF="http://go.microsoft.com/fwlink/?LinkId=9121">Microsoft Windows 2000 Public Key Infrastructure Introduction</A></li>
+
+	<LI><A HREF="http://go.microsoft.com/fwlink/?LinkId=9122">Planning Your Public Key Infrastructure</A></li>
+</UL>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_835570', 'MSDN@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2003 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

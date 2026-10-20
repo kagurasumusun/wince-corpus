@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIPS Microprocessor</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="MIPS Microprocessor"/>
+<MSHelp:RLTitle Title="MIPS Microprocessor"/>
+<MSHelp:Keyword Index="A" Term="cgconMIPSMicroprocessor"/>
+<MSHelp:Keyword Index="K" Term="kernel, MIPS microprocessor OAL issues"/>
+<MSHelp:Keyword Index="K" Term="microprocessors, MIPS OAL issues"/>
+<MSHelp:Keyword Index="K" Term="MIPS, OAL issues"/>
+<MSHelp:Keyword Index="A" Term="cgconMIPSMicroprocessor"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: oal.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_748535">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cgconmipsmicroprocessor"></A>MIPS Microprocessor</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>MIPS ISRs are limited to using a subset of the available microprocessor registers. Specifically, a MIPS ISR can only use registers AT, V0, A0, A1, A2, and A3. Use the following design principals when creating an OAL for a MIPS microprocessor:
+
+<UL type="disc">
+	<LI>The ISR must return by means of <B>j</B> <B>ra</B>.</li>
+
+	<LI>Implement a system-timer ISR that sets the variables <A HREF="cmrefcurmsec.htm">CurMSec</A> and <A HREF="cmrefdiffmsec.htm">DiffMSec</A>.</li>
+
+	<LI><A HREF="cmrefoeminit.htm">OEMInit</A> needs to register the system-timer ISR to handle the system timer and update CurMSec and DiffMSec.</li>
+
+	<LI>Create the OAL function <MSHelp:link keywords="_wcesdk_Win32_GetTickCount" TABINDEX="0">GetTickCount</MSHelp:link> to return a value from the interval timer.</li>
+
+	<LI>The <B>OEMIdle</B> function takes a single parameter that is only used by the MIPS CPU. 
+<P>This parameter is undefined for other CPUs. It is the base program status register (PSR) value and sets interrupts to be enabled. The following code sample shows how <B>OEMIdle</B> is defined for the MIPS microprocessor.
+
+<PRE class="code">void
+OEMIdle(
+  DWORD dwIdleParam
+)</PRE>
+</li>
+
+	<LI>Nested interrupts
+<P>The SHx kernel utilizes a structure that provides the kernel with information about which nested interrupts are masked while the current interrupt is being handled. To gain access to this structure, the <MSHelp:link keywords="cmrefIntrPrio" TABINDEX="0">IntrPrio</MSHelp:link> global variable must be declared in the OAL.
+</li>
+</UL>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cgconmicroprocessor-specificissues.htm">Microprocessor-Specific Issues</A></P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;MIPS%20Microprocessor&nbsp;(cgconmipsmicroprocessor.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

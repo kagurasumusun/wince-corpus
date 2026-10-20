@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Debugging MSMQ Installations</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Debugging MSMQ Installations"/>
+<MSHelp:RLTitle Title="Debugging MSMQ Installations"/>
+<MSHelp:Keyword Index="A" Term="ceconDebuggingMSMQInstallations"/>
+<MSHelp:Keyword Index="K" Term="MSMQ, debugging installations"/>
+<MSHelp:Keyword Index="A" Term="ceconDebuggingMSMQInstallations"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: msmq_concepts.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_662542">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cecondebuggingmsmqinstallations"></A>Debugging MSMQ Installations</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>Effective with version 3.0, Windows CE includes a debug version of MSMQ that simplifies the task of debugging network connections and MSMQ applications. This debug version checks for consistency of MSMQ's internal and external data. It is also capable of outputting a trace of currently performed operations. On systems that support a console, the debug version has a command monitor that allows you to view MSMQ's internal data structures.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<b class="le">Note&nbsp;&nbsp;&nbsp;</b>Use extreme caution when enabling debug output. Some of the options may prevent the system from booting over, so in general it is inadvisable to leave debug output enabled across warm boots.</BLOCKQUOTE>
+
+<P>For example, if the debugger is not connected to the system, enabling serial port debug output might continously block in the initialization thread on system startup. Enabling text output will crash the system at boot because the console driver has not been initialized. Both conditions require a cold boot for the device to recover. </P>
+
+<P class="labelproc"><B>To install the debug build</B>
+
+<OL type="1">
+	<LI>Stop MSMQ.</li>
+
+	<LI>Rename \Windows\msmqd.dll to \Windows\Msmqd.dll.old.</li>
+
+	<LI>Copy debug build of Msmqd.dll to \Windows.</li>
+
+	<LI>Restart the system.</li>
+
+	<LI>Start MSMQ.</li>
+</OL>
+
+<P>To select the output method for debugging information, set the <B>DebugOutputChannels</B> registry entry to 0x1 for console output or 0x2 for output to a log file.</P>
+
+<P>The Console and Log File components are available for tracing by setting the <B>DebugOutputMask</B> registry entry to any combination of items in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=41%>Value</TH>
+<TH width=59%>Item</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_API</TD>
+<TD width=59%>0x00000001</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_QUEUE</TD>
+<TD width=59%>0x00000002</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_SESSION</TD>
+<TD width=59%>0x00000004</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_PACKETS</TD>
+<TD width=59%>0x00000008</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_CURSORS</TD>
+<TD width=59%>0x00000010</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_ORDER</TD>
+<TD width=59%>0x00000020</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_IO</TD>
+<TD width=59%>0x00000040</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_FILE</TD>
+<TD width=59%>0x00000080</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_INIT</TD>
+<TD width=59%>0x00000100</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_WARN</TD>
+<TD width=59%>0x00004000</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>VERBOSE_MASK_FATAL</TD>
+<TD width=59%>0x00008000</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH2">Console</H2>
+
+<P>On platforms that support the console, the debug version of MSMQ can create a console window with a rudimentary monitor prompt that allows you to see the values inside MSMQ internal structures. The console can be turned on only by running the Console command in MSMQADM. Once you see the prompt, the help command will give you the list of currently supported monitor commands.</P>
+
+<H2 class="dtH2"><A NAME="_wceipc_log_files"></A>Log Files</H2>
+
+<P>Effective with Windows CE 3.0, MSMQ supports logging. The log file is called MQLOGFILE.TXT and resides in the MSMQ storage directory. It stores event information such as starts, stops, or fatal errors. The size of the log is controlled by the <B>LogSize</B> registry entry. When the file reaches half of the specified size, it is renamed MQLOGFILE.OLD and a new MQLOGFILE.TXT file is created.</P>
+
+<H2 class="dtH2"><A NAME="_wceipc_troubleshooting_network_connections"></A>Troubleshooting Network Connections</H2>
+
+<P>The following list helps discover the problem with network connection:
+
+<UL type="disc">
+	<LI>Does your device have unique name? Is it different from the default? If not, name registration service will not load.</li>
+
+	<LI>Is there a DNS server on the net? Windows NT version can operate without DNS server by using NetBIOS broadcasts. Windows CE requires DNS, WINS or subkey in <B>HKEY_LOCAL_MACHINE\Comm\Tcpip\hosts</B> for name resolution.</li>
+
+	<LI>Does DNS server know about the target machine? Use nslookup utility to find out.</li>
+
+	<LI>If DNS does not know about the device, or has wrong IP address, this usually means that it did not sync up with WINS server. What WINS servers are used? Run IPCONFIG /ALL on Windows NT or look in the <B>HKEY_LOCAL_MACHINE\Comm\&lt;your netcard driver name&gt;\Parms\Tcpip</B> subkey for values WINS or DhcpWINS.</li>
+
+	<LI>What does WINS know about the name in question? You may need to query WINS to discover this information. RFC1001/1002 explains how to write your own small tool to do WINS queries.</li>
+
+	<LI>VISADM utility provided with MSMQ SDK sample will walk you through registry configuration. Is it properly configured? 
+<P>Check for improper configuration with the following examples.
+
+<UL type="disc">
+	<LI>The redirector is not present, but NetBIOS is configured to use redirector for network administration.</li>
+
+	<LI>Network tracking is enabled on a device running a version of Windows CE earlier than 2.12.</li>
+
+	<LI>Network tracking is enabled in MSMQ on a version of Windows CE earlier than 2.12, which disables the redirector.</li>
+
+	<LI>Network tracking is disabled and periodic update is set to a high number. Remember, the <B>Cycle</B> value is in seconds.</li>
+
+	<LI>The computer has not been assigned a unique name on the network.</li>
+</UL>
+</li>
+
+	<LI>On a device with a redirector, you can run cmd.exe and "net view \\someresource". This forces the redirector to load and attempt to register the name on the net.</li>
+
+	<LI>If WINS does have the correct address, check the <B>HKEY_LOCAL_MACHINE\Comm\Tcpip\hosts</B> registry key for possible outdated cache entries for the target computer.</li>
+
+	<LI>If the target computer is a Windows CE device, check its log file. The source computer may not have NetBIOS service running and it may not be correctly responding to node status queries. In this case, MSMQ will not be able to retrieve machine name for incoming connection and will reject the connection. To check whether the connecting device answers node status query, find out its IP address and run "ping &#0150;a &lt;its_ip_address&gt;".</li>
+</UL>
+
+<P>The Cambridge Computer Corporation provides a set of free tools, called VxUtil, for troubleshooting the network from the Windows CE device. </P>
+
+<P>Use the NETMON utility to track general connection problems.</P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;Debugging%20MSMQ%20Installations&nbsp;(cecondebuggingmsmqinstallations.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>

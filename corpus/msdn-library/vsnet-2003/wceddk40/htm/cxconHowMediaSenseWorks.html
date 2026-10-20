@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How MediaSense Works</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="How MediaSense Works"/>
+<MSHelp:RLTitle Title="How MediaSense Works"/>
+<MSHelp:Keyword Index="A" Term="cxconHowMediaSenseWorks"/>
+<MSHelp:Keyword Index="K" Term="Media Sense see MediaSense"/>
+<MSHelp:Keyword Index="A" Term="cxconHowMediaSenseWorks"/>
+<MSHelp:Attr Name="DocSet" Value="kbwcedoc"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="Product" Value="kbwince"/>
+<MSHelp:Attr Name="ProductVers" Value="kbcenetplat"/>
+<MSHelp:Attr Name="Status" Value="Same"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbwcenet"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--Filename: mediasense_guide.rtf--><SCRIPT SRC="../scripts/dtuelink.js"></SCRIPT><META NAME="msdnID" CONTENT="_715752">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Microsoft&nbsp;Windows&nbsp;CE&nbsp;.NET</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cxconhowmediasenseworks"></A>How MediaSense Works</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom">
+<P>The NDIS, TCP/IP stack and NIC miniport work hand in hand to bring the MediaSense advantage to the user. The NIC is required to implement media presence detection and an interface for querying the current media state. A majority of modern NICs implement MediaSense but none of the 10Base2 cards are capable due to the lack of line voltage on the coaxial cable. The miniport works together with the NIC hardware to implement several callouts related to MediaSense:
+
+<UL type="disc">
+	<LI>A query through <A HREF="cxtskoid_gen_media_connect_status.htm">OID_GEN_MEDIA_CONNECT_STATUS</A>. NDIS can call upon this object identifier to obtain the present media state.</li>
+
+	<LI>The miniport notifies NDIS whenever the media state has changed from connected to disconnected or vice versa through the NdisMediaStateConnected and NdisMediaStateDisconnected flags for use with the <A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A> API.</li>
+</UL>
+
+<P>The miniport supports a query as well as a notification of the media state by NDIS. On some older NICs the notification of the media state may not be supported, in which case it is simulated by NDIS through periodic queries. If the query is also not supported then the operation will always return the non-zero value of True.</P>
+
+<P>TCP/IP is the only protocol in Windows CE implementing the MediaSense event processing. It uses all NDIS functions to configure and query the current media state and be notified of MediaSense events. The default-damping interval is 20 seconds for disconnect events and 10 seconds for connect events. Upon receiving a notification, TCP/IP starts/restarts the interfaces and adds/removes the corresponding IP addresses and route entries. TCP/IP starts up/tears down the network connectivity at the transport level in response to the Media Connect/Disconnect events and notifies Dynamic Host Configuration Protocol (DHCP). The DHCP client has been modified to send both requests and renewals on a MediaSense connect event through a notification from TCP/IP. The TCP/IP protocol then passes the notification on to DHCP. TCP/IP maintains a connection state and this state may at time be different than that of NDIS due to the damping interval. It is important to note that the Winsock API blocking routines such as <B>recv</B> on blocking socket return on a MediaSense disconnect event.</P>
+
+<P>It is possible to disable MediaSense at the TCP/IP level through a DisableDHCPMediaSense registry value.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>Key</TH>
+<TH width=20%>Value type</TH>
+<TH width=20%>Value range</TH>
+<TH width=20%>Description</TH>
+<TH width=20%>Default</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Comm\Tcpip\Parms</B></TD>
+<TD width=20%>REG_DWORD</TD>
+<TD width=20%>0 to 1</TD>
+<TD width=20%>0 - Enables MediaSense on the DHCP client
+<P>1 - Disables MediaSense on the DHCP client.</P>
+</TD>
+<TD width=20%>0</TD>
+</TR>
+</table></div>
+
+<P>DisableDHCPMediaSense directs the DHCP client to ignore MediaSense events from the interface. MediaSense provides a mechanism for network adapters to notify the protocol stack when a network media is connected or disconnected. The protocol stack can then update the network configuration parameters. MediaSense is extremely useful on a portable device that is commonly disconnected from one network and then connected to a different one. MediaSense events direct the DHCP client to take an action such as attempting to obtain a lease when media is connected or invalidating the interface and routes when media is disconnected.</P>
+
+<P>TCP/IP provides an interface for applications allowing them to query the connection state at TCP/IP and request a notification on change of state.</P>
+
+<P>The damping intervals for TCP/IP can be adjusted through two registry values.</P>
+
+<P class="label"><B>ConnectDampingInterval</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Key</TH>
+<TH width=33%>Value type</TH>
+<TH width=34%>Default</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Comm\[Adapter Name]\Parms\Tcpip</B></TD>
+<TD width=33%>REG_DWORD</TD>
+<TD width=34%>10</TD>
+</TR>
+</table></div>
+
+<P><B>ConnectDampingInterval</B> specifies the amount of time, in seconds, by which TCP/IP will delay any action in response to a MediaSense connect event.</P>
+
+<P class="label"><B>DisconnectDampInterval</B></P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Key</TH>
+<TH width=33%>Value type</TH>
+<TH width=34%>Default</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>Comm\[Adapter Name]\Parms\Tcpip</B></TD>
+<TD width=33%>REG_DWORD</TD>
+<TD width=34%>15</TD>
+</TR>
+</table></div>
+
+<P><B>DisconnectDampInterval</B> specifies the amount of time, in seconds, by which TCP/IP will delay any action in response to a MediaSense disconnect event.</P>
+
+<H4 class="dtH4">See Also</H4>
+
+<P><A HREF="cxtskoid_gen_media_connect_status.htm">OID_GEN_MEDIA_CONNECT_STATUS</A></P>
+
+<P><A HREF="cxconndissupportformediasense.htm">NDIS Support for MediaSense</A></P>
+
+<P><A HREF="_wceddk_ndismindicatestatus.htm">NdisMIndicateStatus</A> </P>
+<!--Footer-->
+<br>
+<div class="footer">
+<hr>
+<p><font size="1">&nbsp;Last updated on Friday, May 31, 2002</font></p>
+</div><!--Feedback Link-->
+<table width=100&#37;>
+<tr><td align=left><font size="1"><i><a href="mailto:eapgfdbk&#64;microsoft.com?subject=Platform&nbsp;Builder&nbsp;4.1&nbsp;feedback&nbsp;on&nbsp;topic:&nbsp;How%20MediaSense%20Works&nbsp;(cxconhowmediasenseworks.htm)">Send Feedback</a> on this topic</i></font></td>
+<td align=right></td></tr>
+</table>
+<br>
+</BODY>
+</HTML>
