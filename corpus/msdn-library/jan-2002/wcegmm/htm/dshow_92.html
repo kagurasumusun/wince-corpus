@@ -1,0 +1,65 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling State Changes and Pause Completion</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Handling State Changes and Pause Completion"/>
+<MSHelp:RLTitle Title="Handling State Changes and Pause Completion"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_handling_state_changes_and_pause_completion"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_cbasecontrolvideo__getstaticimage" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediacontrol__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_imediacontrol__pause" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_cbasefilter__getstate" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_error_and_success_codes" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Handling State Changes and Pause Completion</H1>
+
+<P>A renderer filter behaves the same as any other filter in the filter graph when its state is changed, with the following exception. After being paused, the renderer will have some data queued, ready to be rendered when subsequently run. When the video renderer is stopped, it holds on to this queued data. This is an exception to the DirectShow rule that no resources should be held by filters while the filter graph is stopped. </P>
+
+<P>The reason for this exception is that by holding resources, the renderer will always have an image with which to repaint the window if it receives a WM_PAINT message. It also has an image to satisfy methods, such as <A HREF="JavaScript:hhobj_1.Click()"><B>CBaseControlVideo::GetStaticImage</B></A>, that request a copy of the current image. Another effect of holding resources is that holding on to the image stops the allocator from being decommitted, which in turn makes the next state change occur much faster because the image buffers are already allocated. </P>
+
+<P>A video renderer should render and release samples only while running. While paused, the filter might render them (for example, when drawing a static poster image in a window), but should not release them. Audio renderers will do no rendering while paused (although they can perform other activities, such as preparing the wave device, for example). The time at which the samples should be rendered is obtained by combining the stream time in the sample with the reference time passed as a parameter to the <A HREF="JavaScript:hhobj_2.Click()"><B>IMediaControl::Run</B></A> method. Renderers should reject samples with start times less than or equal to end times. </P>
+
+<P>When an application pauses a filter graph, the filter graph does not return from its <A HREF="JavaScript:hhobj_3.Click()"><B>IMediaControl::Pause</B></A> method until there is data queued at the renderers. In order to ensure this, when a renderer is paused, it should return S_FALSE if there is no data waiting to be rendered. If it has data queued, then it can return S_OK. </P>
+
+<P>The filter graph manager checks all return values when pausing a filter graph, to ensure that the renderers have data queued. If one or more filters are not ready, then the filter graph manager polls the filters in the graph by calling <A HREF="JavaScript:hhobj_4.Click()"><B>GetState</B></A>. The <B>GetState</B> method takes a time-out parameter. A filter (typically a renderer) that is still waiting for data to arrive before completing the state change returns <A HREF="JavaScript:hhobj_5.Click()">VFW_S_STATE_INTERMEDIATE</A> if the <B>GetState</B> method expires. Once data arrives at the renderer, <B>GetState</B> should be returned immediately with S_OK. </P>
+
+<P>In both the intermediate and completed state, the reported filter state will be <B>State_Paused</B>. Only the return value indicates whether the filter is really ready or not. If, while a renderer is waiting for data to arrive, its source filter sends an end-of-stream notification, then that should also complete the state change. </P>
+
+<P>Once all filters actually have data waiting to be rendered, the filter graph will complete its pause state change. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

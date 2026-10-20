@@ -1,0 +1,141 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptCreateKeyIdentifierFromCSP</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptCreateKeyIdentifierFromCSP"/>
+<MSHelp:RLTitle Title="CryptCreateKeyIdentifierFromCSP"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptcreatekeyidentifierfromcsp"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CryptCreateKeyIdentifierFromCSP</H1>
+
+<P>This function creates a key identifier from a cryptographic service provider (CSP) public key <B>BLOB</B>.</P>
+
+<P>This function converts a CSP's <A HREF="_wcesdk_crypto2_publickeystruc.htm"><B>PUBLICKEYSTRUC</B></A> structure into an X.509 <A HREF="_wcesdk_crypto2_cert_public_key_info.htm"><B>CERT_PUBLIC_KEY_INFO</B></A> structure and encodes it. The encoded structure is then hashed with the SHA1 algorithm to obtain the key identifier.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptCreateKeyIdentifierFromCSP(</B>
+<B>DWORD</B> <I>dwCertEncodingType</I><B>,</B>
+<B>LPCSTR</B> <I>pszPubKeyOID</I><B>,</B>
+<B>const PUBLICKEYSTRUC *</B><I>pPubKeyStruc</I><B>,</B>
+<B>DWORD</B> <I>cbPubKeyStruc</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>void *</B><I>pvReserved</I><B>,</B>
+<B>BYTE *</B><I>pbHash</I><B>,</B>
+<B>DWORD</B> *<I>pcbHash
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwCertEncodingType</I> </DT>
+
+<DD>[in] Specifies the encoding type used. Currently, only X509_ASN_ENCODING is used; however, additional encoding types may be added in the future.</dd>
+
+<DT><I>pszPubKeyOID</I> </DT>
+
+<DD>[in] Pointer to the public key object identifier (OID). A non-NULL value overrides the default OID obtained from the <B>aiKeyAlg</B> member of the structure pointed to by the <I>pPubKeyStruc </I>parameter. Set the <I>pszPubKeyOID</I> parameter to NULL to use the default OID.</dd>
+
+<DT><I>pPubKeyStruc</I> </DT>
+
+<DD>[in] Pointer to a <B>PUBLICKEYSTRUC</B> structure. In the default case, the <B>aiKeyAlg</B> member of the structure pointed to by the <I>pPubKeyStruc</I> parameter is used to find the public key OID. A non-NULL <I>pszPubKeyOID</I> parameter overrides the default.</dd>
+
+<DT><I>cbPubKeyStruc</I> </DT>
+
+<DD>[in] Size, in bytes, of the <B>PUBLICKEYSTRUC</B> structure.</dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] Reserved for future use and must be zero.</dd>
+
+<DT><I>pvReserved</I> </DT>
+
+<DD>[in] Reserved for future use and must be NULL.</dd>
+
+<DT><I>pbHash</I> </DT>
+
+<DD>[out] Pointer to a buffer to receive the hash of the public key and the key identifier.
+
+<P>This parameter can be NULL to get the size of this information for memory allocation purposes.
+</dd>
+
+<DT><I>pcbHash</I> </DT>
+
+<DD>[in/out] Pointer to a <B>DWORD</B> specifying the size, in bytes, of the buffer pointed to by the <I>pbHash</I> parameter. When the function returns, the <B>DWORD</B> contains the number of bytes stored in the buffer. Currently using SHA1 hashing, the length of the required buffer is 20.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<H4>Remarks</H4>
+
+<P>The desktop platform supports the PKCS_7_ASN_ENCODING flag, but Windows CE does not. Windows CE ignores the flag when it is specified.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptenumkeyidentifierproperties.htm"><B>CryptEnumKeyIdentifierProperties</B></A>, <A HREF="_wcesdk_crypto2_cryptgetkeyidentifierproperty.htm"><B>CryptGetKeyIdentifierProperty</B></A>, <A HREF="_wcesdk_crypto2_cryptsetkeyidentifierproperty.htm"><B>CryptSetKeyIdentifierProperty</B></A>, <A HREF="_wcesdk_crypto2_cert_public_key_info.htm"><B>CERT_PUBLIC_KEY_INFO</B></A>, <A HREF="_wcesdk_crypto2_publickeystruc.htm"><B>PUBLICKEYSTRUC</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

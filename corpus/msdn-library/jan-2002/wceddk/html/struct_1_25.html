@@ -1,0 +1,145 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPELineParms</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GPELineParms"/>
+<MSHelp:RLTitle Title="GPELineParms"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_gpelineparms"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>GPELineParms</H1>
+
+<P>This structure controls line drawing for GPE and display drivers. Some of the members of GPELineParms come from applications, while GPE calculates and sets the rest.</P>
+
+<PRE class="syntax"><B>struct GPELineParms </B>{
+<B>SCODE</B> <B>(GPE::*</B><I>pLine</I><B>)(GPELineParms *)</B>;
+<B>long </B><I>xStart</I>;
+<B>long </B><I>yStart</I>;
+<B>int </B><I>cPels</I>;
+<B>unsigned long </B><I>dM</I>;
+<B>unsigned long </B><I>dN</I>;
+<B>long </B><I>llGamma</I>;
+<B>int </B><I>iDir</I>;
+<B>unsigned long </B><I>style</I>;
+<B>int </B><I>styleState</I>;
+<B>GPESurf *</B><I>pDst</I>;
+<B>COLOR </B><I>solidColor</I>;
+<B>RECTL *</B><I>prclClip</I>;
+<B>unsigned short</B> <I>mix</I>;
+};
+</PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>pLine</I></DT>
+
+<DD>A pointer to a GPE::Line function.</dd>
+
+<DT><I>xStart</I></DT>
+
+<DD>Starting horizontal point of the line.</dd>
+
+<DT><I>yStart</I></DT>
+
+<DD>Starting vertical point of the line.</dd>
+
+<DT><I>cPels</I></DT>
+
+<DD>Length in pixels of the line in the major direction.</dd>
+
+<DT><I>dM</I></DT>
+
+<DD>The larger of the lengths of the line in the horizontal and vertical directions, calculated in 1/16ths of a pixel.</dd>
+
+<DT><I>dN</I></DT>
+
+<DD>The smaller of the length of the line in the horizontal and vertical directions, calculated in 1/16ths of a pixel.</dd>
+
+<DT><I>llGamma</I></DT>
+
+<DD>Typically, the initial starting value for the slope iterator.</dd>
+
+<DT><I>iDir</I></DT>
+
+<DD>The octant number for the line. See <A HREF="intf_1_17.htm">Accelerated Line Segment Function</A> for a chart of the octant numbers.</dd>
+
+<DT><I>style</I></DT>
+
+<DD>Line attributes, such as solid or dashed.</dd>
+
+<DT><I>styleState</I></DT>
+
+<DD>The state of the line style in the current path, measured in pixels.</dd>
+
+<DT><I>pDst</I></DT>
+
+<DD>A pointer to the line’s destination surface.</dd>
+
+<DT><I>solidColor</I></DT>
+
+<DD>The brush color.</dd>
+
+<DT><I>prclClip</I></DT>
+
+<DD>A clipping rectangle.</dd>
+
+<DT><I>mix</I></DT>
+
+<DD>A two-byte value consisting of two different ROP2 values, which are alternated between according to the bit pattern in the <I>style</I> member.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <I>style</I>, <I>styleState</I>, and <I>mix </I>members work together to define the pattern of pixels that are drawn along the line’s length. The <I>mix</I> member specifies two ROP2 values, one in each byte. The first byte can be thought of as the ROP2 for pixels in the line that are “on”, while the second is for pixels that are “off”. The <I>style</I> member is treated as a 32-bit pattern of alternation between the ROP values in mix. The bits that are set in <I>style</I> correspond to the “on” ROP2, while the unset bits correspond to the “off” ROP2. For example, a <I>style</I> value of 0xF0F0F0F0 would alternate between the ROP2 values in four-pixel groups, since the bit pattern consists of alternating groups of four ones and four zeros. Finally, the <I>styleState</I> member acts as an offset into <I>style</I>. That is, if <I>styleState</I> were set to 12, then the pattern of alternating ROP2 values would start with whatever ROP2 is specified by the 12<SUP>th</SUP> bit in <I>style</I>.</P>
+
+<P>It can be useful to specify a non-zero value for <I>styleState</I> if you need to ensure that both ends of a line are drawn with the same ROP2 value. For example, if the “off” ROP2 corresponds to the window’s background color, and the <I>style</I> member is 0xF0F0F0F0, then a visual error of as much as 4 pixels would be possible depending on the line’s exact length. To avoid such errors, find a value <I>x </I>for <I>styleState</I> such that the <I>x</I><SUP>th</SUP> and (<I>x+cPels mod 32</I>)<SUP>th</SUP> bits in <I>style</I> are set. For example, if cPels were 48, and style were 0xF0F0F0F0, then a value of 2 would suffice. Often, many such <I>styleState</I> values will suffice, and the choice can be made on other criteria, such as how many “on” bits will actually be drawn on each end of the line. The <I>styleState</I> member can also be used to make a <I>style</I> pattern appear continuous while drawing several line segments that are connected end-to-end.</P>
+
+<H4>Requirements</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>gpe.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

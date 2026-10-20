@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Extension-Agent Architecture</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Extension-Agent Architecture"/>
+<MSHelp:RLTitle Title="Extension-Agent Architecture"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_extension_agent_architecture"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Extension-Agent Architecture</H1>
+
+<P>The following diagram illustrates the most current extension-agent architecture by using the MIB-II extension agent and a fictitious Lanmgr-2 extension agent (which were shipped with Windows NT 4.0).</P>
+
+<P>The master agent begins its initialization process by opening the <B>SNMP\Parameters\ExtensionAgents</B> subkey under <B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services</B> and enumerating the extension agents that are registered. Each value under this subkey represents another registry key in which an extension agent has stored configuration information. The following example shows the configuration information for the subkey of an extension agent:</P>
+
+<PRE class="code">1 : REG_SZ : SOFTWARE\Microsoft\LANManagerMib2Agent\CurrentVersion
+2 : REG_SZ : SOFTWARE\Microsoft\RFC1156Agent\CurrentVersion</PRE>
+
+<P>Where <B>SOFTWARE\Microsoft\LANManagerMib2Agent\CurrentVersion</B> contains only the following:</P>
+
+<PRE class="code">Pathname : REG_EXPAND_SZ : lmmib2.dll
+Windows CE does not support the expansion of SystemRoot &#0150; the only thing needed in the registry value is the name of the DLL &#0150; this differs from NT</PRE>
+
+<P><B>SOFTWARE\Microsoft\RFC1156Agent\CurrentVersion</B> contains only the following:</P>
+
+<PRE class="code">Pathname : REG_EXPAND_SZ : inetmib1.dll</PRE>
+
+<P>The master agent requires the name of the library in order to load the extension-agent DLL via the <B>LoadLibrary</B> function.</P>
+
+<P>The five Extension API functions are implemented in extension-agent DLLs and called by the SNMP service. Each extension-agent DLL uses only the Extension API to communicate with the SNMP service. An extension-agent DLL requires no active thread of execution, but you can create one if you need it. Each extension-agent DLL must export the following three entry points:
+
+<UL type="disc">
+	<LI><B>SnmpExtensionInit</B></li>
+
+	<LI><B>SnmpExtensionQuery</B></li>
+
+	<LI><B>SnmpExtensionTrap</B></li>
+</UL>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>ExtensionInitEx</B>, <B>ExtensionQueryEx</B>, and <B>ExtensionClose</B> functions are optional.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

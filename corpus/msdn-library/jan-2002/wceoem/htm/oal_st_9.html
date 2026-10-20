@@ -1,0 +1,194 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CEL_HEADER</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CEL_HEADER"/>
+<MSHelp:RLTitle Title="CEL_HEADER"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_cel_header"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CEL_HEADER</H1>
+
+<P>This structure precedes every logged event that is sent out through the logging mechanism. </P>
+
+<PRE class="syntax"><B>typedef struct __CEL_HEADER {
+DWORD</B> <I>Length</I>:16;<B>
+DWORD</B> <I>ID</I>:14;<B>
+DWORD</B> <I>Reserved</I>:1;<B>
+DWORD</B> <I>fTimeStamp</I>:1;<B>
+} CEL_HEADER, *PCEL_HEADER</B>;</PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>Length</I></DT>
+
+<DD>The lower 16 bits of the header holds the length, in bytes, of the event structure. This does not include the length of the header structure or the time stamp if it is present.</dd>
+
+<DT><I>ID</I></DT>
+
+<DD>The next 14 bits of the header are used for the event identifier.</dd>
+
+<DT><I>Reserved</I></DT>
+
+<DD>This bit is reserved for future use.</dd>
+
+<DT><I>fTimeStamp</I></DT>
+
+<DD>The upper bit of the header is used to indicate whether or not a time stamp is present. If this bit is set, a 32-bit time stamp follows the structure and the value is given in tick counts. Otherwise, no time stamp follows. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This structure is a single <B>DWORD</B> broken into several sections; it will be followed by a <B>DWORD</B> timestamp if the appropriate flag is set.</P>
+
+<P>If you replace the event-tracking engine (Celog.lib) with your own, you should follow the same rules and include <B>CEL_HEADER</B> with each event. <B>CEL_HEADER</B> is attached to the data by <B>CeLogData</B>. </P>
+
+<P>The format of the header has two forms depending on whether the event is a flagged event or not.</P>
+
+<P>The following table shows the format of the non-flagged event header.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=22%>Data</TH>
+<TH width=78%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>T</TD>
+<TD width=78%>Flag that indicates whether TIMESTAMP is added to the header (<I>fTimeStamp</I>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>TIMESTAMP</TD>
+<TD width=78%>Time that an event was recorded</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>ID</TD>
+<TD width=78%>Event that occurred (<I>ID</I>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>LEN</TD>
+<TD width=78%>Length of the data (<I>Length</I>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>DATA</TD>
+<TD width=78%>Raw data that follows the header</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table shows the format of the flagged event header.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=22%>Data</TH>
+<TH width=78%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>T</TD>
+<TD width=78%>Flag that indicates whether TIMESTAMP is added to the header (<I>fTimeStamp</I>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>CELID_FLAGGED</TD>
+<TD width=78%>Identifier that is used to determine whether the event has been flagged and the structure changed</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>TIMESTAMP</TD>
+<TD width=78%>Time that an event was recorded</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>ID</TD>
+<TD width=78%>Event that occurred (<I>ID</I>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>FLAG</TD>
+<TD width=78%>User-provided flag use to flag the event</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>LEN</TD>
+<TD width=78%>Length of the data (<I>Length</I>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>DATA</TD>
+<TD width=78%>Raw data that follows the header</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Celog.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="oal_f_1.htm"><B>CeLogData</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

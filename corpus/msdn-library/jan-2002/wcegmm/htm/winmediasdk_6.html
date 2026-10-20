@@ -1,0 +1,121 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Processing Embedded Script Commands</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Processing Embedded Script Commands"/>
+<MSHelp:RLTitle Title="Processing Embedded Script Commands"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_asx_processing_embedded_script_commands"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_asx_event_scriptcommand" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_asx_prop_baseurl" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_asx_base" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_asx_prop_DefaultFrame" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_asx_prop_InvokeURLs" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_asx_event_ScriptCommand" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_asx_prop_FileName" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_asx_Event" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_asx_event" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Processing Embedded Script Commands</H1>
+
+<P>One compelling feature of Advanced Streaming Format (ASF) streams is that they can deliver script commands to the Microsoft&reg; Windows Media&trade; Player (WMP) control, along with the audio and video streams. These script commands are pairs of Unicode&trade; strings synchronized with a particular time in the multimedia stream. The first string identifies the type of command being sent, and the second specifies the command to process. When the stream reaches the time associated with a command, the control sends a <A HREF="JavaScript:hhobj_1.Click()">ScriptCommand</A> event to the web page which contains it. An event-handling routine can then respond to this event. The script command strings are passed to the event handler as parameters of the ScriptCommand event.</P>
+
+<P>The WMP control automatically processes the following types of embedded script commands. Event-handling routines are not necessary to process these types of commands.
+
+<UL type="disc">
+	<LI>URL-type Commands<U> </U></li>
+
+	<LI>FILENAME-type Commands<U> </U></li>
+
+	<LI>TEXT-type Commands<U> </U></li>
+
+	<LI>EVENT-type Commands<U> </U></li>
+
+	<LI>OPENEVENT-type Commands</li>
+
+	<LI>User defined Commands<U> </U></li>
+</UL>
+
+<H2>URL-type Commands</H2>
+
+<P>When the WMP control receives a URL-type command, it has two tasks. The control must first interpret the URL to determine what must be opened, and then it must determine where to display that content.</P>
+
+<P>The URL is interpreted in the following manner. If the URL is an absolute address (i.e. http://server.com/content.html) it is launched unmodified. If it is a relative path, the control determines the base prefix according to the following rules:
+
+<OL type="1">
+	<LI>The <A HREF="JavaScript:hhobj_2.Click()">BaseURL</A> property of the WMP control if set to a non-empty string.</li>
+
+	<LI><A HREF="JavaScript:hhobj_3.Click()">BASE</A> tag specified for the ASX playlist entry.</li>
+
+	<LI>BASE tag specified for the entire ASX playlist.</li>
+
+	<LI>The location of the ASF file being played minus its filename and extension</li>
+
+	<LI>If the current ASF file doesn't begin with http:// (i.e. mms://) then the ActiveX container of the WMP control is requested to supply a base. If the control is embedded within an HTML page inside Internet Explorer, this base will be the current HTML page location minus its filename and extension.</li>
+</OL>
+
+<P>The resulting URL is passed as the command parameter of the ScriptCommand event.</P>
+
+<P>After the location of the content has been determined, the control must determine where to display the content. If the WMP control is embedded in an HTML file that uses frames, the URL can be launched in a frame specified by the script command. This allows the WMP control to continue rendering the multimedia stream in one frame, while the browser renders images or Web pages in another frame. If the script command does not specify a frame, the <A HREF="JavaScript:hhobj_4.Click()">DefaultFrame</A> property determines the frame in which the new URL is launched.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;If the HTML file does not use frames, or if the URL-type command is launched in the same frame as the WMP control, the URL-type command will be ignored unless the following registry key is set. This allows the WMP control to open another instance of the browser. This key is off by default.</P>
+
+<PRE class="code">HKLM\Software\Microsoft\MediaPlayer\Control\URLFlipping=dword:1</PRE>
+
+<P>You can enable or disable automatic processing of URL-type script commands by setting the <A HREF="JavaScript:hhobj_5.Click()">InvokeURLs</A> property. If this property is false, the WMP control ignores URL-type commands. The <A HREF="JavaScript:hhobj_6.Click()">ScriptCommand</A> event is still sent to the container, however, allowing for conditional processing of URL-type commands. </P>
+
+<H2>FILENAME-type Commands</H2>
+
+<P>When the WMP control receives a FILENAME-type command, it sets the <A HREF="JavaScript:hhobj_7.Click()">FileName</A> property to the value specified by the command. The WMP control then opens the file and begins rendering the stream from the new location. The WMP control always automatically processes FILENAME-type commands; unlike URL-type commands, they cannot be disabled.</P>
+
+<H2>TEXT-type Commands</H2>
+
+<P>When the WMP control receives a TEXT-type command, it is ignored because the WMP control does not contain a captioning window to display the content of the command. You can still capture the TEXT-type command using the Event Handler.</P>
+
+<H2>EVENT-type Commands</H2>
+
+<P>When the WMP control receives an EVENT-type command, it searches for the NAME attribute of <A HREF="JavaScript:hhobj_8.Click()">EVENT</A> elements in the Advanced Stream Redirector (ASX) file. If the NAME attribute matches the second string of the script command, the WMP control executes the entries contained within the EVENT element. An example is to embed a script command for switching streams.</P>
+
+<H2>OPENEVENT-type Commands</H2>
+
+<P>When the WMP control receives an OPENEVENT-type command, it checks the EVENT element in the ASX file and opens the matching title. It does not play the title until the WMP control receives the actual event of the same name from an <A HREF="JavaScript:hhobj_9.Click()">EVENT-type</A> command.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RUNTIME_CLASS</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="RUNTIME_CLASS"/>
+<MSHelp:RLTitle Title="RUNTIME_CLASS"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_runtime_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>RUNTIME_CLASS</H1>
+
+<P>Use this macro to get the run-time class structure from the name of a C++ class.</P>
+
+<P><B>RUNTIME_CLASS</B> returns a pointer to a CRuntimeClass structure for the class specified by <I>class_name</I>. Only <B>CObject</B>-derived classes declared with <B>DECLARE_DYNAMIC</B>, <B>DECLARE_DYNCREATE</B>, or <B>DECLARE_SERIAL</B> will return pointers to a <B>CRuntimeClass</B> structure.</P>
+
+<PRE class=syntax><B>RUNTIME_CLASS(</B>
+<I>class_name</I> <B>)</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>class_name</I></DT>
+
+<DD>The actual name of the class (not enclosed in quotation marks).</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<H4>CObject Class: Accessing Run-Time Class Information</H4>
+
+<P class=indent><B>Note&nbsp;&nbsp;&nbsp;</B>MFC does not use the Run-Time Type Information (RTTI) support introduced in Visual C++ 4.0. </P>
+
+<P>If you have derived your class from CObject and used the <B>DECLARE</B>_<B>DYNAMIC</B> and <B>IMPLEMENT_DYNAMIC</B>, the <B>DECLARE_DYNCREATE</B> and <B>IMPLEMENT_DYNCREATE</B>, or the <B>DECLARE_SERIAL</B> and <B>IMPLEMENT_SERIAL</B> macros explained in the article CObject Class: Deriving a Class from CObject, the <B>CObject</B> class has the ability to determine the exact class of an object at run time. </P>
+
+<P>This ability is most useful when extra type checking of function arguments is needed and when you must write special-purpose code based on the class of an object. However, this practice is not usually recommended because it duplicates the functionality of virtual functions.</P>
+
+<P>The <B>CObject</B> member function <B>IsKindOf</B> can be used to determine if a particular object belongs to a specified class or if it is derived from a specific class. The argument to <B>IsKindOf</B> is a <B>CRuntimeClass</B> object, which you can get using the <B>RUNTIME_CLASS</B> macro with the name of the class.</P>
+
+<P><B>To use the RUNTIME_CLASS macro </B>
+
+<UL type=disc>
+	<LI>Use <B>RUNTIME_CLASS</B> with the name of the class, as shown here for the class <B>CObject</B>:
+<PRE>CRuntimeClass* pClass = RUNTIME_CLASS( CObject );
+</PRE>
+</LI>
+</UL>
+
+<P>You will rarely need to access the run-time class object directly. A more common use is to pass the run-time class object to the <B>IsKindOf</B> function, as shown in the next procedure. The <B>IsKindOf</B> function tests an object to see if it belongs to a particular class.</P>
+
+<P><B>To use the IsKindOf function </B>
+
+<OL>
+	<LI>Make sure the class has run-time class support. That is, the class must have been derived directly or indirectly from <B>CObject</B> and used the <B>DECLARE</B>_<B>DYNAMIC</B> and <B>IMPLEMENT_DYNAMIC</B>, the <B>DECLARE_DYNCREATE</B> and <B>IMPLEMENT_DYNCREATE</B>, or the <B>DECLARE_SERIAL</B> and <B>IMPLEMENT_SERIAL</B> macros explained in the article CObject Class: Deriving a Class from CObject. </LI>
+
+	<LI>Call the <B>IsKindOf</B> member function for objects of that class, using the <B>RUNTIME_CLASS</B> macro to generate the <B>CRuntimeClass</B> argument, as shown here:
+<PRE>// in .H file
+class CPerson : public CObject
+{
+    DECLARE_DYNAMIC( CPerson )
+public:
+    CPerson(){};
+
+    // other declaration
+};
+
+
+// in .CPP file
+IMPLEMENT_DYNAMIC( CPerson, CObject )
+
+
+void SomeFunction(void)
+{
+CObject* pMyObject = new CPerson;
+
+if(pMyObject-&gt;IsKindOf( RUNTIME_CLASS( CPerson ) ) )
+{
+//if IsKindOf is true, then cast is all right
+CPerson* pmyPerson = (CPerson*) pMyObject ;
+...
+delete pmyPerson;
+}
+...
+delete [MyObject];
+}
+</PRE>
+</LI>
+</OL>
+
+<P class=indent><B>Note&nbsp;&nbsp;&nbsp;IsKindOf</B> returns <B>TRUE</B> if the object is a member of the specified class or of a class derived from the specified class. <B>IsKindOf</B> does not support multiple inheritance or virtual base classes, although you can use multiple inheritance for your derived Microsoft Foundation classes if necessary.</P>
+
+<P>One use of run-time class information is in the dynamic creation of objects. This process is discussed in the article CObject Class: Dynamic Object Creation. </P>
+
+<P>For more detailed information on serialization and run-time class information, see the articles Files in MFC and Serialization (Object Persistence). </P>
+
+<H4>Example</H4>
+
+<PRE>// example for RUNTIME_CLASS
+CRuntimeClass* prt = RUNTIME_CLASS( CAge );
+ASSERT( lstrcmp( prt-&gt;m_lpszClassName, "CAge" )  == 0 );
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+
+<H4>See Also </H4>
+
+<P><A HREF="funct_7.htm"><B>DECLARE_DYNAMIC</B></A>, <A HREF="funct_8.htm"><B>DECLARE_DYNCREATE</B></A>, <A HREF="funct_9.htm"><B>DECLARE_SERIAL</B></A>, <A HREF="cobject_5.htm"><B>CObject::GetRuntimeClass</B></A>, <A HREF="crunclas.htm"><B>CRuntimeClass</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

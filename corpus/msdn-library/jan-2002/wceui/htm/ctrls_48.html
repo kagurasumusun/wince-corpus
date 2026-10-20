@@ -1,0 +1,109 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Tree-View Image List</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Tree-View Image List"/>
+<MSHelp:RLTitle Title="Creating a Tree-View Image List"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_creating_a_tree_view_image_list"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Creating a Tree-View Image List</H1>
+
+<P>Each item in a tree-view control can have four bit images that are associated with it:
+
+<UL type=disc>
+	<LI>An image such as an open folder, which appears when the item is selected</LI>
+
+	<LI>An image such as a closed folder, which is displayed when the item is not selected</LI>
+
+	<LI>An overlay image, which is drawn transparently over the selected or unselected image</LI>
+
+	<LI>A state image, which is an additional image that is displayed to the left of the selected or unselected image. You can use state images, such as checked and cleared check boxes, to indicate application-defined item states.</LI>
+</UL>
+
+<P>By default, a tree-view control does not display item images. To display item images, you must create image lists and associate them with the control.</P>
+
+<P>A tree-view control can have two image lists: a normal image list and a state image list. A normal image list stores the selected, unselected, and overlay images. A state image list stores state images.</P>
+
+<P><B>To create an image list</B>
+
+<OL>
+	<LI>Call the <B>ImageList_Create</B> function, and use other functions related to image lists to add bitmaps to the image list.</LI>
+
+	<LI>Associate the image list with the tree-view control by using the TVM_SETIMAGELIST message. TVM_GETIMAGELIST retrieves a handle to one of the image lists of a tree-view control.</LI>
+</OL>
+
+<P>In addition to the selected and unselected images, the normal image list of a tree-view control can contain up to four overlay images. Overlay images are designed to be drawn transparently over the selected and unselected images. To assign an index for an overlay mask to an image in the normal image list, call the <B>ImageList_SetOverlayImage</B> function.</P>
+
+<P>By default, all items display the first image in the normal image list for both the selected and unselected states. Also, by default, items do not display overlay images or state images. You can change these default behaviors for an item by sending the TVM_INSERTITEM message or the TVM_SETITEM message. These messages use the <B>TVITEM</B> structure to specify indexes for the image lists indexes for an item.</P>
+
+<P>To associate an overlay image with an item, use the <B>INDEXTOOVERLAYMASK</B> macro to specify an index for an overlay mask in the <I>state</I> member of the <B>TVITEM</B> structure for the item. You also must set the TVIS_OVERLAYMASK bits in the <I>stateMask</I> member. Indexes for Overlay masks are one-based; an index of zero indicates that the application does not specify an overlay image.</P>
+
+<P>To associate a state image with an item, use the <B>INDEXTOSTATEIMAGEMASK</B> macro to specify an index for the state image in the <I>state</I> member of the <B>TVITEM</B> structure of the item. The index identifies an image in the state image list of the control.</P>
+
+<P class=indent><span class=blue><B>Note</B></span>&nbsp;&nbsp;&nbsp;You can speed up the creation of large tree views by disabling the painting of the tree view before you add the items. You do this by sending a WM_SETREDRAW message that has the redraw flag set to FALSE. When you have finished adding items, re-enable painting by sending a WM_SETREDRAW message that has the redraw flag set to TRUE.</P>
+
+<P>The following code example shows how to create and set an image list for a tree-view control, and then redraw the control by using the new images.</P>
+
+<PRE>BOOL InitTreeViewImageLists (HWND hwndTreeView)
+{
+  HBITMAP hBmp;          // Handle to the bitmaps to be added
+
+  // Create the image list for the item pictures.
+  if ((g_hImgList = ImageList_Create (CX_BITMAP, CY_BITMAP, ILC_MASK,
+                                      NUM_BITMAPS, 0)) == NULL)
+    return FALSE;
+
+  // Load the bitmap resource.
+  hBmp = LoadBitmap (g_hInst, MAKEINTRESOURCE (IDB_IMAGES));
+
+  // Add the images to the image list, generating a mask from the
+  // bitmap.
+  if (ImageList_AddMasked (g_hImgList, hBmp, RGB (0, 255, 0)) == -1)
+  {
+    return FALSE;
+  }
+
+  // Delete the bitmap object, and free system resources.
+  DeleteObject (hBmp);
+
+  // If not all of the images were added, then return.
+  if (ImageList_GetImageCount (g_hImgList) &lt; NUM_BITMAPS)
+    return FALSE;
+
+  // Set the image list for the tree-view control, and redraw the
+  // control by using the new images.
+  TreeView_SetImageList (hwndTreeView, g_hImgList, TVSIL_NORMAL);
+
+  return TRUE;
+}
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

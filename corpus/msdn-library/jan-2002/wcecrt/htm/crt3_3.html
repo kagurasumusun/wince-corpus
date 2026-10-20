@@ -1,0 +1,209 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_snprintf</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="_snprintf"/>
+<MSHelp:RLTitle Title="_snprintf"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_snprintf"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>_snprintf</H1>
+
+<P>Write formatted data to a string.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Routine</TH>
+<TH width=67%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>_snprintf</B></TD>
+<TD width=67%>&lt;stdio.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>int _snprintf( char</B> *<I>buffer</I>, <B>size_t</B> <I>count</I>, <B>const char</B> *<I>format</I> [, <I>argument</I>] ...<B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>buffer</I></DT>
+
+<DD>Storage location for output</dd>
+
+<DT><I>count</I></DT>
+
+<DD>Maximum number of characters to store</dd>
+
+<DT><I>format</I></DT>
+
+<DD>Format-control string</dd>
+
+<DT><I>argument</I></DT>
+
+<DD>Optional arguments</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Value</H4>
+
+<P><B>_snprintf</B> returns the number of bytes stored in <I>buffer</I>, not counting the terminating null character. If the number of bytes required to store the data exceeds <I>count</I>, then <I>count</I> bytes of data are stored in <I>buffer</I> and a negative value is returned.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>_snprintf</B> function formats and stores count or fewer characters and values (including a terminating null character that is always appended unless count is zero or the formatted string length is greater than or equal to count characters) in buffer. Each <I>argument</I> (if any) is converted and output according to the corresponding format specification in <I>format</I>. The format consists of ordinary characters and has the same form and function as the <I>format</I> argument for <B>printf</B>. If copying occurs between strings that overlap, the behavior is undefined.</P>
+
+<H4>Generic-Text Routine Mappings</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=100%>TCHAR.H Routine </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>_sntprintf</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Example</H4>
+
+<PRE class="code">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#if !defined(__cplusplus)
+typedef int bool;
+const bool true = 1;
+const bool false = 0;
+#endif
+
+int main(void)
+{
+&nbsp;&nbsp;char buffer[200];
+&nbsp;&nbsp;const static char s[] = "computer"
+#if 0
+"computercomputercomputercomputercomputercomputercomputercomputer"
+"computercomputercomputercomputercomputercomputercomputercomputer"
+"computercomputercomputercomputercomputercomputercomputercomputer"
+"computercomputercomputercomputercomputercomputercomputercomputer"
+#endif
+&nbsp;&nbsp;;
+&nbsp;&nbsp;const char c = 'l';
+&nbsp;&nbsp;const int i = 35;
+#if 1
+&nbsp;&nbsp;const double fp = 1.7320534;
+#else
+&nbsp;&nbsp;const double fp = 1e300; // also doesn't fit in the buffer
+#endif
+&nbsp;&nbsp;/* !subtract one to prevent "squeezing out" the terminal nul! */
+&nbsp;&nbsp;const int bufferSize = sizeof(buffer)/sizeof(buffer[0]) - 1;
+&nbsp;&nbsp;int bufferUsed = 0;
+&nbsp;&nbsp;int bufferLeft = bufferSize - bufferUsed;
+&nbsp;&nbsp;bool bSuccess = true;
+&nbsp;&nbsp;buffer[0] = 0;
+
+&nbsp;&nbsp;/* Format and print various data: */
+
+&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tString: %s\n", s );
+&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferLeft -= perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tCharacter: %c\n", c );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferLeft -= perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tInteger: %d\n", i );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferLeft -= perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bufferLeft &gt; 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int perElementBufferUsed = _snprintf(&amp;buffer[bufferUsed], bufferLeft, "\tReal: %f\n", fp );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (bSuccess = (perElementBufferUsed &gt;= 0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bufferUsed += perElementBufferUsed;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;if (!bSuccess)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;printf("%s\n", "failure");
+&nbsp;&nbsp;}
+&nbsp;&nbsp;else
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;/* !store nul because _snprintf doesn't necessarily (if the string fits without the
+&nbsp;&nbsp;&nbsp;&nbsp; * the terminal nul, but not with it)!
+&nbsp;&nbsp;&nbsp;&nbsp; * bufferUsed might be as large as bufferSize, which normally is like going
+&nbsp;&nbsp;&nbsp;&nbsp; * one element beyond a buffer, but in this case subtracted one from bufferSize,
+&nbsp;&nbsp;&nbsp;&nbsp; * so we're ok.
+&nbsp;&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp;&nbsp;buffer[bufferUsed] = 0;
+&nbsp;&nbsp;&nbsp;&nbsp;printf( "Output:\n%s\ncharacter count = %d\n", buffer, bufferUsed );
+&nbsp;&nbsp;}
+&nbsp;&nbsp;return EXIT_SUCCESS;
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">Output:
+&nbsp;&nbsp;String: computer
+&nbsp;&nbsp;Character: l
+&nbsp;&nbsp;Integer: 35
+&nbsp;&nbsp;Real: 1.732053
+
+character count = 61
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt3_4.htm">sprintf</A>, <A HREF="crt2_36.htm">fprintf</A>, <A HREF="crt2_88.htm">printf</A>, <A HREF="crt2_102.htm">scanf</A>, <A HREF="crt3_7.htm">sscanf</A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

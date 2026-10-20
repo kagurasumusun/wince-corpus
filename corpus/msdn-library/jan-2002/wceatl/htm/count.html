@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>COUNT/COUNTCTN</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="COUNT/COUNTCTN"/>
+<MSHelp:RLTitle Title="COUNT/COUNTCTN"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term=""/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_IUnknown_QueryInterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_DrawText" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_GetClientRect" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_win32_PatBlt" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_win32_Rectangle" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_win32_Sleep" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_win32_releasedc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_win32_wsprintf" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+<P>The COUNT sample demonstrates how to create a full control and a simple object, within the same DLL, that communicate with each other. The COUNTCTN sample is a simple dialog box application that provides a container for the <B>CCount</B> control.</P>
+
+<P>The <B>CCountCtnDlg</B> dialog box class has two public variables, <B>m_Counter</B>, which is a <B>CCounter</B> object, and <B>m_nMaxCounter</B> which is an integer that’s initialized to 10 in <B>CCountCtnDlg</B>’s constructor.</P>
+
+<P><B>CCounter</B> is a full control. In addition to <B>IUnknown</B> and <B>IDispatch,</B> it implements the <B>ICounter</B> interface, which exposes three methods. It supports a dual interface, so you can either access the <B>ICounter</B> methods through <B>IDispatch::Invoke</B> or call them directly by way of the <B>vtable</B>. These methods are <B>SetMaxCounter</B>, <B>StartCounting</B>, and <B>GetInfoFromCounter</B>. <B>CCounter</B> also has one protected data member, called <B>m_pIObject</B>, which is a pointer to the <B>IObject1</B> interface on a <B>CObject1</B> object. </P>
+
+<P><B>CObject1</B> is a simple object. It also supports a dual interface. In addition to <B>IUnknown</B> and <B>IDispatch,</B> it implements the <B>IObject1</B> interface<B>,</B> which exposes three methods. These methods are <B>Initialize</B>, <B>SetMax</B>, and <B>Start</B>. <B>CObject1</B> has two protected data members. The <B>m_pICounter</B> data member contains a back-pointer to the <B>ICounter</B> interface on the <B>CCounter</B> control that instantiates it. The <B>m_nMax</B> data member is an integer.</P>
+
+<P>The <B>CCounter</B> constructor instantiates a <B>CObject1</B> object and queries for a pointer to its <B>IObject1</B> interface, which the <B>CCounter</B> control assigns to its <B>m_pIObject</B> data member. It then calls <B>IObject1::Initialize</B>, passing a back-pointer to itself, which the IObject1 object assigns to its <B>m_pICounter</B> data member.</P>
+
+<P>When a user enters a number between 1 and 15 in the dialog box’s edit control, the number is assigned to <B>CCountCtnDlg::m_nMaxCounter</B>. When the user taps the <B>Apply</B> button, <B>CCountCtnDlg::OnSetMaxCounter</B> invokes <B>ICounter::SetMaxCounter</B> on the <B>CCounter</B> control, passing the value of m_nMaxCounter as the argument. The <B>ICounter::SetMaxCounter</B> method invokes <B>IObject1::SetMax</B> on its <B>m_pIObject</B> data member, passing along the value it was passed. <B>IObject1::SetMax</B> assigns this value to its <B>m_nMax</B> data member.</P>
+
+<P>When a user taps the <B>Start</B> button, <B>CCountCtnDlg::OnStart</B> invokes <B>ICounter::StartCounting</B> on the <B>CCounter</B> control. <B>ICounter::StartCounting</B> invokes <B>IObject::Start</B> on its <B>m_pIObject</B> member, which loops <B>m_nMax</B> times. Each time through the loop, it calls <B>ICounter::GetInfoFromCounter</B>, using the back-pointer stored in its <B>m_pICounter</B> member, passing in a text string that states the number of times it’s been through the loop. <B>ICounter::GetInfoFromCounter</B> displays the text string in its window on the dialog box.</P>
+
+<P>This sample demonstrates the following keywords:
+
+<UL type=disc>
+	<LI><A HREF="JavaScript:hhobj_1.Click()"><B>IUnknown::QueryInterface</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_2.Click()"><B>DrawText</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_3.Click()"><B>GetClientRect</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_4.Click()"><B>PatBlt</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_5.Click()"><B>Rectangle</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_6.Click()"><B>Sleep</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_7.Click()"><B>ReleaseDC</B></A></LI>
+
+	<LI><A HREF="JavaScript:hhobj_8.Click()"><B>wsprintf</B></A></LI>
+</UL>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

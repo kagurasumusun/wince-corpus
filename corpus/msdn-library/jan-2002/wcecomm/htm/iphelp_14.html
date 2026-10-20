@@ -1,0 +1,125 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Changing the Default Gateway</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Changing the Default Gateway"/>
+<MSHelp:RLTitle Title="Changing the Default Gateway"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_changing_the_default_gateway"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Changing the Default Gateway</H1>
+
+<P>This code is an example of how to change the default gateway to NewGateway. Simply calling GetIpForwardEntry, changing the gateway and then calling SetIpForwardEntry will not change the route, but rather will just add a new one. If for some reason there are multiple default gateways present, this code will delete them. Note that the new gateway must be viable, otherwise TCP/IP will ignore the change.</P>
+
+<PRE class="code">
+   PMIB_IPFORWARDTABLE pIpForwardTable = NULL;
+   PMIB_IPFORWARDROW pRow = NULL;
+   ULONG dwSize = 0;
+   BOOL bOrder = FALSE;
+   DWORD dwStatus = 0;
+   DWORD NewGateway = 0xDDBBCCAA; // this is in host order Ip Address AA.BB.CC.DD is DDCCBBAA
+
+   // Find out how big our buffer needs to be
+   dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   if (dwStatus == ERROR_INSUFFICIENT_BUFFER) {
+
+      // Allocate the memory for the table
+      if (!(pIpForwardTable = (PMIB_IPFORWARDTABLE)malloc(dwSize))) {
+         OutputMessage(TEXT("Malloc failed, Out of Memory!\r\n"));
+         exit(1);
+      }
+
+      // Now get the table
+      dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   }
+
+   if (dwStatus != ERROR_SUCCESS) {
+      OutputMessage(TEXT("GetIpForwardTable Failed, ERROR %d\r\n"), dwStatus);
+      if (pIpForwardTable)
+         free(pIpForwardTable);
+      exit(1);
+   }
+
+   // Search for the row in the table we want. The default gateway has a destination
+   // of 0.0.0.0 - Notice that we continue looking through the table, but only copy
+   // one row. This is so that if there happen to be multiple default gateways, we can
+   // be sure to delete them all.
+   for (unsigned long int i=0; i &lt; pIpForwardTable-&gt;dwNumEntries; i++) {
+      if (pIpForwardTable-&gt;table[i].dwForwardDest == 0) {
+
+         // We've found the default gateway
+         if (!pRow) {
+            // Allocate some memory to store the row in - this is easier than filling
+            // in the row structure ourselves and we can be sure we only change the
+            // gateway address.
+            pRow = (PMIB_IPFORWARDROW)malloc(sizeof(MIB_IPFORWARDROW));
+            if (!pRow) {
+               OutputMessage(TEXT("Malloc failed, Out of Memory!\r\n"));
+               exit(1);
+            }
+            // Copy the row
+            memcpy(pRow, &amp;(pIpForwardTable-&gt;table[i]), sizeof(MIB_IPFORWARDROW));
+         }
+
+         // Delete the old default gateway entry
+         dwStatus = DeleteIpForwardEntry(&amp;(pIpForwardTable-&gt;table[i]));
+
+         if (dwStatus != ERROR_SUCCESS) {
+            OutputMessage(TEXT("Could not delete old gateway\n"));
+            exit(1);
+         }
+      }
+   }
+
+   // Set the nexthop field to our new gateway - all the other properties of the route will
+   // be the same as they were previously.
+   pRow-&gt;dwForwardNextHop = NewGateway;
+
+   // Create a new route entry for the default gateway.
+   dwStatus = CreateIpForwardEntry(pRow);
+
+   if (dwStatus == NO_ERROR)
+      OutputMessage(TEXT("Gateway changed successfully\n"));
+   else if (dwStatus == ERROR_INVALID_PARAMETER)
+      OutputMessage(TEXT("Invalid Parameter\n"));
+   else
+      DisplayErrorMessage(dwStatus);
+
+   // Free resources
+   if (pIpForwardTable)
+      free(pIpForwardTable);
+   if (pRow)
+      free(pRow);</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,152 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IAppointment::GetRecurrencePattern</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IAppointment::GetRecurrencePattern"/>
+<MSHelp:RLTitle Title="IAppointment::GetRecurrencePattern"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_iappointment_getrecurrencepattern"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<OBJECT ID="obj_cook" CLASSID="clsid:59CC0C20-679B-11D2-88BD-0800361A1803" STYLE="display:none;"></OBJECT>
+
+
+<H1>IAppointment::GetRecurrencePattern</H1>
+
+<P>This method is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This method gets the current recurrence pattern for an appointment. Call this function to create a recurring appointment or determine the recurrence pattern of an existing recurring appointment.</P>
+
+<PRE class="syntax"><B>HRESULT GetRecurrencePattern(&nbsp;IRecurrencePattern</B> * <I>pRec </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pRec</I></DT>
+
+<DD>[out] Pointer to the recurrence pattern.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates success. If an error occurs, the appropriate <B>HRESULT</B> value is returned.</P>
+
+<H4>Code Example <SPAN class=plat>[Visual Basic]</SPAN></H4>
+
+<P>The following Visual Basic® code snippet creates an appointment and sets the recurrence pattern:</P>
+
+<PRE class="code">Sub CreateRecurringAppointment(polApp As PocketOutlook.Application)
+‘ Create the appointment
+Set pAppt = polApp.CreateItem(olAppointmentItem)
+polAppt.Subject = “Recurring Appointment”)
+polAppt.Start = #4/5/1999 10:00 AM#
+
+‘ Set the recurrence
+Set pRec = pAppt.GetRecurrencePattern()
+pRec.RecurrenceType = olRecursWeekly
+pRec.DayOfWeekMask = olMonday
+pRec.NoEndDate = True
+
+‘ Save the appointment
+pAppt.Save
+End Sub</PRE>
+
+<H4>Code Example <SPAN class=plat>[C++]</SPAN></H4>
+
+<P>The following C++ code snippet creates an appointment and sets the recurrence pattern:</P>
+
+<PRE class="code">void CreateRecurringAppointment(IPOutlookApp *polApp)
+{
+IAppointment *pAppt;
+IRecurrencePattern *pRec;
+SYSTEMTIME st;
+DATE date;
+
+// Call CreateItem on the Application object to add a new appointment
+polApp-&gt;CreateItem(olAppointmentItem, (IDispatch **) &amp;pAppt);
+
+// Convert Monday, 4/5/9 at 10:00 am to a DATE
+memset(&amp;st, 0, sizeof(SYSTEMTIME));
+st.wMonth = 4;
+st.wDay = 5;
+st.wYear = 1999;
+st.wHour = 10;
+polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);
+
+// Set the subject and start date
+pAppt-&gt;put_Subject(TEXT(“Recurring Appointment”));
+pAppt-&gt;put_Start(date);
+
+// Set the recurrence pattern
+pAppt-&gt;GetRecurrencePattern(&amp;pRec);
+pRec-&gt;put_RecurrenceType(olRecursWeekly);
+pRec-&gt;put_DayOfWeekMask(olMonday);
+pRec-&gt;put_NoEndDate(TRUE);
+
+// Save the appointment
+pAppt-&gt;Save();
+
+// Release objects
+pRec-&gt;Release();
+pAppt-&gt;Release();
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_iappointment_unknown.htm">IAppointment::Unknown</A>, <A HREF="_wcesdk_iappointment_propertylist.htm">IAppointment Property Methods</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

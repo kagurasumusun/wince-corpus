@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Access to the Primary Buffer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Access to the Primary Buffer"/>
+<MSHelp:RLTitle Title="Access to the Primary Buffer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_access_to_the_primary_buffer_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_DSBUFFERDESC_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IDirectSound_CreateSoundBuffer_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IDirectSoundBuffer_GetCaps_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_DSBCAPS_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_IDirectSoundBuffer_Play_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Access to the Primary Buffer</H1>
+
+<P>For applications that require specialized mixing or other effects not supported by secondary buffers, DirectSound allows direct access to the primary buffer. </P>
+
+<P>When you obtain write access to a primary sound buffer, other DirectSound features become unavailable. Secondary buffers are not mixed and, consequently, hardware-accelerated mixing is unavailable.</P>
+
+<P>Most applications should use secondary buffers instead of directly accessing the primary buffer. Applications can write to a secondary buffer easily because the larger buffer size provides more time to write the next block of data, thereby minimizing the risk of gaps in the audio. Even if an application has simple audio requirements, such as using one stream of audio data that does not require mixing, it will achieve better performance by using a secondary buffer to play its audio data.</P>
+
+<P>You cannot specify the size of the primary buffer, and you must accept the returned size after the buffer is created. A primary buffer is typically very small, so if your application writes directly to this kind of buffer, it must write blocks of data at short intervals to prevent the previously written data from being replayed.</P>
+
+<P>You create an accessible primary buffer by specifying the DSBCAPS_PRIMARYBUFFER flag in the <A HREF="JavaScript:hhobj_1.Click()"><B>DSBUFFERDESC</B></A> structure passed to the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSound::CreateSoundBuffer</B></A> method. If you want to write to the buffer, the cooperative level must be DSSCL_WRITEPRIMARY.</P>
+
+<P>You cannot obtain write access to a primary buffer unless it exists in hardware. To determine whether this is the case, call the <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectSoundBuffer::GetCaps</B></A> method and check for the DSBCAPS_LOCHARDWARE flag in the <B>dwFlags</B> member of the <A HREF="JavaScript:hhobj_4.Click()"><B>DSBCAPS</B></A> structure that is returned. If you attempt to lock a primary buffer that is emulated in software, the call will fail.</P>
+
+<P>Primary sound buffers must be played with looping. Ensure that the DSBPLAY_LOOPING flag is set.</P>
+
+<P>The following example shows how to obtain write access to the primary buffer:</P>
+
+<PRE class="code">BOOL AppCreateWritePrimaryBuffer(
+    LPDIRECTSOUND lpDirectSound,
+    LPDIRECTSOUNDBUFFER *lplpDsb,
+    LPDWORD lpdwBufferSize,
+    HWND hwnd)
+{
+    DSBUFFERDESC dsbdesc;
+    DSBCAPS dsbcaps;
+    HRESULT hr;
+    WAVEFORMATEX wf;
+
+    // Set up wave format structure.
+    memset(&amp;wf, 0, sizeof(WAVEFORMATEX));
+    wf.wFormatTag = WAVE_FORMAT_PCM;
+    wf.nChannels = 2;
+    wf.nSamplesPerSec = 22050;
+    wf.nBlockAlign = 4;
+    wf.nAvgBytesPerSec =
+        wf.nSamplesPerSec * wf.nBlockAlign;
+    wf.wBitsPerSample = 16;
+
+    // Set up DSBUFFERDESC structure.
+    memset(&amp;dsbdesc, 0, sizeof(DSBUFFERDESC));
+    dsbdesc.dwSize = sizeof(DSBUFFERDESC);
+    dsbdesc.dwFlags = DSBCAPS_PRIMARYBUFFER;
+    // Buffer size is determined by sound hardware.
+    dsbdesc.dwBufferBytes = 0;
+    dsbdesc.lpwfxFormat = NULL; // Must be NULL for primary buffers.
+
+    // Obtain write-primary cooperative level.
+    hr = lpDirectSound-&gt;lpVtbl-&gt;SetCooperativeLevel(lpDirectSound,
+        hwnd, DSSCL_WRITEPRIMARY);
+    if SUCCEEDED(hr)
+    {
+        // Try to create buffer.
+        hr = lpDirectSound-&gt;lpVtbl-&gt;CreateSoundBuffer(lpDirectSound,
+            &amp;dsbdesc, lplpDsb, NULL);
+        if SUCCEEDED(hr)
+        {
+            // Set primary buffer to desired format.
+            hr = (*lplpDsb)-&gt;lpVtbl-&gt;SetFormat(*lplpDsb, &amp;wf);
+            if SUCCEEDED(hr)
+            {
+                // If you want to know the buffer size, call GetCaps.
+                    dsbcaps.dwSize = sizeof(DSBCAPS);
+                (*lplpDsb)-&gt;lpVtbl-&gt;GetCaps(*lplpDsb, &amp;dsbcaps);
+                *lpdwBufferSize = dsbcaps.dwBufferBytes;
+                return TRUE;
+            }
+        }
+    }
+    // Failure.
+    *lplpDsb = NULL;
+    *lpdwBufferSize = 0;
+    return FALSE;
+} </PRE>
+
+<P>You may also create a primary buffer object without write access, by specifying a cooperative level other than DSSCL_WRITEPRIMARY. One reason for doing this would be to call the <A HREF="JavaScript:hhobj_5.Click()"><B>IDirectSoundBuffer::Play</B></A> method for the primary buffer, in order to eliminate problems associated with frequent short periods of silence. For more information, see <A HREF="dsover_43.htm">Playing the Primary Buffer Continuously</A>.</P>
+
+<P>See also <A HREF="dsover_30.htm">Custom Mixers</A>.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

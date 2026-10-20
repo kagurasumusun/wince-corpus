@@ -1,0 +1,72 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Stream Data (LIST 'movi' Chunk)</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Stream Data (LIST 'movi' Chunk)"/>
+<MSHelp:RLTitle Title="Stream Data (LIST 'movi' Chunk)"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_stream_data_(list__movi__chunk)"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32__bitmapinfo_str" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32__bitmapinfoheader_str" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Stream Data (LIST 'movi' Chunk)</H1>
+
+<P>Following the header information is a LIST 'movi' chunk that contains chunks of the actual data in the streams - that is, the pictures and sounds themselves. The data chunks can reside directly in the LIST 'movi' chunk or they might be grouped into 'rec' chunks. The 'rec' grouping implies that the grouped chunks should be read from disk all at once. This is used only for files specifically interleaved to play from CD-ROM. </P>
+
+<P>Like any RIFF chunk, the data chunks contain a FOURCC (four-character code) to identify the chunk type. A FOURCC is a 32-bit quantity represented as a sequence of one to four ASCII alphanumeric characters, padded on the right with blank characters. The FOURCC that identifies each chunk consists of the stream number and a two-character code that defines the type of information encapsulated in the chunk. For example, a waveform chunk is identified by a two-character code of 'wb'. If a waveform chunk corresponded to the second LIST 'hdrl' stream description, it would have a FOURCC of '01wb'. </P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;While two-character codes are a convenient way to describe a stream, do not expect them to be recognized by other applications. Use FOURCCs when creating a stream or transferring the information to other applications. </P>
+
+<P>Because all the format information is in the header, the audio data contained in these data chunks does not contain any information about its format. An audio data chunk has the following format (the ## in the format represents the stream identifier): </P>
+
+<PRE class="code">WAVE Bytes '##wb'
+     BYTE  abBytes[];</PRE>
+
+<P>Video data can be compressed or uncompressed DIBs. An uncompressed DIB has BI_RGB specified for the <B>biCompression</B> member in its associated <A HREF="JavaScript:hhobj_1.Click()"><B>BITMAPINFO</B></A> structure. A compressed DIB has a value other than BI_RGB specified in the <B>biCompression</B> member. For more information about compression formats, see the description of the <A HREF="JavaScript:hhobj_2.Click()"><B>BITMAPINFOHEADER</B></A> data structure in the Microsoft Windows Programmer's Reference. </P>
+
+<P>A data chunk for an uncompressed DIB contains RGB video data. These chunks are identified by a two-character code of 'db' (db is an abbreviation for DIB bits). Data chunks for a compressed DIB are identified by a two-character code of 'dc' (dc is an abbreviation for DIB compressed). Neither data chunk will contain any header information about the DIBs. The data chunk for an uncompressed DIB has the following form: </P>
+
+<PRE class="code">DIB  Bits  '##db'
+     BYTE  abBits[];</PRE>
+
+<P>The data chunk for a compressed DIB has the following form. </P>
+
+<PRE class="code">Compressed DIB  Bits  '##dc'
+                BYTE  abBits[];</PRE>
+
+<P>Video data chunks can also define new palette entries used to update the palette during an AVI sequence. For more information on specifying palette information, see <I>Video for Windows Programmer's Guide</I>. </P>
+
+<P>Text streams can use arbitrary two-character codes. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

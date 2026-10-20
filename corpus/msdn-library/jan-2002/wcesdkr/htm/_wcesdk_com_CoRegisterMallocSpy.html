@@ -1,0 +1,104 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoRegisterMallocSpy</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoRegisterMallocSpy"/>
+<MSHelp:RLTitle Title="CoRegisterMallocSpy"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_coregistermallocspy"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoRegisterMallocSpy</H1>
+
+<P>This function registers an implementation of the <B>IMallocSpy</B> interface in OLE, thereafter requiring OLE to call its wrapper methods around every call to the corresponding <B>IMalloc</B> method. <B>IMallocSpy</B> is defined in OLE to allow developers to debug memory allocations.</P>
+
+<PRE class="syntax"><B>HRESULT CoRegisterMallocSpy(
+LPMALLOCSPY </B><I>pMallocSpy</I><B> );</B></PRE>
+
+<H4>Parameter</H4>
+
+<DL>
+<DT><I>pMallocSpy</I></DT>
+
+<DD>[in] Pointer to an instance of the <B>IMallocSpy</B> implementation.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return value E_INVALIDARG, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The <B>IMallocSpy</B> object is successfully registered.</dd>
+
+<DT>CO_E_OBJISREG</DT>
+
+<DD>There is already a registered spy.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CoRegisterMallocSpy</B> function registers the <B>IMallocSpy</B> object, which is used to debug calls to <B>IMalloc</B> methods. The function calls <B>QueryInterface</B> on the pointer <I>pMallocSpy</I> for the interface <B>IID_IMallocSpy</B>. This is to ensure that <I>pMallocSpy</I> really points to an implementation of <B>IMallocSpy</B>. By the rules of OLE, it is expected that a successful call to <B>QueryInterface</B> has added a reference (through the <B>AddRef</B> method) to the <B>IMallocSpy</B> object. That is, <B>CoRegisterMallocSpy</B> does not directly call <B>AddRef</B> on <I>pMallocSpy</I>, but fully expects that the <B>QueryInterface</B> call will.</P>
+
+<P>When the <B>IMallocSpy</B> object is registered, whenever there is a call to one of the <B>IMalloc</B> methods, OLE first calls the corresponding <B>IMallocSpy</B> pre-method. Then, after executing the <B>IMalloc</B> method, OLE calls the corresponding <B>IMallocSpy</B> post-method. For example, whenever there is a call to <B>IMalloc::Alloc</B>, from whatever source, OLE calls <B>IMallocSpy::PreAlloc</B>, calls <B>IMalloc::Alloc</B>, and after that allocation is completed, calls <B>IMallocSpy::PostAlloc</B>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

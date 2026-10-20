@@ -1,0 +1,75 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Setting ForwardMetric Values</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Setting ForwardMetric Values"/>
+<MSHelp:RLTitle Title="Setting ForwardMetric Values"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_setting_forwardmetric_values"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Setting ForwardMetric Values</H1>
+
+<P>When you are going to use one of the IP helper functions to set a parameter, first use the corresponding "Get" function to retrieve the data structure. Then change only the part you want to change, and pass the structure into the "Set" function. This example sets ForwardMetric1 to 0 for all of the entries in the forward table.</P>
+
+<PRE class="code">PMIB_IPFORWARDTABLE pbuffer  = NULL;
+DWORD    result = 0,
+         dwStatus = 0;
+ULONG    size = 0;
+BOOL     bfound = FALSE,
+         bOrder = 0;
+
+dwStatus = GetIpForwardTable(pbuffer, &amp;size, bOrder);
+if (dwStatus == ERROR_BUFFER_OVERFLOW) {
+   if (!(pbuffer = (PMIB_IPFORWARDTABLE) malloc(size))) {
+         exit(1);
+   }
+   dwStatus = GetIpForwardTable(pbuffer, &amp;size, bOrder);
+}
+
+if (dwStatus != NO_ERROR) {
+   exit(1);
+}
+
+for (unsigned long int k = 0; k &lt; pbuffer-&gt;dwNumEntries; k++) {
+   pbuffer-&gt;table[k].dwForwardMetric1 = 0;
+   dwStatus = SetIpForwardEntry(&amp;(pbuffer-&gt;table[k]));
+
+   if (result != NO_ERROR)
+exit(1);
+}</PRE>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;For further details, refer to the ipconfig or route code which are located in the public folder. <BR>
+(\Wince300\Public\&lt;project name&gt;\Wince300\cesysgen\oak\debug)</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

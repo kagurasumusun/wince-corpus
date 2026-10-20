@@ -1,0 +1,137 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::MapObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CArchive::MapObject"/>
+<MSHelp:RLTitle Title="CArchive::MapObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_carchive_mapobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CArchive::MapObject</H1>
+
+<P>This method places an object in the map that is not actually serialized to the file, but that is available for subobjects to reference.</P>
+
+<PRE class=syntax><B>void MapObject(
+const CObject* </B><I>pOb</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pOb</I></DT>
+
+<DD>A constant pointer to the object being stored.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>For example, you might not serialize a document, but you might serialize items that are part of the document. By calling <B>MapObject</B>, you allow those items, or sub-objects, to reference the document. Also, serialized subitems can serialize their <B>m_pDocument</B> back pointer.</P>
+
+<P>You can call <B>MapObject</B> when you store to and load from the <B>CArchive</B> object. <B>MapObject</B> adds the specified object to the internal data structures maintained by the <B>CArchive</B> object during serialization and deserialization. Unlike <B>ReadObject </B>and <B>WriteObject</B>, it does not call serialize on the object.</P>
+
+<H4>Example</H4>
+
+<PRE>// MyDoc.h
+// Document should have DECLARE_SERIAL and IMPLEMENT_SERIAL
+
+class CMyDocument : public CDocument
+{
+&nbsp;&nbsp;CObList m_listOfSubItems;
+    ...
+&nbsp;&nbsp;DECLARE_SERIAL(CMyDocument)
+};
+
+// MyDoc.cpp
+...
+IMPLEMENT_SERIAL(CMyDocument, CObject, 1)
+...
+void CMyDocument::Serialize(CArchive&amp; ar)
+{
+&nbsp;&nbsp;if (ar.IsStoring())
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// TODO: add storing code here
+&nbsp;&nbsp;}
+&nbsp;&nbsp;else
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// TODO: add loading code here
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;ar.MapObject(this);
+&nbsp;&nbsp;//Serialize the subitems in the document;
+&nbsp;&nbsp;//they can serialize their m_pDoc
+&nbsp;&nbsp;//back pointer
+&nbsp;&nbsp;m_listOfSubItems.Serialize(ar);
+
+}
+
+//SubItem.h
+class CSubItem : public CObject
+{
+public:
+&nbsp;&nbsp;CSubItem(CMyDocument * pDoc)
+&nbsp;&nbsp;&nbsp;&nbsp;{ m_pDoc = pDoc; }
+
+&nbsp;&nbsp;// Back pointer to owning document
+&nbsp;&nbsp;CMyDocument* m_pDoc;
+&nbsp;&nbsp;WORD m_i; // Other item data
+
+&nbsp;&nbsp;virtual void Serialize(CArchive&amp; ar);
+};
+
+//SubItem.cpp
+void CSubItem::Serialize(CArchive&amp; ar)
+
+{
+&nbsp;&nbsp;if (ar.IsStoring( ) )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Will serialize a reference
+&nbsp;&nbsp;&nbsp;&nbsp;// to the mapped document pointer
+&nbsp;&nbsp;&nbsp;&nbsp;ar &lt;&lt; (CObject *)m_pDoc;
+&nbsp;&nbsp;&nbsp;&nbsp;ar &lt;&lt; m_l;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;else
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Will load a reference to
+&nbsp;&nbsp;&nbsp;&nbsp;// the mapped document pointer
+&nbsp;&nbsp;&nbsp;&nbsp;ar &gt;&gt; (CObject *&amp;) m_pDoc;
+&nbsp;&nbsp;&nbsp;&nbsp;ar &gt;&gt; m_l;
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="carchi_14.htm"><B>CArchive::ReadObject</B></A>, <A HREF="carchi_22.htm"><B>CArchive::WriteObject</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

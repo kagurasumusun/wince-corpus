@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>sendto</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="sendto"/>
+<MSHelp:RLTitle Title="sendto"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_sendto"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>sendto </H1>
+
+<P>This function sends data to a specific destination. </P>
+
+<PRE class="syntax"><B>int</B> <B>sendto</B> <B>(
+SOCKET</B> <I>s</I><B>,
+const</B> <B>char</B> <I>*buf</I><B>,
+int</B> <I>len</I><B>,
+int</B> <I>flags</I><B>,
+const</B> <B>struct</B> <B>sockaddr</B> <I>*to</I><B>,
+int</B> <I>tolen </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor that identifies a (possibly connected) socket.</dd>
+
+<DT><I>buf</I></DT>
+
+<DD>[in] Buffer that contains the data to be transmitted.</dd>
+
+<DT><I>len</I></DT>
+
+<DD>[in] Length of the data in <I>buf</I>.</dd>
+
+<DT><I>flags</I></DT>
+
+<DD>[in] Specifies the way in which the call is made.</dd>
+
+<DT><I>to</I></DT>
+
+<DD>[in] Optional pointer to the address of the target socket.</dd>
+
+<DT><I>tolen</I></DT>
+
+<DD>[in] Size of the address in <I>to</I>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The total number of bytes sent, which can be less than the number indicated by <I>len</I>, indicates that no error occurred. SOCKET_ERROR indicates failure. To get a specific error value, call <B>WSAGetLastError</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>sendto</B> function is used to write outgoing data on a socket. For message-oriented sockets, care must be taken not to exceed the maximum packet size of the underlying subnets. If the data is too long to pass atomically through the underlying protocol, the error WSAEMSGSIZE is returned and no data is transmitted. </P>
+
+<P>The <I>to</I> parameter can be any valid address in the socket's address family, including a broadcast or any multicast address. To send to a broadcast address, an application must have used <A HREF="_wcesdk_setsockopt.htm"><B>setsockopt</B></A> with SO_BROADCAST enabled. Otherwise, <B>sendto</B> will fail with the error value WSAEACCES. For TCP/IP, an application can send to any multicast address (without becoming a group member).</P>
+
+<P>If the socket is unbound, unique values are assigned to the local association by the system, and the socket is then marked as bound. An application can use <A HREF="_wcesdk_getsockname.htm"><B>getsockname</B></A> to determine the local socket name in this case.</P>
+
+<P>The successful completion of a <B>sendto</B> does not indicate that the data was successfully delivered.</P>
+
+<P>The <B>sendto</B> function is normally used on a connectionless socket to send a datagram to a specific peer socket identified by the <I>to</I> parameter. Even if the connectionless socket has been previously connected to a specific address, the <I>to</I> parameter overrides the destination address for that particular datagram only. On a connection-oriented socket, the <I>to</I> and <I>tolen </I>parameters are ignored, making <B>sendto</B> equivalent to <A HREF="_wcesdk_send.htm"><B>send</B></A>.</P>
+
+<P><B>For</B> <B>Sockets</B> <B>Using</B> <B>IP</B> <B>(Version</B> <B>4)</B></P>
+
+<P>To send a broadcast (on a SOCK_DGRAM only), the address in the <I>to</I> parameter should be constructed using the special IP address INADDR_BROADCAST (defined in Winsock.h), together with the intended port number. It is generally inadvisable for a broadcast datagram to exceed the size at which fragmentation can occur, which implies that the data portion of the datagram (excluding headers) should not exceed 512 bytes.</P>
+
+<P>If no buffer space is available within the transport system to hold the data to be transmitted, <B>sendto</B> will block unless the socket has been placed in a nonblocking mode. On nonblocking, stream oriented sockets, the number of bytes written can be between 1 and the requested length, depending on buffer availability on both the client and server systems. The <A HREF="_wcesdk_select.htm"><B>select</B></A> function can be used to determine when it is possible to send more data.</P>
+
+<P>Calling <B>sendto</B> with a <I>len</I> of zero is permissible and will return zero as a valid value. For message-oriented sockets, a zero-length transport datagram is sent.</P>
+
+<P>The <I>flags</I> parameter is used to influence the behavior of the function beyond the options specified for the associated socket. However, Windows CE silently ignores the MSG_DONTROUTE value and does not support MSG_OOB. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winsock.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_recv.htm"><B>recv</B></A>, <A HREF="_wcesdk_recvfrom.htm"><B>recvfrom</B></A>, <A HREF="_wcesdk_socket.htm"><B>socket</B></A>, <A HREF="_wcesdk_select.htm"><B>select</B></A>, <A HREF="_wcesdk_send.htm"><B>send</B></A>, <A HREF="_wcesdk_shutdown_function.htm"><B>shutdown</B></A>, <A HREF="_wcesdk_wsastartup.htm"><B>WSAStartup</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

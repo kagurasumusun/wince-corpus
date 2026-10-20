@@ -1,0 +1,138 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMRegisterMiniport</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMRegisterMiniport"/>
+<MSHelp:RLTitle Title="NdisMRegisterMiniport"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismregisterminiport"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMRegisterMiniport</H1>
+
+<P>This function registers a network adapter or intermediate driver’s <B>Miniport</B>_* entry points and name with the NDIS library when the driver initializes.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMRegisterMiniport(
+IN NDIS_HANDLE </B><I>NdisWrapperHandle</I><B>,
+IN PNDIS_MINIPORT_CHARACTERISTICS </B><I>MiniportCharacteristics</I><B>,
+IN UINT </B><I>CharacteristicsLength</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>NdisWrapperHandle</I></DT>
+
+<DD>Handle returned by the <A HREF="_wcesdk_ndisminitializewrapper.htm"><B>NdisMInitializeWrapper</B></A> function.</dd>
+
+<DT><I>MiniportCharacteristics</I></DT>
+
+<DD>Pointer to an <B>NDIS_MINIPORT_CHARACTERISTICS</B> structure set up by the caller.
+
+<P>The driver should initialize this structure with 0s before setting up any its members.
+</dd>
+
+<DT><I>CharacteristicsLength</I></DT>
+
+<DD>Specifies the length, in bytes, of the caller-supplied characteristics buffer. This parameter must be <B>sizeof(</B>NDIS40_MINIPORT_CHARACTERISTICS<B>)</B>.
+
+<P>The driver includes the build instruction NDIS40_MINIPORT, as appropriate, in its sources; if the driver writer uses the -DNDIS40_MINIPORT compiler switch, this parameter is set when the driver is built.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>NDIS_STATUS_SUCCESS indicates success. One of the following status values indicates failure:
+
+<DL>
+<DT>NDIS_STATUS_BAD_CHARACTERISTICS</DT>
+
+<DD>The <I>CharacteristicsLength</I> is too small for the <I>MajorNdisVersion</I> specified in the buffer at <I>MiniportCharacteristics</I>.</dd>
+
+<DT>NDIS_STATUS_BAD_VERSION</DT>
+
+<DD>The <I>MajorNdisVersion</I> or <I>MinorNdisVersion</I> specified in the characteristics structure is invalid.</dd>
+
+<DT>NDIS_STATUS_RESOURCES</DT>
+
+<DD>A shortage of resources, possibly memory, prevented the NDIS library from registering the caller.</dd>
+
+<DT>NDIS_STATUS_FAILURE</DT>
+
+<DD>This is a default error status, returned when none of the preceding errors caused the registration to fail. For example, if the NDIS library cannot load the driver’s image and lock it into system memory, it returns this error.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>An network adapter driver calls this function from its <A HREF="_wcesdk_driverentry.htm"><B>DriverEntry</B></A> function after <B>DriverEntry</B> calls the <B>NdisMInitializeWrapper</B> function.</P>
+
+<P>Every network adapter driver that exports only <B>Miniport<I>XXX</I> </B>functions must set up a characteristics structure and call this function. This structure is copied in the request to the NDIS library’s internal storage. Thus, once it has registered, a miniport driver cannot change its handler functions.</P>
+
+<P>The NDIS library currently does not call <A HREF="_wcesdk_miniportreconfigure.htm"><B>MiniportReconfigure</B></A> functions, so such a function in an existing miniport driver does nothing unless the miniport makes internal calls to its <B>MiniportReconfigure</B> function from <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>.</P>
+
+<P>After the driver has called this function, it should be prepared to be called back at the <B>MiniportInitialize</B> entry point specified in the characteristics structure.</P>
+
+<P>NDIS intermediate drivers, which export both <B>Miniport<I>XXX</I> </B>and <B>Protocol<I>XXX</I></B> functions, usually call the <A HREF="_wcesdk_ndisimregisterlayeredminiport.htm"><B>NdisIMRegisterLayeredMiniport</B></A> function, instead of this function. Intermediate drivers that export only a set of <B>Miniport<I>XXX</I> </B>functions usually call this function.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_driverentry.htm"><B>DriverEntry</B></A>, <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_miniportreconfigure.htm"><B>MiniportReconfigure</B></A>, <A HREF="_wcesdk_ndiszeromemory.htm"><B>NdisZeroMemory</B></A>, <A HREF="_wcesdk_ndisimregisterlayeredminiport.htm"><B>NdisIMRegisterLayeredMiniport</B></A>, <A HREF="_wcesdk_ndisminitializewrapper.htm"><B>NdisMInitializeWrapper</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

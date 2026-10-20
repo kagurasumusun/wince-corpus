@@ -1,0 +1,90 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Listing Addresses</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Listing Addresses"/>
+<MSHelp:RLTitle Title="Listing Addresses"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_listing_addresses"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Listing Addresses</H1>
+
+<P>In the case where an IP Helper function returns a list of adapters, addresses, statistics, etc., step through the linked list to retrieve the information present.</P>
+
+<PRE class="code">// Get Adapters Info
+PIP_ADAPTER_INFO  pAdapterInfo = NULL;
+PIP_ADAPTER_INFO  pOriginalPtr;
+ULONG             ulSizeAdapterInfo = 0;
+DWORD             dwStatus;
+
+// Find out how big our buffer needs to be to hold the data
+dwStatus = GetAdaptersInfo(pAdapterInfo, &amp;ulSizeAdapterInfo);
+if (dwStatus == ERROR_BUFFER_OVERFLOW) {
+   // Allocate a buffer of the appropriate size
+   if (!(pAdapterInfo = (PIP_ADAPTER_INFO)malloc(ulSizeAdapterInfo))) {
+      printf(“\n Insufficient Memory ");
+      return(1);
+   }
+
+   // Obtain the Adapter Info
+   dwStatus = GetAdaptersInfo(pAdapterInfo, &amp;ulSizeAdapterInfo);
+}
+
+if (dwStatus != ERROR_SUCCESS) {
+   return(1);
+}
+
+pOriginalPtr = pAdapterInfo;
+
+if (pAdapterInfo == NULL)
+   printf("\n No Interfaces Present.\n");
+   // Step through the adapter list
+   while (pAdapterInfo != NULL) {
+
+      // Print the Ip Addresses
+      printf(" \n\n\t IpAddressList:: ");
+      PIP_ADDR_STRING pAddressList = &amp;(pAdapterInfo-&gt;IpAddressList);
+
+      do {
+         printf("\n\t IpAddress = %hs", pAddressList-&gt;IpAddress.String);
+         pAddressList = pAddressList-&gt;Next;
+      } while (pAddressList != NULL);
+
+      // And so on with other members of the Adapter info structure…..
+
+      pAdapterInfo = pAdapterInfo-&gt;Next;
+   } //  while(pAdapterInfo!=NULL){
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

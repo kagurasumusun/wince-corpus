@@ -1,0 +1,241 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>mixerGetLineControls</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="mixerGetLineControls"/>
+<MSHelp:RLTitle Title="mixerGetLineControls"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_am_mixergetlinecontrols"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>mixerGetLineControls</H1>
+
+<P>The <B>mixerGetLineControls</B> function retrieves one or more controls associated with an audio line.</P>
+
+<PRE class="syntax"><B>MMRESULT mixerGetLineControls(</B>
+<B>HMIXEROBJ</B> <I>hmxobj</I><B>,</B>
+<B>LPMIXERLINECONTROLS</B> <I>pmxlc</I><B>,</B>
+<B>DWORD</B> <I>fdwControls</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hmxobj </I></DT>
+
+<DD>Handle to the mixer device object that is being queried. </dd>
+
+<DT><I>pmxlc </I></DT>
+
+<DD>Pointer to a <A HREF="_wcesdk_am_mixerlinecontrols.htm"><B>MIXERLINECONTROLS</B></A> structure. This structure is used to reference one or more <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structures to be filled with information about the controls associated with an audio line. The <B>cbStruct</B> member of the <B>MIXERLINECONTROLS</B> structure must always be initialized to be the size, in bytes, of the <B>MIXERLINECONTROLS</B> structure. </dd>
+
+<DT><I>fdwControls </I></DT>
+
+<DD>Flags for retrieving information about one or more controls associated with an audio line. The following values are defined.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Flag</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MIXER_GETLINECONTROLSF_ALL</TD>
+<TD width=50%>The <I>pmxlc</I> parameter references a list of <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structures that will receive information on all controls associated with the audio line identified by the <B>dwLineID</B> member of the <A HREF="_wcesdk_am_mixerlinecontrols.htm"><B>MIXERLINECONTROLS</B></A> structure. The <B>cControls</B> member must be initialized to the number of controls associated with the line. This number is retrieved from the <B>cControls</B> member of the <A HREF="_wcesdk_am_mixerline.htm"><B>MIXERLINE</B></A> structure returned by the <A HREF="_wcesdk_am_mixergetlineinfo.htm"><B>mixerGetLineInfo</B></A> function. The <B>cbmxctrl</B> member must be initialized to the size, in bytes, of a single <B>MIXERCONTROL</B> structure. The <B>pamxctrl</B> member must point to the first <B>MIXERCONTROL</B> structure to be filled. The <B>dwControlID</B> and <B>dwControlType</B> members are ignored for this query.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MIXER_GETLINECONTROLSF_ONEBYID</TD>
+<TD width=50%>The <I>pmxlc</I> parameter references a single <B>MIXERCONTROL</B> structure that will receive information on the control identified by the <B>dwControlID</B> member of the <B>MIXERLINECONTROLS</B> structure. The <B>cControls</B> member must be initialized to 1. The <B>cbmxctrl</B> member must be initialized to the size, in bytes, of a single <B>MIXERCONTROL</B> structure. The <B>pamxctrl</B> member must point to a <B>MIXERCONTROL</B> structure to be filled. The <B>dwLineID</B> and <B>dwControlType</B> members are ignored for this query. This query is usually used to refresh a control after receiving a <A HREF="_wcesdk_am_mm_mixm_control_change.htm">MM_MIXM_CONTROL_CHANGE</A> control change notification message by the user-defined callback (see <A HREF="_wcesdk_am_mixeropen.htm"><B>mixerOpen</B></A>).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MIXER_GETLINECONTROLSF_ONEBYTYPE </TD>
+<TD width=50%>The <B>mixerGetLineControls</B> function retrieves information about the first control of a specific class for the audio line that is being queried. The <I>pmxlc</I> parameter references a single <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structure that will receive information about the specific control. The audio line is identified by the <B>dwLineID</B> member. The control class is specified in the <B>dwControlType</B> member of the <A HREF="_wcesdk_am_mixerlinecontrols.htm"><B>MIXERLINECONTROLS</B></A> structure.
+<P>The <B>dwControlID</B> member is ignored for this query. This query can be used by an application to get information on a single control associated with a line. For example, you might want your application to use a peak meter only from a waveform-audio output line.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MIXER_OBJECTF_HMIXER</TD>
+<TD width=50%>The <I>hmxobj</I> parameter is a mixer device handle returned by the <A HREF="_wcesdk_am_mixeropen.htm"><B>mixerOpen</B></A> function. This flag is optional.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>MIXER_OBJECTF_MIXER</TD>
+<TD width=50%>The <I>hmxobj</I> parameter is the identifier of a mixer device in the range of zero to one less than the number of devices returned by the <A HREF="_wcesdk_am_mixergetnumdevs.htm"><B>mixerGetNumDevs</B></A> function. This flag is optional.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>The following flags are supported in other versions of Windows, but not in Windows CE.
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=100%>Flags not supported in Windows CE</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_AUX</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_HMIDIN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_HMIDIOUT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_HWAVEIN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_HWAVEOUT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_MIDIIN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_MIDIOUT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_WAVEHOUT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%>MIXER_OBJECTF_WAVEIN</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns MMSYSERR_NOERROR if successful or an error otherwise. Possible error values include the following: </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MIXERR_INVALCONTROL</TD>
+<TD width=64%>The control reference is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MIXERR_INVALLINE</TD>
+<TD width=64%>The audio line reference is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MMSYSERR_BADDEVICEID</TD>
+<TD width=64%>The <I>hmxobj</I> parameter specifies an invalid device identifier.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MMSYSERR_INVALFLAG</TD>
+<TD width=64%>One or more flags are invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MMSYSERR_INVALHANDLE</TD>
+<TD width=64%>The <I>hmxobj</I> parameter specifies an invalid handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MMSYSERR_INVALPARAM</TD>
+<TD width=64%>One or more parameters are invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>MMSYSERR_NODRIVER</TD>
+<TD width=64%>No mixer device is available for the object specified by <I>hmxobj</I>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>mmsystem.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>mixerapi.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_am_mixerlinecontrols.htm"><B>MIXERLINECONTROLS</B></A>, <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A>, <A HREF="_wcesdk_am_mixerline.htm"><B>MIXERLINE</B></A>, <A HREF="_wcesdk_am_mixergetlineinfo.htm"><B>mixerGetLineInfo</B></A>, <A HREF="_wcesdk_am_mm_mixm_control_change.htm"><B>MM_MIXM_CONTROL_CHANGE</B></A>, <A HREF="_wcesdk_am_mixeropen.htm"><B>mixerOpen</B></A>, <A HREF="_wcesdk_am_mixergetnumdevs.htm"><B>mixerGetNumDevs</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

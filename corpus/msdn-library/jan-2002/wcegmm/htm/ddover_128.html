@@ -1,0 +1,89 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DirectDraw Applications and Window Styles</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DirectDraw Applications and Window Styles"/>
+<MSHelp:RLTitle Title="DirectDraw Applications and Window Styles"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_directdraw_applications_and_window_styles"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>DirectDraw Applications and Window Styles</H1>
+
+<P>If your application uses DirectDraw in windowed mode, you can create windows with any window style. However, full-screen exclusive mode applications cannot be created with the WS_EX_TOOLWINDOW style without risk of unpredictable behavior. The WS_EX_TOOLWINDOW style prevents a window from being the top most window, which is required for a DirectDraw full-screen, exclusive mode application.</P>
+
+<P>Full-screen exclusive mode applications should use the WS_EX_TOPMOST extended window style and the WS_VISIBLE window style to display properly. These styles keep the application at the front of the window z-order and prevent GDI from drawing on the primary surface.</P>
+
+<P>The following example shows one way to safely prepare a window to be used in a full-screen, exclusive mode application.</P>
+
+<PRE class="code">////////////////////////////////////////////////////////
+// Register the window class, display the window, and init
+// all DirectX and graphic objects.
+////////////////////////////////////////////////////////
+BOOL WINAPI InitApp(INT nWinMode)
+{
+    WNDCLASSEX wcex;
+
+    wcex.cbSize           =    sizeof(WNDCLASSEX);
+    wcex.hInstance        =    g_hinst;
+    wcex.lpszClassName    =    g_szWinName;
+    wcex.lpfnWndProc      =    WndProc;
+    wcex.style            =    CS_VREDRAW|CS_HREDRAW|CS_DBLCLKS;
+    wcex.hIcon            =    LoadIcon (NULL, IDI_APPLICATION);
+    wcex.hIconSm          =    LoadIcon (NULL, IDI_WINLOGO);
+    wcex.hCursor          =    LoadCursor (NULL, IDC_ARROW);
+    wcex.lpszMenuName     =    MAKEINTRESOURCE(IDR_APPMENU);
+    wcex.cbClsExtra       =    0 ;
+    wcex.cbWndExtra       =    0 ;
+    wcex.hbrBackground    =    GetStockObject (NULL_BRUSH);
+
+    RegisterClassEx(&amp;wcex);
+
+    g_hwndMain = CreateWindowEx(
+                        WS_EX_TOPMOST,
+                        g_szWinName,
+                        g_szWinCaption,
+                        WS_VISIBLE|WS_POPUP,
+                        0,0,CX_SCREEN,CY_SCREEN,
+                        NULL,
+                        NULL,
+                        g_hinst,
+                        NULL);
+
+    if(!g_hwndMain)
+        return(FALSE);
+
+    SetFocus(g_hwndMain);
+    ShowWindow(g_hwndMain, nWinMode);
+    UpdateWindow(g_hwndMain);
+
+    return TRUE;
+}
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

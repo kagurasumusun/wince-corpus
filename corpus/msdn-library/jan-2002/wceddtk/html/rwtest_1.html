@@ -1,0 +1,146 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_memory_card_read!write_running_the_test"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Running the Test</H1>
+
+<P>The following command line shows the syntax for using Tux.exe to run the test, where <I>test_case</I> is the specific test case or range of test cases to run.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d rwtest &#0150;x<I> test_case</I></PRE>
+
+<P>The following example shows the syntax for using Tux.exe to run the entire test.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d rwtest</PRE>
+
+<P>After each test case finishes, a status report is displayed indicating whether it passed, failed, skipped, or aborted. After all of the specified test cases have finished, a summary of results is displayed.</P>
+
+<P>The following table shows the test cases.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=20%>Test Case</TH>
+<TH width=80%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>1001</TD>
+<TD width=80%>Multiple-thread read/write test. 2 threads, 1000 writes/thread, 1 sector/thread, starting sector: 100.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>1002</TD>
+<TD width=80%>Multiple-thread read/write test. 3 threads, 1000 writes/thread, 1 sector/thread, starting sector: 100. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>1003</TD>
+<TD width=80%>Multiple-thread read/write test. 4 threads, 1000 writes/thread, 1 sector/thread, starting sector: 100.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>2001</TD>
+<TD width=80%>Multiple scatter/gather buffers. Buffer sizes: 512.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>2002</TD>
+<TD width=80%>Multiple scatter/gather buffers. Buffer sizes: 512, 512.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>2003</TD>
+<TD width=80%>Multiple scatter/gather buffers. Buffer sizes: 1024, 1024, 1024, 1024.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>2004</TD>
+<TD width=80%>Multiple scatter/gather buffers. Buffer sizes: 65536.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>3001</TD>
+<TD width=80%>Read/write build verification test. Read/write sectors 0, 1 and 2 boundary test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>3002</TD>
+<TD width=80%>Read/write build verification test. Read/write around (total sectors / 2) boundary test.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P><B>Test Cases 1001&#0150;1003 - Multiple-Thread Read/Write Testing</B></P>
+
+<P>These test cases verify that a device driver is able to correctly handle multiple, simultaneous requests for service. Each test case creates multiple threads and assigns each thread a block of sectors to write. Each thread attempts to write to its block of sectors multiple times. These test cases provide a set of easy-to-run tests for quick verification of the driver’s behavior&#0151;they differ only in the number of threads created. They all assign each thread only one sector, starting at sector 100; each thread makes 1000 writes to its sector.</P>
+
+<P>When running the multiple-thread test cases, you will be given general information about the test, such as the number of threads, number of writes per thread, number of sectors per write, and the starting sector. Progress indicators from each thread will also be displayed. </P>
+
+<P>If an error occurs during the test, the test aborts immediately and returns a failing code to Tux.exe. If an error occurs, the type of error, such as a driver error or corrupt data, and the source of the error, such as a driver or memory location, is displayed.</P>
+
+<P><B>Test Cases 2001&#0150;2004 - Multiple Scatter/Gather Testing</B></P>
+
+<P>These test cases verify that the block device driver can correctly handle multiple scatter/gather buffers, as well as odd-sized buffers in which the buffer size is not equal to the sector size. These test cases were written assuming a 512-byte sector size; if your driver uses a different sector size, you will need to change the test source code to reflect the correct sector size. This test verifies that the device driver does not return an error and that the data is valid.</P>
+
+<P>The SG_BUF and SG_REQ structures are filled in and their pointers are passed to the driver via <B>DeviceIoControl</B>. The following code example shows the syntax for these structures.</P>
+
+<PRE class="code">typedef struct _SG_BUF {
+PUCHAR <I>sb_buf</I>;            // pointer to buffer
+DWORD <I>sb_len</I>;             // length of buffer
+} SG_BUF, *PSG_BUF;
+
+typedef struct _SG_REQ {
+DWORD <I>sr_start</I>;           // starting sector number
+DWORD <I>sr_num_sec</I>;         // number of sectors
+DWORD <I>sr_num_sg</I>;          // number of scatter/gather buffers
+DWORD <I>sr_status</I>;          // request status
+PFN_REQDONE <I>sr_callback</I>;  // request completion callback function
+SG_BUF <I>sr_sglist</I>[1];      // first scatter/gather buffer
+} SG_REQ, * PSG_REQ;</PRE>
+
+<P>Additional <I>sr_sglist</I> entries may be filled in as well, according to the value of <I>sr_num_sg</I>. </P>
+
+<P>Each test case outputs a detailed description of the number and location of each scatter/gather buffer that it creates. If an error occurs, the type of error, such as a driver error or corrupt data, and the source of the error, such as a driver or memory location, is displayed.</P>
+
+<P><B>Test Cases 3001&#0150;3002 - Boundary Testing</B></P>
+
+<P>These test cases are designed to check the behavior of the read/write operations at boundary limits, where errors often occur.</P>
+
+<P>These test cases give a detailed description of the number and location of each <B>DeviceIoControl</B>. If an error occurs, the type of error, such as a driver error or corrupt data, and the source of the error, such as a driver or memory location, is displayed.</P>
+<DIV CLASS="footer">Built on Tuesday, January 09, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

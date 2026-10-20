@@ -1,0 +1,157 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IRecipients::Add</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IRecipients::Add"/>
+<MSHelp:RLTitle Title="IRecipients::Add"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_irecipients_add"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IRecipients::Add</H1>
+
+<P>This function is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This function adds a person to the recipient list for a meeting request. After you add the recipient you must set the <B>Address</B> property for it.</P>
+
+<PRE class="syntax"><B>HRESULT Add(&nbsp;BSTR</B> <I>pwszName</I>, <B>IRecipient ** </B><I>ppRecipient </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pwszName</I></DT>
+
+<DD>[in] This becomes the display name for the recipient.</dd>
+
+<DT><I>pRecipient</I></DT>
+
+<DD>[out] Pointer to a pointer to the new recipient.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates success. If an error occurs, the appropriate <B>HRESULT</B> value is returned.</P>
+
+<H4>Code Example</H4>
+
+<P>The following C++ code snippet creates a meeting and sends it to three recipients:</P>
+
+<PRE class="code">void CreateMeetingRequest(IPOutlookApp *polApp)
+{
+IRecurrencePattern *pRec;
+IAppointment *pAppt;
+IRecipients *pRecipients;
+IRecipient *pRecipient;
+VAR_BOOL bResolved
+
+// Add a new appointment
+polApp-&gt;CreateItem(olAppointmentItem, (IDispatch **) &amp;pAppt);
+
+// Set the subject on the appointment
+pAppt-&gt;put_Subject(TEXT(“Recurring Appointment”));
+
+// Convert Monday, 4/5/9 at 10:00 am to a DATE
+SYSTEMTIME st;
+DATE date;
+memset(&amp;st, 0, sizeof(SYSTEMTIME));
+st.wMonth = 4;
+st.wDay = 5;
+st.wYear = 1999;
+st.wHour = 10;
+polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);
+
+// Set the start date
+pAppt-&gt;put_Start(date);
+
+// Add recipients
+pAppt-&gt;get_Recipients(&amp;pRecipients);
+pRecipients-&gt;Add(TEXT(“Kathryn Wilson”), &amp;pRecipient);
+pRecipients-&gt;Add(TEXT(“Blanca”), &amp;pRecipient);
+pRecipients-&gt;Add(TEXT(“Robert”), &amp;pRecipient);
+
+// Resolve the recipients against contacts on the device
+IPOlRecipient *pRecip2;
+int iRecipientCount;
+pRecipients-&gt;get_Count(&amp;iRecipientCount);
+// Count down so removing recipient doesn’t reorder
+// remaining unresolved recipients
+for (int i = iRecipientCount; i &gt; 0; i--) {
+   pRecipients-&gt;Item(i, &amp;pRecipient)
+   pRecipient-&gt;QueryInterface(IID_IPOlRecipient, (LPVOID *) &amp;pRecip2);
+   pRecip2-&gt;Resolve(TRUE, &amp;bResolved);
+   if !bResolved pRecipients-&gt;Remove(i);
+}
+pRecip2-&gt;Release();
+
+// Send the meeting request
+pRecipients-&gt;get_Count(&amp;iRecipientCount);
+if (iRecipientCount &gt; 0) pAppt-&gt;Send();
+
+// Release objects
+pRec-&gt;Release();
+pAppt-&gt;Release();
+pRecipients-&gt;Release();
+pRecipient-&gt;Release();
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_irecipients_unknown.htm">IRecipients::Unknown</A>, <A HREF="_wcesdk_irecipients_propertylist.htm">IRecipients Property Methods</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

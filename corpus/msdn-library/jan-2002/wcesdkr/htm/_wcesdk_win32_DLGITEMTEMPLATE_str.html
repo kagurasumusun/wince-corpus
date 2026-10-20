@@ -1,0 +1,177 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DLGITEMTEMPLATE</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DLGITEMTEMPLATE"/>
+<MSHelp:RLTitle Title="DLGITEMTEMPLATE"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_dlgitemtemplate_str"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>DLGITEMTEMPLATE</H1>
+
+<P>This structure defines the dimensions and style of a control in a dialog box. One or more of these structures are combined with a <A HREF="_wcesdk_win32_dlgtemplate_str.htm"><B>DLGTEMPLATE</B></A> structure to form a dialog box template. </P>
+
+<PRE class="syntax"><B>typedef struct {
+DWORD </B><I>style</I><B>;
+DWORD </B><I>dwExtendedStyle</I><B>;
+short </B><I>x</I><B>;
+short </B><I>y</I><B>;
+short </B><I>cx</I><B>;
+short </B><I>cy</I><B>;
+WORD </B><I>id</I><B>;
+} DLGITEMTEMPLATE; </B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>style</I></DT>
+
+<DD>Specifies the style of the control. This member can be a combination of window style values (such as WS_BORDER) and one or more of the control style values (such as BS_PUSHBUTTON and ES_LEFT). </dd>
+
+<DT><I>dwExtendedStyle</I></DT>
+
+<DD>Specifies extended styles for a window. This member is not used to create controls in dialog boxes, but applications that use dialog box templates can use it to create other types of windows. </dd>
+
+<DT><I>x</I></DT>
+
+<DD>Specifies the <I>x</I>-coordinate, in dialog box units, of the upper-left corner of the control. This coordinate is always relative to the upper-left corner of the dialog box’s client area. </dd>
+
+<DT><I>y</I></DT>
+
+<DD>Specifies the <I>y</I>-coordinate, in dialog box units, of the upper-left corner of the control. This coordinate is always relative to the upper-left corner of the dialog box’s client area. </dd>
+
+<DT><I>cx</I></DT>
+
+<DD>Specifies the width, in dialog box units, of the control. </dd>
+
+<DT><I>cy</I></DT>
+
+<DD>Specifies the height, in dialog box units, of the control. </dd>
+
+<DT><I>id</I></DT>
+
+<DD>Specifies the control identifier. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>In a standard template for a dialog box, the <B>DLGITEMTEMPLATE</B> structure is always immediately followed by three variable-length arrays specifying the class, title, and creation data for the control. Each array consists of one or more 16-bit elements. </P>
+
+<P>Each <B>DLGITEMTEMPLATE</B> structure in the template must be aligned on a <B>DWORD</B> boundary. The class and title arrays must be aligned on <B>WORD</B> boundaries. The creation data array must be aligned on a <B>WORD</B> boundary. </P>
+
+<P>Immediately following each <B>DLGITEMTEMPLATE</B> structure is a class array that identifies the window class of the control. If the first element of this array is any value other than 0xFFFF, the system treats the array as a null-terminated Unicode string that specifies the name of a registered window class. If the first element is 0xFFFF, the array has one additional element that specifies the ordinal value of a predefined system class. The ordinal can be one of the atom values shown in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=13%>Value</TH>
+<TH width=87%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0x0080</TD>
+<TD width=87%>Button</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0x0081</TD>
+<TD width=87%>Edit</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0x0082</TD>
+<TD width=87%>Static</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0x0083</TD>
+<TD width=87%>List box</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0x0084</TD>
+<TD width=87%>Scroll bar</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0x0085</TD>
+<TD width=87%>Combo box</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>Following the class array is a title array that contains the initial text or resource identifier of the control. If the first element of this array is 0xFFFF, the array has one additional element that specifies an ordinal value of a resource, such as an icon, in an executable file. You can use a resource identifier for controls, such as static icon controls, that load and display an icon or other resource rather than text. If the first element is any value other than 0xFFFF, the system treats the array as a null-terminated Unicode string that specifies the initial text. </P>
+
+<P>The creation data array begins at the next <B>WORD</B> boundary after the title array. This creation data can be of any size and format. If the first word of the creation data array is nonzero, it indicates the size, in bytes, of the creation data (including the size word). The control’s window procedure must be able to interpret the data. When the system creates the control, it passes a pointer to this data in the <I>lParam</I> parameter of the WM_CREATE message that it sends to the control. </P>
+
+<P>If you specify character strings in the class and title arrays, you must use Unicode strings. To create code that works on both Windows 95/98 and Windows NT, use the <A HREF="_wcesdk_win32_multibytetowidechar.htm"><B>MultiByteToWideChar</B></A> function to generate these Unicode strings.</P>
+
+<P>The <I>x</I>, <I>y</I>, <I>cx</I>, and <I>cy</I> members specify values in dialog box units. You can convert these values to screen units (pixels) by using the <A HREF="_wcesdk_win32_mapdialogrect.htm"><B>MapDialogRect</B></A> function. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createdialogindirect.htm"><B>CreateDialogIndirect</B></A>, <A HREF="_wcesdk_win32_createdialogindirectparam.htm"><B>CreateDialogIndirectParam</B></A>, <A HREF="_wcesdk_win32_createwindowex.htm"><B>CreateWindowEx</B></A>, <A HREF="_wcesdk_win32_dialogboxindirect.htm"><B>DialogBoxIndirect</B></A>, <A HREF="_wcesdk_win32_dialogboxindirectparam.htm"><B>DialogBoxIndirectParam</B></A>, <A HREF="_wcesdk_win32_mapdialogrect.htm"><B>MapDialogRect</B></A>, <A HREF="_wcesdk_win32_multibytetowidechar.htm"><B>MultiByteToWideChar</B></A>, <A HREF="_wcesdk_win32_dlgtemplate_str.htm"><B>DLGTEMPLATE</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

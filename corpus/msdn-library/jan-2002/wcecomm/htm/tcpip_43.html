@@ -1,0 +1,63 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Host Name Resolution Using Registry Entries</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Host Name Resolution Using Registry Entries"/>
+<MSHelp:RLTitle Title="Host Name Resolution Using Registry Entries"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_host_name_resolution_using_registry_entries"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Host Name Resolution Using Registry Entries</H1>
+
+<P>In Windows NT, one common way to resolve a host name to an IP address is to use a locally-stored database file that contains mappings of IP addresses to host names. Windows CE supports host name resolution by using entries in the registry.</P>
+
+<P>You can store the name-to-IP-address mapping for devices that you connect to regularly by loading HOSTS entries into the <B>HKEY_LOCAL_MACHINE\Comm\Tcpip\Hosts\<I>Host Name</I></B> registry subkey. <B><I>Host Name</I></B> stands for the name of the host and is not hard-coded. This subkey contains three entries, <B>ExpireTime</B>, <B>ipaddr</B>, and <B>aliases</B>. The entries are described in <A HREF="tcpip_60.htm">Parameters Configurable Using the Registry Editor</A>. Setting a large expire time guarantees that the entry is not deleted from the registry. You can also set the expire time to a short interval of time, as an offset from the current file time. When an application calls <B>gethostbyname</B>, the registry is queried first, before a DNS or WINS request is sent. If the host name is found in the registry, <B>gethostbyname</B> returns the registry values.</P>
+
+
+
+<H3><A NAME="_wcesdk_assigning_a_device_name"></A>Assigning a Device Name</H3>
+
+<P>An OEM can configure the name of a particular device more permanently &#0151; instead of entering the name each time that the device cold boots &#0151; by including the following lines in the Platform.reg file:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Ident]
+   "OrigName"="WinCE"
+   "Name"="MyUniqueName"</PRE>
+
+<P>When the device boots, the system copies the original name to the <B>HKEY_LOCAL_MACHINE\Ident\OrigName</B> registry key. If another device wants to connect to your device by using the value of the <I>Name</I>, the other device can do so. If Redir or MSMQ is started, it logs the value of <I>Name</I> with WINS. Even if Redir and MSMQ do not run on your device, your device responds to the IP subnet broadcast from another device on the same subnet. </P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>If you update <I>Name</I> after Redir or MSMQ has started, you need to reset the interface before the new name is registered with WINS. To reset the interface, either remove a PCMCIA card and then reinsert it, or use the <B>ipconfig /release</B> command followed by the <B>ipconfig /renew</B> command.</P>
+
+<P class=indent>The names of the registry entries for configuring the name of a device may change in future releases.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

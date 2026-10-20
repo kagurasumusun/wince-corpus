@@ -1,0 +1,46 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Single Access and Multiple Access</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Single Access and Multiple Access"/>
+<MSHelp:RLTitle Title="Single Access and Multiple Access"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_single_access_and_multiple_access"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Single Access and Multiple Access</H1>
+
+<P>Because peripheral devices are exposed to applications as special files when you create a stream interface driver, you provide the implementation of such a file. Therefore, consider whether it is practical, based on the capabilities of the device that your driver serves, to enable multiple applications to have simultaneous access to the special file. That is, consider whether your driver can have multiple open file handles on its device. A stream interface driver can implement either single access or multiple access by using the <I>hOpenContext</I> parameter that Windows CE passes to all file I/O functions.</P>
+
+<P>To enable multiple access, each call to the <A HREF="funct_1_420.htm"><B><I>XXX_Open</I></B></A> function should return a different value for <I>hOpenContext</I>. The device driver must track which return values from <B><I>XXX</I>_Open</B> are in use. Subsequent calls by Windows CE to <A HREF="funct_1_416.htm"><B><I>XXX_Close</I></B></A>, <A HREF="funct_1_423.htm"><B><I>XXX_Read</I></B></A>, <A HREF="funct_1_425.htm"><B><I>XXX_Write</I></B></A>, <A HREF="funct_1_424.htm"><B><I>XXX_Seek</I></B></A>, and <A HREF="funct_1_419.htm"><B><I>XXX_IOControl</I></B></A> pass these values back to the device driver, enabling the driver to identify which internal data structures to manipulate.</P>
+
+<P>To enforce single access, only the first call to <B><I>XXX</I>_Open</B> should return a valid <I>hOpenContext</I> value. As long as this value remains valid, which is until Windows CE calls <B><I>XXX</I>_Close</B> for the value, subsequent calls to <B><I>XXX</I>_Open</B> should return NULL to the calling application to indicate failure.</P>
+
+<P>Note that the Windows CE implementation of the Telephony API (TAPI) requires that serial port devices support multiple access. OEMs who are using any of Microsoft’s serial port MDD implementations gain this functionality automatically. OEMs who write their own serial port MDD layers, or who opt to implement monolithic serial port drivers, must implement multiple access for themselves in order to support TAPI.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

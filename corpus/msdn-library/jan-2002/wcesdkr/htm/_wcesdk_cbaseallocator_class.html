@@ -1,0 +1,220 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseAllocator Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseAllocator Class"/>
+<MSHelp:RLTitle Title="CBaseAllocator Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseallocator_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseAllocator Class</H1>
+
+<P class="fig"><IMG SRC="filter09.gif" ALT="" BORDER=0></P>
+
+<P><B>CBaseAllocator</B> is an abstract base class that implements the basic mechanisms for an allocator with a fixed number of fixed-size buffers. The number of buffers and their size can be changed using the <A HREF="_wcesdk_cbaseallocator__setproperties.htm"><B>CBaseAllocator::SetProperties</B></A> member function when an input pin and an output pin negotiate the allocator between them. </P>
+
+<P>The class provides the basic functionality for a memory allocator by implementing the <A HREF="_wcesdk_imemallocator_interface.htm"><B>IMemAllocator</B></A> interface. It provides support for managing a list of <A HREF="_wcesdk_cmediasample_class.htm"><B>CMediaSample</B></A> objects (or objects derived from this class), including support for the <A HREF="_wcesdk_imemallocator__commit.htm"><B>IMemAllocator::Commit</B></A> and <A HREF="_wcesdk_imemallocator__decommit.htm"><B>IMemAllocator::Decommit</B></A> methods, and blocking the <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>IMemAllocator::GetBuffer</B></A> method. </P>
+
+<P>Any class derived from this class (such as <A HREF="_wcesdk_cmemallocator_class.htm"><B>CMemAllocator</B></A>) must create <A HREF="_wcesdk_cmediasample_class.htm"><B>CMediaSample</B></A> objects, which this base class does not. </P>
+
+<P>A signaling mechanism employing a semaphore is used so that if there are no samples, a thread can wait until there are samples or until the allocator is decommitted. The <B>m_lFree</B> and <B>m_hSem</B> member variables are used to implement this simple signaling mechanism as follows. </P>
+
+<P>When a thread calls <A HREF="_wcesdk_cbaseallocator__getbuffer.htm"><B>CBaseAllocator::GetBuffer</B></A>and there are no samples available, <B>m_lWaiting</B> is incremented and the thread calls the Microsoft® Win32® <B>WaitForSingleObject</B> function on the semaphore indicated by <B>m_hSem</B>. </P>
+
+<P>When a sample is freed (by the <A HREF="_wcesdk_iunknown__release.htm"><B>IUnknown::Release</B></A> method returning the reference count to zero) or <A HREF="_wcesdk_cbaseallocator__decommit.htm"><B>CBaseAllocator::Decommit</B></A> is called and <B>m_lWaiting</B> is nonzero, the Win32 <B>ReleaseSemaphore</B> function is called on <B>m_hSem</B> with a release count of <B>m_lWaiting</B>, and <B>m_lWaiting</B> is reset to zero. </P>
+
+<P>All member functions in this class that return <B>HRESULT</B> and accept a pointer as a parameter return E_POINTER when passed a null pointer. </P>
+
+<H4>Protected Data Members</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%>m_bChanged </TD>
+<TD width=50%>TRUE if the buffers have changed; otherwise, FALSE. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_bCommitted</TD>
+<TD width=50%>If TRUE, the allocator is in a state in which all <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>IMemAllocator::GetBuffer</B></A> methods fail. The <A HREF="_wcesdk_imemallocator__setproperties.htm"><B>IMemAllocator::SetProperties</B></A> method is the only member function permitted to operate in this state. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_bDecommitInProgress</TD>
+<TD width=50%>If TRUE, the decommit process completes upon the return of all media samples. Until the decommit process has completed, any calls to <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>IMemAllocator::GetBuffer</B></A> return E_OUTOFMEMORY. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_hSem</TD>
+<TD width=50%>Semaphore for signaling. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lAlignment</TD>
+<TD width=50%>Agreed alignment of the buffer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lAllocated </TD>
+<TD width=50%>Number of buffers actually allocated. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lCount</TD>
+<TD width=50%>Established number of buffers to provide. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lFree</TD>
+<TD width=50%>List of <A HREF="_wcesdk_cmediasample_class.htm"><B>CMediaSample</B></A> objects that are currently free (free list). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lPrefix</TD>
+<TD width=50%>Agreed prefix of the buffer (precedes value returned by <A HREF="_wcesdk_imediasample__getpointer.htm"><B>IMediaSample::GetPointer</B></A>). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lSize </TD>
+<TD width=50%>Size of each buffer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_lWaiting</TD>
+<TD width=50%>Count of threads waiting for samples. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__cbaseallocator.htm"><B>CBaseAllocator</B></A></TD>
+<TD width=50%>Constructs a <B>CBaseAllocator</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__notifysample.htm"><B>NotifySample</B></A></TD>
+<TD width=50%>Notifies a waiting thread that a sample is available on the free list. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__setwaiting.htm"><B>SetWaiting</B></A></TD>
+<TD width=50%>Increments the <B>m_lWaiting</B> data member to indicate that a thread is waiting for a sample. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Overridable Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__alloc.htm"><B>Alloc</B></A></TD>
+<TD width=50%>Allocates memory, instantiates <A HREF="_wcesdk_cmediasample_class.htm"><B>CMediaSample</B></A> objects, and adds them to the <B>m_lAllocated</B> and <B>m_lFree</B> data members. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__free.htm"><B>Free</B></A></TD>
+<TD width=50%>Decommits memory when the last buffer is freed. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented IMemAllocator Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__commit.htm"><B>Commit</B></A></TD>
+<TD width=50%>Allocates memory by calling the <A HREF="_wcesdk_cbaseallocator__alloc.htm"><B>CBaseAllocator::Alloc</B></A> member function, which you must override. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__decommit.htm"><B>Decommit</B></A></TD>
+<TD width=50%>Releases any resources and enters the inactive state. Any blocking calls to <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>IMemAllocator::GetBuffer</B></A> should return with an error value, and all further calls to <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>GetBuffer</B></A> fail when in the inactive state. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__getbuffer.htm"><B>GetBuffer</B></A></TD>
+<TD width=50%>Retrieves a container for a sample. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__getproperties.htm"><B>GetProperties</B></A></TD>
+<TD width=50%>Determines the size, number, and alignment of blocks. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__releasebuffer.htm"><B>ReleaseBuffer</B></A></TD>
+<TD width=50%>Releases the <A HREF="_wcesdk_cmediasample_class.htm"><B>CMediaSample</B></A> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__setproperties.htm"><B>SetProperties</B></A></TD>
+<TD width=50%>Specifies a desired number of blocks, size of the blocks, and block alignment figure. This method returns the actual values for the same. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented INonDelegatingUnknown Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbaseallocator__nondelegatingqueryinterface.htm"><B>NonDelegatingQueryInterface</B></A></TD>
+<TD width=50%>Passes out pointers to any interfaces added to the derived filter class. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

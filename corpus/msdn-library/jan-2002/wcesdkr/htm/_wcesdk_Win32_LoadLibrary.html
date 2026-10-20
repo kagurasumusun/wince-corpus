@@ -1,0 +1,152 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>LoadLibrary</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="LoadLibrary"/>
+<MSHelp:RLTitle Title="LoadLibrary"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_loadlibrary"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>LoadLibrary </H1>
+
+<P>This function maps the specified .DLL file into the address space of the calling process. </P>
+
+<PRE class="syntax"><B>HINSTANCE</B> <B>LoadLibrary(
+LPCTSTR</B> <I>lpLibFileName</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpLibFileName</I></DT>
+
+<DD>Pointer to a null-terminated string that names the .DLL file. The name specified is the filename of the module and is not related to the name stored in the library module itself, as specified by the <B>LIBRARY</B> keyword in the module-definition (.DEF) file.
+
+<P>If the string specifies a path but the file does not exist in the specified directory, the function fails. When specifying a path, be sure to use backslashes (\), not forward slashes (/).
+
+
+<P>If the string does not specify a path, the function uses a standard search strategy to find the file. See the <B>Remarks</B> for more information.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A handle to the module indicates success. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P><B>LoadLibrary</B> can be used to map a DLL module and return a handle that can be used in <A HREF="_wcesdk_win32_getprocaddress.htm"><B>GetProcAddress</B></A> to get the address of a DLL function. <B>LoadLibrary</B> can also be used to map other executable modules. For example, the function can specify an .exe file to get a handle that can be used in <A HREF="_wcesdk_win32_findresource.htm"><B>FindResource</B></A> or <B>LoadResource</B>. Do not use <B>LoadLibrary</B> to run a .exe file, use the <B>CreateProcess</B> function. </P>
+
+<P>If the module is a DLL not already mapped for the calling process, the system calls the DLL’s <B>DllMain</B> function with the DLL_PROCESS_ATTACH value. In Windows CE, a DLL is loaded once, but then it is mapped into each processes address space when a process implicitly or explicitly loads the library with the <B>LoadLibrary</B> function. When Windows CE loads a DLL, all path information is ignored when determining if the DLL is already loaded. This means that a DLL with the same name but a different path can only be loaded once. In addition, a module ending with the extension ".CPL" is treated as if the extension if ".DLL". </P>
+
+<P>It is not safe to call <B>LoadLibrary</B> from <B>DllMain</B>. </P>
+
+<P>Module handles are not global or inheritable. A call to <B>LoadLibrary</B> by one process does not produce a handle that another process can use&#0151;for example, in calling <B>GetProcAddress</B>. The other process must make its own call to <B>LoadLibrary</B> for the module before calling <B>GetProcAddress</B>. </P>
+
+<P>Two different modules cannot have the same filename, given that the extensions are different. These effectively have the same “module” name. For example, if <B>LoadLibrary</B> is made on “Sample.cpl”, the operating system will not load Sample.cpl, but instead will again load Sample.dll. A similar limitation exists for modules with the same name but residing in different directories. For example, if <B>LoadLibrary</B> is called on “\\Windows\Sample.dll”, and then <B>LoadLibrary</B> is called on “\\MyDir\Sample.dll”, “\\Windows\Sample.dll” will simply be reloaded.</P>
+
+<P>If no filename extension is specified in the <I>lpLibFileName</I> parameter, the default library extension .DLL is appended. However, the filename string can include a trailing point character (.) to indicate that the module name has no extension. </P>
+
+<P>A search path to the executable module cannot be specified. Unless the full path to the module is specified, Windows CE versions 2.10 and later search the following path for the module:
+
+<OL type="1">
+	<LI>The absolute path specified by the <I>lpLibFileName</I> parameter</li>
+
+	<LI>ROM for statically-linked .DLL files</li>
+
+	<LI>The .EXE launch directory</li>
+
+	<LI>The windows (\windows) directory</li>
+
+	<LI>The root (\) directory </li>
+
+	<LI>An OEM-dependent directory</li>
+
+	<LI>The OEM-defined shell (\ppshell) directory&#0151;Platform Builder users only.</li>
+
+	<LI>In Windows CE, version 3.0 searches the ROM for statically-linked DLL files last. </li>
+</OL>
+
+<P>Windows CE versions 1.0 through 2.01 search the following path for the module:
+
+<OL type="1">
+	<LI>The root directory of the PC Card RAM expansion card, if one exists.</li>
+
+	<LI>The windows directory (\Windows).</li>
+
+	<LI>The root directory (\).</li>
+</OL>
+
+<P>The following registry subkey specifies a search path to use with <B>LoadLibrary</B> and <B>CreateProcess</B>:</P>
+
+<P><B>\HKEY_LOCAL_MACHINE\Loader<BR>
+&nbsp;&nbsp;"SystemPath"=multi_sz:"\\<I>path1</I>\\"<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"\\<I>path2</I>\\"</B></P>
+
+<P>For efficiency, the path is searched before CESH but after the ROM and built in file systems. Note also that the path is only searched if path of the file being looked for is not explicitly specified.</P>
+
+<P>The total length of the <B>SystemPath</B> value cannot exceed 260 characters, or the path will be completely ignored. A change to the <B>SystemPath</B> key does not take effect until a Windows CE-based device is reset.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Nk.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_findresource.htm"><B>FindResource</B></A>, <A HREF="_wcesdk_win32_freelibrary.htm"><B>FreeLibrary</B></A>, <A HREF="_wcesdk_win32_getprocaddress.htm"><B>GetProcAddress</B></A>, <A HREF="_wcesdk_win32_loadresource.htm"><B>LoadResource</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Scheduling a Thread</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Scheduling a Thread"/>
+<MSHelp:RLTitle Title="Scheduling a Thread"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_scheduling_a_thread"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Scheduling a Thread</H1>
+
+<P>Windows CE uses a priority-based time-slice algorithm to schedule the execution of threads. Because Windows CE does not have priority classes, the process in which the thread runs does not influence thread priorities. All the priorities can be used in the same process. A thread can have one of the 256 priorities. The top 249 (0 through 248) priorities are real-time priority levels. The following table describes the bottom eight (248 through 255) priorities.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Priority</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_TIME_CRITICAL</TD>
+<TD width=50%>Indicates 3 points above normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_HIGHEST</TD>
+<TD width=50%>Indicates 2 points above normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_ABOVE_NORMAL</TD>
+<TD width=50%>Indicates 1 point above normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_NORMAL</TD>
+<TD width=50%>Indicates normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_BELOW_NORMAL</TD>
+<TD width=50%>Indicates 1 point below normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_LOWEST</TD>
+<TD width=50%>Indicates 2 points below normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_ABOVE_IDLE</TD>
+<TD width=50%>Indicates 3 points below normal priority</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>THREAD_PRIORITY_IDLE</TD>
+<TD width=50%>Indicates 4 points below normal priority</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>Threads with a higher priority run first. Threads with the same priority run in a round-robin fashion&#0151;when a thread has stopped running, all other threads of the same priority run before the original thread can continue. Threads at a lower priority do not run until all threads with a higher priority have either finished or have been blocked. If one thread is running and a thread of higher priority is unblocked, the lower-priority thread is immediately suspended and the higher-priority thread is scheduled.</P>
+
+<P>Threads run for a specific slice of time&#0151;called a quantum&#0151;which has a default value of 100 milliseconds. An OEM can specify a different quantum. If, after the quantum has elapsed, the thread has not relinquished its time slice and is not time-critical, it is suspended and another thread is scheduled to run. Threads having a quantum set to 0 cannot be preempted except by a higher priority thread or an interrupt service routine (ISR).</P>
+
+<P>For the most part, thread priorities are fixed and do not change. However, there is one exception, called <I>priority inversion</I>. If a low-priority thread is using a resource that a high-priority thread is waiting to use, the kernel temporarily boosts the priority of the low-priority thread until it releases the resource that is required by the higher-priority thread.</P>
+
+<P>To query the priority level of a thread, call the <B>CEGetThreadPriority</B> function. To change the priority level of a thread, call the <B>CESetThreadPriority</B> function.</P>
+<DIV CLASS="footer">Built on Thursday, November 16, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+ <!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

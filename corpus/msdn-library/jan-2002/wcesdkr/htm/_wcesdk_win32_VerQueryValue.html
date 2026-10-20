@@ -1,0 +1,212 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VerQueryValue</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="VerQueryValue"/>
+<MSHelp:RLTitle Title="VerQueryValue"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_verqueryvalue"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>VerQueryValue</H1>
+
+<P>This function returns selected version information from the specified version-information resource. To retrieve the appropriate resource, before you call <B>VerQueryValue</B>, you must first call the <A HREF="_wcesdk_win32_getfileversioninfosize.htm"><B>GetFileVersionInfoSize</B></A> function, and then the <A HREF="_wcesdk_win32_getfileversioninfo.htm"><B>GetFileVersionInfo</B></A> function. </P>
+
+<PRE class="syntax"><B>BOOL VerQueryValue(</B>
+<B>const LPVOID </B><I>pBlock</I>
+<B>LPTSTR </B><I>lpSubBlock</I>
+<B>LPVOID *</B><I>lplpBuffer</I>
+<B>PUINT </B><I>puLen</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pBlock </I></DT>
+
+<DD>[in] Pointer to the buffer containing the version-information resource returned by the <B>GetFileVersionInfo</B> function. </dd>
+
+<DT><I>lpSubBlock</I> </DT>
+
+<DD>[in] Pointer to a zero-terminated string specifying which version-information value to retrieve. The string must consist of names separated by backslashes (\) and it must have one of the following forms.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Form </TH>
+<TH width=50%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>\ </TD>
+<TD width=50%>Specifies the root block. The function retrieves a pointer to the <A HREF="_wcesdk_win32_vs_fixedfileinfo_str.htm"><B>VS_FIXEDFILEINFO</B></A> structure for the version-information resource. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>\VarFileInfo\Translation </TD>
+<TD width=50%>Specifies the translation array in a <A HREF="_wcesdk_win32_var_str.htm"><B>Var</B></A> variable information structure. The function retrieves a pointer to an array of language and code page identifiers. An application can use these identifiers to access a language-specific <A HREF="_wcesdk_win32_stringtable_str.htm"><B>StringTable</B></A> structure in the version-information resource. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>\StringFileInfo\lang-codepage\string-name </TD>
+<TD width=50%>Specifies a value in a language-specific <B>StringTable</B> structure. The lang-codepage name is a concatenation of a language and code page identifier pair found as a <B>DWORD</B> in the translation array for the resource. Here the <I>lang-codepage</I> name must be specified as a hexadecimal string. The string-name name must be one of the predefined strings described in the following Remarks section. The function retrieves a string value specific to the language and code page indicated.  </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>lplpBuffer</I> </DT>
+
+<DD>[out] Pointer to a variable that receives a pointer to the requested version information in the buffer pointed to by <I>pBlock</I>. The memory pointed to by *<I>lplpBuffer</I> is freed when the associated <I>pBlock</I> memory is freed. </dd>
+
+<DT><I>puLen</I> </DT>
+
+<DD>[out] Pointer to a buffer that receives the length, in characters, of the version-information value. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the specified version-information structure exists, and version information is available, the return value is nonzero. If the address of the length buffer is zero, no value is available for the specified version-information name.</P>
+
+<P>If the specified name does not exist or the specified resource is not valid, the return value is zero. </P>
+
+<H4>Remarks</H4>
+
+<P>The version information functions work only with Win32 file images. They do not work with 16-bit Windows file images. </P>
+
+<P>The following are predefined version information Unicode strings: </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=33%>Comments</TD>
+<TD width=33%>InternalName</TD>
+<TD width=34%>ProductName</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CompanyName </TD>
+<TD width=33%>LegalCopyright </TD>
+<TD width=34%>ProductVersion </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FileDescription </TD>
+<TD width=33%>LegalTrademarks </TD>
+<TD width=34%>PrivateBuild </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>FileVersion </TD>
+<TD width=33%>OriginalFilename </TD>
+<TD width=34%>SpecialBuild </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Example</H4>
+
+<P>The following example shows how to enumerate the available version languages and retrieve the FileDescription string-value for each language. </P>
+
+<PRE class="code">// Structure used to store enumerated languages and code pages.
+
+struct LANGANDCODEPAGE {
+  WORD wLanguage;
+  WORD wCodePage;
+} *lpTranslate;
+
+// Read the list of languages and code pages.
+
+VerQueryValue(pBlock,
+              TEXT("\\VarFileInfo\\Translation"),
+              (LPVOID*)&amp;lpTranslate,
+              &amp;cbTranslate);
+
+// Read the file description for each language and code page.
+
+for( i=0; i &lt; (cbTranslate/sizeof(struct LANGANDCODEPAGE)); i++ )
+{
+  wsprintf( SubBlock,
+            TEXT("\\StringFileInfo\\%04x%04x\\FileDescription"),
+            lpTranslate[i].wLanguage,
+            lpTranslate[i].wCodePage);
+
+  // Retrieve file description for language and code page "i".
+  VerQueryValue(pBlock,
+                SubBlock,
+                &amp;lpBuffer,
+                &amp;dwBytes);
+}</PRE>
+
+<P>Be sure to call the <B>GetFileVersionInfoSize</B> and <B>GetFileVersionInfo</B> functions before calling <B>VerQueryValue</B> to properly initialize the <I>pBlock</I> buffer. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getfileversioninfo.htm"><B>GetFileVersionInfo</B></A>, <A HREF="_wcesdk_win32_getfileversioninfosize.htm"><B>GetFileVersionInfoSize</B></A>, <A HREF="_wcesdk_win32_stringtable_str.htm"><B>StringTable</B></A>, <A HREF="_wcesdk_win32_var_str.htm"><B>Var</B></A>, <A HREF="_wcesdk_win32_vs_fixedfileinfo_str.htm"><B>VS_FIXEDFILEINFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

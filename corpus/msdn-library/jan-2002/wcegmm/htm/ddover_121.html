@@ -1,0 +1,67 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Solutions to Common Video Artifacts</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Solutions to Common Video Artifacts"/>
+<MSHelp:RLTitle Title="Solutions to Common Video Artifacts"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_solutions_to_common_video_artifacts"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdrawsurface5_updateoverlay_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Solutions to Common Video Artifacts</H1>
+
+<P>Several problems are inherent in displaying broadcast video on display devices other than televisions. This section briefly discusses some common problems, then describes how DirectDraw video-port extensions tries to solve them.</P>
+
+<P><B>NTSC Interlaced Display and Interleaved Memory</B></P>
+
+<P>An NTSC signal broadcasts video at an approximate rate of 30 frames, or 60 fields, per second. Like a frame, a field in an NTSC signal is independent of the other field in a frame and can contain different image data. For more information on this behavior, see <A HREF="ddover_117.htm">Video Frames and Fields</A>.</P>
+
+<P>The problems caused by the independence of fields within a frame become apparent when two fields are interleaved for display. In video with a lot of movement, the two fields of a single frame will contain images that don't match each other, resulting in motion artifacts.</P>
+
+<P>One way that developers have tried to work around this behavior is by discarding one of the fields. This solution causes a loss in image quality by roughly one-half, but provides acceptable results for some purposes. Another method frequently used is to display fields individually, stretching each vertically by a factor of two when it is displayed. This provides better image quality, but because fields are offset by one pixel in the y-direction, the result is an animation that "jitters" up and down as it plays.</P>
+
+<P>DirectDraw video-port extensions can employ two, more advanced, techniques for improving image quality, known as "Bob" and "Weave." Both are supported by the DirectDraw overlay surfaces that are used with video-port extensions.</P>
+
+<P>The first algorithm, Bob, is very similar to the method of displaying each field in a frame individually. However, for each field, the overlay's source rectangle is adjusted to accommodate for any jittering effects. Effectively, the source rectangle bounces up and down in time with the fields, negating the jittering on the screen. The following illustration depicts this process.</P>
+
+<P class="fig"><IMG SRC="bob.gif" ALT="" BORDER=0></P>
+
+<P>The Weave algorithm provides the best image quality for material that originates from film by exploiting a common technique used in the video industry for converting motion pictures to television. Unlike Bob, a video-port object does not Weave by itself; you must combine the default overlay behavior of displaying both fields simultaneously with kernel mode video transport to implement the algorithm. </P>
+
+<P>Here is a synopsis of the algorithm, provided for completeness. Motion pictures capture video at a rate of 24 frames per second. When converting a motion picture for television, technicians use a technique called <I>3:2 pulldown</I> to convert the frame rate to the 30 frames per second required for television broadcasts. This technique involves inserting a redundant field for every four true fields in the video stream to come up with the required number of fields.</P>
+
+<P>When you weave, you are reversing this process. You detect when 3:2 pulldown is being used, removing any redundant fields to restore the original motion-picture frames. The fields that make up the restored frames can then be interleaved in memory without risk of motion artifacts. Occasionally, the pattern of redundant frames will change due to edits within the original film or reel breaks. You must monitor when these changes occur and update the behavior to adjust for the new pattern.</P>
+
+<P>By default, an overlay surface displays both fields simultaneously. This works well if you're implementing the Weave algorithm, but prevents the video port from using the Bob algorithm. You can programmatically change how the overlay treats video data by calling the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDrawSurface5::UpdateOverlay</B></A> method. The flags you include in the <B>dwFlags</B> parameter determine the overlay's behavior: if you include the DDOVER_BOB flag, the video port will use the Bob algorithm; if you don't, it displays both fields. Note that by simply displaying both fields simultaneously, the resulting video will show motion artifacts.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

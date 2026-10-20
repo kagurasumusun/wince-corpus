@@ -1,0 +1,56 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating and Initializing COM Objects</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating and Initializing COM Objects"/>
+<MSHelp:RLTitle Title="Creating and Initializing COM Objects"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_creating_and_initializing_com_objects"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Creating and Initializing COM Objects</H1>
+
+<P>As with the desktop version of COM, a thread can call the <B>CoCreateInstance</B> or the <B>CoGetClassObject</B> function to create a new instance of a component. However, under Windows CE, the <I>dwClsContext</I> parameter in those calls must be set to CLSCTX_ INPROC_SERVER.</P>
+
+<P>Beginning with Windows&nbsp;CE 2.12, you can activate in-process COM objects by specifying either CLSCTX_ ALL or CLSCTX_SERVER; earlier versions of Windows CE will return an E_NOTIMPL error if the flag is not set explicitly to CLSCTX_INPROC_SERVER. Additionally, the COSERVERINFO parameter in the call to the <B>CoGetClassObject</B> function must be NULL, because COM on Windows CE does not support remote servers.</P>
+
+<PRE class="code"><code><b class="cfe">IClassFactory* pFactory = NULL;
+ ::CoGetClassObject(CLSID_MyObject,
+                    CLSCTX_INPROC_SERVER, NULL,
+                    IID_ICLASSFACTORY, (LPVOID*)
+                    &amp;pFactory);
+ pFactory-&gt;CreateInstance(NULL,IID_IMyObject,
+                          (LPVOID*) m_pObj);
+</b></code></PRE>
+
+
+
+<H4><A NAME="_wcesdk_initializing_objects"></A>Initializing COM Objects</H4>
+
+<P>The DCOM implementation requires that you initialize objects by calling the <B>CoInitializeEx</B> function before you can use them.</P>
+
+<P>The COM implementation does not enforce object initialization, but it is still recommended that you initialize all objects..</P>
+<DIV CLASS="footer">Built on Thursday, March 15, 2001</DIV>
+
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

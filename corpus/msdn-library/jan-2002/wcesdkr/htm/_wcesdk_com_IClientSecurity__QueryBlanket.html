@@ -1,0 +1,145 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IClientSecurity::QueryBlanket</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IClientSecurity::QueryBlanket"/>
+<MSHelp:RLTitle Title="IClientSecurity::QueryBlanket"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iclientsecurity__queryblanket"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IClientSecurity::QueryBlanket</H1>
+
+<P>This method retrieves authentication information the client uses to make calls on the specified proxy.</P>
+
+<PRE class="syntax"><B>HRESULT QueryBlanket(
+IUnknown *</B><I>pProxy</I><B>,
+DWORD *</B><I>pAuthnSvc</I><B>,
+DWORD *</B><I>pAuthzSvc</I><B>,
+OLECHAR **</B><I>pServerPrincName</I><B>,
+DWORD *</B><I>pAuthnLevel</I><B>,
+DWORD *</B><I>pImpLevel</I><B>,
+RPC_AUTH_IDENTITY_HANDLE* </B><I>pAuthInfo</I><B>,
+DWORD *</B><I>pCapabilities</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pProxy</I></DT>
+
+<DD>[in] Pointer indicating the proxy to query. It may not be NULL. For more information, see the Remarks section.</dd>
+
+<DT><I>pAuthnSvc</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current authentication service. This will be a single value taken from the list of <B>RPC_C_AUTHN_xxx</B> constants. If the caller specifies NULL, the current authentication service is not retrieved.</dd>
+
+<DT><I>pAuthzSvc</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current authorization service. This will be a single value taken from the list of <B>RPC_C_AUTHZ_xxx</B> constants. If the caller specifies NULL, the current authorization service is not retrieved.</dd>
+
+<DT><I>pServerPrincName</I></DT>
+
+<DD>[out] Pointer to the current principal name. The string will be allocated by the callee using <A HREF="_wcesdk_com_cotaskmemalloc.htm"><B>CoTaskMemAlloc</B></A> and must be freed by the caller using <B>CoTaskMemFree</B> when they are done with it. Notice that the actual principal name is returned. If the caller specifies NULL, the current principal name is not retrieved.</dd>
+
+<DT><I>pAuthnLevel</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current authentication level. This will be a single value taken from the list of <B>RPC_C_AUTHN_LEVEL_xxx</B> constants. If the caller specifies NULL, the current authentication level is not retrieved.</dd>
+
+<DT><I>pImpLevel</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current impersonation level. This will be a single value taken from the list of <B>RPC_C_IMP_LEVEL_xxx</B> constants. If the caller specifies NULL, the current impersonation level is not retrieved. When using NTLMSSP, this value could be RPC_IMP_LEVEL_IDENTIFY or RPC_IMP_LEVEL_IMPERSONATE. When using Kerberos, it can be RPC_IMP_LEVEL_IDENTIFY, RPC_IMP_LEVEL_IMPERSONATE, or RPC_C_IMP_LEVEL_DELEGATE. </dd>
+
+<DT><I>pAuthInfo</I></DT>
+
+<DD>[out] Pointer to a handle indicating the identity of the client that was passed to the last <A HREF="_wcesdk_com_iclientsecurity__setblanket.htm"><B>IClientSecurity::SetBlanket</B></A> call (or the default value). Default values are only valid until the proxy is released. If the caller specifies NULL, the client identity is not retrieved. The format of the structure that the returned handle refers to depends on the authentication service. For NTLMSSP and Kerberos, if the client specified a structure in the <I>pAuthInfo</I> parameter to <A HREF="_wcesdk_com_coinitializesecurity.htm"><B>CoInitializeSecurity</B></A>, that value is returned. Because this points to the value itself and is not a copy, it should not be manipulated or freed. </dd>
+
+<DT><I>pCapabilities</I></DT>
+
+<DD>[out] Pointer to a DWORD of flags indicating the capabilities of the proxy. May be NULL, in which case the flags are not retrieved. On Windows 2000, these may be EOAC_STATIC_CLOAKING or EOAC_DYNAMIC_CLOAKING. If the caller specifies NULL, the current capability flags are not retrieved.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>Success.</dd>
+
+<DT>E_INVALIDARG</DT>
+
+<DD>One or more arguments are invalid.</dd>
+
+<DT>E_OUTOFMEMORY</DT>
+
+<DD>Insufficient memory to create the <I>pServerPrincName</I> out-parameter.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>IClientSecurity::QueryBlanket</B> is called by the client to retrieve the authentication information COM will use on calls made from the specified interface proxy. With a pointer to an interface on the proxy, the client would first call <A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A> for a pointer to <B>IClientSecurity</B>; then, with this pointer, the client would call <B>IClientSecurity::QueryBlanket</B>, followed by releasing the pointer. This sequence of calls is encapsulated in the helper function <A HREF="_wcesdk_com_coqueryproxyblanket.htm"><B>CoQueryProxyBlanket</B></A>.</P>
+
+<P>In <I>pProxy</I>, you pass an interface pointer. However, you cannot pass a pointer to an interface that does not use a proxy. Thus you can't pass a pointer to an interface that has the local keyword in its interface definition since no proxy is created for such an interface. <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A> is the exception to this rule.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_coqueryproxyblanket.htm"><B>CoQueryProxyBlanket</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

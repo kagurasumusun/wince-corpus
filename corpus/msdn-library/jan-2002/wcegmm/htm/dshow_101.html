@@ -1,0 +1,77 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Control Distributors</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Control Distributors"/>
+<MSHelp:RLTitle Title="Control Distributors"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_control_distributors"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imediafilter__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediacontrol__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ibasicaudio_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_imediacontrol_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_imediafilter_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_ibasefilter_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_idistributornotify_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_idistributornotify__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_idistributornotify__pause" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_idistributornotify__stop" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_11 keywords="_wcesdk_idistributornotify__notifygraphchange" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Control Distributors</H1>
+
+<P>A control distributor is a PID that is used to control the data flow in the filter graph; for example, starting or stopping playback of a media stream. The standard control distributors supplied with DirectShow directly implement their distribution. These distributors make the following assumptions:
+
+<UL type="disc">
+	<LI>Applications that connect filters directly without informing the filter graph manager will get unexpected results if they also use the distributors of the filter graph manager. For example, a deadlock might occur if an application calls a filter's <A HREF="JavaScript:hhobj_1.Click()"><B>IBaseFilter::Run</B></A> method directly, because the filter graph manager contains a distributor that implements <A HREF="JavaScript:hhobj_2.Click()"><B>IMediaControl::Run</B></A> and passes calls on to each filter's <B>IBaseFilter::Run</B> method. </li>
+
+	<LI>Properties that can be aggregated directly can be read and written to through the control interface, even when exposed by multiple filters. For example, duration can be reported as the longest of all individual durations, with all streams treated as running in parallel. </li>
+
+	<LI>Where a property is exposed by several different filters, applications will either use the filter graph manager to set and get the property or will communicate with the individual filters, but will not mix the two methods. An application that communicates with two audio renderers to reset the volume and then queries the <A HREF="JavaScript:hhobj_3.Click()"><B>IBasicAudio</B></A> implementation of the filter graph manager for the volume, will get undefined results. (In practice, it will probably retrieve the <B>Volume</B> property of the first audio renderer with no attempt to combine this with the other stream.) If the application sets the property through the interface of the filter graph manager, the same value will be set to all the individual filters that expose it. </li>
+
+	<LI>The filter graph manager will expose the <A HREF="JavaScript:hhobj_4.Click()"><B>IMediaContro</B>l</A> interface (through a non-replaceable distributor) as the main application method for starting and stopping graphs. This is a slightly higher-level, more simplified interface than <A HREF="JavaScript:hhobj_5.Click()"><B>IMediaFilter</B></A> and is suitable for Automation clients and applications. The <B>IMediaFilter</B> implementation on the filter graph manager should not be called by applications. <B>IMediaControl</B> is implemented by calling the <B>IMediaFilter</B> interface implemented by the filter graph manager and by individual filters. Individual filters expose <B>IMediaFilter</B> through the <A HREF="JavaScript:hhobj_6.Click()"><B>IBaseFilter</B></A> interface, which inherits it. </li>
+</UL>
+
+<P>PIDs must keep track of the filters in the filter graph. This is done by implementing the <A HREF="JavaScript:hhobj_7.Click()"><B>IDistributorNotify</B></A> interface on the distributor. <B>IDistributorNotify</B> has the same <A HREF="JavaScript:hhobj_8.Click()"><B>Run</B></A>, <A HREF="JavaScript:hhobj_9.Click()"><B>Pause</B></A>, and <A HREF="JavaScript:hhobj_10.Click()"><B>Stop</B></A> methods as <B>IMediaFilter</B>, all of which are called before the calling the filter. It also has a <A HREF="JavaScript:hhobj_11.Click()"><B>IDistributorNotify::NotifyGraphChange</B></A> method, which notifies the distributor when any filters are added or removed from the filter graph, or connections change. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

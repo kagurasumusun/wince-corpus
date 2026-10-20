@@ -1,0 +1,122 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MyFSD_Notify</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MyFSD_Notify"/>
+<MSHelp:RLTitle Title="MyFSD_Notify"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_myfsd_notify"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><I>MyFSD</I>_Notify</H1>
+
+<P>This function, an event notification handler, is called by the application to notify a file system driver (FSD) on a per-volume basis.</P>
+
+<PRE class="syntax"><B>void <I>MyFSD</I>_Notify(
+PVOLUME</B> <I>pVolume</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pVolume</I></DT>
+
+<DD>Pointer to the value that the FSD defines in its DLL and passes to the <A HREF="_wcesdk_fsdmgr_registervolume.htm"><B>FSDMGR_RegisterVolume</B></A> function when registering the volume. The definition of <I>pVolume</I> can point to private structures.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Specifies the event. It is one of the following flags, included in Fsdmgr.h from the Extfile.h file:
+
+<UL type="disc">
+	<LI>FSNOTIFY_POWER_ON
+<P>Indicates that the device has resumed operations from a suspended mode. The file system manager calls the application on a single thread, therefore, the application should return quickly so other file systems can resume.
+</li>
+
+	<LI>FSNOTIFY_POWER_OFF
+<P>Indicates that the device is entering a suspended state. No system calls can be made at this point, and the file system manager calls the application on a single thread.
+</li>
+
+	<LI>FSNOTIFY_DEVICES_ON
+<P>Indicates that that the device has resumed after a suspended mode, and the PC card devices are now available for use.
+</li>
+</UL>
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None.</P>
+
+<H4>Remarks</H4>
+
+<P>All FSD functions can be called reentryly, therefore, FSD developers must take this into account when developing an FSD.</P>
+
+<P>The Fsdmgr component is a dynamic-link library (DLL) that manages all operating system interaction with installable files systems. Each installable file system requires an FSD, which is a DLL that exports an API needed to support an installable file system. The name of the DLL and the names of the functions it exports start with the name of the associated installable file system. For example, if the name of file system is MyFSD, then its DLL is MyFSD.dll and its exported functions are prefaced with MyFSD_*. </P>
+
+<P>Fsdmgr provides services to FSDs. The <B>FSDMGR_RegisterVolume</B>, <A HREF="_wcesdk_fsdmgr_createfilehandle.htm"><B>FSDMGR_CreateFileHandle</B></A>, and <A HREF="_wcesdk_fsdmgr_createsearchhandle.htm"><B>FSDMGR_CreateSearchHandle</B></A> functions record a DWORD of volume-specific data the FSD needs to keep associated with volume. This volume-specific data is passed as the first parameter of these three functions.</P>
+
+<P>Applications that access an installable file system use standard Win32 functions. For example, when an application wants to create a folder on a device that contains an installable file system, it calls <A HREF="_wcesdk_win32_createdirectory.htm"><B>CreateDirectory</B></A>. Fsdmgr recognizes that the path is to a device containing an installable file system and calls the appropriate function, which in the case of the FAT file system is <B>FATFSD_CreateDirectoryW</B>. That is, the application calls <B>CreateDirectory</B>, causing Fsdmgr to call <B>FATFSD_CreateDirectoryW</B>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>&nbsp;</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createdirectory.htm"><B>CreateDirectory</B></A>, <A HREF="_wcesdk_fsdmgr_createfilehandle.htm"><B>FSDMGR_CreateFileHandle</B></A>, <A HREF="_wcesdk_fsdmgr_createsearchhandle.htm"><B>FSDMGR_CreateSearchHandle</B></A>, <A HREF="_wcesdk_fsdmgr_registervolume.htm"><B>FSDMGR_RegisterVolume</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

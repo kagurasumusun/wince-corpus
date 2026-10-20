@@ -1,0 +1,113 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IAMStreamControl Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IAMStreamControl Interface"/>
+<MSHelp:RLTitle Title="IAMStreamControl Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_iamstreamcontrol_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IAMStreamControl Interface</H1>
+
+<P>The <B>IAMStreamControl</B> interface is exposed on input and output pins on any filter in a filter graph. This interface exposes methods that allow applications to control individual stream components in a filter graph. You can turn various streams on or off without affecting the rest of the graph. For example, you can turn off an audio stream while a video stream continues, for muting. This interface also assists in frame accuracy when exact start or stop times are important. </P>
+
+<P>Currently, the <A HREF="_wcesdk_cbasestreamcontrol__cbasestreamcontrol.htm"><B>CBaseStreamControl</B></A> base class implements <B>IAMStreamControl</B>. <B>CBaseStreamControl</B> enables the user to specify start and stop times in the <A HREF="_wcesdk_cbasestreamcontrol__startat.htm"><B>CBaseStreamControl::StartAt</B></A> and <A HREF="_wcesdk_cbasestreamcontrol__stopat.htm"><B>CBaseStreamControl::StopAt</B></A> member functions and provides stream information in the <A HREF="_wcesdk_cbasestreamcontrol__getinfo.htm"><B>CBaseStreamControl::GetInfo</B></A>member function. <B>CBaseStreamControl</B> uses the <A HREF="_wcesdk_dtypes__streamcontrolstate.htm"><B>StreamControlState</B></A> enumerated data type to describe the various states a stream is in. A flowing stream is indicated by the STREAM_FLOWING setting; otherwise it is in a discarding state indicated by the STREAM_DISCARDING setting. See <B>StreamControlState</B> for more details on stream states. </P>
+
+<P>If you want to implement this interface on your own your class should typically inherit from <A HREF="_wcesdk_cbasestreamcontrol__cbasestreamcontrol.htm"><B>CBaseStreamControl</B></A> to obtain an implementation of the <A HREF="_wcesdk_cbasestreamcontrol__startat.htm"><B>CBaseStreamControl::StartAt</B></A>, <A HREF="_wcesdk_cbasestreamcontrol__stopat.htm"><B>CBaseStreamControl::StopAt</B></A>, and <A HREF="_wcesdk_cbasestreamcontrol__getinfo.htm"><B>CBaseStreamControl::GetInfo</B></A> methods. The <B>CBaseStreamControl</B> class also maintains state information and makes decisions about what to do with the sample. Developers implementing their own filters with pins that support <B>IAMStreamControl</B> through the <B>CBaseStreamControl</B> base class must follow certain guidelines outlined in the <B>CBaseStreamControl</B> documentation. </P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;There must be a clock in the filter graph or the stream control methods might not function as expected. </P>
+
+<P>This interface is not available on the preview pin of capture cards with hardware overlay. Calling <A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A> for this interface will return the error E_NOINTERFACE (0x80004002). </P>
+
+<H4>When to Implement</H4>
+
+<P>Implement on input or output pins of filters when you want precise control of the data stream. This interface enables you to turn off portions of the filter graph's streams at specific times without affecting the rest of the graph. Although this interface can be used throughout the graph, the input pins of multiplexer filters are the primary users. </P>
+
+<P>If you are writing a filter that will implement <A HREF="#_wcesdk_iamstreamcontrol_interface"><B>IAMStreamControl</B></A> on one of its pins, you should set the STREAM_DISCARDING state so that the pin discards media samples in a timely fashion, rather than as soon as they are received. This means that if your pin is discarding samples as soon as it determines they are outside the time that the pin is supposed to be on, it will discard samples as fast as possible and the whole file could potentially be pushed into your filter and discarded in mere moments. This causes problems if the pin tries to call <A HREF="_wcesdk_iamstreamcontrol__startat.htm"><B>IAMStreamControl::StartAt</B></A> at a later point in time because the entire file will have already been discarded. To avoid pins from dumping media samples as fast possible, your code should check the media sample's timestamp and wait until the reference clock verifies that the end of the sample's time has actually occurred before discarding. This is known as discarding in a timely fashion (see <A HREF="_wcesdk_cbasestreamcontrol__cbasestreamcontrol.htm"><B>CBaseStreamControl</B></A> for an implementation that does this). </P>
+
+<H4>When to Use</H4>
+
+<P>Use this interface to turn on or off certain portions of the filter graph's streams while other portions continue to process data. For example, your application can tell a video filter's input pin precisely when to start or stop playback, independent of what is happening in the rest of the graph. This assists in frame accuracy when exact start or stop times are important. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IUnknown methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Retrieves pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IAMStreamControl methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iamstreamcontrol__startat.htm"><B>StartAt</B></A></TD>
+<TD width=50%>Informs the pin when to start sending streaming data. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iamstreamcontrol__stopat.htm"><B>StopAt</B></A></TD>
+<TD width=50%>Informs the pin when to suspend processing and supplying data. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iamstreamcontrol__getinfo.htm"><B>GetInfo</B></A></TD>
+<TD width=50%>Retrieves information about the current streaming settings. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

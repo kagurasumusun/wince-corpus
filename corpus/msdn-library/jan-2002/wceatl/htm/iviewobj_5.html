@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>IViewObjectExImpl::GetColorSet</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="IViewObjectExImpl::GetColorSet"/>
+<MSHelp:RLTitle Title="IViewObjectExImpl::GetColorSet"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_iviewobjecteximpl_getcolorset"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IViewObjectExImpl::GetColorSet</H1>
+
+<P>This method returns the logical palette used by the control for drawing. </P>
+
+<P>The <B>IViewObjectExImpl::GetColorSet</B> method recursively queries any nested objects and returns a color set that represents the union of all colors requested. The color set enentually percolates to the top-level container that owns the window frame. This container can call <B>GetColorSet</B> on each of its embedded objects to obtain all the colors needed to draw the embedded objects. The container can use the color sets obtained in conjunction with other colors it needs for itself to set the overall color palette.</P>
+
+<P>The OLE-provided implementation of <B>GetColorSet</B> looks at the data it has on hand to draw the picture. If CF_DIB is the drawing format, the palette found in the bitmap is used. For a regular bitmap, no color information is returned. If the drawing format is a metafile, the object handler enumerates the metafile looking for a CreatePalette metafile record. If one is found, the handler uses it as the color set.</P>
+
+<PRE class=syntax><B>STDMETHOD ( GetColorSet )(
+DWORD </B><I>dwDrawAspect</I>, <B>
+LONG </B><I>lindex</I>, <B>
+void* </B><I>pvAspect</I>, <B>
+DVTARGETDEVICE* </B><I>ptd</I>, <B>
+HDC </B><I>hicTargetDev</I>, <B>
+LOGPALETTE** </B><I>ppColorSet</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwDrawAspect</I></DT>
+
+<DD>[in] Specifies how the object is to be represented. Representations include content, an icon, a thumbnail, or a printed document. Valid values are taken from the enumeration <B>DVASPECT</B>. See the <B>DVASPECT</B> enumeration for more information.</DD>
+
+<DT><I>lindex</I></DT>
+
+<DD>[in] Portion of the object that is of interest for the draw operation. Its interpretation varies with <I>dwDrawAspect</I>. See the <B>DVASPECT</B> enumeration for more information.</DD>
+
+<DT><I>pvAspect</I></DT>
+
+<DD>[in] Pointer to additional information about the view of the object specified in <I>dwDrawAspect</I>. Since none of the current aspects support additional information, <I>pvAspect</I> must always be <B>NULL</B>.</DD>
+
+<DT><I>ptd</I></DT>
+
+<DD>[in] Pointer to the <B>DVTARGETDEVICE</B> structure that describes the device for which the object is to be rendered. If <B>NULL</B>, the view should be rendered for the default target device, typically the display. A value other than <B>NULL</B> is interpreted in conjunction with <I>hicTargetDev</I> and <I>hdcDraw</I>. For example, if <I>hdcDraw</I> specifies a printer as the device context, <I>ptd</I> points to a structure describing that printer device. The data may actually be printed if <I>hicTargetDev</I> is a valid value or it may be displayed in print preview mode if <I>hicTargetDev</I> is <B>NULL</B>.</DD>
+
+<DT><I>hicTargetDev</I></DT>
+
+<DD>[in] Information context for the target device indicated by the <I>ptd</I> parameter from which the object can extract device metrics and test the capabilities of the device. If <I>ptd</I> is <B>NULL</B>, the object should ignore the <I>hicTargetDev</I> parameter.</DD>
+
+<DT><I>ppColorSet</I></DT>
+
+<DD>[out] Address of <B>LOGPALETTE</B> pointer variable that receives a pointer to the <B>LOGPALETTE</B> structure. The <B>LOGPALETTE</B> structure contains the set of colors that would be used if <B>IViewObjectExImpl::Draw</B> were called with the same parameters for <I>dwAspect</I>, <I>lindex</I>, <I>pvAspect</I>,<I>ptd</I>, and <I>hicTargetDev</I>. If <I>*ppColorSet</I> is <B>NULL</B>, the object does not use a palette.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The ATL implementation returns E_NOTIMPL.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

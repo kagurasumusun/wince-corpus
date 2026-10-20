@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Initialization</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Initialization"/>
+<MSHelp:RLTitle Title="Initialization"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_initialization_ddhal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Initialization</H1>
+
+<P>This section describes changes to the initialization mechanism that have appeared in the <B>DDGPE</B> implementation of the DDHAL.</P>
+
+<P>The process of initialization of the DDHAL has changed slightly from the Desktop specification. Unlike the DriverInit entry point in the Desktop implementation, the main initialization point for the Windows CE DDHAL is <B>HALInit</B>.</P>
+
+<P><B>HalInit</B></P>
+
+<P><A HREF="ddhal_90.htm"><B>HALInit</B></A> is exported by the display driver. It is implemented in the <B>DDGPE</B> interface, so you can simply export it from your driver.</P>
+
+<P><B>buildDDHALInfo</B></P>
+
+<P><A HREF="ddhal_90.htm"><B>HALInit</B></A> calls <A HREF="ddhal_89.htm"><B>buildDDHALInfo</B></A> with the appropriate parameters.</P>
+
+<P>You should be able to convert your 32-bit <B>buildDDHALInfo</B> (or <B>buildDDHALInfo32</B>) function fairly easily. When transferring this function from your Desktop DDHAL implementation, keep in mind that the parameter list has changed slightly:</P>
+
+<PRE class="code">EXTERN_C BOOL buildDDHALInfo (
+LPDDHALINFO lpddhi,
+DWORD modeidx
+);</PRE>
+
+<P>Since there is no longer a DDHAL driver data structure associated with the device driver, your <B>buildDDHALInfo</B> function should be modified to use the <B>DDHALINFO</B> structure passed into it by <B>HALInit</B>. Also, your driver is now responsible for allocation of the callback structures. <B>DDGPE</B> expects all callback and capabilities data structures to be implemented as global variables (see the sample code or <A HREF="ddhal_96.htm">DDHAL Callbacks and Capabilities</A>).</P>
+
+<P>You will need to extend your <B>buildDDHALInfo</B> function to set up several global variables required by the <B>DDGPE</B> model. You should consult the sample code and <A HREF="ddhal_91.htm">Required Variables</A> for examples and descriptions of these global variables.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

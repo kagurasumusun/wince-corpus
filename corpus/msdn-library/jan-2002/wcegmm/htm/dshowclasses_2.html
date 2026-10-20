@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseObject and CUnknown Classes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseObject and CUnknown Classes"/>
+<MSHelp:RLTitle Title="CBaseObject and CUnknown Classes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseobject_and_cunknown_classes"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_CBaseObject_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_CUnknown_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_INonDelegatingUnknown_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_com_Iunknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>CBaseObject and CUnknown Classes</H1>
+
+<P>The <A HREF="JavaScript:hhobj_1.Click()"><B>CbaseObject</B></A> class is the root of all base classes. It exists primarily to provide debugging assistance by keeping a count of all DirectShow objects that are active. All derived base class constructors provide a debugging object name as the first parameter and call the <B>CBaseObject</B> constructor. You can view the debugging object name sent to this base class on a debugging monitor. </P>
+
+<P class="fig"><IMG SRC="cbase01.gif" ALT="" BORDER=0></P>
+
+<P>All DirectShow classes that implement interfaces derive from a base class called <A HREF="JavaScript:hhobj_2.Click()"><B>CUnknown</B></A>, which is derived from <B>CBaseObject</B>. <B>CUnknown</B> implements the <A HREF="JavaScript:hhobj_3.Click()"><B>INonDelegatingUnknown</B></A> interface which, like the <A HREF="JavaScript:hhobj_4.Click()"><B>IUnknown</B></A> interface, provides methods to request an interface, and to add or release references to that interface. </P>
+
+<P>Why are there two interfaces that implement the services of <B>IUnknown</B>? Because of <I>aggregation</I>. Aggregation is the COM term for the combining of more than one object into a single larger object. Although filter graph objects, such as filters and pins, are rarely aggregated, the design is available for future extensibility and also for implementing plug-in distributors (PID), which are objects that are aggregated with the filter graph manager. In an aggregated object, the <I>outer object</I> (the one containing the other objects) uses the <B>IUnknown</B> interface to communicate outside the object. The <B>IUnknown</B> interface on the outer object passes out references to the <B>IUnknown</B> interfaces of its internal objects. That is, when an application calls the <B>IUnknown</B> interface on the outer object and asks for the interface belonging to one of its internal objects, the outer object calls the <B>IUnknown</B> interface of the internal object to retrieve the requested interface. </P>
+
+<P>Because the internal objects must delegate <B>IUnknown</B> interfaces to the <B>IUnknown</B> of the outer object, the <B>IUnknown</B> interface of the internal object should not be accessed privately (that is, without going through the outer object's <B>IUnknown</B> interface). The internal object's <B>IUnknown</B> is reserved exclusively for communicating through the outer object. However, it is possible that objects will want to connect to other objects privately, without knowledge of the outer object. For example, pins on filters are likely to need to query interfaces on pins of other objects privately. </P>
+
+<P>The <B>INonDelegatingUnknown</B> interface provides direct, private access to interfaces, regardless of whether or not the object is aggregated. Direct access is important in most of the communication between the DirectShow objects such as pins, allocators, and filters, and is the default method of communication. In fact, the base classes implement the <B>IUnknown</B> interface on nonaggregated objects (which includes almost every object in the filter graph) to call the nondelegating interface directly. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

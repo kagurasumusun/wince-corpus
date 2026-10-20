@@ -1,0 +1,69 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Processing Character Messages</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Processing Character Messages"/>
+<MSHelp:RLTitle Title="Processing Character Messages"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_processing_character_messages"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Processing Character Messages</H1>
+
+<P>When the user enters a character, Windows CE does not generate a character message automatically; instead, it generates a keystroke message. To translate a keystroke message into a corresponding character message, the application message loop must call the <B>TranslateMessage</B> function. This function examines the virtual-key code of a keystroke message and, if the code corresponds to a character, places a character message into the message queue. The character message is removed and dispatched on the next iteration of the message loop.</P>
+
+<P>The message loop should call the <B>TranslateMessage</B> function to translate every message, not just keystroke messages. Although <B>TranslateMessage</B> has no effect on other types of messages, using this function ensures that keyboard input is translated correctly. The following code example shows how to include the <B>TranslateMessage</B> function in a typical thread message loop.</P>
+
+<PRE>while (GetMessage(&amp;msg, (HWND) NULL, 0, 0))
+{
+   if (TranslateAccelerator(hwndMain, haccl, &amp;msg) == 0)
+   {
+      TranslateMessage(&amp;msg);
+      DispatchMessage(&amp;msg);
+   }
+}
+</PRE>
+
+<P>Windows CE includes four character messages: WM_CHAR, WM_SYSCHAR, WM_DEADCHAR, and WM_SYSDEADCHAR. A typical window procedure ignores all of the character messages except for WM_CHAR. The WM_CHAR message contains the character code and the flags that provide additional data about the character.</P>
+
+<P>When a window procedure receives the WM_CHAR message, it should examine the character code that accompanies the message to determine how to process the character. The character code is in the message <I>wParam</I> parameter.</P>
+
+<P>The following code example shows the window procedure framework that a typical application uses to receive and process character messages.</P>
+
+<PRE>while (GetMessage (&amp;msg, (HWND)NULL, 0, 0))
+{
+   if (TranslateAccelerator (hwndMain, haccl, &amp;msg) == 0)
+   {
+      TranslateMessage (&amp;msg);
+      DispatchMessage (&amp;msg);
+   }
+}
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

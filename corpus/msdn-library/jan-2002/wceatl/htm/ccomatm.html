@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CComAutoThreadModule</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CComAutoThreadModule"/>
+<MSHelp:RLTitle Title="CComAutoThreadModule"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomautothreadmodule"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CComAutoThreadModule</H1>
+
+<P>Because ATL for Windows CE does not support the apartment threading model, this class does not do anything. It is included so that future versions of ATL for Windows CE will be backward compatible.</P>
+
+<PRE class=syntax><B>Template
+&lt; class </B><I>ThreadAllocator</I><B> = CComSimpleThreadAllocator &gt;
+class CComAutoThreadModule : public CComModule</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ThreadAllocator</I></DT>
+
+<DD>[in] The class managing thread selection. The default value is <B>CComSimpleThreadAllocator</B>.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CComAutoThreadModule</B> derives from <B>CComModule</B> to implement a thread-pooled, apartment-model COM server for EXEs and Windows NT services. <B>CComAutoThreadModule</B> uses <B>CComApartment</B> to manage an apartment for each thread in the module.</P>
+
+<P>Derive your module from <B>CComAutoThreadModule</B> when you want to create objects in multiple apartments. You must also include the <B>DECLARE_CLASSFACTORY_AUTO_THREAD</B> macro in the class definition of your object to specify <B>CComClassFactoryAutoThread</B> as the class factory.</P>
+
+<P>By default, the ATL COM AppWizard will derive your module from <B>CComModule</B>. To use <B>CComAutoThreadModule</B>, modify the class definition. For example:</P>
+
+<PRE>class CMyModule :
+public CComAutoThreadModule&lt;CComSimpleThreadAllocator&gt;
+{
+public:
+   LONG Unlock( )
+   {
+      LONG l = CComAutoThreadModule&lt;ComSimpleThreadAllocator&gt;::Unlock( );
+      if (l == 0)
+         PostThreadMessage(dwThreadID, WM_QUIT, 0, 0);
+      return l;
+   }
+
+   DWORD dwThreadID;
+};
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlbase.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

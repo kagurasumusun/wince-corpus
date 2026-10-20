@@ -1,0 +1,397 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseVideoRenderer Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseVideoRenderer Class"/>
+<MSHelp:RLTitle Title="CBaseVideoRenderer Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasevideorenderer_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseVideoRenderer Class</H1>
+
+<P class="fig"><IMG SRC="rbase03.gif" ALT="" BORDER=0></P>
+
+<P>This base class is used for building video renderer filters. </P>
+
+<H4>Protected Data Members</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%>m_bDrawLateFrames</TD>
+<TD width=50%>Flag to signal that no frames are to be dropped. Debug only. This destroys synchronization. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_bSupplierHandlingQuality </TD>
+<TD width=50%>TRUE indicates quality control messages are being handled. This lets the renderer know to wait until as late as possible to drop frames itself, and to display the next frame very early after the supplier has dropped a frame. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_cFramesDrawn</TD>
+<TD width=50%>Total number of frames that have been drawn since streaming started. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_cFramesDropped</TD>
+<TD width=50%>Cumulative frames that have been dropped in the renderer since streaming started. Frames can also be dropped upstream without the renderer recognizing them. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idDecision</TD>
+<TD width=50%>MSR_id. for the decision code of <A HREF="_wcesdk_cbasevideorenderer__shoulddrawsamplenow.htm"><B>ShouldDrawSampleNow</B></A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idDuration </TD>
+<TD width=50%>MSR_id for the duration of a frame. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idFrameAccuracy</TD>
+<TD width=50%>Performance log identifier for the time in milliseconds that the frame was late. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idFrameAvg</TD>
+<TD width=50%>Performance log identifier for the average frame time that is used for synchronization and quality control. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idQualityRate</TD>
+<TD width=50%>MSR_id for the quality rate requested. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idQualityTime </TD>
+<TD width=50%>MSR_id for the quality time requested. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idRenderAvg </TD>
+<TD width=50%>Performance log identifier for the average renderer time recorded. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idSchLateTime</TD>
+<TD width=50%>MSR_id for how late the frame was when scheduled. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idSendQuality </TD>
+<TD width=50%>MSR_id for timing the notifications (unused). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idTimeStamp </TD>
+<TD width=50%>MSR_id for a frame time stamp. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idWait</TD>
+<TD width=50%>Performance log identifier for the recorded wait time (unused). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_idWaitReal</TD>
+<TD width=50%>Performance log identifier for the true wait time. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_iSumFrameTime</TD>
+<TD width=50%>Sum of the interframe times; needed for the property page. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_iSumSqAcc</TD>
+<TD width=50%>Sum of the squares of the accuracies (in milliseconds) needed for the property page. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_iSumSqFrameTime</TD>
+<TD width=50%>Sum of the squares of interframe times; needed for the property page. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_iTotAcc</TD>
+<TD width=50%>Sum of the accuracies (in milliseconds) needed for the property page. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_nNormal </TD>
+<TD width=50%>Number of consecutive frames drawn at their scheduled time. A negative number indicates that a frame has just been dropped by the renderer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trDuration</TD>
+<TD width=50%>Duration of the last frame (difference between the start and end times). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trEarliness </TD>
+<TD width=50%>How early a frame is allowed to be played when a frame has just been dropped. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trFrame</TD>
+<TD width=50%>Most recently recorded time between frames. Used in statistical measurements. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trFrameAvg</TD>
+<TD width=50%>Average interframe time in reference time units. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trLastDraw</TD>
+<TD width=50%>Time of previous frame. Used for interframe time references. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trLate</TD>
+<TD width=50%>Amount of time that the current frame was late. Used in statistical measurements. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trRenderAvg</TD>
+<TD width=50%>Time that frames are taking to perform the bit-block transfer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trRenderLast</TD>
+<TD width=50%>Time for the last frame bit-block transfer. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trRenderStart </TD>
+<TD width=50%>Time the bit-block transfer started. Used to get <B>m_trRenderLast</B>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trThrottle</TD>
+<TD width=50%>Period to insert after rendering each frame, typically used when audio quality has been increased and video performance must be decreased to allow this. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_trWaitAvg </TD>
+<TD width=50%>Average wait time in reference time units. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_tStreamingStart</TD>
+<TD width=50%>Used for property page statistics. Represents the start time of the current streaming process or the previous streaming process if not currently streaming. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__cbasevideorenderer.htm"><B>CBaseVideoRenderer</B></A></TD>
+<TD width=50%>Constructs a <B>CBaseVideoRenderer</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__getstddev.htm"><B>GetStdDev</B></A></TD>
+<TD width=50%>Estimates the standard deviation in milliseconds between when each frame is due and when it is actually rendered, for per-frame statistics. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__prepareperformancedata.htm"><B>PreparePerformanceData</B></A></TD>
+<TD width=50%>Sets the <B>m_trLate</B> and <B>m_trFrame</B> values of the current frame. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__throttlewait.htm"><B>ThrottleWait</B></A></TD>
+<TD width=50%>Inserts a wait period after each frame. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Overridable Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__joinfiltergraph.htm"><B>JoinFilterGraph</B></A></TD>
+<TD width=50%>Sends <A HREF="_wcesdk_event_notification_codes__ec_window_destroyed.htm">EC_WINDOW_DESTROYED</A>event notification when filter is removed from the filter graph. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__ondirectrender.htm"><B>OnDirectRender</B></A></TD>
+<TD width=50%>Collects timing information that controls synchronization and quality control. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__onrenderend.htm"><B>OnRenderEnd</B></A></TD>
+<TD width=50%>Records information for quality control and synchronization. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__onrenderstart.htm"><B>OnRenderStart</B></A></TD>
+<TD width=50%>Records information for quality control and synchronization. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__onstartstreaming.htm"><B>OnStartStreaming</B></A></TD>
+<TD width=50%>Resets all times that control streaming. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__onstopstreaming.htm"><B>OnStopStreaming</B></A></TD>
+<TD width=50%>Called at the end of streaming to fix times for the property page report. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__onwaitend.htm"><B>OnWaitEnd</B></A></TD>
+<TD width=50%>Called when a wait time ends. Performance logging only. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__onwaitstart.htm"><B>OnWaitStart</B></A></TD>
+<TD width=50%>Updates times spent waiting and not waiting. Performance logging only. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__recordframelateness.htm"><B>RecordFrameLateness</B></A></TD>
+<TD width=50%>Records how timely the rendering occurred and gathers statistics for the property page. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__resetstreamingtimes.htm"><B>ResetStreamingTimes</B></A></TD>
+<TD width=50%>Resets all times that control the streaming. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__schedulesample.htm"><B>ScheduleSample</B></A></TD>
+<TD width=50%>Sets up an advise link with the clock. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__sendquality.htm"><B>SendQuality</B></A></TD>
+<TD width=50%>Sends a quality message to indicate what the supplier should do about quality. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__shoulddrawsamplenow.htm"><B>ShouldDrawSampleNow</B></A></TD>
+<TD width=50%>Determines if the video should be drawn when it is due, without setting a timer advise link with the clock. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented IQualProp Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__get_avgframerate.htm"><B>get_AvgFrameRate</B></A></TD>
+<TD width=50%>Retrieves the average frame rate since streaming started in frames per 100 seconds. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__get_avgsyncoffset.htm"><B>get_AvgSyncOffset</B></A></TD>
+<TD width=50%>Retrieves the average of the time in milliseconds between when each frame was due and when it was actually rendered. This applies to all frames since streaming started. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__get_devsyncoffset.htm"><B>get_DevSyncOffset</B></A></TD>
+<TD width=50%>Retrieves the standard deviation of the time in milliseconds between when each frame was due and when it was actually rendered for all frames since streaming started. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__get_framesdrawn.htm"><B>get_FramesDrawn</B></A></TD>
+<TD width=50%>Retrieves the number of frames drawn since streaming started. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__get_framesdroppedinrenderer.htm"><B>get_FramesDroppedInRenderer</B></A></TD>
+<TD width=50%>Retrieves the number of frames dropped by the renderer. Frames can also be dropped upstream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__get_jitter.htm"><B>get_Jitter</B></A></TD>
+<TD width=50%>Retrieves the standard deviation of the time in milliseconds between each frame and the next. This applies to all frames since streaming started. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented INonDelegatingUnknown Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__nondelegatingqueryinterface.htm"><B>NonDelegatingQueryInterface</B></A></TD>
+<TD width=50%>Provides access to other interfaces, particularly the property page. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented IQualityControl Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__notify.htm"><B>Notify</B></A></TD>
+<TD width=50%>Notifies the recipient that a quality change is requested. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasevideorenderer__setsink.htm"><B>SetSink</B></A></TD>
+<TD width=50%>Sets the <A HREF="_wcesdk_iqualitycontrol_interface.htm"><B>IQualityControl</B></A> object that will receive quality messages. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

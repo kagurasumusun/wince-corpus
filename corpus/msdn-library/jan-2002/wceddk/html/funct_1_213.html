@@ -1,0 +1,101 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisIMSwitchToMiniport</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisIMSwitchToMiniport"/>
+<MSHelp:RLTitle Title="NdisIMSwitchToMiniport"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndisimswitchtominiport"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisIMSwitchToMiniport</H1>
+
+<P>This function allows an intermediate driver function to call <B>NdisM<I>XXX</I></B> functions that are normally called only from <B>Miniport<I>XXX</I></B> functions, as, for example, to make indications to higher-level protocols.</P>
+
+<PRE class="syntax"><B>BOOLEAN</B> <B>NdisIMSwitchToMiniport(
+IN NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B><I>
+</I><B>OUT PNDIS_HANDLE</B> <I>SwitchHandle</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle input to the <B>MiniportInitialize</B> function.</dd>
+
+<DT><I>SwitchHandle</I></DT>
+
+<DD>Pointer to a variable in which this function returns a handle if the call succeeds.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns TRUE if the caller can safely call miniport-only <B>NdisM<I>XXX</I></B> functions until it makes a reciprocal call to <B>NdisIMRevertBack</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>An intermediate driver must make indications to higher-level protocols as if from an NIC driver’s <B>Miniport<I>XXX</I></B> functions. Attempts to simply forward indications to bound protocols directly from an intermediate driver function that receives them cause deadlocks.</P>
+
+<P>For example, after a successful call to this function, the <B>Protocol<I>XXX</I></B> function of an NDIS intermediate driver can safely call <B>NdisM<I>XXX</I></B> functions commonly called from the <B>MiniportHandleInterrupt</B> or <B>MiniportTimer</B> functions of underlying NIC drivers. In particular, such a <B>Protocol<I>XXX</I></B> function can call <B>NdisM<I>XXX</I></B> functions, such as <B>NdisMIndicateReceivePacket</B> or <B>NdisMIndicateStatus</B>, that indicate to higher-level protocols bound to the intermediate driver’s virtual NIC.</P>
+
+<P>After a successful call to this function, an intermediate driver should call <B>NdisIMRevertBack</B> as quickly as possible. Until it calls<B> NdisIMRevertBack</B>, the execution of such a <B>Protocol<I>XXX</I></B> function prevents other <B>Miniport<I>XXX</I></B> functions in the same driver from running.</P>
+
+<P>If this function returns FALSE, the intermediate driver should call the <B>NdisIMQueueMiniportCallback</B> function. The <B>MiniportCallback</B> function passed to <B>NdisIMQueueMiniportCallback</B> should do essentially the same work as the caller’s miniport-only code would have done if its call to this function had succeeded. That is, such a <B>MiniportCallback</B> function replaces the miniport-only code bracketed by calls to this function and <B>NdisIMRevertBack</B>, as well as setting up sufficient state to communicate with the nonminiport code paths of the intermediate driver.</P>
+
+<P>If an NDIS intermediate driver has internal functions called by both its <B>Protocol<I>XXX</I></B> and <B>Miniport<I>XXX</I></B> functions, such an internal driver function cannot call this function, <B>NdisIMRevertBack</B>, or <B>NdisIMQueueMiniportCallback</B>. A call to any of these <B>NdisIM<I>XXX</I></B> functions from a <B>Miniport<I>XXX</I></B> code path is a fatal error.</P>
+
+<P>A driver that calls this function runs at IRQL &lt;= DISPATCH_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_212.htm"><B>NdisIMRevertBack</B></A>, <A HREF="funct_1_226.htm"><B>NdisMEthIndicateReceive</B></A>, <A HREF="funct_1_229.htm"><B>NdisMIndicateReceivePacket</B></A>, <A HREF="funct_1_230.htm"><B>NdisMIndicateStatus</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

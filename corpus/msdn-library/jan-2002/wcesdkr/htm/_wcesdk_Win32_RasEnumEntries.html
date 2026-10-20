@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RasEnumEntries</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="RasEnumEntries"/>
+<MSHelp:RLTitle Title="RasEnumEntries"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_rasenumentries"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>RasEnumEntries </H1>
+
+<P>This function lists all entry names in a remote access phone book. </P>
+
+<PRE class="syntax"><B>DWORD</B> <B>RasEnumEntries(</B>
+<B>LPWSTR</B> <I>Reserved</I><B>, </B>
+<B>LPWSTR</B> <I>lpszPhoneBookPath</I><B>, </B>
+<B>LPRASENTRYNAME</B> <I>lprasentryname</I><B>, </B>
+<B>LPDWORD</B> <I>lpcb</I><B>, </B>
+<B>LPDWORD</B> <I>lpcEntries </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Reserved</I></DT>
+
+<DD>Reserved; set to NULL. </dd>
+
+<DT><I>lpszPhoneBookPath</I></DT>
+
+<DD><B>Windows CE: </B>This parameter is ignored. Dial-up networking stores phone-book entries in the registry rather than in a phone-book file.</dd>
+
+<DT><I>lprasentryname</I></DT>
+
+<DD>Pointer to a buffer that receives an array of <A HREF="_wcesdk_win32_rasentryname_str.htm"><B>RASENTRYNAME</B></A> structures, one for each phone-book entry. Before calling the function, an application must set the <I>dwSize</I> member of the first <B>RASENTRYNAME</B> structure in the buffer to <B>sizeof(RASENTRYNAME)</B> in order to identify the version of the structure being passed. </dd>
+
+<DT><I>lpcb</I></DT>
+
+<DD>Pointer to a variable that that contains the size, in bytes, of the buffer specified by <I>lprasentryname</I>. On return, the function sets this variable to the number of bytes required to successfully complete the call. </dd>
+
+<DT><I>lpcEntries</I></DT>
+
+<DD>Pointer to a variable that the function, if successful, sets to the number of phone-book entries written to the buffer specified by <I>lprasentryname</I>. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Zero indicates success. A nonzero error value listed in the RAS header file, ERROR_BUFFER_TOO_SMALL, or ERROR_NOT_ENOUGH_MEMORY indicates failure. </P>
+
+<P>Include Raserror.h for definitions of the RAS error codes.</P>
+
+<H4>Remarks</H4>
+
+<P>The following sample code enumerates the RAS phonebook entries on the current machine. The code initially calls <B>RasEnumEntries</B> to obtain the size of the buffer to pass in. The code then calls <B>RasEnumEntries</B> again, to enumerate the entries. Note that for both calls, the code sets the <I>dwSize</I> member of the first <B>RASENTRY</B> structure in the buffer to <B>sizeof</B>(<B>RASENTRY</B>) to specify the structure version.</P>
+
+<PRE class="code">lprasentryname = (LPRASENTRYNAME)LocalAlloc(GPTR,, sizeof(RASENTRYNAME));
+lprasentryname-&gt;dwSize = sizeof(RASENTRYNAME);
+if ((nRet = RasEnumEntries(NULL, NULL, lprasentryname, &amp;cb, &amp;cEntries))
+    == ERROR_BUFFER_TOO_SMALL)
+{
+    lprasentryname = (LPRASENTRYNAME)GlobalAlloc(GPTR, cb);
+    lprasentryname-&gt;dwSize = sizeof(RASENTRYNAME);
+}
+
+// Calling RasEnumEntries to enumerate the phonebook entries
+nRet = RasEnumEntries(NULL, NULL, lprasentryname, &amp;cb, &amp;cEntries);
+
+if (nRet != ERROR_SUCCESS)
+{
+    printf("RasEnumEntries failed: Error %d\n", nRet);
+}
+else
+{
+    printf("Phone book entries in the default phonebook:\n\n");
+    for(i=0;i &lt; cEntries;i++)
+    {
+        printf("%s\n",lprasentryname-&gt;szEntryName);
+        lprasentryname++;
+    }
+}</PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Ras.h, Afdfunc.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Ppp.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_rasentryname_str.htm"><B>RASENTRYNAME</B></A>, <A HREF="_wcesdk_win32_rasenumconnections.htm"><B>RasEnumConnections</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

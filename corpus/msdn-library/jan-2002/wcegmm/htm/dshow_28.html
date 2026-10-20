@@ -1,0 +1,59 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding Filters to the Graph</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Adding Filters to the Graph"/>
+<MSHelp:RLTitle Title="Adding Filters to the Graph"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_adding_filters_to_the_graph"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_CoCreateInstance" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ifiltergraph__addfilter" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IPin__Connect" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IPin__ReceiveConnection" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ibasefilter__enumpins" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_ibasefilter__findpin" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_igraphbuilder__render" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Adding Filters to the Graph</H1>
+
+<P>If a moniker is found for a source filter that can read a file of the specified type, the Filter Graph Manager uses <A HREF="JavaScript:hhobj_1.Click()"><B>CoCreateInstance</B></A> to create an instance of the filter using the returned GUID, and then calls its own <A HREF="JavaScript:hhobj_2.Click()"><B>AddFilter</B></A> method to add the filter to the filter graph. Once added to the graph, the filter creates one or more output pins configured for the type of file it will be reading. After the pin(s) are created, the Filter Graph Manager will examine the media type each pin supports and then look again in the registry for a filter that can accept that media type on its input pin. When it finds a suitable filter, it adds it to the graph and then calls the <A HREF="JavaScript:hhobj_3.Click()"><B>IPin::Connect</B></A> method on the upstream filter's output pin. The output pin can enumerate the supported media types on the input pin and attempt to use that type by calling <A HREF="JavaScript:hhobj_4.Click()"><B>IPin::ReceiveConnection</B></A> on that pin. If the input pin agrees on the media type, then the connection is made. This process is repeated until all the necessary filters have been added to the graph. Typically, the second filter in a playback graph will be a parser or splitter filter, which reads a raw stream of data, such as AVI or MPEG, and splits it into separate audio and video streams, creating an output pin for each stream. If the data for either stream is compressed, the next filter on each stream will be a decompressor, followed by a renderer filter. </P>
+
+<P>The <I>Intelligent Connect</I> mechanisms can also be used by applications to partially build graphs. For example, assume you have a special filter that captures data from some device and outputs it in a standard format. Your application can manually add the first filter to the graph, then use the Filter Graph Manager to obtain a pointer to the filter, then use the filter's <A HREF="JavaScript:hhobj_5.Click()"><B>EnumPins</B></A> or <A HREF="JavaScript:hhobj_6.Click()"><B>FindPin</B></A> methods to obtain pointers to the output pins. Then, when the application supplies that pointer in a call to <A HREF="JavaScript:hhobj_7.Click()"><B>IGraphBuilder::Render</B></A>, the Filter Graph Manager will use the Intelligent Connect process to finish building the rest of the graph. An application can also manually disconnect any filter inserted into a graph and replace it with another filter. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

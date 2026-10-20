@@ -1,0 +1,206 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxOleRegisterControlClass</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AfxOleRegisterControlClass"/>
+<MSHelp:RLTitle Title="AfxOleRegisterControlClass"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afxoleregistercontrolclass"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>AfxOleRegisterControlClass</H1>
+
+<P>Registers the control class with the Windows registration database. This allows the control to be used by containers that are OLE-control aware. <B>AfxOleRegisterControlClass</B> updates the registry with the control’s name and location on the system and also sets the threading model that the control supports in the registry.</P>
+
+<PRE class=syntax><B>BOOL AFXAPI AfxOleRegisterControlClass(
+HINSTANCE </B><I>hInstance</I><B>,
+REFCLSID </B><I>clsid</I><B>,
+LPCTSTR </B><I>pszProgID</I><B>,
+UINT </B><I>idTypeName</I><B>,
+UINT </B><I>idBitmap</I><B>,
+int </B><I>nRegFlags</I><B>,
+DWORD </B><I>dwMiscStatus</I><B>,
+REFGUID </B><I>tlid</I><B>,
+WORD </B><I>wVerMajor</I><B>,
+WORD </B><I>wVerMinor</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hInstance</I></DT>
+
+<DD>The instance handle of the module associated with the control class.</DD>
+
+<DT><I>clsid</I></DT>
+
+<DD>The unique class ID of the control.</DD>
+
+<DT><I>pszProgID</I></DT>
+
+<DD>The unique program ID of the control.</DD>
+
+<DT><I>idTypeName</I></DT>
+
+<DD>The resource ID of the string that contains a user-readable type name for the control.</DD>
+
+<DT><I>idBitmap</I></DT>
+
+<DD>The resource ID of the bitmap used to represent the OLE control in a toolbar or palette.<B> </B></DD>
+
+<DT><I>nRegFlags</I></DT>
+
+<DD>Contains one or more of the following flags:
+
+<UL type=disc>
+	<LI>afxRegInsertable&nbsp;&nbsp;&nbsp;Allows the control to appear in the Insert Object dialog box for OLE objects.</LI>
+
+	<LI>afxRegApartmentThreading&nbsp;&nbsp;&nbsp;Sets the threading model in the registry to ThreadingModel=Apartment.</LI>
+
+	<LI>afxRegFreeThreading&nbsp;&nbsp;&nbsp;Sets the threading model in the registry to ThreadingModel=Free.
+<P>You can combine the two flags afxRegApartmentThreading and afxRegFreeThreading to set ThreadingModel=Both.
+</LI>
+</UL>
+</DD>
+</DL>
+
+<P class=indent><span class=blue><B>Note</B></span>&nbsp;&nbsp;&nbsp;In MFC versions prior to MFC 4.2, the <B>int</B> <I>nRegFlags </I>parameter was a <B>BOOL</B> parameter, <I>bInsertable</I>, that allowed or disallowed the control to be inserted from the Insert Object dialog box.
+
+<DL>
+<DT><I>dwMiscStatus</I></DT>
+
+<DD>Contains one or more of the following status flags:
+
+<UL type=disc>
+	<LI>OLEMISC_RECOMPOSEONRESIZE</LI>
+
+	<LI>OLEMISC_ONLYICONIC</LI>
+
+	<LI>OLEMISC_INSERTNOTREPLACE</LI>
+
+	<LI>OLEMISC_STATIC</LI>
+
+	<LI>OLEMISC_CANTLINKINSIDE</LI>
+
+	<LI>OLEMISC_CANLINKBYOLE1</LI>
+
+	<LI>OLEMISC_ISLINKOBJECT</LI>
+
+	<LI>OLEMISC_INSIDEOUT</LI>
+
+	<LI>OLEMISC_ACTIVATEWHENVISIBLE</LI>
+
+	<LI>OLEMISC_RENDERINGISDEVICEINDEPENDENT</LI>
+
+	<LI>OLEMISC_INVISIBLEATRUNTIME</LI>
+
+	<LI>OLEMISC_ALWAYSRUN</LI>
+
+	<LI>OLEMISC_ACTSLIKEBUTTON</LI>
+
+	<LI>OLEMISC_ACTSLIKELABEL</LI>
+
+	<LI>OLEMISC_NOUIACTIVATE</LI>
+
+	<LI>OLEMISC_ALIGNABLE</LI>
+
+	<LI>OLEMISC_IMEMODE</LI>
+
+	<LI>OLEMISC_SIMPLEFRAME</LI>
+
+	<LI>OLEMISC_SETCLIENTSITEFIRST</LI>
+</UL>
+</DD>
+
+<DT><I>tlid</I></DT>
+
+<DD>The unique ID of the control class.</DD>
+
+<DT><I>wVerMajor</I></DT>
+
+<DD>The major version number of the control class.</DD>
+
+<DT><I>wVerMinor</I></DT>
+
+<DD>The minor version number of the control class.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<DL>
+<DT>Nonzero if the control class was registered; otherwise, zero.</DT>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// Method implementation of class COleObjectFactory::UpdateRegistry
+//
+BOOL CMyApartmentAwareCtrl::CApartmentCtrlFactory::UpdateRegistry(BOOL bRegister)
+{
+// TODO: Verify that your control follows
+// apartment-model threading rules.
+// Refer to MFC TechNote 64 for more information.
+// If your control does not conform to the
+// apartment-model rules, then you must modify the
+// code below, changing the 6th parameter from
+// afxRegInsertable | afxRegApartmentThreading to
+// afxRegInsertable.
+
+   if (bRegister)
+      return AfxOleRegisterControlClass()
+         AfxGetInstanceHandle(),
+         m_clsid,
+         m_lpszProgID,
+         IDS_APARTMENT,
+         IDB_APARTMENT,
+         afxRegInsertable | afxRegApartmentThreading,
+         _dwApartmentOleMisc,
+         _tlid,
+         _wVerMajor,
+         _wVerMinor);
+   else
+      return AfxOleUnregisterClass(m_clsid, m_lpszProgID);
+</PRE>
+
+<P>The above example demonstrates how <B>AfxOleRegisterControlClass</B> is called with the flag for insertable and the flag for apartment model ORed together to create the sixth parameter:</P>
+
+<PRE>&nbsp;&nbsp;afxRegInsertable | afxRegApartmentThreading,
+</PRE>
+
+<P>The control will show up in the <B>Insert</B> <B>Object</B> dialog box for enabled containers, and it will be apartment model-aware. Apartment model-aware controls must ensure that static class data is protected by locks, so that while a control in one apartment is accessing the static data, it isn’t disabled by the scheduler before it is finished, and another instance of the same class starts using the same static data. Any accesses to the static data will be surrounded by critical section code.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_47.htm"><B>AfxOleRegisterPropertyPageClass</B></A>, <A HREF="funct_49.htm"><B>AfxOleRegisterTypeLib</B></A>, <A HREF="funct_50.htm"><B>AfxOleUnregisterClass</B></A>, <A HREF="funct_51.htm"><B>AfxOleUnregisterTypeLib</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

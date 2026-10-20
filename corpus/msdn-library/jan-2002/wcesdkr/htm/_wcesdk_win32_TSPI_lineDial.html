@@ -1,0 +1,125 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TSPI_lineDial</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TSPI_lineDial"/>
+<MSHelp:RLTitle Title="TSPI_lineDial"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_tspi_linedial"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>TSPI_lineDial</H1>
+
+<P>The <B>TSPI_lineDial</B> function dials the specified dialable number on the specified call.</P>
+
+<PRE class="syntax"><B>LONG TSPIAPI TSPI_lineDial(</B>
+<B>DRV_REQUESTID </B><I>dwRequestID</I><B>,  </B>
+<B>HDRVCALL </B><I>hdCall</I><B>,          </B>
+<B>LPCWSTR </B><I>lpszDestAddress</I><B>,  </B>
+<B>DWORD </B><I>dwCountryCode</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwRequestID</I> </DT>
+
+<DD>The identifier of the asynchronous request. </dd>
+
+<DT><I>hdCall</I> </DT>
+
+<DD>The service provider's handle to the call to be dialed. The call state of <I>hdCall</I> can be any state except idle and disconnected. </dd>
+
+<DT><I>lpszDestAddress</I> </DT>
+
+<DD>Pointer to a null-terminated Unicode string that specifies the destination to be dialed using the standard dialable number format. </dd>
+
+<DT><I>dwCountryCode</I> </DT>
+
+<DD>The country code of the destination. The implementation uses this to select the call progress protocols for the destination address. If a value of 0 is specified, a default call-progress protocol defined by the service provider is used. TAPI does not validate this parameter when this function is called. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns <I>dwRequestID</I> or an error number if an error occurs. The <I>lResult </I>actual parameter of the corresponding <B>ASYNC_COMPLETION</B> is zero if the function succeeds or an error number if an error occurs. Possible return values are as follows: </P>
+
+<P>LINEERR_INVALCALLHANDLE, LINEERR_OPERATIONFAILED, LINEERR_INVALADDRESS, LINEERR_RESOURCEUNAVAIL, LINEERR_INVALCOUNTRYCODE, LINEERR_DIALBILLING, LINEERR_INVALCALLSTATE, LINEERR_DIALQUIET, LINEERR_ADDRESSBLOCKED, LINEERR_DIALDIALTONE, LINEERR_NOMEM, LINEERR_DIALPROMPT, LINEERR_OPERATIONUNAVAIL. </P>
+
+<H4>Remarks</H4>
+
+<P>The service provider returns LINEERR_INVALCALLSTATE if the current state of the call does not allow dialing.</P>
+
+<P>The service provider carries out no dialing if it returns LINEERR_INVALADDRESS.</P>
+
+<P>If the service provider returns LINEERR_DIALBILLING, LINEERR_DIALQUIET, LINEERR_DIALDIALTONE, or LINEERR_DIALPROMPT, it should perform none of the actions otherwise performed by <B>TSPI</B>_<B>lineDial</B> (for example, no partial dialing, and no going offhook). This is because the service provider should pre-scan the number for unsupported characters first.</P>
+
+<P><B>TSPI</B>_<B>lineDial</B> is used for dialing on an existing call appearance; for example, call handles returned from <B>TSPI</B>_<B>lineMakeCall</B> with NULL as the <I>lpszDestAddress</I> or ending in ';', call handles returned from <B>TSPI</B>_<B>lineSetupTransfer</B> or <B>TSPI</B>_<B>lineSetupConference</B>. <B>TSPI</B>_<B>lineDial</B> can be invoked multiple times in the course of dialing in the case of multistage dialing, if the line's device capabilities permit it.</P>
+
+<P>If the string pointed to by the <I>lpszDestAddress </I>parameter in the previous call to the <B>TSPI</B>_<B>lineMakeCall</B> or <B>TSPI</B>_<B>lineDial</B> function is terminated with a semicolon, an empty string in the current call to <B>TSPI_lineDial</B> indicates that dialing is complete.</P>
+
+<P>Multiple addresses can be provided in a single dial string separated by CRLF. Service providers that provide inverse multiplexing can establish individual physical calls with each of the addresses, and return a single call handle to the aggregate of all calls to the application. All addresses would use the same country code.</P>
+
+<P>Dialing is considered complete after the address has been accepted by the service provider, not after the call is finally connected. Service providers that provide inverse multiplexing may allow multiple addresses to be provided at once. The service provider must send LINE_CALLSTATE messages to TAPI to inform it about the progress of the call.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Tapicomn.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_tspi_linemakecall.htm"><B>TSPI_lineMakeCall</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

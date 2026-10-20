@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoReleaseMarshalData</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoReleaseMarshalData"/>
+<MSHelp:RLTitle Title="CoReleaseMarshalData"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_coreleasemarshaldata"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoReleaseMarshalData</H1>
+
+<P>This function destroys a previously marshaled data packet. </P>
+
+<PRE class="syntax"><B>STDAPI CoReleaseMarshalData(
+IStream *</B><I>pStm</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStm</I></DT>
+
+<DD>[in] Pointer to the stream that contains the data packet to be destroyed.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return values E_FAIL, E_INVALIDARG,</P>
+
+<P>E_OUTOFMEMORY, and E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The data packet was successfully destroyed.</dd>
+
+<DT>STG_E_INVALIDPOINTER</DT>
+
+<DD>An <B>IStream</B> error dealing with the <I>pStm</I> parameter.</dd>
+
+<DT>CO_E_NOTINITIALIZED</DT>
+
+<DD>The <A HREF="_wcesdk_com_coinitialize.htm"><B>CoInitialize</B></A> function was not called on the current thread before this function was called.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CoReleaseMarshalData</B> function performs the following tasks:
+
+<OL type="1">
+	<LI>The function reads a CLSID from the stream. </li>
+
+	<LI>If COM's default marshaling implementation is being used, the function gets an <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A> pointer to an instance of the standard unmarshaler. If custom marshaling is being used, the function creates a proxy by calling the <A HREF="_wcesdk_com_cocreateinstance.htm"><B>CoCreateInstance</B></A> function, passing the CLSID it read from the stream, and requesting an <B>IMarshal</B> interface pointer to the newly created proxy. </li>
+
+	<LI>Using whichever <B>IMarshal</B> interface pointer it has acquired, the function calls <A HREF="_wcesdk_com_imarshal__releasemarshaldata.htm"><B>IMarshal::ReleaseMarshalData</B></A>. </li>
+</OL>
+
+<P>You typically do not call this function. The only situation in which you might need to call this function is if you use custom marshaling (write and use your own implementation of <B>IMarshal</B>). Examples of when <B>CoReleaseMarshalData</B> should be called include the following situations:
+
+<UL type="disc">
+	<LI>An attempt was made to unmarshal the data packet, but it failed.</li>
+
+	<LI>A marshaled data packet was removed from a global table.</li>
+</UL>
+
+<P>As an analogy, the data packet can be thought of as a reference to the original object, just as if it were another interface pointer being held on the object. Like a real interface pointer, that data packet must be released at some point. The use of <B>IMarshal::ReleaseMarshalData</B> to release data packets is analogous to the use of <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A> to release interface pointers. </P>
+
+<P>Note that you do not need to call <B>CoReleaseMarshalData</B> after a successful call of the <A HREF="_wcesdk_com_counmarshalinterface.htm"><B>CoUnmarshalInterface</B></A> function; that function releases the marshal data as part of the processing that it does. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

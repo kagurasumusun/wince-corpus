@@ -1,0 +1,79 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Joining and Leaving a Multicast Group</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Joining and Leaving a Multicast Group"/>
+<MSHelp:RLTitle Title="Joining and Leaving a Multicast Group"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_joining_and_leaving_a_multicast_group"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Joining and Leaving a Multicast Group</H1>
+
+<P>Before a host can receive IP multicast datagrams, it must become a member of one or more IP multicast groups. The following code example shows how a process requests to join a multicast group by using the <B>setsockopt</B> function.</P>
+
+<PRE class="code">struct ip_mreq mreq;
+// mreq is the ip_mreqstructure
+{
+  struct in_addr imr_multiaddr;  //The multicast group to join
+  struct in_addr imr_interface;  //The interface to join on
+}
+
+#define RECV_IP_ADDR  "225.6.7.8" // An arbitrary multicast address
+
+mreq.imr_multiaddr.s_addr = inet_addr(RECV_IP_ADDR);
+mreq.imr_interface.s_addr = INADDR_ANY;
+err = setsockopt(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sock,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPPROTO_IP,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP_ADD_MEMBERSHIP,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(char*)&amp;mreq,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sizeof(mreq));</PRE>
+
+<P>A socket must bind to an address before calling <B>setsockopt</B>.</P>
+
+<P>Every multicast group membership is associated with a single interface. It is possible to join the same group on more than one interface. To choose the default multicast interface, use INADDR_ANY as the address for <I>imr_interface</I>. To choose a specific interface capable of multicasting, use one of the host's local addresses.</P>
+
+<P>The following code example shows how to leave a multicast group.</P>
+
+<PRE class="code">struct ip_mreq mreq;
+setsockopt(
+&nbsp;&nbsp;&nbsp;sock,
+&nbsp;&nbsp;&nbsp;IPPROTO_IP,
+&nbsp;&nbsp;&nbsp;IP_DROP_MEMBERSHIP,
+&nbsp;&nbsp;&nbsp;(char*)&amp;mreq,
+&nbsp;&nbsp;&nbsp;sizeof(mreq));</PRE>
+
+<P>The memberships associated with a socket are dropped when the socket is closed, or the process holding the socket is terminated. However, more than one socket may claim a membership in a particular group, and the host remains a member of that group until the last membership is dropped.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

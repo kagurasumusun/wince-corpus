@@ -1,0 +1,74 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Capture Buffer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Capture Buffer"/>
+<MSHelp:RLTitle Title="Creating a Capture Buffer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_creating_a_capture_buffer_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IDirectSoundCapture_CreateCaptureBuffer_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_DSCBUFFERDESC_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Creating a Capture Buffer</H1>
+
+<P>You create a capture buffer by calling the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectSoundCapture::CreateCaptureBuffer</B></A> method of the DirectSoundCapture object. </P>
+
+<P>One of the parameters to the method is a <A HREF="JavaScript:hhobj_2.Click()"><B>DSCBUFFERDESC</B></A> structure that describes the characteristics of the desired buffer. The last member of this structure is a <B>WAVEFORMATEX</B> structure, which must be initialized with the details of the desired wave format. For more information on this structure, see <A HREF="dsover_5.htm">Sound Data</A>.</P>
+
+<P>Note that if your application is using DirectSound as well as DirectSoundCapture, capture buffer creation can fail when the format of the capture buffer is not the same as that of the primary buffer. The reason is that some cards have only a single clock and cannot support capture and playback at two different frequencies.</P>
+
+<P>The following example sets up a capture buffer that will hold 1 second of data:</P>
+
+<PRE class="code">/* In this example it is assumed that pDSC is a valid pointer to
+   a DirectSoundCapture object. */
+
+DSCBUFFERDESC              dscbd;
+LPDIRECTSOUNDCAPTUREBUFFER pDSCB;
+WAVEFORMATEX               wfx =
+    {WAVE_FORMAT_PCM, 2, 44100, 176400, 4, 16, 0};
+    // wFormatTag, nChannels, nSamplesPerSec, mAvgBytesPerSec,
+    // nBlockAlign, wBitsPerSample, cbSize
+dscbd.dwSize = sizeof(DSCBUFFERDESC);
+dscbd.dwFlags = 0;
+dscbd.dwBufferBytes = wfx.nAvgBytesPerSec;
+dscbd.dwReserved = 0;
+dscbd.lpwfxFormat = &amp;wfx;
+
+pDSCB = NULL;
+
+HRESULT hr = pDSC-&gt;CreateCaptureBuffer(&amp;dscbd,
+        &amp;pDSCB, NULL);
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

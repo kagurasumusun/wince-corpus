@@ -1,0 +1,52 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Restrictions on Native Device Drivers</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Restrictions on Native Device Drivers"/>
+<MSHelp:RLTitle Title="Restrictions on Native Device Drivers"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_restrictions_on_native_drivers"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Restrictions on Native Device Drivers</H1>
+
+<P>Device driver code runs with user-level access. With one exception, driver code can call Microsoft® Win32® APIs and access any resources available to user-level processes. For the most part, though, device drivers need only a limited number of simple APIs. Drivers do occasionally perform more complex tasks, such as creating threads or windows. For example, on many Windows CE&#0150;based platforms, the battery driver presents a dialog box to users when the batteries drop below a threshold voltage on order to notify users to replace the batteries.</P>
+
+<P>The only time that a driver cannot call Win32 APIs is when the driver processes a notification that the Windows CE-based platform is powering off or on. With one exception, the device driver must not perform any system calls while processing these notifications. To avoid these problems, restrict the device driver to the following actions when processing power off or power on notifications:
+
+<UL type="disc">
+	<LI>Saving or restoring the device state to or from preallocated storage</li>
+
+	<LI>Issuing any commands to the hardware pertinent to powering on or off</li>
+
+	<LI>Modifying memory within the driver to note that it has been shut down, usually by setting a flag variable.</li>
+</UL>
+
+<P>During power-on notification, the driver may call the <B>SetInterruptEvent</B> function to generate an artificial interrupt event. A typical scenario is for the power on routine to set a global flag representing a power on event, and call <B>SetInterruptEvent</B>. Once the power on sequence is complete, the IST would be triggered by the artificial interrupt, and would then detect the global flag and performs any power on processing that requires system calls. For examples of using <B>SetInterruptEvent</B>, see the <B>HWPowerOn</B> and <B>HWGetIntrType</B> functions in the P2io.c file.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

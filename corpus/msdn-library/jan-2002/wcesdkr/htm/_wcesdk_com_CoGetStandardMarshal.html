@@ -1,0 +1,141 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoGetStandardMarshal</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoGetStandardMarshal"/>
+<MSHelp:RLTitle Title="CoGetStandardMarshal"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_cogetstandardmarshal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoGetStandardMarshal</H1>
+
+<P>This function creates a default, or standard, marshaling object in either the client process or the server process, depending on the caller, and returns a pointer to that object's <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A> implementation.</P>
+
+<PRE class="syntax"><B>STDAPI CoGetStandardMarshal(
+REFIID </B><I>riid</I><B>,
+IUnknown *</B><I>pUnk</I><B>,
+DWORD </B><I>dwDestContext</I><B>,
+LPVOID </B><I>pvDestContext</I><B>,
+DWORD </B><I>mshlflags</I><B>,
+LPMARSHAL *</B><I>ppMarshal</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>riid</I></DT>
+
+<DD>[in] Reference to the identifier of the interface whose pointer is to be marshaled. This interface must be derived from the <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A> interface.</dd>
+
+<DT><I>pUnk</I></DT>
+
+<DD>[in] Pointer to the interface to be marshaled.</dd>
+
+<DT><I>dwDestContext</I></DT>
+
+<DD>[in] Destination context where the specified interface is to be unmarshaled. Values for <I>dwDestContext</I> come from the enumeration <B>MSHCTX</B>. Currently, unmarshaling can occur either in another apartment of the current process (MSHCTX_INPROC) or in another process on the same computer as the current process (MSHCTX_LOCAL).</dd>
+
+<DT><I>pvDestContext</I></DT>
+
+<DD>[in] Reserved for future use; must be NULL.</dd>
+
+<DT><I>mshlflags</I></DT>
+
+<DD>[in] Flag indicating whether the data to be marshaled is to be transmitted back to the client process&#0151;the normal case&#0151;or written to a global table, where it can be retrieved by multiple clients. Valid values come from the <B>MSHLFLAGS</B> enumeration.</dd>
+
+<DT><I>ppMarshal</I></DT>
+
+<DD>[out] Address of <B>IMarshal</B>* pointer variable that receives the interface pointer to the standard marshaler.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return values E_FAIL, E_OUTOFMEMORY and E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The <B>IMarshal</B> instance was returned successfully.</dd>
+
+<DT>CO_E_NOTINITIALIZED</DT>
+
+<DD>The <B>CoInitialize</B> function was not called on the current thread before this function was called.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CoGetStandardMarshal</B> function creates a default, or standard, marshaling object in either the client process or the server process, as may be necessary, and returns that object's <B>IMarshal</B> pointer to the caller. If you implement <B>IMarshal</B>, you may want your implementation to call <B>CoGetStandardMarshal</B> as a way of delegating to COM's default implementation any destination contexts that you don't fully understand or want to handle. Otherwise, you can ignore this function, which COM calls as part of its internal marshaling procedures.</P>
+
+<P>When the COM library in the client process receives a marshaled interface pointer, it looks for a CLSID to be used in creating a proxy for the purposes of unmarshaling the packet. If the packet does not contain a CLSID for the proxy, COM calls <B>CoGetStandardMarshal</B>, passing a NULL <I>pUnk</I> value. This function creates a standard proxy in the client process and returns a pointer to that proxy's implementation of <B>IMarshal</B>. COM uses this pointer to call <A HREF="_wcesdk_com_counmarshalinterface.htm"><B>CoUnmarshalInterface</B></A> to retrieve the pointer to the requested interface.</P>
+
+<P>If your OLE server application's implementation of <B>IMarshal</B> calls <A HREF="#_wcesdk_com_cogetstandardmarshal"><B>CoGetStandardMarshal</B></A>, you should pass both the IID of (<I>riid</I>), and a pointer to (<I>pUnk</I>), the interface being requested.</P>
+
+<P>This function performs the following tasks:
+
+<OL type="1">
+	<LI>Determines whether <I>pUnk</I> is NULL.</li>
+
+	<LI>If <I>pUnk</I> is NULL, creates a standard interface proxy in the client process for the specified <I>riid</I> and returns the proxy's <B>IMarshal</B> pointer.</li>
+
+	<LI>If pUnk is not NULL, checks to see if a marshaler for the object already exists, creates a new one if necessary, and returns the marshaler's <B>IMarshal</B> pointer.</li>
+</OL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

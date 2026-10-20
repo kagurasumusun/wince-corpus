@@ -1,0 +1,107 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CHeaderCtrl::DrawItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CHeaderCtrl::DrawItem"/>
+<MSHelp:RLTitle Title="CHeaderCtrl::DrawItem"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cheaderctrl_drawitem"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CHeaderCtrl::DrawItem</H1>
+
+<P>This method is called by the framework when a visual aspect of an owner-draw header control changes. The <I>itemAction</I> member of the <B>DRAWITEMSTRUCT</B> structure defines the drawing action that is to be performed.</P>
+
+<PRE class=syntax><B>virtual void DrawItem(
+LPDRAWITEMSTRUCT </B><I>lpDrawItemStruct</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpDrawItemStruct</I></DT>
+
+<DD>Specifies a pointer to a <A HREF="struct_12.htm"><B>DRAWITEMSTRUCT</B></A> structure describing the item to be painted.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>By default, this method does nothing. Override this method to implement drawing for an owner-draw <B>CHeaderCtrl</B> object.</P>
+
+<P>The application should restore all graphics device interface (GDI) objects selected for the display context supplied in <I>lpDrawItemStruct</I> before this method terminates.</P>
+
+<H4>Example</H4>
+
+<PRE>// NOTE: CMyHeaderCtrl is a class derived from CHeaderCtrl.
+// The CMyHeaderCtrl object was created as follows:
+//
+//&nbsp;&nbsp;CMyHeaderCtrl myHeader;
+//&nbsp;&nbsp;myHeader.Create(WS_CHILD|WS_VISIBLE|HDS_HORZ,
+//&nbsp;&nbsp;&nbsp;&nbsp; CRect(10, 10, 600, 50), pParentWnd, 1);
+
+
+// This example implements the DrawItem method for a
+// CHeaderCtrl-derived class that draws every item as a
+// 3D button using the text color red.
+void CMyHeaderCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
+{
+&nbsp;&nbsp;// This code only works with header controls.
+&nbsp;&nbsp;ASSERT(lpDrawItemStruct-&gt;CtlType == ODT_HEADER);
+
+&nbsp;&nbsp;HDITEM hdi;
+&nbsp;&nbsp;TCHAR  lpBuffer[256];
+
+&nbsp;&nbsp;hdi.mask = HDI_TEXT;
+&nbsp;&nbsp;hdi.pszText = lpBuffer;
+&nbsp;&nbsp;hdi.cchTextMax = 256;
+
+&nbsp;&nbsp;GetItem(lpDrawItemStruct-&gt;itemID, &amp;hdi);
+
+&nbsp;&nbsp;// Draw the button frame.
+&nbsp;&nbsp;::DrawFrameControl(lpDrawItemStruct-&gt;hDC,
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;lpDrawItemStruct-&gt;rcItem, DFC_BUTTON, DFCS_BUTTONPUSH);
+
+&nbsp;&nbsp;// Draw the text items using the text color red.
+&nbsp;&nbsp;COLORREF crOldColor = ::SetTextColor(lpDrawItemStruct-&gt;hDC,
+&nbsp;&nbsp;&nbsp;&nbsp;RGB(255,0,0));
+&nbsp;&nbsp;::DrawText(lpDrawItemStruct-&gt;hDC, lpBuffer, strlen(lpBuffer),
+&nbsp;&nbsp;&nbsp;&nbsp;&amp;lpDrawItemStruct-&gt;rcItem, DT_SINGLELINE|DT_VCENTER|DT_CENTER);
+&nbsp;&nbsp;::SetTextColor(lpDrawItemStruct-&gt;hDC, crOldColor);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxcmn.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_114.htm"><B>CWnd::OnDrawItem</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

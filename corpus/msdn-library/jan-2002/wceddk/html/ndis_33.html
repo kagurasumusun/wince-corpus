@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDISTest Configuration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NDISTest Configuration"/>
+<MSHelp:RLTitle Title="NDISTest Configuration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndistest_configuration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NDISTest Configuration</H1>
+
+<P>Before testing an NDIS miniport, you must set the Hapi.ini configuration file to indicate, which tests will be run, and how each test will be performed. To test a miniport successfully, you must define two sections in Hapi.ini: DLLs and Variables.</P>
+
+<P>The DLLs section specifies the DLLs to load. For NDISTest, this section is always two lines long and looks like the following:</P>
+
+<PRE class="code">[DLLs]
+NDISTST.DLL
+</PRE>
+
+<P>The Variables section consists of variable initializations; it can contain multiple lines. The first line must look like the following:</P>
+
+<PRE class="code">[Variables]
+</PRE>
+
+<P>Subsequent lines in the Variables section must have the following format:</P>
+
+<PRE class="code">&lt;variable_name&gt;=&lt;variable value&gt;
+</PRE>
+
+<P>All variables must begin with the dollar sign character ($). Variable names are limited to alphanumeric characters and the underscore character (_). Variables can have either strings or integers assigned as values. Strings must be enclosed in double quotation marks. You can specify integers as either decimal or hexadecimal numerals. To specify an integer as a hexadecimal numeral, use a <I>0x</I> prefix.</P>
+
+<P>A variable must be created and assigned to a value before it can be used in an expression or as an argument to a function. Therefore, a previously undefined variable can be used only to the left of the equal sign (=). Every time a variable is assigned, its definition is destroyed and recreated. Variables do not have fixed types, and type declarations are generally not necessary. The following examples show valid variable declarations:</P>
+
+<PRE class="code"># Variable $Temp is created as an integer variable with value 5.
+$Temp = 5
+
+# Previous variable $Temp is destroyed and new variable $Temp is created # as a floating point variable with the value 1.75
+$Temp = 1.75
+
+# Previous variable $Temp is destroyed, new variable $Temp is created as # a string with the value "string."
+$Temp = "string"
+</PRE>
+
+<P>For NDISTest, the Hapi.ini configuration file sets values for a number of global variables that control what tests are run and how they are run.</P>
+
+<P>The following are the global variables that are used in the Hapi.ini configuration file:
+
+<UL type="disc">
+	<LI><I>G_DebugLevel</I>
+<P>Creates a global variable that is used to maintain debug settings. The value is unimportant; the scripts will set it as they execute.
+</li>
+
+	<LI><I>G_WorkCard</I>
+<P>Specifies the name of the card to be tested.
+</li>
+
+	<LI><I>G_TrustedCard</I>
+<P>Specifies the name of a trusted card in the system that will be used to assist in testing the card that is specified in <I>G_WorkCard</I>. This variable can be set to the null string, in which case all of the tests that require two cards in the same system will be skipped.
+</li>
+
+	<LI><I>G_MessageCard</I>
+<P>Specifies the name of the card that is used to send commands to the remote Windows&nbsp;NT system that is running the NDISTest server that is used for two-machine testing. This variable can be set to the null string, in which case all of the two-machine tests will be skipped.
+</li>
+
+	<LI><I>G_Media</I>
+<P>Specifies the media to be tested. It must be set always to a value of 1 (Ethernet).
+</li>
+
+	<LI><I>G_Ndis30Flag</I>
+<P>This variable must be set always to 0.
+</li>
+
+	<LI><I>G_ScriptName</I>
+<P>This variable has an effect only if the DO_RUNTEST bit is set in the <I>G_TestOptions</I> variable. If the DO_RUNTEST bit is set, then this variable specifies the name of a specific script to be run, instead of running the functional, stress, or hardware compatibility testing suites.
+</li>
+
+	<LI><I>G_TestOptions</I>
+<P>This variable is a combination of the following:
+
+<UL type="disc">
+	<LI>DO_FUNCTIONAL_TESTS (0x00001)
+<P>If set, then functional testing will be done.
+</li>
+
+	<LI>DO_STRESS_TESTS (0x00002)
+<P>If set, then stress testing will be done.
+</li>
+
+	<LI>DO_HCT_TESTS (0x00008)
+<P>If set, then hardware compatibility testing will be done.
+</li>
+
+	<LI>DO_RUNTEST (0x00010)
+<P>If set, then a single script only will be run. Functional, stress, and hardware compatibility testing will be skipped.
+
+<P>The <I>G_ScriptName</I> variable must be set in the Hapi.ini configuration file and must be the name of a script file to be run. The following is an example of this:
+
+<PRE class="code">G_ScriptName=“scripts\lan\1c_srecv.tst”
+</PRE>
+</li>
+
+	<LI>ENABLE_VERBOSE_FLAG (0x10000)
+<P>If set, then the output files that are generated will include more detail.
+</li>
+
+	<LI>SKIP_1CARD_TESTS (0x20000)
+<P>If set, then the tests that involve only a single card (1c_xxx.tst scripts) will be skipped.
+</li>
+</UL>
+</li>
+</UL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

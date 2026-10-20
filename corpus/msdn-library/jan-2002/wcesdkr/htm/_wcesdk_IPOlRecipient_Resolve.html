@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPOlRecipient::Resolve</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPOlRecipient::Resolve"/>
+<MSHelp:RLTitle Title="IPOlRecipient::Resolve"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ipolrecipient_resolve"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IPOlRecipient::Resolve</H1>
+
+<P>This method is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This method matches first and last names of a recipient against the people in the Contacts database contained on the Windows&nbsp;CE device. It looks for both complete and partial matches and after obtaining a match sets the <B>Name</B> and <B>Address</B> properties for the recipient.</P>
+
+<PRE class="syntax"><B>HRESULT Resolve(&nbsp;VARIANT_BOOL</B> <I>fDisplayUI</I>, <B>VARIANT_BOOL * </B><I>pfResolved </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>fDisplayUI</I></DT>
+
+<DD>[in] If TRUE, <B>Resolve</B> displays a dialog box listing all matching e-mail addresses if there is more than one matching address. The user can then select the address for the contact’s Address property. The parent handle for this dialog box is the window handle provided in the <B>Login</B> call. If FALSE, <B>Resolve</B> does not resolve the address when there is more than one match and the <I>pfResolved </I>parameter returns FALSE. This parameter is optional for Visual BASIC, with a default value of FALSE.</dd>
+
+<DT><I>pfResolved</I></DT>
+
+<DD>[out] Set to TRUE if the name resolves properly or FALSE if it does not.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates there were no errors whether or not the name resolved properly. If an error occurs, the appropriate <B>HRESULT</B> value is returned.</P>
+
+<H4>Remarks</H4>
+
+<P>To get a pointer to <B>IPOlRecipient</B>, first get a pointer to an <B>IRecipient</B> object and then call the <B>IUnknown</B> method <B>QueryInterface</B>. If the call to <B>QueryInterface</B> fails, it means that the object does not support the interface, so you cannot call Resolve. Checking for this is useful if you want to write code that runs on Windows&nbsp;CE 2.0 in addition to Windows&nbsp;CE 3.0&#0151;only Windows&nbsp;CE 3.0 supports the <B>IPOlRecipient</B> interface.</P>
+
+<H4>Code Example</H4>
+
+<P>The following C++ code snippet shows how to resolve a recipient:</P>
+
+<PRE class="code">void ResolveName(IRecipients *pRecipientList)
+{
+IRecipient *pRecip;
+IPOlRecipient *pRecip2;
+BSTR pwsz;
+
+pRecipientList-&gt;Add(TEXT("Tom"), &amp;pRecip);
+
+// Call QueryInterface to get the new interface on the same recipient
+pRecip-&gt;QueryInterface(IID_IPOlRecipient, (LPVOID *) &amp;pRecip2);
+
+// Resolve the name
+pRecip2-&gt;Resolve();
+
+// You can examine the Address with either pRecip
+// or pRecip2&#0151;they both point to the same object
+pRecip-&gt;get_Address(&amp;pwsz);
+// or
+pRecip2-&gt;get_Address(&amp;pwsz);
+SysFreeString(pwsz);
+
+// Release both objects
+pRecip2-&gt;Release();
+pRecip-&gt;Release();
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_irecipient_unknown.htm">IRecipient::Unknown</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

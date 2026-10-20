@@ -1,0 +1,85 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Worker Callback Functions and Data</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Worker Callback Functions and Data"/>
+<MSHelp:RLTitle Title="Worker Callback Functions and Data"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_worker_callback_functions_and_data"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Worker Callback Functions and Data</H1>
+
+<P>The callback functions that implement the extension agent perform the actual work of the extension agent. Because the SnmpTfx framework does not hand an OID of the selected object to the callback routines, there must be at least as many functions as there are unique accessible data elements (not counting array instances) in the MIB to eliminate ambiguity about the object that is being accessed. The framework allows you to implement a separate Get and Set operation for each unique data element, but it does not require it.</P>
+
+<P>You do not need to define <B>Get</B> operations for read-only MIB variables. Inaccessible variables do not require a definition of either a Get or Set operation.</P>
+
+<P>In addition to defining the <B>Get</B> and<B>Set</B> operations for each MIB variable, you need to define a buffer structure for each MIB element that is to be accessed. The framework creates the per-variable buffer to pass information to and from your callback functions. You must define a single structure that contains one <B>AsnAny</B> variable for each MIB variable that is accessed in your extension agent.</P>
+
+<P>The following code example shows how to define a single structure in the extension agent:</P>
+
+<PRE class="code">typedef struct
+{
+  AsnAny snmpErrNumber;
+  AsnAny snmpErrCode;
+  AsnAny snmpTriggerTrap;
+} SNMPTEST_VARS;</PRE>
+
+<P>The order of the MIB variable definitions must match the lexicographic ordering of the variables in your MIB that are accessed. After declaring the functions and data buffer variables in a header file (see “Mibfuncs.h” in the SNMP sample, which is included in %_WINCEROOT\Public\Astb\Samples\Snmpsamp), you need to define each MIB variable in a <B>#define</B> declaration.</P>
+
+<P>You need to define the Get and Set operations, as well as a variable instance for getting and setting for each MIB variable (<I>SomeMibVar</I>) that has read and write access. The following code example uses <I>SomeMibVar</I> as the common base name:</P>
+
+<PRE class="code">UINT accessor_function (
+  UINT actID,
+  AsnAny *aryObject,
+  UINT *pErrIndex
+);
+
+UINT setter_function (
+  UINT actID,
+  AsnAny *aryObject,
+  UINT *pErrIndex
+);
+
+typedef struct
+{
+  AsnAny someAccessedVariable ;
+  (...plus other variables...)
+} MY_MIB_STRUCT ;
+
+#define gf_SomeMibVar              accessor_function
+#define sf_SomeMibVar              setter_function
+#define gb_SomeMibVar              MY_MIB_STRUCT
+#define sb_someMibVar              MY_MIB_STRUCT</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

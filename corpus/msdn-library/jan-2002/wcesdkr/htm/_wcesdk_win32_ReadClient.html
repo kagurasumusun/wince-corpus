@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ReadClient</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ReadClient"/>
+<MSHelp:RLTitle Title="ReadClient"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_readclient"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>ReadClient</H1>
+
+<P>This function reads data from the body of the client's HTTP request.</P>
+
+<PRE class="syntax"><B>BOOL ReadClient(
+HCONN </B><I>hConn</I><B>,
+LPVOID </B><I>lpvBuffer</I><B>,
+LPDWORD </B><I>lpdwSize</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hConn </I></DT>
+
+<DD>A connection handle.</dd>
+
+<DT><I>lpvBuffer</I> </DT>
+
+<DD>Points to the buffer area to receive the requested information.</dd>
+
+<DT><I>lpdwSize</I> </DT>
+
+<DD>Points to a DWORD that indicates the number of bytes available in the buffer specified by <I>lpvBuffer</I>. On return, <I>lpdwSize</I> will point to a DWORD that contains the number of bytes actually transferred into the buffer. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is TRUE. If an error occurs, the return value is FALSE. The <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function can be called to determine the error.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>ReadClient</B> function reads information from the body of the Web client's HTTP request into the buffer supplied by the caller. Thus, the call can be used to read data from an HTML form that uses the POST method.</P>
+
+<P>It is not necessary to call <B>ReadClient</B> unless the EXTENSION_CONTROL_BLOCK member <I>cbTotalBytes</I> is larger than <I>cbAvailable</I> (also in the <A HREF="_wcesdk_win32_extension_control_block.htm"><B>EXTENSION_CONTROL_BLOCK</B></A>). If the buffer size that your extension has allocated, specified by <I>lpdwSize</I>, is less than the number of bytes available, as specified by the <B>EXTENSION_CONTROL_BLOCK</B> member <I>cbAvailable</I>, then your <B>ReadClient</B> call will return immediately with the requested amount of data. Your extension will need to call <B>ReadClient</B> multiple times to retrieve all the data. If the buffer size is greater than the number of bytes available, <B>ReadClient</B> will fill the available space.</P>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;<B>ReadClient</B> will time out after 60 seconds, regardless of any IIS server timeout settings. If you expect that the client of your ISAPI extension will regularly take more than 60 seconds to respond to a read, then you should performs asynchronous reads through the HSE_REQ_ASYNC_READ_CLIENT <A HREF="_wcesdk_win32_serversupportfunction.htm"><B>ServerSupportFunction</B></A>, instead of synchronous <B>ReadClient</B> calls. Asynchronous read requests make better use of the IIS I/O thread pool, and can have timeout times regulated using the connection timeout value, accessible in the MMC.</P>
+
+<P>Alternatively, if you are unable to use asynchronous reads, you can loop by initiating another synchronous <B>ReadClient</B> call after the 60-second timeout period has elapsed.</P>
+
+<P>If the socket on which the server is listening to the client is closed, <B>ReadClient</B> will return TRUE, but with zero bytes read.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>httpext.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Httpextn.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_serversupportfunction.htm"><B>ServerSupportFunction</B></A>, <A HREF="_wcesdk_win32_extension_control_block.htm"><B>EXTENSION_CONTROL_BLOCK</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

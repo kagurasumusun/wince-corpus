@@ -1,0 +1,126 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RDF_TRANSMIT</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="RDF_TRANSMIT"/>
+<MSHelp:RLTitle Title="RDF_TRANSMIT"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_rdf_transmit"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>RDF_TRANSMIT</H1>
+
+<P>The <B>RDF_TRANSMIT</B> callback function performs data transmissions. This callback function is mandatory.</P>
+
+<PRE class="syntax"><B>NTSTATUS (*ReaderFunction[RDF_TRANSMIT])(
+  PSMARTCARD_EXTENSION </B><I>SmartcardExtension</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT>SmartcardExtension </DT>
+
+<DD>Points to the smart card extension of the device. <I>SmartcardExtension-&gt;MajorIoControlCode</I> contains IOCTL_SMARTCARD_TRANSMIT. <I>SmartcardExtension-&gt;IoRequest.RequestBuffer</I> points to an <B>SCARD_IO_REQUEST</B> structure followed by data to be transmitted to the card. <I>SmartcardExtension-&gt;IoRequest.RequestBufferLength</I> contains the number of bytes to be transmitted to the card. <I>SmartcardExtension-&gt;IoRequest.ReplyBufferLength</I> contains the size of the reply buffer. On output, <I>SmartcardExtension-&gt;IoRequest.ReplyBuffer</I> points to the buffer that receives the <B>SCARD_IO_REQUEST</B> structure, plus the result of the card, and <I>SmartcardExtension-&gt;IoRequest.Information</I> receives the actual number of bytes returned by the card, plus the size of <B>SCARD_IO_REQUEST</B> structure.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>When this function is called, <I>SmartcardExtension-&gt;IoRequest.RequestBuffer</I> points to a <B>SCARD_IO_REQUEST</B> structure followed by data to be transmitted. SCARD_IO_REQUEST has the following format:</P>
+
+<PRE class="code">typedef struct _SCARD_IO_REQUEST{
+    DWORD dwProtocol;   // Protocol identifier
+    DWORD cbPciLength;  // Protocol Control Information Length
+} SCARD_IO_REQUEST, *PSCARD_IO_REQUEST, *LPSCARD_IO_REQUEST;
+ </PRE>
+
+<P>The dwProtocol member must contain the protocol identifier that was returned by a call to IOCTL_SMARTCARD_SET_PROTOCOL. </P>
+
+<P>The cbPciLength member contains the size of this structure, which is usually eight. This structure will be used mainly for future implementations. </P>
+
+<P>The structure is followed by (protocol) data to be transmitted to the card. Depending on the protocol to be used for this transmission, the library offers several support functions. See <A HREF="funct_1_386.htm"><B>SmartcardT1Request</B></A>. </P>
+
+<P>Note, RequestBuffer and ReplyBuffer point to the same system buffer. If you use the library function SmartcardxxRequest and SmartcardxxReply, you do not have to worry that you might overwrite the input buffer. If you do not use these functions, make a copy of the RequestBuffer before you start transmissions.</P>
+
+<P>The implementation requires you to copy the SCARD_IO_REQUEST structure to the ReplyBuffer, followed by the data received from the card. Again, if you use the SmartcardxxRequest and SmartcardxxReply functions, you do not need to copy the structure because the library does this.</P>
+
+<H4>Return Values</H4>
+
+<P>This function returns an NTSTATUS value. Possible values are the following:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STATUS_SUCCESS</TD>
+<TD width=50%>Transmission successful.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STATUS_NO_MEDIA</TD>
+<TD width=50%>No card is in the reader.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STATUS_IO_TIMEOUT</TD>
+<TD width=50%>The request has timed out.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>STATUS_INVALID_DEVICE_REQUEST</TD>
+<TD width=50%>The protocol defined by <B>dwProtocol</B> is invalid.</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=17%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

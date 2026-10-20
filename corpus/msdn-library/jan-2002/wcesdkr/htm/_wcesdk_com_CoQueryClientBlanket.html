@@ -1,0 +1,143 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoQueryClientBlanket</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoQueryClientBlanket"/>
+<MSHelp:RLTitle Title="CoQueryClientBlanket"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_coqueryclientblanket"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoQueryClientBlanket</H1>
+
+<P>This function is called by the server to find out about the client that invoked the method executing on the current thread.</P>
+
+<PRE class="syntax"><B>HRESULT CoQueryClientBlanket(
+DWORD *</B><I>pAuthnSvc</I><B>,
+DWORD *</B><I>pAuthzSvc</I><B>,
+OLECHAR **</B><I>pServerPrincName</I><B>,
+DWORD *</B><I>pAuthnLevel</I><B>,
+DWORD *</B><I>pImpLevel</I><B>,
+RPC_AUTHZ_HANDLE *</B><I>pPrivs</I><B>,
+DWORD **</B><I>pCapabilities</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pAuthnSvc</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current authentication service. This will be a single value taken from the list of <B>RPC_C_AUTHN_xxx</B> constants. May be NULL, in which case the current authentication service is not returned.</dd>
+
+<DT><I>pAuthzSvc</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current authorization service. This will be a single value taken from the list of <B>RPC_C_AUTHZ_xxx</B> constants. May be NULL, in which case the current authorization service is not returned.</dd>
+
+<DT><I>pServerPrincName</I></DT>
+
+<DD>[out] Pointer to the current principal name. The string will be allocated by the callee using <A HREF="_wcesdk_com_cotaskmemalloc.htm"><B>CoTaskMemAlloc</B></A> and must be freed by the caller using <A HREF="_wcesdk_com_cotaskmemfree.htm"><B>CoTaskMemFree</B></A> when they are done with it. May be NULL, in which case the principal name is not returned. ‹By default, SSL principal names will be in the msstd form. The fullsic form will be returned if EOAC_MAKE_FULLSIC is specified in the pCapabilities parameter. For more information on msstd and fullsic, see the SSL section of COM and Security Packages.› </dd>
+
+<DT><I>pAuthnLevel</I></DT>
+
+<DD>[out] Pointer to a DWORD value defining the current authentication level. This will be a single value taken from the list of <B>RPC_C_AUTHN_LEVEL_xxx</B> constants. May be NULL, in which case the current authentication level is not returned.</dd>
+
+<DT><I>pImpLevel</I></DT>
+
+<DD>[out] Must be NULL. This parameter is reserved for future use.</dd>
+
+<DT><I>pPrivs</I></DT>
+
+<DD>[out] Pointer to a handle that indicates the privilege information for the client application. The format of the structure that the handle refers to depends on the authentication service. The application should not write or free the memory. The information is only valid for the duration of the current call. NULL may be returned, in which case the privilege information is not returned. For NTLMSSP and Kerberos, this is the client's principal name.</dd>
+
+<DT><I>pCapabilities</I></DT>
+
+<DD>[in, out] Pointer to return flags indicating capabilities of the call. May be NULL, in which case the flags indicating capabilities are not returned. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>Success.</dd>
+
+<DT>E_INVALIDARG</DT>
+
+<DD>One or more arguments are invalid.</dd>
+
+<DT>E_OUTOFMEMORY</DT>
+
+<DD>Insufficient memory to create the <I>pServerPrincName</I> out-parameter.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CoQueryClientBlanket</B> is called by the server to get security information about the client that invoked the method executing on the current thread. This function encapsulates the following sequence of common calls (error handling excluded):</P>
+
+<PRE class="code">CoGetCallContext(IID_IServerSecurity, (void**)&amp;pss);
+pss-&gt;QueryBlanket(pAuthnSvc, pAuthzSvc, pServerPrincName,
+                  pAuthnLevel, pImpLevel, pPrivs, pCapabilities);
+pss-&gt;Release(); </PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_iserversecurity__queryblanket.htm"><B>IServerSecurity::QueryBlanket</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

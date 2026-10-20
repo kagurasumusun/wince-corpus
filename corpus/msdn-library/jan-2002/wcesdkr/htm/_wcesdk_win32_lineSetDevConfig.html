@@ -1,0 +1,154 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineSetDevConfig</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineSetDevConfig"/>
+<MSHelp:RLTitle Title="lineSetDevConfig"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_linesetdevconfig"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>lineSetDevConfig</H1>
+
+<P>This function enables the application to restore the configuration of a media-stream device on a line device to a setup previously obtained using the <A HREF="_wcesdk_win32_linegetdevconfig.htm"><B>lineGetDevConfig</B></A> function. For example, the contents of this structure could specify data rate, character format, modulation schemes, and error control protocol settings for a "datamodem" media device associated with the line.</P>
+
+<PRE class="syntax"><B>LONG</B> <B>lineSetDevConfig</B> <B>(</B>
+<B>DWORD</B> <I>dwDeviceID</I><B>, </B>
+<B>LPVOID</B> <B>const</B> <I>lpDeviceConfig</I><B>, </B>
+<B>DWORD</B> <I>dwSize</I><B>, </B>
+<B>LPCTSTR</B> <I>lpszDeviceClass</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwDeviceID </I></DT>
+
+<DD>[in] Specifies the line device to be configured. </dd>
+
+<DT><I>lpDeviceConfig </I></DT>
+
+<DD>[in] Pointer to the opaque configuration data structure that was returned by <B>lineGetDevConfig</B> in the variable portion of the <A HREF="_wcesdk_win32_varstring_str.htm"><B>VARSTRING</B></A> structure. </dd>
+
+<DT><I>dwSize </I></DT>
+
+<DD>[in] Specifies the number of bytes in the structure pointed to by <I>lpDeviceConfig</I>. This value is returned in the <I>dwStringSize</I> member in the <B>VARSTRING</B> structure returned by <B>lineGetDevConfig</B>. </dd>
+
+<DT><I>lpszDeviceClass </I></DT>
+
+<DD>[in] Pointer to a null-terminated string that specifies the device class of the device whose configuration is to be set. Valid device class strings are the same as those specified for the <A HREF="_wcesdk_win32_linegetid.htm"><B>lineGetID</B></A> function. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Zero indicates success. A negative error number indicates that an error occurred. Possible error values are as follows:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_BADDEVICEID</TD>
+<TD width=52%>LINEERR_NODEVICE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_NODRIVER</TD>
+<TD width=52%>LINEERR_NOMEM</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INVALDEVICECLASS</TD>
+<TD width=52%>LINEERR_OPERATIONFAILED</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INVALLINESTATE</TD>
+<TD width=52%>LINEERR_OPERATIONUNAVAIL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INVALPARAM</TD>
+<TD width=52%>LINEERR_RESOURCEUNAVAIL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INVALPOINTER</TD>
+<TD width=52%>LINEERR_UNINITIALIZED</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>Call states are device specific. </P>
+
+<P>Typically, an application calls <B>lineGetID</B> to identify the media stream device associated with a line, and then calls <A HREF="_wcesdk_win32_lineconfigdialogedit.htm"><B>lineConfigDialogEdit</B></A> to enable the user to change the device configuration and affect the current call or next call with those changes by passing the output of <B>lineConfigDialogEdit</B> to <B>lineSetDevConfig</B>. When the user wants to call the same destination again, this <B>lineSetDevConfig</B> function can be used to restore the configuration settings selected by the user. </P>
+
+<P>The exact format of the data contained within the structure is specific to the line and media stream API (device class), is undocumented, and is undefined. The application must treat it as "opaque" and not manipulate the contents directly. Generally, the structure can be sent using this function only to the same device from which it was obtained. Certain telephony service providers may, however, permit structures to be interchanged between identical devices (that is, multiple ports on the same multiport modem card). Such interchangeability is not guaranteed in any way, even for devices of the same device class. </P>
+
+<P>Some service providers may permit the configuration to be set while a call is active, and others may not. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Tapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_linegetdevconfig.htm"><B>lineGetDevConfig</B></A>, <A HREF="_wcesdk_win32_linegetid.htm"><B>lineGetID</B></A>, <A HREF="_wcesdk_win32_lineconfigdialogedit.htm"><B>lineConfigDialogEdit</B></A>, <A HREF="_wcesdk_win32_varstring_str.htm"><B>VARSTRING</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

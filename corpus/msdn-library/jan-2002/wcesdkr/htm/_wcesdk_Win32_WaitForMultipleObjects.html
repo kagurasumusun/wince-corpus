@@ -1,0 +1,155 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WaitForMultipleObjects</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="WaitForMultipleObjects"/>
+<MSHelp:RLTitle Title="WaitForMultipleObjects"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_waitformultipleobjects"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>WaitForMultipleObjects</H1>
+
+<P>This function returns when one of the following occurs:
+
+<UL type="disc">
+	<LI>Either any one of the specified objects are in the signaled state.</li>
+
+	<LI>The time-out interval elapses.</li>
+</UL>
+
+<PRE class="syntax"><B>DWORD WaitForMultipleObjects(</B>
+<B>DWORD</B> <I>nCount</I><B>, </B>
+<B>CONST HANDLE *</B><I>lpHandles</I><B>, </B>
+<B>BOOL</B> <I>fWaitAll</I><B>, </B>
+<B>DWORD</B> <I>dwMilliseconds </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nCount</I></DT>
+
+<DD>Specifies the number of object handles in the array pointed to by <I>lpHandles</I>. The maximum number of object handles is MAXIMUM_WAIT_OBJECTS. </dd>
+
+<DT><I>lpHandles</I></DT>
+
+<DD>Pointer to an array of object handles. For a list of the object types whose handles can be specified, see the following Remarks section. The array can contain handles of objects of different types. </dd>
+
+<DT><I>fWaitAll</I></DT>
+
+<DD>Specifies the wait type. This parameter must be set to FALSE. This causes function to return when the state of any one of the objects set to is signaled. The return value indicates the object whose state caused the function to return.</dd>
+
+<DT><I>dwMilliseconds</I></DT>
+
+<DD>Specifies the time-out interval, in milliseconds. The function returns if the interval elapses, even if the conditions specified by the <I>bWaitAll</I> parameter are not met. If <I>dwMilliseconds</I> is zero, the function tests the states of the specified objects and returns immediately. If <I>dwMilliseconds</I> is INFINITE, the function’s time-out interval never elapses. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value indicates the event that caused the function to return. This value can be one of the following.
+
+<DL>
+<DT>WAIT_OBJECT_0 to (WAIT_OBJECT_0 + <I>nCount</I> &#0150;1)</DT>
+
+<DD>The return value minus WAIT_OBJECT_0 indicates the <I>lpHandles</I> array index of the object that satisfied the wait. If more than one object became signaled during the call, this is the array index of the signaled object with the smallest index value of all the signaled objects.</dd>
+
+<DT>WAIT_ABANDONED_0 to (WAIT_ABANDONED_0 + <I>nCount</I> &#0150;1)</DT>
+
+<DD>The return value minus WAIT_ABANDONED_0 indicates the <I>lpHandles</I> array index of an abandoned mutex object that satisfied the wait.</dd>
+
+<DT>WAIT_TIMEOUT</DT>
+
+<DD>The time-out interval elapsed and the condition specified by the <I>fWaitAll</I> parameter are not satisfied.</dd>
+</DL>
+
+<P>WAIT_FAILED indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>Windows CE versions 1.0 through 2.12 does not support waiting for semaphores, change notification objects, input, and timers. Windows 3.0 and later supports waiting for semaphores.</P>
+
+<P>For Windows CE versions 1.0 and 1.01, this function cannot wait on process or thread handles. </P>
+
+<P>The <B>WaitForMultipleObjects</B> function determines whether the wait criteria have been met. If the criteria have not been met, the calling thread enters an efficient wait state, consuming very little processor time while waiting for the criteria to be met.</P>
+
+<P>Before returning, a wait function modifies the state of some types of synchronization objects. Modification occurs only for the object or objects whose signaled state caused the function to return. When <I>fWaitAll</I> is FALSE, and multiple objects are in the signaled state, the function chooses one of the objects to satisfy the wait; the states of the objects not selected are unaffected. </P>
+
+<P>The <B>WaitForMultipleObjects</B> function can specify handles of any of the following object types in the <I>lpHandles</I> array:
+
+<UL type="disc">
+	<LI>Event</li>
+
+	<LI>Mutex</li>
+
+	<LI>Process</li>
+
+	<LI>Thread</li>
+
+	<LI>Semaphore</li>
+</UL>
+
+<P>Use caution when calling the wait functions and code that directly or indirectly creates windows. If a thread creates any windows, it must process messages. Message broadcasts are sent to all windows in the system. A thread that uses a wait function with no time-out interval may cause the system to become deadlocked. Two examples of code that indirectly creates windows are DDE and COM <B>CoInitialize</B>. Therefore, if you have a thread that creates windows, use <A HREF="_wcesdk_win32_msgwaitformultipleobjects.htm"><B>MsgWaitForMultipleObjects</B></A> or <A HREF="_wcesdk_win32_msgwaitformultipleobjectsex.htm"><B>MsgWaitForMultipleObjectsEx</B></A>, rather than <B>WaitForMultipleObjects</B>.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.01 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Nk.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createevent.htm"><B>CreateEvent</B></A>, <A HREF="_wcesdk_win32_createfile.htm"><B>CreateFile</B></A>, <A HREF="_wcesdk_win32_createmutex.htm"><B>CreateMutex</B></A>, <A HREF="_wcesdk_win32_createprocess.htm"><B>CreateProcess</B></A>, <A HREF="_wcesdk_win32_createthread.htm"><B>CreateThread</B></A>, <A HREF="_wcesdk_win32_pulseevent.htm"><B>PulseEvent</B></A>, <A HREF="_wcesdk_win32_resetevent.htm"><B>ResetEvent</B></A>, <A HREF="_wcesdk_win32_setevent.htm"><B>SetEvent</B></A>, <A HREF="_wcesdk_win32_waitforsingleobject.htm"><B>WaitForSingleObject</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SMARTCARD_EXTENSION</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SMARTCARD_EXTENSION"/>
+<MSHelp:RLTitle Title="SMARTCARD_EXTENSION"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_smartcard_extension"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SMARTCARD_EXTENSION</H1>
+
+<P>The <B>SMARTCARD_EXTENSION</B> structure is used by the driver to access all the other smart card data structures, and additional information. This structure is passed to all callback functions.</P>
+
+<PRE class="syntax"><B>typedef struct _SMARTCARD_EXTENSION {
+ULONG </B><I>Version;</I><B>
+VENDOR_ATTR </B><I>VendorAttr</I><B>;
+NTSTATUS (*</B><I>ReaderFunction</I><B>[16])(PSMARTCARD_EXTENSION);
+SCARD_CARD_CAPABILITIES </B><I>CardCapabilities</I><B>;
+ULONG </B><I>LastError</I><B>;
+struct {
+    PULONG </B><I>Information</I><B>;
+    PUCHAR </B><I>RequestBuffer</I><B>;
+    ULONG </B><I>RequestBufferLength</I><B>;
+    PUCHAR </B><I>ReplyBuffer</I><B>;
+    ULONG </B><I>ReplyBufferLength</I><B>;
+} </B><I>IoRequest</I><B>;
+ULONG </B><I>MajorIoControlCode</I><B>;
+ULONG </B><I>MinorIoControlCode</I><B>;
+POS_DEP_DATA </B><I>OsData</I><B>;
+SCARD_READER_CAPABILITIES </B><I>ReaderCapabilities</I><B>;
+PREADER_EXTENSION </B><I>ReaderExtension</I><B>;
+SMARTCARD_REPLY </B><I>SmartcardReply</I><B>;
+SMARTCARD_REQUEST </B><I>SmartcardRequest</I><B>;
+T0_DATA </B><I>T0</I><B>;
+T1_DATA </B><I>T1</I><B>;
+ULONG </B><I>Reserved</I><B>[25];
+} SMARTCARD_EXTENSION, *PSMARTCARD_EXTENSION;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>Version</I></DT>
+
+<DD>The version of this structure.</dd>
+
+<DT><I>VendorAttr</I></DT>
+
+<DD>Mandatory vendor attribute data.</dd>
+
+<DT><I>ReaderFunction</I></DT>
+
+<DD>An array of smart card reader callback functions.</dd>
+
+<DT><I>CardCapabilities</I></DT>
+
+<DD>The capabilities of the currently inserted card.</dd>
+
+<DT><I>LastError</I></DT>
+
+<DD>The last error of an overlapped operation.</dd>
+
+<DT><I>IoRequest</I></DT>
+
+<DD>A structure containing the data of a user’s I/O request.</dd>
+
+<DT><I>MajorIoControlCode</I></DT>
+
+<DD>The major I/O Control Code for the current request.</dd>
+
+<DT><I>MinorIoControlCode</I></DT>
+
+<DD>The minior I/O Control Code for the current request.</dd>
+
+<DT><I>OsData </I></DT>
+
+<DD>Pointer to a structure containing information dependent on the driver type. It is managed by the smart-card driver library.
+
+<PRE class="code"><B>typedef struct _OS_DEP_DATA {
+</B>    <B>struct _SMARTCARD_EXTENSION *</B><I>pSmartCardExtension</I>;
+<B>    CRITICAL_SECTION </B><I>CritSect</I>; // used to control entry into driver
+    <B>HANDLE </B><I>hChangeEvent</I>; // signaled on card-insertion event
+    <B>HANDLE </B><I>hCancelEvent</I>; // signaled on CANCEL_BLOCKING ioctls
+<B>} OS_DEP_DATA, *POS_DEP_DATA;</B></PRE>
+
+
+<P>This structure will be allocated by a call to <A HREF="funct_1_379.htm"><B>SmartcardInitialize</B></A>. You cannot use this structure to store driver-dependent information. For card-tracking requests, <B>NotificationIrp</B> is set to the requesting <B>Irp</B>. See <A HREF="funct_1_355.htm"><B>RDF_CARD_TRACKING</B></A> for more information about card tracking.
+</dd>
+
+<DT><I>ReaderCapabilities</I></DT>
+
+<DD>Capabilities of the keyboard reader.</dd>
+
+<DT><I>ReaderExtension</I></DT>
+
+<DD>A pointer to reader specific data.</dd>
+
+<DT><I>SmartcardReply</I></DT>
+
+<DD>A buffer where the card reader stores all replies from the smart card.</dd>
+
+<DT><I>SmartcardRequest</I></DT>
+
+<DD>The current command to send to the smart card.</dd>
+
+<DT><I>T0</I></DT>
+
+<DD>Data for T=0.</dd>
+
+<DT><I>T1</I></DT>
+
+<DD>Data for T=1.</dd>
+
+<DT><I>Reserved</I></DT>
+
+<DD>A buffer of 25 ULONG values, reserved for future use. Drivers should not use this space.</dd>
+</DL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

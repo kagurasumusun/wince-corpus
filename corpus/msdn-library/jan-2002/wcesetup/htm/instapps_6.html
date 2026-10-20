@@ -1,0 +1,200 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CEDevice</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CEDevice"/>
+<MSHelp:RLTitle Title="CEDevice"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term=""/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H2><A NAME="_wcesdk_cedevice"></A>CEDevice</H2>
+
+<P>The [CEDevice] section is optional and describes the platform for which your application is targeted. All keys in this section are optional. If a key is nonexistent, Windows CE does not perform the checks specified for that particular key. Windows CE also does not perform any checking if a key has no data. The exception is <B>UnsupportedPlatforms</B>; if this key exists but there is no data, the previous value is not overridden. For more information, see <A HREF="instapps_25.htm">Current Processors and Device Platforms</A>.</P>
+
+<PRE class="code">[CEDevice]
+[ProcessorType =[<I>processor_type</I>]]
+[UnsupportedPlatforms = <I>platform_family_name</I>[,<I>platform_family_name</I>]]
+[VersionMin = [<I>major_version.minor_version</I>]]
+[VersionMax = [<I>major_version.minor_version</I>]]</PRE>
+
+<DL>
+<DT><I>processor_type</I></DT>
+
+<DD>Value that is returned by <B>SYSTEMINFO.</B><I>dwProcessorType</I>. For example, the value for the SH3 CPU is 10003 and the MIPS CPU is 4000. For more information about the processor types that are currently available, see <A HREF="instapps_25.htm">Current Processors and Device Platforms</A>.</dd>
+
+<DT><I>platform_family_name</I></DT>
+
+<DD>List of platform family names that are known to be unsupported. If the name specified in the [CEDevice.<I>xxx</I>] section is different from that in the [CEDevice] section, both <I>platform_family_name</I> values are unsupported for the microprocessor that is specified by <I>xxx</I>. That is, the list of specific unsupported platform family names is appended to the previous list of unsupported platform family names. . For more information about the platform family names that are currently available, see <A HREF="instapps_25.htm">Current Processors and Device Platforms</A>. Application Manager will not display the application for an unsupported platform. Also, a user will be warned during the setup process if the .cab file is copied to an unsupported device. For example:
+
+<PRE class="code">[CEDevice]
+UnsupportedPlatforms = <I>pltfrm1</I>      ; <I>pltfrm1</I> is unsupported
+[CEDevice.SH3]
+UnsupportedPlatforms =              ; <I>pltfrm1</I> is still unsupported</PRE>
+</dd>
+
+<DT><I>major_version</I> and <I>minor_version</I></DT>
+
+<DD>Numeric value that is returned by <B>OSVERSIONINFO.</B><I>dwVersionMinor</I> and <B>OSVERSIONINFO.</B><I>dwVersionMajor</I>. The .cab file is valid for the currently connected device if the version of the currently connected device is less than or equal to <I>VersionMax</I> and also greater than or equal to <I>VersionMin</I>. For Windows CE Japanese-language 2.0 devices, set <I>VersionMin</I> and <I>VersionMax</I> to 2.01.
+
+<P>If you are using ActiveSync 3.0 or greater, use the <I>VersionMin</I> and <I>VersionMax </I>keys to distinguish between black/white and color displays on a Palm-size PC. The following table describes how to declare VersionMin and VersionMax to distinguish between the different displays.
+
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=25%><I>VersionMin</I> value</TH>
+<TH width=25%><I>VersionMax</I> value</TH>
+<TH width=25%>Palm-size PC version</TH>
+<TH width=25%>Display</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<DL>
+<DT>2.1</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>2.1</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>1.0</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>Black and white</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<DL>
+<DT>2.11</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>2.11</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>2.0</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>Color</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>
+<DL>
+<DT>3.0</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>&gt;3.0</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>3.0</DT>
+</DL>
+</TD>
+<TD width=25%>
+<DL>
+<DT>Version 3.0 color</DT>
+</DL>
+</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<P>The following sample shows how to use one .inf file to distinguish between different Palm-size PC hardware capabilities.</P>
+
+<PRE class="code">[CEDevice.PPC_1]; black&amp;white Palm-size PC 1.0
+VersionMin = 2.1
+VersionMax = 2.1
+UnsupportedPlatforms = "HPC","HPC Pro"
+
+[CEDevice.PPC_2]; color Palm-size PC 2.0
+VersionMin = 2.11
+VersionMax = 2.11
+UnsupportedPlatforms = "HPC","HPC Pro"
+
+[CEDevice.PPC_3]; color Palm-size PC 3.0 and above
+VersionMin = 3.0
+VersionMax = 1000.0; an arbitrary high value
+UnsupportedPlatforms = "HPC","HPC Pro"</PRE>
+
+<P>The following code example shows three [CEDevice] sections: one that gives basic information for any CPU and two that are specific to the SH3 and the MIPS microprocessors.</P>
+
+<PRE class="code">[CEDevice]                           ; A "template" for all platforms
+UnsupportedPlatforms = <I>pltfrm1</I>       ; Does not support <I>pltfrm1</I>
+; The following specifies version 2.0 devices only.
+VersionMin = 2.0
+VersionMax = 2.0
+
+[CEDevice.SH3]                  ; Inherits all [CEDevice] settings
+; This will create a .cab file specific to SH3 devices.
+ProcessorType = 10003           ; The SH3 .cab file is only valid
+                                ; for the SH3 microprocessors.
+UnsupportedPlatforms =          ;<I> pltfrm1</I> is still unsupported
+; The following overrides the version settings so that no version
+; checking is performed.
+VersionMin =
+VersionMax =
+
+[CEDevice.MIPS]                  ; Inherits all [CEDevice] settings
+; This will create a .cab file specific to "MIPS" devices.
+ProcessorType = 4000             ; The MIPS .cab file is only valid
+                                 ; for the MIPS microprocessor.
+UnsupportedPlatforms =<I>pltfrm2</I>    ;<I> pltfrm1 and pltfrm2</I> are
+                                 ; unsupported for the "MIPs" .cab file.</PRE>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;To create the two CPU-specific .cab files for the setup .inf file in the previous example, you must run the CAB Wizard with the <B>/cpu sh3 mips</B> parameter.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

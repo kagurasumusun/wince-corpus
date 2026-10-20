@@ -1,0 +1,84 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDsDriverBuffer::Unlock</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IDsDriverBuffer::Unlock"/>
+<MSHelp:RLTitle Title="IDsDriverBuffer::Unlock"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_idsdriverbuffer__unlock"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IDsDriverBuffer::Unlock</H1>
+
+<P>The <B>IDsDriverBuffer::Unlock</B> method releases a block of sound data to the driver. The driver should perform whatever actions are necessary to output the audio data to the sound device. </P>
+
+<PRE class="syntax"><B>HRESULT Unlock(
+LPVOID </B><I>pvAudio1</I><B>,
+DWORD </B><I>dwLen1</I><B>,
+LPVOID </B><I>pvAudio2</I><B>,
+DWORD</B> <I>dwLen2</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pvAudio1</I></DT>
+
+<DD>Pointer to the beginning of the first audio block. </dd>
+
+<DT><I>dwLen1</I></DT>
+
+<DD>The number of bytes written to <I>pvAudio1</I>. </dd>
+
+<DT><I>pvAudio2</I></DT>
+
+<DD>Pointer to the beginning of the second audio block. </dd>
+
+<DT><I>dwLen2</I></DT>
+
+<DD>The number of bytes written to <I>pvAudio2</I>. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns DS_OK if successful, or one of the following error values otherwise:
+
+<UL type="disc">
+	<LI>DSERR_INVALIDCALL</li>
+
+	<LI>DSERR_INVALIDPARAM</li>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>The data block is actually described by two pointers; both are required because sound buffers are circular. If the locked bytes do not wrap around the end of the buffer, the second pointer (<I>pvAudio2</I>) is NULL. However, if the bytes do wrap around, then the second pointer points to the beginning of the buffer. </P>
+
+<P>Each call to <B>IDsDriverBuffer::Unlock</B> is preceded by a corresponding call to <A HREF="dshal_15.htm"><B>IDsDriverBuffer::Lock</B></A>. The pointer parameters are always the same pointers as those returned by <B>IDsDriverBuffer::Lock</B>. However, the number of bytes unlocked may be less than the number of bytes locked if the application does not fill the locked region. See <B>IDsDriverBuffer::Lock</B> for more details. </P>
+
+<P>For some devices (such as DMA-based cards that do not support hardware secondary buffers), repeated calls to <B>IDsDriverBuffer::Lock</B> and <B>IDsDriverBuffer::Unlock</B> are unnecessary. In this case, the driver should specify the DSDCAPS_DONTNEEDLOCK flag in the <B>DSDRIVERDESC</B> structure returned by <A HREF="dshal_10.htm"><B>IDsDriver::GetDriverDesc</B></A> method. If this flag is specified, then the <B>IDsDriverBuffer::Unlock</B> method is never called by DirectSound. In that case, the <B>IDsDriverBuffer::Unlock</B> method should simply return DSERR_UNSUPPORTED. </P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

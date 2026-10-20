@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Phase 2: PPP User Authentication</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Phase 2: PPP User Authentication"/>
+<MSHelp:RLTitle Title="Phase 2: PPP User Authentication"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_phase_2__ppp_user_authentication"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Phase 2: PPP User Authentication </H1>
+
+<P>In the second phase, the client computer presents the user's credentials to the remote access server. A secure authentication scheme provides protection against replay attacks and remote client impersonation. </P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>A replay attack occurs when a third party monitors a successful connection and uses captured packets to play back the remote client's response so that it can gain an authenticated connection. Remote client impersonation occurs when a third party takes over an authenticated connection. The intruder waits until the connection has been authenticated and then traps the conversation parameters, disconnects the authenticated user, and takes control of the authenticated connection.</P>
+
+<P>Most implementations of PPP provide limited authentication methods, typically Password Authentication Protocol (PAP), Challenge Handshake Authentication Protocol (CHAP), and Microsoft Challenge Handshake Authentication Protocol (MSCHAP). </P>
+
+<P><B>Password Authentication Protocol (PAP)</B>. PAP is a simple, clear text   authentication scheme. The network authentication server (NAS) requests the user name and password, and PAP returns them in clear text (unencrypted). Obviously, this authentication scheme is not secure because a third party could capture the user's name and password and use it to get subsequent access to the NAS and all of the resources provided by the NAS. PAP provides no protection against replay attacks or remote client impersonation once the user's password is compromised. </P>
+
+<P><B>Challenge-Handshake Authentication Protocol (CHAP)</B>. CHAP is an encrypted authentication mechanism that avoids transmission of the actual password on the connection. The NAS sends a challenge, which consists of a session ID and an arbitrary challenge string, to the remote client. The remote client must use the MD5 one-way hashing algorithm to return the user name and an encryption of the challenge, session ID, and the client's password. The user name is sent unhashed. </P>
+
+<P>CHAP is an improvement over PAP in that the clear text password is not sent over the link. Instead, the password is used to create an encrypted hash from the original challenge. The server knows the client's clear text password, and can therefore replicate the operation and compare the result to the password sent in the client's response. CHAP protects against replay attacks by using an arbitrary challenge string for each authentication attempt. CHAP protects against remote client impersonation by unpredictably sending repeated challenges to the remote client throughout the duration of the connection. </P>
+
+<P><B>Microsoft Challenge-Handshake Authentication Protocol (MS-CHAP)</B>. MS-CHAP is an encrypted authentication mechanism very similar to CHAP. As in CHAP, the NAS sends a challenge, which consists of a session ID and an arbitrary challenge string, to the remote client. The remote client must return the user name and an MD4 hash of the challenge string, the session ID, and the MD4-hashed password. This design, which manipulates a hash of the MD4 hash of the password, provides an additional level of security because it allows the server to store hashed passwords instead of clear-text passwords. MS-CHAP also provides additional error codes, including a password expired code, and additional encrypted client-server messages that permit users to change their passwords. In Microsoft's implementation of MS-CHAP, both the Client and NAS independently generate an initial key for subsequent data encryption by MPPE. The last point is very important, as it explains why MS-CHAP authentication is required in order to enable MPPE-based data encryption. </P>
+
+<P><B>Microsoft Challenge-Handshake Authentication Protocol version 2.0 (MS-CHAPv2)</B>.<B> </B>Microsoft Windows CE 3.0 supports MS-CHAP version 2.0, which offers improved security features over MS-CHAP, such as a server authentication scheme and a single change password packet.</P>
+
+<P>During Phase 2 of PPP link configuration, the NAS collects the authentication data and then validates the data against its own user database or against a central authentication database server, such as one maintained by a Windows NT Primary Domain Controller (PDC) or a Remote Authentication Dial-In User Service (RADIUS) server. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

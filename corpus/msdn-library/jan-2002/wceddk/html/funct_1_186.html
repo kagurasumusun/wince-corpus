@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAllocatePacket</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisAllocatePacket"/>
+<MSHelp:RLTitle Title="NdisAllocatePacket"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndisallocatepacket"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisAllocatePacket</H1>
+
+<P>This function allocates and initializes a packet descriptor.</P>
+
+<PRE class="syntax"><B>VOID NdisAllocatePacket(
+OUT PNDIS_STATUS</B> <I>Status</I>,
+<B>OUT PNDIS_PACKET *Packet,
+IN NDIS_HANDLE</B> <I>PoolHandle</I> );</PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns the final status of the request; one of the following:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=42%>Value</TH>
+<TH width=58%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>NDIS_STATUS_SUCCESS</TD>
+<TD width=58%>The caller can use the packet descriptor returned by the <I>Packet</I> parameter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>NDIS_STATUS_RESOURCES</TD>
+<TD width=58%>The free list for the packet pool currently has no available entries. A subsequent call to the <B>NdisFreePacket</B> function returns the specified entry to the free list.</TD>
+</TR>
+</TABLE><BR>
+
+</dd>
+
+<DT><I>Packet</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns a pointer to the allocated packet descriptor.</dd>
+
+<DT><I>PoolHandle</I></DT>
+
+<DD>Handle returned by a preceding call to the <B>NdisAllocatePacketPool</B> function.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>NDIS drivers must allocate packet descriptors from a packet pool. Protocol drivers call this function one or more times for their subsequent calls to the <B>NdisSend</B> function. Miniports call this function one or more times for subsequent calls to the <B>NdisMIndicateReceivePacket</B> function. NDIS intermediate drivers must call this function to repackage sends and receive indications in fresh packet descriptors before passing incoming transfer requests on to other NDIS drivers.</P>
+
+<P>Each packet descriptor eventually has one or more buffer descriptors chained to it. This function initializes the packet descriptor at 0 and sets its buffer chain pointer to NULL. The caller must chain the buffer descriptor(s) mapping the packet data to the packet descriptor before it is sent or indicated. Most NDIS drivers allocate buffer descriptors with the <B>NdisAllocateBuffer</B> function.</P>
+
+<P>Drivers must use the <B>NDIS_SET_PACKET_<I>XXX</I></B> macros to access or set up any out-of-band information associated with the packet descriptor.</P>
+
+<P>A driver that calls this function runs at IRQL &lt;=DISPATCH_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_175.htm"><B>NDIS_SET_PACKET_HEADER_SIZE</B></A>, <A HREF="funct_1_176.htm"><B>NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</B></A>, <A HREF="funct_1_177.htm"><B>NDIS_SET_PACKET_STATUS</B></A>, <A HREF="funct_1_178.htm"><B>NDIS_SET_PACKET_TIME_RECEIVED</B></A>, <A HREF="funct_1_179.htm"><B>NDIS_SET_PACKET_TIME_SENT</B></A>, <A HREF="funct_1_180.htm"><B>NDIS_SET_PACKET_TIME_TO_SEND</B></A>, <A HREF="funct_1_183.htm"><B>NdisAllocateBuffer</B></A>, <A HREF="funct_1_187.htm"><B>NdisAllocatePacketPool</B></A>, <A HREF="funct_1_203.htm"><B>NdisFreePacket</B></A>, <A HREF="funct_1_226.htm"><B>NdisMEthIndicateReceive</B></A>, <A HREF="funct_1_229.htm"><B>NdisMIndicateReceivePacket</B></A>, <A HREF="funct_1_289.htm"><B>NdisSend</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

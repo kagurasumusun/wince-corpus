@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AFX_EXTENSION_MODULE Structure</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AFX_EXTENSION_MODULE Structure"/>
+<MSHelp:RLTitle Title="AFX_EXTENSION_MODULE Structure"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afx_extension_module_structure"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>AFX_EXTENSION_MODULE </H1>
+
+<P>This structure is used during initialization of MFC extension DLLs to hold the state of extension DLL module. </P>
+
+<PRE class=syntax><B>struct AFX_EXTENSION_MODULE</B>
+<B>{</B>
+<B>&nbsp;&nbsp;&nbsp;BOOL </B><I>bInitialized</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;HMODULE </B><I>hModule</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;HMODULE </B><I>hResource</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;CRuntimeClass* </B><I>pFirstSharedClass</I><B>;</B>
+<B>&nbsp;&nbsp;&nbsp;COleObjectFactory* </B><I>pFirstSharedFactory</I><B>;</B>
+<B>};</B><I> </I></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>bInitialized</I></DT>
+
+<DD><B>TRUE</B> if the DLL module has been initialized with <B>AfxInitExtensionModule</B>.</DD>
+
+<DT><I>hModule</I></DT>
+
+<DD>Specifies the handle of the DLL module.</DD>
+
+<DT><I>hResource</I></DT>
+
+<DD>Specifies the handle of the DLL custom resource module.</DD>
+
+<DT><I>pFirstSharedClass</I></DT>
+
+<DD>A pointer to information (the <B>CRuntimeClass</B> structure) about the first runtime class in the DLL module. Used to provide the start of the runtime class list.</DD>
+
+<DT><I>pFirstSharedFactory</I></DT>
+
+<DD>A pointer to the first object factory in the DLL module (a <B>COleObjectFactory</B> object). Used to provide the start of the class factory list.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>MFC extension DLLs need to do two things in their <B>DllMain</B> function:
+
+<UL type=disc>
+	<LI>Call <A HREF="funct_38.htm"><B>AfxInitExtensionModule</B></A> and check the return value.</LI>
+
+	<LI>Create a <B>CDynLinkLibrary</B> object if the DLL will be exporting <A HREF="crunclas.htm"><B>CRuntimeClass</B></A> objects or has its own custom resources.</LI>
+</UL>
+
+<P>The <B>AFX_EXTENSION_MODULE</B> structure is used to hold a copy of the extension DLL module state, including a copy of the runtime class objects that have been initialized by the extension DLL as part of normal static object construction executed before <B>DllMain</B> is entered. For example:</P>
+
+<PRE>static AFX_EXTENSION_MODULE extensionDLL;
+extern "C" int APIENTRY
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
+{
+   // initialize this DLL extension module
+   VERIFY(AfxInitExtensionModule(extensionDLL, hInstance));
+</PRE>
+
+<P>The module information stored in the <B>AFX_EXTENSION_MODULE</B> structure can be copied into the <B>CDynLinkLibrary</B> object. For example:</P>
+
+<PRE>// CDynLinkLibrary class
+IMPLEMENT_DYNAMIC(CDynLinkLibrary, CCmdTarget)
+// Constructor
+CDynLinkLibrary::CDynLinkLibrary(AFX_EXTENSION_MODULE&amp; state, BOOL bSystem)
+{
+#ifndef _AFX_NO_OLE_SUPPORT
+   m_factoryList.Construct(offsetof(COleObjectFactory, m_pNextFactory));
+#endif
+   m_classList.Construct(offsetof(CRuntimeClass, m_pNextClass));
+
+   // copy info from AFX_EXTENSION_MODULE struct
+   ASSERT(state.hModule != NULL);
+   m_hModule = state.hModule;
+   m_hResource = state.hResource;
+   m_classList.m_pHead = state.pFirstSharedClass;
+#ifndef _AFX_NO_OLE_SUPPORT
+   m_factoryList.m_pHead = state.pFirstSharedFactory;
+#endif
+   m_bSystem = bSystem;
+</PRE>
+
+<H4>Requirements </H4>
+
+<DL>
+<DT><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdll_.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</DT>
+</DL>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_38.htm"><B>AfxInitExtensionModule</B></A>, <A HREF="funct_57.htm"><B>AfxTermExtensionModule</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

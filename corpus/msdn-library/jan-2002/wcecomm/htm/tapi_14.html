@@ -1,0 +1,138 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Address Translation</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Address Translation"/>
+<MSHelp:RLTitle Title="Address Translation"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_address_translation"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_lineTranslateDialog" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_lineGetTranslateCaps" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_lineTranslateAddress" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Address Translation</H1>
+
+<P>A telephone number might have to be converted or translated into a dialable address format. For example, an application can help a user avoid dialing the wrong number by calling a function and displaying a dialog box for a user to change or confirm the number. Another example might be when a call that is placed to a different area code is not a long-distance telephone call. Some calls that are placed to another exchange prefix within the same area code are long-distance and require that a 1 be added before dialing. The <A HREF="JavaScript:hhobj_1.Click()"><B>lineTranslateDialog</B></A> function displays a dialog box in which a user can change the current telephone number, adjust the location, and see the effect on a telephone number to be dialed.</P>
+
+<P>Following the call to the <B>lineTranslateDialog</B> function, the application first must call the <A HREF="JavaScript:hhobj_2.Click()"><B>lineGetTranslateCaps</B></A> function to save any changes that a user made to the telephony address translation parameters, and then call the <A HREF="JavaScript:hhobj_3.Click()"><B>lineTranslateAddress</B></A> function to obtain a dialable string that is based on the new user selections.</P>
+
+<P>The following code example shows how to use the <B>lineTranslateDialog</B> and <B>lineGetTranslateCaps</B> functions.</P>
+
+<PRE class="code">DWORD dwCounter,
+                 dwSizeTranslateCaps;
+LPLINELOCATIONENTRY lpLocationEntry;
+LPLINETRANSLATECAPS lpLineTranslateCaps;
+
+          // Bring up the modal dialog box to adjust the location.
+          lineTranslateDialog (g_hLineApp,
+                               g_dwCurrentLineID,
+                               g_CurrentLineInfo.dwAPIVersion,
+                               hwnd,
+                               NULL);
+
+          dwSizeTranslateCaps = sizeof (LINETRANSLATECAPS);
+
+          // Allocate sufficient memory for lpLineTranslateCaps.
+          do
+          {
+            if (!(lpLineTranslateCaps = (LINETRANSLATECAPS*) LocalAlloc(
+                                            LPTR, dwSizeTranslateCaps)))
+              return FALSE;
+
+            lpLineTranslateCaps-&gt;dwTotalSize = dwSizeTranslateCaps;
+
+            if (lineGetTranslateCaps (g_hLineApp,
+                                      g_CurrentLineInfo.dwAPIVersion,
+                                      lpLineTranslateCaps))
+            {
+              LocalFree (lpLineTranslateCaps);
+              return FALSE;
+            }
+
+            if (lpLineTranslateCaps-&gt;dwNeededSize &lt;=
+                                      lpLineTranslateCaps-&gt;dwTotalSize)
+              break;
+            else
+            {
+              dwSizeTranslateCaps = lpLineTranslateCaps-&gt;dwNeededSize;
+              LocalFree (lpLineTranslateCaps);
+              lpLineTranslateCaps = NULL;
+            }
+          } while (TRUE);
+
+          lpLocationEntry = (LPLINELOCATIONENTRY)
+                            ((LPBYTE)lpLineTranslateCaps +
+                            lpLineTranslateCaps-&gt;dwLocationListOffset);
+
+          // Find the selected location.
+          for (dwCounter = 0;
+               dwCounter &lt; lpLineTranslateCaps-&gt;dwNumLocations;
+               dwCounter++)
+          {
+            if (lpLocationEntry[dwCounter].dwPermanentLocationID ==
+                            lpLineTranslateCaps-&gt;dwCurrentLocationID)
+              break;
+          }
+
+          // Error occured in finding the selected location.
+          if (dwCounter == lpLineTranslateCaps-&gt;dwNumLocations)
+          {
+            LocalFree (lpLineTranslateCaps);
+            return FALSE;
+          }
+
+          // Save the location name, country, and area code data.
+          wsprintf (g_szLocationName,
+                    (LPTSTR)((LPSTR)lpLineTranslateCaps +
+                    lpLocationEntry[dwCounter].dwLocationNameOffset));
+
+          wsprintf (g_szCountryCode, TEXT("%ld"),
+                    lpLocationEntry[dwCounter].dwCountryCode);
+
+          wsprintf (g_szAreaCode,
+                    (LPTSTR)((LPSTR)lpLineTranslateCaps +
+                    lpLocationEntry[dwCounter].dwCityCodeOffset));
+
+          LocalFree (lpLineTranslateCaps);
+          return TRUE;</PRE>
+
+<P>The <B>lineTranslateAddress</B> function examines the registry settings to find the user location, which includes the country and area code. This function then produces a valid dialing sequence by removing unnecessary portions of the number&#0151;such as the country code or area code&#0151;and adding other digits, such as a long-distance prefix or a digit that is used to dial out of a local, private branch exchange.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

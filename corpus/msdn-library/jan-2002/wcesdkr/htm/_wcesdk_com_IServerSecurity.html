@@ -1,0 +1,154 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IServerSecurity</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IServerSecurity"/>
+<MSHelp:RLTitle Title="IServerSecurity"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iserversecurity"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IServerSecurity</H1>
+
+<P>This interface is used by a server to help authenticate the client and to manage impersonation of the client. </P>
+
+<P>When a client calls a server, the server can call <A HREF="_wcesdk_com_cogetcallcontext.htm"><B>CoGetCallContext</B></A> to get a pointer to the <B>IServerSecurity</B> interface implemented on the call context object for the current method call. This pointer can be used to call an <B>IServerSecurity</B> method that allows the server to check the client’s authentication or to impersonate the client. </P>
+
+<P>The pointer to the instance of <B>IServerSecurity</B> returned by <B>CoGetCallContext</B> is automatically deleted when the server sends the reply back to the client. Therefore, the <B>IServerSecurity</B> object is valid only for the duration of the call. The <B>IServerSecurity</B> pointer must be released when it is no longer needed.</P>
+
+<H4>When to Implement</H4>
+
+<P>The stub management code in the system provides an implementation of <B>IServerSecurity</B> for objects by default as part of each incoming call, so typically you would not implement this interface.</P>
+
+<P>You may choose to implement <B>IServerSecurity</B> on the custom stubs of objects that support custom marshaling to maintain a consistent programming model for their objects. Before dispatching an arriving call, custom marshalers call <A HREF="_wcesdk_com_coswitchcallcontext.htm"><B>CoSwitchCallContext</B></A>, specifying a new context object (which must implement <B>IServerSecurity</B>). The original call context must be restored after the server object sends a reply. </P>
+
+<H4>When to Use</H4>
+
+<P>The methods of the <B>IServerSecurity</B> interface are called by a server object to examine the security settings of a particular call between a client and the server object (<A HREF="_wcesdk_com_iserversecurity__queryblanket.htm"><B>QueryBlanket</B></A>) or to impersonate the client (<A HREF="_wcesdk_com_iserversecurity__impersonateclient.htm"><B>ImpersonateClient</B></A> and <A HREF="_wcesdk_com_iserversecurity__reverttoself.htm"><B>RevertToSelf</B></A>). A server impersonates a client by running in the client's security context, which allows the server to test the privilege level of the calling client with an <B>AccessCheck</B> call and to access resources (such as files) as the client. For more information about how impersonation works, see Impersonation and Cloaking.</P>
+
+<P>The information obtained through <B>IServerSecurity</B> also allows an object to perform security checks in addition to the automatic ACL checks COM performs. For example, an application may wish to allow time of day access to some objects or may have a different ACL for each method on an object.</P>
+
+<P><B>IServerSecurity</B> methods may be called only before the remote procedure call completes. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%><A HREF="_wcesdk_com_iunknown.htm">IUnknown</A> Methods</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=56%>Returns pointers to supported interfaces.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iunknown_addref.htm"><B>AddRef</B></A></TD>
+<TD width=56%>Increments the reference count.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iunknown_release.htm"><B>Release</B></A></TD>
+<TD width=56%>Decrements the reference count.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>IServerSecurity Methods</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iserversecurity__queryblanket.htm"><B>QueryBlanket</B></A></TD>
+<TD width=56%>Called by the server to find out about the client that invoked one of its methods.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iserversecurity__impersonateclient.htm"><B>ImpersonateClient</B></A></TD>
+<TD width=56%>Allows a server to impersonate a client for the duration of a call.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iserversecurity__reverttoself.htm"><B>RevertToSelf</B></A></TD>
+<TD width=56%>Restores the authentication information on a thread.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iserversecurity__isimpersonating.htm"><B>IsImpersonating</B></A></TD>
+<TD width=56%>Indicates whether the server is currently impersonating the client. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P>Security in COM, <B>CoGetCallContext</B> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

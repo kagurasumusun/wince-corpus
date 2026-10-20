@@ -1,0 +1,86 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Property Sheets</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using Property Sheets"/>
+<MSHelp:RLTitle Title="Using Property Sheets"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_using_property_sheets"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Using Property Sheets</H1>
+
+<P>To use a property sheet in your application, complete the following steps.</P>
+
+<P><B>To add a property sheet to an application</B>
+
+<OL>
+	<LI>Create a dialog template resource for each property page. Keep in mind that the user may be switching from one page to another, so lay out each page as consistently as possible.
+<P>The dialog templates for all pages do not have to be the same size. The framework uses the size of the largest page to determine how much space to allocate in the property sheet for the property pages.
+
+<P>When you create the dialog template resource for a property page, you must specify the following styles in the Dialog Properties property sheet:
+
+<UL type=disc>
+	<LI>Set the <B>Caption </B>edit box on the <B>General </B>page to the text you want to appear in the tab for this page.</LI>
+
+	<LI>Set the <B>Style </B>list box on the <B>Styles </B>page to <B>Child</B>.</LI>
+
+	<LI>Set the <B>Border </B>list box on the <B>Styles </B>page to <B>Thin</B>.</LI>
+
+	<LI>Ensure that the <B>Titlebar </B>check box on the <B>Styles </B>page is selected.</LI>
+
+	<LI>Ensure that the <B>Disabled </B>check box on the <B>More Styles</B> page is selected.</LI>
+</UL>
+</LI>
+
+	<LI>Use ClassWizard to create a <B>CPropertyPage</B>-derived class corresponding to each property page dialog template. To do this, choose <B>ClassWizard </B>from the <B>View </B>menu while the focus is on a particular property page dialog box. Choose <B>CPropertyPage</B> as the base class in ClassWizard.</LI>
+
+	<LI>Using ClassWizard, create member variables to hold the values for this property page. The process for adding member variables to a property page is exactly the same as adding member variables to a dialog box, because a property page is a specialized dialog box.</LI>
+
+	<LI>Construct a <B>CPropertySheet</B> object in your source code. Usually, you construct the <B>CPropertySheet</B> object in the handler for the command that displays the property sheet. This object represents the entire property sheet. If you create a modal property sheet with the <B>DoModal </B>function, the framework supplies three command buttons by default: OK, Cancel, and Apply. The framework creates no command buttons for modeless property sheets created with the Create function. You do not need to derive a class from <B>CPropertySheet</B> unless you want to either add other controls (such as a preview window) or display a modeless property sheet. This step is necessary for modeless property sheets because they do not contain any default controls that could be used to close the property sheet.</LI>
+
+	<LI>For each page to be added to the property sheet, do the following:
+<UL type=disc>
+	<LI>Construct one object for each <B>CPropertyPage</B>-derived class that you created using ClassWizard earlier in this process.</LI>
+
+	<LI>Call <B>CPropertySheet::AddPage</B> for each page.</LI>
+</UL>
+
+<P>Typically, the object that creates the <B>CPropertySheet</B> also creates the <B>CPropertyPage</B> objects in this step. However, if you implement a <B>CPropertySheet</B>-derived class, you can embed the <B>CPropertyPage</B> objects in the <B>CPropertySheet</B> object and call <B>AddPage</B> for each page from the <B>CPropertySheet</B>-derived class constructor. <B>AddPage</B> adds the <B>CPropertyPage</B> object to the property sheet’s list of pages but does not actually create the window for that page. Therefore, it is not necessary to wait until creation of the property sheet window to call <B>AddPage</B>; you can call <B>AddPage</B> from the property sheet’s constructor.
+
+<P>By default, if a property sheet has more tabs than will fit in a single row of the property sheet, the tabs will stack in multiple rows. To disable stacking, call <B>CPropertySheet::EnableStackedTabs</B> with the parameter set to <B>FALSE</B>. You must call <B>EnableStackedTabs</B> when you create the property sheet.
+</LI>
+
+	<LI>Call <B>CPropertySheet::DoModal</B> or <B>CPropertySheet::Create</B> to display the property sheet. Call <B>DoModal</B> to create a property sheet as a modal dialog box. Call <B>Create</B> to create the property sheet as a modeless dialog box.</LI>
+
+	<LI>Exchange data between property pages and the owner of the property sheet. See <A HREF="develop_26.htm">Exchanging Data</A>.</LI>
+</OL>
+
+<P>For an example of how to use property sheets, see the MFC sample <A HREF="propdlg.htm">PROPDLG</A>.</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

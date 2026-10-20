@@ -1,0 +1,89 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::GetSafeHwnd</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::GetSafeHwnd"/>
+<MSHelp:RLTitle Title="CWnd::GetSafeHwnd"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_getsafehwnd"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CWnd::GetSafeHwnd</H1>
+
+<P>This method obtains the window handle for a window. It returns <B>NULL</B> if the <B>CWnd</B> is not attached to a window or if it is used with a null <B>CWnd</B> pointer. </P>
+
+<PRE class=syntax><B>HWND GetSafeHwnd( )
+const;</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Returns the window handle for a window. Returns <B>NULL</B> if the <B>CWnd</B> is not attached to a window or if it is used with a <B>NULL CWnd</B> pointer. </P>
+
+<H4>Example</H4>
+
+<P>This is the example for the <A HREF="cwnd_199.htm"><B>CWnd::SubclassWindow</B></A> method.</P>
+
+<PRE>// The following code shows how to subclass the edit control and list box
+// controls inside a combo box. It uses WM_CTLCOLOR for subclassing.
+// CSuperComboBox represents the combo box.
+HBRUSH CSuperComboBox::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+   if (nCtlColor == CTLCOLOR_EDIT)
+   {
+      //Edit control
+      if (m_edit.GetSafeHwnd() == NULL)
+         m_edit.SubclassWindow(pWnd-&gt;GetSafeHwnd());
+   }
+   else if (nCtlColor == CTLCOLOR_LISTBOX)
+   {
+      //ListBox control
+      if (m_listbox.GetSafeHwnd() == NULL)
+         m_listbox.SubclassWindow(pWnd-&gt;GetSafeHwnd());
+   }
+   HBRUSH hbr = CComboBox::OnCtlColor(pDC, pWnd, nCtlColor);
+   return hbr;
+}
+
+void CSuperComboBox::OnDestroy()
+{
+   // Unsubclass edit and list box before destruction.
+   if (m_edit.GetSafeHwnd() != NULL)
+      m_edit.UnsubclassWindow();
+   if (m_listbox.GetSafeHwnd() != NULL)
+      m_listbox.UnsubclassWindow();
+   CComboBox::OnDestroy();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

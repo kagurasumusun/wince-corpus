@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersist::GetClassID</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersist::GetClassID"/>
+<MSHelp:RLTitle Title="IPersist::GetClassID"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersist_getclassid"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IPersist::GetClassID</H1>
+
+<P>This method retrieves the class identifier (CLSID) of an object. The CLSID is a unique value that identifies the code that can manipulate the persistent data.</P>
+
+<PRE class="syntax"><B>HRESULT GetClassID( CLSID *</B><I>pClassID</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pClassID</I></DT>
+
+<DD>[out] Pointer to the location of the CLSID on return. The CLSID is a globally unique identifier (GUID) that uniquely represents an object class that defines the code that can manipulate the object’s data.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=11%>Value</TH>
+<TH width=89%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=11%>S_OK</TD>
+<TD width=89%>The CLSID was successfully retrieved.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=11%>E_FAIL</TD>
+<TD width=89%>The CLSID could not be retrieved.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The <B>GetClassID</B> method retrieves the class identifier (CLSID) for an object, used in later operations to load object-specific code into the caller’s context.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>A container application might call this method to retrieve the original CLSID of an object that it is treating as a different class. Such a call would be necessary if a user performed an editing operation that required the object to be saved. If the container were to save it using the treat-as CLSID, the original application would no longer be able to edit the object. Typically, in this case, the container calls the <A HREF="_wcesdk_com_olesave.htm"><B>OleSave</B></A> helper function, which performs all the necessary steps. For this reason, most container applications have no need to call this method directly.</P>
+
+<P>The exception would be a container that provides an object handler for certain objects. In particular, a container application should not get an object’s CLSID and then use it to retrieve class specific information from the registry. Instead, the container should use <B>IOleObject</B> and <B>IDataObject</B> interfaces to retrieve such class-specific information directly from the object.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>Typically, implementations of this method simply supply a constant CLSID for an object. If, however, the object’s <B>TreatAs</B> registry key has been set by an application that supports emulation (and so is treating the object as one of a different class), a call to <B>IPersist::GetClassID</B> must supply the CLSID specified in the <B>TreatAs</B> key. For more information on emulation, refer to <A HREF="_wcesdk_com_cotreatasclass.htm"><B>CoTreatAsClass</B></A>.</P>
+
+<P>When an object is in the running state, the default handler calls an implementation of <B>IPersist::GetClassID</B> that delegates the call to the implementation in the object. When the object is not running, the default handler instead calls the <A HREF="_wcesdk_com_readclassstg.htm"><B>ReadClassStg</B></A> function to read the CLSID that is saved in the object’s storage.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_cotreatasclass.htm"><B>CoTreatAsClass</B></A>, <A HREF="_wcesdk_com_olesave.htm"><B>OleSave</B></A>, <A HREF="_wcesdk_com_readclassstg.htm"><B>ReadClassStg</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

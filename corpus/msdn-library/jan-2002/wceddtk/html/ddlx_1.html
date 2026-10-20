@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_running_the_test"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Running the Test</H1>
+
+<P>The following command line shows the syntax for running a test using Ddlx.dll</P>
+
+<PRE class="code">tux &#0150;d ddlx &#0150;c “-d <I>test_dll</I> &#0150;i <I>device_index</I> -c <I>parameters</I>”</PRE>
+
+<P>The parameters outside of the quotation marks (-d ddlx &#0150;c) are parameters for Tux. They instruct Tux to load Ddlx.dll into the Tux process space and then pass the entire string enclosed in quotation marks to Ddlx.dll.</P>
+
+<P>In the parameter list for Ddlx.dll, which is enclosed in quotation marks, a space is not required between a command line option and its argument. However, each command line option must be specified separately from the other command line options. For example, the following command line is not acceptable.</P>
+
+<PRE class="code">tux -d ddlx -c “-dtest.dll-i2”</PRE>
+
+<P>The following table shows the parameters for DDLX.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>Parameter</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>-d </B><I>test_dll</I></TD>
+<TD width=70%>Instructs DDLX which file to register. If this option is not specified, DDLX will attempt to load Generic.dll.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>-i </B><I>device_index</I></TD>
+<TD width=70%>Specifies the device index for the driver (-i2 for gen2:, for example). If this option is not specified, DDLX will use 1. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>-c </B><I>parameters</I></TD>
+<TD width=70%>Specifies additional <I>test_dll</I> parameters to pass on to the device driver being tested.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following command line shows the syntax for a sample test.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d ddlx &#0150;c “-d test.dll &#0150;i 2 &#0150;c 1 2 3”</PRE>
+
+<P>The device driver being tested will receive the following string as a command line: “1 2 3”.</P>
+
+<P>If you do not need to specify the device index or any additional command line parameters, you can leave out the quotation marks and the <B>&#0150;d</B> parameter. The syntax for this is shown in the following command line.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d ddlx &#0150;c test.dll </PRE>
+
+<P>The general layout for writing test procedures is the same for Tux/Ddlx as it is for Tux alone. These test procedures consist of creating the function table, processing <B>ShellProc</B> commands, processing <B>TestProc</B> commands, and so on. However, there are two differences between a normal Tux test procedure and a Tux/Ddlx test procedure that are in the context of the make file:
+
+<UL type="disc">
+	<LI>Ddlxioct.lib must be linked with your test procedure as a source library, not as a target library. </li>
+
+	<LI>Your .def file needs to include all required device driver entry points. </li>
+</UL>
+
+<P>Since your test program will be running as a device driver, it must accept <B>DeviceIoControl</B> commands. However, Ddlxioct.lib will handle the processing of these commands by receiving them and passing them along to your test procedure as standard Tux messages. No additional coding is required in your test procedure.</P>
+
+<P>Note that Ddlxioct.lib does not implement any of these procedures; it only returns a passing value to satisfy device.exe.</P>
+
+<P>Ddlxioct.lib also exposes a function to control debugger output. <B>DDLXDebuggerControl</B> accepts a DWORD containing flags set for debugger output, and returns a DWORD indicating the previous state of the debugger’s output. In order to use this function, you must include Ddlx.h. For more information, see Ddlx.h.</P>
+
+<P>The following code example shows a typical .mak file:</P>
+
+<PRE class="code">TARGETNAME=ddlxtest
+TARGETTYPE=DYNLINK
+TARGETLIBS=\
+   $(_COMMONSDKROOT)\lib\$(_CPUINDPATH)\coredll.lib \
+   $(_PROJECTOAKROOT)\lib\$(_CPUINDPATH)\kato.lib
+DLLENTRY=DllMain
+INCLUDES=\
+   $(_PUBLICROOT)\common\oak\inc
+SOURCES=shelproc.cpp \
+   testproc.cpp \
+   globals.cpp
+SOURCELIBS=\
+   $(_PROJECTOAKROOT)\lib\$(_CPUINDPATH)\ddlxioct.lib</PRE>
+
+<P>The following code example shows a typical .def file.</P>
+
+<PRE class="code">EXPORTS
+   ShellProc
+   gen_Init
+   gen_Deinit
+   gen_Open
+   gen_Close
+   gen_Read
+   gen_Write
+   gen_Seek
+   gen_IOControl
+   gen_PowerUp
+   gen_PowerDown</PRE>
+<DIV CLASS="footer">Built on Tuesday, January 09, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

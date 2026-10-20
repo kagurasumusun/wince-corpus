@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>mbstowcs</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="mbstowcs"/>
+<MSHelp:RLTitle Title="mbstowcs"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_mbstowcs"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>mbstowcs</H1>
+
+<P>Converts a sequence of multibyte characters to a corresponding sequence of wide characters.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=29%>Routine</TH>
+<TH width=71%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><B>mbstowcs</B></TD>
+<TD width=71%>&lt;stdlib.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>size_t mbstowcs( wchar_t</B> *<I>wcstr</I><B>, const char</B> *<I>mbstr</I><B>, size_t</B> <I>count</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>wcstr</I></DT>
+
+<DD>The address of a sequence of wide characters</dd>
+
+<DT><I>mbstr</I></DT>
+
+<DD>The address of a sequence of multibyte characters</dd>
+
+<DT><I>count</I></DT>
+
+<DD>The number of multibyte characters to convert</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Values</H4>
+
+<P>If <B>mbstowcs</B> successfully converts the source string, it returns the number of converted multibyte characters. If the <I>wcstr</I> argument is <B>NULL</B>, the function returns the required size of the destination string. In versions of Windows CE prior to 3.0, setting <I>mbstr</I> to NULL returns -1. If <B>mbstowcs</B> encounters an invalid multibyte character, it returns &#0150;1. If the return value is <I>count</I>, the wide-character string is not null-terminated.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>mbstowcs</B> function converts <I>count</I> or fewer multibyte characters pointed to by <I>mbstr</I> to a string of corresponding wide characters that are determined by the current locale. It stores the resulting wide-character string at the address represented by <I>wcstr</I>. If <B>mbstowcs</B> encounters the single-byte null character ('\0') either before or when count occurs, it converts the null character to a wide-character null character (L'\0') and stops. Thus the wide-character string at <I>wcstr</I> is null-terminated only if a null character is encountered during conversion. If the sequences pointed to by <I>wcstr</I> and <I>mbstr</I> overlap, the behavior is undefined.</P>
+
+<P>If the <I>wcstr</I> argument is <B>NULL</B>, <B>mbstowcs</B> returns the required size of the destination string. </P>
+
+<H4>Example</H4>
+
+<PRE class="code">/* MBSTOWCS.CPP illustrates the behavior of the mbstowcs function
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+void main( void )
+{
+    int i;
+    char    *pmbnull  = NULL;
+    char    *pmbhello = (char *)malloc( MB_CUR_MAX );
+    wchar_t *pwchello = L"Hi";
+    wchar_t *pwc      = (wchar_t *)malloc( sizeof( wchar_t ));
+
+    printf( "Convert to multibyte string:\n" );
+    i = wcstombs( pmbhello, pwchello, MB_CUR_MAX );
+    printf( "\tCharacters converted: %u\n", i );
+    printf( "\tHex value of first" );
+    printf( " multibyte character: %#.4x\n\n", pmbhello );
+
+    printf( "Convert back to wide-character string:\n" );
+    i = mbstowcs( pwc, pmbhello, MB_CUR_MAX );
+    printf( "\tCharacters converted: %u\n", i );
+    printf( "\tHex value of first" );
+    printf( " wide character: %#.4x\n\n", pwc );
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">Convert to multibyte string:
+   Characters converted: 1
+   Hex value of first multibyte character: 0x0e1a
+
+Convert back to wide-character string:
+   Characters converted: 1
+   Hex value of first wide character: 0x0e1e
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt3_45.htm"><B>wcstombs</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

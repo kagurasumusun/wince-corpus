@@ -1,0 +1,102 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSendResourcesAvailable</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSendResourcesAvailable"/>
+<MSHelp:RLTitle Title="NdisMSendResourcesAvailable"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndismsendresourcesavailable"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMSendResourcesAvailable</H1>
+
+<P>This function notifies NDIS that a miniport has sufficient internal resources to accept another send request, even though one or more outstanding send packets are pending within the miniport.</P>
+
+<PRE class="syntax"><B>VOID NdisMSendResourcesAvailable(
+IN NDIS_HANDLE </B><I>MiniportAdapterHandle</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle originally input to the <B>MiniportInitialize</B> function.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The NDIS library queues send requests for miniports so that each NIC driver can deal with one device transmit operation at a time, although a miniport can transmit several packets per operation, depending on the capabilities of its NIC. NDIS serializes the submission of incoming packet arrays to each miniport’s <B>MiniportSendPackets</B> function, and it serializes the submission of packets to each miniport’s <B>MiniportSend</B> function. NDIS queues incoming send requests in first-in, first-out (FIFO) order.</P>
+
+<P>Any miniport retains ownership of such a send packet in one of the following ways:
+
+<UL type="disc">
+	<LI>Its <B>MiniportSendPackets</B> function sets the <I>Status</I> member in the out-of-band data block for a packet to NDIS_STATUS_PENDING with NDIS_SET_PACKET_STATUS.</li>
+
+	<LI>Its <B>MiniportSend</B> function returns NDIS_STATUS_PENDING.</li>
+</UL>
+
+<P>In either of these circumstances, the NIC driver eventually must call <B>NdisMSendComplete</B> or <B>NdisMWanSendComplete</B> to indicate that it has released ownership of the packet and that the driver has sufficient resources available to accept the next transmit request.</P>
+
+<P>However, before a miniport calls <B>NdisMSendComplete</B> for a pending packet, it can call this function if the driver and its NIC are capable of accepting another send request immediately, provided NDIS has one in its queue to submit to that driver. Such a call allows the driver of a high-capacity NIC to optimize transmissions over the network by sending more data at a time.</P>
+
+<P>This function can be called only between the return of NDIS_STATUS_PENDING for a specified packet and the miniport’s call to <B>NdisMSendComplete</B> with that packet.</P>
+
+<P>If a miniport returns any value except NDIS_STATUS_PENDING for a particular packet from <B>MiniportSendPackets</B> or from <B>MiniportSend</B>, it should call neither this function nor <B>NdisMSendComplete</B>. Any send packet for which an NIC driver returns something other than NDIS_STATUS_PENDING should be considered inaccessible by that miniport on return from its <B>MiniportSendPackets</B> or <B>MiniportSend</B> function.</P>
+
+<P>A WAN miniport cannot call this function.</P>
+
+<P>A driver that calls this function runs at IRQL DISPATCH_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_246.htm"><B>NdisMSendComplete</B></A>, <A HREF="funct_1_289.htm"><B>NdisSend</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

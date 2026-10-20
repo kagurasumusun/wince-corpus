@@ -1,0 +1,82 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Playing the File</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Playing the File"/>
+<MSHelp:RLTitle Title="Playing the File"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_playing_the_file"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_igraphbuilder_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediacontrol_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_igraphbuilder__renderfile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_mediacontrol__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Playing the File</H1>
+
+<P>Playing a file using DirectShow is a three-step process:</P>
+
+<P>Create an instance of the filter graph manager. </P>
+
+<P>Use the filter graph manager to create a filter graph. </P>
+
+<P>Use the filter graph manager to run the filter graph. </P>
+
+<P>To accomplish this, you need to use two interfaces:
+
+<UL type="disc">
+	<LI><A HREF="JavaScript:hhobj_1.Click()"><B>IGraphBuilder</B></A>: Constructs the filter graph. </li>
+
+	<LI><A HREF="JavaScript:hhobj_2.Click()"><B>IMediaControl</B></A>: Handles media streaming in the filter graph. </li>
+</UL>
+
+<P>The filter graph manager implements both of these interfaces. Here is the basic code, minus some COM details:</P>
+
+<PRE class="code">IGraphBuilder *pGraph;
+IMediaControl *pMediaControl;
+CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC,
+                    IID_IGraphBuilder, (void **)&amp;pGraph);
+// Query for IMediaControl (not shown)
+// Filenames on Windows CE start with a \\ instead of a drive letter.
+pGraph-&gt;RenderFile(L"\\Hello_World.avi", NULL);
+pMediaControl-&gt;Run();</PRE>
+
+<P>The <A HREF="JavaScript:hhobj_3.Click()"><B>IGraphBuilder::RenderFile</B></A> method constructs a filter graph that will play the specified file. The first parameter is the file name, represented as a wide character (2-byte) Unicode string. For simplicity, the example program specifies a literal string, rather than have the user select a file name. The "L" prefix converts an ASCII string to a wide character string. The second parameter is reserved and must equal NULL.</P>
+
+<P>After the filter graph manager has constructed a filter graph, it is ready to begin playback. The <A HREF="JavaScript:hhobj_4.Click()"><B>IMediaControl::Run</B></A> method switches the graph into running mode. When the application invokes this method, media data begins to move through the filter graph and is rendered as video, audio, or both.</P>
+
+<P>If this were the last statement in the program, the program would abruptly stop the moment playback began. In a real application, you would wait for an end-of-stream event, a topic discussed in <A HREF="dshow_12.htm">Responding to Events</A>. To keep the example as short as possible, the sample program merely displays a message box, which blocks program execution. Playback continues on a separate thread until the user clicks the OK button. Also, in a real application, you should test the return value of <B>RenderFile</B> to confirm that it created the filter graph successfully. For example, if the specified file does not exist, <B>RenderFile</B> fails and returns the error code VFW_E_NOT_FOUND. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

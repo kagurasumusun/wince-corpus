@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSendResourcesAvailable</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSendResourcesAvailable"/>
+<MSHelp:RLTitle Title="NdisMSendResourcesAvailable"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismsendresourcesavailable"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMSendResourcesAvailable</H1>
+
+<P>This function notifies NDIS that a miniport has sufficient internal resources to accept another send request, even though one or more outstanding send packets are pending within the miniport.</P>
+
+<PRE class="syntax"><B>VOID NdisMSendResourcesAvailable(
+IN NDIS_HANDLE </B><I>MiniportAdapterHandle</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle originally input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The NDIS library queues send requests for miniports so that each network adapter driver can deal with one device transmit operation at a time, although a miniport can transmit several packets per operation, depending on the capabilities of its network adapter. NDIS serializes the submission of packets to each miniport’s <A HREF="_wcesdk_miniportsend.htm"><B>MiniportSend</B></A> function. NDIS queues incoming send requests in first-in, first-out (FIFO) order.</P>
+
+<P>Any miniport retains ownership of such a send packet in one of the following ways:
+
+<UL type="disc">
+	<LI>Its <B>MiniportSend</B> function returns NDIS_STATUS_PENDING.</li>
+</UL>
+
+<P>In either of these circumstances, the network adapter driver eventually must call <A HREF="_wcesdk_ndismsendcomplete.htm"><B>NdisMSendComplete</B></A> or <A HREF="_wcesdk_ndismwansendcomplete.htm"><B>NdisMWanSendComplete</B></A> to indicate that it has released ownership of the packet and that the driver has sufficient resources available to accept the next transmit request.</P>
+
+<P>However, before a miniport calls <B>NdisMSendComplete</B> for a pending packet, it can call this function if the driver and its network adapter are capable of accepting another send request immediately, provided NDIS has one in its queue to submit to that driver. Such a call allows the driver of a high-capacity network adapter to optimize transmissions over the network by sending more data at a time.</P>
+
+<P>This function can be called only between the return of NDIS_STATUS_PENDING for a specified packet and the miniport’s call to <B>NdisMSendComplete</B> with that packet.</P>
+
+<P>A WAN miniport cannot call this function.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_miniportsend.htm"><B>MiniportSend</B></A>, <A HREF="_wcesdk_ndismsendcomplete.htm"><B>NdisMSendComplete</B></A>, <A HREF="_wcesdk_ndismwansendcomplete.htm"><B>NdisMWanSendComplete</B></A>, <A HREF="_wcesdk_ndissend.htm"><B>NdisSend</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

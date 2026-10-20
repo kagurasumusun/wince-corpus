@@ -1,0 +1,148 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPOutlookItemCollection::Find</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPOutlookItemCollection::Find"/>
+<MSHelp:RLTitle Title="IPOutlookItemCollection::Find"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ipoutlookitemcollection_find"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<OBJECT ID="obj_cook" CLASSID="clsid:59CC0C20-679B-11D2-88BD-0800361A1803" STYLE="display:none;"></OBJECT>
+
+
+<H1>IPOutlookItemCollection::Find</H1>
+
+<P>This method is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This method finds the first Pocket Outlook item in a collection that passes the specified restriction. </P>
+
+<PRE class="syntax"><B>HRESULT Find(&nbsp;BSTR </B><I>pwszRestriction</I>, <B>IDispatch **</B> <I>ppolItem </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pwszRestriction</I></DT>
+
+<DD>[in] A restriction string that defines which items to find. This must contain a boolean expression that evaluates to TRUE or FALSE for any item. Enclose property names between brackets. You can combine expressions with <B>AND </B>and <B>OR</B>. Comparison operators are the following: &lt;, &lt;=, &gt;, &gt;=, = or &lt;&gt;.
+
+<P>For example, the restriction string [CompanyName] = “Microsoft” returns the first item that has Microsoft as the company.
+</dd>
+
+<DT><I>ppolItem</I></DT>
+
+<DD>[out] A pointer to a pointer to the item found by the method. This is set to NULL if no item passes the restriction.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates success. If an error occurs, the appropriate <B>HRESULT</B> value is returned. If no item matches the restriction, the return value is S_OK and <I>ppolItem</I> is set to NULL.</P>
+
+<H4>Remarks</H4>
+
+<P>An item without the specified property set will not pass a restriction regardless of the restriction string. For example, if you do not set the email address for a contact, the contact will not be found using the restriction string [Email1Address]&lt;&gt;foo@bar.com even though it does not have foo@bar.com associated with it.</P>
+
+<P><B>Find</B> does not support restrictions based on the following item properties: <B>BodyInk, ReminderTime, Recipients</B>.</P>
+
+<P>Use <A HREF="_wcesdk_ipoutlookitemcollection_findnext.htm">FindNext</A> to find subsequent items in a collection that pass the restriction.</P>
+
+<H4>Code Example <SPAN class=plat>[Visual Basic]</SPAN></H4>
+
+<P>The following Visual Basic® code snippet shows how set the current home city as Seattle:</P>
+
+<PRE class="code">Sub SetHomeCity(polApp As PocketOutlook.Application)
+Dim pCity as PocketOutlook.CityItem
+Set strQuery = “[NAME] = “ &amp; Chr(34) &amp; “Seattle, WA” &amp; Chr(34)
+Set pCity = polApp.GetDefaultFolder(olFolderCities).Items.Find(strQuery)
+polApp.HomeCity = pCity
+polApp.CurrentCityIndex = olHomeCity
+End Sub</PRE>
+
+<H4>Code Example <SPAN class=plat>[C++]</SPAN></H4>
+
+<P>The following C++ code snippet shows how to set the home city as Seattle:</P>
+
+<PRE class="code">void SetHomeCity(IPOutlookApp *polApp)
+{
+IFolder *pFolder;
+IPOutlookItemCollection *polItems;
+ICity *pCity;
+
+// Get the cities folder
+polApp-&gt;GetDefaultFolder(olFolderCities, &amp;pFolder);
+
+// Get the cities Items collection
+pFolder-&gt;get_Items(&amp;polItems);
+
+// Find Seattle, WA
+polItems-&gt;Find(TEXT(“[Name] = \”Seattle, WA\””), (IDispatch **) &amp;pCity);
+
+// Make Seattle, WA the home city
+polApp-&gt;put_HomeCity(pCity);
+polApp-&gt;put_CurrentCityIndex(olHomeCity);
+
+// Release objects
+pFolder-&gt;Release();
+polItems-&gt;Release();
+pCity-&gt;Release();
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ipoutlookitemcollection__unknown.htm">IPOutlookItemCollection::Unknown</A>, <A HREF="_wcesdk_ipoutlookitemcollection_propertylist.htm">IPOutlookItemCollection Property Methods</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

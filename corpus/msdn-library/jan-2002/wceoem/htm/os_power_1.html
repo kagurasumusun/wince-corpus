@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Transitioning Between Power States</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Transitioning Between Power States"/>
+<MSHelp:RLTitle Title="Transitioning Between Power States"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_transitioning_between_power_states"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Transitioning Between Power States</H1>
+
+<P>The following list describes the transitions between the power states for Windows CE&#0150;based target devices.
+
+<UL type="disc">
+	<LI>Power-on reset
+<P>Power-on reset occurs when the target device is in the no power state and batteries are installed or AC power is applied for the first time. Power is applied to the CPU, ROM, and RAM, allowing the system to operate. When power is applied to the target device, RAM is cleared (both the file system and working RAM), the file system is initialized to its default state (copying initial files from ROM), and the target platform transitions to the on power state.
+</li>
+
+	<LI>Cold boot
+<P>A cold boot is a complete reset of the target device in which all applications are forcibly closed and working RAM and the file system are cleared. Typically, a cold boot is initiated by removing all power from the target device, including any backup batteries. When power is reapplied, the device performs a power-on reset.
+</li>
+
+	<LI>Warm boot
+<P>A warm boot&#0151;a transition from the on, idle, or suspend power state&#0151;closes all applications, clears working RAM, and preserves the file system. A warm boot can occur as a result of a software interrupt or by pressing the reset switch on the target device.
+
+<P>An application can perform a warm boot of the device by calling the <A HREF="krnl_f_14.htm"><B>KernelIoControl</B></A> function and passing the control code IOCTL_HAL_REBOOT. This I/O control code is an OEM-supplied routine, and may not be implemented on all devices.
+</li>
+
+	<LI>On-to-idle
+<P>When transitioning from the on power state to the idle power state, the CPU internal clock is stopped. The transition requires approximately 10 microseconds. While in the idle power state, the CPU uses little power and waits for an interrupt to occur. The kernel calls the <A HREF="oal_f_37.htm"><B>OEMIdle</B></A> function when there are no threads ready to run.
+</li>
+
+	<LI>Idle-to-on
+<P>Typically, the timer interrupt causes the CPU to transition from the idle power state to the on power state; however, any interrupt occurring on the target device can cause the transition. When the kernel receives an interrupt, the CPU is returned to full-power operation.
+</li>
+
+	<LI>On-to-suspend
+<P>The transition from the on power state to the suspend power state occurs during the following events:
+
+<UL type="disc">
+	<LI>Timeout of the user input inactivity timer.</li>
+
+	<LI>The OFF switch on the target device is pressed.</li>
+
+	<LI>An application program calls the <B>GwesPowerOff</B> function.</li>
+</UL>
+</li>
+
+	<LI>Suspend-to-on
+<P>The transition from the suspend power state to the on power state occurs during the following events:
+
+<UL type="disc">
+	<LI>The on switch is pressed on the target device.</li>
+
+	<LI>An alarm event.</li>
+
+	<LI>A wake-up event&#0151;for example, carrier detection&#0151;on the target device, or an OEM-specific wake-up source, such as the ring indicator on a PCMCIA modem.</li>
+</UL>
+</li>
+
+	<LI>Critical-to-off
+<P>A critical-to-off transition occurs when battery voltages for the primary batteries decrease to a critically low level that prevents the target device from performing a safe shutdown.
+
+<P>Instead of executing an on-to-suspend transition, during which power is shut down in a timely manner, the critical-to-off transition bypasses the normal steps of turning off power to any peripherals or devices by immediately shutting down power to them and applying refresh voltage to the RAM. This preserves the file system and sets the CPU to the suspend power state.
+
+<P>Recovery from a critical-to-off transition occurs when adequate power is applied to the device. Note that the process of a target device recovering from a critical-to-off transition is equivalent to a warm boot transition.
+</li>
+</UL>
+
+<P>Outside of the OAL, the device drivers are also notified of on-to-suspend and suspend-to-on transitions. </P>
+
+<P>During an on-to-suspend transition, the device driver can respond to these notifications by saving the current state of the hardware in RAM, and then shutting down the hardware in the appropriate order. Then, as the suspend-to-on transition occurs, the device driver can re-initialize the hardware and reset any necessary power states. For more information about power management routines, see the driver development documentation.</P>
+
+<P>Because the drivers are called while the operating system is not scheduling other tasks, this limits the actions that a device driver can take in these power states. During the transitions, most function calls are not available and no other threads are running. </P>
+
+<P>For example, a driver cannot enter a critical section to guard access to its resources in its power down and power up functions. However, these functions will run to completion without interruption because they are called in the kernel’s power-up/power-down thread context. To allow more complex power-on scenarios, the <A HREF="krnl_f_23.htm"><B>SetInterruptEvent</B></A> function is available during the PowerHandler state, and is used to signal the interrupt event for the driver. Typically, the <B>PowerOn</B> routine will set a driver variable indicating that <B>PowerOn</B> has occurred, and then call <B>SetInterruptEvent</B>. Once <B>PowerOn</B> has completed, the IST, which is scheduled as a result of the event, can use the driver variable to perform any complex power-on handling. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

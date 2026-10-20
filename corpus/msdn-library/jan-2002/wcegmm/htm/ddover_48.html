@@ -1,0 +1,65 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Flipping Surfaces</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Flipping Surfaces"/>
+<MSHelp:RLTitle Title="Flipping Surfaces"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_flipping_surfaces"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdrawsurface5_flip_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_idirectdrawsurface5_lock_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_idirectdrawsurface5_blt_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_idirectdrawsurface5_bltfast_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_idirectdrawsurface5_getdc_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_dderr_wasstilldrawing_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Flipping Surfaces</H1>
+
+<P>Any surface in DirectDraw can be constructed as a <I>flipping surface</I>. A flipping surface is any piece of memory that can be swapped between a front buffer and a back buffer. (This construct is commonly referred to as a flipping chain). Often, the front buffer is the primary surface, but it doesn't have to be.</P>
+
+<P>Typically, when you use the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDrawSurface5::Flip</B></A> method to request a surface flip operation, the pointers to surface memory for the primary surface and back buffers are swapped. Flipping is performed by switching pointers that the display device uses for referencing memory, not by copying surface memory. (The exception to this is when DirectDraw is emulating the flip, in which case it simply copies the surfaces. DirectDraw emulates flip operations if a back buffer cannot fit into display memory or if the hardware doesn't support DirectDraw.) When a flipping chain contains a primary surface and more than one back buffer, the pointers are switched in a circular pattern, as shown in the following illustration.</P>
+
+<P class="fig"><IMG SRC="trplflip.gif" ALT="" BORDER=0></P>
+
+<P>Other surfaces that are attached to a DirectDraw object, but not part of the flipping chain, are unaffected when the <B>Flip</B> method is called.</P>
+
+<P>Remember, DirectDraw flips surfaces by swapping surface memory pointers within DirectDrawSurface objects, not by swapping the objects themselves. This means that, to blit to the back buffer in any type of flipping scheme, you always use the same DirectDrawSurface object — the one that was the back buffer when you created the flipping chain. Conversely, you always perform a flip operation by calling the front surface's <B>Flip</B> method.</P>
+
+<P>When working with visible surfaces, such as a primary surface flipping chain or a visible overlay surface flipping chain, the <B>Flip</B> method is asynchronous unless you include the DDFLIP_WAIT flag. On these visible surfaces, the <B>Flip</B> method can return before the actual flip operation occurs in the hardware (because the hardware doesn't flip until the next vertical refresh occurs). While the actual flip operation is pending, the back buffer behind the currently visible surface can't be locked or blitted by calling the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectDrawSurface5::Lock</B></A>, <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectDrawSurface5::Blt</B></A>, <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectDrawSurface5::BltFast</B></A>, or <A HREF="JavaScript:hhobj_5.Click()"><B>IDirectDrawSurface5::GetDC</B></A> methods. If you attempt to call these methods while a flip operation is pending, they will fail and return <A HREF="JavaScript:hhobj_6.Click()">DDERR_WASSTILLDRAWING</A>. However, if you are using a triple buffered scheme, the rearmost buffer is still available.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

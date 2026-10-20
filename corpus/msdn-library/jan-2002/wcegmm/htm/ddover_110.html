@@ -1,0 +1,78 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Types of Palette Entries in Windowed Mode</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Types of Palette Entries in Windowed Mode"/>
+<MSHelp:RLTitle Title="Types of Palette Entries in Windowed Mode"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_types_of_palette_entries_in_windowed_mode"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Types of Palette Entries in Windowed Mode</H1>
+
+<P>Unlike full-screen exclusive mode applications, windowed applications must share the desktop palette with other applications. This imposes several restrictions on which palette entries you can safely modify and how you can modify them. The <B>PALETTEENTRY</B> structure you use when working with DirectDrawPalette objects and GDI contains a <B>peFlags</B> member to carry information that describes how the system should interpret the <B>PALETTEENTRY</B> structure.</P>
+
+<P>The <B>peFlags</B> member describes three types of palette entries, discussed in this topic:
+
+<UL type="disc">
+	<LI>Windows static entries</li>
+
+	<LI>Animated entries</li>
+
+	<LI>Nonanimated entries</li>
+</UL>
+
+<P><B>Windows static entries</B></P>
+
+<P>In normal mode, Windows reserves palette entries 0 through 9 and 246 through 255 for system colors that it uses to display menu bars, menu text, window borders, and so on. In order to maintain a consistent look for your application and avoid damaging the appearance of other applications, you need to protect these entries in the palette you set to the primary surface. Often, developers retrieve the system palette entries by calling the <B>GetSystemPaletteEntries</B> Win32&reg; function, then explicitly set the identical entries in a custom palette to match before assigning it to the primary surface. Duplicating the system palette entries in a custom palette will work initially, but it becomes invalid if the user changes the desktop color scheme.</P>
+
+<P>To avoid having your palette look bad when the user changes color schemes, you can protect the appropriate entries by providing a reference into the system palette instead specifying a color value. This way, no matter what color the system is using for a given entry, your palette will always match and you won't need to do any updating. The PC_EXPLICIT flag, used in the <B>peFlags</B> member, makes it possible for you to directly refer to a system palette entry. When you use this flag, the system no longer assumes that the other structure members include color information. Rather, when you use PC_EXPLICIT, you set the value in the <B>peRed</B> member to the desired system palette index and set the other colors to zero.</P>
+
+<P>For instance, if you want to ensure that the proper entries in your palette always match the system's color scheme, you could use the following code:</P>
+
+<PRE class="code">// Set the first and last 10 entries to match the system palette.
+PALETTEENTRY pe[256];
+ZeroMemory(pe, sizeof(pe));
+for(int i=0;i&lt;10;i++){
+    pe[i].peFlags  = pe[i+246].peFlags = PC_EXPLICIT;
+    pe[i].peRed = i;
+    pe[i+246].peRed = i+246;
+}
+ </PRE>
+
+<P>You can force Windows to use only the first and last palette entry (0 and 255) by calling the <B>SetSystemPaletteUse</B> Win32 function. In this case, you should set only entries 0 and 255 of your <B>PALETTEENTRY</B> structure to PC_EXPLICIT.</P>
+
+<P><B>Animated entries</B></P>
+
+<P>You specify palette entries that you will be animating by using the PC_RESERVED flag in the corresponding <B>PALETTEENTRY</B> structure. Windows will not allow any other application to map its logical palette entry to that physical entry, thereby preventing other applications from cycling their colors when your application animates the palette.</P>
+
+<P><B>Nonanimated entries</B></P>
+
+<P>You specify normal, nonanimated palette entries by using the PC_NOCOLLAPSE flag in the corresponding <B>PALETTEENTRY</B> structure. The PC_NOCOLLAPSE flag informs Windows not to substitute some other already-allocated physical palette entry for that entry.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

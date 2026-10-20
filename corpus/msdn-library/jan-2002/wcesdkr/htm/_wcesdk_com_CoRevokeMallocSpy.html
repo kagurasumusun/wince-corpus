@@ -1,0 +1,101 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoRevokeMallocSpy</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoRevokeMallocSpy"/>
+<MSHelp:RLTitle Title="CoRevokeMallocSpy"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_corevokemallocspy"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoRevokeMallocSpy</H1>
+
+<P>This function revokes a registered <B>IMallocSpy</B> object.</P>
+
+<PRE class="syntax"><B>HRESULT CoRevokeMallocSpy( );</B></PRE>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The <B>IMallocSpy</B> object is successfully revoked.</dd>
+
+<DT>CO_E_OBJNOTREG</DT>
+
+<DD>No spy is currently registered.</dd>
+
+<DT>E_ACCESSDENIED</DT>
+
+<DD>Spy is registered but there are outstanding allocations (not yet freed) made while this spy was active.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>IMallocSpy</B> object is released when it is revoked. This release corresponds to the call to <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A> in the implementation of the <B>QueryInterface</B> function by the <A HREF="_wcesdk_com_coregistermallocspy.htm"><B>CoRegisterMallocSpy</B></A> function. The implementation of the <B>IMallocSpy</B> interface should then do any appropriate cleanup.</P>
+
+<P>If the return code is E_ACCESSDENIED, there are still outstanding allocations that were made while the spy was active. In this case, the registered spy cannot be revoked at this time because it may have attached arbitrary headers and/or trailers to these allocations that only the spy knows about. Only the spy's <B>PreFree</B> (or <B>PreRealloc</B>) method knows how to account for these headers and trailers. Before returning E_ACCESSDENIED, <B>CoRevokeMallocSpy</B> notes internally that a revoke is pending. When the outstanding allocations have been freed, the revoke proceeds automatically, releasing the <B>IMallocSpy</B> object. Thus, it is necessary to call <B>CoRevokeMallocSpy</B> only once for each call to <B>CoRegisterMallocSpy</B>, even if E_ACCESSDENIED is returned.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><B>CoGetMalloc </B></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

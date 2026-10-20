@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>The EmulatedLine Function</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="The EmulatedLine Function"/>
+<MSHelp:RLTitle Title="The EmulatedLine Function"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_the_emulatedline_function"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>The EmulatedLine Function</H1>
+
+<P><B>EmulatedLine</B> is the GPE default line-drawing function. The following code example shows the algorithm <B>EmulatedLine</B> uses.</P>
+
+<PRE class="code">long accum = (long)(pParms-&gt;dN) + pParms-&gt;llGamma;
+long axstp = (long)(pParms-&gt;dN);
+long dgstp = (long)(pParms-&gt;dN) - (long)(pParms-&gt;dM);
+for( remainingPels = pParms-&gt;cPels; remainingPels; remainingPels-- )
+{
+   if( accum &lt; 0)
+   {
+      accum += axstp;
+   }
+   else
+   {
+       increment_in_minor_direction;
+       accum += dgstp;
+   }
+}
+increment_in_major_direction;
+draw_current_pixel;
+}</PRE>
+
+<P>You should use <B>EmulatedLine</B> to handle diagonal lines, which are relatively rare and therefore usually do not need to be accelerated. Similarly, it is quite rare for line styles to be used. <B>EmulatedLine </B>should be used as the default processor for this case as well.</P>
+
+<P>For devices that support hardware line-drawing acceleration, the driver can implement its own accelerated line function to replace the default <B>EmulatedLine</B> implementation. Alternatively, the driver can call an existing emulation function or create a new software emulation function to handle the line drawing. Even if adequate line-drawing acceleration is available, if solid-fill block transfer (BLT) acceleration is implemented in the hardware, this should be used to accelerate horizontal and vertical lines, since hardware-accelerated BLT operations are almost always faster than hardware accelerated line operations.</P>
+
+<P>The recommended approach for most situations is to emulate all diagonal and styled lines, and to use either line-drawing hardware or fill-BLT hardware to accelerate horizontal and vertical lines. Horizontal and vertical lines comprise the majority of lines drawn by Windows CE, so this approach gives good results.</P>
+
+<P>For horizontal and vertical lines, <I>dN</I> will be zero and no account need be taken of the subpixel information in <I>dM</I> and error term <I>llgamma</I>, as shown in the following code example.</P>
+
+<PRE class="code">if( pLineParms-&gt;dN == 0 )
+{
+     //Line is vertical or horizontal
+     //Use fill-BLGT or h/w line to draw a line starting at
+     //pLineParms-&gt;xStart, pLineParms-&gt;yStart
+     //in the direction specified by pLineParms-&gt;iDir
+     //for a total of pLineParms-&gt;cPels pixels
+}
+else   // use software implementation for diagonal lines
+{
+     return EmulatedLine( pLineParms );
+}</PRE>
+
+<P>For diagonal lines, the values in the <I>dM</I>, <I>dN</I>, and error term <I>llgamma </I>fields of <A HREF="struct_1_25.htm"><B>GPELineParms</B></A> contain subpixel information. This information should be used when initializing hardware line-drawing registers, otherwise diagonal lines that are clipped will be incorrectly drawn. This effect can be quite noticeable when moving a window over another window that contains a diagonal line.</P>
+
+<P>In the prepare phase, the driver performs a general inspection of the line parameters to determine whether it can accelerate the line. When the acceleration function is called, the driver might need to perform additional validation. This is because when the driver's accelerated function is called, it will be for a specific path segment clipped to a specific clipping region. The driver must ensure that the line segment length will not cause its hardware registers to overflow.</P>
+
+<P>The sample code below shows how to make these additional checks. Because the <I>dM</I> and <I>dN</I> values are originally expressed in 1/16ths of a pixel, the hardware slope iterators of the device must be able to retain these lengths for whatever line segment is being drawn. A lot of hardware is designed to be able to draw a diagonal line across the whole screen, but this hardware expects the <I>dM</I>, <I>dN</I> values (or equivalents) to be expressed in pixels. Because GPE uses subpixel precision, these counters need 4 more bits. For short lines, this is not a problem. However, for long lines, these values can overflow the registers and cause the hardware to draw incorrect lines.</P>
+
+<P>While diagonal lines are uncommon, long diagonal lines are extremely rare, so the time taken to render long diagonal lines using the <B>EmulatedLine</B> function is unimportant. The following code sample shows one way to check the line parameters to ensure that they will not overflow the hardware registers.</P>
+
+<PRE class="code">Int errTerm = (in)pLineParms-&gt;dN +
+              (in)pLineParms-&gt;llGamma &#0150;
+              ( ( command &amp; PLUS_X ) ? 0 " 1 );
+   if(
+     ( pLineParms-&gt;dN &gt; 4090 ||   //Remember dM &gt;= dN
+     ( errTerm &gt; 4090 ) ||
+     ( errTerm &lt; -4090 ) )
+   {
+      RetVal = EmulatedLine(pLineParms); //The hardware DDA would
+                                         //overflow; use emulation.
+   }
+   else
+   {
+     WaitForFIFO(7);     //seven parameters required
+     reg_ALT_CURXY = ((pLineParms-&gt;xStart + ((S3Trio64Surf*)
+                      (pLineParms-&gt;pDst))-&gt;Left()) &lt;&lt; 16 |
+                      (pLineParms-&gt;yStart + ((S3Trio64Surf*)
+                      (pLineParms-&gt;pDst))-&gt;Top());
+     reg_MAJ_AXIS_PCNT = (pLineParms-&gt;cPels-1);
+     reg_ALT_STEP = (((pLineParms-&gt;dN-pLineParms-&gt;dN)/*&amp;0x3FFF*/)&lt;&lt;16) |
+                    (pLineParms-&gt;dN /*&amp;0x3FFF*/);
+     reg_err_Term = errTerm /*&amp;0x3FFF*/;
+     reg_CMD = command;
+     RetVal = S_OK;
+   }</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

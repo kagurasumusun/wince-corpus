@@ -1,0 +1,112 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>About Effect Filters</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="About Effect Filters"/>
+<MSHelp:RLTitle Title="About Effect Filters"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_about_effect_filters"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ctransformfilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ctransinplacefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_cbasepin__checkmediatype" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_ctransformfilter__checkinputtype" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ctransformfilter__checktransform" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_cbasefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_cbasepin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_cautolock_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>About Effect Filters</H1>
+
+<P>In Microsoft&reg; DirectShow&reg;, <I>effect filters</I> are defined as filters that apply an effect to media data, but don't change the media type. </P>
+
+<P>Because the input and output media formats are the same, and the applied effect can't change the format, effect filters often contain a code that checks the media formatting. If the filter derives from one of the transform filter base classes, <A HREF="JavaScript:hhobj_1.Click()"><B>CTransformFilter</B></A> or <A HREF="JavaScript:hhobj_2.Click()"><B>CTransInPlaceFilter</B></A>, the filter typically checks the format with the <A HREF="JavaScript:hhobj_3.Click()"><B>CheckMediaType</B></A>, <A HREF="JavaScript:hhobj_4.Click()"><B>CTransformFilter::CheckInputType</B></A>, and <A HREF="JavaScript:hhobj_5.Click()"><B>CheckTransform</B></A> methods. If the filter doesn't derive from one of the transform filter base classes, its pins typically check the format by calling the <B>CBasePin::CheckMediaType</B> member function. For more information, see <A HREF="dshow_37.htm#_dxce_dshow_negotiating_media_types_with_cbasepin__agreemediatype">Negotiating Media Types with CBasePin::AgreeMediaType</A>. </P>
+
+<P>You should choose a base class for your effect filter class that provides the greatest amount of the functionality you need. Often, the base class will be one of the transform filter base classes. If none of the higher-level base classes support your required functionality, you can choose <A HREF="JavaScript:hhobj_6.Click()"><B>CBaseFilter</B></A> or <A HREF="JavaScript:hhobj_7.Click()"><B>CBasePin</B></A> as your base class. </P>
+
+<P>If you want the user to be able to manipulate the effect, you must create and display your effect filter's property page and provide a mechanism for returning the user's input to the filter. To do this, implement a property page class, the <B>ISpecifyPropertyPages </B>interface (which exposes property pages), and a custom interface that changes property page values. Typically, property pages use controls such as a slider, button, or check box to receive user input. You also must provide the resource file that displays the controls on the property page. </P>
+
+<P>To implement the property page class, create a class that derives from <B>CBasePropertyPage</B> and implement the <B>OnReceiveMessage</B> method, the <B>CPersistStream::SetDirty</B> method, and a data member for each effect parameter. To access the two interfaces, derive your effect filter class from <B>ISpecifyPropertyPages</B> and the custom interface, and then query for the interfaces. You can query for all the interfaces you need by overriding the <B>NonDelegatingQueryInterface</B> method as shown in the following code example (IGargle is the custom interface). </P>
+
+<PRE class="code">STDMETHODIMP CGargle::NonDelegatingQueryInterface(REFIID riid, void **ppv)
+{
+    CheckPointer(ppv,E_POINTER);
+    if (riid == IID_IGargle) {
+        return GetInterface((IGargle *) this, ppv);
+    } else if (riid == IID_ISpecifyPropertyPages) {
+        return GetInterface((ISpecifyPropertyPages *) this, ppv);
+    } else if (riid == IID_IPersistStream) {
+        return GetInterface((IPersistStream *) this, ppv);
+    } else {
+        return CTransInPlaceFilter::NonDelegatingQueryInterface(riid, ppv);
+    }
+} </PRE>
+
+<P>The effect filter's custom interface typically supplies a put and a get method for each effect parameter. For example, the IGargle custom interface supplies put_GargleRate and get_GargleRate methods. The IContrast custom interface in the Contrast sample supplies put_ContrastLevel and get_ContrastLevel methods. When the user accesses one of the controls on the property page, the page generates a windows message. The property page class's OnReceiveMessage member function handles this message. The following code fragment from the Contrast sample demonstrates this message generation and handling. IDB_DEFAULT is the resource ID of the Default button. The user clicks this button to set the video contrast to its default state. The CContrastProperties class implements the property page and the IContrast::put_DefaultContrastLevel method sets the contrast level to its default value. </P>
+
+<PRE class="code">BOOL CContrastProperties::OnReceiveMessage(HWND hwnd, UINT uMsg,
+    WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+       case WM_COMMAND:
+        {
+          if (LOWORD(wParam) == IDB_DEFAULT)
+            {
+            pIContrast()-&gt;put_DefaultContrastLevel();
+            SendMessage(m_hwndSlider, TBM_SETPOS, TRUE, 0L);
+              SetDirty();
+        }
+            return (LRESULT) 1;
+        }
+...</PRE>
+
+<P>Effect filters use critical sections internally to protect the global filter state. Effect filters can lock a critical section to ensure that data flow through the filter graph is serialized and that the global filter state doesn't change while an effect is occurring. DirectShow locks a critical section by declaring a <A HREF="JavaScript:hhobj_8.Click()"><B>CAutoLock</B></A> class object. Typically, effect filters lock the critical section as soon as they enter the function that applies the effect. For example, in the following code fragment, the function that applies the effect is MessItAbout: </P>
+
+<PRE class="code">// Declare the critical section data member in
+// the effect filter class definition.
+CCritSec   m_GargleLock;
+
+void CGargle::MessItAbout(PBYTE pb, int cb)
+{
+    CAutoLock foo(&amp;m_GargleLock);</PRE>
+
+<P>The put and get methods of the effect properties (for example, put_GargleRate) typically lock the critical section so effect values can't change in the middle of an update. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

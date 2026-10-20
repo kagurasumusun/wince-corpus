@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisOpenConfiguration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisOpenConfiguration"/>
+<MSHelp:RLTitle Title="NdisOpenConfiguration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndisopenconfiguration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisOpenConfiguration</H1>
+
+<P>This function returns a handle for an NDIS NIC driver’s <B>\<I>DriverName</I>\Parms</B> registry key.</P>
+
+<PRE class="syntax"><B>VOID</B> <B>NdisOpenConfiguration(
+OUT PNDIS_STATUS</B> <I>Status</I><B>,</B>
+<B>OUT PNDIS_HANDLE</B> <I>ConfigurationHandle</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>WrapperConfigurationContext</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns the status of its attempt to open the registry key. Possible return values are the following:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NDIS_STATUS_SUCCESS</TD>
+<TD width=64%>The value at <I>ConfigurationHandle</I> is valid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NDIS_STATUS_FAILURE</TD>
+<TD width=64%>The key could not be opened.</TD>
+</TR>
+</TABLE><BR>
+
+</dd>
+
+<DT><I>ConfigurationHandle</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns a handle to the registry <B>HKEY_LOCAL_MACHINE\System\CurrentControlSet<BR>
+\Services\<I>DriverName</I>\Parameters</B> key. Value entries under this key are provided by the driver’s installation script.</dd>
+
+<DT><I>WrapperConfigurationContext</I></DT>
+
+<DD>Handle input to the <B>MiniportInitialize</B> function.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>With the handle returned by this function, an NDIS miniport can call the <B>NdisReadConfiguration</B> function one or more times to extract configuration information about its NIC from the registry. A miniport can also call <B>NdisReadNetworkAddress</B> with this handle to retrieve software-configurable network address information that was stored in the registry when its NIC was installed in the current computer.</P>
+
+<P>A miniport’s installation script must store at least the following configuration information in the registry:
+
+<UL type="disc">
+	<LI>The NIC’s I/O bus interface type.</li>
+
+	<LI>If it is not on an ISA bus, the bus number.</li>
+
+	<LI>The NIC’s adapter ID value, which, depending on the I/O bus interface type, is equivalent to the following bus-type-specific configuration data value:
+<P>If the NIC is on a PCI bus, the value of the PCI <B>DeviceId</B>
+</li>
+</UL>
+
+<P>Drivers of NICs on ISA buses usually get bus-relative configuration parameters for an NIC from the registry with the <B>NdisReadConfiguration</B> function. Drivers of NICs on other types of I/O buses can also call <B>Ndis</B><I>XXX</I> bus-type-specific configuration functions to get bus-relative NIC-specific configuration parameters suitable for calling functions, such as <B>NdisMRegisterInterrupt</B>, <B>NdisMMapIoSpace</B>, and/or <B>NdisMRegisterIoPortRange</B>.</P>
+
+<P>An NIC driver calls the <B>NdisMSetAttributes</B> or the <B>NdisMSetAttributesEx</B> function to identify the type of I/O bus on which its NIC is likely to be found before that driver calls any of the bus-type-specific configuration functions.</P>
+
+<P>After a driver has consumed and, possibly, modified the registry configuration information, the driver must call the <B>NdisCloseConfiguration</B> function to release the handle obtained from this function and to free any temporary storage that NDIS allocated in the driver’s calls to <B>NdisReadConfiguration</B>, <B>NdisReadNetworkAddress</B>, and/or <B>NdisWriteConfiguration</B>.</P>
+
+<P>A driver that calls this function runs at IRQL PASSIVE_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_234.htm"><B>NdisMMapIoSpace</B></A>, <A HREF="funct_1_242.htm"><B>NdisMRegisterInterrupt</B></A>, <A HREF="funct_1_243.htm"><B>NdisMRegisterIoPortRange</B></A>, <A HREF="funct_1_244.htm"><B>NdisMRegisterMiniport</B></A>, <A HREF="funct_1_248.htm"><B>NdisMSetAttributes</B></A>, <A HREF="funct_1_249.htm"><B>NdisMSetAttributesEx</B></A>, <A HREF="funct_1_260.htm"><B>NdisOpenProtocolConfiguration</B></A>, <A HREF="funct_1_279.htm"><B>NdisReadNetworkAddress</B></A>, <A HREF="funct_1_280.htm"><B>NdisReadPciSlotInformation</B></A>, <A HREF="funct_1_282.htm"><B>NdisRegisterProtocol</B></A>, <A HREF="funct_1_299.htm"><B>NdisWriteConfiguration</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

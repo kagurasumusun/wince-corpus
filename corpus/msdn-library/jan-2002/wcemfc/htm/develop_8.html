@@ -1,0 +1,52 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Serializing Data to and from Files</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Serializing Data to and from Files"/>
+<MSHelp:RLTitle Title="Serializing Data to and from Files"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_serializing_data_to_and_from_files"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Serializing Data to and from Files</H1>
+
+<P>The basic idea of persistence is that an object should be able to write its current state, indicated by the values of its member variables, to persistent storage. Later, the object can be re-created by reading, or "deserializing," the object's state from persistent storage. A key point here is that the object itself is responsible for reading and writing its own state. Thus, for a class to be persistent, it must implement the basic serialization operations.</P>
+
+<P>The framework provides a default implementation for saving documents to disk files in response to the Save and Save As commands on the File menu and for loading documents from disk files in response to the Open command. With very little work, you can implement a document's ability to write and read its data to and from a file. The main thing you must do is override the <B>Serialize</B> member function in your document class.</P>
+
+<P>AppWizard places a skeletal override of the <B>CDocument</B> member function <B>Serialize</B> in the document class it creates for you. After you have implemented your application's member variables, you can fill in your <B>Serialize</B> override with code that sends the data to an "archive object" connected to a file. A <B>CArchive</B> object is similar to the <B>cin</B> and <B>cout</B> input/output objects from the C++ iostream library. However, <B>CArchive</B> writes and reads binary format, not formatted text. </P>
+
+<H4>The Role of the Document in Serialization</H4>
+
+<P>The framework responds automatically to the <B>Open</B>, <B>Save</B>, and <B>Save As</B> commands on the File menu by calling the document's <B>Serialize</B> member function if it is implemented. An <B>ID_FILE_OPEN</B> command, for example, calls a handler function in the application object. During this process, the user sees and responds to the <B>File Open</B> dialog box and the framework obtains the filename the user chooses. The framework creates a <B>CArchive</B> object set up for loading data into the document and passes the archive to <B>Serialize</B>. The framework has already opened the file. The code in your document's <B>Serialize</B> member function reads the data in through the archive, reconstructing data objects as needed. </P>
+
+<H4>The Role of the Data in Serialization</H4>
+
+<P>In general, class-type data should be able to serialize itself. That is, when you pass an object to an archive, the object should know how to write itself to the archive and how to read itself from the archive. MFC provides support for making classes serializable in this way. If you design a class to define a data type and you intend to serialize data of that type, design for serialization. </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,75 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enabling a Backlight</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Enabling a Backlight"/>
+<MSHelp:RLTitle Title="Enabling a Backlight"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term=""/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H2><A NAME="_wcepb_enabling_a_backlight"></A>Enabling a Backlight</H2>
+
+<P>If your hardware is equipped with a backlight, you should implement this feature by selecting the Backlight component of the Cplmain module. This component enables the backlight and allows your users to control the backlight settings. To include the Backlight component in your project, set the Backlight component as a Cplmain component in your Cesysgen.bat file.</P>
+
+<P>The following example shows a sample entry in a Cesysgen.bat file which defines the Backlight as a Cplmain component.</P>
+
+<PRE class="code">set CPLMAIN_COMPONENTS=%CPLMAIN_COMPONENTS% backlight</PRE>
+
+<P>In addition to including the Backlight component in your project, you should also create the following registry key:</P>
+
+<PRE class="code">HKEY_CURRENT_USER\\ControlPanel\\Backlight</PRE>
+
+<P>Once the backlight is enabled, your users can set separate backlight timeouts for battery and AC power. When a user changes these settings, the Control Panel updates the following registry values:</P>
+
+<PRE class="code">HKEY_CURRENT_USER\\ControlPanel\\Backlight
+   BatteryTimeout = DWORD
+   ACTimeout = DWORD</PRE>
+
+<P>Your display driver should read these values from the registry and turn off the backlight at the appropriate timeout. You can configure the initial values of these timeouts by setting these registry values to the appropriate defaults in your project.reg file.</P>
+
+<P>Whenever a change occurs in the timeout values, the Control Panel signals an event named "BackLightChangeEvent." This event eliminates the need for your display driver to constantly read the registry to monitor the timeout values for changes.</P>
+
+<P>The following example shows a display driver with a background thread that waits on the BackLightChangeEvent event.</P>
+
+<PRE class="code">//  Create an auto-reset named event, initially not set.
+//  CPL will signal this when something changes.
+HANDLE   hEvent = CreateEvent(NULL, FALSE, FALSE, "BackLightChangeEvent")
+for(;;)
+{
+   //  Wait on this event.
+   WaitForSingleObject(hEvent, INFINITE)
+   //  Got woken up. CPL must have changed some settings.
+   //  Read new settings from registry and do something useful
+   //  with the new settings.
+   //  Now loop back and wait again.
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

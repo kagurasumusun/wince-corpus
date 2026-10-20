@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMMapIoSpace</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMMapIoSpace"/>
+<MSHelp:RLTitle Title="NdisMMapIoSpace"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismmapiospace"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMMapIoSpace</H1>
+
+<P>This function maps a specified bus-relative range of physical addresses or registers onto a system-space virtual range of addresses.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMMapIoSpace(
+OUT PVOID *</B><I>VirtualAddress</I><B>,
+IN NDIS_HANDLE </B><I>MiniportAdapterHandle</I><B>,
+IN NDIS_PHYSICAL_ADDRESS </B><I>PhysicalAddress</I><B>,
+IN UINT </B><I>Length</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>VirtualAddress</I></DT>
+
+<DD>Pointer to a caller-supplied variable that is set to the converted virtual address if the call is successful.</dd>
+
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+
+<DT><I>PhysicalAddress</I></DT>
+
+<DD>Specifies the bus-relative base physical address of the device memory range to be mapped.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>Specifies the number of bytes to be mapped.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>NDIS_STATUS_SUCCESS indicates success. One of the following values indicates failure:
+
+<DL>
+<DT>NDIS_STATUS_RESOURCE_CONFLICT</DT>
+
+<DD>An attempt to claim the device memory range in the registry has failed, possibly because another driver has already claimed the range for its device. This function logs an error if this occurs.</dd>
+
+<DT>NDIS_STATUS_RESOURCES</DT>
+
+<DD>The memory could not be mapped or sufficient virtual memory could not be allocated.</dd>
+
+<DT>NDIS_STATUS_FAILURE</DT>
+
+<DD>Either the bus type or bus number is out of range, or the specified <I>PhysicalAddress</I> and <I>Length</I> are invalid, possibly not within the I/O space of the current platform.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function is called by drivers of network adapters that have on-board memory or a bank of device registers appearing in the I/O space of the host. For example, the driver of a network adapter that uses PI/O calls this function.</P>
+
+<P>A successful call to this function claims hardware resources in the registry for the driver’s network adapter. Consequently, only <B>MiniportInitialize</B> functions call this function.</P>
+
+<P>This function sets the variable at <I>VirtualAddress</I> to NULL if it does not return NDIS_STATUS_SUCCESS.</P>
+
+<P><B>MiniportInitialize</B> gets the <I>PhysicalAddress</I> value either from the driver’s <B>Parameters</B> registry key or by calling a bus-type-specific <B>Ndis<I>XXX</I></B> configuration function. The specified physical address range must fall within the I/O space of the current platform. It is a programming error to call this function with a host physical memory address.</P>
+
+<P>A miniport must call the reciprocal <A HREF="_wcesdk_ndismunmapiospace.htm"><B>NdisMUnmapIoSpace</B></A> function to release its claim on system resources if <B>MiniportInitialize</B> subsequently fails to initialize the network adapter, if its network adapter is removed from the machine, and/or when the driver is unloading.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndismunmapiospace.htm"><B>NdisMUnmapIoSpace</B></A>, <A HREF="_wcesdk_ndisopenconfiguration.htm"><B>NdisOpenConfiguration</B></A>, <A HREF="_wcesdk_ndisreadpcislotinformation.htm"><B>NdisReadPciSlotInformation</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

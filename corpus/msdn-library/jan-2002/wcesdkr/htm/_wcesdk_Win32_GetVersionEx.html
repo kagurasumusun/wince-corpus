@@ -1,0 +1,122 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetVersionEx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GetVersionEx"/>
+<MSHelp:RLTitle Title="GetVersionEx"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_getversionex"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>GetVersionEx</H1>
+
+<P>This function obtains extended information about the version of the operating system that is currently running. A remote application interface (RAPI) version of this function exists, and it is named <A HREF="_wcesdk_cegetversionex_rapi_.htm"><B>CeGetVersionEx</B></A>.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B>GetVersionEx( </B>
+<B>LPOSVERSIONINFO</B> <I>lpVersionInformation</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpVersionInformation</I></DT>
+
+<DD>[out] Pointer to an <A HREF="_wcesdk_win32_osversioninfo_str.htm"><B>OSVERSIONINFO</B></A> data structure that the function fills with operating system version information.
+
+<P>Before calling the <B>GetVersionEx</B> function, set the <I>dwOSVersionInfoSize</I> member of the <B>OSVERSIONINFO</B> data structure to <B>sizeof(OSVERSIONINFO)</B>.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. The function fails if you specify an invalid value for the <I>dwOSVersionInfoSize</I> member of the <A HREF="_wcesdk_win32_osversioninfo_str.htm"><B>OSVERSIONINFO</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>When using the <B>GetVersionEx</B> function to determine whether your application is running on a particular version of the operating system, check for version numbers that are greater than or equal to the desired version numbers. This ensures that the test succeeds for later versions of the operating system. For example, if your application requires Windows 98, use the following test:</P>
+
+<PRE class="code">GetVersionEx (&amp;osvi);
+bIsWindows98orLater =
+   (osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS) &amp;&amp;
+   ( (osvi.dwMajorVersion &gt; 4) ||
+   ( (osvi.dwMajorVersion == 4) &amp;&amp; (osvi.dwMinorVersion &gt; 0) ) );
+ </PRE>
+
+<P>Identifying the current operating system is usually not the best way to determine whether a particular operating system feature is present. This is because the operating system may have had new features added in a redistributable DLL. Rather than using <B>GetVersionEx</B> to determine the operating system platform or version number, test for the presence of the feature itself.</P>
+
+<P>To determine the best way to test for a feature, refer to the documentation for the feature of interest. The following list discusses some common techniques for feature detection:
+
+<UL type="disc">
+	<LI>You can test for the presence of the functions associated with a feature. To test for the presence of a function in a system DLL, call the <A HREF="_wcesdk_win32_loadlibrary.htm"><B>LoadLibrary</B></A> function to load the DLL. Then call the <A HREF="_wcesdk_win32_getprocaddress.htm"><B>GetProcAddress</B></A> function to determine whether the function of interest is present in the DLL. Use the pointer returned by <B>GetProcAddress</B> to call the function. Note that even if the function is present, it may be a stub that just returns an error code such as ERROR_CALL_NOT_IMPLEMENTED.</li>
+
+	<LI>You can determine the presence of some features by using the <A HREF="_wcesdk_win32_getsystemmetrics.htm"><B>GetSystemMetrics</B></A> function. For example, you can detect multiple display monitors by calling <B>GetSystemMetrics</B>(SM_CMONITORS).</li>
+
+	<LI>There are several versions of the redistributable DLLs that implement shell and common control features.</li>
+</UL>
+
+<P>The value of the <I>dwPlatformID</I> member of the OSVERSIONINFO structure will be VER_PLATFORM_WIN32_CE.</P>
+
+<P>When writing applications for the Japanese version of Handheld PC Edition software, be aware that the toolbar indicates that the version is 2.0.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coremain.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_cegetversionex_rapi_.htm"><B>CeGetVersionEx</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_getprocaddress.htm"><B>GetProcAddress</B></A>, <A HREF="_wcesdk_win32_getsystemmetrics.htm"><B>GetSystemMetrics</B></A>, <A HREF="_wcesdk_win32_loadlibrary.htm"><B>LoadLibrary</B></A>, <A HREF="_wcesdk_win32_osversioninfo_str.htm"><B>OSVERSIONINFO</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

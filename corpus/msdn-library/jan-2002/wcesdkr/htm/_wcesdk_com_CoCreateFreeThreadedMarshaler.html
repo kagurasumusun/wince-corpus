@@ -1,0 +1,135 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoCreateFreeThreadedMarshaler</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoCreateFreeThreadedMarshaler"/>
+<MSHelp:RLTitle Title="CoCreateFreeThreadedMarshaler"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_cocreatefreethreadedmarshaler"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoCreateFreeThreadedMarshaler</H1>
+
+<P>This function creates an aggregatable object capable of context-dependent marshaling.</P>
+
+<PRE class="syntax"><B>HRESULT CoCreateFreeThreadedMarshaler(
+LPUNKNOWN </B><I>punkOuter</I><B>,
+LPUNKNOWN *</B><I>ppunkMarshaler</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>punkOuter</I></DT>
+
+<DD>[in] Pointer to the aggregating object's controlling <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A>.</dd>
+
+<DT><I>ppunkMarshaler</I></DT>
+
+<DD>[out] Address of <B>IUnknown</B>* pointer variable that receives the interface pointer to the aggregatable marshaler.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return value E_OUTOFMEMORY, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The marshaler was created.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CoCreateFreeThreadedMarshaler</B> function enables an object to efficiently marshal interface pointers between threads in the same process. If your objects do not support interthread marshaling, you have no need to call this function. It is intended for use by free-threaded DLL servers that must be accessed directly by all threads in a process, even those threads associated with single-threaded apartments. It custom-marshals the real memory pointer over into other apartments as a bogus "proxy" and thereby gives direct access to all callers, even if they are not free-threaded.</P>
+
+<P>The <B>CoCreateFreeThreadedMarshaler</B> function performs the following tasks:
+
+<OL type="1">
+	<LI>Creates a free-threaded marshaler object.</li>
+
+	<LI>Aggregates this marshaler to the object specified by the <I>punkOuter</I> parameter. This object is normally the one whose interface pointers are to be marshaled.</li>
+</OL>
+
+<P>The aggregating object's implementation of <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A> should delegate <A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A> calls for IID_IMarshal to the <B>IUnknown</B> of the free-threaded marshaler. Upon receiving a call, the free-threaded marshaler performs the following tasks:
+
+<OL type="1">
+	<LI>Checks the destination context specified by the <A HREF="_wcesdk_com_comarshalinterface.htm"><B>CoMarshalInterface</B></A> function's <I>dwDestContext</I> parameter. </li>
+
+	<LI>If the destination context is MSHCTX_INPROC, copies the interface pointer into the marshaling stream.</li>
+
+	<LI>If the destination context is any other value, finds or creates an instance of COM's default (standard) marshaler and delegates marshaling to it.</li>
+</OL>
+
+<P>Values for <I>dwDestContext</I> come from the MSHCTX enumeration. MSHCTX_INPROC indicates that the interface pointer is to be marshaled between different threads in the same process. Because both threads have access to the same address space, the client thread can dereference the pointer directly rather than having to direct calls to a proxy. In all other cases, a proxy is required, so <B>CoCreateFreeThreadedMarshaler</B> delegates the marshaling job to COM's default implementation.</P>
+
+<P>Great care should be exercised in using the <B>CoCreateFreeThreadedMarshaler</B> function. This is because the performance of objects which aggregate the free-threaded marshaler is obtained through a calculated violation of the rules of COM, with the ever-present risk of undefined behavior unless the object operates within certain restrictions. The most important restrictions are:
+
+<OL type="1">
+	<LI>A free-threaded marshaler object cannot hold direct pointers to interfaces on an object that does not aggregate the free-threaded marshaler as part of its state. If the object were to use direct references to ordinary single-threaded aggregate objects, it may break their single threaded property. If the object were to use direct references to ordinary multi-threaded aggregate objects, these objects can behave in ways that show no sensitivity to the needs of direct single-threaded aggregate clients. For example, these objects can spin new threads and pass parameters to the threads that are references to ordinary single-threaded aggregate objects.</li>
+
+	<LI>A free-threaded marshaler object cannot hold references to proxies to objects in other apartments. Proxies are sensitive to the threading model and can return RPC_E_WRONG_THREAD if called by the wrong client.</li>
+</OL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_comarshalinterthreadinterfaceinstream.htm"><B>CoMarshalInterThreadInterfaceInStream</B></A>, <A HREF="_wcesdk_com_cogetinterfaceandreleasestream.htm"><B>CoGetInterfaceAndReleaseStream</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

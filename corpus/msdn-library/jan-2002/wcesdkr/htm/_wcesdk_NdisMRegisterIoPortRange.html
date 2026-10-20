@@ -1,0 +1,137 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMRegisterIoPortRange</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMRegisterIoPortRange"/>
+<MSHelp:RLTitle Title="NdisMRegisterIoPortRange"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismregisterioportrange"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMRegisterIoPortRange</H1>
+
+<P>This function sets up driver access to device I/O ports with the <B>NdisRawReadPort<I>XXX</I></B> and <B>NdisRawWritePort<I>XXX</I></B> functions and claims the range of I/O port addresses in the registry for that driver’s network adapter.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMRegisterIoPortRange(
+OUT PVOID *</B><I>PortOffset</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>IN UINT</B> <I>InitialPort</I><B>,</B>
+<B>IN UINT</B> <I>NumberOfPorts</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>PortOffset</I></DT>
+
+<DD>Specifies a caller-supplied variable in which this function returns the mapped base virtual address for the specified bus-relative I/O port range specified by <I>InitialPort</I> and <I>NumberOfPorts</I>.</dd>
+
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+
+<DT><I>InitialPort</I></DT>
+
+<DD>Specifies the bus-relative base port address for a range of ports to be mapped.</dd>
+
+<DT><I>NumberOfPorts</I></DT>
+
+<DD>Specifies the number of ports in the range to be mapped.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns one of the following:
+
+<DL>
+<DT>NDIS_STATUS_SUCCESS</DT>
+
+<DD>The specified range of I/O ports was mapped successfully; the value at <I>PortOffset</I> is valid, and the mapped range has been claimed in the registry for the network adapter.</dd>
+
+<DT>NDIS_STATUS_RESOURCE_CONFLICT</DT>
+
+<DD>An attempt to claim the I/O port range in the registry has failed, possibly because another driver already claimed the range for its device. This function logs an error if this occurs.</dd>
+
+<DT>NDIS_STATUS_RESOURCES</DT>
+
+<DD>The port range could not be mapped, or NDIS could not allocate resources to check the registry for hardware-resource conflicts.</dd>
+
+<DT>NDIS_STATUS_FAILURE</DT>
+
+<DD>Either the bus type or bus number is out of range, or the specified <I>InitialPort</I> and <I>NumberOfPorts</I> were invalid, possibly not within the I/O port space of the current platform.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>An network adapter driver calls this function from its <B>MiniportInitialize</B> function. <B>MiniportInitialize</B> must call <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A> or <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A> before calling this function.</P>
+
+<P>This function maps a bus-relative device address range that the miniport can use subsequently to access an I/O port range on its network adapter by calling the <B>NdisRaw<I>XXX</I></B> functions. A successful call claims the specified range of I/O ports in the registry for the caller’s network adapter.</P>
+
+<P>Because the parameters passed to the <B>NdisRaw<I>XXX</I></B><I> </I>have been mapped, these functions run significantly faster than the corresponding <B>NdisImmediate<I>XXX</I>Port<I>XXX</I></B>. After a successful call to this function, a miniport cannot call any of the <B>NdisImmediate<I>XXX</I>Port<I>XXX</I></B> functions with either bus-relative addresses or mapped virtual addresses within such an I/O port range.</P>
+
+<P>If its call to this function fails, <B>MiniportInitialize</B> releases all resources that it has already allocated for its network adapter, and then fails initialization for that network adapter.</P>
+
+<P>Drivers of network adapters with device registers in the host memory space call <A HREF="_wcesdk_ndismmapiospace.htm"><B>NdisMMapIoSpace</B></A> and, subsequently, the <B>NdisRead/WriteRegister<I>XXX</I></B> functions to access the network adapter registers.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndismderegisterioportrange.htm"><B>NdisMDeregisterIoPortRange</B></A>, <A HREF="_wcesdk_ndismmapiospace.htm"><B>NdisMMapIoSpace</B></A>, <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A>, <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A>, <A HREF="_wcesdk_ndisrawreadportbufferuchar.htm"><B>NdisRawReadPortBufferUchar</B></A>, <A HREF="_wcesdk_ndisrawreadportbufferulong.htm"><B>NdisRawReadPortBufferUlong</B></A>, <A HREF="_wcesdk_ndisrawreadportbufferushort.htm"><B>NdisRawReadPortBufferUshort</B></A>, <A HREF="_wcesdk_ndisrawreadportuchar.htm"><B>NdisRawReadPortUchar</B></A>, <A HREF="_wcesdk_ndisrawreadportulong.htm"><B>NdisRawReadPortUlong</B></A>, <A HREF="_wcesdk_ndisrawreadportushort.htm"><B>NdisRawReadPortUshort</B></A>, <A HREF="_wcesdk_ndisrawwriteportuchar.htm"><B>NdisRawWritePortUchar</B></A>, <A HREF="_wcesdk_ndisrawwriteportulong.htm"><B>NdisRawWritePortUlong</B></A>, <A HREF="_wcesdk_ndisrawwriteportushort.htm"><B>NdisRawWritePortUshort</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

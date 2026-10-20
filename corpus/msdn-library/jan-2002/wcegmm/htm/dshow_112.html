@@ -1,0 +1,94 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registering a Custom File Type</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Registering a Custom File Type"/>
+<MSHelp:RLTitle Title="Registering a Custom File Type"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_registering_a_custom_file_type"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_getclassfile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Registering a Custom File Type</H1>
+
+<P>This article describes how to register a new file type so that file-reader source filters can recognize it. The mechanism used here is taken from the Microsoft&reg; Win32&reg; <A HREF="JavaScript:hhobj_1.Click()"><B>GetClassFile</B></A> function, which is used to return the CLSID associated with the given file name. Microsoft&reg; DirectShow&reg; media types use the same quadruple set of values in the registry that are used for <B>GetClassFile</B> FileType registrations, but associate a file matching this criteria with a media type rather than a file type. Also, the registry entry for a DirectShow media type provides the CLSID of a source filter that can be used to read this media type. </P>
+
+<P>For both FileType and MediaType registration, a pattern in the registry contains a series of entries of the form: </P>
+
+<PRE class="code">regdb key = offset, cb, mask, value  </PRE>
+
+<P>The media type is defined as a CLSID pair, {Majortype clsid, Subtype clsid}. If the data in the file at the specified offset or offsets matches a pattern in HKEY_CLASSES_ROOT\Media Type\{&lt;major type&gt;}\{&lt;subtype&gt;}, the media type CLSID pair associated with that pattern is the media type of the file. </P>
+
+<P>The parameters of the registry key are interpreted as follows. The value of the <I>offset</I> item is an offset from the beginning or end of the file, and the <I>cb</I> item is a length in bytes. These two decimal values represent a particular byte range in the file. (A negative value for the offset item is interpreted from the end of the file.) The <I>mask</I> value is a hexadecimal bit mask that is used to perform a logical AND operation, with the byte range specified by <I>offset</I> and <I>cb</I>. The result of the logical AND operation is compared with the <I>value</I> item. If the mask is omitted, it is assumed to be all ones. The number of hexadecimal digits in <I>mask</I> and <I>value</I> must be twice the value of <I>cb</I> (because <I>cb</I> is in bytes). </P>
+
+<P>Each pattern in the registry is compared to the file in the order of the patterns in the database. The first pattern where each of the value items matches the result of the AND operation determines the media type of the file. </P>
+
+<P>Note that each entry can have multiple quadruples, all of which must match the data in the file for the media type to be associated with the file. An example of using multiple quadruples in a single entry might be to match the byte sequence at the beginning and at the end of the file. The following example shows a pattern of AB CD 12 34 as the first 4 bytes in the file and AB AB 00 AB as the last 4 bytes in the file (no masks applied here). All elements must match for the pattern to match a file with a media type. </P>
+
+<PRE class="code">0 = REG_SZ 0, 4, , ABCD1234,  -4, 4, , ABAB00AB </PRE>
+
+<P>Additionally, there can be multiple entries specified under a single media type, a match to any one of which will associate the file with the media type. </P>
+
+<P>For example, the pattern contained in the following entries of the registry requires that the first three bytes be AB CD 12, that the fourth byte be 32, 33, 34, or 35, and that the last 4 bytes be FE FE FE FE: </P>
+
+<PRE class="code">HKEY_CLASSES_ROOT
+    Media Type
+         {12345678-0000-0001-C000-000000000095}
+                {87654321-0000-0001-C000-000000000095}
+                    0 = REG_SZ 0, 4, FFFFFFFE, ABCD1234, -4, 4, , FEFEFEFE
+                    1 = REG_SZ 0, 4, FFFFFFFE, ABCD1232, -4, 4, , FEFEFEFE
+                    Source Filter = {56781234-0000-0001-C000-000000000095}</PRE>
+
+<P>If a file contains such a pattern, the media type {12345678-0000-0001-C000-000000000095}{87654321-0000-0001-C000-000000000095} will be associated with this file. The file source filter for the media type is identified by the CLSID of the Source Filter value under the key for the media type. </P>
+
+<P>The media type can be used to find filter handlers for the file in order to render it. A handler for a type performs a more exact test of the file to be sure of the type before attempting to render the data. </P>
+
+<P>Note that this scheme allows for a set of alternative masks (for instance, .wav files) that might or might not have a RIFF header. </P>
+
+<H4>Registering File Extensions Without Byte Extensions</H4>
+
+<P>As mentioned previously, you can register a particular media type/subtype pair or a source filter CLSID for a given file extension. In this case, only the type and source filter will be used to read the media type. However, if you register your own source filter, there is no requirement for the name to represent a real file because the name gets passed to the source filter for interpretation.</P>
+
+<P>The registry entries are as follows.</P>
+
+<PRE class="code">HKEY_CLASSES_ROOT\Media Type\Extensions</PRE>
+
+<P>If the file extension is .foo, the key has the following structure.</P>
+
+<PRE class="code">.foo
+REG_SZ: Media Type
+REG_SZ: Subtype
+REG_SZ: Source Filter</PRE>
+
+<P>Each value represents a GUID.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

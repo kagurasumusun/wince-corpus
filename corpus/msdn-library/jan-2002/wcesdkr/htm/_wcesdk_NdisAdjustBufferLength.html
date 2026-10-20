@@ -1,0 +1,105 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAdjustBufferLength</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisAdjustBufferLength"/>
+<MSHelp:RLTitle Title="NdisAdjustBufferLength"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisadjustbufferlength"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisAdjustBufferLength</H1>
+
+<P>This function modifies the length specified in a buffer descriptor allocated or copied by the caller.</P>
+
+<PRE class="syntax"><B>VOID NdisAdjustBufferLength(
+IN PNDIS_BUFFER </B><I>Buffer</I><B>,
+IN UINT </B><I>Length</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Buffer</I></DT>
+
+<DD>Pointer to the buffer descriptor previously allocated with the <A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A> function.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>Specifies the new length, in bytes, to be set in the buffer descriptor.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The caller of this function can pass only a buffer descriptor that was allocated by the caller. It cannot pass a buffer descriptor that was allocated by another driver.</P>
+
+<P>For example, the driver of a busmaster DMA network adapter calls this function with buffer descriptors that it allocated to specify receive buffers in its shared memory block. Before such a driver indicates received data, it calls this function to make the buffer descriptor that it includes in the receive indication match the size of the received data if it is less than the size of the network adapter’s receive buffer. When a receive packet with such an adjusted buffer descriptor has been consumed and returned to the miniport, the driver again calls this function to make the buffer descriptor match the actual size of its receive buffer again.</P>
+
+<P>The <I>Length</I> parameter passed to this function cannot be larger than the <I>Length </I>that was passed to the <B>NdisAllocateBuffer</B> function when the buffer descriptor was allocated.</P>
+
+<P>The caller of this function must restore the length to its original value before it frees the buffer descriptor with the <A HREF="_wcesdk_ndisfreebuffer.htm"><B>NdisFreeBuffer</B></A> function.</P>
+
+<P>The driver must release any spin lock that it is currently holding before calling this function.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A>, <A HREF="_wcesdk_ndisfreebuffer.htm"><B>NdisFreeBuffer</B></A>, <A HREF="_wcesdk_ndisreleasespinlock.htm"><B>NdisReleaseSpinLock</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,102 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAllocateSpinLock</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisAllocateSpinLock"/>
+<MSHelp:RLTitle Title="NdisAllocateSpinLock"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisallocatespinlock"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisAllocateSpinLock</H1>
+
+<P>This function initializes a variable of type NDIS_SPIN_LOCK, used to synchronize access to resources shared among driver functions not related to interrupts.</P>
+
+<PRE class="syntax"><B>VOID NdisAllocateSpinLock (
+IN PNDIS_SPIN_LOCK</B> <I>SpinLock</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>SpinLock</I></DT>
+
+<DD>Pointer to an opaque variable that represents a spin lock.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Before a driver calls <A HREF="_wcesdk_ndisacquirespinlock.htm"><B>NdisAcquireSpinLock</B></A>, <A HREF="_wcesdk_ndisdpracquirespinlock.htm"><B>NdisDprAcquireSpinLock</B></A>, or any of the <B>NdisInterlocked<I>XXX</I></B> functions, it must call this function to initialize the spin lock passed as a required parameter to these <B>Ndis<I>XXX</I></B> functions. The caller must provide nonpaged storage for the variable at <I>SpinLock</I>.</P>
+
+<P>After calling this function, the driver can call <B>NdisAcquireSpinLock</B> to obtain exclusive use of the resource(s) that the spin lock protects. When resource access is complete, the driver calls <A HREF="_wcesdk_ndisreleasespinlock.htm"><B>NdisReleaseSpinLock</B></A> so that other driver functions can access the resource(s) protected by that spin lock.</P>
+
+<P>As a general rule, a driver should not pass the same spin lock to every <B>Ndis<I>XXX</I>SpinLock</B> and <B>NdisInterlocked<I>XXX</I></B> that it calls subsequently. In this way, any driver might initialize more than one spin lock with this function.</P>
+
+<P>A driver should never use two spin locks to protect the same resources because nested spin-lock acquisitions frequently cause deadlocks. Even if a driver could be designed to prevent deadlocks, nested spin-lock acquisitions have an adverse effect on driver performance and I/O throughput.</P>
+
+<P>When a driver no longer requires resource protection, for example, when a network adapter is being removed and the driver is releasing the resources that it allocated for that network adapter, the driver calls <A HREF="_wcesdk_ndisfreespinlock.htm"><B>NdisFreeSpinLock</B></A>.</P>
+
+<P>Freeing a spin lock and releasing a spin lock must be distinguished. <B>NdisFreeSpinLock</B> clears the memory at <I>SpinLock</I> so it no longer represents a spin lock. Releasing an acquired spin lock with <B>NdisReleaseSpinLock</B> allows another thread of execution to acquire that spin lock.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisacquirespinlock.htm"><B>NdisAcquireSpinLock</B></A>, <A HREF="_wcesdk_ndisdpracquirespinlock.htm"><B>NdisDprAcquireSpinLock</B></A>, <A HREF="_wcesdk_ndisdprreleasespinlock.htm"><B>NdisDprReleaseSpinLock</B></A>, <A HREF="_wcesdk_ndisfreespinlock.htm"><B>NdisFreeSpinLock</B></A>, <A HREF="_wcesdk_ndismsynchronizewithinterrupt.htm"><B>NdisMSynchronizeWithInterrupt</B></A>, <A HREF="_wcesdk_ndisreleasespinlock.htm"><B>NdisReleaseSpinLock</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

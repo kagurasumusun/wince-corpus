@@ -1,0 +1,91 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using PlaySound with a Resource Identifier</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using PlaySound with a Resource Identifier"/>
+<MSHelp:RLTitle Title="Using PlaySound with a Resource Identifier"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_using_playsound_with_a_resource_identifier"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Using PlaySound with a Resource Identifier</H1>
+
+<P>To play a sound that is stored as a resource, use the <B>PlaySound</B> function. Although you can use the <B>sndPlaySound</B> function to play a resource sound, you must find, load, lock, unlock, and free the resource; in contrast, <B>PlaySound</B> completes these tasks in a single line of code.</P>
+
+<P><B>To include a .wav file as a resource in an application</B>
+
+<UL type="disc">
+	<LI>Add the following entry to the resource script (.rc) file of the application.
+<PRE class="code"><I>soundName </I>WAVE \sounds\bells.wav</PRE>
+
+<P>The <I>soundName</I> parameter is a placeholder for a name that you supply to refer to the wave resource sound. Wave resources are loaded and accessed like other application-defined Windows resources.
+</li>
+</UL>
+
+<P>The following code example shows how to use the <B>PlaySound</B> function to play a wave resource sound.</P>
+
+<PRE class="code">PlaySound (TEXT("soundName"), hInst, SND_RESOURCE | SND_ASYNC);</PRE>
+
+<P>In contrast, the following code example shows how to use the <B>sndPlaySound</B> function to play a wave resource sound.</P>
+
+<PRE class="code">BOOL PlayResource (LPTSTR lpName)
+{
+  BOOL bRtn;
+  LPTSTR lpRes;
+  HANDLE hResInfo, hRes;
+
+  // Find the wave resource.
+  hResInfo = FindResource (hInst, lpName, "WAVE");
+
+  if (hResInfo == NULL)
+    return FALSE;
+
+  // Load the wave resource.
+  hRes = LoadResource (hInst, hResInfo);
+
+  if (hRes == NULL)
+    return FALSE;
+
+  // Lock the wave resource and play it.
+  lpRes = LockResource (hRes);
+
+  if (lpRes != NULL)
+    {
+    bRtn = sndPlaySound (lpRes, SND_MEMORY | SND_SYNC | SND_NODEFAULT);
+    }
+  else
+    bRtn = 0;
+
+  return bRtn;
+}</PRE>
+
+<P>To play a wave resource sound by using <B>sndPlaySound</B>, pass into the function a pointer to a string that contains the resource name, as shown in the following code example.</P>
+
+<PRE class="code">PlayResource (TEXT("soundName"));</PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

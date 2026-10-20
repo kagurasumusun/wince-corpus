@@ -1,0 +1,86 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DirectDraw HAL Implementation</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DirectDraw HAL Implementation"/>
+<MSHelp:RLTitle Title="DirectDraw HAL Implementation"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_directdraw_hal_implementation_ddhal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>DirectDraw HAL Implementation</H1>
+
+<P>This section describes the steps required to implement minimal DirectDraw HAL functionality in your display driver. This section assumes that you do not wish to move an existing DirectDraw HAL from desktop Windows to Windows CE. For information on doing that, please see the chapter, <A HREF="ddhal_10.htm">Porting your DDHAL from the Desktop</A>.</P>
+
+<P>Before you continue, you will need the following items to implement a simple DDHAL in your display driver:
+
+<UL type="disc">
+	<LI>The contents of the DDGPE package (the basic HAL source code).</li>
+
+	<LI>The sample display driver package.</li>
+
+	<LI>The build files used to export functions from your compiled code (this usually has the name of your compiled binary, as defined in the <CODE>TARGETNAME=BINARYNAME</CODE> section of your sources file, and ends with the .def extension).</li>
+
+	<LI>The build files used to define include paths, and to attach source code and libraries to your project (usually called sources).</li>
+</UL>
+
+<P>First, modify the file used to export functions from your compiled binary. It should export the <B>HALInit</B> function. You can consult the sample driver source code file DDI.def to see how this is done. The <B>HALInit</B> function is part of the ddgpe.lib, which you should have already linked to your project.</P>
+
+<P>Next, modify your include path to include <I>drive</I>:\wince212\public\directX\oak\inc. This should be the path to the following file:
+
+<UL type="disc">
+	<LI>DDHFuncs.h</li>
+</UL>
+
+<P>This is a public header file that can be used by any display driver and should not be modified.</P>
+
+<P>Copy the following header file from the basic HAL source code into an appropriate location inside your display driver’s build directory:
+
+<UL type="disc">
+	<LI>GPEHALUsr.h</li>
+</UL>
+
+<P>This header file is private to your display driver, and can be modified to contain whatever you like. You must customize this file to implement the <B>IN_VBLANK</B> and <B>IS_BUSY</B> macros, since they are required by the sample DDHAL implementation.</P>
+
+<P>Now copy the following source code files from the basic HAL source code from the sample display drivers into your display driver’s build directory, and add them to the appropriate build files:
+
+<UL type="disc">
+	<LI>HalCaps.cpp</li>
+
+	<LI>HalDD.cpp</li>
+
+	<LI>HalSurf.cpp</li>
+
+	<LI>HalPalette.cpp</li>
+
+	<LI>Use the sample display driver that most closely matches the architecture of your display driver.</li>
+</UL>
+
+<P>Finally, compile and build your display driver and ensure that it continues to work properly. Once you have verified that it is still functional, your driver is ready to be tested with DirectDraw programs. Keep in mind that the code is not in an optimized state, and will require some customization to improve performance. See<I> </I><A HREF="ddhal_15.htm">Taking Advantage of DDGPE</A>, and <A HREF="ddhal_19.htm">Customizing Your DDHAL</A>, for more information.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

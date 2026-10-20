@@ -1,0 +1,98 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Establishing a Network Connection</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Establishing a Network Connection"/>
+<MSHelp:RLTitle Title="Establishing a Network Connection"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_establishing_a_network_connection"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_WnetAddConnection3" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_WNetConnectionDialog1" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_NETRESOURCE_str" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Establishing a Network Connection</H1>
+
+<P>To establish a network connection, the user must know something about the network to be connected to. At a minimum, the user must know the local name or UNC of the network. For more information on functions you can use to retrieve network data, see <A HREF="winnet_14.htm">Retrieving Network Data</A>. An application can use one of two functions to establish network connections: <A HREF="JavaScript:hhobj_1.Click()"><B>WNetAddConnection3</B></A> and <A HREF="JavaScript:hhobj_2.Click()"><B>WNetConnectionDialog1</B></A>. Network connections are not automatically restored in Windows CE when a user logs on.</P>
+
+<P>If a user knows the data needed to identify the network resource, an application can call <B>WNetAddConnection3</B>. The following code example shows how <B>WNetAddConnection3</B> is used to establish a connection with a network resource described by a <A HREF="JavaScript:hhobj_3.Click()"><B>NETRESOURCE</B></A> structure.</P>
+
+<PRE class="code">DWORD dwResult;
+
+// Make a connection to the network resource.
+dwResult = WNetAddConnection3 (
+                hwnd,                     // Handle to the owner window
+                &amp;nr,                      // Retrieved from enumeration
+                NULL,                     // No password
+                NULL,                     // Logged-in user
+                CONNECT_UPDATE_PROFILE);  // Update profile with
+                                          // connection data.
+if (dwResult == ERROR_ALREADY_ASSIGNED)
+{
+  MessageBox (hwnd, TEXT("Already connected to specified resource."),
+              TEXT("Info"), MB_OK);
+  return FALSE;
+}
+
+else if (dwResult == ERROR_DEVICE_ALREADY_REMEMBERED)
+{
+  MessageBox (hwnd, TEXT("Attempted reassignment of remembered device"),
+              TEXT("Info"), MB_OK);
+  return FALSE;
+}
+else if (dwResult != ERROR_SUCCESS)
+{
+  ErrorHandler (hwnd, dwResult, TEXT("WNetAddConnection3"));
+  return FALSE;
+}
+
+MessageBox (hwnd, TEXT("Connected to specified resource."),
+            TEXT("Info"), MB_OK);</PRE>
+
+<P>The <B>WNetConnectionDialog1</B> function creates a dialog box that enables a user to browse and connect to network resources. This function prompts the user to choose a local name or UNC in a dialog box. The following code example shows how <B>WNetConnectionDialog1</B> is called to create a dialog box that displays all disk resources on a network.</P>
+
+<PRE class="code">DWORD dwResult = WNetConnectionDialog1 (lpConnectDlgStruc);
+
+if (dwResult != ERROR_SUCCESS)
+{
+  ErrorHandler (hwnd, dwResult, TEXT("WNetConnectionDialog1"));
+  return FALSE;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

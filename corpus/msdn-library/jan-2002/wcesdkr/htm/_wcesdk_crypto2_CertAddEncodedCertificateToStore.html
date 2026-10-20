@@ -1,0 +1,204 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CertAddEncodedCertificateToStore</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CertAddEncodedCertificateToStore"/>
+<MSHelp:RLTitle Title="CertAddEncodedCertificateToStore"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_certaddencodedcertificatetostore"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CertAddEncodedCertificateToStore</H1>
+
+<P>This function creates a certificate context from an encoded certificate and adds it to the certificate store. The context created does not include any extended properties.</P>
+
+<P>The <B>CertAddEncodedCertificateToStore</B> function also makes a copy of the encoded certificate before adding the certificate to the store.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CertAddEncodedCertificateToStore(</B>
+<B>HCERTSTORE</B> <I>hCertStore</I><B>,</B>
+<B>DWORD</B> <I>dwCertEncodingType</I><B>,</B>
+<B>const BYTE *</B><I>pbCertEncoded</I><B>,</B>
+<B>DWORD</B> <I>cbCertEncoded</I><B>,</B>
+<B>DWORD</B> <I>dwAddDisposition</I><B>,</B>
+<B>PCCERT_CONTEXT *</B><I>ppCertContext
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCertStore</I></DT>
+
+<DD>[in] Handle to the certificate store.</dd>
+
+<DT><I>dwCertEncodingType</I></DT>
+
+<DD>[in] Specifies the type of encoding used. Currently, only X509_ASN_ENCODING is used; however, additional encoding types may be added in the future.</dd>
+
+<DT><I>pbCertEncoded</I></DT>
+
+<DD>[in] Pointer to a buffer containing the encoded certificate that is to be added to the certificate store.</dd>
+
+<DT><I>cbCertEncoded</I></DT>
+
+<DD>[in] Size, in bytes, of the <I>pbCertEncoded</I> buffer.</dd>
+
+<DT><I>dwAddDisposition</I></DT>
+
+<DD>[in] Specifies the action to take if a matching certificate or link to a matching certificate exists in the store. The following table lists the currently defined disposition values and their uses.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_ALWAYS</TD>
+<TD width=53%>The function makes no check for an existing matching certificate or link to a matching certificate. A new certificate is always added to the store. This can lead to duplicates in a store.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_NEW</TD>
+<TD width=53%>If a matching certificate or a link to a matching certificate exists in the store, the operation fails. The <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function returns the CRYPT_E_EXISTS code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_NEWER</TD>
+<TD width=53%>If a matching certificate or a link to a matching certificate exists, the function compares the <B>NotBefore</B> times on the certificates. If the existing certificate has a <B>NotBefore </B>time less than the <B>NotBefore</B> time on the new certificate, the old certificate or link is replaced just as with CERT_STORE_ADD_REPLACE_EXISTING. If the existing certificate has a <B>NotBefore</B> time greater than or equal to the <B>NotBefore</B> time on the certificate to be added, the function fails with the <B>GetLastError</B> function returning the CRYPT_E_EXISTS code.
+<P>If a matching certificate or a link to a matching certificate is not found in the store, a new certificate is added to the store.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_NEWER_INHERIT_PROPERTIES</TD>
+<TD width=53%>The action is the same as for CERT_STORE_ADD_NEWER, except that if an older certificate is replaced, the properties of the older certificate are incorporated into the replacement certificate.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_REPLACE_EXISTING</TD>
+<TD width=53%>If a matching certificate or link to a matching certificate exists in the store, the existing certificate or link is deleted and a new certificate is created and added to the store. If a matching certificate or link to a matching certificate does not exist, a new certificate is created and added to the store.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_REPLACE_EXISTING_INHERIT_PROPERTIES</TD>
+<TD width=53%>If a matching certificate exists in the store, that existing context is deleted before creating and adding the new context. The new context inherits properties from the existing certificate.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_STORE_ADD_USE_EXISTING</TD>
+<TD width=53%>If a matching certificate or a link to a matching certificate exists, that existing certificate or link is used and properties from the new certificate are added. The function does not fail, but it does not add a new context. If <I>ppCertContext</I> is not NULL, the existing context is duplicated.
+<P>If a matching certificate or link to a matching certificate does not exist, a new certificate is added.</P>
+</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>ppCertContext </I></DT>
+
+<DD>[out/optional] Pointer to a pointer to the decoded certificate context. This is an optional parameter that can be NULL, indicating that the calling application does not require a copy of the new or existing certificate. When a copy is made, its context must be freed by using the <A HREF="_wcesdk_crypto2_certfreecertificatecontext.htm"><B>CertFreeCertificateContext</B></A> function.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is TRUE.</P>
+
+<P>If the function fails, the return value is FALSE.</P>
+
+<P>For extended error information, call the <B>GetLastError</B> function. The following table lists some possible error codes.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>CRYPT_E_EXISTS</TD>
+<TD width=50%>This code is returned if CERT_STORE_ADD_NEW is set and the certificate already exists in the store, or if CERT_STORE_ADD_NEWER is set and there is a certificate in the store with a <B>NotBefore</B> date greater than or equal to the <B>NotBefore</B> date on the certificate to be added.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>E_INVALIDARG</TD>
+<TD width=50%>An invalid disposition value was specified in the <I>dwAddDisposition</I> parameter, or an invalid certificate encoding type was specified. Currently, only the X509_ASN_ENCODING type is supported.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The desktop platform supports the PKCS_7_ASN_ENCODING flag, but Windows CE does not. Windows CE ignores the flag when it is specified.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_certaddcertificatecontexttostore.htm"><B>CertAddCertificateContextToStore</B></A>, <A HREF="_wcesdk_crypto2_certfreecertificatecontext.htm"><B>CertFreeCertificateContext</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,92 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::DestroyWindow</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::DestroyWindow"/>
+<MSHelp:RLTitle Title="CWnd::DestroyWindow"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_destroywindow"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CWnd::DestroyWindow</H1>
+
+<P>This method destroys the Windows CE window attached to this <B>CWnd</B> object. The <B>DestroyWindow</B> method sends appropriate messages to the window to deactivate it and remove the input focus. It also destroys the <B>Windows</B> menu, flushes the application queue, destroys outstanding timers, removes Clipboard ownership, and breaks the Clipboard-viewer chain if <B>CWnd</B> is at the top of the viewer chain. It sends WM_DESTROY and WM_NCDESTROY messages to the window. It does not destroy the <B>CWnd</B> object.</P>
+
+<PRE class=syntax><B>virtual BOOL DestroyWindow ( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the window is destroyed; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P><B>DestroyWindow</B> is a place holder for performing cleanup. Because <B>DestroyWindow</B> is a virtual function, it is shown in any <B>CWnd</B>-derived class in ClassWizard. But even though you override this function in your <B>CWnd</B>-derived class, <B>DestroyWindow</B> is not necessarily called. If <B>DestroyWindow</B> is not called in the MFC code, then you have to explicitly call it in your own code if you want it to be called.</P>
+
+<P>Assume, for example, you have overridden <B>DestroyWindow</B> in a <B>CView</B>-derived class. Since MFC source code does not call <B>DestroyWindow</B> in any of its <B>CFrameWnd</B>-derived classes, your overridden <B>DestroyWindow</B> will not be called unless you call it explicitly. </P>
+
+<P>If the window is the parent of any windows, these child windows are automatically destroyed when the parent window is destroyed. The <B>DestroyWindow</B> method destroys child windows first and then the window itself. </P>
+
+<P>The <B>DestroyWindow</B> method also destroys modeless dialog boxes created by <A HREF="cdialog_3.htm"><B>CDialog::Create</B></A>.</P>
+
+<P>If the <B>CWnd</B> being destroyed is a child window and does not have the WS_EX_NOPARENTNOTIFY style set, then the WM_PARENTNOTIFY message is sent to the parent.</P>
+
+<P>The <B>CWnd::DestroyWindow</B> method only sends the WM_DESTROY message. Windows CE does not support the WM_NCDESTROY message.</P>
+
+<H4>Example</H4>
+
+<PRE>// CModeless is CDialog class representing a modeless dialog.
+// Destruction of the modeless dialog involves calling DestroyWindow in
+// OnOK() &amp; OnCancel() handlers.
+void CModeless::OnOK()
+{
+&nbsp;&nbsp;if (!UpdateData(TRUE))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE0("UpdateData failed during dialog termination\n");
+&nbsp;&nbsp;&nbsp;&nbsp;// The UpdateData routine will set focus to the correct item.
+&nbsp;&nbsp;&nbsp;&nbsp;return;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;DestroyWindow();
+}
+
+void CModeless::OnCancel()
+{
+&nbsp;&nbsp;DestroyWindow();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_112.htm"><B>CWnd::OnDestroy</B></A>, <A HREF="cwnd_23.htm"><B>CWnd::Detach</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMarshal::DisconnectObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMarshal::DisconnectObject"/>
+<MSHelp:RLTitle Title="IMarshal::DisconnectObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imarshal__disconnectobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMarshal::DisconnectObject</H1>
+
+<P>This method forcibly releases all external connections to an object. The object's server calls the object's implementation of this method prior to shutting down.</P>
+
+<PRE class="syntax"><B>HRESULT DisconnectObject(
+DWORD </B><I>dwReserved</I><B> );</B></PRE>
+
+<H4>Parameter</H4>
+
+<DL>
+<DT><I>dwReserved</I></DT>
+
+<DD>[in] Reserved for future use; must be zero. To ensure compatibility with future use, <B>DisConnectObject</B> must not check for zero.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The method supports the standard return value E_FAIL, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The object was disconnected successfully.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This method is implemented on the object, not the proxy.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>The usual case in which this method is called occurs when an end user forcibly closes a COM server that has one or more running objects that implement <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A>. Prior to shutting down, the server calls the <A HREF="_wcesdk_com_codisconnectobject.htm"><B>CoDisconnectObject</B></A> helper function to sever external connections to all its running objects. For each object that implements <B>IMarshal</B>, however, this function calls <B>IMarshal::DisconnectObject</B>, so that each object that manages its own marshaling can take steps to notify its proxy that it is about to shut down.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>As part of its normal shutdown code, a server should call the <B>CoDisconnectObject</B> function, which in turn calls <B>IMarshal::DisconnectObject</B>, on each of its running objects that implements <B>IMarshal</B>.</P>
+
+<P>The outcome of any implementation of this method should be to enable a proxy to respond to all subsequent calls from its client by returning RPC_E_DISCONNECTED or CO_E_OBJECTNOTCONNECTED rather than attempting to forward the calls on to the original object. It is up to the client, of course, to destroy the proxy.</P>
+
+<P>If you are implementing this method for an immutable object, such as a moniker, your implementation doesn't need to do anything because such objects are typically copied whole into the client's address space. Therefore, they have neither a proxy nor a connection to the original object. For more information on marshaling immutable objects, see <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A>, "When to Implement."</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_codisconnectobject.htm"><B>CoDisconnectObject</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptImportPublicKeyInfoEx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptImportPublicKeyInfoEx"/>
+<MSHelp:RLTitle Title="CryptImportPublicKeyInfoEx"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptimportpublickeyinfoex"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CryptImportPublicKeyInfoEx</H1>
+
+<P>This function imports public key information into the cryptographic service provider (CSP) and returns a handle of the public key. Additional parameters to override defaults are provided to supplement those in the <A HREF="_wcesdk_crypto2_cert_public_key_info.htm"><B>CERT_PUBLIC_KEY_INFO</B></A><B> </B>structure.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptImportPublicKeyInfoEx(</B>
+<B>HCRYPTPROV</B> <I>hCryptProv</I><B>,</B>
+<B>DWORD</B> <I>dwCertEncodingType</I><B>,</B>
+<B>PCERT_PUBLIC_KEY_INFO</B> <I>pInfo</I><B>,</B>
+<B>ALG_ID</B> <I>aiKeyAlg</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>void *</B><I>pvAuxInfo</I><B>,</B>
+<B>HCRYPTKEY</B> *<I>phKey
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCryptProv </I></DT>
+
+<DD>[in] Handle of the CSP that will receive the imported public key. This handle must have already been created using the <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A> function.</dd>
+
+<DT><I>dwCertEncodingType </I></DT>
+
+<DD>[in] Specifies the encoding type used. Currently, only X509_ASN_ENCODING is used; however, additional encoding types may be added in the future.</dd>
+
+<DT><I>pInfo </I></DT>
+
+<DD>[in] Pointer to a <B>CERT_PUBLIC_KEY_INFO</B> structure containing the public key to import into the provider.
+
+<P class=atl><B>Note&nbsp;&nbsp;&nbsp;</B>The <B>pzObjId</B> member of the Algorithm member pointed to by the <I>pInfo</I> parameter and the <I>dwCertEncodingType</I> parameter determine an installable CRYPT_OID_IMPORT_PUBLIC_KEY_INFO_FUNC callback function. If an installable function is not found, an attempt is made to import the key as a szOID_RSA_RSA, RSA Public Key.
+</dd>
+
+<DT><I>aiKeyAlg </I></DT>
+
+<DD>[in] <A HREF="_wcesdk_crypto2_alg_id.htm"><B>ALG_ID</B></A> structure containing a CSP-specific algorithm to override the CALG_RSA_KEYX default algorithm.</dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>[in] Reserved for future use and must be zero.</dd>
+
+<DT><I>pvAuxInfo </I></DT>
+
+<DD>[in] Reserved for future use and must be NULL.</dd>
+
+<DT><I>phKey</I> </DT>
+
+<DD>[out] Pointer to the handle of the imported public key.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;Errors from the called <A HREF="_wcesdk_crypto2_cryptgetuserkey.htm"><B>CryptGetUserKey</B></A> and <A HREF="_wcesdk_crypto2_cryptexportkey.htm"><B>CryptExportKey</B></A> functions might be propagated to this function. This function has the following error code.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Error code</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>ERROR_FILE_NOT_FOUND</TD>
+<TD width=50%>An installable or registerable import function could not be found for the specified <I>dwCertEncodingType</I> and <I>pInfo </I>parameters.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The desktop platform supports the PKCS_7_ASN_ENCODING flag, but Windows CE does not. Windows CE ignores the flag when it is specified.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A>, <A HREF="_wcesdk_crypto2_cryptexportkey.htm"><B>CryptExportKey</B></A>, <A HREF="_wcesdk_crypto2_cryptexportpublickeyinfoex.htm"><B>CryptExportPublicKeyInfoEx</B></A>, <A HREF="_wcesdk_crypto2_cryptgetuserkey.htm"><B>CryptGetUserKey</B></A>, <A HREF="_wcesdk_crypto2_alg_id.htm"><B>ALG_ID</B></A>, <A HREF="_wcesdk_crypto2_cert_public_key_info.htm"><B>CERT_PUBLIC_KEY_INFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

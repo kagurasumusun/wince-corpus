@@ -1,0 +1,163 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMoniker::ParseDisplayName</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMoniker::ParseDisplayName"/>
+<MSHelp:RLTitle Title="IMoniker::ParseDisplayName"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imoniker_parsedisplayname"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IMoniker::ParseDisplayName</H1>
+
+<P>This<B> </B>method converts a display name into a moniker.</P>
+
+<PRE class="syntax"><B>HRESULT ParseDisplayName(
+IBindCtx *</B><I>pbc</I><B>,
+IMoniker *</B><I>pmkToLeft</I><B>,
+LPOLESTR *</B><I>pszDisplayName</I><B>,
+ULONG *</B><I>pchEaten</I><B>,
+IMoniker **</B><I>ppmkOut</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pbc</I></DT>
+
+<DD>[in] Pointer to the <B>IBindCtx</B> interface on the bind context to be used in this binding operation. The bind context caches objects bound during the binding process, contains parameters that apply to all operations using the bind context, and provides the means by which the moniker implementation should retrieve information about its environment. For more information, see <B>IBindCtx</B>.</dd>
+
+<DT><I>pmkToLeft</I></DT>
+
+<DD>[in] Pointer to the <B>IMoniker</B> interface on the moniker that has been built out of the display name up to this point.</dd>
+
+<DT><I>pszDisplayName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that contains the remaining display name to be parsed. For Win32 applications, the <B>LPOLESTR</B> type indicates a wide character string (two bytes per character); otherwise, the string has one byte per character.</dd>
+
+<DT><I>pchEaten</I></DT>
+
+<DD>[out] Pointer to the number of characters in <I>pszDisplayName</I> that were consumed in this step.</dd>
+
+<DT><I>ppmkOut</I></DT>
+
+<DD>[out] Address of <B>IMoniker</B>* pointer variable that receives the interface pointer to the moniker that was built from <I>pszDisplayName</I>. When successful, the implementation must call <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A> on the new moniker; it is the caller’s responsibility to call <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>. If an error occurs, the implementation sets *<I>ppmkOut</I> to NULL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The method supports the standard return values E_OUTOFMEMORY and E_UNEXPECTED, as well as the values described in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=35%>Value</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>S_OK</TD>
+<TD width=65%>The parsing operation was completed successfully.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>MK_E_SYNTAX</TD>
+<TD width=65%>An error in the syntax of the input components (<I>pmkToLeft</I>, this moniker, and <I>pszDisplayName</I>). For example, a file moniker returns this error if <I>pmkToLeft</I> is non-NULL, and an item moniker returns it if <I>pmkToLeft</I> is NULL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A> errors</TD>
+<TD width=65%>Parsing display names may cause binding. Thus, any error associated with this function may be returned.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<H4>Notes to Callers</H4>
+
+<P>Moniker clients do not typically call <B>IMoniker::ParseDisplayName</B> directly. Instead, they call the <A HREF="_wcesdk_com_mkparsedisplayname.htm"><B>MkParseDisplayName</B></A> function when they want to convert a display name into a moniker (for example, in implementing the Links dialog box for a container application, or for implementing a macro language that supports references to objects outside the document). That function first parses the initial portion of the display name itself.</P>
+
+<P>It then calls <B>IMoniker::ParseDisplayName</B> on the moniker it has just created, passing the remainder of the display name and getting a new moniker in return; this step is repeated until the entire display name has been parsed. </P>
+
+<H4>Notes to Implementers</H4>
+
+<P>Your implementation may be able to perform this parsing by itself if your moniker class is designed to designate only certain kinds of objects. Otherwise, you must get an <A HREF="_wcesdk_com_iparsedisplayname.htm"><B>IParseDisplayName</B></A> interface pointer for the object identified by the moniker-so-far (i.e., the composition of <I>pmkToLeft</I> and this moniker) and then return the results of calling <B>IParseDisplayName::ParseDisplayName</B>.</P>
+
+<P>There are different strategies for getting an <B>IParseDisplayName</B> pointer:
+
+<UL type="disc">
+	<LI>You can try to get the object’s CLSID (by calling <A HREF="_wcesdk_com_ipersist_getclassid.htm"><B>IPersist::GetClassID</B></A> on the object), and then call the <A HREF="_wcesdk_com_cogetclassobject.htm"><B>CoGetClassObject</B></A> function, requesting the <B>IParseDisplayName</B> interface on the class factory associated with that CLSID.</li>
+
+	<LI>You can try to bind to the object itself to get an <B>IParseDisplayName</B> pointer.</li>
+
+	<LI>You can try binding to the object identified by <I>pmkToLeft</I> to get an <B>IOleItemContainer</B> pointer, and then call <B>IOleItemContainer::GetObject</B> to get an <B>IParseDisplayName</B> pointer for the item.</li>
+</UL>
+
+<P>Any objects that are bound should be registered with the bind context (see <B>IBindCtx::RegisterObjectBound</B>) to ensure that they remain running for the duration of the parsing operation.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oaidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_cogetclassobject.htm"><B>CoGetClassObject</B></A>, <A HREF="_wcesdk_com_mkparsedisplayname.htm"><B>MkParseDisplayName</B></A>, <B>IBindCtx</B>, <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A>, <A HREF="_wcesdk_com_iparsedisplayname.htm"><B>IParseDisplayName</B></A>, <A HREF="_wcesdk_com_ipersist_getclassid.htm"><B>IPersist::GetClassID</B></A>, <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A>, <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleObject::GetUserType</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IOleObject::GetUserType"/>
+<MSHelp:RLTitle Title="IOleObject::GetUserType"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ioleobject_getusertype"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IOleObject::GetUserType</H1>
+
+<P>This<B> </B>method retrieves the user type name of an object for display in user interface elements such as menus, list boxes, and dialog boxes.</P>
+
+<PRE class="syntax"><B>HRESULT GetUserType( </B>
+<B>DWORD </B><I>dwFormOfType</I><B>, </B>
+<B>LPOLESTR *</B><I>pszUserType</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwFormOfType</I></DT>
+
+<DD>[in] Specifies the form of the user-type name to be presented to users. Valid values are obtained from the <B>USERCLASSTYPE</B> enumeration.</dd>
+
+<DT><I>pszUserType</I></DT>
+
+<DD>[out] Address of <B>LPOLESTR</B> pointer variable that receives a pointer to the user type string. The caller must free *<I>pszUserType</I> using the current <B>IMalloc</B> instance. If an error occurs, the implementation must set *<I>pszUserType</I> to NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=21%>Value</TH>
+<TH width=79%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>S_OK</TD>
+<TD width=79%>The object’s user-type name is successfully returned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>OLE_S_USEREG</TD>
+<TD width=79%>Delegate to the default handler’s implementation using the registry to provide the requested information. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>Containers call <B>IOleObject::GetUserType</B> in order to represent embedded objects in list boxes, menus, and dialog boxes by their normal, user-recognizable names. Examples include “Word Document,” “Excel Chart,” and “Paintbrush Object.” The information returned by <B>IOleObject::GetUserType</B> is the user-readable equivalent of the binary class identifier returned by <A HREF="_wcesdk_com_ioleobject_getuserclassid.htm"><B>IOleObject::GetUserClassID</B></A>.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>The default handler’s implementation of <B>IOleObject::GetUserType</B> uses the object’s class identifier (the <I>pClsid</I> parameter returned by <B>IOleObject::GetUserClassID</B>) and the <I>dwFormOfType</I> parameter together as a key into the registry. If an entry is found that matches the key exactly, then the user type specified by that entry is returned. If only the CLSID part of the key matches, then the lowest-numbered entry available (usually the full name) is used. If the CLSID is not found, or there are no user types registered for the class, the user type currently found in the object’s storage is used.</P>
+
+<P>You should not cache the string returned from <B>GetUserType.</B> Instead, call this method each and every time the string is needed. This guarantees correct results when the embedded object is being converted from one type into another without the caller’s knowledge. Calling this method is inexpensive because the default handler implements it using the registry.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>You can use the implementation provided by the default handler by returning OLE_S_USEREG as your application’s implementation of this method. If the user type name is an empty string, the message “Unknown Object” is returned.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

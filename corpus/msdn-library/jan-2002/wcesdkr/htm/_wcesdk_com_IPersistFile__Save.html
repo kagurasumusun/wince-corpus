@@ -1,0 +1,137 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistFile::Save</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersistFile::Save"/>
+<MSHelp:RLTitle Title="IPersistFile::Save"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersistfile__save"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IPersistFile::Save</H1>
+
+<P>This method saves a copy of the object into the specified file.</P>
+
+<PRE class="syntax"><B>HRESULT Save(
+LPCOLESTR </B><I>pszFileName</I><B>,
+BOOL </B><I>fRemember</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pszFileName</I></DT>
+
+<DD>[in]Points to a zero-terminated string containing the absolute path of the file to which the object should be saved. If <I>pszFileName</I> is NULL, the object should save its data to the current file, if there is one.</dd>
+
+<DT><I>fRemember</I></DT>
+
+<DD>[in]Indicates whether the <I>pszFileName</I> parameter is to be used as the current working file. If TRUE, <I>pszFileName</I> becomes the current file and the object should clear its dirty flag after the save. If FALSE, this save operation is a "Save A Copy As ..." operation. In this case, the current file is unchanged and the object should not clear its dirty flag. If <I>pszFileName</I> is NULL, the implementation should ignore the <I>fRemember</I> flag.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The object was successfully saved.</dd>
+
+<DT>E_FAIL </DT>
+
+<DD>The file was not saved.</dd>
+</DL>
+
+<P><B>IPersistFile::Save</B> STG_E_* errors.</P>
+
+<H4>Remarks</H4>
+
+<P>This method can be called to save an object to the specified file in one of three ways:
+
+<DL>
+<DT>Save</DT>
+
+<DD>Call <A HREF="_wcesdk_com_ipersistfile__getcurfile.htm"><B>IPersistFile::GetCurFile</B></A> first to determine whether the object has an associated filename. If so, call <B>IPersistFile::Save</B> specifying NULL for the <I>pszFileName</I> parameter in this method to indicate that the object should be saved to its current file. Then call <A HREF="_wcesdk_com_ipersistfile__savecompleted.htm"><B>IPersistFile::SaveCompleted</B></A> to indicate completion.</dd>
+
+<DT>Save As</DT>
+
+<DD>Call <B>IPersistFile::Save</B> specifying TRUE in the <I>fRemember</I> parameter and a non-NULL value, indicating the name of the new file the object is to be saved to, for the <I>pszFileName</I> parameter . Then call <B>IPersistFile::SaveCompleted</B> to indicate completion.</dd>
+
+<DT>Save a Copy As</DT>
+
+<DD>Call <B>IPersistFile::Save</B> specifying FALSE in the fRemember parameter and a non-NULL value, indicating the name of the new file the object is to be copied to, for the <I>pszFileName</I> parameter.</dd>
+</DL>
+
+<P>The implementer must detect which type of save operation the caller is requesting. If the <I>pszFileName</I> parameter is NULL, a "Save" is being requested. If the <I>pszFileName</I> parameter is not NULL, use the value of the <I>fRemember</I> parameter to distinguish between a "Save As" and a "Save a Copy As".</P>
+
+<P>In "Save" or "Save As" operations, <B>IPersistFile::Save</B> clears the internal dirty flag after the save and sends <A HREF="_wcesdk_com_iadvisesink_onsave.htm"><B>IAdviseSink::OnSave</B></A> notifications to any advisory connections (see also <A HREF="_wcesdk_com_ioleadviseholder_sendonsave.htm"><B>IOleAdviseHolder::SendOnSave</B></A>). Also, in these operations, the object is in NoScribble mode until it receives an <B>IPersistFile::SaveCompleted</B> call. In NoScribble mode, the object must not write to the file.</P>
+
+<P>In the "Save As" scenario, the implementation should also send <A HREF="_wcesdk_com_iadvisesink_onrename.htm"><B>IAdviseSink::OnRename</B></A> notifications to any advisory connections (see also <A HREF="_wcesdk_com_ioleadviseholder_sendonrename.htm"><B>IOleAdviseHolder::SendOnRename</B></A>).</P>
+
+<P>In the "Save a Copy As" scenario, the implementation does not clear the internal dirty flag after the save.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>OLE does not call <B>IPersistFile::Save</B>. Typically, applications would not call it unless they are saving an object to a file directly, which is generally left to the end-user.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_ioleadviseholder_sendonrename.htm"><B>IOleAdviseHolder::SendOnRename</B></A>, <A HREF="_wcesdk_com_ioleadviseholder_sendonsave.htm"><B>IOleAdviseHolder::SendOnSave</B></A>, <A HREF="_wcesdk_com_ipersistfile__getcurfile.htm"><B>IPersistFile::GetCurFile</B></A>, <A HREF="_wcesdk_com_ipersistfile__savecompleted.htm"><B>IPersistFile::SaveCompleted</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

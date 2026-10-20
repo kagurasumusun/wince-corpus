@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Secure Communications with Microsoft Windows CE 2.1</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Secure Communications with Microsoft Windows CE 2.1"/>
+<MSHelp:RLTitle Title="Secure Communications with Microsoft Windows CE 2.1"/>
+<MSHelp:Keyword Index="A" Term="crypto21"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, authenticating users"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, data-link authentication"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, encrypting data"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, mobile information appliances"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, programming interfaces"/>
+<MSHelp:Keyword Index="K" Term="Windows CE. 2.1, secure communications"/>
+<MSHelp:Keyword Index="A" Term="crypto21"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="Technology" Value="Security"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbSecurity"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<meta name="description" content="The Microsoft Windows CE programming interfaces can provide secure communications to ensure the integrity and privacy of sensitive data."><meta name="keywords" content="Windows CE 2.1, secure communications, data-link authentication, encrypting data, authenticating users"><META name="rtfFileName" content="crypto21.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="msdnID" CONTENT="_661442">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="crypto21"></A>Secure Communications with Microsoft Windows CE 2.1</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>May 2000</P>
+
+<P><B>Summary:</B> With its support for many different communications interfaces, the Microsoft® Windows CE® operating system enables a wide variety of mobile information appliances. These programming interfaces can also provide secure communications to ensure the integrity and privacy of sensitive data. From data-link authentication using PAP, CHAP, and Microsoft® CHAP, through the Microsoft® CryptoAPI, SSPI, Winsock, and the WinInet API functions, the wide variety of support for communications security means that existing and new applications can take advantage of standard methods for authenticating users and encrypting data. (6 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#crypto21_overview">Overview</A><CODE><BR>
+</CODE><A HREF="#crypto21_socket">Using Secure Sockets: WinINet or Winsock</A><CODE><BR>
+</CODE><A HREF="#crypto21_ssp">The Security Support Provider Interface</A><CODE><BR>
+</CODE><A HREF="#crypto21_capi">The Microsoft CryptoAPI</A><CODE><BR>
+</CODE><A HREF="#crypto21_authentic">Authentication Using Low-Level Protocols</A><CODE><BR>
+</CODE><A HREF="#crypto21_mschap">Microsoft Challenge Authentication Protocol (MS-CHAP)</A><CODE><BR>
+</CODE><A HREF="#crypto21_info">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="crypto21_overview"></A>Overview</H2>
+
+<P>Communicating over a network usually means that your target will be only one of many recipients of your message. For example, local area network transmissions can be received by every computer on the local branch of the network. Internet transmissions may pass through a number of different computers and routers before reaching their destination, such as a specific computer on a local area network.</P>
+
+<P>Users or applications on computers that receive the message may be able to read the contents of that message. The only way to be certain that your message can only be read by its intended recipient&#151;and no one else&#151;is to encrypt it before sending, and decrypt it after it is received. Another important security technique involves authentication, the process of determining that the person sending the data actually is who she claims to be.</P>
+
+<P>If you have a need for secure communications, Windows CE provides several programming options, described here in order from the highest-level interface to the lowest-level interface:
+
+<UL type="disc">
+	<LI>The WinInet API provides a high-level mechanism for secure FTP and HTTP communications. It uses the secure sockets extension to Winsock. </li>
+
+	<LI>Winsock can also be used directly. Secure Sockets Layer 2.0 and 3.0 and the Private Communication Technology (PCT) 1.0 security protocols are supported. The same three protocols are available through WinInet, but Winsock provides a greater degree of flexibility in how they are used. </li>
+
+	<LI>The Security Support Provider Interface (SSPI) is used to request an authenticated connection from a security provider. Winsock uses SSPI internally, but you can also use the API directly for more control over the process. </li>
+
+	<LI>The Cryptography API allows applications to control most aspects of encryption. </li>
+
+	<LI>Authentication is provided at the data-link level of the network stack by the Password Authentication Protocol (PAP), Challenge Authentication Protocol (CHAP), and Microsoft CHAP. </li>
+</UL>
+
+<P>The following figure schematically illustrates the Windows CE security architecture.</P>
+
+<P class="fig"><CODE><IMG SRC="crypto21.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1.</B></P>
+
+<P>In general, the higher level approaches are simpler to use, but offer less control over how encryption is handled. The following sections of this paper introduce each of these programming interfaces. For complete information, including sample code, please see the Windows CE Toolkit for Visual C++® 5.0.</P>
+
+<H2 class="dtH1"><A NAME="crypto21_socket"></A>Using Secure Sockets: WinINet or Winsock</H2>
+
+<P>Probably the simplest way to implement secure communications is to create a secure socket connection. After a secure socket connection is established, you simply communicate as usual, while Winsock automatically handles encryption and decryption. Three security protocols are available: SSL 2.0, SSL 3.0, and PCT 1.0.</P>
+
+<P>There are two ways to use secure sockets:
+
+<OL type="1">
+	<LI>Use the WinInet API. For encrypted FTP or HTTP communication, this is the simplest approach. Set the appropriate security flags when opening a connection and making a request. WinInet handles the details of setting up the secure socket connection. The remainder of the session is handled in exactly the same way as with a non-secure connection. Encryption and decryption are automatic. </li>
+
+	<LI>Use the Windows Sockets API. You use setsockopt to specify a secure connection, and WSAIoctl to specify the protocol. Once a secure connection is established, your application simply uses send and recv as it would for a normal socket connection. You must also implement a callback function to receive authentication information. The procedure for creating secure connections is very similar to the procedure for creating non-secure sockets. </li>
+</OL>
+
+<P>WinInet gives you relatively little flexibility in how the connection is set up. For instance, you cannot select the security protocol that will be used. For more control over the process, you can use Winsock to make the connection and handle communication. You can invoke the security protocols when you establish the socket connection, or you can wait until you need to use them. Once the protocols are invoked, Winsock automatically handles encryption and decryption of the data.</P>
+
+<H2 class="dtH1"><A NAME="crypto21_ssp"></A>The Security Support Provider Interface</H2>
+
+<P>Microsoft provides an extensible security layer that applications can call at the top end, while third party security support providers can implement DLLs that map these calls to their specific security system. In this way, applications can use one high-level interface yet interact with very different security systems. New security systems can be added in the future without requiring changes to the applications.</P>
+
+<P>This general-purpose security layer, the Security Support Provider Interface (SSPI), is modeled after Internet RFC 1508, the Generic Security Services API (GSSAPI), while tailored for use with Microsoft Windows®.</P>
+
+<P>SSPI can be thought of as the Microsoft Win32® interface between transport level applications and network security service providers, offering an architecture that integrates different security models. SSPI enables applications to call one of several security providers to obtain an authenticated connection without knowledge of the details of the underlying security protocol.</P>
+
+<P>A security provider is a dynamic-link library (DLL) that implements the SSPI and makes one or more security packages available to applications. A security package maps the SSPI functions to an implementation of the security protocol specific to that package, such as Windows NT® LAN Manager (NTLM) or SChannel. Security packages are sometimes referred to as "SSPs", such as the "NTLM SSP".</P>
+
+<P>SSPI does not establish logon credentials because that is generally a privileged operation handled by the operating system. However, after logon credentials for a user are established, the application can use the SSPI functions to create a security context for that user. The security context is an opaque data structure that contains the security data relevant to a connection (such as a session key), the duration of the session, and so on. The client and server in a communication link must cooperate and negotiate to create the security context, and having done so, they can use it with the SSPI message support functions to ensure message integrity and privacy during the connection.</P>
+
+<P>SSPI consists of following groups of API functions:</P>
+
+<P><B>Credential Management APIs</B>&#0151;Credential management APIs provide access to credentials (password data, tickets, etc.).</P>
+
+<P><B>Context Management APIs</B>&#0151;Context management APIs provide methods for creating and using security contexts. The contexts are created on both client and server side of a communication link. These contexts can then be used later with the message support APIs.</P>
+
+<P><B>Message Support APIs</B>&#0151;Message support APIs provide communication integrity and privacy services based on a security context.</P>
+
+<P><B>Package Management APIs</B>&#0151;Package management APIs provide services for different security packages that the security provider supports.</P>
+
+<P>The capabilities of the security package determine what services it provides to the application. These capabilities include, for example, support for authentication, mutual or client-only, or support for message integrity and message privacy. Applications will typically select security packages based on the type of security capabilities available to meet the application needs.</P>
+
+<H2 class="dtH1"><A NAME="crypto21_capi"></A>The Microsoft CryptoAPI</H2>
+
+<P>The Microsoft CryptoAPI supports the security infrastructure needed to encrypt your data so that it can be safely transmitted over a public network. Microsoft currently uses the RC4 algorithm from RSA, Inc. and the U.S. government standard DES algorithm (although there are provisions for allowing additional algorithms). RC4 requires both the sender and receiver of the message to have the same secret encryption key. The keys are exchanged between sender and receiver in a certificate, signed by a "Certificate Authority," that guarantees the key is authentic.</P>
+
+<P>The Microsoft CryptoAPI includes API functions that support encryption, decryption, and certificate management.</P>
+
+<P>A remote site establishes its trustworthiness by obtaining a certificate from a Certifying Authority (CA). Windows CE supports X.509 style certificates. The first CA may in turn have obtained a certificate from a higher CA, and so on, creating a chain of trust. The decision on whether to trust the site or not is based on the root CA of the chain of trust.</P>
+
+<P>Windows CE maintains a database of trusted CAs. When a secure connection is attempted by an application, Windows CE extracts the root certificate and checks the CA against the database. It then passes the results of that comparison and the root certificate itself to the application's callback function.</P>
+
+<P>Your application is responsible for deciding whether or not to trust a particular certificate or CA. You can accept or reject certificates based on any criteria you wish to use. If you reject the certificate by returning an error from the callback function, the socket connection is not completed. At a minimum, a certificate should meet two basic criteria: It should be current, and the identity contained within the certificate should match that of the root CA.</P>
+
+<H2 class="dtH1"><A NAME="crypto21_authentic"></A>Authentication Using Low-Level Protocols</H2>
+
+<P>In addition to these high-level interfaces, Windows CE also supports authentication using the low-level protocols. For serial-link networking over a cable or modem, Windows CE supports the widely used Serial Line Interface (SLIP) and Point-to-Point (PPP) protocols. For authentication using these protocols, Windows CE supports:
+
+<UL type="disc">
+	<LI>Password Authentication Protocol (PAP) </li>
+
+	<LI>PAP uses clear text (unencrypted) password authentication. </li>
+
+	<LI>Challenge Authentication Protocol (CHAP) </li>
+</UL>
+
+<P>CHAP requires a challenge response with encryption on the response. Windows CE supports the DES and RSA MD4 encryption algorithms for CHAP authentication.</P>
+
+<H2 class="dtH1"><A NAME="crypto21_mschap"></A>Microsoft Challenge Authentication Protocol (MS-CHAP)</H2>
+
+<P>This version of the encrypted challenge response uses Microsoft's version of the RSA MD4 standard, and represents the most secure encryption algorithm supported by Windows CE.</P>
+
+<H2 class="dtH1"><A NAME="crypto21_info"></A>For More Information</H2>
+
+<P>Complete documentation of the Windows CE operating system is included with the software development kits: 
+
+<UL type="disc">
+	<LI>The Windows CE Toolkit for Visual C++ 5.0 </li>
+
+	<LI>The Windows CE Embedded Toolkit for Visual C++ 5.0 </li>
+</UL>
+
+<P>These software development kits contain samples and complete documentation regarding the API programming interfaces.</P>
+
+<P><I>The information contained in this document represents the current view of Microsoft Corporation on the issues discussed as of the date of publication. Because Microsoft must respond to changing market conditions, it should not be interpreted to be a commitment on the part of Microsoft, and Microsoft cannot guarantee the accuracy of any information presented after the date of publication. This document is for informational purposes only.</I></P>
+
+<P><I>This White Paper is for informational purposes only. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, IN THIS DOCUMENT.</I></P>
+
+<P><I>Other product and company names mentioned herein may be the trademarks of their respective owners.</I></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661442', 'XMSDNERR@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Icons, Bitmaps, Images, and Strings</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating Icons, Bitmaps, Images, and Strings"/>
+<MSHelp:RLTitle Title="Creating Icons, Bitmaps, Images, and Strings"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_creating_icons_bitmaps_images_and_strings"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Creating Icons, Bitmaps, Images, and Strings</H1>
+
+<P>An <I>icon</I> is an image that used to identify an application, file, or other object. It consists of a bit image combined with a mask. An application icon always appears on the taskbar while the application is running, and it can be used to recover the application main window when another window has the foreground. The icon can also be used to identify the application in the Windows CE Explorer. Every application should register both 16 by 16 pixel and 32 by 32 pixel icons for its main executable file and the types of files it stores in the file system.</P>
+
+<P>A <I>bitmap</I> is a graphics image that you can include in an application. Unlike icons, which have a fixed size, you determine the bitmap size. Both icons and bitmaps must be defined in a resource file.</P>
+
+<P><B>To create an icon</B></P>
+
+<OL>
+	<LI>Draw the icon by using a graphics application.</LI>
+
+	<LI>Include the icon as a resource in the application resource-definition file.</LI>
+
+	<LI>Call the WM_SETICON message to associate an icon with a window class.
+<P>Icons are associated with window classes rather than with individual windows.
+</LI>
+
+	<LI>Call the WM_GETICON message to retrieve the handle of the icon that is associated with a window class.</LI>
+</OL>
+
+<P class=indent><span class=blue><B>Note&nbsp;&nbsp;&nbsp;</B></span>Windows CE does not support any of the standard predefined icons (IDI_*) that Windows-based desktop platforms support.</P>
+
+<P><B>To create a bitmap</B></P>
+
+<OL>
+	<LI>Draw the bitmap by using a graphics application.</LI>
+
+	<LI>Include the bitmap as a resource in the application resource-definition file.</LI>
+
+	<LI>Call the <B>LoadBitmap</B> function to initialize the bitmap.
+<P>The bitmap you create with this function will be read-only because Windows&nbsp;CE does not copy the bitmap into RAM as Windows-based desktop platforms do.
+</LI>
+
+	<LI>Call the <B>SelectObject</B> function to select the bitmap into a device context. This enables you to display the bitmap.
+<P>When you select the bitmap into a device context, you cannot modify the device context&#0151;for example, by drawing text into it&#0151;because that would require the ability to write to the bitmap.
+</LI>
+</OL>
+
+<P>The following code example shows how to load a bitmap and display it.</P>
+
+<PRE>HBITMAP hbm = LoadBitmap(hInst,MAKEINTRESOURCE(IDB_BITMAP1));
+
+// Clear the window.
+InvalidateRect(hWnd, NULL, TRUE);
+UpdateWindow(hWnd);
+
+HDC hdc = GetDC(hWnd);
+HDC hdcTemp = CreateCompatibleDC(hdc);
+SelectObject(hdcTemp, hbm);
+
+// Get the size of the bitmap.
+BITMAP bm;
+GetObject(hbm, sizeof(BITMAP), &amp;bm );
+
+BitBlt(hdc, 50, 50, bm.bmWidth + 50, bm.bmHeight + 50, hdcTemp, 0, 0, SRCCOPY);
+
+ReleaseDC(hWnd,hdc);
+</PRE>
+
+<P>Images and strings are created similarly to icons and bitmaps. Both are resources that must be defined in a resource file. The following code example shows how to define a resource for an icon, bitmap, cursor, and string.</P>
+
+<PRE>#include "windows.h"
+
+#define IDB_BITMAP                      101
+#define IDC_CURSOR                      102
+#define IDI_CEPADICON                   103
+
+IDB_CEPADBITMAP     BITMAP  DISCARDABLE     "CePad.bmp"
+IDC_CEPADCURSOR     CURSOR  DISCARDABLE     "CePad.cur"
+IDI_CEPADICON       ICON    DISCARDABLE     "CePad.ico"
+
+STRINGTABLE DISCARDABLE
+BEGIN
+  1                 "CePad"
+  2                 "CePad Application"
+END
+</PRE>
+
+<P>When adding an image or string to an application, call the <B>LoadImage</B> function to load an image and call the <B>LoadString</B> function to load a string. Windows CE does not support stretching and shrinking of images or any loading options other than LR_DEFAULTCOLOR. Windows CE supports only Unicode strings.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

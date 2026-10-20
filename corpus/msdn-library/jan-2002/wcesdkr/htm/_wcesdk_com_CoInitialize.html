@@ -1,0 +1,116 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoInitialize</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoInitialize"/>
+<MSHelp:RLTitle Title="CoInitialize"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_coinitialize"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoInitialize</H1>
+
+<P>This function initializes the COM library on the current thread and identifies the concurrency model as single-thread apartment (STA). Applications must initialize the COM library before they can call COM library functions other than <A HREF="_wcesdk_com_cogetmalloc.htm"><B>CoGetMalloc</B></A> and memory allocation functions. </P>
+
+<P>New applications should call <A HREF="_wcesdk_com_coinitializeex.htm"><B>CoInitializeEx</B></A> instead of <B>CoInitialize</B>. </P>
+
+<PRE class="syntax"><B>HRESULT CoInitialize(
+LPVOID </B><I>pvReserved</I><B> );</B></PRE>
+
+<H4>Parameter</H4>
+
+<DL>
+<DT><I>pvReserved</I></DT>
+
+<DD>[in] Reserved; must be NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return values E_INVALIDARG, E_OUTOFMEMORY, and E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The COM library was initialized successfully on this thread.</dd>
+
+<DT>S_FALSE</DT>
+
+<DD>The COM library is already initialized on this thread.</dd>
+
+<DT>RPC_E_CHANGED_MODE</DT>
+
+<DD>A previous call to <B>CoInitializeEx</B> specified the concurrency model for this thread as multithread apartment (MTA). </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CoInitializeEx</B> provides the same functionality as <B>CoInitialize</B> and also provides a parameter to explicitly specify the thread's concurrency model. <B>CoInitialize</B> calls <B>CoInitializeEx</B> and specifies the concurrency model as single-thread apartment. Applications developed today should call <B>CoInitializeEx</B> rather than <B>CoInitialize</B>. </P>
+
+<P>You need to initialize the COM library on a thread before you call any of the library functions except <B>CoGetMalloc</B>, to get a pointer to the standard allocator, and the memory allocation functions.</P>
+
+<P>Once the concurrency model for a thread is set, it cannot be changed. A call to <B>CoInitialize</B> on an apartment that was previously initialized as multithreaded will fail and return RPC_E_CHANGED_MODE. </P>
+
+<P>Typically, the COM library is initialized on a thread only once. Subsequent calls to <B>CoInitialize</B> or <B>CoInitializeEx</B> on the same thread will succeed, as long as they do not attempt to change the concurrency model, but will return S_FALSE. To close the COM library gracefully, each successful call to <B>CoInitialize</B> or <B>CoInitializeEx</B>, including those that return S_FALSE, must be balanced by a corresponding call to <A HREF="_wcesdk_com_couninitialize.htm"><B>CoUninitialize</B></A>. However, the first thread in the application that calls <CODE>CoInitialize(0)</CODE> or <CODE>CoInitializeEx(COINIT_APARTMENTTHREADED)</CODE> must be the last thread to call <CODE>CoUninitialize()</CODE>. If the call sequence is not in this order, then subsequent calls to <B>CoInitialize</B> on the STA will fail and the application will not work.</P>
+
+<P>Because there is no way to control the order in which in-process servers are loaded or unloaded, it is not safe to call <B>CoInitialize</B>, <B>CoInitializeEx</B>, or <B>CoUninitialize</B> from the <A HREF="_wcesdk_win32_dllmain.htm"><B>DllMain</B></A> function. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,217 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MultiByteToWideChar</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MultiByteToWideChar"/>
+<MSHelp:RLTitle Title="MultiByteToWideChar"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_multibytetowidechar"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>MultiByteToWideChar</H1>
+
+<P>This function maps a character string to a wide-character (Unicode) string. The character string mapped by this function is not necessarily from a multibyte character set. </P>
+
+<PRE class="syntax"><B>int MultiByteToWideChar(</B>
+<B>UINT</B> <I>CodePage</I><B>, </B>
+<B>DWORD</B> <I>dwFlags</I><B>, </B>
+<B>LPCSTR</B> <I>lpMultiByteStr</I><B>, </B>
+<B>int</B> <I>cbMultiByte</I><B>, </B>
+<B>LPWSTR</B> <I>lpWideCharStr</I><B>, </B>
+<B>int</B> <I>cchWideChar </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>CodePage</I></DT>
+
+<DD>[in] Specifies the code page to be used to perform the conversion. This parameter can be given the value of any code page that is installed or available in the system. You can also specify one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CP_ACP</TD>
+<TD width=52%>ANSI code page</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CP_MACCP</TD>
+<TD width=52%>Not supported</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CP_OEMCP</TD>
+<TD width=52%>OEM code page</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CP_SYMBOL</TD>
+<TD width=52%>Not supported</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CP_THREAD_ACP</TD>
+<TD width=52%>Not supported</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Specifies whether to translate to precomposed or composite wide characters (if a composite form exists), whether to use glyph characters in place of control characters, and how to deal with invalid characters. You can specify a combination of the following flag constants:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>MB_PRECOMPOSED</TD>
+<TD width=52%>Always use precomposed characters&#0151;that is, characters in which a base character and a nonspacing character have a single character value. This is the default translation option. Cannot be used with MB_COMPOSITE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>MB_COMPOSITE</TD>
+<TD width=52%>Always use composite characters&#0151;that is, characters in which a base character and a nonspacing character have different character values. Cannot be used with MB_PRECOMPOSED.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>MB_ERR_INVALID_CHARS</TD>
+<TD width=52%>If the function encounters an invalid input character, it fails and <B>GetLastError</B> returns ERROR_NO_UNICODE_TRANSLATION.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>MB_USEGLYPHCHARS</TD>
+<TD width=52%>Use glyph characters instead of control characters.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>A composite character consists of a base character and a nonspacing character, each having different character values. A precomposed character has a single character value for a base/non-spacing character combination. In the character <I>è</I>, the <I>e</I> is the base character and the accent grave mark is the nonspacing character.
+
+
+<P>The function’s default behavior is to translate to the precomposed form. If a precomposed form does not exist, the function attempts to translate to a composite form.
+
+
+<P>The flags MB_PRECOMPOSED and MB_COMPOSITE are mutually exclusive. The MB_USEGLYPHCHARS flag and the MB_ERR_INVALID_CHARS can be set regardless of the state of the other flags.
+</dd>
+
+<DT><I>lpMultiByteStr</I></DT>
+
+<DD>[in] Pointer to the character string to be converted. </dd>
+
+<DT><I>cbMultiByte</I></DT>
+
+<DD>[in] Specifies the size in bytes of the string pointed to by the <I>lpMultiByteStr</I> parameter. If this value is &#0150;1, the string is assumed to be null terminated and the length is calculated automatically. </dd>
+
+<DT><I>lpWideCharStr</I></DT>
+
+<DD>[out] Pointer to a buffer that receives the translated string. </dd>
+
+<DT><I>cchWideChar</I></DT>
+
+<DD>[in] Specifies the size, in wide characters, of the buffer pointed to by the <I>lpWideCharStr</I> parameter. If this value is zero, the function returns the required buffer size, in wide characters, and makes no use of the <I>lpWideCharStr</I> buffer. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If <I>cchWideChar</I> is nonzero, the number of wide characters written to the buffer pointed to by <I>lpWideCharStr</I> indicates success. If <I>cchWideChar</I> is zero, the required size, in wide characters, for a buffer that can receive the translated string indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. Possible values for <B>GetLastError</B> include the following:
+
+<UL type="disc">
+	<LI>ERROR_INSUFFICIENT_BUFFER</li>
+
+	<LI>ERROR_INVALID_FLAGS</li>
+
+	<LI>ERROR_INVALID_PARAMETER</li>
+
+	<LI>ERROR_NO_UNICODE_TRANSLATION</li>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>The <I>lpMultiByteStr</I> and <I>lpWideCharStr</I> pointers must not be the same. If they are the same, the function fails, and <B>GetLastError</B> returns the value ERROR_INVALID_PARAMETER. </P>
+
+<P>The function fails if MB_ERR_INVALID_CHARS is set and it encounters an invalid character in the source string. An invalid character is one that would translate to the default character if MB_ERR_INVALID_CHARS was not set, but is not the default character in the source string, or when a lead byte is found in a string and there is no valid trail byte for DBCS strings. When an invalid character is found, and MB_ERR_INVALID_CHARS is set, the function returns 0 and sets <B>GetLastError </B>with the error ERROR_NO_UNICODE_TRANSLATION.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.01 and later</TD>
+<TD width=18%>Winnls.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_widechartomultibyte.htm"><B>WideCharToMultiByte</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

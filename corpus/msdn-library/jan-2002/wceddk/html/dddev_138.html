@@ -1,0 +1,146 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VIDMEM</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="VIDMEM"/>
+<MSHelp:RLTitle Title="VIDMEM"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_ddhal_vidmem"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_DDSCAPS_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>VIDMEM</H1>
+
+<P>The <B>VIDMEM</B> structure manages the display memory into heaps. </P>
+
+<PRE class="syntax"><B>typedef struct _VIDMEM
+{
+DWORD</B>               <I>dwFlags</I><B>;</B>
+<B>FLATPTR</B>             <I>fpStart</I><B>;</B>
+<B>union</B>
+<B>{</B>
+<B>FLATPTR</B>         <I>fpEnd</I><B>;</B>
+<B>DWORD</B>           <I>dwWidth</I><B>;</B>
+<B>};</B>
+<B>DDSCAPS</B>             <I>ddsCaps</I><B>;</B>
+<B>DDSCAPS</B>             <I>ddsCapsAlt</I><B>;</B>
+<B>union</B>
+<B>{</B>
+<B>LPVMEMHEAP</B>      <I>lpHeap</I><B>;</B>
+<B>DWORD</B>           <I>dwHeight</I><B>;</B>
+<B>};</B>
+} <B>VIDMEM</B>;
+<B>typedef VIDMEM FAR *LPVIDMEM;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>dwFlags</I><B> </B></DT>
+
+<DD>Indicates the type of display memory.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=36%>Flag</TH>
+<TH width=64%>Usage</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISHEAP </TD>
+<TD width=64%>Reserved for future use. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISLINEAR </TD>
+<TD width=64%>Indicates linear memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISNONLOCAL </TD>
+<TD width=64%>The heap resides in nonlocal (AGP) memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISRECTANGULAR </TD>
+<TD width=64%>Indicates rectangular memory. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>VIDMEM_ISWC </TD>
+<TD width=64%>The driver has enabled write combining on the display memory in this heap. Write combining is a special caching mode in Pentium™ Pro-class processors that batches writes to the same cache line so they can be transferred in a single bus clock. Write combining does not preserve ordering of the writes, a tradeoff that is usually acceptable for frame buffers. Refer to Intel® documentation for more information on write combining. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>fpStart</I><B> </B></DT>
+
+<DD>Indicates the starting address of the memory range in the heap. </dd>
+
+<DT><I>fpEnd</I><B> </B></DT>
+
+<DD>Indicates the ending address of the memory range, if the heap is linear. This address is inclusive, i.e., it specifies the last valid address in the range. Thus, the number of bytes specified by <B>fpStart</B> and <B>fpEnd</B> is (fpEnd-fpStart+1). </dd>
+
+<DT><I>dwWidth</I><B> </B></DT>
+
+<DD>Indicates the width of a memory chunk in rectangular memory. </dd>
+
+<DT><I>ddsCaps</I><B> </B></DT>
+
+<DD><A HREF="JavaScript:hhobj_1.Click()"><B>DDSCAPS</B></A> structure that indicates what this memory cannot be used for. </dd>
+
+<DT><I>ddsCapsAlt</I><B> </B></DT>
+
+<DD>Structure that indicates what this memory cannot be used for if no other memory is found on the first pass. </dd>
+
+<DT><I>lpHeap</I><B> </B></DT>
+
+<DD>Indicates the heap pointer used by DirectDraw. </dd>
+
+<DT><I>dwHeight</I><B> </B></DT>
+
+<DD>Indicates the height of a memory chunk in rectangular memory. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>DirectDraw scans through to allocate its surfaces in the order the display memory heaps are listed. Heaps are managed in an array of <B>VIDMEM</B> structures. The memory allocated first is the memory that is accessed first. The <B>VIDMEM</B> structure sets up certain starting points, and determines the amount of memory on the surface and what cannot be done with the surface. DirectDraw manages it by suballocating and deallocating memory, that is, creating and destroying surfaces under each heap's jurisdiction. Physical limits determine how to set up these attributes. </P>
+
+<P>DirectDraw's heap manager makes two passes through the <B>VIDMEM</B> structures. The ddsCaps member indicates to DirectDraw what the memory in the heap cannot be used for on the first pass. For example, if the heap were just big enough for a back buffer, sprites could be excluded from being allocated on the first pass by setting the <B>DSCAPS_OFFSCREENPLAIN</B> flag in the <B>DDSCAPS</B> structure. That way, other surfaces would fill up with sprites, while preserving the back buffer for page flipping. The ddsCapsAlt member could be set to allow sprites on the second pass (by removing the <B>DSCAPS_OFFSCREENPLAIN</B> flag). This allows heaps to be used preferentially for their highest and best use, without ruling out alternative uses. By choosing the order of allocation carefully (for example, by listing the back buffer last), the need to sort by <B>ddsCaps</B> and <B>ddsCapsAlt</B> can sometimes be eliminated.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

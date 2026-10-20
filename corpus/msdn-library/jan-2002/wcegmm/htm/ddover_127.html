@@ -1,0 +1,79 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Triple Buffering</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Triple Buffering"/>
+<MSHelp:RLTitle Title="Triple Buffering"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_triple_buffering"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdrawsurface5_flip_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Triple Buffering</H1>
+
+<P>In some cases, that is, when the display adapter has enough memory, it may be possible to speed up the process of displaying your application by using triple buffering. Triple buffering uses one primary surface and two back buffers. The following example shows how to initialize a triple-buffering scheme:</P>
+
+<PRE class="code">// The lpDDSPrimary and lpDDSBack variables are globally
+// declared, uninitialized LPDIRECTDRAWSURFACE4 variables.
+//
+// The lpDD variable is a pointer to an IDirectDraw4 interface
+
+DDSURFACEDESC2 ddsd;
+ZeroMemory (&amp;ddsd, sizeof(ddsd));
+
+// Create the primary surface with two back buffers.
+ddsd.dwSize = sizeof(ddsd);
+ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE |
+    DDSCAPS_FLIP | DDSCAPS_COMPLEX;
+ddsd.dwBackBufferCount = 2;
+ddrval = lpDD-&gt;CreateSurface(&amp;ddsd, &amp;lpDDSPrimary, NULL);
+
+// If we successfully created the flipping chain,
+// retrieve pointers to the surfaces we need for
+// flipping and blitting.
+if(ddrval == DD_OK)
+{
+    // Get the surface directly attached to the primary (the back buffer).
+    ddsd.ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
+    ddrval = lpDDSPrimary-&gt;GetAttachedSurface(&amp;ddsd.ddsCaps,
+        &amp;lpDDSBack);
+    if(ddrval != DD_OK) ;
+        // Display an error message here.
+}
+ </PRE>
+
+<P>You do not need to keep track of all surfaces in a triple buffered flipping chain. The only surfaces you must keep pointers to are the primary surface and the back-buffer surface. You need a pointer to the primary surface in order to flip the surfaces in the flipping chain, and you need a pointer to the back buffer for blitting. For more information, see <A HREF="ddover_48.htm">Flipping Surfaces</A>.</P>
+
+<P>Triple buffering allows your application to continue blitting to the back buffer even if a flip has not completed and the back buffer's blit has already finished. Performing a flip is not a synchronous event; one flip can take longer than another. Therefore, if your application uses only one back buffer, it may spend some time idling while waiting for the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDrawSurface5::Flip</B></A> method to return with DD_OK.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

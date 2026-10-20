@@ -1,0 +1,210 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMediaType Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMediaType Class"/>
+<MSHelp:RLTitle Title="CMediaType Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cmediatype_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CMediaType Class</H1>
+
+<P class="fig"><IMG SRC="mtype01.gif" ALT="" BORDER=0></P>
+
+<P>When filters are connected, they typically negotiate a type between them. This type describes the format of the data to be exchanged; if the filters do not agree on a media type, they cannot connect. Microsoft® DirectShow™ describes types through the media type structure, which contains two conceptual parts. The first is a list of members that describes generic attributes of a data stream. An example of this is a member that declares whether the data will be passed in fixed-size buffers. The second part of the structure is a variable-length block of data. How large the block of data should be and what it will contain depend on the type of data stream. For example, if the data stream is digital video, the format block is a <A HREF="_wcesdk_structs__videoinfoheader.htm"><B>VIDEOINFOHEADER</B></A> structure. If, on the other hand, it is digital audio, the format block is a Microsoft Win32® <B>WAVEFORMATEX</B> structure. </P>
+
+<P>A data stream type (for example, digital video) is set with a combination of two globally unique identifiers (GUIDs), called a major type and a subtype. The <I>major type</I> describes the overall class of data, examples of which might be digital video, digital audio, MIDI, or text captions. The <I>subtype</I> should supply a more specific description of the data type. In the case of digital video, for example, the subtype could be RGB8, RGB16, or RGB32 (among others). By having these two types in a generic structure (<A HREF="_wcesdk_structs__am_media_type.htm"><B>AM_MEDIA_TYPE</B></A>), a component, such as a filter graph, can connect filters without any knowledge that is type specific. </P>
+
+<P>The distinction between what goes in the major type and the subtype is somewhat arbitrary. However, as a general rule, transformations between major types (for example, video to audio or video to MIDI) should be relatively rare. Such a rare exception might be a transformation between audio and MIDI. As for the subtype, the more information promoted from the type-specific format block into the subtype, the better the design. </P>
+
+<P>As an example of promoting type-specific information to the subtype, video in DirectShow uses a <A HREF="_wcesdk_structs__videoinfoheader.htm"><B>VIDEOINFOHEADER</B></A> structure for the type-specific format block. This contains a Win32 <B>BITMAPINFOHEADER</B> structure that defines the video stream. <B>BITMAPINFOHEADER</B> contains the bit depth of the video, such as 8-bit, 16-bit, or 24-bit. This information is duplicated in the subtype field, because a subtype of RGB8 directly infers a bit count of 8. </P>
+
+<P>DirectShow defines a number of major types. The most important of these are a video type that uses <A HREF="_wcesdk_structs__videoinfoheader.htm"><B>VIDEOINFOHEADER</B></A> for the variable-length format block, and an audio that uses <B>WAVEFORMATEX</B>. However, it is insufficient to have a major type (such as digital video) inferring the contents of the format block (in this case, <B>VIDEOINFOHEADER</B>). The principal reason for this is extensibility: the format block type must be able to be updated without changing the less-specific major type. Therefore, what the format block actually contains is inferred by another GUID called the <I>format type</I>. If the format block contains <B>VIDEOINFOHEADER</B>, the format type <B>GUID</B> will be FORMAT_VideoInfo. </P>
+
+<P>The principal use of the <B>CMediaType</B> class is to manage a media type structure in a simple way. At the same time, the class provides some extra helper functions (such as format-block copying and allocation). The class can be cast to an <A HREF="_wcesdk_structs__am_media_type.htm"><B>AM_MEDIA_TYPE</B></A> structure when an interface method requires one to be passed to it. </P>
+
+<P>The <B>CMediaType</B> class contains a pointer to a block of memory. When copying a <B>CMediaType</B> object, it is insufficient to simply copy the pointer. In C++, a data copy is required, which actually allocates a new block of memory and copies the data into it. This is the purpose of the copy operator. </P>
+
+<P>Similarly, when comparing two <B>CMediaType</B> objects, you must compare the blocks of variable-length data (actually using <B>memcmp</B>) when producing the final result. To make this possible, <B>CMediaType</B> overrides the equivalence operator. </P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__allocformatbuffer.htm"><B>AllocFormatBuffer</B></A></TD>
+<TD width=58%>Allocates an uninitialized format block in the object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__cmediatype.htm"><B>CMediaType</B></A></TD>
+<TD width=58%>Constructs a <B>CMediaType</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__format.htm"><B>Format</B></A></TD>
+<TD width=58%>Returns the format block for this media type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__formatlength.htm"><B>FormatLength</B></A></TD>
+<TD width=58%>Returns the length of the format block of this object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__formattype.htm"><B>FormatType</B></A></TD>
+<TD width=58%>Returns a pointer to the format type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__getsamplesize.htm"><B>GetSampleSize</B></A></TD>
+<TD width=58%>Returns the size of the samples. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__initmediatype.htm"><B>InitMediaType</B></A></TD>
+<TD width=58%>Initializes the media type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__isfixedsize.htm"><B>IsFixedSize</B></A></TD>
+<TD width=58%>Queries whether the samples are fixed in length. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__ispartiallyspecified.htm"><B>IsPartiallySpecified</B></A></TD>
+<TD width=58%>Checks if the media type is not completely specified. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__istemporalcompressed.htm"><B>IsTemporalCompressed</B></A></TD>
+<TD width=58%>Queries whether the data stream is compressed temporally. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__isvalid.htm"><B>IsValid</B></A></TD>
+<TD width=58%>Queries whether the media type is currently valid. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__matchespartial.htm"><B>MatchesPartial</B></A></TD>
+<TD width=58%>Checks whether this media type matches another media type that is only partially specified. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__reallocformatbuffer.htm"><B>ReallocFormatBuffer</B></A></TD>
+<TD width=58%>Reallocates the format block, maintaining its current content where possible. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__resetformatbuffer.htm"><B>ResetFormatBuffer</B></A></TD>
+<TD width=58%>Deletes any format block that is currently present. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__setformat.htm"><B>SetFormat</B></A></TD>
+<TD width=58%>Sets the format block. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__setformattype.htm"><B>SetFormatType</B></A></TD>
+<TD width=58%>Sets the type of the format block in the object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__setsamplesize.htm"><B>SetSampleSize</B></A></TD>
+<TD width=58%>Sets the size of the samples. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__setsubtype.htm"><B>SetSubtype</B></A></TD>
+<TD width=58%>Sets the subtype. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__settemporalcompression.htm"><B>SetTemporalCompression</B></A></TD>
+<TD width=58%>Marks the media type to indicate that samples will be temporally compressed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__settype.htm"><B>SetType</B></A></TD>
+<TD width=58%>Sets the major type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__setvariablesize.htm"><B>SetVariableSize</B></A></TD>
+<TD width=58%>Marks the media type to indicate that samples will vary in length. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__subtype.htm"><B>Subtype</B></A></TD>
+<TD width=58%>Returns a pointer to the subtype. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__type.htm"><B>Type</B></A></TD>
+<TD width=58%>Returns a pointer to the major type. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Operators</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__operator_eq.htm">operator =</A></TD>
+<TD width=58%>Performs a copy operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__operator_eqeq.htm">operator ==</A></TD>
+<TD width=58%>Tests for equality between <B>CMediaType</B> objects. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_cmediatype__operator_noteq.htm">operator !=</A></TD>
+<TD width=58%>Tests for inequality between <B>CMediaType</B> objects. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

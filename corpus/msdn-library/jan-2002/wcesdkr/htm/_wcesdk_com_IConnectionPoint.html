@@ -1,0 +1,183 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IConnectionPoint</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IConnectionPoint"/>
+<MSHelp:RLTitle Title="IConnectionPoint"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iconnectionpoint"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IConnectionPoint</H1>
+
+<P>This interface supports connection points for connectable objects.</P>
+
+<P>Connectable objects support the following features:
+
+<UL type="disc">
+	<LI>Outgoing interfaces, such as event sets</li>
+
+	<LI>The ability to enumerate the IIDs of the outgoing interfaces</li>
+
+	<LI>The ability to connect and disconnect sinks to the object for those outgoing IIDs</li>
+
+	<LI>The ability to enumerate the connections that exist to a particular outgoing interface</li>
+</UL>
+
+<H4>When to Implement</H4>
+
+<P>Implement this interface as part of support for connectable objects. To create a connectable object, you need to implement objects that provide four related interfaces:
+
+<UL type="disc">
+	<LI><A HREF="_wcesdk_com_iconnectionpointcontainer.htm"><B>IConnectionPointContainer</B></A></li>
+
+	<LI><A HREF="_wcesdk_com_ienumconnectionpoints.htm"><B>IEnumConnectionPoints</B></A></li>
+
+	<LI><B>IConnectionPoint </B></li>
+
+	<LI><A HREF="_wcesdk_com_ienumconnections.htm"><B>IEnumConnections</B></A></li>
+</UL>
+
+<P>The <B>IConnectionPointContainer</B> interface is implemented on the connectable object to indicate the existence of the outgoing interfaces. It provides access to an enumerator sub-object with the <B>IEnumConnectionPoints</B> interface. It also provides access to all the connection point sub-objects, each of which implements the <B>IConnectionPoint</B> interface. The <B>IConnectionPoint</B> interface provides access to an enumerator sub-object with the <B>IEnumConnections</B> interface.</P>
+
+<P>Each connection point is a separate sub-object to avoid circular reference counting problems.</P>
+
+<P>A connection point controls how many connections (one or more) it will allow in its implementation of <A HREF="_wcesdk_com_iconnectionpoint__advise.htm"><B>IConnectionPoint::Advise</B></A>. A connection point that allows only one interface can return E_NOTIMPL from the <A HREF="_wcesdk_com_iconnectionpoint__enumconnections.htm"><B>IConnectionPoint::EnumConnections</B></A> method.</P>
+
+<H4>When to Use</H4>
+
+<P>A client can use the <B>IConnectionPointContainer</B> interface:
+
+<UL type="disc">
+	<LI>To obtain access to an enumerator sub-object with the <B>IEnumConnectionPoints</B> interface. The <B>IEnumConnectionPoints</B> interface can then be used to enumerate connection points for each outgoing IID.</li>
+
+	<LI>To obtain access to connection point sub-objects with the <B>IConnectionPoint</B> interface for each outgoing IID. Through the <B>IConnectionPoint</B> interface, a client starts or terminates an advisory loop with the connectable object and the client's own sink. The client can also use the <B>IConnectionPoint</B> interface to obtain an enumerator object with the <B>IEnumConnections</B> interface to enumerate the connections that it knows about.</li>
+</UL>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%><A HREF="_wcesdk_com_iunknown.htm">IUnknown</A> Methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iunknown_addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iunknown_release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IConnectionPoint Methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iconnectionpoint__getconnectioninterface.htm"><B>GetConnectionInterface</B></A></TD>
+<TD width=50%>Returns the IID of the outgoing interface managed by this connection point.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iconnectionpoint__getconnectionpointcontainer.htm"><B>GetConnectionPointContainer</B></A></TD>
+<TD width=50%>Returns the parent (connectable) object's <B>IConnectionPointContainer</B> interface pointer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iconnectionpoint__advise.htm"><B>Advise</B></A></TD>
+<TD width=50%>Creates a connection between a connection point and a client's sink, where the sink implements the outgoing interface supported by this connection point.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iconnectionpoint__unadvise.htm"><B>Unadvise</B></A></TD>
+<TD width=50%>Terminates a notification previously set up with <B>Advise</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iconnectionpoint__enumconnections.htm"><B>EnumConnections</B></A></TD>
+<TD width=50%>Returns an object to enumerate the current advisory connections for this connection point.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Ocidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="#_wcesdk_com_iconnectionpoint"><B>IConnectionPoint</B></A>, <A HREF="_wcesdk_com_iconnectionpointcontainer.htm"><B>IConnectionPointContainer</B></A>, <A HREF="_wcesdk_com_ienumconnectionpoints.htm"><B>IEnumConnectionPoints</B></A>, <A HREF="_wcesdk_com_ienumconnections.htm"><B>IEnumConnections</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

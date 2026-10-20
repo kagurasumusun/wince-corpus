@@ -1,0 +1,101 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>INonDelegatingUnknown::INonDelegatingUnknown</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="INonDelegatingUnknown::INonDelegatingUnknown"/>
+<MSHelp:RLTitle Title="INonDelegatingUnknown::INonDelegatingUnknown"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_inondelegatingunknown__inondelegatingunknown"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>INonDelegatingUnknown::INonDelegatingUnknown</H1>
+
+<P>A version of <A HREF="_wcesdk_iunknown_interface.htm"><B>IUnknown</B></A> renamed to enable a class to support both nondelegating and delegating <B>IUnknown</B> interfaces in the same COM object. The interface supports the following three methods, in vtable order. </P>
+
+<PRE class="syntax"><B>HRESULT NonDelegatingQueryInterface(</B>
+<B>REFIID</B> <I>iid</I><B>,</B>
+<B>void**</B> <I>ppvObject</I> <B>);</B>
+<B>ULONG</B> <B>NonDelegatingAddRef(void);</B>
+<B>ULONG NonDelegatingRelease(void);</B></PRE>
+
+<H4>Remarks</H4>
+
+<P>To use <B>INonDelegatingUnknown</B> for multiple inheritance, perform the following steps: </P>
+
+<P>Derive your class from an interface, for example, IMyInterface. </P>
+
+<P>Include <B>DECLARE_IUNKNOWN</B> in your class definition to declare implementations of <B>QueryInterface</B>, <B>AddRef</B>, and <B>Release</B> that call the outer unknown. </P>
+
+<P>Override <B>NonDelegatingQueryInterface</B> to expose IMyInterface with code such as the following: </P>
+
+<PRE class="code">     if (riid == IID_IMyInterface) {
+         return GetInterface((IMyInterface *) this, ppv);
+     } else {
+         return CUnknown::NonDelegatingQueryInterface(riid, ppv);
+     }</PRE>
+
+<P>Declare and implement the member functions of IMyInterface. </P>
+
+<P>To use <B>INonDelegatingUnknown</B> for nested interfaces, perform the following steps: </P>
+
+<P>Declare a class derived from <A HREF="_wcesdk_cunknown_class.htm"><B>CUnknown</B></A>. </P>
+
+<P>Include <B>DECLARE_IUNKNOWN </B>in your class definition. </P>
+
+<P>Override <B>NonDelegatingQueryInterface</B> to expose IMyInterface with the code such as the following: </P>
+
+<PRE class="code">     if (riid == IID_IMyInterface) {
+         return GetInterface((IMyInterface *) this, ppv);
+     } else {
+         return CUnknown::NonDelegatingQueryInterface(riid, ppv);
+     }</PRE>
+
+<P>Implement the member functions of IMyInterface. Use <A HREF="_wcesdk_cunknown__getowner.htm"><B>CUnknown::GetOwner</B></A> to access the COM object class. </P>
+
+<P>In your COM object class, make the nested class a friend of the COM object class, and declare an instance of the nested class as a member of the COM object class. </P>
+
+<P>Because you must always pass the outer unknown and an <B>HRESULT</B> to the <A HREF="_wcesdk_cunknown_class.htm"><B>CUnknown</B></A> constructor, you can't use a default constructor. You have to make the member variable a pointer to the class and make a new call in your constructor to actually create it. </P>
+
+<P>Override the <B>NonDelegatingQueryInterface</B> with code such as the following: </P>
+
+<PRE class="code">     if (riid == IID_IMyInterface) {
+         return m_pImplFilter-&gt;
+            NonDelegatingQueryInterface(IID_IMyInterface, ppv);
+     } else {
+         return CUnknown::NonDelegatingQueryInterface(riid, ppv);
+     }</PRE>
+
+<P>You can have mixed classes that support some interfaces through multiple inheritance and some interfaces through nested classes. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

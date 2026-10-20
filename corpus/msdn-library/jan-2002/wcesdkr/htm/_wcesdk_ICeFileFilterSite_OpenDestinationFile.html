@@ -1,0 +1,147 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ICeFileFilterSite::OpenDestinationFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ICeFileFilterSite::OpenDestinationFile"/>
+<MSHelp:RLTitle Title="ICeFileFilterSite::OpenDestinationFile"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_icefilefiltersite_opendestinationfile"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>ICeFileFilterSite::OpenDestinationFile</H1>
+
+<P>This method is called by a file filter to open a destination file. </P>
+
+<PRE class="syntax"><B>STDMETHODIMP ICeFileFilterSite::OpenDestinationFile(
+int</B> <I>nHowToOpenFile</I><B>,
+LPCSTR</B> <I>pszFullpath</I><B>,
+LPVOID</B> <B>*</B><I>ppObj</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nHowToOpenFile </I></DT>
+
+<DD>Specifies how the source file is to be opened. It is one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>PF_OPENFLAT</TD>
+<TD width=71%>Open as a flat file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>PF_OPENCOMPOUND</TD>
+<TD width=71%>Open as an OLE compound file. Note that Windows CE does not support compound files.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pszFullpath </I></DT>
+
+<DD>Pointer to the null-terminated string that contains the name of the file to open to override the default destination file name. If this parameter is NULL, the default destination file name is used. </dd>
+
+<DT><I>ppObj </I></DT>
+
+<DD>Pointer to an <B>LPVOID</B> variable that receives an <B>IStream</B> pointer if <I>nHowToOpenFile</I> is PF_OPENFLAT, or an <B>IStorage</B> pointer if <I>nHowToOpenFile</I> is PF_OPENCOMPOUND. This object must be released using the <A HREF="_wcesdk_icefilefiltersite_closedestinationfile.htm"><B>ICeFileFilterSite::CloseDestinationFile</B></A> method before returning to Pocket Internet Explorer. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>NOERROR indicates success. An HRESULT_FROM_WIN32 error value indicates failure. </P>
+
+<H4>Remarks</H4>
+
+<P>The default destination file name and path are specified in the <A HREF="_wcesdk_cff_destinationfile.htm"><B>CFF_DESTINATIONFILE</B></A> structure is passed in to the call to <A HREF="_wcesdk_icefilefilter_nextconvertfile.htm"><B>ICeFileFilter::NextConvertFile</B></A>. The default path is temporary and is managed by Windows CE Services. For example, if the user drags a bitmap file named Tmp.bmp from the desktop computer to the mobile device, the default destination file name is Tmp.2bp. </P>
+
+<P>The following code example shows how the destination file can be modified when the file filter’s <B>ICeFileFilter::NextConvertFile</B> method calls the <B>ICeFileFilterSite::OpenDestinationFile</B> method.</P>
+
+<PRE class="code">// Filter and copy Tmp.bmp on desktop computer to Tmp1.2bp on Windows CE-based device
+CFF_DESTINATIONFILE *pdf;
+IStream *pstmDst; // Open the destination file as a stream
+TCHAR szBuf[80];
+lstrcpy(szBuf, pdf-&gt;szPath); // Use default path …
+lstrcat(szBuf, TEXT("TMP1.2bp") ); // … but Modify the file name
+hres = cffs-&gt;OpenDestinationFile(PF_OPENFLAT, szBuf, (LPVOID*)&amp;pstmDst);</PRE>
+
+<P>In this example, note that the path to the directory containing the temporary destination was preserved. The reason is that, after the file filter conversion is complete&#0151;that is, <B>NextConvertFile</B> has returned ERROR_NO_MORE_ITEMS&#0151;Windows CE Services looks in <I>szPath</I> and copies all files, regardless of file or extension name, to the target folder, as directed by the user. </P>
+
+<P>The temporary destination file path must be located on the desktop computer, but the path can be modified as desired. </P>
+
+<P>Note that <B>OpenDestinationFile</B> can be called only once within a specified call to <B>ICeFileFilter::NextConvertFile</B>. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Replfilt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_icefilefilter_nextconvertfile.htm"><B>ICeFileFilter::NextConvertFile</B></A>, <A HREF="_wcesdk_icefilefiltersite_closedestinationfile.htm"><B>ICeFileFilterSite::CloseDestinationFile</B></A>, <A HREF="_wcesdk_cff_destinationfile.htm"><B>CFF_DESTINATIONFILE</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

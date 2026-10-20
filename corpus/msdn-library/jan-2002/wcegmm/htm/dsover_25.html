@@ -1,0 +1,117 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Playing Sounds</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Playing Sounds"/>
+<MSHelp:RLTitle Title="Playing Sounds"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_playing_sounds_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IDirectSoundBuffer_Lock_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IDirectSoundBuffer_Unlock_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IDirectSoundBuffer_Play_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IDirectSoundBuffer_Stop_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Playing Sounds</H1>
+
+<P>Playing a sound consists of the following steps:
+
+<OL type="1">
+	<LI>Lock a portion of the secondary buffer using <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectSoundBuffer::Lock</B></A>. This method returns a pointer to the address where writing will begin, based on the offset from the beginning of the buffer that you pass in to the method.</li>
+
+	<LI>Write the audio data to the buffer.</li>
+
+	<LI>Unlock the buffer using <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSoundBuffer::Unlock</B></A>.</li>
+
+	<LI>Send the sound to the primary buffer and from there to the output device using <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectSoundBuffer::Play</B></A>. If the buffer is a streaming buffer, it will continue playing in a loop as steps 1 to 3 are repeated. </li>
+</OL>
+
+<P>Because streaming sound buffers usually play continually and are conceptually circular, DirectSound returns two write pointers when locking a sound buffer. For example, if you tried to lock 3,000 bytes beginning at the midpoint of a 4,000-byte buffer, the <B>Lock</B> method would return one pointer to the last 2,000 bytes of the buffer, and a second pointer to the first 1,000 bytes. The second pointer is NULL if the locked portion of the buffer does not wrap around.</P>
+
+<P>Normally the buffer stops playing automatically when the end is reached. However, if the DSBPLAY_LOOPING flag was set in the <I>dwFlags</I> parameter to the <B>Play</B> method, the buffer plays repeatedly until the application calls the <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectSoundBuffer::Stop</B></A> method.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;When using a waveout driver, DirectSound will use waveOutGetPosition which returns a 32 bit value. This value will wrap in just under 7 hours, making the DirectSound subsystem unstable. If your application requires prolonged continous playback of audio with DirectSound, a DirectSound driver should be developed to avoid this problem.</P>
+
+<P>For streaming sound buffers, your application is responsible for ensuring that each block of data is written to the buffer ahead of the current play position. (For more on the play position, see <A HREF="dsover_27.htm">Current Play and Write Positions</A>.) Applications should write at least 1 second ahead of the current play position to minimize the possibility of gaps in the audio output during playback.</P>
+
+<P>The following C example writes data to a sound buffer, starting at the offset into the buffer passed in <I>dwOffset</I>:</P>
+
+<PRE class="code">BOOL AppWriteDataToBuffer(
+    LPDIRECTSOUNDBUFFER lpDsb,  // the DirectSound buffer
+    DWORD dwOffset,             // our own write cursor
+    LPBYTE lpbSoundData,        // start of our data
+    DWORD dwSoundBytes)         // size of block to copy
+{
+    LPVOID  lpvPtr1;
+    DWORD   dwBytes1;
+    LPVOID  lpvPtr2;
+    DWORD   dwBytes2;
+    HRESULT hr;
+
+    // Obtain memory address of write block. This will be in two parts
+    // if the block wraps around.
+    hr = lpDsb-&gt;lpVtbl-&gt;Lock(lpDsb, dwOffset, dwSoundBytes, &amp;lpvPtr1,
+        &amp;dwBytes1, &amp;lpvPtr2, &amp;dwBytes2, 0);
+
+    // If DSERR_BUFFERLOST is returned, restore and retry lock.
+    if (DSERR_BUFFERLOST == hr)
+    {
+        lpDsb-&gt;lpVtbl-&gt;Restore(lpDsb);
+        hr = lpDsb-&gt;lpVtbl-&gt;Lock(lpDsb, dwOffset, dwSoundBytes,
+            &amp;lpvPtr1, &amp;dwAudio1, &amp;lpvPtr2, &amp;dwAudio2, 0);
+    }
+    if SUCCEEDED(hr)
+    {
+        // Write to pointers.
+        CopyMemory(lpvPtr1, lpbSoundData, dwBytes1);
+        if (NULL != lpvPtr2)
+        {
+            CopyMemory(lpvPtr2, lpbSoundData+dwBytes1, dwBytes2);
+        }
+        // Release the data back to DirectSound.
+        hr = lpDsb-&gt;lpVtbl-&gt;Unlock(lpDsb, lpvPtr1, dwBytes1, lpvPtr2,
+            dwBytes2);
+        if SUCCEEDED(hr)
+        {
+            // Success.
+            return TRUE;
+        }
+    }
+    // Lock, Unlock, or Restore failed.
+    return FALSE;
+}
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

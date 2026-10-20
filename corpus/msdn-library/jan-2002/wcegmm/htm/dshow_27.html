@@ -1,0 +1,59 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Finding the Filters</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Finding the Filters"/>
+<MSHelp:RLTitle Title="Finding the Filters"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_finding_the_filters"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_structs__am_media_type" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_igraphbuilder__renderfile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ifiltermapper__enummatchingfilters" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_com_IEnumMoniker" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Finding the Filters</H1>
+
+<P>The first step in creating a filter graph is to find and create the needed filters. All DirectShow filters are registered in the Windows registry with a GUID and other information such as which media types are supported, by category, or the filter's merit.</P>
+
+<P>In addition, a filter can register the media types which it will accept for its input and output pins. This is done by registering a 'majortype' and 'subtype' GUID for each media type the filter will accept. The 'majortype' and 'subtype' correspond to the first two fields of the DirectShow Media Type structure (<A HREF="JavaScript:hhobj_1.Click()">AM_MEDIA_TYPE</A>) and are used in this way to find filters which process particular types.</P>
+
+<P>Given the name of a file to play in the <A HREF="JavaScript:hhobj_2.Click()"><B>RenderFile</B></A> call, the Filter Graph Manager can rapidly search the registry for filters that will support the kind of file it wants to play. This involves either using the file extension or searching for special 'check bytes' in the file. This generally results in the filter graph finding a source filter that it creates and adds to the filter graph, as well as telling the source filter the name of the file.</P>
+
+<P>The source filter will generally have one or more output pins, although in some cases it can have none. Assuming the source filter has at least one output pin, the Filter Graph Manager code inside <B>RenderFile</B> will ask the source filter's output pins to list the media types of the data they output. The Filter Graph Manager can then search the registry for filters that accept those media types on their input pins (by using the majortype and subtype fields in the media types).</P>
+
+<P>To actually do the search, the Filter Graph Manager creates an instance of the DirectShow Filter Mapper object and calls the <A HREF="JavaScript:hhobj_3.Click()"><B>IFilterMapper::EnumMatchingFilters</B></A> method to search the registry. This method can enumerate DirectShow filters (as well as hardware devices such as decoders) by category or by media type, and it returns a standard COM <A HREF="JavaScript:hhobj_4.Click()"><B>IEnumMoniker</B></A> object containing monikers to all the filters and/or hardware devices that match the search criteria. (The use of COM monikers allows this method to query objects without actually instantiating them, and also to create paths and enumerate things which are not actually COM objects, such as hardware devices.) </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

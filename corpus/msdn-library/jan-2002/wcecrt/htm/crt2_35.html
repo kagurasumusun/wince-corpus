@@ -1,0 +1,189 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>_fpreset</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="_fpreset"/>
+<MSHelp:RLTitle Title="_fpreset"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fpreset"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>_fpreset</H1>
+
+<P>Resets the floating-point package.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>_fpreset</B></TD>
+<TD width=74%>&lt;float.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>void _fpreset( void );</B></PRE>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Values</H4>
+
+<P>None</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>_fpreset</B> function reinitializes the floating-point math package. <B>_fpreset</B> is usually used with signal, system, or the _exec or _spawn functions. If a program traps floating-point error signals (SIGFPE) with signal, it can safely recover from floating-point errors by invoking <B>_fpreset</B> and using longjmp.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">/* FPRESET.C: This program uses signal to set up a
+ * routine for handling floating-point errors.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;setjmp.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;float.h&gt;
+#include &lt;math.h&gt;
+#include &lt;string.h&gt;
+
+#pragma warning(disable : 4113) /* C4113 warning expected */
+
+jmp_buf mark;              /* Address for long jump to jump to */
+int     fperr;             /* Global error number */
+
+void __cdecl fphandler( int sig, int num );   /* Prototypes */
+void fpcheck( void );
+
+void main( void )
+{
+   double n1, n2, r;
+   int jmpret;
+   /* Unmask all floating-point exceptions. */
+    _control87( 0, _MCW_EM );
+   /* Set up floating-point error handler. The compiler
+    * will generate a warning because it expects
+    * signal-handling functions to take only one argument.
+    */
+    if( signal( SIGFPE, fphandler ) == SIG_ERR )
+
+   {
+      fprintf( stderr, "Couldn't set SIGFPE\n" );
+      abort();   }
+
+   /* Save stack environment for return in case of error. First
+    * time through, jmpret is 0, so true conditional is executed.
+    * If an error occurs, jmpret will be set to -1 and false
+    * conditional will be executed.
+    */
+   jmpret = setjmp( mark );
+   if( jmpret == 0 )
+   {
+      printf( "Test for invalid operation - " );
+      printf( "enter two numbers: " );
+      scanf( "%lf %lf", &amp;n1, &amp;n2 );
+      r = n1 / n2;
+      /* This won't be reached if error occurs. */
+      printf( "\n\n%4.3g / %4.3g = %4.3g\n", n1, n2, r );
+
+      r = n1 * n2;
+      /* This won't be reached if error occurs. */
+      printf( "\n\n%4.3g * %4.3g = %4.3g\n", n1, n2, r );
+   }
+   else
+      fpcheck();
+}
+/* fphandler handles SIGFPE (floating-point error) interrupt. Note
+ * that this prototype accepts two arguments and that the
+ * prototype for signal in the run-time library expects a signal
+ * handler to have only one argument.
+ *
+ * The second argument in this signal handler allows processing of
+ * _FPE_INVALID, _FPE_OVERFLOW, _FPE_UNDERFLOW, and
+ * _FPE_ZERODIVIDE, all of which are Microsoft-specific symbols
+ * that augment the information provided by SIGFPE. The compiler
+ * will generate a warning, which is harmless and expected.
+
+ */
+void fphandler( int sig, int num )
+{
+   /* Set global for outside check since we don't want
+    * to do I/O in the handler.
+    */
+   fperr = num;
+   /* Initialize floating-point package. */
+   _fpreset();
+   /* Restore calling environment and jump back to setjmp. Return
+    * -1 so that setjmp will return false for conditional test.
+    */
+   longjmp( mark, -1 );
+}
+void fpcheck( void )
+{
+   char fpstr[30];
+   switch( fperr )
+   {
+   case _FPE_INVALID:
+       strcpy( fpstr, "Invalid number" );
+       break;
+   case _FPE_OVERFLOW:
+       strcpy( fpstr, "Overflow" );
+
+       break;
+   case _FPE_UNDERFLOW:
+       strcpy( fpstr, "Underflow" );
+       break;
+   case _FPE_ZERODIVIDE:
+       strcpy( fpstr, "Divide by zero" );
+       break;
+   default:
+       strcpy( fpstr, "Other floating point error" );
+       break;
+   }
+   printf( "Error %d: %s\n", fperr, fpstr );
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">Test for invalid operation - enter two numbers: 5 0
+Error 131: Divide by zero
+</PRE>
+
+<H4>See Also</H4>
+
+<P>_exec Function Overview, signal, _spawn Function Overview, system</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

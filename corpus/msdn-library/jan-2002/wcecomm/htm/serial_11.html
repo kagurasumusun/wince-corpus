@@ -1,0 +1,83 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Writing to a Serial Port</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Writing to a Serial Port"/>
+<MSHelp:RLTitle Title="Writing to a Serial Port"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_writing_to_a_serial_port"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_WriteFile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_WaitCommEvent" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_CreateFile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Writing to a Serial Port</H1>
+
+<P>The <A HREF="JavaScript:hhobj_1.Click()"><B>WriteFile</B></A> function transfers data through the serial connection to another device. Before calling this function, an application must open and configure a serial port.</P>
+
+<P>Because Windows CE does not support overlapped I/O, the primary <I>thread</I> or any thread that creates a window should not try to write a large amount of data to a serial port. Such threads are blocked and cannot manage message queues. An application can simulate overlapped I/O by creating multiple threads to handle read/write operations. To coordinate threads, an application calls the <A HREF="JavaScript:hhobj_2.Click()"><B>WaitCommEvent</B></A> function to block threads until specific communication events occur. For more information about communication events, see <A HREF="serial_13.htm">Using Communication Events</A>.</P>
+
+<P><B>To write to a serial port</B>
+
+<OL type="1">
+	<LI>Pass the port handle to the <B>WriteFile</B> function in the <I>hFile</I> parameter. The <A HREF="JavaScript:hhobj_3.Click()"><B>CreateFile</B></A> function returns this handle when an application opens a port.</li>
+
+	<LI>Specify a pointer to the data to be written in <I>lpBuffer</I>. Often this data is binary data or a character array.</li>
+
+	<LI>Specify the number of characters to write in <I>nNumberOfBytesToWrite</I>. For Windows CE&#0150;based devices, an application can convert Unicode characters to ASCII characters in a buffer to enable text transfer to a device at the opposite end of a serial connection. The entire buffer can be passed to the driver.</li>
+
+	<LI>Specify in <I>lpNumberOfBytesWritten</I> a pointer to the number of bytes actually written. <B>WriteFile</B> fills this variable so that an application can determine if the data transferred.</li>
+
+	<LI>Be sure that <I>lpOverlapped</I> is NULL.</li>
+</OL>
+
+<P>The following code example shows how to transfer data using the <B>WriteFile</B> function.</P>
+
+<PRE class="code">DWORD dwError,
+      dwNumBytesWritten;
+
+WriteFile (hPort,              // Port handle
+           &amp;Byte,              // Pointer to the data to write
+           1,                  // Number of bytes to write
+           &amp;dwNumBytesWritten, // Pointer to the number of bytes
+                               // written
+           NULL                // Must be NULL for Windows CE
+);</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

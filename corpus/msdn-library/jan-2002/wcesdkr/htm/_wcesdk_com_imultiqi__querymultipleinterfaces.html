@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMultiQI::QueryMultipleInterfaces</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMultiQI::QueryMultipleInterfaces"/>
+<MSHelp:RLTitle Title="IMultiQI::QueryMultipleInterfaces"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imultiqi__querymultipleinterfaces"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMultiQI::QueryMultipleInterfaces</H1>
+
+<P>This method fills a caller-provided array of structures with pointers to multiple interfaces. Calling this method is equivalent to issuing a series of separate <A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A> calls except that you do not incur the overhead of a corresponding number of RPC calls. In multithreaded applications and distributed environments, keeping RPC calls to a minimum is essential for optimal performance.</P>
+
+<PRE class="syntax"><B>HRESULT QueryMultipleInterfaces(
+ULONG </B><I>cMQIs</I><B>,
+MULTI_QI *</B><I>pMQIs</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>cMQIs</I></DT>
+
+<DD>[in] Pointer to the number of elements in an array of <B>MULTI_QI</B> structures, each of which contains the IID of a single interface.</dd>
+
+<DT><I>pMQIs</I></DT>
+
+<DD>[in, out] Pointer to the first <B>MULTI_QI</B> strucutre in the array.</dd>
+</DL>
+
+<H4>Return Value</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>Pointers were returned to all requested interfaces.</dd>
+
+<DT>S_FALSE</DT>
+
+<DD>Pointers were returned to some, but not all, of the requested interfaces.</dd>
+
+<DT>E_NOINTERFACE</DT>
+
+<DD>Pointers were returned to none of the requested interfaces.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>QueryMultipleInterfaces</B> method takes as input an array of <B>MULTI_QI</B> structures. Each structure specifies an interface IID and contains two additional blank fields for receiving an interface pointer and return value.</P>
+
+<P>This method obtains as many requested interface pointers as possible directly from the object proxy. For each interface not implemented on the proxy, the method calls the server to obtain a pointer. Upon receiving an interface pointer from the server, the method builds a corresponding interface proxy and returns its pointer along with pointers to the interfaces it already implements.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>A caller should begin by querying the object proxy for the <A HREF="_wcesdk_com_imultiqi.htm"><B>IMultiQI</B></A> interface. If the object proxy returns a pointer to this interface, the caller should then create a <B>MULTI_QI</B> structure for each interface it wants to obtain. Each structure should specify an interface IID and set its <I>pItf</I> member to NULL. Failure to set the <I>pItf</I> member to NULL will cause the object proxy to ignore the structure.</P>
+
+<P>On return, <B>QueryMultipleInterfaces</B> writes the requested interface pointer and a return value into each <B>MULTI_QI</B> structure in the client's array. The <I>pItf</I> field receives the pointer; the hr field receives the return value.</P>
+
+<P>If the value returned from a call to <B>QueryMultipleInterfaces</B> is S_OK, then pointers were returned for all requested interfaces. If the return value is E_NOINTERFACE, then pointers were returned for none of the requested interfaces. If the return value is S_FALSE, then pointers to one or more requested interfaces were not returned. In this event, the client should check the hr field of each <B>MULTI_QI</B> structure to determine which interfaces were acquired and which were not.</P>
+
+<P>If a client knows ahead of time that it will be using several of an object's interfaces, it can call <B>QueryMultipleInterfaces</B> up front and then, later, if a <B>QueryInterface</B> is done for one of the interfaces already acquired through <B>QueryMultipleInterfaces</B>, no RPC call will be necessary.</P>
+
+<P>On return, the caller should check the hr field of each <B>MULTI_QI</B> structure to determine which interface pointers were and were not returned.</P>
+
+<P>The client is responsible for releasing each of the acquired interfaces by calling <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

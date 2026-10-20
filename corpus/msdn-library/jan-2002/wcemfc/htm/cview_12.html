@@ -1,0 +1,92 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CView::OnPrint</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CView::OnPrint"/>
+<MSHelp:RLTitle Title="CView::OnPrint"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cview_onprint"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CView::OnPrint</H1>
+
+<P>This method is called by the framework to print or preview a page of the document. For each page being printed, the framework calls this method immediately after calling the <B>OnPrepareDC</B> method. The page being printed is specified by the <B>m_nCurPage</B> member of the <A HREF="cprtinfo.htm"><B>CPrintInfo</B></A> structure that <I>pInfo</I> points to. The default implementation calls the <A HREF="cview_7.htm"><B>OnDraw</B></A> method and passes it the printer device context.</P>
+
+<PRE class=syntax><B>virtual void OnPrint(
+CDC* </B><I>pDC</I><B>,
+CPrintInfo* </B><I>pInfo</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Points to the printer device context.</DD>
+
+<DT><I>pInfo</I></DT>
+
+<DD>Points to a <B>CPrintInfo</B> structure that describes the current print job. </DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Override this function for any of the following reasons:
+
+<UL type=disc>
+	<LI>To allow printing of multipage documents. Render only the portion of the document that corresponds to the page currently being printed. If you are using <B>OnDraw</B> to perform the rendering, you can adjust the viewport origin so that only the appropriate portion of the document is printed.</LI>
+
+	<LI>To make the printed image look different from the screen image (that is, if your application is not WYSIWYG). Instead of passing the printer device context to <B>OnDraw</B>, use the device context to render an image using attributes not shown on the screen.
+<P>If you need GDI resources for printing that you do not use for screen display, select them into the device context before drawing and deselect them afterwards. These GDI resources should be allocated in <A HREF="cview_6.htm"><B>OnBeginPrinting</B></A> and released in <A HREF="cview_8.htm"><B>OnEndPrinting</B></A>.
+</LI>
+
+	<LI>To implement headers or footers. You can still use <B>OnDraw</B> to do the rendering by restricting the area that it can print on.</LI>
+</UL>
+
+<P>Note that the <B>m_rectDraw</B> member of the <I>pInfo</I> parameter describes the printable area of the page in logical units.</P>
+
+<P>Do not call <B>OnPrepareDC</B> in your override of <B>OnPrint</B>; the framework calls <B>OnPrepareDC</B> automatically before calling <B>OnPrint</B>.</P>
+
+<H4>Example</H4>
+
+<P>The following is a skeleton for an overridden <B>OnPrint</B> function:</P>
+
+<PRE>void CMyView::OnPrint( CDC *pDC, CPrintInfo *pInfo )
+{
+&nbsp;&nbsp;// Print headers and/or footers, if desired.
+&nbsp;&nbsp;// Find portion of document corresponding to pInfo-&gt;m_nCurPage.
+&nbsp;&nbsp;OnDraw( pDC );
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

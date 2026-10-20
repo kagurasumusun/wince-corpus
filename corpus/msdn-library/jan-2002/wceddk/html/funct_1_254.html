@@ -1,0 +1,102 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSynchronizeWithInterrupt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSynchronizeWithInterrupt"/>
+<MSHelp:RLTitle Title="NdisMSynchronizeWithInterrupt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndismsynchronizewithinterrupt"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMSynchronizeWithInterrupt</H1>
+
+<P>This function synchronizes execution of a Miniport-supplied function with the <B>MiniportISR</B> or the <B>MiniportDisableInterrupt</B> function.</P>
+
+<PRE class="syntax"><B>BOOLEAN NdisMSynchronizeWithInterrupt(
+IN PNDIS_MINIPORT_INTERRUPT </B><I>Interrupt</I><B>,
+IN PVOID </B><I>SynchronizeFunction</I><B>,
+IN PVOID </B><I>SynchronizeContext</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Interrupt</I></DT>
+
+<DD>Pointer to the caller-supplied storage for the interrupt object initialized with the <B>NdisMRegisterInterrupt</B> function.</dd>
+
+<DT><I>SynchronizeFunction</I></DT>
+
+<DD>Specifies the entry point of the driver’s <B>MiniportSynchronizeISR</B> function.</dd>
+
+<DT><I>SynchronizeContext</I></DT>
+
+<DD>Pointer to a miniport-determined context area to be passed to the <B>MiniportSynchronizeISR</B> function when it is called.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns the Boolean value returned by <B>MiniportSynchronizeISR</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The value returned by <B>MiniportSynchronizeISR</B> is also returned by this function. This propagated value can be used to provide a status to the caller.</P>
+
+<P>Any miniport function that shares resources with any other driver function that runs at DIRQL must use this function to synchronize its access to those resources. The <B>MiniportSynchronizeISR</B> function also runs at DIRQL, and the shared resources are protected by a system-allocated spin lock on multiprocessor platforms. Thus, the shared resources are protected from simultaneous access by <B>MiniportISR</B> or <B>MiniportDisableInterrupt</B> and the caller whenever the driver is running on a multiprocessor platform.</P>
+
+<P>This function releases the system spin lock and restores the original IRQL of its caller before it returns control.</P>
+
+<P>A driver that calls this function runs at IRQL &lt;= DIRQL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_224.htm"><B>NdisMDeregisterInterrupt</B></A>, <A HREF="funct_1_242.htm"><B>NdisMRegisterInterrupt</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

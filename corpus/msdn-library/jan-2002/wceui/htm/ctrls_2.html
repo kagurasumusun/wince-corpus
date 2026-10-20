@@ -1,0 +1,123 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Notification Messages</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Handling Notification Messages"/>
+<MSHelp:RLTitle Title="Handling Notification Messages"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_handling_notification_messages"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Handling Notification Messages</H1>
+
+<P>Every window control responds to user input or changes to the control by sending a <I>notification message</I> to its parent window. A notification message is a WM_COMMAND message that includes a control identifier and a notification code that identifies the nature of the event. An application must collect these notification messages and respond to them.</P>
+
+<P>The following code example shows one method of trapping a WM_COMMAND message.</P>
+
+<PRE>BOOL CALLBACK AboutDialogProc (
+                        HWND hwndDlg,     // Handle to the dialog box
+                        UINT uMsg,        // Message
+                        WPARAM wParam,    // First message parameter
+                        LPARAM lParam)    // Second message parameter
+{
+  switch (uMsg)
+  {
+    case WM_INITDIALOG:
+      return TRUE;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+      {
+        case IDOK:
+          EndDialog (hwndDlg, IDOK);
+          return TRUE;
+
+        case IDCANCEL:
+          EndDialog (hwndDlg, IDCANCEL);
+          return TRUE;
+      }
+      break;
+  }
+  return FALSE;
+}
+</PRE>
+
+<P>Some window controls receive as well as generate messages. Typically, a window procedure sends a message to a control, directing it to execute a task. The control processes the message and carries out the requested action. Windows&nbsp;CE has several predefined messages, such as WM_GETTEXT and WM_GETDLGCODE, that it sends to controls. These messages typically correspond to window-management functions that carry out actions on windows. The window procedure for an application-defined control processes any predefined control message that affects the operation of the control. The following table shows these messages.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>Message</TH>
+<TH width=70%>Recommendation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_GETDLGCODE</TD>
+<TD width=70%>Process if the control uses the ENTER, ESC, TAB, or arrow keys. The <B>IsDialogMessage</B> function sends this message to controls in a dialog box to determine whether to process the keys or pass them to the control.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_GETFONT</TD>
+<TD width=70%>Process if the WM_SETFONT message also is processed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_GETTEXT</TD>
+<TD width=70%>Process if the control text is not the same as the title that is specified by the <B>CreateWindowEx</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_GETTEXTLENGTH</TD>
+<TD width=70%>Process if the control text is not the same as the title that is specified by the <B>CreateWindowEx</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_KILLFOCUS</TD>
+<TD width=70%>Process if the control displays a caret, a focus rectangle, or another item to indicate that it has the input focus.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_SETFONT</TD>
+<TD width=70%>Process if the control displays text. Windows CE sends this message when Windows CE creates a dialog box that has the DS_SETFONT style.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_SETFOCUS</TD>
+<TD width=70%>Process if the control displays a caret, a focus rectangle, or another item to indicate that it has the input focus.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>WM_SETTEXT</TD>
+<TD width=70%>Process if the control text is not the same as the title that is specified by the <B>CreateWindowEx</B> function.</TD>
+</TR>
+</TABLE><BR>
+
+<P>You also can send messages to a control by calling the <B>SendMessage</B> function. One control that calls <B>SendMessage</B> to receive messages is the button control.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

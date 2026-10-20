@@ -1,0 +1,147 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleDispatchDriver::COleDispatchDriver</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="COleDispatchDriver::COleDispatchDriver"/>
+<MSHelp:RLTitle Title="COleDispatchDriver::COleDispatchDriver"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_coledispatchdriver_coledispatchdriver"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_oa96_IDispatch_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>COleDispatchDriver::COleDispatchDriver</H1>
+
+<P>This constructor constructs a <B>COleDispatchDriver</B> object.</P>
+
+<P>The default constructor creates a <B>COleDispatchDriver</B> object but does not connect the <B>IDispatch</B> interface. Before using <B>COleDispatchDriver </B>object, you should connect an <B>IDispatch</B> interface to it by using either <B>COleDispatchDriver::CreateDispatch</B> or <B>COleDispatchDriver::AttachDispatch</B>. </P>
+
+<P>The form <B>COleDispatchDriver(LPDISPATCH</B> <I>lpDispatch</I>, <B>BOOL</B> <I>bAutoRelease</I> = <B>TRUE)</B> connects the <B>IDispatch</B> interface. </P>
+
+<P>The third form is the copy constructor.</P>
+
+<PRE class=syntax><B>COleDispatchDriver( );</B><I> </I>
+
+<B>COleDispatchDriver(
+LPDISPATCH </B><I>lpDispatch</I><B>,
+BOOL </B><I>bAutoRelease</I><B> = TRUE );</B><I> </I>
+
+<B>COleDispatchDriver(
+const COleDispatchDriver&amp; </B><I>dispatchSrc</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpDispatch</I></DT>
+
+<DD>Specifies a pointer to an OLE <B>IDispatch</B> object to be attached to the <B>COleDispatchDriver</B> object.</DD>
+
+<DT><I>bAutoRelease</I></DT>
+
+<DD>Specifies whether the dispatch is to be released when this object goes out of scope.</DD>
+
+<DT><I>dispatchSrc</I></DT>
+
+<DD>Specifies the reference to an existing <B>COleDispatchDriver</B> object. </DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>void CTestView::OnBatterylife()
+{
+&nbsp;&nbsp;COleDispatchDriver disp;
+&nbsp;&nbsp;COleException *e = new COleException;
+&nbsp;&nbsp;
+&nbsp;&nbsp;try {
+&nbsp;&nbsp;&nbsp;&nbsp;// Create an instance of Microsoft System Information Control
+&nbsp;&nbsp;&nbsp;&nbsp;// by using ProgID.
+&nbsp;&nbsp;&nbsp;&nbsp;if (disp.CreateDispatch("SYSINFO.Sysinfo.1", e))
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Call BatteryLifePercent.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;short nBatteryLifePercent;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disp.InvokeHelper(0x03, DISPATCH_PROPERTYGET, VT_I2,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void*)&amp;nBatteryLifePercent, NULL);
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (nBatteryLifePercent == 255)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Battery Life % unknown");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CString cStr;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr.Format("Battery Life is at %d%%",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nBatteryLifePercent);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(cStr);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw e;
+
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;//Catch control-specific exceptions.
+&nbsp;&nbsp; catch (COleDispatchException * e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;CString cStr;
+
+&nbsp;&nbsp;&nbsp;&nbsp;if (!e-&gt;m_strSource.IsEmpty())
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr = e-&gt;m_strSource + " - ";
+&nbsp;&nbsp;&nbsp;&nbsp;if (!e-&gt;m_strDescription.IsEmpty())
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr += e-&gt;m_strDescription;
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cStr += "unknown error";
+
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(cStr, MB_OK,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(e-&gt;m_strHelpFile.IsEmpty())? 0:e-&gt;m_dwHelpContext);
+
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;//Catch all MFC exceptions, including COleExceptions.
+&nbsp;&nbsp;// Operating system exceptions will not be caught.
+&nbsp;&nbsp; catch (CException *e)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%s(%d): OLE Execption caught: SCODE = %x",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__FILE__, __LINE__, COleException::Process(e));
+&nbsp;&nbsp;&nbsp;&nbsp;e-&gt;Delete();
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="coledspd_4.htm"><B>COleDispatchDriver::CreateDispatch</B></A>, <A HREF="coledspd_3.htm"><B>COleDispatchDriver::AttachDispatch</B></A>, <A HREF="JavaScript:hhobj_1.Click()"><B>IDispatch</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

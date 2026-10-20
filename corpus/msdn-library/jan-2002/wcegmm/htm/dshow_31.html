@@ -1,0 +1,92 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Retrieving Events</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Retrieving Events"/>
+<MSHelp:RLTitle Title="Retrieving Events"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_retrieving_events"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imediaeventsink_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediaevent_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_imediaeventex_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_imediaeventsink__notify" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_event_notification_codes" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_imediaevent__getevent" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_imediaevent__freeeventparams" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_imediaevent__canceldefaulthandling" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_imediaevent__restoredefaulthandling" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Retrieving Events</H1>
+
+<P>The Filter Graph Manager exposes three interfaces that support event notification.
+
+<UL type="disc">
+	<LI><A HREF="JavaScript:hhobj_1.Click()"><B>IMediaEventSink</B></A> contains the method for filters to post events. </li>
+
+	<LI><A HREF="JavaScript:hhobj_2.Click()"><B>IMediaEvent</B></A> contains methods for applications to retrieve events. </li>
+
+	<LI><A HREF="JavaScript:hhobj_3.Click()"><B>IMediaEventEx</B></A> inherits from and extends the <B>IMediaEvent</B> interface. </li>
+</UL>
+
+<P>Filters post event notifications by calling the <A HREF="JavaScript:hhobj_4.Click()"><B>IMediaEventSink::Notify</B></A> method on the Filter Graph Manager. An event notification consists of an event code, which defines the type of event, and two DWORD parameters that give additional information. Depending on the event code, the parameters might contain pointers, return codes, reference times, or other information. For a complete list of event codes and parameters, see <A HREF="JavaScript:hhobj_5.Click()">Event Notification Codes</A>.</P>
+
+<P>To retrieve an event from the queue, the application calls the <A HREF="JavaScript:hhobj_6.Click()"><B>IMediaEvent::GetEvent</B></A> method on the Filter Graph Manager. This method blocks until there is an event to return or until a specified time elapses. Assuming there is a queued event, the method returns with the event code and the two event parameters. After calling <B>GetEvent</B>, an application should always call the <A HREF="JavaScript:hhobj_7.Click()"><B>IMediaEvent::FreeEventParams</B></A> method to release any resources associated with the event parameters. For example, a parameter might be a BSTR value that was allocated by the filter graph. </P>
+
+<P>The following code example provides an outline of how to retrieve events from the queue.</P>
+
+<PRE class="code">long evCode, param1, param2;
+HRESULT hr;
+while (hr = pEvent-&gt;GetEvent(&amp;evCode, &amp;param1, &amp;param2, 0), SUCCEEDED(hr))
+{
+    switch(evCode)
+    {
+        // Call application-defined functions for each
+        // type of event that you want to handle.
+    }
+
+    hr = pEvent-&gt;FreeEventParams(evCode, param1, param2);
+}</PRE>
+
+<P>To override the Filter Graph Manager's default handling for an event, call the <A HREF="JavaScript:hhobj_8.Click()"><B>IMediaEvent::CancelDefaultHandling</B></A> method with the event code as a parameter. You can reinstate the default handling by calling the <A HREF="JavaScript:hhobj_9.Click()"><B>IMediaEvent::RestoreDefaultHandling</B></A> method. If the filter graph performs no default handling for the specified event code, calling these methods has no effect.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;If an application obtains an <B>IMediaEvent</B> interface pointer from the Filter Graph Manager, it must retrieve all events from the queue or they will accumulate and cause the heap to be used up. On the other hand, as long as the application has not obtained an <B>IMediaEvent</B> pointer, the filter graph does not queue any events. Therefore, you have the option of ignoring all events.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

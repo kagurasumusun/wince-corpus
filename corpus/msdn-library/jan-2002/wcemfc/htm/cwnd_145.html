@@ -1,0 +1,169 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::OnSysKeyUp</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::OnSysKeyUp"/>
+<MSHelp:RLTitle Title="CWnd::OnSysKeyUp"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_onsyskeyup"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_translateaccelerator" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_wm_syskeydown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>CWnd::OnSysKeyUp</H1>
+
+<P>This method is called by the framework, if the <B>CWnd</B> object has the input focus, when the user releases a key that was pressed while the ALT key was held down. If no window currently has the input focus, the active window <B>OnSysKeyUp</B> method is called. The <B>CWnd</B> object that receives the call can distinguish between these two contexts by checking the context code in <I>nFlags</I>. </P>
+
+<PRE class=syntax><B>afx_msg void OnSysKeyUp(
+UINT </B><I>nChar</I><B>,
+UINT </B><I>nRepCnt</I><B>,
+UINT </B><I>nFlags</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nChar</I></DT>
+
+<DD>Specifies the virtual key code of the key being pressed. For a list of of standard virtual key codes, see Winuser.h</DD>
+
+<DT><I>nRepCnt</I></DT>
+
+<DD>Specifies the repeat count.</DD>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies the scan code, key-transition code, previous key state, and context code, as shown in the following list:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=15%>Value</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>0&#0150;7</TD>
+<TD width=85%>Scan code (OEM-dependent value). Low byte of high-order word.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>8</TD>
+<TD width=85%>Extended key, such as a function key or a key on the numeric keypad (1 if it is an extended key; otherwise, it is 0).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>9&#0150;10</TD>
+<TD width=85%>Not used.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>11&#0150;12</TD>
+<TD width=85%>Used internally by Windows CE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>13</TD>
+<TD width=85%>Context code (1 if the ALT key is held down while the key is pressed, 0 otherwise).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>14</TD>
+<TD width=85%>Previous key state (1 if the key is down before the message is sent, 0 if the key is up).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>15</TD>
+<TD width=85%>Transition state (1 if the key is being released, 0 if the key is being pressed).</TD>
+</TR>
+</TABLE><BR>
+
+
+
+<P>For <B>OnSysKeyUp</B> calls, the key-transition bit (bit 15) is 1. The context-code bit (bit 13) is 1 if the ALT key is down while the key is pressed; it is 0 if the message is sent to the active window because no window has the input focus.
+</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>When the context code is zero, the WM_SYSKEYUP message received by <B>OnSysKeyUp</B> can be passed to the <A HREF="JavaScript:hhobj_1.Click()"><B>TranslateAccelerator</B></A> Windows CE function, which will handle it as though it were a normal key message instead of a system-key message. This allows accelerator (shortcut) keys to be used with the active window even if the active window does not have the input focus.</P>
+
+<P>For IBM Enhanced 101- and 102-key keyboards, enhanced keys are the right ALT and the right CTRL keys on the main section of the keyboard; the INS, DEL, HOME, END, PAGE UP, PAGE DOWN, and arrow keys in the clusters to the left of the numeric keypad; and the slash (/) and ENTER keys in the numeric keypad. Some other keyboards may support the extended-key bit in <I>nFlags</I>.</P>
+
+<P>For non-U.S. Enhanced 102-key keyboards, the right ALT key is handled as the CTRL+ALT key combination. The following shows the sequence of messages and calls that result when the user presses and releases this key:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=18%>Sequence</TH>
+<TH width=35%>Function Accessed</TH>
+<TH width=47%>Message Passed</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>1.</TD>
+<TD width=35%>WM_KEYDOWN</TD>
+<TD width=47%>VK_CONTROL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>2.</TD>
+<TD width=35%>WM_KEYDOWN</TD>
+<TD width=47%>VK_MENU</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>3.</TD>
+<TD width=35%>WM_KEYUP</TD>
+<TD width=47%>VK_CONTROL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>4.</TD>
+<TD width=35%>WM_SYSKEYUP</TD>
+<TD width=47%>VK_MENU</TD>
+</TR>
+</TABLE><BR>
+
+<P>This method is called by the framework to allow your application to handle a Windows CE message. The parameters passed to your method reflect the parameters received by the framework when the message was received. If you call the base-class implementation of this method, that implementation will use the parameters originally passed with the message and not the parameters you supply to the method.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="JavaScript:hhobj_2.Click()"><B>WM_SYSKEYDOWN</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CComDispatchDriver::GetProperty</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CComDispatchDriver::GetProperty"/>
+<MSHelp:RLTitle Title="CComDispatchDriver::GetProperty"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomdispatchdriver_getproperty"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CComDispatchDriver::GetProperty</H1>
+
+<P>This method gets the value of the property identified by <I>dwDispID</I>. If you supply <I>pDisp</I>, that <B>IDispatch</B> pointer is used. If you do not, the <B>IDispatch</B> pointer contained in the <B>p</B> data member is used. </P>
+
+<PRE class=syntax><B>HRESULT</B> <B>GetProperty(</B>
+<B>DISPID</B> <I>dwDispID</I>,
+<B>VARIANT*</B> <I>pvar</I> <B>);</B><I> </I>
+
+<B>static HRESULT GetProperty(</B><I>
+</I><B>IDispatch*</B><I> pDisp</I>,<I>
+</I><B>DISPID</B><I> dwDispID</I>,<I>
+</I><B>VARIANT*</B><I> pvar</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwDispID</I></DT>
+
+<DD>[in] The DISPID of the property to be retrieved. The DISPID can be obtained from <B>IDispatch::GetIDsOfNames</B>. </DD>
+
+<DT><I>pvar</I></DT>
+
+<DD>[out] Pointer to where the property value is to be stored. </DD>
+
+<DT><I>pDisp</I></DT>
+
+<DD>[in] Pointer to the <B>IDispatch</B> interface.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>One of the standard <B>HRESULT</B> values. </P>
+
+<H4>Remarks</H4>
+
+<P>The following example shows a call to the static version of <B>GetProperty</B>. This code is used to implement <B>IPersistStreamInitImpl::Save</B>.</P>
+
+<PRE>CComPtr&lt;IDispatch&gt; pDispatch;
+const IID* piidOld = NULL;
+for(int i = 0; pMap[i].pclsidPropPage != NULL; i++)
+               // The pMap parameter is a pointer to an array of
+               // ATL_PROPMAP_ENTRY structures.
+{
+   if (pMap[i].szDesc == NULL)
+      continue;
+   CComVariant var;
+   if(pMap[i].piidDispatch != piidOld)
+   {
+      if(FAILED(ControlQueryInterface(*pMap[i].piidDispatch,
+                                (void**)&amp;pDispatch)))
+      {
+         ATLTRACE(_T("Failed to get a dispatch pointer
+                  for property #%i\n"), i);
+         hr = E_FAIL;
+         break;
+      }
+      piidOld = pMap[i].piidDispatch;
+   }
+   if (FAILED(CComDispatchDriver::GetProperty(pDispatch,
+                               pMap[i].dispid, &amp;var)))
+   {
+      ATLTRACE(_T("Invoked failed on DISPID %x\n"),
+               pMap[i].dispid);
+      hr = E_FAIL;
+      break;
+   }
+   HRESULT hr = var.WriteToStream(pStm);
+   if (FAILED(hr))
+      break;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccdisdrv_4.htm"><B>CComDispatchDriver::PutProperty</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

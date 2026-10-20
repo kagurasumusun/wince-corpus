@@ -1,0 +1,55 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Supplying a Full-Screen Renderer Filter</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Supplying a Full-Screen Renderer Filter"/>
+<MSHelp:RLTitle Title="Supplying a Full-Screen Renderer Filter"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_supplying_a_full-screen_renderer_filter"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ivideowindow_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_error_and_success_codes" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Supplying a Full-Screen Renderer Filter</H1>
+
+<P>If neither of the previous options were successful, then the PID finds the first available filter in the filter graph that supports an <A HREF="JavaScript:hhobj_1.Click()"><B>IVideoWindow</B></A> interface, and assumes that it is the current video renderer filter. </P>
+
+<P>If no filters that support <B>IVideoWindow</B> are available, the call to change to full-screen mode will return <A HREF="JavaScript:hhobj_2.Click()">VFW_E_NO_FULLSCREEN</A>. When asked to change into full-screen mode, the PID asks the current renderer if it can support full-screen mode efficiently. If so, no graph changes are made. If not, the PID stops the filter graph (if it is not already stopped), disconnects the current renderer, reconnects the DirectShow full-screen renderer in its place, and restores the original filter graph when it's done. When switching out of full-screen mode, the opposite occurs. That is, the full-screen renderer is disconnected and the original filter is reconnected. The state of the filter graph is likewise restored. The full-screen renderer is a specialized renderer that uses the display changing capabilities provided by Microsoft&reg; DirectDraw&reg;. For example, it might switch the full-screen display 320 × 240 when it might have been in, for example, 1024 × 768. By switching to lower resolution modes, it can cheaply implement full-screen rendering without having to stretch images. </P>
+
+<P>The full-screen renderer currently implements 320 × 200 × 8/16 bits per pixel, 320 × 240 × 8/16, 640 × 400 × 8/16, 640 × 400 × 8/16, 640 × 480 × 8/16, 800 × 600 × 8/16, 1024 × 768 × 8/16, 1152 × 864 × 8/16, and 1280 × 1024 × 8/16 display modes. The Mode X renderer supports the <B>IFullScreenVideo</B> interface. When the Mode X renderer is connected, it loads the display modes DirectDraw has made available. The number of modes available can be obtained through <B>IFullScreenVideo::CountModes</B>. Information on each mode is available by calling <B>IFullScreenVideo::GetModeInfo</B> and <B>IFullScreenVideo::IsModeAvailable</B>. An application can enable and disable any modes by calling the SetEnabled flag with OATRUE or OAFALSE. The current value can be queried for with <B>IFullScreenVideo::IsModeEnabled</B>. </P>
+
+<P>Another way to set the modes enabled is to use the clip loss factor. This defines the amount of video that can be lost when deciding which display mode to use. Assuming the decoder cannot compress the video, then playing, for example, an MPEG file that is 352 × 288 pixels into a 320 × 200 display will lose over 40 percent of the image. The clip loss factor specifies the upper range of clipping loss that is permissible. To allow typical MPEG video to be played in 320 × 200 it defaults to 50 percent. You can set the clip loss factor with <B>IFullScreenVideo::SetClipFactor</B>.</P>
+
+<P>No ModeX renderer is supplied for Windows CE, however the default video renderer will perform efficient full screen rendering if the graphics system provides hardware accelerated stretch blits.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

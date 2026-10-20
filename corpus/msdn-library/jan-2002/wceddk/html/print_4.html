@@ -1,0 +1,64 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Global Printer Settings</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Global Printer Settings"/>
+<MSHelp:RLTitle Title="Global Printer Settings"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_global_printer_settings"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Global Printer Settings</H1>
+
+<P>The global printer settings that are stored in the registry list the I/O ports to use for printing, provide a global time-out value, and store which printer driver currently is selected as the default. The default printer driver is stored as a value for <B>DefaultPrinter</B>. The printer ports are stored as values in the <B>\Ports</B> subkey.</P>
+
+<P>The following registry file excerpt defines five printer ports, two time-out values, and the default printer driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Printers\Ports]
+  "Port1"="COM1: 9600"
+  "Port2"="COM1: 57600"
+  "Port3"="IRDA"
+  "Port4"="LPT1:"
+  "Port5"="NET0:"
+[HKEY_LOCAL_MACHINE\Printers\Settings]
+  "TimeOut"=dword:1E
+[HKEY_LOCAL_MACHINE\PrintSettings]
+  "TimeOut"=dword:2D
+[HKEY_LOCAL_MACHINE\Printers]
+  "DefaultPrinter"="PCL Laser"
+</PRE>
+
+<P>The values correspond to serial ports at 9,600 baud and 57,600 baud, an infrared port, a parallel port, and a network printer port. For the two COM1: ports, a baud is also specified. The port monitor parses the values to extract the baud and device file name. In Windows CE 2.0, COM3: is assumed to be an infrared port. However, in Windows CE 2.10 and later the new file name “IRDA” is reserved for the infrared port, whereas COM3: is used for an additional serial port. When assigning an infrared port for printing, the value of the key for the port must be the literal string “IRDA” even though this value is not in the standard format for special <A HREF="stream_6.htm">device file names</A>. The names “LPT1:” and “NET0:” are reserved for parallel and network printing, respectively, although the <A HREF="stream_9.htm">device file name indexes</A> in those names can be any valid value.</P>
+
+<P>Windows CE versions 2.02 and later use the <B>HKEY_LOCAL_MACHINE\Printers\Settings\TimeOut</B> key. This value is a hexadecimal number that is measured in seconds; the example is for a 30-second time-out. After the time-out period, the printer driver can display a dialog box to give the user the option to retry or cancel.</P>
+
+<P>For a printer that does not use the parallel port, such as an infrared or serial printer, it is difficult for Windows CE to determine whether the printer has received all the data to be printed. Therefore, a time-out parameter is used to detect and report printing errors if the printer fails to give any signal that it is still active. This time-out value is stored in the <B>PrintSettings\TimeOut </B>key. The default value is 45 seconds.</P>
+
+<P>The value stored in the <B>DefaultPrinter</B> key lists the printer that is preselected in the common print dialog box that applications display to users. T default printer driver,<B> </B>“PCL Laser”, is the name of a subkey within <B>HKEY_LOCAL_MACHINE\Printers\</B> where Windows CE can find settings for the Printer Control Language (PCL) laser printer driver.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,55 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Network Registration Utility</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using the Network Registration Utility"/>
+<MSHelp:RLTitle Title="Using the Network Registration Utility"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceipc_using_the_network_registration_utility"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Using the Network Registration Utility</H1>
+
+<P>The network registration daemon (NETREGD) provides name registration services for Windows CE devices. It ensures that the device name and IP address are registered with WINS when the device goes online. In version 2.12, the NETREG daemon relies solely on the redirector to provide registration services. In version 3.0, NETREG can work with or without the redirector.</P>
+
+<P>Parameters of NETREG daemon are stored in [HKEY_LOCAL_MACHINE\Software\Microsoft\netreg]. The daemon itself installs as a built-in device driver and starts at the system boot time.</P>
+
+<P>The NETREG daemon can use the network tracking capability of Windows CE 2.12 and later to register the device name when network interface becomes available. To enable this capability, the DWORD value “TrackNetwork” must be set to 1.</P>
+
+<P>It can also reregister a name periodically. To enable this, set the “Cycle” DWORD value to the desired elapsed time, in seconds, between registrations.</P>
+
+<P>NETREG operates in two different (and mutually exclusive) modes. Redirector mode must be used when redirector is present in the system. To use it, registry DWORD value “UseRedirector” must be set to 1. On Windows CE, redirector has a side effect of supporting NetBIOS networking, including name registration and node status query support, required for hosting network servers on Windows CE devices. When working in redirector mode, NETREG simply ensures that redirector is loaded all the time by periodically (every “cycle” seconds and after network interface has come up if TrackNetwork is specified) creating a file on an non-existent network share.</P>
+
+<P>If a redirector is not present in the OS image (such as on pre-2.11 Handheld PCs and all Pocket PCs), NETREG is capable of supplying all necessary NetBIOS services to guarantee that the machine is properly registered on the network. DWORD registry value “EmulateNB” needs to be set to 1 and “UseRedirector” to 0. In this mode, NETREG (with the same periodicity as in redirector mode) scans the registry’s [HKEY_LOCAL_MACHINE\COMM\*\Params\tcpip] key for values “WINS”, “DHCPWINS”, “IPAddress,” and “DHCPIPAddress”. It then calls gethostbyname on the local host to get list of active IP addresses and matches these to interfaces discovered in the registry to determine active network interfaces. It then registers itself with the WINS servers discovered in the active interfaces.</P>
+
+<P>The NETREG utility is implemented as a device driver and installs in:</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\NETREGD]
+   "Dll"="NETREGD.Dll"
+   "Order"=dword:8
+   "Keep"=dword:1
+   "Entry"="NETREGDInitialize"</PRE>
+<DIV CLASS="footer">Built on Thursday, March 15, 2001</DIV>
+
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

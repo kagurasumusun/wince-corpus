@@ -1,0 +1,81 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Play Buffer Notification</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Play Buffer Notification"/>
+<MSHelp:RLTitle Title="Play Buffer Notification"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_play_buffer_notification_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IDirectSoundNotify_SetNotificationPositions_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IDirectSoundNotify_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_com_iunknown_queryinterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_DSBPOSITIONNOTIFY_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Play Buffer Notification</H1>
+
+<P>When streaming audio, you may want your application to be notified when the current play position reaches a certain point in the buffer, or when playback is stopped. With the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectSoundNotify::SetNotificationPositions</B></A> method you can set any number of points within the buffer where events are to be signaled. You cannot do this while the buffer is playing.</P>
+
+<P>First you have to obtain a pointer to the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSoundNotify</B></A> interface. You can do this by using the buffer object's <A HREF="JavaScript:hhobj_3.Click()"><B>QueryInterface</B></A> method, as in the following C++ example:</P>
+
+<PRE class="code">// LPDIRECTSOUNDBUFFER lpDsbSecondary;
+// The buffer has been initialized already.
+
+LPDIRECTSOUNDNOTIFY lpDsNotify;  // pointer to the interface
+
+HRESULT hr = lpDsbSecondary-&gt;QueryInterface(IID_IDirectSoundNotify,
+                                            (LPVOID *)&amp;lpDsNotify);
+if SUCCEEDED(hr)
+{
+    // Go ahead and use lpDsNotify-&gt;SetNotificationPositions.
+}
+ </PRE>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;The <B>IDirectSoundNotify</B> interface is associated with the object that obtained the pointer, in this case the secondary buffer. The methods of the new interface will automatically apply to that buffer. </P>
+
+<P>Now create an event object with the Win32&reg; <B>CreateEvent</B> function. You put the handle to this event in the <B>hEventNotify</B> member of a <A HREF="JavaScript:hhobj_4.Click()"><B>DSBPOSITIONNOTIFY</B></A> structure, and in the <B>dwOffset</B> member of that structure you specify the offset within the buffer where you want the event to be signaled. Then you pass the address of the structure—or of an array of structures, if you want to set more than one notification position—to the <B>IDirectSoundNotify::SetNotificationPositions</B> method. </P>
+
+<P>The following example sets a single notification position. The event will be signaled when playback stops, either because it was not looping and the end of the buffer has been reached, or because the application called the <B>IDirectSoundBuffer::Stop</B> method.</P>
+
+<PRE class="code">DSBPOSITIONNOTIFY PositionNotify;
+
+PositionNotify.Offset = DSBPN_OFFSETSTOP;
+PositionNotify.hEventNotify = hMyEvent;
+// hMyEvent is the handle returned by CreateEvent()
+
+lpDsNotify-&gt;SetNotificationPositions(1, &amp;PositionNotify);
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

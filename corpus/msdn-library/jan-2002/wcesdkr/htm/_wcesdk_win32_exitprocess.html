@@ -1,0 +1,122 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ExitProcess</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ExitProcess"/>
+<MSHelp:RLTitle Title="ExitProcess"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_exitprocess"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>ExitProcess</H1>
+
+<P>The <B>ExitProcess</B> function ends a process and all of its threads. </P>
+
+<PRE class="syntax"><B>VOID ExitProcess(</B>
+<B>UINT</B> <I>uExitCode</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>uExitCode</I></DT>
+
+<DD>[in] Specifies the exit code for the process and for all threads that are terminated as a result of this call. Use the <A HREF="_wcesdk_win32_getexitcodeprocess.htm"><B>GetExitCodeProcess</B></A> function to retrieve the process's exit value. Use the <A HREF="_wcesdk_win32_getexitcodethread.htm"><B>GetExitCodeThread</B></A> function to retrieve a thread's exit value. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None. </P>
+
+<H4>Remarks</H4>
+
+<P><B>ExitProcess</B> is the preferred method of ending a process. This function provides a clean process shutdown. This includes calling the entry-point function of all attached dynamic-link libraries (DLLs) with a value indicating that the process is detaching from the DLL. If a process terminates by calling <A HREF="_wcesdk_win32_terminateprocess.htm"><B>TerminateProcess</B></A>, the DLLs that the process is attached to are not notified of the process termination. </P>
+
+<P>After all attached DLLs have executed any process termination value, this function terminates the current process. </P>
+
+<P>Terminating a process causes the following:
+
+<UL type="disc">
+	<LI>All of the object handles opened by the process are closed. </li>
+
+	<LI>All of the threads in the process terminate their execution. </li>
+
+	<LI>The state of the process object becomes signaled, satisfying any threads that had been waiting for the process to terminate. </li>
+
+	<LI>The states of all threads of the process become signaled, satisfying any threads that had been waiting for the threads to terminate. </li>
+
+	<LI>The termination status of the process changes from STILL_ACTIVE to the exit value of the process. </li>
+</UL>
+
+<P>Terminating a process does not necessarily remove the process object from the operating system. A process object is deleted when the last handle to the process is closed. </P>
+
+<P>Any process that is started as a result of a call by <A HREF="_wcesdk_win32_createprocess.htm"><B>CreateProcess</B></A> is run serially with the <B>ExitProcess</B>, <A HREF="_wcesdk_win32_exitthread.htm"><B>ExitThread</B></A>, and <A HREF="_wcesdk_win32_createthread.htm"><B>CreateThread</B></A> functions; that is, within the parent process, only one of these events can happen in an address space at a time. This means the following restrictions hold:
+
+<UL type="disc">
+	<LI>During process startup and DLL initialization routines, new threads can be created, but they do not begin execution until DLL initialization is done for the process. </li>
+
+	<LI>Only one thread in a process can be in a DLL initialization or detach routine at a time. </li>
+
+	<LI>If any process is in its DLL initialization or detach routine, <B>ExitProcess</B> does not return. </li>
+</UL>
+
+<P><B>Requirements </B></P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>mkfuncs.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createprocess.htm"><B>CreateProcess</B></A>, <A HREF="_wcesdk_win32_createthread.htm"><B>CreateThread</B></A>, <A HREF="_wcesdk_win32_exitthread.htm"><B>ExitThread</B></A>, <A HREF="_wcesdk_win32_getexitcodeprocess.htm"><B>GetExitCodeProcess</B></A>, <A HREF="_wcesdk_win32_getexitcodethread.htm"><B>GetExitCodeThread</B></A>, <A HREF="_wcesdk_win32_openprocess.htm"><B>OpenProcess</B></A>, <A HREF="_wcesdk_win32_terminateprocess.htm"><B>TerminateProcess</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

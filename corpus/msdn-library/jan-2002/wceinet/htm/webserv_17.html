@@ -1,0 +1,57 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISAPI Extensions</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ISAPI Extensions"/>
+<MSHelp:RLTitle Title="ISAPI Extensions"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_isapi_extensions"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>ISAPI Extensions</H1>
+
+<P>ISAPI extensions provide a means of scripting for the Web server. ISAPI extensions are implemented as DLLs that are loaded into the same process as the Web server.</P>
+
+<P>If the Web server receives a request that maps to an ISAPI extension, such as <B>http://www.mysite.com/MyISAPI.dll</B>, it searches for the DLL in a cache of recently used extensions. If it is not in the cache, the Web server loads the DLL. After the DLL is loaded, the entire request is handled by the extension, with the Web server acting as an intermediary and helper.</P>
+
+<P>The basic use and operation of ISAPI extensions on the Windows CE Web server are very similar to their use and operation on Microsoft Internet Information Server (IIS).</P>
+
+<P>If a file that is requested has the .dll extension, the Web server attempts to load it as an ISAPI extension if it is in a directory that has the <B>HSE_FLAGS_URL_EXECUTE</B> flag set. If the load attempt fails, the Web server returns the “500 &#0150; Internal Server Error” status code.</P>
+
+<P>Windows CE allows virtual paths to specify an ISAPI extension or ASP page instead of a directory. For instance, the http://www.computername.com/inventory URL could map to the \windows\scripts\inventory.dll file. To set up this specification, name the physical path “\windows\scripts\inventory.dll” under the <B>inventory</B> subkey in the registry. There should be no characters trailing the file name in this registry value.</P>
+
+<P>By calling the <B>GetServerVariable</B> function with the <I>lpszVariableName</I> parameter set to <B>PATH_INFO</B>, the trailing part of the URL (that is, the part of the URL that comes after the ISAPI DLL name or that mapped to the ISAPI DLL path in the <B>Vroot</B> mapping, but that comes before the query string, if any) is placed in <I>lpvBuffer</I>.</P>
+
+<P>Using the example above, the http://www.computername.com/inventory/a/b URL still would match the Inventory.dll file, and a call to the <B>GetServerVariable</B> function with the <I>lpszVariableName</I> parameter set to <B>PATH_INFO</B> would set the <I>lpvBuffer</I> parameter to <B>/a/b</B>.</P>
+
+<P>The <B>PATH_TRANSLATED</B> variable specifies the value of the <B>PATH_INFO</B> variable, but with any virtual path expanded into a directory specification.</P>
+
+<P>ISAPI extension names may be embedded in a URL. Once again, the <B>PATH_INFO</B> portion of the URL comes after the ISAPI DLL name, but before the query string, if any. For the http://www.yourcomputer.com/scripts/inventory.dll/a/b request, the Web server would look for the Inventory.dll file in the directory that is specified by the virtual directory “scripts.” The value of the <B>PATH_INFO</B> variable would be <B>/a/b</B>.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

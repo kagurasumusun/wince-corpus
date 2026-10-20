@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisWriteConfiguration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisWriteConfiguration"/>
+<MSHelp:RLTitle Title="NdisWriteConfiguration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndiswriteconfiguration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisWriteConfiguration</H1>
+
+<P>This function writes a caller-supplied value for a specified entry into the registry.</P>
+
+<PRE class="syntax"><B>VOID NdisWriteConfiguration(
+OUT PNDIS_STATUS </B><I>Status</I><B>,
+IN NDIS_HANDLE </B><I>WrapperConfigurationContext</I><B>,
+IN PNDIS_STRING </B><I>Keyword</I><B>,
+IN PNDIS_CONFIGURATION_PARAMETER *</B><I>ParameterValue</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns the status of the call as one of the following:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_SUCCESS</TD>
+<TD width=50%>The supplied value at <I>ParameterValue</I> was written into the registry. If this is a new entry, the name at <I>Keyword</I> was also written into the registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_NOT_SUPPORTED</TD>
+<TD width=50%>The supplied <I>ParameterType</I> is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_RESOURCES</TD>
+<TD width=50%>NDIS could not allocate resources, usually enough memory, to transfer the requested information to the registry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_FAILURE</TD>
+<TD width=50%>The requested information could not be written.</TD>
+</TR>
+</TABLE><BR>
+
+</dd>
+
+<DT><I>WrapperConfigurationContext</I></DT>
+
+<DD>Specifies the handle returned by the <B>NdisOpenConfiguration</B> or the <B>NdisOpenProtocolConfiguration</B> function.</dd>
+
+<DT><I>Keyword</I></DT>
+
+<DD>Pointer to a caller-supplied counted string, in the system-default character set, specifying the name of an entry for which to write the value.</dd>
+
+<DT><I>ParameterValue</I></DT>
+
+<DD>Points to a caller-supplied variable set to the address of a filled-in <B>NDIS_CONFIGURATION_PARAMETER</B> structure.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>If an entry of the same name as at <I>Keyword</I> already exists under the opened registry key, this function replaces its current value with the caller-supplied value. Otherwise, this function adds a new value entry with the specified name and supplied value to the registry.</P>
+
+<P>This function buffers and copies the caller-supplied string at <I>Keyword</I> and the caller-supplied data specified at <I>ParameterValue</I>. This memory is freed when the driver releases the <I>ConfigurationHandle</I> with the <B>NdisCloseConfiguration</B> function. The caller of this function is responsible for releasing the buffered string at <I>Keyword</I> and the memory allocated for the <B>NDIS_CONFIGURATION_PARAMETER</B> structure.</P>
+
+<P>As an alternative to calling this function, every NDIS driver can set up configuration information in the registry for itself under the driver’s <B>Parameters</B> key, using an installation script.</P>
+
+<P>A driver that calls this function runs at IRQL PASSIVE_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_189.htm"><B>NdisAnsiStringToUnicodeString</B></A>, <A HREF="funct_1_193.htm"><B>NdisCloseConfiguration</B></A>, <A HREF="funct_1_202.htm"><B>NdisFreeMemory</B></A>, <A HREF="funct_1_206.htm"><B>NdisFreeString</B></A>, <A HREF="funct_1_214.htm"><B>NdisInitAnsiString</B></A>, <A HREF="funct_1_216.htm"><B>NdisInitializeString</B></A>, <A HREF="funct_1_217.htm"><B>NdisInitUnicodeString</B></A>, <A HREF="funct_1_259.htm"><B>NdisOpenConfiguration</B></A>, <A HREF="funct_1_260.htm"><B>NdisOpenProtocolConfiguration</B></A>, <A HREF="funct_1_278.htm"><B>NdisReadConfiguration</B></A>, <A HREF="funct_1_298.htm"><B>NdisUnicodeStringToAnsiString</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

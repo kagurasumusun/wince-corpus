@@ -1,0 +1,132 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TranslateAccelerator</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TranslateAccelerator"/>
+<MSHelp:RLTitle Title="TranslateAccelerator"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_translateaccelerator"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>TranslateAccelerator</H1>
+
+<P>This function processes accelerator keys for menu commands. <B>TranslateAccelerator</B> translates a <A HREF="_wcesdk_win32_wm_keydown.htm">WM_KEYDOWN</A> or <A HREF="_wcesdk_win32_wm_syskeydown.htm">WM_SYSKEYDOWN</A> message to a <A HREF="_wcesdk_win32_wm_command.htm">WM_COMMAND</A> message and then sends the WM_COMMAND message directly to the appropriate window procedure. <B>TranslateAccelerator</B> does not return until the window procedure has processed the message.</P>
+
+<PRE class="syntax"><B>int</B> <B>TranslateAccelerator(</B>
+<B>HWND</B> <I>hWnd</I><B>, </B>
+<B>HACCEL</B> <I>hAccTable</I><B>, </B>
+<B>LPMSG</B> <I>lpMsg </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hWnd</I></DT>
+
+<DD>Handle to the window whose messages are to be translated. </dd>
+
+<DT><I>hAccTable</I></DT>
+
+<DD>Handle to an accelerator table. The accelerator table must have been loaded by a call to the <A HREF="_wcesdk_win32_loadaccelerators.htm"><B>LoadAccelerators</B></A> function or created by a call to the <A HREF="_wcesdk_win32_createacceleratortable.htm"><B>CreateAcceleratorTable</B></A> function. </dd>
+
+<DT><I>lpMsg</I></DT>
+
+<DD>Long pointer to an <A HREF="_wcesdk_win32_msg_str.htm"><B>MSG</B></A> structure that contains message information retrieved from the calling thread’s message queue by using the <A HREF="_wcesdk_win32_getmessage.htm"><B>GetMessage</B></A> or <A HREF="_wcesdk_win32_peekmessage.htm"><B>PeekMessage</B></A> function. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<H4>Windows CE Remarks</H4>
+
+<P>All accelerator key messages are translated into WM_COMMAND messages; Windows CE does not support the WM_SYSCOMMAND message. </P>
+
+<H4>Remarks</H4>
+
+<P>To differentiate the message that this function sends from messages sent by menus or controls, the high-order word of the <I>wParam</I> parameter of the WM_COMMAND or WM_SYSCOMMAND message contains the value 1. </P>
+
+<P>Accelerator key combinations used to select items from the <B>window</B> menu are translated into WM_SYSCOMMAND messages; all other accelerator key combinations are translated into WM_COMMAND messages. </P>
+
+<P>When <B>TranslateAccelerator</B> returns a nonzero value and the message is translated, the application should not use the <A HREF="_wcesdk_win32_translatemessage.htm"><B>TranslateMessage</B></A> function to process the message again. </P>
+
+<P>An accelerator need not correspond to a menu command. </P>
+
+<P>If the accelerator command corresponds to a menu item, the application is sent a <A HREF="_wcesdk_win32_wm_initmenupopup.htm">WM_INITMENUPOPUP</A> message, as if the user were trying to display the menu. However, these messages are not sent if any of the following conditions exist:
+
+<UL type="disc">
+	<LI>The window is disabled. </li>
+
+	<LI>The menu item is disabled. </li>
+
+	<LI>The accelerator key combination does not correspond to an item on the <B>window</B> menu and the window is minimized. </li>
+
+	<LI>A mouse capture is in effect. For information about mouse capture, see the <A HREF="_wcesdk_win32_setcapture.htm"><B>SetCapture</B></A> function. </li>
+</UL>
+
+<P>If the specified window is the active window and no window has the keyboard focus (which is generally the case if the window is minimized), <B>TranslateAccelerator</B> translates <A HREF="_wcesdk_win32_wm_syskeyup.htm">WM_SYSKEYUP</A> and WM_SYSKEYDOWN messages instead of WM_KEYUP and WM_KEYDOWN messages. </P>
+
+<P>If an accelerator keystroke occurs that corresponds to a menu item when the window that owns the menu is minimized, <B>TranslateAccelerator</B> does not send a WM_COMMAND message. However, if an accelerator keystroke occurs that does not match any of the items in the window’s menu or in the <B>window</B> menu, the function sends a WM_COMMAND message, even if the window is minimized. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Accel.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createacceleratortable.htm"><B>CreateAcceleratorTable</B></A>, <A HREF="_wcesdk_win32_getmessage.htm"><B>GetMessage</B></A>, <A HREF="_wcesdk_win32_loadaccelerators.htm"><B>LoadAccelerators</B></A>, <A HREF="_wcesdk_win32_msg_str.htm"><B>MSG</B></A>, <A HREF="_wcesdk_win32_peekmessage.htm"><B>PeekMessage</B></A>, <A HREF="_wcesdk_win32_setcapture.htm"><B>SetCapture</B></A>, <A HREF="_wcesdk_win32_translatemessage.htm"><B>TranslateMessage</B></A>, <A HREF="_wcesdk_win32_wm_command.htm">WM_COMMAND</A>, <A HREF="_wcesdk_win32_wm_initmenupopup.htm">WM_INITMENUPOPUP</A>, <A HREF="_wcesdk_win32_wm_keydown.htm">WM_KEYDOWN</A>, <A HREF="_wcesdk_win32_wm_syskeydown.htm">WM_SYSKEYDOWN</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

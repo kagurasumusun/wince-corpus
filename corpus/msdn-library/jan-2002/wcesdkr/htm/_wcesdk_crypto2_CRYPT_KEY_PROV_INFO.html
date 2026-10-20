@@ -1,0 +1,201 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CRYPT_KEY_PROV_INFO</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CRYPT_KEY_PROV_INFO"/>
+<MSHelp:RLTitle Title="CRYPT_KEY_PROV_INFO"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_crypt_key_prov_info"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CRYPT_KEY_PROV_INFO</H1>
+
+<P>This structure contains fields that are passed as the arguments to the <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A> function to acquire a handle to a particular key container within a particular cryptographic service provider (CSP) or to create or destroy a key container.</P>
+
+<PRE class="syntax"><B>typedef struct _CRYPT_KEY_PROV_INFO {
+LPWSTR</B> <I>pwszContainerName</I>;
+<B>LPWSTR</B> <I>pwszProvName</I>;
+<B>DWORD</B> <I>dwProvType</I>;
+<B>DWORD</B> <I>dwFlags</I>;
+<B>DWORD</B> <I>cProvParam</I>;
+<B>PCRYPT_KEY_PROV_PARAM</B> <I>rgProvParam</I>;
+<B>DWORD</B> <I>dwKeySpec</I>;
+<B>} CRYPT_KEY_PROV_INFO,  *PCRYPT_KEY_PROV_INFO;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><B>pwszContainerName</B> </DT>
+
+<DD>String naming a key container within a particular CSP. </dd>
+
+<DT><B>pwszProvName</B> </DT>
+
+<DD>String that names a CSP. </dd>
+
+<DT><B>dwProvType</B> </DT>
+
+<DD>CSP type. The <B>dwProvType</B> values are as follows:
+
+<P>PROV_RSA_FULL
+
+
+<P>PROV_RSA_SIG
+
+
+<P>PROV_DSS
+
+
+<P>PROV_FORTEZZA
+
+
+<P>PROV_MS_EXCHANGE
+
+
+<P>PROV_SSL
+
+
+<P>PROV_RSA_SCHANNEL
+
+
+<P>PROV_DSS_DH
+
+
+<P>PROV_DH_SCHANNEL
+</dd>
+</DL>
+
+<P><B>dwFlags</B> </P>
+
+<P>Values indicating whether a key container is to be created or destroyed and whether an application is allowed access to a key container. </P>
+
+<P>The following flags are defined and must not collide with any <B>CryptAcquireContext</B> function <B>dwFlags</B> definitions.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Flag value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_SET_KEY_PROV_HANDLE_PROP_ID</TD>
+<TD width=53%>Enables the handle to the key provider to be kept open for subsequent calls to the cryptographic functions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_SET_KEY_CONTEXT_PROP_ID</TD>
+<TD width=53%>Enables the handle to the key provider to be kept open for subsequent calls to the cryptographic functions.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>See the <B>CryptAcquireContext</B> function for the list of the flags passed through. The flags listed in the previous table are cleared before the <B>CryptAcquireContext</B> function is called. The cryptographic functions <B>CryptDecryptMessage</B>, <B>CryptSignMessage</B>, <B>CryptDecryptAndVerifyMessageSignature</B>, and <B>CryptSignAndEncryptMessage</B> internally perform <B>CryptAcquireContext</B> operations using CRYPT_KEY_PROV_INFO from a certificate. When the CERT_SET_KEY_CONTEXT_PROP_ID or CERT_SET_KEY_PROV_HANDLE_PROP_ID flag is set, these cryptographic functions then can call <B>CertSetCertificateContextProperty</B> (CERT_KEY_CONTEXT_PROP_ID). This call enables the handle to the key provider to be kept open for subsequent calls to the cryptographic functions mentioned that use that same certificate, which eliminates the need to perform another <B>CryptAcquireContext</B>, improving efficiency. Also, because some providers can require that a password be entered for calls to <B>CryptAcquireContext</B>, it is desirable for applications to minimize the number of <B>CryptAcquireContext</B> calls made. Handles to key providers that were kept open are automatically released when the store is closed. </P>
+
+<P>For example, consider an e-mail application where five encrypted messages have been received, all encrypted with the public key from the same certificate. If the handle to the key provider is kept open after the first message is processed, calls to <B>CryptAcquireContext</B> are not required for the four remaining messages.
+
+<DL>
+<DT><B>cProvParam</B> </DT>
+
+<DD>Number of elements in the <B>rgProvParam</B> array. </dd>
+
+<DT><B>rgProvParam</B> </DT>
+
+<DD>Array of pointers to <A HREF="_wcesdk_crypto2_crypt_key_prov_param.htm"><B>CRYPT_KEY_PROV_PARAM</B></A> structures. </dd>
+
+<DT><B>dwKeySpec</B></DT>
+
+<DD>Specification of the private key to retrieve. The following <B>dwKeySpec</B> values are defined for the default provider.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>AT_KEYEXCHANGE</TD>
+<TD width=53%>Keys used to encrypt/decrypt session keys.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>AT_SIGNATURE</TD>
+<TD width=53%>Keys used to create and verify digital signatures.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_certgetcertificatecontextproperty.htm"><B>CertGetCertificateContextProperty</B></A>, <A HREF="_wcesdk_crypto2_certsetcertificatecontextproperty.htm"><B>CertSetCertificateContextProperty</B></A>, <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A>, <A HREF="_wcesdk_crypto2_crypt_key_prov_param.htm"><B>CRYPT_KEY_PROV_PARAM</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,284 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How to Implement IUnknown</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="How to Implement IUnknown"/>
+<MSHelp:RLTitle Title="How to Implement IUnknown"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_how_to_implement_iunknown"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_IUnknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_cunknown_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_com_IUnknown_AddRef" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_com_IUnknown_Release" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_com_IUnknown_QueryInterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_com_IUnknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_inondelegatingunknown_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_com_IClassFactory_CreateInstance" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_cunknown_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_cunknown__nondelegatingqueryinterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_11 keywords="_wcesdk_object_pin_functs__getinterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_12 keywords="_wcesdk_iunknown_macro__declare_iunknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_13 keywords="_wcesdk_cunknown__getowner" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_14 keywords="_wcesdk_Cunknown__CUnknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_15 keywords="_wcesdk_com_IUnknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_16 keywords="_wcesdk_Cunknown_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_17 keywords="_wcesdk_InonDelegatingUnknown_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>How to Implement IUnknown</H1>
+
+<P>Microsoft&reg; DirectShow&reg; is based on the Component Object Model (COM). If you write your own filter, you must implement it as a COM object. The DirectShow base classes provide a framework from which to do this. Using the base classes is not required, but it can simplify the development process. This article describes some of the internal details of COM objects and their implementation in the DirectShow base classes.</P>
+
+<P>This article assumes that you know how to program COM client applications&#0151;in other words, that you understand the methods in <A HREF="JavaScript:hhobj_1.Click()"><B>IUnknown</B></A>&#0151;but does not assume any prior experience developing COM objects. DirectShow handles many of the details of developing a COM object. If you have experience developing COM objects, you should read <A HREF="#_wcesdk_using_cunknown">Using <B>CUnknown</B></A>, which describes the <A HREF="JavaScript:hhobj_2.Click()"><B>CUnknown</B></A> base class.</P>
+
+<P>COM is a specification, not an implementation. It defines the rules that a component must follow; putting those rules into effect is left to the developer. In DirectShow, all objects derive from a set of C++ base classes. The base class constructors and methods do most of the COM "bookkeeping" work, such as keeping a consistent reference count. By deriving your filter from a base class, you inherit the functionality of the class. To use base classes effectively, you need a general understanding of how they implement the COM specification.</P>
+
+<P>This article contains the following topics.
+
+<UL type="disc">
+	<LI><A HREF="#_wcesdk_how_iunknown_works">How <B>IUnknown</B> Works</A><U> </U></li>
+
+	<LI><A HREF="#_wcesdk_using_cunknown">Using <B>CUnknown</B></A><U> </U></li>
+
+	<LI><A HREF="#_wcesdk_summary">Summary</A><U> </U></li>
+</UL>
+
+
+
+<H2><A NAME="_wcesdk_how_iunknown_works"></A>How IUnknown Works</H2>
+
+<P>The methods in <B>IUnknown</B> enable an application to query for interfaces on the component and manage the component's reference count. This section contains the following topics.
+
+<UL type="disc">
+	<LI><A HREF="#_wcesdk_reference_count">Reference Count</A></li>
+
+	<LI><A HREF="#_wcesdk_interface_queries">Interface Queries</A></li>
+
+	<LI><A HREF="#_wcesdk_aggregation_and_delegation">Aggregation and Delegation</A></li>
+</UL>
+
+
+
+<H3><A NAME="_wcesdk_reference_count"></A>Reference Count</H3>
+
+<P>The reference count is an internal variable, incremented in the <A HREF="JavaScript:hhobj_3.Click()"><B>IUnknown::AddRef</B></A> method and decremented in the <A HREF="JavaScript:hhobj_4.Click()"><B>IUnknown::Release</B></A> method. The base classes manage the reference count and synchronize access to the reference count among multiple threads. </P>
+
+
+
+<H3><A NAME="_wcesdk_interface_queries"></A>Interface Queries</H3>
+
+<P>Querying for an interface is also straightforward. The caller passes two parameters: an interface identifier (IID), and the address of a pointer. If the component supports the requested interface, it sets the pointer to the interface, increments its own reference count, and returns S_OK. Otherwise, it sets the pointer to NULL and returns E_NOINTERFACE. The following pseudocode shows the general outline of the <A HREF="JavaScript:hhobj_5.Click()"><B>IUnknown::QueryInterface</B></A> method. Component aggregation, described in the next section, introduces some additional complexity.</P>
+
+<PRE class="code">if (IID == IID_IUnknown)
+    set pointer to (IUnknown *)this
+    AddRef
+    return S_OK
+
+else if (IID == IID_ISomeInterface)
+    set pointer to (ISomeInterface *)this
+    AddRef
+    return S_OK
+
+else if ...
+
+else
+    set pointer to NULL
+    return E_NOINTERFACE</PRE>
+
+<P>The only difference between the <B>QueryInterface</B> method of one component and the <B>QueryInterface</B> method of another is the list of IIDs that each component tests. For every interface that the component supports, the component must test for the IID of that interface.</P>
+
+
+
+<H3><A NAME="_wcesdk_aggregation_and_delegation"></A>Aggregation and Delegation</H3>
+
+<P>Component aggregation must be transparent to the caller. Therefore, the aggregate must expose a single <A HREF="JavaScript:hhobj_6.Click()"><B>IUnknown</B></A> interface, with the aggregated component deferring to the outer component's implementation. Otherwise, the caller would see two different <B>IUnknown</B> interfaces in the same aggregate. If the component is not aggregated, it uses its own implementation. </P>
+
+<P>To support this behavior, the component must add a level of indirection. A <I>delegating IUnknown</I> delegates the work to the appropriate place: to the outer component, if there is one, or to the component's internal version. A <I>nondelegating IUnknown</I> does the work, as described in the previous section.</P>
+
+<P>The delegating version is public and keeps the name <B>IUnknown</B>. The nondelegating version is renamed <A HREF="JavaScript:hhobj_7.Click()"><B>INonDelegatingUnknown</B></A>. This name is not part of the COM specification, because it is not a public interface. </P>
+
+<P>When the client creates an instance of the component, it calls the <A HREF="JavaScript:hhobj_8.Click()"><B>IClassFactory::CreateInstance</B></A> method. One parameter is a pointer to the aggregating component's <B>IUnknown</B> interface, or is NULL if the new instance is not aggregated. In its constructor method, the component uses this parameter to store a member variable that indicates which <B>IUnknown</B> interface to use, as shown in the following example.</P>
+
+<PRE class="code">CMyComponent::CMyComponent(IUnknown *pOuterUnkown)
+{
+    if (pOuterUnknown == NULL)
+        m_pUnknown = (IUnknown *)(INonDelegatingUnknown *)this;
+    else
+        m_pUnknown = pOuterUnknown;
+
+    [ ... more constructor code ... ]
+}</PRE>
+
+<P>Each method in the delegating <B>IUnknown</B> calls its nondelegating counterpart, as shown in the following example.</P>
+
+<PRE class="code">HRESULT QueryInterface(REFIID iid, void **ppv)
+{
+    return m_pUnknown-&gt;QueryInterface(iid, ppv);
+}</PRE>
+
+<P>By the nature of delegation, the delegating methods look identical in every component. Only the nondelegating versions change.</P>
+
+
+
+<H2><A NAME="_wcesdk_using_cunknown"></A>Using CUnknown</H2>
+
+<P>DirectShow implements <B>IUnknown</B> in a base class called <A HREF="JavaScript:hhobj_9.Click()"><B>CUnknown</B></A>. You can use <B>CUnknown</B> to derive other classes, overriding only the methods that change across components. Most of the other base classes in DirectShow derive from <B>CUnknown</B>, so your component can inherit directly from <B>CUnknown</B> or from another base class.</P>
+
+<P>This section contains the following topics.</P>
+
+<P><A HREF="#_wcesdk_inondelegatingunknown"><B>INonDelegatingUnknown</B></A></P>
+
+<P><A HREF="#_wcesdk_iunknown"><B>IUnknown</B></A></P>
+
+<P><A HREF="#_wcesdk_class_constructor">Class Constructor</A></P>
+
+
+
+<H3><A NAME="_wcesdk_inondelegatingunknown"></A>INonDelegatingUnknown</H3>
+
+<P><B>CUnknown</B> implements <B>INonDelegatingUnknown</B>. It manages reference counts internally, and in most situations your derived class can inherit the two reference-counting methods with no change. Be aware that <B>CUnknown</B> deletes itself when the reference count drops to zero. On the other hand, you must override <A HREF="JavaScript:hhobj_10.Click()"><B>NonDelegatingQueryInterface</B></A>, because the method in the base class returns E_NOINTERFACE if it receives any IID other than IID_IUnknown. In your derived class, test for the IIDs of interfaces that you support, as shown in the following example.</P>
+
+<PRE class="code">STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void **ppv)
+{
+    if (riid == IID_ISomeInterface)
+    {
+        return GetInterface((ISomeInterface*)this, ppv);
+    }
+    // default
+    return CUnknown::NonDelegatingQueryInterface(riid, ppv);
+}</PRE>
+
+<P>The utility function <A HREF="JavaScript:hhobj_11.Click()"><B>GetInterface</B></A> sets the pointer, increments the reference count in a thread-safe way, and returns S_OK. In the default case, call the base class method and return the result. If you derive from another base class, call its <B>NonDelegatingQueryInterface</B> method instead. This enables you to support all the interfaces that the parent class supports.</P>
+
+
+
+<H3><A NAME="_wcesdk_iunknown"></A>IUnknown</H3>
+
+<P>As mentioned earlier, the delegating version of <B><U>IUnknown</U></B>  is the same for every component, because it does nothing more than invoke the correct instance of the nondelegating version. For convenience, the header file Combase.h contains a macro, <A HREF="JavaScript:hhobj_12.Click()"><B>DECLARE_IUNKNOWN</B></A>, which declares the three delegating methods as inline methods. It expands to the following code.</P>
+
+<PRE class="code">STDMETHODIMP QueryInterface(REFIID riid, void **ppv) {
+    return GetOwner()-&gt;QueryInterface(riid,ppv);
+};
+STDMETHODIMP_(ULONG) AddRef() {
+    return GetOwner()-&gt;AddRef();
+};
+STDMETHODIMP_(ULONG) Release() {
+    return GetOwner()-&gt;Release();
+};</PRE>
+
+<P>The utility function <A HREF="JavaScript:hhobj_13.Click()"><B>GetOwner</B></A> retrieves a pointer to the <B>IUnknown</B> interface of the component that owns this component. For an aggregated component, the owner is the outer component. Otherwise, the component owns itself. Include the DECLARE_IUNKNOWN macro in the public section of your class definition.</P>
+
+
+
+<H3><A NAME="_wcesdk_class_constructor"></A>Class Constructor</H3>
+
+<P>Your class constructor should invoke the constructor method for the parent class, in addition to anything it does that is specific to your class. The following example is a typical constructor method.</P>
+
+<PRE class="code">CMyComponent(TCHAR *tszName, LPUNKNOWN pUnk, HRESULT *phr)
+    : CUnknown(tszName, pUnk, phr)
+{
+    /* Other initializations */
+};</PRE>
+
+<P>The method takes the following parameters, which it passes directly to the <A HREF="JavaScript:hhobj_14.Click()"><B>CUnknown</B></A> constructor method.
+
+<UL>
+	<LI><I>tszName</I> specifies a name for the component. </li>
+
+	<LI><I>pUnk</I> is a pointer to the aggregating <A HREF="JavaScript:hhobj_15.Click()"><B>IUnknown</B></A>. </li>
+
+	<LI><I>pHr</I> is a pointer to an HRESULT value, indicating the success or failure of the method. </li>
+</UL>
+
+
+
+<H2><A NAME="_wcesdk_summary"></A>Summary</H2>
+
+<P>The following example shows a derived class that supports <B><U>IUnknown</U></B>  and a hypothetical interface named <B><I>ISomeInterface</I></B>.</P>
+
+<PRE class="code">class CMyComponent : public CUnknown, public ISomeInterface
+{
+public:
+
+    DECLARE_IUNKNOWN;
+
+    STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void **ppv)
+    {
+        if( riid == IID_ISomeInterface )
+        {
+            return GetInterface((ISomeInterface*)this, ppv);
+        }
+        return CUnknown::NonDelegatingQueryInterface(riid, ppv);
+    }
+
+    CMyComponent(TCHAR *tszName, LPUNKNOWN pUnk, HRESULT *phr)
+        : CUnknown(tszName, pUnk, phr)
+    {
+        /* Other initializations */
+    };
+
+    // More declarations will be added later.
+};</PRE>
+
+<P>This example illustrates the following points.
+
+<UL type="disc">
+	<LI>The <A HREF="JavaScript:hhobj_16.Click()"><B>CUnknown</B></A> class implements the <B>IUnknown</B> interface. The new component inherits from <B>CUnknown</B> and from any interfaces that the component supports. The component could derive instead from another base class that inherits from <B>CUnknown</B>. </li>
+
+	<LI>The DECLARE_IUNKNOWN macro declares the delegating <B>IUnknown</B> methods as inline methods. </li>
+
+	<LI>The <B>CUnknown</B> class provides the implementation for <A HREF="JavaScript:hhobj_17.Click()"><B>INonDelegatingUnknown</B></A>. </li>
+
+	<LI>To support an interface other than <B>IUnknown</B>, the derived class must override the <B><U>NonDelegatingQueryInterface</U></B>  method and test for the IID of the new interface. </li>
+
+	<LI>The class constructor invokes the constructor method for <B>CUnknown</B>. </li>
+</UL>
+
+<P>The next step in writing a filter is to enable an application to create new instances of the component. This requires an understanding of DLLs and their relation to class factories and class constructor methods. For more information, see <A HREF="dshow_47.htm">How to Create a DLL</A>.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

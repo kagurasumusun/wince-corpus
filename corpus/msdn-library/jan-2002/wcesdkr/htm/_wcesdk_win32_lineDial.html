@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineDial</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineDial"/>
+<MSHelp:RLTitle Title="lineDial"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_linedial"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>lineDial</H1>
+
+<P>This function dials the specified dialable number on the specified call. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineDial(</B>
+<B>HCALL </B><I>hCall</I><B>,</B>
+<B>LPCSTR </B><I>lpszDestAddress</I><B>,</B>
+<B>DWORD </B><I>dwCountryCode</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCall </I></DT>
+
+<DD>A handle to the call on which a number is to be dialed. The application must be an owner of the call. The call state of <I>hCall </I>can be any state except idle and disconnected. </dd>
+
+<DT><I>lpszDestAddress</I> </DT>
+
+<DD>The destination to be dialed using the standard dialable number format. </dd>
+
+<DT><I>dwCountryCode</I> </DT>
+
+<DD>The country code of the destination. This is used by the implementation to select the call progress protocols for the destination address. If a value of 0 is specified, a service provider-defined default call progress protocol is used. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns a positive request identifier if the function is completed asynchronously, or a negative error number if an error occurs. The <I>dwParam2</I> parameter of the corresponding LINE_REPLY message is zero if the function succeeds or it is a negative error number if an error occurs. Possible return values are: </P>
+
+<P>LINEERR_ADDRESSBLOCKED, LINEERR_INVALPOINTER, LINEERR_DIALBILLING, LINEERR_NOMEM, LINEERR_DIALDIALTONE, LINEERR_NOTOWNER, LINEERR_DIALPROMPT, LINEERR_OPERATIONFAILED, LINEERR_DIALQUIET, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALCALLHANDLE, LINEERR_RESOURCEUNAVAIL, LINEERR_INVALCALLSTATE, LINEERR_UNINITIALIZED, LINEERR_INVALCOUNTRYCODE.</P>
+
+<H4>Remarks</H4>
+
+<P>If LINEERR_INVALADDRESS is returned, no dialing has been done. If LINEERR_DIALBILLING, LINEERR_DIALQUIET, LINEERR_DIALDIALTONE, or LINEERR_DIALPROMPT is returned, none of the actions otherwise performed by <B>lineDial</B> have occurred. For example, none of the dialable addresses prior to the offending character has been dialed, no hookswitch state has changed, and so on. </P>
+
+<P>The <B>lineDial</B> function is used for dialing on an existing call appearance. For example, after a call has been set up for transfer or conference, a consultation call is automatically allocated, and the <B>lineDial</B> function would be used to perform the dialing of this consultation call. The <B>lineDial</B> function can be invoked multiple times in the course of multistage dialing, if the line's device capabilities allow it. Also, multiple addresses can be provided in a single dial string separated by CRLF. Service providers that provide inverse multiplexing can establish individual physical calls with each of the addresses and can return a single call handle to the aggregate of all calls to the application. All addresses would use the same country code. </P>
+
+<P>Dialing is considered complete after the address has been passed to the service provider; not after the call is finally connected. Service providers that provide inverse multiplexing can allow multiple addresses to be provided at once. The service provider sends LINE_CALLSTATE messages to the application to inform it about the progress of the call. To abort a call attempt while a call is being established, the invoking application should use <B>lineDrop</B>. </P>
+
+<P>An application can set the <I>lpszDestAddress</I> parameter of the <B>lineDial</B> function to the address of an empty string to indicate that dialing is complete, but only if the previous calls to the <I>lineMakeCall</I> and <B>lineDial</B> functions have had the strings specified by <I>lpszDestAddress</I> terminated with semicolons. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Tapi.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_line_callstate.htm">LINE_CALLSTATE</A>, <A HREF="_wcesdk_win32_line_reply.htm">LINE_REPLY</A>, <A HREF="_wcesdk_win32_linedrop.htm"><B>lineDrop</B></A>, <A HREF="_wcesdk_win32_linemakecall.htm"><B>lineMakeCall</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

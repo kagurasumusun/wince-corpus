@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::IOCtl</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CAsyncSocket::IOCtl"/>
+<MSHelp:RLTitle Title="CAsyncSocket::IOCtl"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_ioctl"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CAsyncSocket::IOCtl</H1>
+
+<P>This method retrieves operating parameters associated with the socket, independent of the protocol and communications subsystem.</P>
+
+<PRE class=syntax><B>BOOL IOCtl(
+long </B><I>lCommand</I><B>,
+DWORD* </B><I>lpArgument </I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lCommand</I></DT>
+
+<DD>The command to perform on the socket.</DD>
+
+<DT><I>lpArgument</I></DT>
+
+<DD>A pointer to a parameter for <I>lCommand</I>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero, and a specific error code can be retrieved by calling <B>GetLastError</B>. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</DD>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</DD>
+
+<DT>WSAEINVAL</DT>
+
+<DD><I>lCommand</I> is not a valid command, or <I>lpArgument</I> is not an acceptable parameter for <I>lCommand</I>, or the command is not applicable to the type of socket supplied.</DD>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</DD>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Call this method to control the mode of a socket. You can use this routine on any socket in any state. The following commands are supported:
+
+<UL type=disc>
+	<LI><B>FIONBIO</B>&nbsp;&nbsp;&nbsp;Enables or disables nonblocking mode on the socket. The <I>lpArgument</I> parameter points at a <B>DWORD</B>, which is nonzero if nonblocking mode is enabled and zero if it is disabled. If <B>AsyncSelect</B> is issued on a socket, any attempt to use <B>IOCtl</B> to set the socket back to blocking mode fails with <B>WSAEINVAL</B>. To set the socket back to blocking mode and prevent the <B>WSAEINVAL</B> error, an application must first disable <B>AsyncSelect</B> by calling <B>AsyncSelect</B> with the <I>lEvent</I> parameter equal to zero, and then call <B>IOCtl</B>.</LI>
+
+	<LI><B>FIONREAD</B>&nbsp;&nbsp;&nbsp;Determines the maximum number of bytes that can be read with one <B>Receive</B> call from this socket. The <I>lpArgument</I> parameter points at a <B>DWORD</B> in which <B>IOCtl</B> stores the result. If this socket is of type <B>SOCK_STREAM</B>, <B>FIONREAD</B> returns the total amount of data which can be read in a single <B>Receive</B>; this is normally the same as the total amount of data queued on the socket. If this socket is of type <B>SOCK_DGRAM</B>, <B>FIONREAD</B> returns the size of the first datagram queued on the socket.</LI>
+
+	<LI><B>SIOCATMARK</B>&nbsp;&nbsp;&nbsp;Determine whether all out-of-band data has been read. This applies only to a socket of type <B>SOCK_STREAM</B> that is configured for in-line reception of any out-of-band data (<B>SO_OOBINLINE</B>). If no out-of-band data is waiting to be read, the operation returns nonzero. Otherwise, it returns zero, and the next <B>Receive</B> or <B>ReceiveFrom</B> performed on the socket retrieves some or all of the data preceding the mark. The application should use the <B>SIOCATMARK</B> operation to determine whether any data remains. If there is any normal data preceding the urgent (out-of-band) data, it is received in order. A <B>Receive</B> or <B>ReceiveFrom</B> never mixes out-of-band and normal data in the same call. The <I>lpArgument</I> parameter points at a <B>DWORD</B> in which <B>IOCtl</B> stores the result.</LI>
+</UL>
+
+<P>This function is a subset of <B>IOctl</B> as used in Berkeley sockets. In particular, there is no command which is equivalent to <B>FIOASYNC</B>, while <B>SIOCATMARK</B> is the only socket-level command which is supported.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_8.htm"><B>CAsyncSocket::Create</B></A>, <A HREF="casyncso_13.htm"><B>CAsyncSocket::GetSockOpt</B></A>, <A HREF="casyncso_26.htm"><B>CAsyncSocket::SetSockOpt</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

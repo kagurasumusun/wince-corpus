@@ -1,0 +1,117 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineSetupTransfer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineSetupTransfer"/>
+<MSHelp:RLTitle Title="lineSetupTransfer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_linesetuptransfer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>lineSetupTransfer</H1>
+
+<P>The <B>lineSetupTransfer</B> function initiates a transfer of the call specified by the <I>hCall</I> parameter. It establishes a consultation call, <I>lphConsultCall</I>, on which the party can be dialed that can become the destination of the transfer. The application acquires owner privilege to the <I>lphConsultCall</I> parameter. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineSetupTransfer(</B>
+<B>HCALL </B><I>hCall</I><B>,</B>
+<B>LPHCALL </B><I>lphConsultCall</I><B>,</B>
+<B>LPLINECALLPARAMS const </B><I>lpCallParams</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCall</I> </DT>
+
+<DD>The handle of the call to be transferred. The application must be an owner of the call. The call state of <I>hCall</I> must be connected. </dd>
+
+<DT><I>lphConsultCall</I> </DT>
+
+<DD>A pointer to an HCALL handle. This location is then loaded with a handle identifying the temporary consultation call. When setting up a call for transfer, a consultation call is automatically allocated that enables lineDial to dial the address associated with the new transfer destination of the call. The originating party can carry on a conversation over this consultation call prior to completing the transfer. The call state of <I>hConsultCall</I> is not applicable.
+
+<P>This transfer procedure may not be valid for some line devices. The application may need to ignore the new consultation call and unhold an existing held call (using <B>lineUnhold</B>) to identify the destination of the transfer. On switches that support cross-address call transfer, the consultation call can exist on a different address than the call to be transferred. It may also be necessary that the consultation call be set up as an entirely new call, by <B>lineMakeCall</B>, to the destination of the transfer. Which forms of transfer are available are specified in the call's address capabilities.
+</dd>
+
+<DT><I>lpCallParams</I> </DT>
+
+<DD>A pointer to call parameters to be used when establishing the consultation call. This parameter is one or more of the LINECALLPARAMFLAGS_ constants. This parameter can be set to NULL if no special call setup parameters are desired. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns a positive request identifier if the function is completed asynchronously, or a negative error number if an error occurs. The <I>dwParam2</I> parameter of the corresponding LINE_REPLY message is zero if the function succeeds or it is a negative error number if an error occurs. Possible return values are: </P>
+
+<P>LINEERR_BEARERMODEUNAVAIL, LINEERR_INVALRATE, LINEERR_CALLUNAVAIL, LINEERR_NOMEM, LINEERR_INUSE, LINEERR_NOTOWNER, LINEERR_INVALADDRESSMODE, LINEERR_OPERATIONFAILED, LINEERR_INVALBEARERMODE, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALCALLHANDLE, LINEERR_RATEUNAVAIL, LINEERR_INVALCALLPARAMS, LINEERR_RESOURCEUNAVAIL, LINEERR_INVALCALLSTATE, LINEERR_STRUCTURETOOSMALL, LINEERR_INVALLINESTATE, LINEERR_UNINITIALIZED, LINEERR_INVALMEDIAMODE, LINEERR_USERUSERINFOTOOBIG, LINEERR_INVALPOINTER. </P>
+
+<H4>Remarks</H4>
+
+<P>The <B>lineSetupTransfer</B> function sets up the transfer of the call specified by hCall. The setup phase of a transfer establishes a consultation call that enables the application to send the address of the destination (the party to be transferred to) to the switch, while the call to be transferred is kept on hold. This new call is referred to as a consultation call (<I>hConsultCall</I>) and can be dropped or otherwise manipulated independently of the original call. </P>
+
+<P>When the consultation call has reached the dialtone call state, the application can proceed transferring the call either by dialing the destination address and tracking its progress, or by unholding an existing call. The transfer of the original call to the selected destination is completed using <B>lineCompleteTransfer</B>. </P>
+
+<P>While the consultation call exists, the original call typically transitions to the onholdPendingTransfer state. The application may be able to toggle between the consultation call and the original call by using <B>lineSwapHold</B>. A consultation call can be canceled by invoking <B>lineDrop</B> on it. After dropping a consultation call, the original call typically transitions back to the connected state. If the call state of the original call is onHoldPendingTransfer, the <B>lineUnhold</B> function can be used to recover the call. In this case, the call state of the consultation call is set to idle. </P>
+
+<P>The application can also transfer calls in a single step, without having to deal with the intervening consultation call, by using <B>lineBlindTransfer</B>. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Tapi.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_line_reply.htm">LINE_REPLY</A>, <A HREF="_wcesdk_win32_lineblindtransfer.htm"><B>lineBlindTransfer</B></A>, <A HREF="_wcesdk_win32_linecompletetransfer.htm"><B>lineCompleteTransfer</B></A>, <A HREF="_wcesdk_win32_linedrop.htm"><B>lineDrop</B></A>, <A HREF="_wcesdk_win32_linemakecall.htm"><B>lineMakeCall</B></A>, <A HREF="_wcesdk_win32_lineswaphold.htm"><B>lineSwapHold</B></A>, <A HREF="_wcesdk_win32_lineunhold.htm"><B>lineUnhold</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

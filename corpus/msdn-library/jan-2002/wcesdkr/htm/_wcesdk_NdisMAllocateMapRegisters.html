@@ -1,0 +1,146 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMAllocateMapRegisters</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMAllocateMapRegisters"/>
+<MSHelp:RLTitle Title="NdisMAllocateMapRegisters"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismallocatemapregisters"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMAllocateMapRegisters</H1>
+
+<P>This function reserves system resources during network adapter driver initialization for subsequent busmaster DMA operations.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisMAllocateMapRegisters(
+IN NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B> <B>
+IN UINT</B> <I>DmaChannel</I><B>,</B>
+<B>IN BOOLEAN</B> <I>Dma32BitAddresses</I><B>,</B> <B>
+IN ULONG</B> <I>PhysicalMapRegistersNeeded</I><B>,</B>
+<B>IN ULONG</B> <I>MaximumPhysicalMapping</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+
+<DT><I>DmaChannel</I></DT>
+
+<DD>Specifies the bus-relative DMA channel for an ISA busmaster network adapter. If the network adapter is on another type of I/O bus, this parameter must be 0.</dd>
+
+<DT><I>Dma32BitAddresses</I></DT>
+
+<DD>Specifies TRUE if the network adapter is capable of using 32-bit addressing for DMA operations.</dd>
+
+<DT><I>PhysicalMapRegistersNeeded</I></DT>
+
+<DD>Specifies the maximum number of map registers, each mapping a discrete physical page or contiguous range within a physical page, that the network adapter can use in a DMA operation. With <I>MaximumPhysicalMapping</I>, this parameter describes the DMA-transfer capabilities of the network adapter.</dd>
+
+<DT><I>MaximumPhysicalMapping</I></DT>
+
+<DD>Specifies the maximum number of bytes that the network adapter can transfer as a single DMA operation.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>NDIS_STATUS_SUCCESS indicates success. NDIS_STATUS_RESOURCES indicates that either the caller specified incompatible parameters when <B>MiniportInitialize</B> called the <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A> function or the requested number of map registers could not be allocated due to system resource constraints.</P>
+
+<H4>Remarks</H4>
+
+<P>Drivers of busmaster DMA network adapters call this function from their <B>MiniportInitialize</B> functions.</P>
+
+<P>Such a driver’s <B>MiniportInitialize</B> function must call <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A> or <B>NdisMSetAttributesEx</B> before it calls this function. It should call the <A HREF="_wcesdk_ndisquerymapregistercount.htm"><B>NdisQueryMapRegisterCount</B></A> function before calling this function as well.</P>
+
+<P>The specified <I>PhysicalMapRegistersNeeded</I> is constrained by one of the following:
+
+<UL type="disc">
+	<LI>The number of physical discontiguities backing any specified virtual range for a DMA transfer that the network adapter can handle.</li>
+
+	<LI>The relative sizes of the network adapter’s <I>MaximumPhysicalMapping</I> and the memory PAGE_SIZE of the current platform.</li>
+
+	<LI>For a busmaster network adapter, <I>MaximumPhysicalMapping</I> is the largest number of bytes in any virtual range described by an NDIS_BUFFER-type descriptor that can be passed subsequently to the <B>NdisMStartBufferPhysicalMapping</B> function.</li>
+
+	<LI>The number of available map registers for the network adapter’s I/O bus in the current platform.</li>
+</UL>
+
+<P>Map registers are a limited system resource, so a miniport should never allocate more map registers than its network adapter can use in a DMA transfer operation. The <B>NdisQueryMapRegisterCount</B> function returns the maximum number of map registers that can be allocated on the current platform for the type of I/O bus that the network adapter uses. <B>MiniportInitialize</B> should pass the minimum of the following values for <I>PhysicalMapRegistersNeeded</I> to this function:
+
+<UL type="disc">
+	<LI>The result of (<I>MaximumBytesPerTransferOfNIC</I> / PAGE_SIZE+1)</li>
+
+	<LI>The number of physical discontiguites per virtual transfer range that the network adapter can handle in any DMA transfer operation</li>
+
+	<LI>The value returned by the <B>NdisQueryMapRegisterCount</B> function</li>
+</UL>
+
+<P>The map registers allocated with this function are implicitly numbered from 0 through (<I>PhysicalMapRegistersNeeded</I>?1). When calling the <B>NdisMStartBufferPhysicalMapping</B> function, the driver of a busmaster network adapter specifies which map register to use in each call by specifying that map register’s 0-based index.</P>
+
+<P>The driver of a busmaster DMA network adapter must call this function before it calls the <B>NdisMAllocateSharedMemory</B> function.</P>
+
+<P>Drivers of network adapters that use PIO or the host DMA controller as slave devices do not call this function during initialization.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndismfreemapregisters.htm"><B>NdisMFreeMapRegisters</B></A>, <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A>, <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A>, <A HREF="_wcesdk_ndisquerymapregistercount.htm"><B>NdisQueryMapRegisterCount</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

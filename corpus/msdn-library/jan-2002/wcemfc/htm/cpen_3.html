@@ -1,0 +1,125 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPen::CreatePen</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CPen::CreatePen"/>
+<MSHelp:RLTitle Title="CPen::CreatePen"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpen_createpen"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CPen::CreatePen</H1>
+
+<P>This method initializes a pen with the specified style, width, and color. The pen can be subsequently selected as the current pen for any device context.</P>
+
+<PRE class=syntax><B>BOOL CreatePen (
+int</B> <I>nPenStyle</I>,
+<B>int</B> <I>nWidth</I>,
+<B>COLORREF</B> <I>crColor </I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nPenStyle</I></DT>
+
+<DD>Specifies the style for the pen. For a list of possible values, see the <I>nPenStyle</I> parameter in the <B>CPen::CPen</B> constructor.</DD>
+
+<DT><I>nWidth</I></DT>
+
+<DD>Specifies the width of the pen.
+
+<UL type=disc>
+	<LI>For the first version of <B>CreatePen</B>, if this value is zero, the width in device units is always 1 pixel, regardless of the mapping mode.</LI>
+
+	<LI>For the second version of <B>CreatePen</B>, if <I>nPenStyle</I> is <B>PS_GEOMETRIC</B>, the width is given in logical units. If <I>nPenStyle</I> is <B>PS_COSMETIC</B>, the width must be set to 1.</LI>
+</UL>
+</DD>
+
+<DT><I>crColor</I></DT>
+
+<DD>Contains an RGB color for the pen.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero, or the handle of a logical pen, if successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>Pens that have a width greater than 1 pixel should always have either the <B>PS_NULL</B>, <B>PS_SOLID</B>, or <B>PS_INSIDEFRAME</B> style. </P>
+
+<P>If a pen has the <B>PS_INSIDEFRAME</B> style and a color that does not match a color in the logical color table, the pen is drawn with a dithered color. The <B>PS_SOLID</B> pen style cannot be used to create a pen with a dithered color. The style <B>PS_INSIDEFRAME</B> is identical to <B>PS_SOLID</B> if the pen width is less than or equal to 1.</P>
+
+<P>The width of a cosmetic pen is always 1; the width of a geometric pen is always specified in world units. After an application creates a logical pen, it can select that pen into a device context by calling the <A HREF="cdc_77.htm"><B>CDC::SelectObject</B></A><B> </B>function. After a pen is selected into a device context, it can be used to draw lines and curves.
+
+<UL type=disc>
+	<LI>If <I>nPenStyle</I> is <B>PS_COSMETIC</B> and <B>PS_USERSTYLE</B>, the entries in the <I>lpStyle</I> array specify lengths of dashes and spaces in style units. A style unit is defined by the device in which the pen is used to draw a line.</LI>
+
+	<LI>If <I>nPenStyle</I> is <B>PS_GEOMETRIC</B> and <B>PS_USERSTYLE</B>, the entries in the <I>lpStyle</I> array specify lengths of dashes and spaces in logical units.</LI>
+
+	<LI>If <I>nPenStyle</I> is <B>PS_ALTERNATE</B>, the style unit is ignored and every other pixel is set.</LI>
+</UL>
+
+<P>When an application no longer requires a given pen, it should call the <A HREF="cgdiob_5.htm"><B>CGdiObject::DeleteObject</B></A> method or destroy the <B>CPen</B> object so the resource is no longer in use. An application should not delete a pen when the pen is selected in a device context.</P>
+
+<P>Windows CE does not support the following overloaded implementation of the <B>CPen::CreatePen</B> method:</P>
+
+<PRE class=syntax><B>BOOL CreatePen(
+int </B><I>nPenStyle</I><B>,
+int </B><I>nWidth</I><B>,
+const LOGBRUSH* </B><I>pLogBrush</I><B>,
+int </B><I>nStyleCount</I><B> = 0,
+const DWORD* </B><I>lpStyle</I><B> = NULL );</B><I> </I></PRE>
+
+<P>In Windows CE version 1.0, only solid pens can draw wide lines.</P>
+
+<H4>Example</H4>
+
+<PRE>CPen myPen1, myPen2;
+
+// Create a solid red pen of width 2.
+myPen1.CreatePen(PS_SOLID, 2, RGB(255,0,0));
+
+// Create a geometric pen.
+LOGBRUSH logBrush;
+logBrush.lbStyle = BS_SOLID;
+logBrush.lbColor = RGB(0,255,0);
+myPen2.CreatePen(PS_DOT|PS_GEOMETRIC|PS_ENDCAP_ROUND, 2, &amp;logBrush);
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cpen_4.htm"><B>CPen::CreatePenIndirect</B></A>, <A HREF="cpen_2.htm"><B>CPen::CPen</B></A>, <A HREF="cgdiob_5.htm"><B>CGdiObject::DeleteObject</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,156 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSetAttributes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSetAttributes"/>
+<MSHelp:RLTitle Title="NdisMSetAttributes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndismsetattributes"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMSetAttributes</H1>
+
+<P>This function informs the NDIS library about significant features of the caller’s NIC during initialization.</P>
+
+<PRE class="syntax"><B>VOID NdisMSetAttributes(</B>
+<B>IN NDIS_HANDLE </B><I>MiniportAdapterHandle</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterContext</I><B>,</B>
+<B>IN BOOLEAN </B><I>BusMaster</I><B>,</B>
+<B>IN NDIS_INTERFACE_TYPE</B> <I>AdapterType</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle input to the <B>MiniportInitialize</B> function.</dd>
+
+<DT><I>MiniportAdapterContext</I></DT>
+
+<DD>Handle to a resident context area allocated by <B>MiniportInitialize</B>.</dd>
+
+<DT><I>BusMaster</I></DT>
+
+<DD>Specifies TRUE if the caller’s NIC is a busmaster DMA device.</dd>
+
+<DT><I>AdapterType</I></DT>
+
+<DD>Specifies the I/O bus interface type of the caller’s NIC, which usually is the type of I/O bus on which the NIC is connected, as one of the following:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>Value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NdisInterfaceInternal</TD>
+<TD width=70%>Specifies a host-specific internal interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NdisInterfaceIsa</TD>
+<TD width=70%>Specifies the ISA interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NdisInterfaceEisa</TD>
+<TD width=70%>Specifies the extended ISA (EISA) interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NdisInterfacePci</TD>
+<TD width=70%>Specifies the Peripheral Component Interconnect (PCI) interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NdisInterfacePCMcia</TD>
+<TD width=70%>Specifies the Personal Computer Memory Card International Association (PCMCIA) interface.</TD>
+</TR>
+</TABLE><BR>
+
+</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>A <B>MiniportInitialize</B> function must call this function or <B>NdisMSetAttributesEx</B> before calling any other <B>NdisMRegister</B><I>XXX</I> or <B>Ndis</B><I>XXX </I>function that depends on the information supplied to this function or <B>NdisMSetAttributesEx</B>. For example, a call to the <B>NdisMAllocateMapRegisters</B> function fails if <B>MiniportInitialize</B> has not yet called this function with <I>BusMaster</I> set to TRUE or <B>NdisMSetAttributesEx</B> with NDIS_ATTRIBUTE_BUS_MASTER set in the <I>AttributeFlags</I>.</P>
+
+<P>In general, an NIC driver must call this function or <B>NdisMSetAttributesEx</B> before it calls any <B>Ndis</B><I>XXX</I> function that claims hardware resources in the registry for its NIC because NDIS must have the <I>BusMaster</I> or <I>AttributeFlags</I> value, respectively, before such a call is made and because the driver usually needs the memory at <I>MiniportAdapterContext</I> to store information for these calls. This restriction implies that an NIC driver’s <B>MiniportInitialize</B> function cannot call the following <B>Ndis</B><I>XXX</I> functions before it calls this function or <B>NdisMSetAttributesEx</B>:
+
+<UL type="disc">
+	<LI><B>NdisMPciAssignResources</B></li>
+
+	<LI><B>NdisMAllocateMapRegisters</B> and <B>NdisMAllocateSharedMemory</B></li>
+
+	<LI><B>NdisMMapIoSpace</B></li>
+
+	<LI><B>NdisMRegisterDmaChannel</B></li>
+
+	<LI><B>NdisMRegisterInterrupt</B></li>
+
+	<LI><B>NdisMRegisterIoPortRange</B> and, consequently, the <B>NdisRaw</B><I>XXX</I><B>Port</B><I>XXX</I> functions</li>
+</UL>
+
+<P>However, before calling this function or <B>NdisMSetAttributesEx</B>, an NIC driver can call the NDIS configuration functions to retrieve configuration information installed in the registry and the <B>NdisImmediate</B><I>XXX</I>, such as <B>NdisImmediateReadPciSlotInformation</B> or <B>NdisImmediateReadSharedMemory</B>, as well as the <B>NdisImmediate</B><I>XXX</I><B>Port</B><I>XXX</I> functions. <B>MiniportInitialize</B> can also call the bus-type-specific <B>NdisRead</B><I>XXX</I> functions, such as <B>NdisReadPciSlotInformation</B>, as long as the installed registry entry for the driver’s interface type matches the bus-type-specific <B>NdisRead</B><I>XXX</I> <B>MiniportInitialize</B> calls.</P>
+
+<P>The <I>MiniportAdapterContext</I> handle supplied to this function or <B>NdisMSetAttributesEx</B> becomes an input parameter to all <B>Miniport</B><I>XXX</I> functions that were registered, along with <B>MiniportInitialize</B>, in the call to <B>NdisMRegisterMiniport</B>. Usually, this handle is a pointer to resident memory, allocated by <B>MiniportInitialize</B>, in which the driver maintains NIC-specific run-time state.</P>
+
+<P>Intermediate drivers must call <B>NdisMSetAttributesEx</B>, rather than this function. NIC drivers can call either of these functions, but <B>NdisMSetAttributesEx</B> allows a miniport to adjust the intervals at which its <B>MiniportCheckForHang</B> and <B>MiniportReset</B> functions are called.</P>
+
+<P>A driver that calls this function runs at IRQL PASSIVE_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_234.htm"><B>NdisMMapIoSpace</B></A>, <A HREF="funct_1_239.htm"><B>NdisMPciAssignResources</B></A>, <A HREF="funct_1_242.htm"><B>NdisMRegisterInterrupt</B></A>, <A HREF="funct_1_243.htm"><B>NdisMRegisterIoPortRange</B></A>, <A HREF="funct_1_244.htm"><B>NdisMRegisterMiniport</B></A>, <A HREF="funct_1_249.htm"><B>NdisMSetAttributesEx</B></A>, <A HREF="funct_1_259.htm"><B>NdisOpenConfiguration</B></A>, <A HREF="funct_1_280.htm"><B>NdisReadPciSlotInformation</B></A>, <A HREF="funct_1_301.htm"><B>NdisWritePciSlotInformation</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

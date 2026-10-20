@@ -1,0 +1,168 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OEMCertifyModule</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="OEMCertifyModule"/>
+<MSHelp:RLTitle Title="OEMCertifyModule"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_oemcertifymodule"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>OEMCertifyModule</H1>
+
+<P>This function enables the OS loader to pass the module code&#0151;for example, DLL, EXE, OCX, and so on&#0151;to the OEM for purposes of verifying that such module is safe to run on the system.</P>
+
+<PRE class="syntax"><B>BOOL OEMCertifyModule</B> <B>(</B>
+<B>LPBYTE</B> <I>lpData</I><B>,</B><I> </I>
+<B>DWORD</B><I> cbData </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpData</I></DT>
+
+<DD>Pointer to a buffer allocated by the OS that contains the module code for the module being loaded.</dd>
+
+<DT><I>cbData</I></DT>
+
+<DD>The size of the buffer pointed to by <I>lpData</I>, in bytes, passed in by the OS. If <I>cbData</I> is 0, then the end of the module has been reached.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The following table shows the values that this function can return.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST (2)</TD>
+<TD width=67%>The module is trusted by the OEM to perform any operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN (1)</TD>
+<TD width=67%>The module is trusted by the OEM to run, but is restricted from making certain function calls.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_FALSE (0)</TD>
+<TD width=67%>The module is not trusted by the OEM and therefore is not allowed to run.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>To implement this function, assign the address of this function to pOEMLoadModule in <B>OEMInit</B> of the OEM adaptation layer (OAL). The pOEMLoadModule global pointer is exposed by the OS in the OAL. The OS loader calls pOEMLoadModule multiple times until the end of the module is reached. Because the end of the module may never be reached if the loader fails to fully load a module, an OEM must be prepared to handle the situation where pOEMLoadInit is called before the end of the previous module is reached. </P>
+
+<P>Both DLLs and EXEs are assigned trust levels by the OEM. All of the modules from the MODULES section of a .bin file are assumed to be trusted (OEM_CERTIFY_TRUST) and are not tested by the OEM. The OEM should test the modules from the FILES section of the .bin file and other file systems. </P>
+
+<P>An EXE is always assigned a trust level before any of its dependent DLLs are loaded. When a dependent DLL is loaded, the OEM assigns it a trust level. The kernel then compares this DLL trust level to the trust level of the EXE. Based on this comparison, a DLL certification level is obtained for the OS. The kernel will reduce the trust level of the DLL if necessary in order for the DLL to run. If the trust level of the EXE is higher then the DLL, the DLL will not be loaded by the kernel. A DLL can use the <B>CeGetCurrentTrust</B> function to determine the trust level of the EXE if a DLL needs more control over which EXEs are able to load it. The following table shows the resulting DLL certification level based on the combination of OEM-assigned trust levels.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>OEM Certification for EXE</TH>
+<TH width=33%>OEM Certification for DLL</TH>
+<TH width=34%><BR>
+DLL Certification Level</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=34%>OEM_CERTIFY_TRUST</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=34%>OEM_CERTIFY_RUN</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_TRUST</TD>
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=34%>OEM_CERTIFY_FALSE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=33%>OEM_CERTIFY_RUN</TD>
+<TD width=34%>OEM_CERTIFY_RUN</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>All ROM DLLs and EXEs are not certified by the OEM and are assumed to operate at a OEM_CERTIFY_TRUST level.</P>
+
+<P>A module is restricted from calling the following functions if it is not trusted: <B>CeSetThreadPriority</B>, <B>CeSetThreadQuantum</B>, <B>DebugActiveProcess</B>, <B>ForcePageout</B>, <B>LockPages</B>, <B>PowerOffSystem</B>, <B>ReadProcessMemory</B>, <B>SetCleanRebootFlag</B>, <B>SetInterruptEvent</B>, <B>SetKMode</B>, <B>SetProcPermissions</B>, <B>SetSystemMemoryDivision</B>, <B>UnlockPages</B>, <B>VirtualCopy</B>, and <B>WriteProcessMemory</B>. In addition, the <B>CreateProcess</B> debug flags DEBUG_ONLY_THIS_PROCESS and DEBUG_PROCESS are restricted. If these flags are used by a non-trusted application the identified process will still launch, but no debugging will occur.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>2.10 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="oal_f_24.htm"><B>OEMCertifyModuleInit</B></A>, <A HREF="oal_f_38.htm"><B>OEMInit</B></A>, <A HREF="oal_gv_32.htm">pOEMCertifyModule</A>, <A HREF="oal_gv_33.htm">pOEMCertifyModuleInit</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

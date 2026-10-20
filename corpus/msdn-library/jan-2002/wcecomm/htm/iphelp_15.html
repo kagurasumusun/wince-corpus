@@ -1,0 +1,83 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Adding an Entry to the IP Forward Table</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Adding an Entry to the IP Forward Table"/>
+<MSHelp:RLTitle Title="Adding an Entry to the IP Forward Table"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_adding_an_entry_to_the_ip_forward_table"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Adding an Entry to the IP Forward Table</H1>
+
+<P>This code creates a new route in the IP Forward Table. Note the route must be a viable one or IP will not take it.</P>
+
+<PRE class="code">PMIB_IPFORWARDROW pRow = NULL;
+   ULONG dwSize = 0;
+   DWORD dwStatus = 0;
+
+   // Allocate some memory to store the row in
+   pRow = (PMIB_IPFORWARDROW)malloc(sizeof(MIB_IPFORWARDROW));
+   if (!pRow) {
+      OutputMessage(TEXT("Malloc failed, Out of Memory!\r\n"));
+      exit(1);
+   }
+
+   pRow-&gt;dwForwardDest = 0xAACCBBDD;   // AA.BB.CC.DD
+   pRow-&gt;dwForwardNextHop = 0x01CCBBAA; // this is in host order Ip
+   //Address AA.BB.CC.01 is 01CCBBAA
+   pRow-&gt;dwForwardMask = 0x0000FFFF; // 255.255.0.0
+
+   pRow-&gt;dwForwardIfIndex = 2;
+   pRow-&gt;dwForwardType = MIB_IPROUTE_TYPE_DIRECT; // A local route
+   pRow-&gt;dwForwardProto = MIB_IPPROTO_RIP; // This is defined in
+   //iprtrmib.h
+   pRow-&gt;dwForwardAge = 0; // Just created it
+   pRow-&gt;dwForwardMetric1 = 1;
+
+
+   // Create a new route entry for the default gateway.
+   dwStatus = CreateIpForwardEntry(pRow);
+
+   if (dwStatus == NO_ERROR)
+      OutputMessage(TEXT("Route Added Successfully\n"));
+   else if (dwStatus == ERROR_INVALID_PARAMETER)
+      OutputMessage(TEXT("Invalid Parameter\n"));
+   else
+      DisplayErrorMessage(dwStatus);
+
+   // Free resources
+   if (pRow)
+      free(pRow);</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

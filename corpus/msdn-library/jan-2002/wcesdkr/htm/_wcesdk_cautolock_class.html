@@ -1,0 +1,98 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAutoLock Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CAutoLock Class"/>
+<MSHelp:RLTitle Title="CAutoLock Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cautolock_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CAutoLock Class</H1>
+
+<P class="fig"><IMG SRC="util02.gif" ALT="" BORDER=0></P>
+
+<P>The <B>CAutoLock</B> class holds a critical section for the scope of a block or function. The constructor locks the critical section and the destructor unlocks it. The object passed to the <B>CAutoLock</B> constructor must be derived from the <A HREF="_wcesdk_ccritsec_class.htm"><B>CCritSec</B></A> class. Thus, by declaring a <B>CAutoLock</B> object as a local variable in a function, a critical section can be locked without the danger of forgetting to unlock it in some of the code paths: the destructor ensures that upon exit from the function (or the scope of the declaration), the critical section will be unlocked. Member functions in this class are not designed for overriding. </P>
+
+<PRE class="code">/* Typical usage ensuring object is always unlocked correctly */
+
+HRESULT MyFunc(IMediaSample *pSample)
+{
+   CAutoLock cObjectLock(m_pMyLock);
+
+   /* Ignore samples passed when inactive */
+
+   if (!m_bActive) {
+      return NOERROR;
+   }
+
+   /* Add the sample to the pending queue */
+
+   HRESULT hr = m_PendingList.AddTail(pSample);
+   if (FAILED(hr)) {
+      pSample-&gt;Release();
+      return hr;
+   }
+   return NOERROR;
+}</PRE>
+
+<H4>Protected Data Members</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=35%>M_pLock </TD>
+<TD width=65%>Critical section for this lock. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=35%><A HREF="_wcesdk_cautolock__cautolock.htm"><B>CAutoLock</B></A></TD>
+<TD width=65%>Takes a pointer to a critical section object and locks it. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

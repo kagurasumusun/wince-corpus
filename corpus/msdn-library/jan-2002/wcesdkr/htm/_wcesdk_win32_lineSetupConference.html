@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineSetupConference</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineSetupConference"/>
+<MSHelp:RLTitle Title="lineSetupConference"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_linesetupconference"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>lineSetupConference</H1>
+
+<P>The <B>lineSetupConference</B> function sets up a conference call for the addition of the third party. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineSetupConference(</B>
+<B>HCALL </B><I>hCall</I><B>,</B>
+<B>HLINE </B><I>hLine</I><B>,</B>
+<B>LPHCALL </B><I>lphConfCall</I><B>,</B>
+<B>LPHCALL </B><I>lphConsultCall</I><B>,</B>
+<B>DWORD </B><I>dwNumParties</I><B>,</B>
+<B>LPLINECALLPARAMS const </B><I>lpCallParams</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCall</I> </DT>
+
+<DD>The initial call that identifies the first party of a conference call. In some environments (as described in device capabilities), a call must exist to start a conference call, and the application must be an owner of this call. In other telephony environments, no call initially exists, <I>hCall</I> must be left NULL, and <I>hLine</I> must be specified to identify the line on which the conference call is to be initiated. The call state of <I>hCall</I> must be connected. </dd>
+
+<DT><I>hLine</I> </DT>
+
+<DD>A handle to the line. This handle is used to identify the line device on which to originate the conference call if <I>hCall</I> is NULL. The <I>hLine</I> parameter is ignored if <I>hCall</I> is non-NULL. </dd>
+
+<DT><I>lphConfCall</I> </DT>
+
+<DD>A pointer to an HCALL handle. This location is then loaded with a handle identifying the newly created conference call. The application is the initial sole owner of this call. The call state of <I>hConfCall</I> is not applicable. </dd>
+
+<DT><I>lphConsultCall</I> </DT>
+
+<DD>A pointer to an HCALL handle. When setting up a call for the addition of a new party, a new temporary call (consultation call) is automatically allocated. Initially, the application is the sole owner for this call. </dd>
+
+<DT><I>dwNumParties</I> </DT>
+
+<DD>The expected number of parties in the conference call. This number is passed to the service provider. The service provider is free to do as it pleases with this number: ignore it, use it as a hint to allocate the right size conference bridge inside the switch, and so on. </dd>
+
+<DT><I>lpCallParams</I> </DT>
+
+<DD>A pointer to call parameters to be used when establishing the consultation call. This parameter can be set to NULL if no special call setup parameters are desired. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns a positive request identifier if the function is completed asynchronously, or a negative error number if an error occurs. The <I>dwParam2</I> parameter of the corresponding LINE_REPLY message is zero if the function succeeds or it is a negative error number if an error occurs. Possible return values are:</P>
+
+<P>LINEERR_BEARERMODEUNAVAIL, LINEERR_UNINITIALIZED, LINEERR_CALLUNAVAIL, LINEERR_INVALMEDIAMODE, LINEERR_CONFERENCEFULL, LINEERR_INVALPOINTER, LINEERR_INUSE, LINEERR_INVALRATE, LINEERR_INVALADDRESSMODE, LINEERR_NOMEM, LINEERR_INVALBEARERMODE, LINEERR_NOTOWNER, LINEERR_INVALCALLHANDLE, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALCALLSTATE, LINEERR_OPERATIONFAILED, LINEERR_INVALCALLPARAMS, LINEERR_RATEUNAVAIL, LINEERR_INVALLINEHANDLE, LINEERR_RESOURCEUNAVAIL, LINEERR_INVALLINESTATE, LINEERR_STRUCTURETOOSMALL, LINEERR_USERUSERINFOTOOBIG. </P>
+
+<H4>Remarks</H4>
+
+<P>If LINEERR_INVALLINESTATE is returned, the line is currently not in a state in which this operation can be performed. A list of currently valid operations can be found in the <I>dwLineFeatures</I> member (of the type LINEFEATURE) in the LINEDEVSTATUS structure. (Calling <B>lineGetLineDevStatus</B> updates the information in LINEDEVSTATUS.) If LINEERR_INVALMEDIAMODE is returned, check for supported media types on the line in the <I>dwMediaModes</I> member in the LINEDEVCAPS structure. </P>
+
+<P>The <B>lineSetupConference</B> function provides two ways to establish a new conference call, depending on whether a normal two-party call is required to pre-exist or not. When setting up a conference call from an existing two-party call, the <I>hCall</I> parameter is a valid call handle that is initially added to the conference call by the <B>lineSetupConference</B> request; <I>hLine</I> is ignored. On switches where conference call setup does not start with an existing call, <I>hCall</I> must be NULL and <I>hLine</I> must be specified to identify the line device on which to initiate the conference call. In either case, a consultation call is allocated for connecting to the party that is to be added to the call. The application can then use <B>lineDial</B> to dial the address of the other party. </P>
+
+<P>The conference call typically transitions into the onHoldPendingConference state, the consultation call into the dialtone state, and the initial call (if there is one) into the conferenced state. </P>
+
+<P>A conference call can also be set up by a <B>lineCompleteTransfer</B> that is resolved into a three-way conference. The application may be able to toggle between the consultation call and the conference call using <B>lineSwapHold</B>. </P>
+
+<P>A consultation call can be canceled by invoking <B>lineDrop</B> on it. When dropping a consultation call, the existing conference call typically transitions back to the connected state. The application should observe the LINE_CALLSTATE messages to determine exactly what happens to the calls. For example, if the conference call reverts back to a regular two-party call, the conference call becomes idle and the original participant call can revert to connected. </P>
+
+<P>If an application specifies the handle of the original call (<I>hCall</I>) in a call to the <B>lineUnhold</B> function, both the conference call and the consultation call typically go to idle. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Tapi.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_line_callstate.htm">LINE_CALLSTATE</A>, <A HREF="_wcesdk_win32_linecompletetransfer.htm"><B>lineCompleteTransfer</B></A>, <A HREF="_wcesdk_win32_linedevcaps_str.htm"><B>LINEDEVCAPS</B></A>, <A HREF="_wcesdk_win32_linedevstatus_str.htm"><B>LINEDEVSTATUS</B></A>, <A HREF="_wcesdk_win32_linedrop.htm"><B>lineDrop</B></A>, <A HREF="_wcesdk_win32_linegetlinedevstatus.htm"><B>lineGetLineDevStatus</B></A>, <A HREF="_wcesdk_win32_lineswaphold.htm"><B>lineSwapHold</B></A>, <A HREF="_wcesdk_win32_lineunhold.htm"><B>lineUnhold</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

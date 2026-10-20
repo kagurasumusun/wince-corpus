@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing the Notification UI</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Implementing the Notification UI"/>
+<MSHelp:RLTitle Title="Implementing the Notification UI"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_implementing_the_notification_ui"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Implementing the Notification UI</H1>
+
+<P>The notification UI communicates notification events to a user and handles these events. The notification UI primarily handles timer events because when the system triggers a system event notification, it creates a time-based notification with the expiration set to the current time. To implement your notification UI, you can base it on one of the following components:
+
+<DL>
+<DT>Notifmin</DT>
+
+<DD>Handles notifications on devices with no UI. Essentially, this component launches other applications upon event or timer notification when the elements provided by a UI are not available. This component is available in the Minwmgr, Mininput, Mingdi, and Mincomm configurations. The source code for this component is in Public\Common\Oak\NotifyM.</dd>
+
+<DT>Notifpub</DT>
+
+<DD>Handles notifications on devices that are capable of presenting a UI. This component can present a dialog box, flash a light, start a vibrating mechanism, or use any other method of notification that is available on the device. To enable these features, modify this component and insert calls to hardware-dependent device drivers. This component is available in the Minshell and Maxall configurations. The source code for this component is in Public\Common\Oak\Notify.</dd>
+</DL>
+
+<P>Once you have chosen a suitable component for your notification UI, you must modify this component so that it interfaces properly with the hardware requirements of the target device.</P>
+
+<P>To allow the base notification engine to communicate with your notification UI, your notification UI must expose several functions. The following table shows these functions.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Function</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f.htm"><B>CeNotifyPublic_Initialize</B></A></TD>
+<TD width=50%>Initializes the notification subsystem. This function is called once at startup.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_3.htm"><B>CeNotifyPublic_DisposeOfPacket</B></A></TD>
+<TD width=50%>Removes a packet once it has expired, has been handled, or has been removed programmatically.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_4.htm"><B>CeNotifyPublic_NewPacket</B></A></TD>
+<TD width=50%>Creates UI features or launches an application for a new packet when a notification becomes active.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_5.htm"><B>CeNotifyPublic_PresentSettingsBox</B></A></TD>
+<TD width=50%>Allows a user to set notification preferences.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_6.htm"><B>CeNotifyPublic_UserAlarmSignalled</B></A></TD>
+<TD width=50%>Signals an auxiliary timer that is set by <B>CeNotifyPrivate_SetUserAlarm</B>. This function is for use with a progressive alarm.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_2.htm"><B>CeNotifyPublic_FilterUserNotification</B></A></TD>
+<TD width=50%>Validates a user notification with existing hardware. For example, notification by vibration is not valid if the device is not equipped with a vibrating mechanism.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_1.htm"><B>CeNotifyPublic_FilterEvent</B></A></TD>
+<TD width=50%>Validates a system event with existing hardware. For example, power-on notification is not valid if the current power driver does not generate this event.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="notif_f_7.htm"><B>CeNotifyPublic_UIWndProc</B></A></TD>
+<TD width=50%>Defines a window procedure for a hidden UI window.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>To allow users to set notification options, the base notification engine can call your notification UI with the <B>CeNotifyPublic_PresentSettingsBox</B> function. Your notification UI should respond to this function call by launching a dialog box that presents a user with all of the notification options that are available on the device. These options must correspond with the hardware capabilities of the target device.</P>
+
+<P>The base notification engine validates both timer and system events against the hardware that is installed on the device. For timer events, it uses the <B>CeNotifyPublic_FilterUserNotification</B> function. For system events, it uses the <B>CeNotifyPublic_FilterEvent</B> function. If an application registers for events or event responses that are not available on the device, these functions should return FALSE.</P>
+
+<P>For an example of how to start a notification UI, see the <B>NewPacket</B> function in Public\Common\Oak\Notify\Notifext.Cxx.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

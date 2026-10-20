@@ -1,0 +1,182 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DSBCAPS</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DSBCAPS"/>
+<MSHelp:RLTitle Title="DSBCAPS"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dsbcaps_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>DSBCAPS</H1>
+
+<P>The <B>DSBCAPS</B> structure specifies the capabilities of a DirectSound buffer object, for use by the <A HREF="_wcesdk_idirectsoundbuffer_getcaps_dsound.htm"><B>IDirectSoundBuffer::GetCaps</B></A> method.</P>
+
+<PRE class="syntax"><B>typedef struct { </B>
+<B>    DWORD  </B><I>dwSize</I><B>; </B>
+<B>    DWORD  </B><I>dwFlags</I><B>; </B>
+<B>    DWORD  </B><I>dwBufferBytes</I><B>; </B>
+<B>    DWORD  </B><I>dwUnlockTransferRate</I><B>; </B>
+<B>    DWORD  </B><I>dwPlayCpuOverhead</I><B>; </B>
+<B>} DSBCAPS, *LPDSBCAPS; </B>
+<B> </B>
+<B>typedef const DSBCAPS *LPCDSBCAPS; </B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>dwSize</I></DT>
+
+<DD>Size of the structure, in bytes. This member must be initialized before the structure is used.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Flags that specify buffer-object capabilities.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=48%>Flag</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_CTRLFREQUENCY </TD>
+<TD width=52%>The buffer must have frequency control capability. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_CTRLPAN </TD>
+<TD width=52%>The buffer must have pan control capability. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_CTRLVOLUME </TD>
+<TD width=52%>The buffer must have volume control capability. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_GETCURRENTPOSITION2 </TD>
+<TD width=52%>Indicates that <A HREF="_wcesdk_idirectsoundbuffer_getcurrentposition_dsound.htm"><B>IDirectSoundBuffer::GetCurrentPosition</B></A> should use the new behavior of the play cursor. In DirectSound in DirectX 1, the play cursor was significantly ahead of the actual playing sound on emulated sound cards; it was directly behind the write cursor. Now, if the DSBCAPS_GETCURRENTPOSITION2 flag is specified, the application can get a more accurate play position. If this flag is not specified, the old behavior is preserved for compatibility. Note that this flag affects only emulated sound cards; if a DirectSound driver is present, the play cursor is accurate for DirectSound in all versions of DirectX.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_GLOBALFOCUS </TD>
+<TD width=52%>The buffer is a global sound buffer. With this flag set, an application using DirectSound can continue to play its buffers if the user switches focus to another application, even if the new application uses DirectSound. The one exception is if you switch focus to a DirectSound application that uses the DSSCL_EXCLUSIVE or DSSCL_WRITEPRIMARY flag for its cooperative level. In this case, the global sounds from other applications will not be audible.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_LOCHARDWARE </TD>
+<TD width=52%>The buffer is in hardware memory and uses hardware mixing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_LOCSOFTWARE </TD>
+<TD width=52%>The buffer is in software memory and uses software mixing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_PRIMARYBUFFER </TD>
+<TD width=52%>Indicates that the buffer is a primary sound buffer. If this value is not specified, a secondary sound buffer will be created. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_STATIC </TD>
+<TD width=52%>Indicates that the buffer will be used for static sound data. Typically, these buffers are loaded once and played many times. These buffers are candidates for hardware memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>DSBCAPS_STICKYFOCUS </TD>
+<TD width=52%>Changes the focus behavior of the sound buffer. This flag can be specified in an <A HREF="_wcesdk_idirectsound_createsoundbuffer_dsound.htm"><B>IDirectSound::CreateSoundBuffer</B></A> call. With this flag set, an application using DirectSound can continue to play its sticky focus buffers if the user switches to another application not using DirectSound. In this situation, the application's normal buffers are muted, but the sticky focus buffers are still audible. This is useful for nongame applications, such as movie playback (DirectShow™), when the user wants to hear the soundtrack while typing in Microsoft Word or Microsoft® Excel, for example. However, if the user switches to another DirectSound application, all sound buffers, both normal and sticky focus, in the previous application are muted.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>dwBufferBytes</I></DT>
+
+<DD>Size of this buffer, in bytes.</dd>
+
+<DT><I>dwUnlockTransferRate</I></DT>
+
+<DD>Specifies the rate, in kilobytes per second, at which data is transferred to the buffer memory when <A HREF="_wcesdk_idirectsoundbuffer_unlock_dsound.htm"><B>IDirectSoundBuffer::Unlock</B></A> is called. High-performance applications can use this value to determine the time required for <B>IDirectSoundBuffer::Unlock</B> to execute. For software buffers located in system memory, the rate will be very high because no processing is required. For hardware buffers, the rate might be slower because the buffer might have to be downloaded to the sound card, which might have a limited transfer rate.</dd>
+
+<DT><I>dwPlayCpuOverhead</I></DT>
+
+<DD>Specifies the processing overhead as a percentage of main processing cycles needed to mix this sound buffer. For hardware buffers, this member will be 0 because the mixing is performed by the sound device. For software buffers, this member depends on the buffer format and the speed of the system processor.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>DSBCAPS</B> structure contains information similar to that found in the <A HREF="_wcesdk_dsbufferdesc_dsound.htm"><B>DSBUFFERDESC</B></A> structure passed to the <A HREF="_wcesdk_idirectsound_createsoundbuffer_dsound.htm"><B>IDirectSound::CreateSoundBuffer</B></A> method, with some additional information. Additional information includes the location of the buffer (hardware or software) and some cost measures (such as the time to download the buffer if located in hardware, and the processing overhead to play the buffer if it is mixed in software).</P>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;The <B>dwFlags</B> member of the <B>DSBCAPS</B> structure contains the same flags used by the <B>DSBUFFERDESC</B> structure. The only difference is that in the <B>DSBCAPS</B> structure, either the DSBCAPS_LOCHARDWARE or DSBCAPS_LOCSOFTWARE flag will be specified, according to the location of the buffer memory. In the <B>DSBUFFERDESC</B> structure, these flags are optional and are used to force the buffer to be located in either hardware or software.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>dsound.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_idirectsound_createsoundbuffer_dsound.htm"><B>IDirectSound::CreateSoundBuffer</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_getcaps_dsound.htm"><B>IDirectSoundBuffer::GetCaps</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

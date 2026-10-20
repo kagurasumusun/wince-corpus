@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>IViewObjectExImpl::SetAdvise</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="IViewObjectExImpl::SetAdvise"/>
+<MSHelp:RLTitle Title="IViewObjectExImpl::SetAdvise"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_iviewobjecteximpl_setadvise"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IViewObjectExImpl::SetAdvise</H1>
+
+<P>This method sets up a connection between the control and an advise sink so that the sink can be notified about changes in the view of the control. The pointer to the <B>IAdviseSink</B> interface on the advise sink is stored in the <B>m_spAdviseSink</B> data member. </P>
+
+<P>A container application that is requesting a draw operation on a view object can also register with the <B>IViewObjectExImpl::SetAdvise</B> method to be notified when the presentation of the view object changes. To find out about when the underlying data changes in an object. you must call <B>IDataObject::DAdvise</B> seperately.</P>
+
+<P>To remove an existing advisory connection, call the <B>IViewObjectExImpl::SetAdvise</B> method with <I>pAdvSink</I> set to <B>NULL</B>.</P>
+
+<P>If the view object changes, a call is made to the appropriate advise sink through its <B>IAdviseSink::OnViewChange</B> method.</P>
+
+<P>At any time, a given view object can support only one advisory connection. Therefore, when <B>IViewObjectExImpl::SetAdvise</B> is called and the view object is already holding on to an advise sink pointer, OLE releases the existing pointer before the new one is registered.</P>
+
+<PRE class=syntax><B>STDMETHOD ( SetAdvise )(
+DWORD </B><I>aspects</I>, <B>
+DWORD </B><I>advf</I>,
+<B>IAdviseSink* </B><I>pAdvSink</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>aspects</I></DT>
+
+<DD>[in] View for which the advisory connection is being set up. Valid values are taken from the enumeration <B>DVASPECT</B>. See the <B>DVASPECT</B> enumeration for more information.</DD>
+
+<DT><I>advf</I></DT>
+
+<DD>[in] Contains a group of flags for controlling the advisory connection. Valid values are from the enumeration <B>ADVF</B>. However, only some of the possible <B>ADVF</B> values are relevant for this method. The following table briefly describes the relevant values. See the <B>ADVF</B> enumeration for a more detailed description.
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>ADVF Value</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>
+<DL>
+<DT>ADVF_ONLYONCE</DT>
+</DL>
+</TD>
+<TD width=73%>
+<DL>
+<DT>Causes the advisory connection to be destroyed after the first notification is sent.</DT>
+</DL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>
+<DL>
+<DT>ADVF_PRIMEFIRST</DT>
+</DL>
+</TD>
+<TD width=73%>
+<DL>
+<DT>Causes an initial notification to be sent regardless of whether data has changed from its current state.</DT>
+</DL>
+</TD>
+</TR>
+</TABLE><BR>
+
+
+
+<P>Note that the ADVF_ONLYONCE and ADVF_PRIMEFIRST can be combined to provide an asynchronous call to <B>IDataObjectExImpl::GetData</B>.
+</DD>
+
+<DT><I>pAdvSink</I></DT>
+
+<DD>[out] Pointer to the <B>IAdviseSink</B> interface on the advisory sink that is to be informed of changes. A <B>NULL</B> value deletes any existing advisory connection.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>This method supports the standard return values E_INVALIDARG and E_OUTOFMEMORY, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The advisory connection was successfully established.</DD>
+
+<DT>OLE_E_ADVISENOTSUPPORTED</DT>
+
+<DD>Advisory notifications are not supported.</DD>
+
+<DT>DV_E_DVASPECT</DT>
+
+<DD>Invalid value for <I>dwAspect</I>.</DD>
+</DL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="iviewobj_4.htm"><B>IViewObjectExImpl::GetAdvise</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

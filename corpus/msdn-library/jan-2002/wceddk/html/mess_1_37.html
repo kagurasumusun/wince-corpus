@@ -1,0 +1,134 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WODM_OPEN</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="WODM_OPEN"/>
+<MSHelp:RLTitle Title="WODM_OPEN"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_wodm_open"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>WODM_OPEN</H1>
+
+<P>This message is used in an <B>MMDRV_MESSAGE_PARAMS</B> structure passed to the <B>WAV_IOControl</B> function to request a waveform output driver to open an instance of a specified device.</P>
+
+<H4>Parameters </H4>
+
+<DL>
+<DT><I>uDeviceId</I></DT>
+
+<DD>Device identifier&#0151;0, 1, 2, and so on&#0151;for the target device.</dd>
+
+<DT><I>uMsg</I></DT>
+
+<DD>Specifies this message.</dd>
+
+<DT><I>dwUser</I></DT>
+
+<DD>Pointer to a location to receive the device instance identifier.</dd>
+
+<DT><I>dwParam1</I></DT>
+
+<DD>Pointer to a <B>WAVEOPENDESC</B> structure containing the client’s device handle, notification target, and instance identifier</dd>
+
+<DT><I>dwParam2</I></DT>
+
+<DD>Contains the following flags:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Value</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>WAVE_FORMAT_DIRECT</TD>
+<TD width=62%>Data compression and decompression take place in hardware.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>WAVE_FORMAT_QUERY</TD>
+<TD width=62%>The driver indicates whether or not it supports the specified format.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>MMSYSERR_NOERROR indicates success. Otherwise, the driver returns one of the MMSYSERR or WAVEERR error values declared in the Mmsystem.h header file.</P>
+
+<H4>Remarks</H4>
+
+<P>The ACM sends this message by calling the audio driver’s <B>WAV_IOControl</B> entry point through the <B>DeviceIoControl</B> function.</P>
+
+<P>The driver assigns a device instance identifier and returns it in the location pointed to by <I>dwUser</I>. The driver receives this value as the <I>dwUser</I> input parameter of all other wave output driver messages.</P>
+
+<P>The driver determines the number of clients that it enables to use a particular device. If a device is opened by the maximum number of clients, the driver returns MMSYSERR_ALLOCATED for subsequent open requests.</P>
+
+<P>The WAVE_FORMAT_DIRECT flag is meant for use with a wave mapper. If the flag is set in <I>dwParam2</I>, the driver does not call the ACM to handle compression or decompression operations; the caller wants the hardware to perform these operations directly. If the hardware is not capable of performing compression or decompression operations, the driver returns MMSYSERR_NOTSUPPORTED when WAVE_FORMAT_DIRECT is set.</P>
+
+<P>If the WAVE_FORMAT_QUERY flag is set in <I>dwParam2</I>, the driver does not open the device. Instead, the driver determines whether it supports the format specified by the <I>lpFormat</I> member of <B>WAVEOPENDESC</B>. If the driver supports the requested format, it returns MMSYSERR_NOERROR. Otherwise, the driver returns WAVERR_BADFORMAT.</P>
+
+<P>If the open operation succeeds, the Wave API Manager sends the ACM a WOM_OPEN message by calling the <B>PostThreadMessage</B> function on the callback thread handle.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

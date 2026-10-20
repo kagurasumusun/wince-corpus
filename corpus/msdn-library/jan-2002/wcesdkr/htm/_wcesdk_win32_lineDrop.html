@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineDrop</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineDrop"/>
+<MSHelp:RLTitle Title="lineDrop"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_linedrop"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>lineDrop</H1>
+
+<P>This function drops or disconnects the specified call. The application has the option to specify user-to-user data to be transmitted as part of the call disconnect.</P>
+
+<PRE class="syntax"><B>LONG</B> <B>lineDrop(</B>
+<B>HCALL</B> <I>hCall</I><B>, </B>
+<B>LPCTSTR</B> <I>lpsUserUserInfo</I><B>, </B>
+<B>DWORD</B> <I>dwSize</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCall </I></DT>
+
+<DD>[in] Handle to the call to be dropped. The application must be an owner of the call. The call state of <I>hCall</I> can be any state except <I>idle</I>. </dd>
+
+<DT><I>lpsUserUserInfo </I></DT>
+
+<DD>[in] Pointer to a string that contains user data to be sent to the remote party as part of the call disconnect. This pointer can be left NULL if no user-to-user data is to be sent. User-to-user data is only sent if supported by the underlying network . For more information, see <A HREF="_wcesdk_win32_linedevcaps_str.htm"><B>LINEDEVCAPS</B></A>. The protocol field for the user-to-user data, if required, should appear as the first byte of the buffer pointed to by <I>lpsUserUserInfo</I>, and must be accounted for in <I>dwSize</I>. </dd>
+
+<DT><I>dwSize </I></DT>
+
+<DD>[in] Specifies the size, in bytes, of the user-to-user data in <I>lpsUserUserInfo</I>. If <I>lpsUserUserInfo</I> is NULL, no user-to-user data is sent to the calling party and <I>dwSize</I> is ignored. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Zero indicates success. A negative error number indicates that an error has occurred. Possible error values are as follows:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=41%>LINEERR_INVALCALLHANDLE</TD>
+<TD width=59%>LINEERR_RESOURCEUNAVAIL</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>LINEERR_OPERATIONUNAVAIL</TD>
+<TD width=59%>LINEERR_INVALPOINTER</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>LINEERR_NOMEM</TD>
+<TD width=59%>LINEERR_USERUSERINFOTOOBIG</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>LINEERR_OPERATIONFAILED</TD>
+<TD width=59%>LINEERR_INVALCALLSTATE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>LINEERR_NOTOWNER</TD>
+<TD width=59%>LINEERR_UNINITIALIZED</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>When invoking <B>lineDrop</B>, related calls can sometimes be affected as well. For example, dropping a conference call can drop all individual participating calls. <A HREF="_wcesdk_win32_line_callstate.htm"><B>LINE_CALLSTATE</B></A> messages are sent to the application for all calls whose call state is affected. A dropped call typically transitions to the <I>idle</I> state. Invoking <B>lineDrop</B> on a call in the <I>offering</I> state rejects the call. Not all telephone networks provide this capability. </P>
+
+<P>A call in the <I>onholdpending</I> state typically reverts to the <I>connected</I> state. When dropping the consultation call to the third party for a conference call or when removing the third party in a previously established conference call, the provider, and switch, can release the conference bridge and revert the call back to a normal two-party call. If this is the case, <I>hConfCall</I> shifts to the <I>idle</I> state, and the only remaining participating call transitions to the <I>connected</I> state. Some switches automatically release the hold on the other call.</P>
+
+<P>The application has the option to send user-to-user data at the time of the drop. Even if user-to-user data can be sent, there is no guarantee that the network will deliver this data to the remote party. </P>
+
+<P>In various bridged or party-line configurations, when multiple parties are on the call, <B>lineDrop</B> may not actually clear the call. For example, in a bridged situation, a <B>lineDrop</B> operation may not actually drop the call because the status of other stations on the call may govern; instead, the call may simply be changed to the LINECONNECTEDMODE_INACTIVE mode if it remains <I>connected</I> at other stations. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Tapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_line_callstate.htm"><B>LINE_CALLSTATE</B></A>, <A HREF="_wcesdk_win32_line_reply.htm"><B>LINE_REPLY</B></A>, <A HREF="_wcesdk_win32_linedevcaps_str.htm"><B>LINEDEVCAPS</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

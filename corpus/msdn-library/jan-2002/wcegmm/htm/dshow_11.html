@@ -1,0 +1,161 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample Video Window Program</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Sample Video Window Program"/>
+<MSHelp:RLTitle Title="Sample Video Window Program"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_sample_video_window_program"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ivideowindow__setwindowposition" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ibasicvideo_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Sample Video Window Program</H1>
+
+<P>The following sample program renders a file named Test.avi inside an application window. For brevity, it omits the following features:
+
+<UL type="disc">
+	<LI>It does not resize the video window when the parent window is resized. To accomplish this, call <A HREF="JavaScript:hhobj_1.Click()"><B>IVideoWindow::SetWindowPosition</B></A> again in response to a WM_SIZE message on the parent window. </li>
+
+	<LI>It performs no error checking. </li>
+
+	<LI>It stretches the video window without regard to the aspect ratio of the source. To determine the aspect ratio, use the <A HREF="JavaScript:hhobj_2.Click()"><B>IBasicVideo</B></A> interface. </li>
+
+	<LI>It does not handle end-of-stream events. For information on how to do this, see <A HREF="dshow_12.htm">Responding to Events</A>. </li>
+</UL>
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;streams.h&gt;
+
+#define CLASSNAME "VideoWindow"
+
+IGraphBuilder   *pGraph = NULL;
+IMediaControl   *pMediaControl = NULL;
+IVideoWindow    *pVidWin = NULL;
+HWND            g_hwnd;
+
+void PlayFile(void)
+{
+    // Create the filter graph manager.
+    CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC,
+        IID_IGraphBuilder, (void **)&amp;pGraph);
+    pGraph-&gt;QueryInterface(IID_IMediaControl, (void **)&amp;pMediaControl);
+    pGraph-&gt;QueryInterface(IID_IVideoWindow, (void **)&amp;pVidWin);
+
+    // Build the graph.
+    pGraph-&gt;RenderFile(L"Test.avi", NULL);
+
+    //Set the video window.
+    pVidWin-&gt;put_Owner((OAHWND)g_hwnd);
+    pVidWin-&gt;put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
+
+    RECT grc;
+    GetClientRect(g_hwnd, &amp;grc);
+    pVidWin-&gt;SetWindowPosition(0, 0, grc.right, grc.bottom);
+
+    // Run the graph.
+    pMediaControl-&gt;Run();
+}
+
+void CleanUp(void)
+{
+    pVidWin-&gt;put_Visible(OAFALSE);
+    pVidWin-&gt;put_Owner(NULL);
+    pMediaControl-&gt;Release();
+    pVidWin-&gt;Release();
+    pGraph-&gt;Release();
+}
+
+// Message handler
+long FAR PASCAL WindowProc( HWND hwnd, UINT msg, UINT wParam, LONG lParam)
+{
+    switch (msg)
+    {
+        case WM_DESTROY:
+            CleanUp();
+            PostQuitMessage(0);
+            break;
+        default:
+            return (DefWindowProc(hwnd, msg, wParam, lParam));
+    }
+    return(NULL);
+}
+
+// Main
+int PASCAL WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR
+pCmdLine,
+    int nCmdShow )
+{
+    MSG         msg;
+    WNDCLASS    wc;
+
+    CoInitialize(NULL);
+
+    ZeroMemory(&amp;wc, sizeof wc);
+    wc.lpfnWndProc  = WindowProc;
+    wc.hInstance    = hInst;
+    wc.hIcon        = LoadIcon( NULL, IDI_APPLICATION );
+    wc.hCursor      = LoadCursor( NULL, IDC_ARROW );
+    wc.hbrBackground = (HBRUSH)GetStockObject( BLACK_BRUSH );
+    wc.lpszMenuName = NULL;
+    wc.lpszClassName = CLASSNAME;
+    RegisterClass( &amp;wc );
+
+    g_hwnd = CreateWindow(
+        CLASSNAME,
+        "DirectShow Sample",
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        NULL,
+        NULL,
+        hInst,
+        NULL);
+
+    ShowWindow( g_hwnd, nCmdShow );
+    UpdateWindow( g_hwnd );
+    PlayFile();
+
+    while( GetMessage( &amp;msg, NULL, 0, 0 ) )
+    {
+        TranslateMessage( &amp;msg );
+        DispatchMessage( &amp;msg );
+    }
+
+    CoUninitialize();
+    return msg.wParam;
+}</PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Tips for Converting Existing CGI Scripts to ISAPI Extensions</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Tips for Converting Existing CGI Scripts to ISAPI Extensions"/>
+<MSHelp:RLTitle Title="Tips for Converting Existing CGI Scripts to ISAPI Extensions"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_tips_for_converting_existing_cgi_scripts_to_isapi_extensions"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Tips for Converting Existing CGI Scripts to ISAPI Extensions</H1>
+
+<P>This section explains the basic requirements for converting existing Common Gateway Interface (CGI) script-executable files to ISAPI extension DLLs. As with other DLLs, Web server applications should be thread-safe. More than one client browser might be executing the same function at the same time, so the code should follow safety procedures when it modifies a global or static variable.</P>
+
+<P>You can keep your ISAPI extension thread-safe by using appropriate synchronization techniques, such as creating critical sections and semaphores. For additional information on writing thread-safe DLLs, see the documentation in the Platform Builder 3.0 Software Development Kit (SDK) and in the Microsoft Development Library compact disc.</P>
+
+<P>There are several structural differences between an ISAPI extension and a CGI executable file. An ISAPI extension:
+
+<UL type="disc">
+	<LI>Receives most of its data through the <B>lpbData</B> member of the Extension Control Block (ECB), as opposed to reading the data from the <B>StdIn</B> property. For additional data, the extension uses the <B>ReadClient</B> callback function.</li>
+
+	<LI>Accesses common CGI variables through the ECB. For other variables, an ISAPI extension calls the <B>GetServerVariable</B> function. In a CGI executable file, CGI variables are retrieved from the environment table by using the <B>GetEnv</B> function.</li>
+
+	<LI>Sends data back to the client browser by using the <B>WriteClient</B> callback function, instead of writing to the <B>StdOut</B> property.</li>
+
+	<LI>Specifies the completion status by either sending the header directly by using the <B>WriteClient</B> callback function, or calling the <B>ServerSupportFunction</B> function by using the <B>HSE_REQ_SEND_RESPONSE_HEADER</B> flag, instead of sending a “Status: NNN xxxxx...” status code to the <B>StdOut</B> property.</li>
+</UL>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;<B>dwStatusCode</B> is set to 200 before calling an extension, and the server ignores any changes the extension makes to it. The ISAPI developer must set the response code sent back to the client in the <B>ServerSupportFunction</B>.
+
+<UL type="disc">
+	<LI>Redirects requests with a “Location:” or “URL:” header, instead of writing the header to the <B>StdOut</B> property. Use the <B>HSE_REQ_SEND_URL</B> flag if the URL is local; however, if the URL is remote or unknown, use the <B>HSE_REQ_SEND_URL_REDIRECT_RESP</B> flag in the <B>ServerSupportFunction</B> callback function.</li>
+</UL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

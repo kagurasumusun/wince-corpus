@@ -1,0 +1,55 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Reference Counts for Complex Surfaces</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Reference Counts for Complex Surfaces"/>
+<MSHelp:RLTitle Title="Reference Counts for Complex Surfaces"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_reference_counts_for_complex_surfaces"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdrawsurface5_getattachedsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_idirectdrawsurface5_addattachedsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_idirectdrawsurface5_deleteattachedsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_com_iunknown_addref" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Reference Counts for Complex Surfaces</H1>
+
+<P>The methods you use to manipulate a complex surface like a flipping chain all use surface interface pointers, and therefore they all affect the reference counts of the surfaces. Because a complex surface is really a series of single surfaces, the reference count relationships require a little more consideration. As you might expect, the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDrawSurface5::GetAttachedSurface</B></A> method returns the surface interface for a surface attached to the current surface. It does this after incrementing the reference count of the interface being retrieved; it's up to you to release the interface when you no longer need it. The <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectDrawSurface5::AddAttachedSurface</B></A> method attaches a new surface to the current one. Similarly, <B>AddAttachedSurface</B> increments the count for the surface being attached. You would use the <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectDrawSurface5::DeleteAttachedSurface</B></A> method to remove the surface from the chain and implicitly decrease its reference count.</P>
+
+<P>What isn't immediately clear about these methods is that they don't affect the reference counts of the other objects that make up the complex surface. The <B>GetAttachedSurface</B> method simply increments the reference count of the surface it's retrieving, it doesn't affect the counts of the surfaces on which it depends. (The same situation applies to an explicit call to <A HREF="JavaScript:hhobj_4.Click()"><B>IUnknown::AddRef</B></A>.) This means that the reference count for primary surface in a complex surface can reach zero before its subordinate surfaces reach zero. When the primary surface reference count reaches zero, all other surfaces attached to it are released regardless of their current reference counts. (It's like a tree: if you cut the base, the whole thing falls. In this case, the primary surface is the base.) Attempts to access subordinate surfaces after the primary surface has been deallocated will result in memory faults.</P>
+
+<P>To avoid problems, make sure that your application has released all subordinate surface references before attempting to release the primary surface. It might be helpful to track the references you application holds, only accessing subordinate surface interfaces when you're sure that you also hold a reference the primary surface.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

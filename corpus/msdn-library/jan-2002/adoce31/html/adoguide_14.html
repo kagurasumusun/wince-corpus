@@ -1,0 +1,107 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Storing and Retrieving Information in a Table</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="Storing and Retrieving Information in a Table"/>
+<MSHelp:RLTitle Title="Storing and Retrieving Information in a Table"/>
+<MSHelp:Keyword Index="A" Term="adoguide_14"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceadoce_storing_and_retrieving_data_in_a_table"></A><SUP></SUP>Storing and Retrieving Data in a Table</H1>
+
+<P>To retrieve the information stored in a field, use the <B>Value</B> property of the Fields collection. The following code example shows how to retrieve information from an ADOCE database using the <B>Value</B> property of the Fields collection and the RecordCount property of the <B>Recordset</B> object, and then display the data in a ListBox control named List1.</P>
+
+<PRE>Dim rs
+Set rs = CreateObject("ADOCE.RecordSet.3.1")
+rs.Open "myTable", "", 1, 3
+If rs.RecordCount &gt; 0 Then
+  Do While Not rs.EOF
+    List1.Additem rs.Fields("firstfield").Value
+    rs.MoveNext
+  Loop
+End If
+rs.Close
+set rs = Nothing
+</PRE>
+
+<P>You can add a record, change information in an existing record, or remove a record from a database. Before you can modify information in a database, you must change the recordset from its default read-only status to write status. To do this, change the default parameters <I>CursorType</I> and <I>LockType</I> when opening the recordset with the <B>Open</B> method. The following code example shows how to change the recordset to write status.</P>
+
+<PRE>Dim rs
+'Create an ADOCE Recordset object
+Set rs = CreateObject("Adoce.recordset.3.1")
+'Open myTable as a Recordset object with
+'write status by specifying a CursorType
+'value of adOpenKeyset and a LockType value of adLockOptimistic.
+rs.Open "myTable", "", adOpenKeyset, adLockOptimistic
+</PRE>
+
+<P>Once the recordset is set to write status, you can use the <B>AddNew</B> method to create a new record in a recordset. When used without parameters, the <B>AddNew</B> method creates a record but does not store data in the record. When you use the <B>AddNew</B> method with parameters, the data is stored in the record when the record is created. The following code example shows how to use <B>AddNew</B> with parameters to create a new record and store data in the new record.</P>
+
+<PRE>'This statement adds the string "Windows CE" to the field "firstfield."
+rs.AddNew "firstfield", "Windows CE"
+</PRE>
+
+<P>To change a record, rather than add one, make the required changes to the fields and use the <B>Update</B> method. If you use the <B>Update</B> method with parameters, the changes are automatically made to the database. The following code example shows how to use <B>Update</B>.</P>
+
+<PRE>rs.Update "firstfield", "ADOCE"
+</PRE>
+
+<P>You can add a new record to a recordset using the <B>AddNew </B>method with the <B>Update</B> method. After creating the new record using the <B>AddNew</B> method without parameters, add data to the record using the <B>Fields</B> collection and write the data to the database using the <B>Update</B> method. The following code example shows how to use these methods together to write data to the recordset.</P>
+
+<PRE>'This statement creates a new record.
+rs.AddNew
+'These two statements use the fields collection
+'to add data to the recordset.
+rs.Fields("firstfield") = "Active Data Objects"
+rs.Fields("secondfield") = 1.8
+'This statement modifies the database
+'based on the recordset.
+rs.Update
+</PRE>
+
+<P class=indent><B>Note&nbsp;&nbsp;&nbsp;</B>When a clone is created using an empty recordset and rows are added using the initial recordset, sometimes the cloned recordset still believes the recordset is empty. This prevents some actions from succeeding.</P>
+
+<P>The proper methods for making this work are as follows:
+
+<OL>
+	<LI>Create the clone after data has been added with the initial recordset.</LI>
+
+	<LI>Reset the <B>BOF</B>/<B>EOF</B> state of the cloned recordset by calling <CODE>Requery()</CODE> or <CODE>MoveFirst()</CODE>.</LI>
+</OL>
+
+<P>A recordset is determined to be empty when both <B>BOF</B> and <B>EOF</B> are set to <B>TRUE</B>.</P>
+
+<P>The <B>Delete</B> method removes the current record in the recordset. A deleted record remains current until you move to a different record, after which the deleted record is no longer accessible. The following code example shows how to delete the current record in a recordset and move the pointer to the first record in the recordset.</P>
+
+<PRE>'This statement deletes the current record.
+rs.Delete
+'This statement moves the pointer to the
+'first record in the recordset
+rs.MoveFirst
+rs.Update
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

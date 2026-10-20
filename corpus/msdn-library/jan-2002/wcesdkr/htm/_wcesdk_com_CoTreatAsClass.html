@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoTreatAsClass</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoTreatAsClass"/>
+<MSHelp:RLTitle Title="CoTreatAsClass"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_cotreatasclass"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoTreatAsClass</H1>
+
+<P>This function establishes or removes an emulation, in which objects of one class are treated as objects of a different class.</P>
+
+<PRE class="syntax"><B>STDAPI CoTreatAsClass(
+REFCLSID </B><I>clsidOld</I><B>,
+REFCLSID </B><I>clsidNew</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>clsidOld</I></DT>
+
+<DD>[in] CLSID of the object to be emulated.</dd>
+
+<DT><I>clsidNew</I></DT>
+
+<DD>[in] CLSID of the object that should emulate the original object. This replaces any existing emulation for <I>clsidOld</I>. Can be CLSID_NULL, in which case any existing emulation for <I>clsidOld</I> is removed.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return value E_INVALIDARG, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The emulation was successfully established or removed.</dd>
+
+<DT>REGDB_E_CLASSNOTREG</DT>
+
+<DD>The <I>clsidOld</I> parameter is not properly registered in the registration database.</dd>
+
+<DT>REGDB_E_READREGDB</DT>
+
+<DD>Error reading from registration database.</dd>
+
+<DT>REGDB_E_WRITEREGDB</DT>
+
+<DD>Error writing to registration database.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function sets the <B>TreatAs</B> entry in the registry for the specified object, allowing the object to be emulated by another application. Emulation allows an application to open and edit an object of a different format, while retaining the original format of the object. After this entry is set, whenever any function like <B>CoGetClassObject</B> specifies the object's original CLSID (<I>clsidOld</I>), it is transparently forwarded to the new CLSID (<I>clsidNew</I>), thus launching the application associated with the <B>TreatAs</B> CLSID. When the object is saved, it can be saved in its native format, which may result in loss of edits not supported by the original format. </P>
+
+<P>You would call <B>CoTreatAsClass</B> in two situations if your application supports emulation:
+
+<UL type="disc">
+	<LI>In response to an end-user request (through a conversion dialog box) that a specified object be treated as an object of a different class (an object created under one application be run under another application, while retaining the original format information).</li>
+
+	<LI>In a setup program, to register that one class of objects be treated as objects of a different class.</li>
+</UL>
+
+<P>An example of the first case is that an end user might wish to edit a spreadsheet created by one application using a different application that can read and write the spreadsheet format of the original application. For an application that supports emulation, <B>CoTreatAsClass</B> can be called to implement a Treat As option in a conversion dialog box.</P>
+
+<P>An example of the use of <B>CoTreatAsClass</B> in a setup program would be in an updated version of an application. When the application is updated, the objects created with the earlier version can be activated and treated as objects of the new version, while retaining the previous format information. This would allow you to give the user the option to convert when they save, or to save it in the previous format, possibly losing format information not available in the older version.</P>
+
+<P>One result of setting an emulation is that when you enumerate verbs, as in the <A HREF="_wcesdk_com_ioleobject_enumverbs.htm"><B>IOleObject::EnumVerbs</B></A> method implementation in the default handler, this would enumerate the verbs from <I>clsidNew</I> instead of <I>clsidOld</I>.</P>
+
+<P>To ensure that existing emulation information is removed when you install an application, your setup programs should call <B>CoTreatAsClass</B>, setting the <I>clsidNew</I> parameter to CLSID_NULL to remove any existing emulation for the classes they install.</P>
+
+<P>If there is no CLSID assigned to the <B>AutoTreatAs</B> key in the registry, setting <I>clsidNew</I> and <I>clsidOld</I> to the same value removes the <B>TreatAs</B> entry, so there is no emulation. If there is a CLSID assigned to the <B>AutoTreatAs</B> key, that CLSID is assigned to the TreatAs key.</P>
+
+<P>The <B>CoTreatAsClass</B> function does not validate whether an appropriate registry entry for <I>clsidNew</I> currently exists.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><B>CoGetTreatAsClass</B> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,54 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Required Entry Points for USB Device Drivers</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Required Entry Points for USB Device Drivers"/>
+<MSHelp:RLTitle Title="Required Entry Points for USB Device Drivers"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_required_entry_points_for_usb_device_drivers"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Required Entry Points for USB Device Drivers</H1>
+
+<P>All USB device drivers must expose certain entry points in their DLLs to interact properly with the USBD module. The following entry points not only enable the USBD module to connect a driver with its peripheral, but also enable a driver to create and manage any registry keys that it may need:
+
+<UL type="disc">
+	<LI><B>USBDeviceAttach </B>
+<P>The USBD module calls this function when the USB device is connected to a host computer. The driver’s implementation of this function can decline to control the device, in which case the USBD module attempts to find another driver to handle the device. A driver rarely declines to control a device, though it might under certain conditions. For example, the driver might decline to control the device if the driver can determine from the device configuration block that the device is newer than the driver. By doing so, the driver indirectly gives a user an opportunity to enter the name of the correct USB device driver DLL if Windows CE cannot locate another driver for the device. For more information, see <A HREF="usb_18.htm">USB Device Driver Attach Processing</A>.
+</li>
+
+	<LI><B>USBInstallDriver </B>
+<P>This function, which should only be called the first time that the USB device driver is loaded, allows the driver to create any registry keys that it needs. After <B>USBInstallDriver</B> has done its work, the USBD module should subsequently be able to locate the USB device driver automatically. For more information on the format of these keys and how they are used to load USB device drivers, see <A HREF="usb_16.htm">USB Device Driver Load Process</A>.
+</li>
+
+	<LI><B>USBUnInstallDriver </B>
+<P>This function handles removing the driver from a Windows CE&#0150;based platform. It is responsible for removing all registry keys that were created by the driver’s <B>USBInstallDriver</B> function and for releasing any other resources that are held by the driver. Currently, Windows CE never actually calls this function directly, but various setup type programs could do so. For more information, see <A HREF="usb_19.htm">Removing USB Device Drivers</A>.
+</li>
+</UL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,102 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOCTL_DISK_GET_STORAGEID</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IOCTL_DISK_GET_STORAGEID"/>
+<MSHelp:RLTitle Title="IOCTL_DISK_GET_STORAGEID"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ioctl_disk_get_storageid"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IOCTL_DISK_GET_STORAGEID</H1>
+
+<P>This code returns the current STORAGE_IDENTIFICATION for a particular storage device. Block device drivers implement this code.</P>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT>hDevice</DT>
+
+<DD>Handle to the block device storage volume, which can be obtained by opening the FAT volume by its file system entry. For example, a PC Card storage volume could be opened using this call:
+
+<PRE class="code">hVolume = CreateFile(TEXT(“\Storage Card\Vol:”), GENERIC_READ|GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);</PRE>
+</dd>
+
+<DT>dwIoControlCode</DT>
+
+<DD>Specifies this code.</dd>
+
+<DT><I>lpInBuf</I></DT>
+
+<DD>NULL.</dd>
+
+<DT><I>nInBufSize</I></DT>
+
+<DD>Zero.</dd>
+
+<DT><I>lpOutBuf</I></DT>
+
+<DD>This should be set to the address of an allocated STORAGE_IDENTIFICATION structure. The storage ID data will be placed in this buffer when the IoControl call returns.</dd>
+
+<DT><I>nOutBufSize</I></DT>
+
+<DD>This should be set to the size of the <A HREF="struct_1_50.htm">STORAGE_IDENTIFICATION</A> structure plus additional memory for the IDs themselves. For ATA disk devices, the IDs consist of 20 bytes for a manufacturer ID string, plus 10 bytes for the disk’s serial number.</dd>
+
+<DT><I>lpBytesReturned</I></DT>
+
+<DD>A pointer to a DWORD that will be set to the number of bytes written to <I>lpOutBuf</I>.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>If an OEM or IHV provides support in a block device driver for IOCTL_DISK_GET_STORAGEID, then the driver should return TRUE is returned on a successful operation, and FALSE if this code is not supported. If FALSE is returned then callers should call <B>GetLastError</B> for details. An error of ERROR_INSUFFICIENT_BUFFER indicates that <I>lpOutBuf</I> is too small to store all the information. The caller must allocate enough memory for the structure and the IDs. If buffer is not large enough to hold the data then the call will fail and dwSize will be set to the size of the required buffer. Whether a block device driver supports this code depends on the implementation and whether the hardware contains storage ID information.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

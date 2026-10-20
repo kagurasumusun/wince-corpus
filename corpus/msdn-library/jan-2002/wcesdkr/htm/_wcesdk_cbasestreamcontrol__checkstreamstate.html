@@ -1,0 +1,81 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseStreamControl::CheckStreamState</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseStreamControl::CheckStreamState"/>
+<MSHelp:RLTitle Title="CBaseStreamControl::CheckStreamState"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasestreamcontrol__checkstreamstate"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseStreamControl::CheckStreamState</H1>
+
+<P>Retrieves a stream's current state. </P>
+
+<PRE class="syntax"><B>enum StreamControlState CheckStreamState(
+IMediaSample *</B><I>pSample</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pSample </I></DT>
+
+<DD>Pointer to an <A HREF="_wcesdk_imediasample_interface.htm"><B>IMediaSample</B></A> interface. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns a <A HREF="_wcesdk_dtypes__streamcontrolstate.htm"><B>StreamControlState</B></A> enumeration type. </P>
+
+<H4>Remarks</H4>
+
+<P>Your filter calls this member function when your pin receives a sample that it is about to forward. The first sample you forward after throwing one or more away should be marked as a discontinuity. </P>
+
+<P>The following example shows what you should include if your filter inherits from <A HREF="_wcesdk_cbasestreamcontrol_class.htm"><B>CBaseStreamControl</B></A>. </P>
+
+<PRE class="code">//Pin has been given a sample to pass on, pSample
+//m_fLastSampleDiscarded is initialized to TRUE when streaming starts
+
+int iStreamState = CheckStreamState(pSample);
+if (iStreamState == STREAM_FLOWING) {
+   if (m_fLastSampleDiscarded)
+      pSample-&gt;SetDiscontinuity(TRUE);
+   m_fLastSampleDiscarded = FALSE;
+   //now deliver it or put it o a queue to be delivered, or whatever.
+} else {
+   m_fLastSampleDiscarded = TRUE;     //next one is discontinuity
+   //Do NOT deliver this sample. Just throw it away.
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

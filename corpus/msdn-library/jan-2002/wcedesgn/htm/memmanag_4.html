@@ -1,0 +1,157 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using a Separate Heap</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using a Separate Heap"/>
+<MSHelp:RLTitle Title="Using a Separate Heap"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_using_a_separate_heap"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Using a Separate Heap</H1>
+
+<P>Instead of adding more size to the local heap, it is usually more efficient to create several small heaps. For example, a word processor might have a separate heap for each document file. </P>
+
+<P><B>To allocate and deallocate memory on a separate heap</B>
+
+<UL type="disc">
+	<LI>Call the <B>HeapCreate</B> function.</li>
+
+	<LI>The <B>HeapCreate</B> function returns a handle. Use this handle to reference the heap that you are using in the following steps.</li>
+
+	<LI>Windows CE does not allocate or reserve any memory when creating a heap. Memory is only reserved and committed when the first block of the heap is allocated.</li>
+
+	<LI>Call the <B>HeapAlloc</B> function to allocate memory from the heap to your application.</li>
+
+	<LI>Windows CE does not place any limits on the size of a separate heap. As long as you have virtual and physical memory addresses available, you can allocate memory from the separate heap.</li>
+
+	<LI>Use the memory that is allocated to your application.</li>
+
+	<LI>If necessary, call the <B>HeapSize</B> and <B>HeapReAlloc</B> functions to reallocate the separate heap memory.</li>
+
+	<LI>To increase the size of a block, call the <B>HeapSize</B> function to determine if the block contains enough space. Then, call the <B>HeapReAlloc</B> function either to add memory to the top of the allocation or to move the block to a larger area.</li>
+
+	<LI>To deallocate the memory back to Windows CE when finished, call the <B>HeapFree</B> function.</li>
+
+	<LI>Like the local heap, Windows CE deallocates a page only if all of the blocks that are within that page are deallocated also. This can result in fragmentation within the separate heap.</li>
+
+	<LI>To return all of the heap memory to Windows CE when you have finished using the heap, call the <B>HeapDestroy</B> function.</li>
+
+	<LI>You do not have to call the <B>HeapFree</B> function on all of the blocks within the separate heap before you call the <B>HeapDestroy</B> function.</li>
+</UL>
+
+<P>The following code example shows how to create a new heap.</P>
+
+<PRE class="code">LPBYTE pbMyPointer = NULL;
+HANDLE hMyNewHeap = NULL;
+LPVOID lpHeapMemory = NULL;
+LPVOID lpHeapMem2 = NULL;
+UINT uiSize;
+BOOL bResult;
+
+hMyNewHeap = HeapCreate (0,     // *do* serialize
+                         35000, // 35,000 bytes wanted
+                         0);    // Unsupported in Windows CE
+</PRE>
+
+<P>The following code example shows how to allocate memory from the heap, even when the heap is very small, by using the <B>HeapAlloc</B> function.</P>
+
+<PRE class="code">lpHeapMemory = HeapAlloc (hMyNewHeap,       // Specify the heap
+                          HEAP_ZERO_MEMORY, // Zero the memory
+                          42);              // Number of bytes
+if (lpHeapMemory == NULL)
+{
+  // Your error-handling code goes here. You can use
+  // the GetLastError function to obtain more information.
+}
+
+// The return value is actually the address of the memory.
+pbMyPointer = (LPBYTE)lpHeapMemory;
+
+// Your code to use the memory goes here.
+// SomeFunctionCall (pbMyPointer, and so on)
+// . . .
+</PRE>
+
+<P>The following code example shows how to check the size of part of the heap by using the <B>HeapSize</B> function.</P>
+
+<PRE class="code">uiSize = HeapSize (hMyNewHeap,    // Specify the heap
+                   0,             // No flags
+                   lpHeapMemory); // Specify which memory
+if (uiSize == 0)
+{
+  // Your error-handling code goes here. You can use
+  // the GetLastError function to obtain more information.
+}
+</PRE>
+
+<P>The following code example shows how to change the size of part of the heap by using the <B>HeapReAlloc</B> function.</P>
+
+<PRE class="code">lpHeapMem2 = HeapReAlloc (hMyNewHeap,   // Specify which heap
+                          0,            // Options (none)
+                          lpHeapMemory, // Existing memory
+                          100);         // New size, in bytes
+if (lpHeapMem2 == NULL)
+{
+  // Your error-handling code goes here. You can use
+  // the GetLastError function to obtain more information.
+}
+
+// The return value is actually the address of the memory.
+pbMyPointer = (LPBYTE)lpHeapMem2;
+</PRE>
+
+<P>The following code example shows how to free memory from the heap by using the <B>HeapFree</B> function.</P>
+
+<PRE class="code">bResult = HeapFree (hMyNewHeap,       // Specify which heap
+                    0,                // Options (none)
+                    lpHeapMem2);      // Specify what to free
+if (!bResult)
+{
+  // Your error-handling code goes here. You can use
+  // the GetLastError function to obtain more information.
+}
+
+// Always zero the caller’s pointer after freeing memory.
+lpHeapMem2 = NULL;
+</PRE>
+
+<P>The following code example shows how to destroy the heap by using the <B>HeapDestroy</B> function.</P>
+
+<PRE class="code">bResult = HeapDestroy (hMyNewHeap);
+
+if (!bResult)
+{
+  // Your error-handling code goes here. You can use
+  // the GetLastError function to obtain more information.
+}</PRE>
+
+<P class=indent></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

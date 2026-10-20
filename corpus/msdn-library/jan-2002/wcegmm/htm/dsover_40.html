@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capturing Sounds</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Capturing Sounds"/>
+<MSHelp:RLTitle Title="Capturing Sounds"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_capturing_sounds_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IDirectSoundCaptureBuffer_Start_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IDirectSoundCaptureBuffer_Lock_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IDirectSoundCaptureBuffer_GetCurrentPosition_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IDirectSoundCaptureBuffer_Unlock_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_idirectsoundcapturebuffer_stop_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Capturing Sounds</H1>
+
+<P>Capturing a sound consists of the following steps:
+
+<OL type="1">
+	<LI>Start the buffer by calling the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectSoundCaptureBuffer::Start</B></A> method. Audio data from the input device begins filling the buffer from the beginning. </li>
+
+	<LI>Wait until the desired amount of data is available. For one method of determining when the capture position reaches a certain point, see <A HREF="dsover_39.htm">Capture Buffer Notification</A>. </li>
+
+	<LI>When sufficient data is available, lock a portion of the capture buffer by calling the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSoundCaptureBuffer::Lock</B></A> method.
+<P>To make sure you are not attempting to lock a portion of memory that is about to be used for capture, you can first obtain the current read position by calling <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectSoundCaptureBuffer::GetCurrentPosition</B></A>. For an explanation of the read position, see <A HREF="dsover_38.htm">Capture Buffer Information</A>.
+
+<P>As parameters to the <B>Lock</B> method, you pass the size and offset of the block of memory you want to read. The method returns a pointer to the address where the memory block begins, and the size of the block. If the block wraps around from the end of the buffer to the beginning, two pointers are returned, one for each section of the block. The second pointer is NULL if the locked portion of the buffer does not wrap around.
+</li>
+
+	<LI>Copy the data from the buffer, using the addresses and block sizes returned by the <B>Lock</B> method.</li>
+
+	<LI>Unlock the buffer with the <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectSoundCaptureBuffer::Unlock</B></A> method.</li>
+
+	<LI>Repeat steps 2 to 5 until you are ready to stop capturing data. Then call the <A HREF="JavaScript:hhobj_5.Click()"><B>IDirectSoundCaptureBuffer::Stop</B></A> method.</li>
+</OL>
+
+<P>Normally the buffer stops capturing automatically when the capture position reaches the end of the buffer. However, if the DSCBSTART_LOOPING flag was set in the <I>dwFlags</I> parameter to the <B>IDirectSoundCaptureBuffer::Start</B> method, the capture will continue until the application calls the <B>IDirectSoundCaptureBuffer::Stop</B> method.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

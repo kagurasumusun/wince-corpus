@@ -1,0 +1,81 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Choosing Between Functions and Macros</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Choosing Between Functions and Macros"/>
+<MSHelp:RLTitle Title="Choosing Between Functions and Macros"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_choosing_between_functions_and_macros"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Choosing Between Functions and Macros</H1>
+
+<P>Most Microsoft run-time library routines are compiled or assembled functions, but some routines are implemented as macros. When a header file declares both a function and a macro version of a routine, the macro definition takes precedence, because it always appears after the function declaration. When you invoke a routine that is implemented as both a function and a macro, you can force the compiler to use the function version in two ways:
+
+<UL type="disc">
+	<LI>Enclose the routine name in parentheses.
+<PRE class="code">#include &lt;ctype.h&gt;
+a = toupper(a);    //use macro version of toupper
+a = (toupper)(a);  //force compiler to use function version of toupper
+</PRE>
+</li>
+
+	<LI> “Undefine” the macro definition with the <B>#undef</B> directive:
+<PRE class="code">#include &lt;ctype.h&gt;
+#undef toupper
+</PRE>
+</li>
+</UL>
+
+<P>If you need to choose between a function and a macro implementation of a library routine, consider the following trade-offs:
+
+<UL type="disc">
+	<LI>Speed versus size. The main benefit of using macros is faster execution time. During preprocessing, a macro is expanded (replaced by its definition) inline each time it is used. A function definition occurs only once regardless of how many times it is called. Macros may increase code size but do not have the overhead associated with function calls.</li>
+
+	<LI>Function evaluation. A function evaluates to an address; a macro does not. Thus you cannot use a macro name in contexts requiring a pointer. For instance, you can declare a pointer to a function, but not a pointer to a macro.</li>
+
+	<LI>Macro side effects. A macro may treat arguments incorrectly when the macro evaluates its arguments more than once. For instance, the <B>toupper</B> macro is defined as:
+<PRE class="code">#define toupper(c) ( (islower(c)) ? _toupper(c) :  (c) )
+</PRE>
+
+<P>In the following example, the <B>toupper</B> macro produces a side effect:
+
+<PRE class="code">#include &lt;ctype.h&gt;
+
+int a = 'm';
+a = toupper(a++);
+</PRE>
+
+<P>The example code increments a when passing it to <B>toupper</B>. The macro evaluates the argument a++ twice, once to check case and again for the result, therefore increasing a by 2 instead of 1. As a result, the value operated on by <B>islower</B> differs from the value operated on by <B>toupper</B>.
+</li>
+
+	<LI>Type-checking. When you declare a function, the compiler can check the argument types. Because you cannot declare a macro, the compiler cannot check macro argument types, although it can check the number of arguments you pass to a macro.</li>
+</UL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::SubclassWindow</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::SubclassWindow"/>
+<MSHelp:RLTitle Title="CWnd::SubclassWindow"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_subclasswindow"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CWnd::SubclassWindow</H1>
+
+<P>This method dynamically subclasses a window and attach it to this <B>CWnd</B> object. When a window is dynamically subclassed, windows messages will route through the <B>CWnd</B> message map and call message handlers in the <B>CWnd</B> class first. Messages that are passed to the base class will be passed to the default message handler in the window.</P>
+
+<P>This method attaches the Windows CE control to a <B>CWnd</B> object and replaces the<B> WndProc</B> and <B>AfxWndProc</B> functions of the window.</P>
+
+<P>The function stores a pointer to the old <B>WndProc</B> in the <B>CWnd</B> object.</P>
+
+<PRE class=syntax><B>BOOL SubclassWindow(
+HWND </B><I>hWnd</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hWnd</I></DT>
+
+<DD>Specifies a handle to the window.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// The following code shows how to subclass the edit control and list box
+// controls inside a combo box. It uses WM_CTLCOLOR for subclassing.
+// CSuperComboBox represents the combo box.
+HBRUSH CSuperComboBox::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+   if (nCtlColor == CTLCOLOR_EDIT)
+   {
+      //Edit control
+      if (m_edit.GetSafeHwnd() == NULL)
+         m_edit.SubclassWindow(pWnd-&gt;GetSafeHwnd());
+   }
+   else if (nCtlColor == CTLCOLOR_LISTBOX)
+   {
+      //ListBox control
+      if (m_listbox.GetSafeHwnd() == NULL)
+         m_listbox.SubclassWindow(pWnd-&gt;GetSafeHwnd());
+   }
+   HBRUSH hbr = CComboBox::OnCtlColor(pDC, pWnd, nCtlColor);
+   return hbr;
+}
+
+void CSuperComboBox::OnDestroy()
+{
+   // Unsubclass both edit and list box before destruction.
+   if (m_edit.GetSafeHwnd() != NULL)
+      m_edit.UnsubclassWindow();
+   if (m_listbox.GetSafeHwnd() != NULL)
+      m_listbox.UnsubclassWindow();
+   CComboBox::OnDestroy();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_70.htm"><B>CWnd::GetSuperWndProcAddr</B></A>, <A HREF="cwnd_20.htm"><B>CWnd::DefWindowProc</B></A>, <A HREF="cwnd_198.htm"><B>CWnd::SubclassDlgItem</B></A>, <A HREF="cwnd_3.htm"><B>CWnd::Attach</B></A>, <A HREF="cwnd_156.htm"><B>CWnd::PreSubclassWindow</B></A>, <A HREF="cwnd_200.htm"><B>CWnd::UnsubclassWindow</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

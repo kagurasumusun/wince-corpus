@@ -1,0 +1,183 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SafeArrayPutElement</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SafeArrayPutElement"/>
+<MSHelp:RLTitle Title="SafeArrayPutElement"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_oa96_safearrayputelement"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SafeArrayPutElement</H1>
+
+<P>This function assigns a single element to the array.</P>
+
+<PRE class="syntax"><B>HRESULT SafeArrayPutElement(</B>
+<B>SAFEARRAY FAR *</B><I>psa</I>,
+<B>long FAR *</B><I>rgIndices</I>,
+<B>void FAR *</B><I>pv </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>psa</I></DT>
+
+<DD>Pointer to an array descriptor created by <A HREF="_wcesdk_oa96_safearraycreate.htm"><B>SafeArrayCreate</B></A>.</dd>
+
+<DT><I>rgIndices</I></DT>
+
+<DD>Pointer to a vector of indexes for each dimension of the array. The right-most (least significant) dimension is <I>rgIndices</I>[0]. The left-most dimension is stored at <I>rgIndices</I>[<I>psa</I>-&gt;<I>cDims</I> &#0150;1].</dd>
+
+<DT><I>pv</I></DT>
+
+<DD>Void pointer to the data to assign to the array. The variant types VT_DISPATCH, VT_UNKNOWN, and VT_BSTR are pointers, and do not require another level of indirection.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values obtained from the returned <B>HRESULT</B> and described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=28%>Value</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>S_OK</TD>
+<TD width=72%>Success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>DISP_E_BADINDEX</TD>
+<TD width=72%>The specified index was invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>E_INVALIDARG</TD>
+<TD width=72%>One of the arguments is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>E_OUTOFMEMORY</TD>
+<TD width=72%>Memory could not be allocated for the element.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>This function automatically calls <A HREF="_wcesdk_oa96_safearraylock.htm"><B>SafeArrayLock</B></A> and <A HREF="_wcesdk_oa96_safearrayunlock.htm"><B>SafeArrayUnlock</B></A> before and after assigning the element.<B> </B>If the data element is a string, object, or variant, the function copies it correctly. If the existing element is a string, object, or variant, it is cleared correctly. Passing into this function any invalid and, under some circumstances, NULL pointers will result in unexpected termination of the application.</P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>Multiple locks can be on an array. Elements can be put into an array while the array is locked by other operations.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">HRESULT PASCAL __export CPoly::EnumPoints(IEnumVARIANT FAR* FAR* ppenum)
+{
+&nbsp;&nbsp;unsigned int i;
+&nbsp;&nbsp;HRESULT hresult;
+&nbsp;&nbsp;VARIANT var;
+&nbsp;&nbsp;SAFEARRAY FAR* psa;
+&nbsp;&nbsp;CEnumPoint FAR* penum;
+&nbsp;&nbsp;POINTLINK FAR* ppointlink;
+&nbsp;&nbsp;SAFEARRAYBOUND rgsabound[1];
+&nbsp;&nbsp;rgsabound[0].lLbound = 0;
+&nbsp;&nbsp;rgsabound[0].cElements = m_cPoints;
+
+&nbsp;&nbsp;psa = SafeArrayCreate(VT_VARIANT, 1, rgsabound);
+&nbsp;&nbsp;if(psa == NULL){
+&nbsp;&nbsp;&nbsp;&nbsp;HRESULT = ResultFromScode(E_OUTOFMEMORY);
+&nbsp;&nbsp;&nbsp;&nbsp;goto LError0;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Code omitted here for brevity.
+
+&nbsp;&nbsp;&nbsp;&nbsp;V_VT(&amp;var) = VT_DISPATCH;
+&nbsp;&nbsp;&nbsp;&nbsp;HRESULT = ppointlink-&gt;ppoint-&gt;QueryInterface(
+&nbsp;&nbsp;&nbsp;&nbsp;IID_IDispatch, (void FAR* FAR*)&amp;V_DISPATCH(&amp;var));
+&nbsp;&nbsp;&nbsp;&nbsp;if(HRESULT != NOERROR)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto LError1;
+
+&nbsp;&nbsp;&nbsp;&nbsp;ix[0] = i;
+&nbsp;&nbsp;&nbsp;&nbsp;SafeArrayPutElement(psa, ix, &amp;var);
+
+&nbsp;&nbsp;&nbsp;&nbsp;ppointlink = ppointlink-&gt;next;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;HRESULT = CEnumPoint::Create(psa, &amp;penum);
+&nbsp;&nbsp;if(HRESULT != NOERROR)
+&nbsp;&nbsp;&nbsp;&nbsp;goto LError1;
+&nbsp;&nbsp;*ppenum = penum;
+&nbsp;&nbsp;return NOERROR;
+
+LError1:;
+&nbsp;&nbsp;SafeArrayDestroy(psa);
+
+LError0:;
+&nbsp;&nbsp;return hresult;
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>2.0 and later</TD>
+<TD width=19%>Oleauto.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Oleaut32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

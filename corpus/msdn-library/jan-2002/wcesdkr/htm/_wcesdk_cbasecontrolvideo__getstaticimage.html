@@ -1,0 +1,96 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseControlVideo::GetStaticImage</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseControlVideo::GetStaticImage"/>
+<MSHelp:RLTitle Title="CBaseControlVideo::GetStaticImage"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasecontrolvideo__getstaticimage"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseControlVideo::GetStaticImage</H1>
+
+<P>Pure virtual method that derived classes override. </P>
+
+<PRE class="syntax"><B>virtual HRESULT GetStaticImage(</B>
+<B>long *</B><I>pBufferSize</I>,
+<B>long *</B><I>pDIBImage</I><B>) PURE;</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pBufferSize </I></DT>
+
+<DD>Size of the output buffer. </dd>
+
+<DT><I>pDIBImage </I></DT>
+
+<DD>Pointer to output buffer. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns an <B>HRESULT</B> value. </P>
+
+<H4>Remarks</H4>
+
+<P>Through the <A HREF="_wcesdk_ibasicvideo_interface.htm"><B>IBasicVideo</B></A> interface, an application can request that it be given a copy of the current image in a memory buffer (some renderers can return E_NOTIMPL to this if they do not support it). The derived class determines how to retrieve the image. When the application calls <B>CBaseControlVideo::GetStaticImage</B>, it calls this pure virtual method that the derived class should override to implement it. This is also called by the <A HREF="_wcesdk_cbasecontrolvideo__getcurrentimage.htm"><B>CBaseControlVideo::GetCurrentImage</B></A> member function. </P>
+
+<P>The class provides a helper member function, <A HREF="_wcesdk_cbasecontrolvideo__copyimage.htm"><B>CBaseControlVideo::CopyImage</B></A>, that can be given a sample that contains an image, and the member function will copy the relevant section of it (based on the current source rectangle) into the output buffer supplied by the application. </P>
+
+<P>The following example from the video renderer sample, SampVid, demonstrates an implementation of this member function in a derived class. In this example, m_pRenderer holds an object of a class derived from <A HREF="_wcesdk_cbasevideorenderer_class.htm"><B>CBaseVideoRenderer</B></A>. </P>
+
+<PRE class="code">// Return a copy of the current image in the video renderer
+
+HRESULT CVideoText::GetStaticImage(long *pBufferSize,long *pDIBImage)
+{
+    // Get any sample the renderer may be holding.
+
+    IMediaSample *pMediaSample = m_pRenderer-&gt;GetCurrentSample();
+    if (pMediaSample == NULL) {
+        return E_UNEXPECTED;
+    }
+
+    // Call the base class helper method to do the work.
+
+    HRESULT hr = CopyImage(pMediaSample,          // Buffer containing image
+                           &amp;m_pRenderer-&gt;m_mtIn,                // Type representing bitmap
+                           pBufferSize,                                     // Size of buffer for DIB
+                           (BYTE*) pDIBImage);                   // Data buffer for output
+
+    pMediaSample-&gt;Release();
+    return hr;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

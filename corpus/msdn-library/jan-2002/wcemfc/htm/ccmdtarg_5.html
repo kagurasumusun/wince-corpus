@@ -1,0 +1,119 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCmdTarget::EndWaitCursor</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CCmdTarget::EndWaitCursor"/>
+<MSHelp:RLTitle Title="CCmdTarget::EndWaitCursor"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ccmdtarget_endwaitcursor"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CCmdTarget::EndWaitCursor</H1>
+
+<P>This method should be called after you call the <B>CCmdTarget::BeginWaitCursor</B> method to return from the hourglass cursor to the previous cursor. The framework also calls this method after it calls the hourglass cursor.</P>
+
+<PRE class=syntax><B>void EndWaitCursor( );</B><I> </I></PRE>
+
+<H4>Example</H4>
+
+<PRE>// This example illustrates the most common case of displaying
+// the hourglass cursor during lengthy processing of a
+// command handler implemented in a CCmdTarget-derived class,
+// such as a document or view.
+
+void CMyView::OnSomeCommand()
+{
+   BeginWaitCursor(); // Display the hourglass cursor.
+
+   // Do some lengthy processing.
+
+   EndWaitCursor(); // Remove the hourglass cursor.
+}
+
+// The followingexample illustrates RestoreWaitCursor.
+void CMyView::OnSomeCommand()
+{
+   BeginWaitCursor(); // Display the hourglass cursor.
+
+   // Do some lengthy processing.
+
+   // The dialog box normally changes the cursor to the
+   // standard arrow cursor and leaves the cursor in as the
+   // standard arrow cursor when the dialog box is closed.
+   CMyDialog dlg;
+   dlg.DoModal();
+
+   // You must call RestoreWaitCursor here to change the
+   // cursor back to the hourglass cursor.
+   RestoreWaitCursor();
+
+   // Do more lengthy processing.
+
+   EndWaitCursor(); // Remove the hourglass cursor.
+}
+
+// In the above example, the dialog was invoked between the pair of
+// calls to BeginWaitCursor and EndWaitCursor. Sometimes it may not
+// be clear whether the dialog is invoked between a pair of calls to
+// BeginWaitCursor and EndWaitCursor. You can call RestoreWaitCursor,
+// even if BeginWaitCursor is not previously called.  This case is
+// illustrated below, where CMyView::AnotherFunction does not need to
+// know whether it is called in the context of an hourglass cursor.
+void CMyView::AnotherFunction()
+{
+   // Some processing ...
+
+   CMyDialog dlg;
+   dlg.DoModal();
+   RestoreWaitCursor();
+
+   // More processing ...
+}
+
+// If the dialog is invoked from a method of some non-CCmdTarget,
+// you can call CWinApp::DoWaitCursor with a 0 parameter value to
+// restore the hourglass cursor.
+void CMyObject::AnotherFunction()
+{
+   CMyDialog dlg;
+   dlg.DoModal();
+   AfxGetApp()-&gt;DoWaitCursor(0); // Same as CCmdTarget::RestoreWaitCursor
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwaitcur.htm"><B>CWaitCursor</B></A>, <A HREF="ccmdtarg_3.htm"><B>CCmdTarget::BeginWaitCursor</B></A>, <A HREF="ccmdtarg_11.htm"><B>CCmdTarget::RestoreWaitCursor</B></A>, <A HREF="cwinapp_7.htm"><B>CWinApp::DoWaitCursor</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

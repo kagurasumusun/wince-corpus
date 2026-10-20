@@ -1,0 +1,66 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>The DDGPE Classes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="The DDGPE Classes"/>
+<MSHelp:RLTitle Title="The DDGPE Classes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_the_ddgpe_classes_ddhal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>The DDGPE Classes</H1>
+
+<P>This section describes the steps required to extend your display driver using the <B>DDGPE</B> C++ classes.</P>
+
+<P>The <B>DDGPE</B> C++ classes extend the functionality of <B>GPE</B> in order to support the inclusion of a DirectDraw Hardware Abstraction Layer (DDHAL). To add this functionality, you will need to make a few minor and nondestructive changes to your source code.</P>
+
+<P>Before you begin, you will need to know the location of the following things:
+
+<UL type="disc">
+	<LI>The contents of the <B>DDGPE</B> package (ddgpe.lib and ddgpe.h).</li>
+
+	<LI>The build file containing information to link your device driver to gpe.lib (usually called sources).</li>
+
+	<LI>The header file containing your device-specific declaration of a <B>GPE</B>-derived class.</li>
+
+	<LI>The source code file containing the constructor of the device-specific derivation of the <B>GPE</B> class, along with any other files that include the gpe.h header file.</li>
+
+	<LI>Any header files containing the device-specific derivation of the <B>GPESurf</B> class.</li>
+
+	<LI>Any source code files referencing the <B>GPESurf</B> class directly (for example, constructors for any derived classes).</li>
+</UL>
+
+<P>Place ddgpe.lib in the appropriate library directory path, and put ddgpe.h in the appropriate header directory path. Then make the changes in your build file to link to ddgpe.lib (in addition to gpe.lib, which should already exist). Depending on your build environment, you might have to add it as one of your <B>SOURCELIB</B> entries, in order for <B>HALInit</B> to be exported properly by your linker.</P>
+
+<P>Next, change the header file defining your device-specific class to derive directly from <B>DDGPE</B> instead of <B>GPE</B>. Then make any necessary changes to your constructors or other functions to accommodate this change of base class. Change the files that include gpe.h to include ddgpe.h, instead.</P>
+
+<P>Now change any header files deriving from the <B>GPESurf</B> class (these may or may not be present in your display driver), to derive from <B>DDGPESurf</B>, instead. Your source code should be changed to accommodate this change of base class. You should be sure that your code always refers to <B>DDGPESurf</B> where it would normally have referred to <B>GPESurf</B>. </P>
+
+<P>You should now recompile your display driver and test it to be sure that it still works properly. When you have verified that it continues to work properly, you may continue to the next step.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolUnbindAdapter</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolUnbindAdapter"/>
+<MSHelp:RLTitle Title="ProtocolUnbindAdapter"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_protocolunbindadapter"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>ProtocolUnbindAdapter</H1>
+
+<P><B>ProtocolUnbindAdapter</B> is a required function to support Plug and Play.</P>
+
+<PRE class="syntax"><B>VOID</B>
+<B>ProtocolUnbindAdapter(</B>
+<B>OUT PNDIS_STATUS</B> <I>Status</I>,
+<B>IN NDIS_HANDLE</B> <I>ProtocolBindingContext</I>,
+<B>IN NDIS_HANDLE</B> <I>UnbindContext </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I> </DT>
+
+<DD>Specifies the status of the unbinding operation as the value returned by <A HREF="_wcesdk_ndiscloseadapter.htm"><B>NdisCloseAdapter</B></A>, which can be either of the following: </dd>
+
+<DT>NDIS_STATUS_SUCCESS </DT>
+
+<DD>The binding was closed and all resources pertaining to that binding have been released. </dd>
+
+<DT>NDIS_STATUS_PENDING </DT>
+
+<DD>The request is being handled asynchronously, and the <A HREF="_wcesdk_protocolcloseadaptercomplete.htm"><B>ProtocolCloseAdapterComplete</B></A> function will complete the operation. </dd>
+
+<DT><I>ProtocolBindingContext</I> </DT>
+
+<DD>Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>. </dd>
+
+<DT><I>UnbindContext</I> </DT>
+
+<DD>Specifies a handle, supplied by NDIS, that the protocol passes subsequently to <B>NdisCompleteUnbindAdapter</B>. </dd>
+</DL>
+
+<H4>Comments</H4>
+
+<P>As the reciprocal of <A HREF="_wcesdk_protocolbindadapter.htm"><B>ProtocolBindAdapter</B></A>, <B>ProtocolUnbindAdapter</B> releases all resources the driver allocated for per-binding network I/O operations with one possible exception: the driver-allocated context area designated by the <I>ProtocolBindingContext</I> handle. </P>
+
+<P><B>ProtocolUnbindAdapter</B> must call <B>NdisCloseAdapter</B>, which can, in turn, call the driver's <B>ProtocolCloseAdapterComplete</B> function with the <I>ProtocolBindingContext</I> handle, so <B>ProtocolUnbindAdapter</B> cannot free the memory at <I>ProtocolBindingContext</I> unless <B>NdisCloseAdapter</B> returns NDIS_STATUS_SUCCESS. </P>
+
+<P>Consequently, <B>ProtocolUnbindAdapter</B> should store the input <I>UnbindContext</I> handle in the area at <I>ProtocolBindingContext</I> before it calls <B>NdisCloseAdapter</B>. If this call is completed asynchronously, the <B>ProtocolCloseAdapterComplete</B> function will free all driver-allocated per-binding resources and call <B>NdisCompleteUnbindAdapter</B> with the <I>UnbindContext</I> handle. </P>
+
+<P>If <B>NdisCloseAdapter</B> returns NDIS_STATUS_SUCCESS, <B>ProtocolUnbindAdapter</B> frees all per-binding resources, including the driver-allocated memory at <I>ProtocolBindingContext</I>, and calls <B>NdisCompleteUnbindAdapter</B> itself. </P>
+
+<P>The <B>ProtocolUnbindAdapter</B> function of an NDIS intermediate driver makes a reciprocal call to <A HREF="_wcesdk_ndisimdeinitializedeviceinstance.htm"><B>NdisIMDeinitializeDeviceInstance</B></A>. Such a driver's <A HREF="_wcesdk_miniporthalt.htm"><B>MiniportHalt</B></A> function must release all driver-allocated resources associated with the intermediate driver's network adapter before its virtual network adapter is removed from the system. </P>
+
+<P>As soon as <B>ProtocolUnbindAdapter</B> calls <B>NdisCloseAdapter</B>, the <I>NdisBindingHandle</I> originally returned by <B>NdisOpenAdapter</B> should be considered invalid. <B>ProtocolUnbindAdapter</B> cannot make any subsequent calls to <B>Ndis<I>XXX</I></B> functions with this handle, and the protocol cannot receive any indications from the underlying driver. However, if the underlying network adapter is being removed to be reconfigured, NDIS will call the driver's <B>ProtocolBindAdapter</B> function to re-establish the binding when the network adapter is available again. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndiscloseadapter.htm"><B>NdisCloseAdapter</B></A>, <A HREF="_wcesdk_ndisimdeinitializedeviceinstance.htm"><B>NdisIMDeinitializeDeviceInstance</B></A>, <A HREF="_wcesdk_miniporthalt.htm"><B>MiniportHalt</B></A>, <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>, <A HREF="_wcesdk_ndiscloseadapter.htm"><B>NdisCloseAdapter</B></A>, <A HREF="_wcesdk_protocolbindadapter.htm"><B>ProtocolBindAdapter</B></A>, <A HREF="_wcesdk_protocolcloseadaptercomplete.htm"><B>ProtocolCloseAdapterComplete</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

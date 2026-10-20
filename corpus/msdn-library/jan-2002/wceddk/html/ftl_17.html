@@ -1,0 +1,89 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample ATADISK Driver</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Sample ATADISK Driver"/>
+<MSHelp:RLTitle Title="Sample ATADISK Driver"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_sample_atadisk_driver"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Sample ATADISK Driver</H1>
+
+<P>In addition to the standard stream device driver functions, the ATADISK driver also exports a PC Card Plug and Play detection function, <B>DetectATADisk</B>. The detection function only reads the attribute space of the PC Card; no other data is read, and no write operations are performed on the PC Card. The function looks for disk device type 4 in the PC Card’s <B>CISTPL_FUNCID</B> tuple and for ATA device type 1 in the type 1 <B>CISTPL_FUNCE</B> tuple.</P>
+
+<P>The presence of the <B>\Drivers\PCMCIA\ATADisk\</B> key causes the Device Manager to call the driver’s <B>DetectATADisk</B> function when a PC Card is inserted and there is no driver that is associated with the card’s Plug and Play identifier. The following example shows how this is done.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE
+&nbsp;&nbsp;[Drivers]
+&nbsp;&nbsp;&nbsp;&nbsp;[PCMCIA]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Detect]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[50]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SZ: Dll = ATADisk.DLL
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SZ: Entry = DetectATADisk
+</PRE>
+
+<P>When <B>DetectATADisk</B> detects an ATA-compatible PC Card, it causes the Device Manager to load the driver listed in the <B>\Drivers\PCMCIA\AtaDisk\</B> key. The following example shows how this done.</P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE
+&nbsp;&nbsp;[Drivers]
+&nbsp;&nbsp;&nbsp;&nbsp;[PCMCIA]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ATADISK]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SZ: Prefix = DSK
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SZ: Dll = AtaDisk.DLL
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SZ: IOCTL = (DWORD)4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SZ: FSD = FATFS.DLL
+</PRE>
+
+<P>Of the four values shown, only <B>IOCTL</B> is optional. The others are required.</P>
+
+<P>The following values within the <B>ATADISK</B> key are optional. If present, these values affect all devices that the ATADISK driver operates on.
+
+<DL>
+<DT>Folder</DT>
+
+<DD>“Storage Card” causes ATADISK to report a default volume name of “Storage Card” in response to a DISK_IOCTL_GETNAME <B>DeviceIOControl</B>. You can use a different name than “Storage Card”, if desired.</dd>
+
+<DT>Cylinders</DT>
+
+<DD>A value of<I> xxx</I> causes the ATADISK driver to not rely on the number of cylinders that is reported by the ATA device in response to the ATA IDENTIFY command. The number that is specified by the <B>Cylinders</B> registry value is used instead.</dd>
+
+<DT>Heads</DT>
+
+<DD>A value of<I> hh</I> causes the ATADISK driver to not rely on the number of heads that is reported by the ATA device in response to the ATA IDENTIFY command. The number that is specified by the <B>Heads</B> registry value is used instead.</dd>
+
+<DT>Sectors</DT>
+
+<DD>A value of <I>ss</I> causes the ATADISK driver to not rely on the number of sectors per track that is reported by the ATA device in response to the ATA IDENTIFY command. The number that is specified by the <B>Sectors</B> registry value is used instead.</dd>
+
+<DT>CHSMode</DT>
+
+<DD>A value of 1 forces the ATADISK driver to use Cylinder/Head/Sector (CHS) addressing mode. If the <B>CHSMode</B> value is 0 or the value is not present, the ATADISK driver uses the addressing mode that is reported by the ATA device in response to the ATA IDENTIFY command. The ATADISK driver uses logical block address (LBA) mode, when available.</dd>
+</DL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

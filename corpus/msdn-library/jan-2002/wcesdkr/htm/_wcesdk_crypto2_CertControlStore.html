@@ -1,0 +1,184 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CertControlStore</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CertControlStore"/>
+<MSHelp:RLTitle Title="CertControlStore"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_certcontrolstore"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CertControlStore</H1>
+
+<P>This function allows an application to be notified when there is a difference between the contents of a cached store in use and the contents of that store as it is persisted to storage. Differences can occur as another process makes a change that affects the store as it is persisted.</P>
+
+<P>The <B>CertControlStore</B> function can be used to synchronize a cached store if necessary and provides a means to commit changes made in the cached store to persisted storage.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CertControlStore(</B>
+<B>HCERTSTORE</B> <I>hCertStore</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>DWORD</B> <I>dwCtrlType</I><B>,</B>
+<B>void const *</B><I>pvCtrlPara
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCertStore </I></DT>
+
+<DD>[in] Handle of the certificate store.</dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>[in] If the <I>dwCtrlType</I> parameter is set to CERT_STORE_CTRL_COMMIT, the following <I>dwFlags</I> are defined:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CERT_STORE_CTRL_COMMIT_FORCE_FLAG</TD>
+<TD width=52%>Forces the contents of the cache memory store to be copied to permanent storage even if the cache has not been changed</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CERT_STORE_CTRL_COMMIT_CLEAR_FLAG</TD>
+<TD width=52%>Inhibits the copying the contents of the cache memory store to permanent storage even when the store is closed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CERT_STORE_CTRL_INHIBIT_DUPLICATE_HANDLE_FLAG</TD>
+<TD width=52%>Inhibits a duplicate handle of the event HANDLE. If this flag is set, <B>CertControlStore</B> with CERT_STORE_CTRL_CANCEL_NOTIFY passed must be called for this event HANDLE before closing the <I>hCertStore</I> handle.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>If the <I>dwCtrlType</I> parameter is set to CERT_STORE_CTRL_NOTIFY_CHANGE or CERT_STORE_CTRL_RESYNC, the <I>dwFlags</I> parameter is not used and must be set to zero.
+</dd>
+
+<DT><I>dwCtrlType </I></DT>
+
+<DD>[in] Control action to be taken by the <B>CertControlStore</B> function. The interpretations of the <I>pvCtrlPara</I> and <I>dwFlags</I> parameters depend on the value of the <I>dwCtrlType</I> parameter. The following table lists the values for the <I>dwCtrlType </I>parameter.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CERT_STORE_CTRL_RESYNC</TD>
+<TD width=52%>The cached store is resynchronized and made to match the persisted store.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>CERT_STORE_CTRL_COMMIT</TD>
+<TD width=52%>Any changes made to the cached store are copied to persisted storage. If no changes were made since the cached store was opened or since the last commit, the call is ignored. The call is also ignored if the store provider is a provider that automatically persists changes immediately.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pvCtrlPara </I></DT>
+
+<DD>[in] The parameter is not used and must be set to NULL. If the <I>dwCtrlType</I> parameter is CERT_STORE_CTRL_COMMIT, the <I>pvCtrlPara</I> parameter is not used and must be set to NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is TRUE.</P>
+
+<P>If the function fails, the return value is FALSE.</P>
+
+<P>If the <I>dwCtrlType</I> value is CERT_STORE_NOTIFY_CHANGE, the function returns TRUE if a handle for the event signal was successfully set up. The function returns FALSE if the event handle was not set up.</P>
+
+<P>If the <I>dwCtrlType</I> value is CERT_STORE_CTRL_RESYNC, the function returns TRUE if the resynchronization succeeded and FALSE if the resynchronization failed.</P>
+
+<P>If the <I>dwCtrlType</I> value is CERT_STORE_CTRL_COMMIT, the function returns TRUE to indicate the successful completion of the commit to persisted storage and FALSE if the commit failed.</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<P>Some providers might not support specific control types. In these cases, the <B>CertControlStore</B> function returns FALSE and the <B>GetLastError</B> function is set to the ERROR_NOT_SUPPORTED.</P>
+
+<H4>Remarks</H4>
+
+<P>Resynchronization of a store can be done at any time. It need not follow a signaled notification change event.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createevent.htm"><B>CreateEvent</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStreamInit::Save</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersistStreamInit::Save"/>
+<MSHelp:RLTitle Title="IPersistStreamInit::Save"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersiststreaminit__save"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IPersistStreamInit::Save</H1>
+
+<P>This method saves an object to the specified stream.</P>
+
+<PRE class="syntax"><B>HRESULT Save(
+LPSTREAM </B><I>pStm</I><B> ,
+BOOL </B><I>fClearDirty</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStm </I></DT>
+
+<DD>[in]IStream pointer to the stream into which the object should be saved. </dd>
+
+<DT><I>fClearDirty </I></DT>
+
+<DD>[in]Indicates whether to clear the dirty flag after the save is complete. If TRUE, the flag should be cleared. If FALSE, the flag should be left unchanged. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The object was successfully saved to the stream. </dd>
+
+<DT>STG_E_CANTSAVE </DT>
+
+<DD>The object could not save itself to the stream. This error could indicate, for example, that the object contains another object that is not serializable to a stream or that an <A HREF="_wcesdk_com_isequentialstream__write.htm"><B>ISequentialStream::Write</B></A> call returned STG_E_CANTSAVE. </dd>
+
+<DT>STG_E_MEDIUMFULL </DT>
+
+<DD>The object could not be saved because there is no space left on the storage device. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>IPersistStreamInit::Save </B>saves an object into the specified stream and indicates whether the object should reset its dirty flag.</P>
+
+<P>The seek pointer is positioned at the location in the stream at which the object should begin writing its data. The object calls the <B>ISequentialStream::Write</B> method to write its data.</P>
+
+<P>On exit, the seek pointer must be positioned immediately past the object data. The position of the seek pointer is undefined if an error returns.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>Rather than calling <B>IPersistStreamInit::Save</B> directly, you typically call the <A HREF="_wcesdk_com_olesavetostream.htm"><B>OleSaveToStream</B></A><B> </B>helper function which does the following:
+
+<OL type="1">
+	<LI>Calls <A HREF="_wcesdk_com_ipersist_getclassid.htm"><B>IPersistStreamInit::GetClassID</B></A><B> </B>to get the object's CLSID. </li>
+
+	<LI>Calls the <A HREF="_wcesdk_com_writeclassstm.htm"><B>WriteClassStm</B></A><B> </B>function to write the object's CLSID to the stream. </li>
+
+	<LI>Calls <A HREF="#_wcesdk_com_ipersiststreaminit__save"><B>IPersistStreamInit::Save</B></A>. </li>
+</OL>
+
+<P>If you call these methods directly, you can write other data into the stream after the CLSID before calling <B>IPersistStreamInit::Save</B>.</P>
+
+<P>The OLE-provided implementation of <B>IPersistStreamInit</B> follows this same pattern.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>The <B>IPersistStreamInit::Save</B> method does not write the CLSID to the stream. The caller is responsible for writing the CLSID.</P>
+
+<P>The <B>IPersistStream::Save</B> method can read from, write to, and seek in the stream; but it must not seek to a location in the stream before that of the seek pointer on entry.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Ocidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_ipersist_getclassid.htm"><B>IPersist::GetClassID</B></A>, <A HREF="_wcesdk_com_isequentialstream__write.htm"><B>ISequentialStream::Write</B></A>, <A HREF="_wcesdk_com_olesavetostream.htm"><B>OleSaveToStream</B></A><B> </B></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

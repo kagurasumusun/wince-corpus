@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HalGetBusData</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="HalGetBusData"/>
+<MSHelp:RLTitle Title="HalGetBusData"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_halgetbusdata"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>HalGetBusData</H1>
+
+<P>This function retrieves configuration information about a specified slot or address on a particular I/O bus.</P>
+
+<PRE class="syntax"><B>ULONG HalGetBusData</B> <B>(</B>
+<B>BUS_DATA_TYPE</B> <I>BusDataType,</I>
+<B>ULONG </B><I>BusNumber,</I>
+<B>ULONG </B><I>SlotNumber</I>,
+<B>PVOID</B> <I>Buffer</I>,
+<B>ULONG </B><I>Length </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>BusDataType</I></DT>
+
+<DD>[in] Specifies the type of bus data to be retrieved. The upper bound on the types supported is always MaximumBusDataType. Implementation of bus routines is OEM-specific. The default CEDDK always returns 0 for this function. The sample CEPC CEDDK supports only PNPISAConfiguration and PCIConfiguration.</dd>
+
+<DT><I>BusNumber</I></DT>
+
+<DD>[in] Specifies the zero-based and system-assigned number of the bus in systems with several buses of the same <I>BusDataType</I>.</dd>
+
+<DT><I>SlotNumber</I></DT>
+
+<DD>[in] Specifies the logical slot number or location of the device. If PCIConfiguration is specified as the <I>BusDataType</I>, this value is specified as a PCI_SLOT_NUMBER value (slot and function numbers are combined).</dd>
+
+<DT><I>Buffer</I></DT>
+
+<DD>[in] Points to a caller-supplied buffer for configuration information specific to <I>BusDataType</I>.
+
+<P>If PCIConfiguration is specified, the buffer contains the PCI_COMMON_CONFIG information for the given <I>SlotNumber</I> and function number.
+</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>[in] Specifies the maximum number of bytes to return in <I>Buffer</I>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function returns the number of bytes of data it wrote in the given buffer. If the given <I>BusDataType</I> is not valid for the current platform, this function returns zero.</P>
+
+<P>The following table shows the values that can be returned by this function to indicate an error when the input <I>BusType</I> is PCIConfiguration.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=13%>Value</TH>
+<TH width=87%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>0 (zero)</TD>
+<TD width=87%>The specified PCI bus does not exist.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%>2</TD>
+<TD width=87%>The specified PCI bus exists, but there is no device at the given PCI <I>SlotNumber</I>. The <I>Buffer</I> also contains the PCI_INVALID_VENDOR_ID value at the PCI_COMMON_CONFIG <B>VendorId</B> member.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>Device drivers call this function during initialization to locate their devices on a particular I/O bus in the machine. The bus-type-specific configuration data returned is later used in calls to other configuration and initialization functions, such as <B>HalTranslateBusAddress</B>.</P>
+
+<P>Calling <B>HalGetBusData</B> with any <I>BusDataType</I> except <B>CMOS</B> is equivalent to calling <B>HalGetBusDataByOffset</B> with an input <I>Offset</I> of zero.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>2.10 and later</TD>
+<TD width=18%>Ceddk.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ceddk_f_1.htm"><B>HalGetBusDataByOffset</B></A>, <A HREF="ceddk_f_2.htm"><B>HalSetBusData</B></A>, <A HREF="ceddk_f_3.htm"><B>HalSetBusDataByOffset</B></A>, <A HREF="ceddk_f_4.htm"><B>HalTranslateBusAddress</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

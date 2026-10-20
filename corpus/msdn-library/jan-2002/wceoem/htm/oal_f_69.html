@@ -1,0 +1,166 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VirtualSetPageFlags</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="VirtualSetPageFlags"/>
+<MSHelp:RLTitle Title="VirtualSetPageFlags"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_virtualsetpageflags"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>VirtualSetPageFlags</H1>
+
+<P>This function maps the VSPF_* defines to SH4 virtual page attribute flags and sets the flags for all the pages in the range specified by the <I>lpvAddres</I> and <I>cbSize</I> parameters. These flags correspond to bits in the PTEA (Page Table Entry Assistance) register. <B>VirtualSetPageFlags</B> should only be called by the SH4 PCMCIA driver.</P>
+
+<PRE class="syntax"><B>BOOL VirtualSetPageFlags (
+LPVOID</B> <I>lpvAddress</I><B>,</B>
+<B>DWORD</B> <I>cbSize</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>LPDWORD</B> <I>lpdwOldFlags</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpvAddress</I></DT>
+
+<DD>Starting virtual address of the memory region affected by <B>VirtualSetPageFlags</B>.</dd>
+
+<DT><I>cbSize</I></DT>
+
+<DD>Size of the <I>lpvAddress</I> memory region.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Contains the page flags to be applied to the memory region.
+
+<P>Valid flags include the following:
+
+
+<UL type="disc">
+	<LI>VSPF_NONE
+<P>Flag equal to 0.
+</li>
+
+	<LI>VSPF_8BIT
+<P>Flag equal to 0 (default).
+</li>
+
+	<LI>VSPF_VARIABLE
+<P>PCMCIA I/O space, data width is determined by the IOIS#16 signal.
+</li>
+
+	<LI>VSPF_IOSPACE
+<P>PCMCIA I/O space, 8-bit data path width.
+</li>
+
+	<LI>VSPF_COMMON
+<P>PCMCIA common memory space, 8 bit.
+</li>
+
+	<LI>VSPF_ATTRIBUTE
+<P>PCMCIA attribute memory space, 8 bit.
+</li>
+
+	<LI>VSPF_16BIT
+<P>Use in combination with another flag to implement 16-bit data path width.
+</li>
+</UL>
+
+
+<P>All of these flags can be combined with the following flag as needed:
+
+
+<UL type="disc">
+	<LI>VSPF_TC
+<P>Timing control for areas 5 and 6 (PCMCIA areas).
+</li>
+</UL>
+
+
+<P>If VSPF_TC is specified, timing control register 1 is used to control timing for the region. If VSPF_TC is not specified, then timing control register 0 is used. The PCMCIA driver does not use VSPF_TC.
+
+
+<P>Other valid flag combinations include the following:
+
+
+<UL type="disc">
+	<LI>VSPF_IOSPACE | VSPF_16BIT
+<P>PCMCIA I/O space 16-bit data path width.
+</li>
+
+	<LI>VSPF_COMMON | VSPF_16BIT
+<P>PCMCIA common memory space, 16 bit.
+</li>
+
+	<LI>VSPF_ATTRIBUTE | VSPF_16BIT
+<P>PCMCIA attribute memory space, 16 bit.
+</li>
+</UL>
+</dd>
+
+<DT><I>lpdwOldFlags</I></DT>
+
+<DD>Pointer to a DWORD to receive the previous set of page flags for the memory region so they can be restored if needed.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>TRUE indicates success; FALSE indicates failure.</P>
+
+<H4>Remarks</H4>
+
+<P>The PCMCIA driver uses combinations of VSPF_IOSPACE, VSPF_COMMON, VSPF_ATTRIBUTE, VSPF_16BIT, VSPF_VARIABLE and VSPF_8BIT to map pages in the three PCMCIA memory spaces at 8 or 16 bit data path widths.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>3.0 and later</TD>
+<TD width=18%>Pkfuncs.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

@@ -1,0 +1,97 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxTermExtensionModule</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AfxTermExtensionModule"/>
+<MSHelp:RLTitle Title="AfxTermExtensionModule"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afxtermextensionmodule"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>AfxTermExtensionModule</H1>
+
+<P>Call this function to allow MFC to cleanup the extension DLL when each process detaches from the DLL (which happens when the process exits, or when the DLL is unloaded as a result of a <B>AfxFreeLibrary</B> call).</P>
+
+<H4>Syntax </H4>
+
+<PRE class=syntax><B>void</B> <B>AFXAPI</B> <B>AfxTermExtensionModule(</B>
+<B>AFX_EXTENSION_MODULE&amp;</B> <I>state</I><B>,</B>
+<B>BOOL</B> <I>bAll&nbsp;&nbsp;</I><B>=</B> <B>FALSE</B> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>state</I></DT>
+
+<DD>A reference to the <A HREF="struct_2.htm"><B>AFX_EXTENSION_MODULE</B></A> structure that contains the state of extension DLL module. </DD>
+
+<DT><I>bAll</I></DT>
+
+<DD>If <B>TRUE</B>, cleanup all extension DLL modules. Otherwise, cleanup only the current DLL module.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>AfxTermExtensionModule</B> deletes any local storage attached to the module and remove any entries from the message map cache. For example:</P>
+
+<PRE>static AFX_EXTENSION_MODULE extensionDLL;
+extern "C" int APIENTRY
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
+{
+   if (dwReason == DLL_PROCESS_ATTACH)
+   {
+      // Extension DLL one-time initialization
+      if (!AfxInitExtensionModule( extensionDLL, hInstance))
+         return 0;
+      // TODO: perform other initialization tasks here
+   }
+   else if (dwReason == DLL_PROCESS_DETACH)
+   {
+      // Extension DLL per-process termination
+      AfxTermExtensionModule(extensionDLL);
+     // TODO: perform other cleanup tasks here
+   }
+   return 1;   // ok
+}
+</PRE>
+
+<P>If your application loads and frees extension DLLs dynamically, be sure to call <B>AfxTermExtensionModule</B>. Since most extension DLLs are not dynamically loaded (usually, they are linked via their import libraries), the call to <B>AfxTermExtensionModule</B> is usually not necessary. </P>
+
+<P>MFC for Windows CE extension DLLs need to call <A HREF="funct_38.htm"><B>AfxInitExtensionModule</B></A> in their <B>DllMain</B>. If the DLL will be exporting <A HREF="crunclas.htm"><B>CRuntimeClass</B></A> objects or has its own custom resources, you also need to create a <B>CDynLinkLibrary</B> object in <B>DllMain</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdll_.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_38.htm"><B>AfxInitExtensionModule</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,163 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IEnumVARIANT::Next</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IEnumVARIANT::Next"/>
+<MSHelp:RLTitle Title="IEnumVARIANT::Next"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_oa96_ienumvariant_next"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IEnumVARIANT::Next</H1>
+
+<P>This method attempts to get the next <I>celt</I> items in the enumeration sequence, and return them through the array pointed to by <I>rgVar</I>.</P>
+
+<PRE class="syntax"><B>HRESULT Next( </B>
+<B>unsigned long </B><I>celt</I><B>, </B>
+<B>VARIANT FAR *</B><I>rgVar</I><B>, </B>
+<B>unsigned long FAR *</B><I>pCeltFetched </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>celt</I></DT>
+
+<DD>Number of elements to be returned.</dd>
+
+<DT><I>rgVar</I></DT>
+
+<DD>Array of at least size <I>celt</I> in which the elements are to be returned.</dd>
+
+<DT><I>pCeltFetched</I></DT>
+
+<DD>Pointer to the number of elements returned in <I>rgVar</I>, or NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=15%>Value</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>S_OK</TD>
+<TD width=85%>The number of elements returned is <I>celt.</I></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>S_FALSE </TD>
+<TD width=85%>The number of elements returned is less than <I>celt</I>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>If fewer than the requested number of elements remain in the sequence, <B>Next</B> returns only the remaining elements. The actual number of elements returned is passed through *<I>pCeltFetched</I>, unless it is NULL.</P>
+
+<H4>Example</H4>
+
+<P>The following code implements <B>IEnumVariant::Next</B> for collections in the Lines sample file Enumvar.cpp.</P>
+
+<PRE class="code">STDMETHODIMP
+CEnumVariant::Next(ULONG cElements, VARIANT FAR* pvar, ULONG FAR* pcElementFetched)
+{
+HRESULT hr;
+ULONG l;
+long l1;
+ULONG l2;
+
+if (pcElementFetched != NULL)
+*pcElementFetched = 0;
+
+for (l=0; l&lt;cElements; l++)
+VariantInit(&amp;pvar[l]);
+
+// Retrieve the next cElements elements.
+for (l1=m_lCurrent, l2=0; l1&lt;(long)(m_lLBound+m_cElements) &amp;&amp;
+l2&lt;cElements; l1++, l2++)
+{
+hr = SafeArrayGetElement(m_psa, &amp;l1, &amp;pvar[l2]);
+if (FAILED(hr))
+goto error;
+}
+// Set count of elements retrieved.
+if (pcElementFetched != NULL)
+*pcElementFetched = l2;
+m_lCurrent = l1;
+
+return  (l2 &lt; cElements) ? ResultFromScode(S_FALSE) : NOERROR;
+
+error:
+for (l=0; l&lt;cElements; l++)
+VariantClear(&amp;pvar[l]);
+return hr;
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>2.0 and later</TD>
+<TD width=19%>Oaidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

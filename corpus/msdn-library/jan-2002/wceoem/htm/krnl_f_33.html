@@ -1,0 +1,224 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VirtualCopy</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="VirtualCopy"/>
+<MSHelp:RLTitle Title="VirtualCopy"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_virtualcopy"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_VirtualAlloc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>VirtualCopy</H1>
+
+<P>This function binds a specific physical memory range to a virtual memory range.</P>
+
+<PRE class="syntax"><B>BOOL VirtualCopy (
+LPVOID </B><I>lpvDest</I>,<B>
+LPVOID </B><I>lpvSrc</I>,<B>
+DWORD </B><I>cbSize</I>,<B>
+DWORD </B><I>fdwProtect </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpvDest</I></DT>
+
+<DD>Pointer to the destination memory, which must be reserved.</dd>
+
+<DT><I>lpvSrc</I></DT>
+
+<DD>Pointer to committed memory.</dd>
+
+<DT><I>cbSize</I></DT>
+
+<DD>Size, in bytes, of the region. The allocated pages include all pages containing one or more bytes in the range from <I>lpAddress</I> to <I>lpAddress</I>+<I>cbSize</I>. This means that a 2-byte range straddling a page boundary causes both pages to be included in the allocated region.</dd>
+
+<DT><I>fdwProtect</I></DT>
+
+<DD>Type of access protection. If the pages are being committed, any one of a number of flags can be specified, along with the <B>PAGE_GUARD</B> and <B>PAGE_NOCACHE</B>, protection modifier flags. The following table shows the flags that can be specified.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_READONLY</B></TD>
+<TD width=66%>Enables read access to the committed region of pages. An attempt to write to the committed region results in an access violation. If the system differentiates between read-only access and execute access, an attempt to execute code in the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_READWRITE</B></TD>
+<TD width=66%>Enables both read and write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_EXECUTE</B></TD>
+<TD width=66%>Enables execution access to the committed region of pages. An attempt to read or write to the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_EXECUTE_READ</B></TD>
+<TD width=66%>Enables execute and read access to the committed region of pages. An attempt to write to the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_EXECUTE_READWRITE</B></TD>
+<TD width=66%>Enables execute, read, and write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_GUARD</B></TD>
+<TD width=66%>Pages in the region become guard pages. Any attempt to read from or write to a guard page causes the operating system to raise the <B>STATUS_GUARD_PAGE</B> exception and turn off the guard page status. Guard pages thus act as a one-shot access alarm.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B> </B></TD>
+<TD width=66%>The <B>PAGE_GUARD</B> flag is a page protection modifier. An application uses it with one of the other page protection flags, with one exception: it cannot be used with <B>PAGE_NOACCESS</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B> </B></TD>
+<TD width=66%>When an access attempt leads the operating system to turn off guard page status, the underlying page protection takes over.
+<P>If a guard page exception occurs during a system service, the service typically returns a failure status indicator.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_NOACCESS</B></TD>
+<TD width=66%>Disables all access to the committed region of pages. An attempt to read from, write to, or execute in the committed region results in an access violation exception, called a general protection (GP) fault.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_NOCACHE</B></TD>
+<TD width=66%>Allows no caching of the committed regions of pages. The hardware attributes for the physical memory should be specified as "no cache." This is not recommended for general use. It is useful for device drivers; when, for example, mapping a video frame buffer with no caching. This flag is a page protection modifier, and is valid only when used with one of the page protections other than <B>PAGE_NOACCESS</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><B>PAGE_PHYSICAL</B></TD>
+<TD width=66%>Used to map a physical memory region with an address that is greater than 512 MB&#0151;that is, the starting physical address for the parameter <I>lpvSrc</I> is greater than 0x1FFFFFFF. When using this flag, divide the physical address&#0151;that is, <I>lpvSrc</I>&#0151;by 256. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>TRUE indicates success; FALSE indicates failure. To get extended error information, call <B>GetLastError</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The following code example shows how <B>VirtualCopy</B> is called to map a 128-KB region at physical address 0x64000000.</P>
+
+<PRE class="code">VirtualCopy(
+  pvDest, (void *)(0x64000000/256), 128*1024,
+  PAGE_READWRITE | PAGE_PHYSICAL | PAGE_NOCACHE);</PRE>
+
+<P>Drivers or applications that run in user mode must use this function, because user-mode threads do not have permission to access physical memory directly.</P>
+
+<P>This function ensures that the operating system maps a virtual address to the specific physical address of the registers or frame buffer it needs to read or write. Before the thread calls <B>VirtualCopy</B>, it must first obtain a virtual address by calling <B>VirtualAlloc</B>. <B>VirtualAlloc</B> and <B>VirtualCopy</B> must be called at the beginning of every device driver thread or application that must access peripheral registers. In the Windows CE Device Driver Kit (DDK), this sequence of API calls is available in the <B>MmMapIoSpace</B> function.</P>
+
+<P>The following code example shows a user-mode driver thread. For more examples, see the sample device driver code provided with Platform Builder, located in the directory %_WINCEROOT%\Platform\Odo\Drivers.</P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+
+#define PHYSADDR  ((PVOID)0x10000000)
+// PHYSADDR is the physical address of the peripheral
+// registers
+
+#define SIZE  (4800*4)
+
+LPVOID lpv;
+BOOL bRet;
+
+lpv = VirtualAlloc(0, SIZE, MEM_RESERVE, PAGE_NOACCESS);
+// For a user mode driver, always leave the first
+// parameter 0 and use only the flags MEM_RESERVE
+// and PAGE_NOACCESS Check the return value: lpv == 0
+// is an error
+
+printf(TEXT("VirtualAlloc reservation @%8.8lx\r\n"), lpv);
+bRet = VirtualCopy(lpv, PHYSADDR, SIZE, PAGE_READWRITE | PAGE_NOCACHE);
+// The lpv parameter is the virtual address returned
+// by VirtualAlloc().
+// Always use PAGE_NOCACHE */
+
+// Check the return value: bRet ==0 is an error */
+printf(TEXT("VirtualCopy returned: %d\r\n"), bRet);
+
+// At this point lpv is a virtual address which maps
+// the I/O registers
+// at PHYSADDR for SIZE bytes */</PRE>
+
+<P>The destination address defined by the parameter <I>cbSize</I> must be an address range that has been reserved by a call to <B>VirtualAlloc</B>. The maximum value of <I>cbSize</I> depends upon how much virtual memory has already been allocated by the process that is calling <B>VirtualAlloc</B>. Because the maximum size of a process is 32 MB, the maximum size of <I>cbSize</I> is, by necessity, always less than 32 MB.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=17%>Pkfuncs.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ceddk_f_5.htm"><B>MmMapIoSpace</B></A>, <A HREF="JavaScript:hhobj_1.Click()"><B>VirtualAlloc</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

@@ -1,0 +1,136 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMoniker::Inverse</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMoniker::Inverse"/>
+<MSHelp:RLTitle Title="IMoniker::Inverse"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imoniker_inverse"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IMoniker::Inverse</H1>
+
+<P>This<B> </B>method returns the inverse of the moniker.</P>
+
+<PRE class="syntax"><B>HRESULT Inverse(
+IMoniker **</B><I>ppmk</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppmk</I></DT>
+
+<DD>[out] Address of <B>IMoniker</B>* pointer variable that receives the interface pointer to a moniker that is the inverse of this moniker. When successful, the implementation must call <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A> on the new inverse moniker. It is the caller’s responsibility to call <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>. If an error occurs, the implementation should set *<I>ppmk</I> to NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The method supports the standard return value E_OUTOFMEMORY, as well as the values described in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=25%>Value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>S_OK</TD>
+<TD width=75%>The inverse moniker has been returned successfully.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>MK_E_NOINVERSE</TD>
+<TD width=75%>The moniker class does not have an inverse.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The inverse of a moniker is analogous to the “..” directory in MS-DOS file systems; the “..” directory acts as the inverse to any other directory name, because appending “..” to a directory name results in an empty path. In the same way, the inverse of a moniker typically is also the inverse of all monikers in the same class. However, it is not necessarily the inverse of a moniker of a different class. </P>
+
+<P>The inverse of a composite moniker is a composite consisting of the inverses of the components of the original moniker, arranged in reverse order. For example, if the inverse of A is Inv( A ) and the composite of A, B, and C is Comp( A, B, C ), then</P>
+
+<PRE class="code">Inv( Comp( A, B, C ) )
+    is equal to
+Comp( Inv( C ), Inv( B ), Inv( A ) ).</PRE>
+
+<P>Not all monikers have inverses. Most monikers that are themselves inverses, such as anti-monikers, do not have inverses. Monikers that have no inverse cannot have relative monikers formed from inside the objects they identify to other objects outside.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>An object that is using a moniker to locate another object usually does not know the class of the moniker it is using. To get the inverse of a moniker, you should always call <B>IMoniker::Inverse</B> rather than the <A HREF="_wcesdk_com_createantimoniker.htm"><B>CreateAntiMoniker</B></A> function, because you cannot be certain that the moniker you’re using considers an anti-moniker to be its inverse.</P>
+
+<P>The <B>IMoniker::Inverse</B> method is also called by the implementation of the <A HREF="_wcesdk_com_imoniker_relativepathto.htm"><B>IMoniker::RelativePathTo</B></A> method, to assist in constructing a relative moniker.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>If your monikers have no internal structure, you can call the <B>CreateAntiMoniker</B> function in to get an anti-moniker in your implementation of <B>IMoniker::Inverse</B>. In your implementation of <A HREF="_wcesdk_com_imoniker_composewith.htm"><B>IMoniker::ComposeWith</B></A>, you need to check for the inverse you supply in the implementation of <B>IMoniker::Inverse</B>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oaidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_createantimoniker.htm"><B>CreateAntiMoniker</B></A>, <A HREF="_wcesdk_com_imoniker_composewith.htm"><B>IMoniker::ComposeWith</B></A>, <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A>, <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HeapCreate</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="HeapCreate"/>
+<MSHelp:RLTitle Title="HeapCreate"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_heapcreate"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>HeapCreate</H1>
+
+<P>This function creates a heap object that is private to the calling process. This reserves a contiguous block of the process's virtual address space and allocates physical storage for a specified initial portion of this block.</P>
+
+<PRE class="syntax"><B>HANDLE</B> <B>HeapCreate(</B>
+<B>DWORD</B> <I>flOptions</I><B>, </B>
+<B>DWORD</B> <I>dwInitialSize, </I>
+<B>DWORD</B> <I>dwMaximumSize
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>flOptions</I></DT>
+
+<DD>[in] Specifies optional attributes for the new heap. These flags will affect subsequent access to the new heap through calls to the heap functions (<A HREF="_wcesdk_win32_heapalloc.htm"><B>HeapAlloc</B></A>, <A HREF="_wcesdk_win32_heapfree.htm"><B>HeapFree</B></A>, <A HREF="_wcesdk_win32_heaprealloc.htm"><B>HeapReAlloc</B></A>, and <A HREF="_wcesdk_win32_heapsize.htm"><B>HeapSize</B></A>). You can specify the flag listed in the following table.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>HEAP_NO_SERIALIZE</TD>
+<TD width=56%>Specifies that mutual exclusion will not be used when the heap functions allocate and free memory from this heap. The default, when the HEAP_NO_SERIALIZE flag is not specified is to serialize access to the heap. Serialization of heap access allows two or more threads to simultaneously allocate and free memory from the same heap.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>dwInitialSize</I></DT>
+
+<DD>[in] Specifies the initial size, in bytes, of the heap. This value determines the initial amount of physical storage that is allocated for the heap. The value is rounded up to the next page boundary. To determine the size of a page on the host computer, use the <A HREF="_wcesdk_win32_getsysteminfo.htm"><B>GetSystemInfo</B></A> function. </dd>
+
+<DT><I>dwMaximumSize</I></DT>
+
+<DD>Unsupported.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A handle to the newly created heap indicates success. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>HeapCreate</B> function creates a private heap object from which the calling process can allocate memory blocks using the <B>HeapAlloc</B> function. The initial size determines the number of committed pages that are initially allocated for the heap. These pages create a block in the process's virtual address space into which the heap can grow. If requests by <B>HeapAlloc</B> exceed the current size of committed pages, additional pages are automatically committed from this reserved space, assuming that the physical storage is available. </P>
+
+<P>The memory of a private heap object is accessible only to the process that created it. If a dynamic-link library (DLL) creates a private heap, the heap is created in the address space of the process that called the DLL and it is accessible only to that process. </P>
+
+<P>The system uses memory from the private heap to store heap support structures, so not all of the specified heap size is available to the process. For example, if the <B>HeapAlloc</B> function requests 64 KB from a heap with a maximum size of 64 KB, the request may fail because of system overhead. </P>
+
+<P>If the HEAP_NO_SERIALIZE flag is not specified (the simple default), the heap will serialize access within the calling process. Serialization ensures mutual exclusion when two or more threads attempt to simultaneously allocate or free blocks from the same heap. There is a small performance cost to serialization, but it must be used whenever multiple threads allocate and free memory from the same heap. </P>
+
+<P>Setting the HEAP_NO_SERIALIZE flag eliminates mutual exclusion on the heap. Without serialization, two or more threads that use the same heap handle might attempt to allocate or free memory simultaneously, likely causing corruption in the heap. The HEAP_NO_SERIALIZE flag can, therefore, be safely used only in the following situations:
+
+<UL type="disc">
+	<LI>The process has only one thread. </li>
+
+	<LI>The process has multiple threads, but only one thread calls the heap functions for a specific heap. </li>
+
+	<LI>The process has multiple threads, and the application provides its own mechanism for mutual exclusion to a specific heap. </li>
+</UL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Lmem.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_getsysteminfo.htm"><B>GetSystemInfo</B></A>, <A HREF="_wcesdk_win32_heapalloc.htm"><B>HeapAlloc</B></A>, <A HREF="_wcesdk_win32_heapdestroy.htm"><B>HeapDestroy</B></A>, <A HREF="_wcesdk_win32_heapfree.htm"><B>HeapFree</B></A>, <A HREF="_wcesdk_win32_heaprealloc.htm"><B>HeapReAlloc</B></A>, <A HREF="_wcesdk_win32_heapsize.htm"><B>HeapSize</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

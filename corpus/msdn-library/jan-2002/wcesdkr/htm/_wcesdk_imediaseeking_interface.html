@@ -1,0 +1,229 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMediaSeeking Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMediaSeeking Interface"/>
+<MSHelp:RLTitle Title="IMediaSeeking Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_imediaseeking_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMediaSeeking Interface</H1>
+
+<P>Although <A HREF="_wcesdk_imediaposition_interface.htm"><B>IMediaPosition</B></A> allows applications a simple seeking interface on a filter graph, it has a number of limitations. The <B>IMediaPosition</B> interface allows seeking only by using REFTIME time-based units; however, many filter graphs would prefer to seek on units of samples, video frames, or fields in a compressed stream. Also, the <B>IMediaPosition</B> interface uses separate methods to set and retrieve position properties, which can cause unnecessary filter flushing. </P>
+
+<P>The <B>IMediaSeeking</B> interface improves on the <A HREF="_wcesdk_imediaposition_interface.htm"><B>IMediaPosition</B></A> interface by allowing arbitrary formats for seekable units, such as frames, bytes, and 100-second units of time. It also offers the ability to start and stop times using a single method call, which is absent in <B>IMediaPosition</B>. When seeking to time units, <B>IMediaSeeking</B> expresses time as a 64-bit integer (<B>LONGLONG</B>), providing greater accuracy than <B>IMediaPosition</B>, which expresses time in decimal seconds stored as a <B>double</B>. However, because of this difference in time unit data types, only <B>IMediaPosition</B> supports Automation. <B>IMediaPosition</B> is maintained as an interface for this reason only. Applications not using Automation to seek the media stream should use the <B>IMediaSeeking</B> interface instead. </P>
+
+<P>The <B>IMediaSeeking</B> interface is set by using a defined time format, such as TIME_FORMAT_MEDIA_TIME or TIME_FORMAT_SAMPLE, which then defines how parameters in other methods are interpreted. The format can be changed only when the filter graph is stopped (the default DirectShow plug-in distributor method for this method takes care of this automatically, effectively eliminating this restriction). Only one time format is available at any given time. </P>
+
+<P>When a filter is seeked in media time, it must return a time at which the media seek positioned it. For example, if a source filter is seeked to frame 30, it might return 2 seconds if the video is 15 frames per second. With that position time (of 2 seconds), the filter graph manager can then seek all the other filters to that 2-second position so that the graph as a whole remains synchronized. </P>
+
+<P>Time formats are globally unique identifiers (GUIDs), which are defined as follows: </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>GUID</TH>
+<TH width=50%>Defined as</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>0L-0-0-0-0-0-0-0-0-0-0 </TD>
+<TD width=50%>TIME_FORMAT_NONE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>7b785570-8c82-11cf-bc0c-00aa00ac74f6 </TD>
+<TD width=50%>TIME_FORMAT_FRAME </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>7b785571-8c82-11cf-bc0c-00aa00ac74f6 </TD>
+<TD width=50%>TIME_FORMAT_BYTE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>7b785572-8c82-11cf-bc0c-00aa00ac74f6 </TD>
+<TD width=50%>TIME_FORMAT_SAMPLE </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>7b785573-8c82-11cf-bc0c-00aa00ac74f6 </TD>
+<TD width=50%>TIME_FORMAT_FIELD </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>7b785574-8c82-11cf-bc0c-00aa00ac74f6 </TD>
+<TD width=50%>TIME_FORMAT_MEDIA_TIME </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>When to Implement</H4>
+
+<P>The filter graph manager exposes the <A HREF="#_wcesdk_imediaseeking_interface"><B>IMediaSeeking</B></A> interface from the plug-in distributor (PID) that handles this interface. If none of the filters within the graph support this interface, the PID will return E_NOINTERFACE; if at least one filter supports the interface, but all such filters return E_NOTIMPL, the PID will return E_NOTIMPL. Otherwise, the filter graph manager will return either a success or the first failure it encounters. </P>
+
+<P>A success normally means that a seekable file source filter was found. Filters, such as a file source filter, will expose <A HREF="#_wcesdk_imediaseeking_interface"><B>IMediaSeeking</B></A> if they can seek their data or if their output pin represents a seekable stream. The renderer filter also should expose this interface. Output pins of transform filters expose this interface to pass the positioning information upstream, from the renderer through each intermediate filter to the seekable filter. </P>
+
+<P>Use the <A HREF="_wcesdk_cpospassthru__cpospassthru.htm"><B>CPosPassThru</B></A> base class to implement this interface on output pins of transform filters used to pass media positioning information upstream. This is enabled by default in the pin base classes. Renderers can use the same class, although in most cases they should use <A HREF="_wcesdk_crendererpospassthru__crendererpospassthru.htm"><B>CRendererPosPassThru</B></A>, which is derived from <B>CPosPassThru</B>, to implement this interface. </P>
+
+<H4>When to Use</H4>
+
+<P>Applications can use this interface to set or retrieve properties such as the duration of the stream, the current position, the stop time, and the media time format being used. Most commonly, an application will use the methods on this interface to play a media stream for some duration starting at some set position in the stream (for example, 10 seconds from the start). </P>
+
+<P>A transform filter will call the <A HREF="#_wcesdk_imediaseeking_interface"><B>IMediaSeeking</B></A> methods on the connected upstream pin when passing media times upstream from the renderer. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IUnknown methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IMediaSeeking methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getcapabilities.htm"><B>GetCapabilities</B></A></TD>
+<TD width=50%>Returns the seeking capabilities of the media stream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__checkcapabilities.htm"><B>CheckCapabilities</B></A></TD>
+<TD width=50%>Determines which capabilities exist on a media stream by applying seeking capability flags and checking the returned value. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__isformatsupported.htm"><B>IsFormatSupported</B></A></TD>
+<TD width=50%>Determines if a specified time format is supported. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__querypreferredformat.htm"><B>QueryPreferredFormat</B></A></TD>
+<TD width=50%>Retrieves the preferred time format to be used by the interface. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__gettimeformat.htm"><B>GetTimeFormat</B></A></TD>
+<TD width=50%>Retrieves the current time format. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__isusingtimeformat.htm"><B>IsUsingTimeFormat</B></A></TD>
+<TD width=50%>Determines if the time format being used in the call is the same as the one currently in use by the interface. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__settimeformat.htm"><B>SetTimeFormat</B></A></TD>
+<TD width=50%>Sets the time format, which determines the format of units used during seeking. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getduration.htm"><B>GetDuration</B></A></TD>
+<TD width=50%>Retrieves the length of time that the media stream will play. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getstopposition.htm"><B>GetStopPosition</B></A></TD>
+<TD width=50%>Retrieves the position within the media stream at which playback should stop. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getcurrentposition.htm"><B>GetCurrentPosition</B></A></TD>
+<TD width=50%>Retrieves the current position within the media stream. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__converttimeformat.htm"><B>ConvertTimeFormat</B></A></TD>
+<TD width=50%>Converts a time from one time format to another. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__setpositions.htm"><B>SetPositions</B></A></TD>
+<TD width=50%>Sets current and stop positions and applies flags to both. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getpositions.htm"><B>GetPositions</B></A></TD>
+<TD width=50%>Returns the current and stop position settings. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getavailable.htm"><B>GetAvailable</B></A></TD>
+<TD width=50%>Returns the range of times in which seeking is efficient. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__setrate.htm"><B>SetRate</B></A></TD>
+<TD width=50%>Sets a new playback rate. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getrate.htm"><B>GetRate</B></A></TD>
+<TD width=50%>Returns the current rate. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaseeking__getpreroll.htm"><B>GetPreroll</B></A></TD>
+<TD width=50%>Retrieves the preroll settings. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

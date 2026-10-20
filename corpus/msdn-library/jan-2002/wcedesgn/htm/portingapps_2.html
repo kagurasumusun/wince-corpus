@@ -1,0 +1,78 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Character Considerations</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Character Considerations"/>
+<MSHelp:RLTitle Title="Character Considerations"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_character_considerations"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Character Considerations</H1>
+
+<P>Windows CE is based on Unicode. If you are porting non-Unicode applications to Windows CE you should convert all strings from chars to widechars (for example, the C variable type wchar_t). Almost all the Win32 and run-time library functions supported under Windows CE require widechar arguments. Because Windows 95 does not support Unicode, you must use the TCHAR type defined in tchar.h, instead of directly using wchar_t when porting an application from Windows 95.</P>
+
+<P>To successfully port an application to a Windows CE-based platform, you need to adhere to the following guidelines:
+
+<UL type="disc">
+	<LI>Include Tchar.h in your source code. It contains all the required character conversions.</li>
+
+	<LI>Use Win32 string functions instead of C run-time library functions.</li>
+
+	<LI>Use TCHAR or LPTSTR for declarations. By declaring character variables as TCHAR, you can compile the code as either Unicode or ASCII.</li>
+
+	<LI>Use the <B>TEXT</B> macro for string literals, such as a text string. The <B>TEXT</B> macro identifes a string as Unicode when the UNICODE compile flag is use or as an ANSI string when Unicode is not defined.</li>
+
+	<LI>Don’t confuse TCHARs with bytes. The following code sample will cause an access violation, because the argument to the <B>malloc</B> function specifies a size in bytes, whereas the third argument to <B>_tcsncpy</B> specifies a size in TCHARs, not bytes. When UNICODE is defined, a TCHAR will be two bytes.
+<PRE class="code">int myfunc(TCHAR *p)
+{
+TCHAR *pszFileName;
+
+pszFileName = (TCHAR*)malloc(MAXFILELEN);
+if (pszFileName)
+_tcsncpy(szFileName, p, MAXFILELEN);
+/* etc */
+</PRE>
+
+<P>To prevent an access violation, pass the size of a TCHAR as an argument to the <I>sizeof</I> operator and multiply the result with the <I>size</I> parameter of the <B>malloc </B>function as show in the following code sample:
+
+<PRE class="code">int myfunc(TCHAR *p)
+{
+TCHAR *pszFileName;
+
+pszFileName = (TCHAR*)malloc(MAXFILELEN * sizeof(TCHAR));
+if (pszFileName)
+_tcsncpy(szFileName, p, MAXFILELEN);
+}
+/* etc */
+</PRE>
+</li>
+</UL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

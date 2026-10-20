@@ -1,0 +1,97 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoAddRefServerProcess</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoAddRefServerProcess"/>
+<MSHelp:RLTitle Title="CoAddRefServerProcess"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_coaddrefserverprocess"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoAddRefServerProcess</H1>
+
+<P>This function increments a global per-process reference count.</P>
+
+<PRE class="syntax"><B>ULONG CoAddRefServerProcess(void);</B></PRE>
+
+<H4>Parameters</H4>
+
+<P>None.</P>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The CLSID was retrieved successfully.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Servers can call <B>CoAddRefServerProcess</B> to increment a global per-process reference count. This function is particularly helpful to servers that are implemented with multiple threads, either multi-apartmented or free-threaded. Servers of these types must coordinate the decision to shut down with activation requests across multiple threads. Calling <B>CoAddRefServerProcess</B> increments a global per-process reference count, and calling <A HREF="_wcesdk_com_coreleaseserverprocess.htm"><B>CoReleaseServerProcess</B></A> decrements that count.</P>
+
+<P>When that count reaches zero, OLE automatically calls <A HREF="_wcesdk_com_cosuspendclassobjects.htm"><B>CoSuspendClassObjects</B></A>, which prevents new activation requests from coming in. This permits the server to deregister its class objects from its various threads without worry that another activation request may come in. New activation requests result in launching a new instance of the local server process.</P>
+
+<P>The simplest way for a local server application to make use of these API functions is to call <B>CoAddRefServerProcess</B> in the constructor for each of it's instance objects, and in each of its <A HREF="_wcesdk_com_iclassfactory_lockserver.htm"><B>IClassFactory::LockServer</B></A> methods when the <I>fLock</I> parameter is TRUE. The server application should also call <B>CoReleaseServerProcess</B> in the destruction of each of its instance objects, and in each of its <B>IClassFactory::LockServer</B> methods when the <I>fLock</I> parameter is FALSE. Finally, the server application should pay attention to the return code from <B>CoReleaseServerProcess</B> and if it returns 0, the server application should initiate its cleanup, which, for a server with multiple threads, typically means that it should signal its various threads to exit their message loops and call <A HREF="_wcesdk_com_corevokeclassobject.htm"><B>CoRevokeClassObject</B></A> and <A HREF="_wcesdk_com_couninitialize.htm"><B>CoUninitialize</B></A>. </P>
+
+<P>If these functions are used at all, they must be called in both the object instances and the <B>LockServer</B> method; otherwise, the server application may be shut down prematurely. In-process servers typically should not call <B>CoAddRefServerProcess</B> or <B>CoReleaseServerProcess</B>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

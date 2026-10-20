@@ -1,0 +1,143 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoGetMarshalSizeMax</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoGetMarshalSizeMax"/>
+<MSHelp:RLTitle Title="CoGetMarshalSizeMax"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_cogetmarshalsizemax"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoGetMarshalSizeMax</H1>
+
+<P>This function returns an upper bound on the number of bytes needed to marshal the specified interface pointer to the specified object. </P>
+
+<PRE class="syntax"><B>STDAPI CoGetMarshalSizeMax(
+ULONG *</B><I>pulSize</I><B>,
+REFIID </B><I>riid</I><B>,
+IUnknown *</B><I>pUnk</I><B>,
+DWORD </B><I>dwDestContext</I><B>,
+LPVOID </B><I>pvDestContext</I><B>,
+DWORD </B><I>mshlflags</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pulSize</I></DT>
+
+<DD>[out] Pointer to the upper-bound value on the size, in bytes, of the data packet to be written to the marshaling stream; a value of zero means that the size of the packet is unknown.</dd>
+
+<DT><I>riid</I></DT>
+
+<DD>[in] Reference to the identifier of the interface whose pointer is to be marshaled. This interface must be derived from the <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A> interface.</dd>
+
+<DT><I>pUnk</I></DT>
+
+<DD>[in] Pointer to the interface to be marshaled. This interface must be derived from the <B>IUnknown</B> interface.</dd>
+
+<DT><I>dwDestContext</I></DT>
+
+<DD>[in] Destination context where the specified interface is to be unmarshaled. Values for dwDestContext come from the enumeration <B>MSHCTX</B>.</dd>
+
+<DT><I>pvDestContext</I></DT>
+
+<DD>[in] Reserved for future use; must be NULL.</dd>
+
+<DT><I>mshlflags</I></DT>
+
+<DD>[in] Flag indicating whether the data to be marshaled is to be transmitted back to the client process&#0151;the normal case&#0151;or written to a global table, where it can be retrieved by multiple clients. Values come from the enumeration <B>MSHLFLAGS</B>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return value E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The upper bound was returned successfully.</dd>
+
+<DT>CO_E_NOTINITIALIZED</DT>
+
+<DD>The <A HREF="_wcesdk_com_coinitialize.htm"><B>CoInitialize</B></A> function was not called on the current thread before this function was called.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function performs the following tasks:
+
+<OL type="1">
+	<LI>Queries the object for an <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A> pointer or, if the object does not implement <B>IMarshal</B>, gets a pointer to COM's standard marshaler.</li>
+
+	<LI>Using whichever pointer is obtained in the preceding step, calls <A HREF="_wcesdk_com_imarshal__getmarshalsizemax.htm"><B>IMarshal::GetMarshalSizeMax</B></A>.</li>
+
+	<LI>Adds to the value returned by the call to <B>GetMarshalSizeMax</B> the size of the marshaling data header and, possibly, that of the proxy CLSID to obtain the maximum size in bytes of the amount of data to be written to the marshaling stream.</li>
+</OL>
+
+<P>You do not explicitly call this function unless you are implementing <B>IMarshal</B>, in which case your marshaling stub should call this function to get the correct size of the data packet to be marshaled.</P>
+
+<P>The value returned by this method is guaranteed to be valid only as long as the internal state of the object being marshaled does not change. Therefore, the actual marshaling should be done immediately after this function returns, or the stub runs the risk that the object, because of some change in state, might require more memory to marshal than it originally indicated.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_comarshalinterface.htm"><B>CoMarshalInterface</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

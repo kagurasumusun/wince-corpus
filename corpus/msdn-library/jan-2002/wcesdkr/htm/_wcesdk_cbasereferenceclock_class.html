@@ -1,0 +1,152 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseReferenceClock Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseReferenceClock Class"/>
+<MSHelp:RLTitle Title="CBaseReferenceClock Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasereferenceclock_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseReferenceClock Class</H1>
+
+<P class="fig"><IMG SRC="rclock01.gif" ALT="" BORDER=0></P>
+
+<P>This base class implements the <A HREF="_wcesdk_ireferenceclock_interface.htm"><B>IReferenceClock</B></A> interface. </P>
+
+<P>The <B>CBaseReferenceClock</B> class provides a full implementation of <A HREF="_wcesdk_ireferenceclock_interface.htm"><B>IReferenceClock</B></A>. It uses <A HREF="_wcesdk_ccritsec_class.htm"><B>CCritSec</B></A> locking support and <A HREF="_wcesdk_camschedule_class.htm"><B>CAMSchedule</B></A> scheduler support. </P>
+
+<P>Each <I>advise</I> call defines a point in time when the caller wants to be notified. A <I>periodic advise</I> is a regular series of such events. A list of these advise requests is maintained by the reference clock. The clock calculates the delay until the first requested advise, and signals an event at the due time. </P>
+
+<P>Clients are not advised through callbacks. One-shot clients have an event set, while periodic clients have a semaphore released for each event notification. A semaphore allows a client to know exactly how many events were actually triggered, because multiple time periods might elapse before the client code executes. </P>
+
+<P>During class construction, a worker thread is created. This thread executes a series of Microsoft® Win32® <B>WaitForSingleObject</B> calls, waking up when a command is given to the thread or the next wake-up point is reached. The wake-up points are determined by clients making advise calls. </P>
+
+<H4>Protected Data Members</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%>m_pSchedule </TD>
+<TD width=50%>Pointer to the <A HREF="_wcesdk_camschedule_class.htm"><B>CAMSchedule</B></A> object associated with this <B>CBaseReferenceClock</B> object. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__cbasereferenceclock.htm"><B>CBaseReferenceClock</B></A></TD>
+<TD width=50%>Constructs a <B>CBaseReferenceClock</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__getschedule.htm"><B>GetSchedule</B></A></TD>
+<TD width=50%>Returns the <A HREF="_wcesdk_camschedule_class.htm"><B>CAMSchedule</B></A> pointer stored in the <B>m_pSchedule</B> data member. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__settimedelta.htm"><B>SetTimeDelta</B></A></TD>
+<TD width=50%>Adjusts the values returned from <A HREF="_wcesdk_cbasereferenceclock__getprivatetime.htm"><B>CBaseReferenceClock::GetPrivateTime</B></A> by the amount specified in this member function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__triggerthread.htm"><B>TriggerThread</B></A></TD>
+<TD width=50%>Triggers the advise thread's event. If you override <A HREF="_wcesdk_cbasereferenceclock__getprivatetime.htm"><B>CBaseReferenceClock::GetPrivateTime</B></A>, you should either reuse or abandon this method. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented IReferenceClock Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__adviseperiodic.htm"><B>AdvisePeriodic</B></A></TD>
+<TD width=50%>Requests an asynchronous periodic notification that a time has elapsed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__advisetime.htm"><B>AdviseTime</B></A></TD>
+<TD width=50%>Requests an asynchronous notification that a time has elapsed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__gettime.htm"><B>GetTime</B></A></TD>
+<TD width=50%>Returns a reference time. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__unadvise.htm"><B>Unadvise</B></A></TD>
+<TD width=50%>Removes a previously established advise link. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Overridable Member Functions</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__getprivatetime.htm"><B>GetPrivateTime</B></A></TD>
+<TD width=50%>Gets the current time from the real clock. Override this member function to implement your own clock. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Implemented INonDelegatingUnknown Methods</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_cbasereferenceclock__nondelegatingqueryinterface.htm"><B>NonDelegatingQueryInterface</B></A></TD>
+<TD width=50%>Returns a pointer to interfaces supported, that is, <A HREF="_wcesdk_ireferenceclock_interface.htm"><B>IReferenceClock</B></A>. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

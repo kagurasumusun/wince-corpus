@@ -1,0 +1,103 @@
+<HTML DIR=LTR xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Object Identifiers</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using Object Identifiers"/>
+<MSHelp:RLTitle Title="Using Object Identifiers"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_using_object_identifiers"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Using Object Identifiers</H1>
+
+<P>The following code example shows how to retrieve data from the object store or mounted volume by using the Windows CE object identifier.</P>
+
+<PRE class="code">void UsingCeOidGetInfo (void)
+{
+  CEOID CeOid;            // Object identifier
+  PCEGUID pceguid;        // GUID of the mounted volume
+  CEOIDINFO CeObjectInfo; // Structure into which to retrieve
+                          // object data
+  TCHAR szMsg[200];       // String to use with object data
+
+  // Assign to pceguid the CEGUID of the mounted volume
+  // on which the object resides.
+  // ...
+
+  // Assign to CeOid the object identifier of the object about which
+  // you want to get data.
+  // ...
+
+  if (CeOidGetInfoEx (pceguid, CeOid, &amp;CeObjectInfo))
+  {
+    switch (CeObjectInfo.wObjType)
+    {
+      case OBJTYPE_FILE:
+        wsprintf (szMsg, TEXT("Object is a file: %s"),
+                  CeObjectInfo.infFile.szFileName);
+        break;
+
+      case OBJTYPE_DIRECTORY:
+        wsprintf (szMsg, TEXT("Object is a directory: %s"),
+                  CeObjectInfo.infDirectory.szDirName);
+        break;
+
+      case OBJTYPE_DATABASE:
+        wsprintf (szMsg, TEXT("Object is a database: %s"),
+                  CeObjectInfo.infDatabase.szDbaseName);
+        break;
+
+      case OBJTYPE_RECORD:
+        wsprintf (szMsg, TEXT("Object is a record"));
+        break;
+
+      case OBJTYPE_INVALID:
+        wsprintf (szMsg,
+                  TEXT("The object store does not contain a valid ")
+                  TEXT("object that has this object identifier."));
+        break;
+
+      default:
+        wsprintf (szMsg, TEXT("Object is of unknown OBJTYPE"));
+        break;
+    }
+  }
+  else
+  {
+    // Your error-handling code goes here.
+
+    if (GetLastError () == ERROR_INVALID_HANDLE)
+      wsprintf (szMsg, TEXT("Invalid Object ID"));
+    else
+      wsprintf (szMsg, TEXT("Unknown error"));
+  }
+} // End of UsingCeOidGetInfo code</PRE>
+<DIV CLASS="footer">Built on Tuesday, February 13, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineAnswer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineAnswer"/>
+<MSHelp:RLTitle Title="lineAnswer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_lineanswer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>lineAnswer</H1>
+
+<P>The <B>lineAnswer</B> function answers the specified offering call. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineAnswer(
+HCALL </B><I>hCall</I><B>,</B>
+<B>LPCSTR <I>lpsUserUserInfo</I>,</B>
+<B>DWORD </B><I>dwSize</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCall</I> </DT>
+
+<DD>A handle to the call to be answered. The application must be an owner of this call. The call state of <I>hCall</I> must be offering or accepted. </dd>
+
+<DT><I>lpsUserUserInfo</I> </DT>
+
+<DD>A pointer to a string containing user-user information to be sent to the remote party at the time the call is answered. This pointer can be left NULL if no user-user information is to be sent. User-user information is only sent if supported by the underlying network (see <B>LINEDEVCAPS</B>). The protocol discriminator field for the user-user information, if required, should appear as the first byte of the buffer pointed to by <I>lpsUserUserInfo</I>, and must be accounted for in <I>dwSize</I>. </dd>
+
+<DT><I>dwSize </I></DT>
+
+<DD>The size in bytes of the user-user information in lpsUserUserInfo. If lpsUserUserInfo is NULL, no user-user information is sent to the calling party and <I>dwSize</I> is ignored. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns a positive request identifier if the function is completed asynchronously, or a negative error number if an error occurs. The <I>dwParam2</I> parameter of the corresponding LINE_REPLY message is zero if the function succeeds or it is a negative error number if an error occurs. Possible return values are: </P>
+
+<P>LINEERR_INUSE, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALCALLHANDLE, LINEERR_OPERATIONFAILED, LINEERR_INVALCALLSTATE, LINEERR_RESOURCEUNAVAIL, LINEERR_INVALPOINTER, LINEERR_UNINITIALIZED, LINEERR_NOMEM, LINEERR_USERUSERINFOTOOBIG, LINEERR_NOTOWNER.</P>
+
+<H4>Remarks</H4>
+
+<P>When a new call arrives, applications with an interest in the call are sent a LINE_CALLSTATE message to provide the new call handle and to inform the application about the call's state and the privileges to the new call (such as monitor or owner). The application with owner privilege for the call can answer this call using <B>lineAnswer</B>. After the call has been successfully answered, the call typically transitions to the connected state. Initially, only one application is given owner privilege to the incoming call. </P>
+
+<P>In some telephony environments (like ISDN), where user alerting is separate from call offering, the application can have the option to accept a call prior to answering or to reject or redirect the offering call. </P>
+
+<P>If a call comes in (is offered) at the time another call is already active, invoking <B>lineAnswer</B> connects to the new call. The effect this has on the existing active call depends on the line's device capabilities. The first call can be unaffected, it can automatically be dropped, or it can automatically be placed on hold. The appropriate LINE_CALLSTATE messages report state transitions to the application about both calls. </P>
+
+<P>In a bridged situation, if a call is connected but in the LINECONNECTEDMODE_INACTIVE state, it can be joined using the <B>lineAnswer</B> function. </P>
+
+<P>The application has the option to send user-user information at the time of the answer. Even if user-user information can be sent, there is no guarantee that the network will deliver this information to the calling party. An application should consult a line's device capabilities to determine whether sending user-user information upon answering the call is available. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Tapi.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_line_callstate.htm"><B>LINE_CALLSTATE</B></A>, <A HREF="_wcesdk_win32_line_reply.htm"><B>LINE_REPLY</B></A>, <A HREF="_wcesdk_win32_linedevcaps_str.htm"><B>LINEDEVCAPS</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

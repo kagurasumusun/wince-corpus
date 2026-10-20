@@ -1,0 +1,57 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Nested Interrupts</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using Nested Interrupts"/>
+<MSHelp:RLTitle Title="Using Nested Interrupts"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_using_nested_interrupts"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Using Nested Interrupts</H1>
+
+<P>Real-time applications use interrupts to respond to external events in a timely manner. Using interrupts requires that an OS balance performance against ease of use. Windows CE balances these two factors by splitting interrupt processing into two steps: an interrupt service routine (ISR) and an interrupt service thread (IST). </P>
+
+<P>Windows CE associates each interrupt request (IRQ) with one ISR. In Windows CE 2.x when interrupts are enabled and an interrupt occurs, the kernel calls the registered ISR for that interrupt. While the ISR is running, the kernel disables all other IRQs. Therefore, no other interrupt, regardless of the priority, can interrupt another ISR. Once finished, the ISR returns an interrupt identifier. The kernel examines the returned interrupt identifier and sets the associated event. When the kernel sets the event, the IST starts processing.</P>
+
+<P>To prevent the loss and delay of high priority interrupts, the Windows CE 3.0 introduces nested interrupts. The following list shows how Windows CE handles nested ISR calls:
+
+<OL type="1">
+	<LI>The kernel disables all other IRQs for the same and lower priority as the IRQ that invoked the current ISR call.
+<P>If a higher-priority IRQ arrives before the current ISR completes processing, the kernel saves the current ISR state.
+</li>
+
+	<LI>The kernel calls the higher-priority ISR to handle the new request. </li>
+
+	<LI>Once complete, the kernel loads the original ISR and continues processing. </li>
+</OL>
+
+<P>Windows CE can nest as many ISRs as supported by the hardware. An ISR is affected by the delay if they are performing some action that must be completed in a specific amount of time or there are other timing related issues. In these situations, the ISR would need to disable interrupts while performing the require actions.</P>
+<DIV CLASS="footer">Built on Thursday, November 16, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+ <!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

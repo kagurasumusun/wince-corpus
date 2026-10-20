@@ -1,0 +1,101 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing and Using a File Filter</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Implementing and Using a File Filter"/>
+<MSHelp:RLTitle Title="Implementing and Using a File Filter"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_implementing_and_using_a_file_filter"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Implementing and Using a File Filter</H1>
+
+<P>The CD-ROM that accompanies this documentation includes a sample file filter named Copyfilt that imports a binary file (.bin) from a desktop computer to a binary file (.pbn) on a Windows CE&#0150;based device. The Copyfilt sample file filter demonstrates basic operations for implementing a file filter, which are described in the following procedure. </P>
+
+<P><B>To implement a file filter</B>
+
+<OL>
+	<LI>Register the file filter DLL.
+<P>For a description of how to register a file filter, see “Registering a File Filter.”
+</LI>
+
+	<LI>Implement the <B>ICeFileFilter </B>interface and methods. </LI>
+
+	<LI>ActiveSync calls the <B>QueryInterface</B> method for the file filter’s <B>ICeFileFilterOptions</B> interface.
+<UL type=disc>
+	<LI>If this interface is available, Windows CE then calls the <B>ICeFileFilterOptions::SetFilterOptions</B> method with a correctly initialized <B>CFF_CONVERTOPTIONS</B> structure. The <I>bNoModalUI</I> member specifies whether the converter is allowed to bring up modal UI while performing the conversion.
+<P>For a file filter that includes selectable conversion options, implement the <B>ICeFileFilter::FilterOptions</B> method to allow users to select among the conversion options supported by the file filter.
+</LI>
+</UL>
+</LI>
+</OL>
+
+<P><B>To use a file filter</B>
+
+<OL>
+	<LI>The user transfers a file by dragging it between Windows Explorer on the desktop computer and Windows CE Explorer on the device.</LI>
+
+	<LI>ActiveSync prompts the user for a conversion type, using the <B>File Conversion Properties</B> dialog box.</LI>
+
+	<LI>ActiveSync calls the <B>ICeFileFilter::NextConvertFile</B> method for the file filter to perform the custom file conversion. </LI>
+
+	<LI>Information about the file conversion and about the source and destination files is passed by pointers to the <B>CFF_CONVERTINFO</B>, <B>CFF_DESTINATIONFILE</B>, and <B>CFF_SOURCEFILE</B> structures. </LI>
+</OL>
+
+<P>Within the <B>ICeFileFilter::NextConvertFile</B> method:
+
+<OL>
+	<LI>Call ICeFileFilterSite::OpenSourceFile to open the source file.</LI>
+
+	<LI>Call ICeFileFilterSite::OpenDestinationFile to open the destination file. </LI>
+
+	<LI>Use the <B>OpenSourceFile</B> method to read data from the stream file that was opened.</LI>
+
+	<LI>Convert the data.
+<P>This can include independent software vendor (ISV)-developed code and RAPI calls.
+</LI>
+
+	<LI>Check the status of the <B>NextConvertFile pbCancel</B> parameter occasionally to ensure that the user has not stopped the conversion process.
+<P>If the conversion has been stopped, perform all cleanup operations, and then exit.
+</LI>
+
+	<LI>Use the <B>OpenDestinationFile</B> method to write the converted data to the stream file that was opened.</LI>
+
+	<LI>Call the <B>ICeFileFilterSite::ReportProgress</B> method occasionally to report the progress of the file conversion.
+<P>ActiveSync uses this information to update a status bar that shows the percentage of the conversion that is complete. You should limit your use of this method because it can add substantially to the conversion time.
+</LI>
+
+	<LI>Call the <B>ICeFileFilterSite::ReportLoss</B> method to report data that is intentionally discarded during conversion.
+<P>ActiveSync displays a message with this information when the file conversion is complete. Depending on the error format passed in the call, ActiveSync may call the <B>ICeFileFilter::FormatMessage</B> method for the file filter, in order to properly format the message.
+</LI>
+
+	<LI>Use the <B>ICeFileFilterSite::CloseSourceFile</B> method to close the source file, and then use the <B>ICeFileFilterSite::CloseDestinationFile</B> method to close the destination file.</LI>
+</OL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

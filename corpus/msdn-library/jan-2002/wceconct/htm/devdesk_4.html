@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Notification Procedures</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Notification Procedures"/>
+<MSHelp:RLTitle Title="Notification Procedures"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_notification_procedures"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Notification Procedures</H1>
+
+<P>The notification process follows the same basic steps for connection and disconnection of the Windows CE&#0150;based device. The following procedure assumes that the <B>IDccMan</B> and <B>IDccManSink</B> interfaces have been implemented.</P>
+
+<P><B>To register an application by using COM interface&#0150;based notification</B>
+
+<OL>
+	<LI>Initialize the COM library and register the application for the appropriate event.</LI>
+
+	<LI>Connect or disconnect the device.</LI>
+
+	<LI>Perform the application processing. </LI>
+</OL>
+
+<P>The Connection Notification Client sample application, provided on the CD-ROM that accompanies this documentation, shows several connection notification scenarios, including a new remote connect, a disconnect, and a reconnect. To see the actual sequence of interface method calls for any of these scenarios, build and run the application. Then, in the <B>Connection Notification Test</B> dialog box, view the <B>Notification Messages</B> list. </P>
+
+<P><B>To receive notification upon connection of the Windows CE&#0150;based device to a desktop computer</B>
+
+<OL>
+	<LI>Initialize the COM library and register with the connection manager.
+<UL type=disc>
+	<LI>Call the COM function <B>CoInitialize</B> to initialize the Component Object library.</LI>
+
+	<LI>Call the COM function <B>CoCreateInstance</B> with the DccMan class identifier (CLSID_DccMan) and <B>IDccMan</B> interface identifier (IID_IDccMan), and receive a pointer to the <B>IDccMan</B> interface. </LI>
+
+	<LI>Call the <B>IDccMan::Advise</B> method, which provides the connection manager with a pointer to the <B>IDccManSink</B> interface that you implemented and registers the application with the connection manager.
+<P>The connection manager calls the <B>IDccManSink::OnLogInactive</B> method, notifying the application that there is no connection between the desktop computer and the device.
+</LI>
+</UL>
+</LI>
+
+	<LI>Establish the connection between the desktop computer and the device.
+<UL type=disc>
+	<LI>The connection manager calls the <B>IDccManSink::OnLogListen</B> method.
+<P>The connection manager waits for the remote connection services for both the desktop computer and the device to respond. Until they are both running, the connection manager will not proceed.
+</LI>
+
+	<LI>For Windows 95&#0150;based systems only, the connection manager calls the <B>IDccManSink::OnLogAnswered</B> method when the connection manager has detected the communications interface.</LI>
+
+	<LI>The connection manager calls the <B>IDccManSink::OnLogActive</B> method when the connection is established between the device and connection manager. </LI>
+
+	<LI>The connection manager calls the <B>IDccManSink::OnLogIpAddr</B> method, providing the Internet Protocol (IP) address that it obtained for the communications socket.</LI>
+</UL>
+
+<P class=atl><span class=blue><B>Note</B></span>&nbsp;&nbsp;&nbsp;When the <B>IDccManSink::OnLogIpAddr</B> notification occurs, the connection is completely established.
+</LI>
+
+	<LI>Perform your processing in the application.
+<P>This can include processing on the desktop computer, remote processing on the device by using remote application programming interface (RAPI), or calling the <B>IDccMan</B> methods. However, the application should wait to use <B>CeRapiInit</B> to initialize RAPI<B> </B>until the <B>IDccManSink::OnLogActive</B> notification is received. This ensures that a connection is established between the desktop computer and the device.
+</LI>
+</OL>
+
+<P><B>To receive notification upon disconnection of the Windows CE&#0150;based device from the desktop computer</B>
+
+<OL>
+	<LI>Initialize the COM library and register the application.</LI>
+
+	<LI>Disconnect the device from the desktop computer.
+<P>ActiveSync notifies the application when the desktop computer and device are disconnected by calling the <B>IDccManSink::OnLogDisconnection</B> method.
+</LI>
+
+	<LI>Perform your processing in the application.
+<P>Because there is no connection to the device, this processing can only take place on the desktop computer.
+</LI>
+</OL>
+
+<P><B>To receive notification when reestablishing a remote connection</B></P>
+
+<P>The Connection Notification Client source code uses the <B>IDccMan</B> interface and implements the <B>IDccManSink</B> interface.
+
+<UL type=disc>
+	<LI>If a connection was established, but then was disconnected by the desktop computer or the device, the <B>IDccManSink::OnLogActive</B> notification occurs when the connection is reestablished.
+<P>When an application calls the <B>IDccMan::ShowCommSettings</B> function and the <B>OK</B> button is clicked in the <B>Communications Properties</B> dialog box, the following notification sequence occurs:
+
+<UL type=disc>
+	<LI>IDccManSink::OnLogListen</LI>
+
+	<LI>IDccManSink::OnLogDisconnection</LI>
+
+	<LI>IDccManSink::OnLogInactive</LI>
+
+	<LI>IDccManSink::OnLogListen</LI>
+</UL>
+
+<P>If the <B>Cancel</B> button is clicked instead, no notification is sent and a Listen state is maintained.
+</LI>
+</UL>
+
+<P><B>To deregister an application from being notified</B></P>
+
+<P>One of the advantages to using the COM interface&#0150;based notification process is that it allows an application to deregister itself from being notified. This might be helpful when an application needs to run only once.
+
+<OL>
+	<LI>Call <B>IDccMan::Unadvise</B>, which releases the memory associated with the <B>IDccManSink</B> interface.</LI>
+
+	<LI>Call <B>IDccMan::Release</B>, which releases the <B>IDccMan</B> object.</LI>
+
+	<LI>Call <B>CoUninitialize</B> to perform any OLE cleanup.
+<P>Note that a call to <B>CoUninitialize</B> is required for each successful call to <B>CoInitialize</B>.
+</LI>
+</OL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

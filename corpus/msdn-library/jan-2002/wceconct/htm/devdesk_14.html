@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing a Dummy File Filter</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Implementing a Dummy File Filter"/>
+<MSHelp:RLTitle Title="Implementing a Dummy File Filter"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_implementing_a_dummy_file_filter"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Implementing a Dummy File Filter</H1>
+
+<P>A dummy file filter gives the appearance that files are being converted without actually implementing a file filter or performing a filter conversion. Instead, the file is passed without any conversion.</P>
+
+<P>You may want to implement a dummy file filter for a file that has a unique file type or one that has not been registered already in the desktop registry. A dummy file filter can also be useful for a file that does not need any conversion when it is transferred between Windows Explorer on the desktop computer and Windows CE Explorer for the Windows CE&#0150;based device. </P>
+
+<P>Usually, if a file with a deregistered file type is copied to the device, the device displays the warning “No Converter Selected.” This warns the user that the file will be transferred without conversion. In this situation, you could implement a dummy file filter to avoid alarming the user with the file conversion warning.</P>
+
+<P class=indent><span class=blue><B>Note&nbsp;&nbsp;&nbsp;</B></span>The “No Converter Selected” warning is displayed only if the <B>File Conversions Properties</B> for the device is set to enable file conversion. If the <B>Enable File Conversion</B> check box is cleared, the “No Converter Selected” warning is not displayed.</P>
+
+<P><B>To register a dummy file filter</B></P>
+
+<OL>
+	<LI>In the desktop registry, modify the <B>HKLM\Software\Microsoft\Windows CE Services\Filters</B> key by adding a subkey.
+<P>This subkey should name the file extension for the type of files that should be converted with the NULL file conversion. For example, if you are converting files with extension .abc, then you must add an <B>.abc</B> subkey.
+</LI>
+
+	<LI>Under the <B>.abc</B> subkey, create a string value named <B>DefaultImport</B> that is set to <B>Binary Copy</B>.
+<P>This string value identifies the conversion for files with .abc extensions that are imported from the desktop computer to the device.
+</LI>
+
+	<LI>Under the <B>.abc</B> subkey, create a string value named <B>DefaultExport</B> that is set to <B>Binary Copy</B>.
+<P>This string value identifies the conversion for files with .abc extensions that are exported from the device to the desktop computer.
+</LI>
+</OL>
+
+<P>The following registry editor (.reg) file shows how to register the example .abc dummy file filter.</P>
+
+<PRE>REGEDIT4
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\Filters\.abc]
+"DefaultImport"="Binary Copy"
+"DefaultExport"="Binary Copy"
+</PRE>
+
+<P>In this example, when a file with an .abc extension is copied between the desktop computer and the device, it will seem as though a conversion process is taking place because you do not receive the “No Converter Selected” warning from ActiveSync. However, no filter actually is being used, because an <B>InstalledFilters</B> subkey has not been added under the <B>.abc</B> key.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

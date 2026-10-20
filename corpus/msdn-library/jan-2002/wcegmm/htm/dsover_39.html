@@ -1,0 +1,99 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Capture Buffer Notification</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Capture Buffer Notification"/>
+<MSHelp:RLTitle Title="Capture Buffer Notification"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_capture_buffer_notification_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IDirectSoundNotify_SetNotificationPositions_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IDirectSoundNotify_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_com_iunknown_queryinterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_DSBPOSITIONNOTIFY_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Capture Buffer Notification</H1>
+
+<P>You may want your application to be notified when the current read position reaches a certain point in the buffer, or when it reaches the end. The current read position is the point up to which it is safe to read data from the buffer. With the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectSoundNotify::SetNotificationPositions</B></A> method you can set any number of points within the buffer where events are to be signaled.</P>
+
+<P>First you have to obtain a pointer to the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSoundNotify</B></A> interface. You can do this with the capture buffer's <A HREF="JavaScript:hhobj_3.Click()"><B>QueryInterface</B></A> method, as shown in the example under <A HREF="dsover_28.htm">Play Buffer Notification</A>.</P>
+
+<P>Next create an event object with the Win32 <B>CreateEvent</B> function. You put the handle to this event in the <B>hEventNotify</B> member of a <A HREF="JavaScript:hhobj_4.Click()"><B>DSBPOSITIONNOTIFY</B></A> structure, and in the <B>dwOffset</B> member of that structure you specify the offset within the buffer where you want the event to be signaled. Then you pass the address of the structure — or array of structures, if you want to set more than one notification position — to the <B>IDirectSoundNotify::SetNotificationPositions</B> method.</P>
+
+<P>The following example sets up three notification positions in a one-second buffer. One event will be signaled when the read position nears the halfway point in the buffer, another will be signaled when it nears the end of the buffer, and the third will be signaled when capture stops. </P>
+
+<PRE class="code">#define cEvents  3
+
+/* In this example it is assumed that the following variables have
+   been properly initialized, and that wfx was included in the buffer
+   description when the buffer was created.
+
+   LPDIRECTSOUNDNOTIFY  lpDsNotify;
+   WAVEFORMATEX          wfx;
+*/
+
+HANDLE             rghEvent[cEvents] = {0};
+DSBPOSITIONNOTIFY  rgdsbpn[cEvents];
+HRESULT            hr;
+int                i;
+
+// Create the events
+for (i = 0; i &lt; cEvents; ++i)
+{
+    rghEvent[i] = CreateEvent(NULL, TRUE, FALSE, NULL);
+    if (NULL == rghEvent[i])
+    {
+        hr = GetLastError();
+        goto Error;
+    }
+}
+
+// Describe notifications.
+
+rgdsbpn[0].dwOffset = (wfx.nAvgBytesPerSec/2) -1;
+rgdsbpn[0].hEventNotify = rghEvent[0];
+
+rgdsbpn[1].dwOffset = wfx.nAvgBytesPerSec - 1;
+rgdsbpn[1].hEventNotify = rghEvent[1];
+
+rgdsbpn[2].dwOffset = DSBPN_OFFSETSTOP;
+rgdsbpn[2].hEventNotify = rghEvent[2];
+
+// Create notifications.
+
+hr = lpDsNotify-&gt;SetNotificationPositions(cEvents, rgdsbpn);
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisInterlockedInsertHeadList</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisInterlockedInsertHeadList"/>
+<MSHelp:RLTitle Title="NdisInterlockedInsertHeadList"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndisinterlockedinsertheadlist"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisInterlockedInsertHeadList</H1>
+
+<P>This function inserts an entry, usually a packet, at the head of a doubly linked list so that access to the list is synchronized in a multiprocessor-safe way.</P>
+
+<PRE class="syntax"><B>PLIST_ENTRY NdisInterlockedInsertHeadList(</B>
+<B>IN PLIST_ENTRY</B> <I>ListHead</I><B>,</B> <B>
+IN PLIST_ENTRY</B> <I>ListEntry</I><B>,</B>
+<B>IN PNDIS_SPIN_LOCK</B> <I>SpinLock</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ListHead</I></DT>
+
+<DD>Pointer to the head of the doubly linked list into which an entry is to be inserted.</dd>
+
+<DT><I>ListEntry</I></DT>
+
+<DD>Pointer to the entry to be inserted at the head of the list.</dd>
+
+<DT><I>SpinLock</I></DT>
+
+<DD>Pointer to a caller-supplied spin lock used to synchronize access to the list.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns a pointer to the entry that was at the head of the queue before the specified entry was inserted. If the queue was empty, it returns NULL.</P>
+
+<H4>Remarks</H4>
+
+<P>Before calling this function, a driver must initialize the variable at <I>ListHead</I> with the <B>NdisInitializeListHead</B> function and the variable at <I>SpinLock</I> with the <B>NdisAllocateSpinLock</B> function. The driver must also provide resident storage for these variables and for its internal queue.</P>
+
+<P>The caller-supplied spin lock prevents any other function from accessing the driver’s internal queue while this function is inserting the specified entry, even when the driver is running on a multiprocessor machine.</P>
+
+<P>This function raises IRQL to DISPATCH_LEVEL when it acquires the specified spin lock and restores the original IRQL before it returns control. Consequently, any driver function that calls this function cannot be pageable code.</P>
+
+<P>Most NDIS drivers process packets in first-in, first-out (FIFO) order, so any driver that uses an interlocked queue tends to call the <B>NdisInterlockedInsertTailList</B> function far more frequently than this function. Such a driver usually calls this function only to requeue a packet for a retry operation.</P>
+
+<P>To convert a returned value back to the address of the inserted entry, a driver can use the <B>CONTAINING_RECORD</B> macro.</P>
+
+<P>A driver that calls this function runs at IRQL &lt;= DISPATCH_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_188.htm"><B>NdisAllocateSpinLock</B></A>, <A HREF="funct_1_215.htm"><B>NdisInitializeListHead</B></A>, <A HREF="funct_1_219.htm"><B>NdisInterlockedInsertTailList</B></A>, <A HREF="funct_1_220.htm"><B>NdisInterlockedRemoveHeadList</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

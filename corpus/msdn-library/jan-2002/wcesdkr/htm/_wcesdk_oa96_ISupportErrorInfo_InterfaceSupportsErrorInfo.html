@@ -1,0 +1,152 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ISupportErrorInfo::InterfaceSupportsErrorInfo</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ISupportErrorInfo::InterfaceSupportsErrorInfo"/>
+<MSHelp:RLTitle Title="ISupportErrorInfo::InterfaceSupportsErrorInfo"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_oa96_isupporterrorinfo_interfacesupportserrorinfo"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>ISupportErrorInfo::InterfaceSupportsErrorInfo</H1>
+
+<P>This method indicates whether or not an interface supports the <B>IErrorInfo</B> interface.</P>
+
+<PRE class="syntax"><B>HRESULT InterfaceSupportsErrorInfo(</B>
+<B>REFIID </B><I>riid</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>riid</I></DT>
+
+<DD>Pointer to an interface identifier (IID).</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=15%>Value</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>S_OK </TD>
+<TD width=85%>Interface supports <B>IErrorInfo</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>S_FALSE</TD>
+<TD width=85%>Interface does not support <B>IErrorInfo</B>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>Objects that support the <B>IErrorInfo</B> interface must also implement this interface.</P>
+
+<P>Programs that receive an error return value should call <B>QueryInterface</B> to get a pointer to the <B>ISupportErrorInfo</B> interface, and then call <B>InterfaceSupportsErrorInfo</B> with the <I>riid</I> of the interface that returned the return value. If <B>InterfaceSupportsErrorInfo </B>returns S_FALSE, then the error object does not represent an error returned from the caller, but from somewhere else. In this case, the error object can be considered incorrect and should be discarded.</P>
+
+<P>If <B>ISupportErrorInfo </B>returns S_OK, use the <A HREF="_wcesdk_com_geterrorinfo.htm"><B>GetErrorInfo</B></A> function to get a pointer to the error object.</P>
+
+<H4>Example</H4>
+
+<P>The following code example implements the <B>ISupportErrorInfo</B> for the Lines sample. The <B>IErrorInfo</B> implementation also supports the <B>AddRef</B>, <B>Release</B>, and <B>QueryInterface</B> members inherited from the <B>IUnknown</B> interface.</P>
+
+<PRE class="code">CSupportErrorInfo::CSupportErrorInfo(IUnknown FAR* punkObject, REFIID riid)
+{
+   m_punkObject = punkObject;
+   m_iid = riid;
+}
+
+STDMETHODIMP
+CSupportErrorInfo::QueryInterface(REFIID iid, void FAR* FAR* ppv)
+{
+   return m_punkObject-&gt;QueryInterface(iid, ppv);
+}
+
+STDMETHODIMP_(ULONG)
+CSupportErrorInfo::AddRef(void)
+{
+   return m_punkObject-&gt;AddRef();
+}
+
+STDMETHODIMP_(ULONG)
+CSupportErrorInfo::Release(void)
+{
+   return m_punkObject-&gt;Release();
+}
+
+STDMETHODIMP
+CSupportErrorInfo::InterfaceSupportsErrorInfo(REFIID riid)
+{
+   return (riid == m_iid) ? NOERROR : ResultFromScode(S_FALSE);
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>2.0 and later</TD>
+<TD width=19%>Oaidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

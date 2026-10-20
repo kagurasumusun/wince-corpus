@@ -1,0 +1,100 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMEthIndicateReceiveComplete</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMEthIndicateReceiveComplete"/>
+<MSHelp:RLTitle Title="NdisMEthIndicateReceiveComplete"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismethindicatereceivecomplete"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMEthIndicateReceiveComplete</H1>
+
+<P>This function notifies NDIS that an Ethernet receive packet, identified in a preceding call to the <A HREF="_wcesdk_ndismethindicatereceive.htm"><B>NdisMEthIndicateReceive</B></A> function, has been fully transferred by the network adapter so that NDIS can notify the appropriate bound protocols.</P>
+
+<PRE class="syntax"><B>VOID NdisMEthIndicateReceiveComplete(
+IN NDIS_HANDLE </B><I>MiniportAdapterHandle</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle originally input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>After any Ethernet receive indication, a miniport eventually must call this function to indicate the end of the transfer operation over the net, even if a particular packet is accepted by no bound protocol.</P>
+
+<P>This function both indicates the completion of a transfer operation for a receive and notifies any bound protocol that has already consumed the initial indication that it can begin postprocessing the received data.</P>
+
+<P>When a miniport calls this function, NDIS indicates the completion of the receive operation to each such protocol by calling its <B>ProtocolReceiveComplete</B> function.</P>
+
+<P><B>ProtocolReceiveComplete</B> functions need not operate under the severe time constraints of the corresponding <A HREF="_wcesdk_protocolreceive.htm"><B>ProtocolReceive</B></A> functions. However, another receive indication to the <B>ProtocolReceive</B> function can come in while the <A HREF="_wcesdk_protocolreceivecomplete.htm"><B>ProtocolReceiveComplete</B></A> function is running.</P>
+
+<P>A miniport need not call this function in one-to-one correspondence with its calls to the <B>NdisMEthIndicateReceive</B> function. That is, a network adapter driver can issue a single receive-complete indication for some number of receive indications, particularly when network traffic is high. For example, when a miniport is continually indicating receives from the same source, it might call this function once for every ten indications. On the other hand, a miniport might call this function once for each indication when network traffic is low so that the driver can promptly regain ownership of the memory that it allocated for receives.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndismethindicatereceive.htm"><B>NdisMEthIndicateReceive</B></A>, <A HREF="_wcesdk_protocolreceive.htm"><B>ProtocolReceive</B></A>, <A HREF="_wcesdk_protocolreceivecomplete.htm"><B>ProtocolReceiveComplete</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

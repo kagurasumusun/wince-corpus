@@ -1,0 +1,130 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CREATE INDEX</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CREATE INDEX"/>
+<MSHelp:RLTitle Title="CREATE INDEX"/>
+<MSHelp:Keyword Index="A" Term="ado30ref_96"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce_create_index"></A><SUP></SUP>CREATE INDEX</H1>
+
+<P>This statement creates an index for a field.</P>
+
+<PRE class=syntax><B>CREATE INDEX</B> <I>indexname</I> <B>ON </B><I>tablename</I> (<I>fieldname</I> <B>[</B>DESC<B>]</B> <B>[</B>CASESENSITIVE<B>]</B> <B>[</B>UNKNOWNFIRST<B>])</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>indexname</I></DT>
+
+<DD>The name of a new index.</DD>
+
+<DT><I>tablename</I></DT>
+
+<DD>The name of the table for which to create the index. </DD>
+
+<DT><I>fieldname</I></DT>
+
+<DD>The name of the field for which to create the index. Only one field is indexed at a time, and only one index is created per field. The index can be given additional properties by specifying an index attribute after the field name.</DD>
+</DL>
+
+<H4>Return Values</H4>
+
+<UL type=disc>
+	<LI>E_OUTOFMEMORY</LI>
+
+	<LI>DB_E_ERRORSINCOMMAND</LI>
+
+	<LI>DB_E_DUPLICATEINDEXID</LI>
+
+	<LI>DB_E_BADCOLUMNID</LI>
+
+	<LI>DB_E_NOTABLE</LI>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CREATE INDEX</B> statement can increase the efficiency of SQL queries that use <B>SELECT ORDER BY </B>and <B>SELECT WHERE</B> statements.</P>
+
+<P>The following table shows the possible index attributes. They are used singly or in combination.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=24%>Attribute</TH>
+<TH width=76%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>DESC</B></TD>
+<TD width=76%>Sorts the data in descending order. The default is ascending.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>CASESENSITIVE</B></TD>
+<TD width=76%>Sorts capital letters before lower case. The default is case insensitive.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>UNKNOWNFIRST</B></TD>
+<TD width=76%>Sorts NULL to the start of the table. The default is NULL at the end of the table.</TD>
+</TR>
+</TABLE><BR>
+
+<P>The<B> CASESENSITIVE</B> and <B>UNKNOWNFIRST</B> statements work on Windows® CE-based tables only and generally are not supported on other database systems.</P>
+
+<P>An SQL statement cannot be longer than 2,048 characters. A longer statement causes an error.</P>
+
+<H4>Examples</H4>
+
+<P>The following code example shows how to use the <B>CREATE INDEX</B> statement in an SQL query.</P>
+
+<PRE>Dim rs, i, L1
+Set rs = CreateObject("ADOCE.Recordset.3.1")
+rs.Open "CREATE TABLE indexme (f1 <B>varchar</B>)"
+rs.Open "indexme", "", adOpenKeyset, adLockOptimistic
+rs.Addnew "f1", "a"
+rs.Addnew "f1", "A"
+rs.Addnew "f1", "B"
+rs.Addnew "f1", "c"
+rs.Addnew "f1", "C"
+rs.Addnew "f1", "b"
+rs.Addnew "f1", "a"
+rs.Addnew "f1", "B"
+rs.Close
+rs.Open "CREATE INDEX i1 ON indexme (f1 CASESENSITIVE)"
+rs.Open "SELECT f1 FROM indexme ORDER BY f1"
+For i = 0 To rs.Recordcount - 1
+  L1 = L1 &amp; rs.Fields("f1").Value
+  rs.MoveNext
+Next
+rs.Close
+MsgBox L1
+Set rs = Nothing
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

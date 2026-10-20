@@ -1,0 +1,99 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxRegisterClass</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AfxRegisterClass"/>
+<MSHelp:RLTitle Title="AfxRegisterClass"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afxregisterclass"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>AfxRegisterClass</H1>
+
+<P>This function registers window classes in a DLL that uses MFC. If you use this function, the class is automatically unregistered when the DLL is unloaded.</P>
+
+<P>In non-DLL builds, the <B>AfxRegisterClass</B> identifier is defined as a macro that maps to the Windows function <B>RegisterClass</B>, since classes registered in an application are automatically unregistered. If you use <B>AfxRegisterClass</B> instead of <B>RegisterClass</B>, your code can be used without change both in an application and in a DLL.</P>
+
+<PRE class=syntax><B>BOOL AFXAPI AfxRegisterClass(
+WNDCLASS*</B> <I>lpWndClass</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpWndClass</I></DT>
+
+<DD>Specifies the pointer to a <B>WNDCLASS</B> structure containing information about the window class to be registered.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P><B>TRUE</B> if the class is successfully registered; otherwise, it is <B>FALSE</B>.</P>
+
+<H4>Example</H4>
+
+<PRE>BOOL COneT32App::InitInstance()
+{
+
+    // Register your unique class name that you wish to use
+    WNDCLASS wndcls;
+
+    memset(&amp;wndcls, 0, sizeof(WNDCLASS));   // start with NULL
+                                            // defaults
+
+    wndcls.style = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
+
+    //you can specify your own window procedure
+    wndcls.lpfnWndProc = ::DefWindowProc;
+    wndcls.hInstance = AfxGetInstanceHandle();
+    wndcls.hIcon = LoadIcon(IDR_MAINFRAME); // or load a different icon
+    wndcls.hCursor = LoadCursor( IDC_ARROW );
+    wndcls.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+    wndcls.lpszMenuName = NULL;
+
+    // Specify your own class name for using FindWindow later
+    wndcls.lpszClassName = _T("MyNewClass");
+
+    // Register the new class and exit if it fails
+    if(!AfxRegisterClass(&amp;wndcls))
+    {
+       TRACE("Class Registration Failed\n");
+       return FALSE;
+    }
+
+    // Rest of InitInstance goes here
+    ...
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

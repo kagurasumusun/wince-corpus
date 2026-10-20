@@ -1,0 +1,68 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Driver Registration and NDIS Library Registration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Driver Registration and NDIS Library Registration"/>
+<MSHelp:RLTitle Title="Driver Registration and NDIS Library Registration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wincesdk_driver_registration_and_ndis_library_registration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Driver Registration and NDIS Library Initialization</H1>
+
+<P>All NDIS miniport and intermediate drivers must provide a <B>DriverEntry</B> function. When a miniport driver is loaded, NDIS calls <B>DriverEntry</B>, which creates an association between the miniport driver and the NDIS library, and registers the miniport with NDIS.</P>
+
+<P>The <B>DriverEntry</B> function requires the following syntax:</P>
+
+<PRE class="syntax"><B>NTSTATUS DriverEntry(
+IN PDRIVER_OBJECT pDriverObject_,
+IN PUNICODE_STRING pRegistryPath_
+);</B></PRE>
+
+<P>The following parameters are passed into the <B>DriverEntry</B> function:
+
+<UL type="disc">
+	<LI>A pointer to the driver object, which was created by the I/O system</li>
+
+	<LI>A pointer to the registry path, which specifies where driver-specific parameters are stored</li>
+</UL>
+
+<P>The <B>DriverEntry</B> function must call the <B>NdisMInitializeWrapper</B> function and then the <B>NdisMRegisterMiniport</B> function. <B>DriverEntry</B> first calls <B>NdisMRegisterMiniport</B> with the parameters that are passed to <B>DriverEntry</B>, which returns a wrapper handle. <B>DriverEntry</B> then passes the handle to <B>NdisMRegisterMiniport</B>.</P>
+
+<P>Windows CE does not support the common network .inf file format for dynamic installation and registry configuration of miniport drivers that are used in Windows&nbsp;NT. Instead, Windows&nbsp;CE uses the registry for dynamic installation and binding of device drivers. Therefore, your driver installation program must make sure to create the appropriate registry settings for your miniport driver in the Windows&nbsp;CE registry.</P>
+
+<P>The following diagram shows the process for registering a miniport driver and initializing the NDIS library.</P>
+
+<P class="fig"><IMG SRC="ndislib.gif" ALT="" BORDER=0></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

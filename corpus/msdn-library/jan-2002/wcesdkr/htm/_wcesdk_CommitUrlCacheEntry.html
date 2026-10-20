@@ -1,0 +1,173 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CommitUrlCacheEntry</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CommitUrlCacheEntry"/>
+<MSHelp:RLTitle Title="CommitUrlCacheEntry"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_commiturlcacheentry"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CommitUrlCacheEntry</H1>
+
+<P>This function stores data in the specified file in the Internet cache and associates it with the given URL.</P>
+
+<PRE class="syntax"><B>BOOL CommitUrlCacheEntry (
+LPCTSTR</B><I> lpszUrlName</I><B>,</B>
+<B>LPCTSTR</B><I> lpszLocalFileName</I><B>,</B>
+<B>FILETIME </B><I>ExpireTime</I><B>,</B>
+<B>FILETIME </B><I>LastModifiedTime</I><B>,</B>
+<B>DWORD</B><I> CacheEntryType</I><B>,</B>
+<B>LPBYTE</B><I> lpHeaderInfo</I><B>,</B>
+<B>DWORD</B><I> dwHeaderSize</I><B>,</B>
+<B>LPCTSTR </B><I>lpszFileExtension</I><B>,</B>
+<B>DWORD </B><I>dwReserved</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszUrlName</I></DT>
+
+<DD>[in] Address of a string variable that contains the source name of the cache entry. The name string must be unique and should not contain any escape characters.</dd>
+
+<DT><I>lpszLocalFileName</I></DT>
+
+<DD>[in] Address of a string variable that contains the name of the local file that is being cached. This should be the same name as that returned by <A HREF="_wcesdk_createurlcacheentry.htm"><B>CreateUrlCacheEntry</B></A>.</dd>
+
+<DT><I>ExpireTime</I></DT>
+
+<DD>[in] <A HREF="_wcesdk_win32_filetime_str.htm"><B>FILETIME</B></A> structure that contains the expire date and time (in Greenwich mean time) of the file that is being cached. If the expire date and time is unknown, set this parameter to zero.</dd>
+
+<DT><I>LastModifiedTime</I></DT>
+
+<DD>[in] <B>FILETIME</B> structure that contains the last modified date and time (in Greenwich mean time) of the URL that is being cached. If the last modified date and time is unknown, set this parameter to zero.</dd>
+
+<DT><I>CacheEntryType</I></DT>
+
+<DD>[in] Unsigned long integer value that contains the cache type bitmask. Currently, the cache entry type values have not been finalized, so this value does not serve a real purpose at this point, except for STICKY_CACHE_ENTRY. This can be a combination of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=41%>COOKIE_CACHE_ENTRY</TD>
+<TD width=59%>TRACK_CACHE_ENTRY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>EDITED_CACHE_ENTRY</TD>
+<TD width=59%>TRACK_OFFLINE_CACHE_ENTRY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>NORMAL_CACHE_ENTRY</TD>
+<TD width=59%>TRACK_ONLINE_CACHE_ENTRY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>SPARCE_CACHE_ENTRY</TD>
+<TD width=59%>URLHISTORY_CACHE_ENTRY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>STICKY_CACHE_ENTRY</TD>
+<TD width=59%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>lpHeaderInfo</I></DT>
+
+<DD>[in] Address of the buffer containing the header information. If this parameter is not NULL, the header information is treated as extended attributes of the URL and is returned in the <A HREF="_wcesdk_internet_cache_entry_info.htm"><B>INTERNET_CACHE_ENTRY_INFO</B></A> structure.</dd>
+
+<DT><I>dwHeaderSize</I></DT>
+
+<DD>[in] Unsigned long integer value that contains the size of the header information. If <I>lpHeaderInfo</I> is not NULL, this value is assumed to indicate the size of the buffer that will store the header information. An application can maintain headers as part of the data and provide <I>dwHeaderSize</I> together with a NULL value for <I>lpHeaderInfo</I>.</dd>
+
+<DT><I>lpszFileExtension</I></DT>
+
+<DD>[in] Address of a buffer that contains information maintained in the cache database for future use.</dd>
+
+<DT><I>dwReserved</I></DT>
+
+<DD>[in] Reserved. Must be set to zero.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns TRUE if successful, or FALSE otherwise.</P>
+
+<H4>Remarks</H4>
+
+<P>If the cache storage is full, this function invokes cache cleanup to make space for this new file. If the cache entry already exists, the function overwrites the entry if it is not in use. An entry is in use when it has been retrieved with <A HREF="_wcesdk_retrieveurlcacheentryfile.htm"><B>RetrieveUrlCacheEntryFile</B></A>.</P>
+
+<P>Clients that add entries to the cache should set the headers to at least "HTTP/1.0 200 OK\r\n\r\n"; otherwise, client applications which use the Win32 Internet functions may disregard the entry.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 and later</TD>
+<TD width=18%>Wininet.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Wininet.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_createurlcacheentry.htm"><B>CreateUrlCacheEntry</B></A>, <A HREF="_wcesdk_deleteurlcacheentry.htm"><B>DeleteUrlCacheEntry</B></A>, <A HREF="_wcesdk_retrieveurlcacheentryfile.htm"><B>RetrieveUrlCacheEntryFile</B></A>, <A HREF="_wcesdk_win32_filetime_str.htm"><B>FILETIME</B></A>, <A HREF="_wcesdk_internet_cache_entry_info.htm"><B>INTERNET_CACHE_ENTRY_INFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

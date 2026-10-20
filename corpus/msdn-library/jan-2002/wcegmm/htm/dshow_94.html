@@ -1,0 +1,63 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Dynamic Format Changes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Handling Dynamic Format Changes"/>
+<MSHelp:RLTitle Title="Handling Dynamic Format Changes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_handling_dynamic_format_changes"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ipin__queryaccept" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ctransformfilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ctransformfilter__checkinputtype" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_event_notification_codes__ec_palette_changed" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_event_notification_codes__ec_video_size_changed" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_ibasicvideo_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Handling Dynamic Format Changes</H1>
+
+<P>Video renderers in DirectShow accept only video formats that can be drawn efficiently. For example, the window-based run-time renderer will accept only the RGB format that matches the current display device mode (for example, RGB565 when the display is set to 65,536 colors). As a last resort, it also accepts 8-bit palettized formats, as most display cards can draw this format efficiently. When the renderer has Microsoft&reg; DirectDraw&reg; loaded, it might later ask the source filter to switch to something that can be written onto a DirectDraw surface and drawn directly through display hardware. In some cases, the renderer's upstream filter might try to change the video format while the video is playing. This often occurs when a video stream has a palette change. It is most often the video decompressor that initiates a dynamic format change. </P>
+
+<P>An upstream filter attempting to change formats dynamically should always call the <A HREF="JavaScript:hhobj_1.Click()"><B>IPin::QueryAccept</B></A> method on the renderer input pin (for filters based on <A HREF="JavaScript:hhobj_2.Click()"><B>CTransformFilter</B></A>, this is implemented in <A HREF="JavaScript:hhobj_3.Click()"><B>CTransformFilter::CheckInputType</B></A>). The formats a renderer will allow an upstream filter to change dynamically are undefined. However, at a very minimum, it should allow the upstream filter to change palettes. When an upstream filter changes media types, it will attach the format to the first sample delivered in that new type. If the renderer holds many samples in a queue waiting to be rendered, it should delay changing the format until the sample with the type change is actually about to be rendered. </P>
+
+<P>Whenever a format change is detected by the video renderer, it should send an <B>EC_DISPLAY_CHANGED</B> notification. Most video renderers pick a format during connection so that the format can be drawn efficiently through GDI. If the user changes the current display mode without restarting the computer, a renderer might find itself with a bad image format connection and should send this notification. The first parameter should be the pin that needs reconnecting. The filter graph manager will arrange for the filter graph to be stopped and the pin reconnected. During the subsequent reconnection, the renderer can accept a more appropriate format. </P>
+
+<P>Whenever a video renderer detects a palette change in the stream it should send the <A HREF="JavaScript:hhobj_4.Click()"><B>EC_PALETTE_CHANGED</B></A> notification to the filter graph manager. The DirectShow video renderers detect whether a palette has really changed in dynamic format or not. The video renderers do this not only to filter out the number of <B>EC_PALETTE_CHANGED</B> notifications sent but also to reduce the amount of palette creation, installation, and deletion required. </P>
+
+<P>Finally, the video renderer might also detect that the size of the video has changed, in which case, it should send the <A HREF="JavaScript:hhobj_5.Click()"><B>EC_VIDEO_SIZE_CHANGED</B></A> notification. An application might use this notification to negotiate space in a compound document. The actual video dimensions are available through the <A HREF="JavaScript:hhobj_6.Click()"><B>IBasicVideo</B></A> control interface. The DirectShow renderers detect whether the video has actually changed size or not prior to sending these events. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

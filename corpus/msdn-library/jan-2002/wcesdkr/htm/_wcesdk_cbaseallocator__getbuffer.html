@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseAllocator::GetBuffer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseAllocator::GetBuffer"/>
+<MSHelp:RLTitle Title="CBaseAllocator::GetBuffer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseallocator__getbuffer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseAllocator::GetBuffer</H1>
+
+<P>Retrieves a container for a sample. </P>
+
+<PRE class="syntax"><B>HRESULT GetBuffer(</B>
+<B>IMediaSample **</B><I>ppBuffer</I><B>,</B>
+<B>REFERENCE_TIME *</B><I>pStartTime</I><B>,</B>
+<B>REFERENCE_TIME *</B><I>pEndTime</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppBuffer </I></DT>
+
+<DD>Pointer to a retrieved media sample buffer. </dd>
+
+<DT><I>pStartTime </I></DT>
+
+<DD>Either NULL or set to the beginning time of the sample to retrieve. </dd>
+
+<DT><I>pEndTime </I></DT>
+
+<DD>Either NULL or set to the ending time of the sample to retrieve. </dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>The following flags are supported.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%>AM_GBF_PREVFRAMESKIPPED </TD>
+<TD width=50%>The buffer returned will not be filled with data contiguous to any previous data sent. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>AM_GBF_NOTASYNCPOINT </TD>
+<TD width=50%>Dynamic format changes are not allowed on this buffer because it is not a key frame. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns an <B>HRESULT</B> value. </P>
+
+<H4>Remarks</H4>
+
+<P>This member function implements the <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>IMemAllocator::GetBuffer</B></A> method. </P>
+
+<P>This is a blocking, synchronous call to access the next free buffer (as represented by an <A HREF="_wcesdk_imediasample_interface.htm"><B>IMediaSample</B></A> interface). Upon return, properties (such as the time and so on) are invalid, but the buffer pointer and size are correct. </P>
+
+<P>If no buffers are available, <B>CBaseAllocator::GetBuffer</B> calls <A HREF="_wcesdk_cbaseallocator__setwaiting.htm"><B>CBaseAllocator::SetWaiting</B></A> and then calls the Microsoft® Win32® <B>WaitForSingleObject</B> function to wait for the list to signal that a sample is available. The list signals by calling <A HREF="_wcesdk_cbaseallocator__releasebuffer.htm"><B>CBaseAllocator::ReleaseBuffer</B></A>, which in turn calls <A HREF="_wcesdk_cbaseallocator__notifysample.htm"><B>CBaseAllocator::NotifySample</B></A>, which sets <B>m_lWaiting</B> to zero and calls the Win32 <B>ReleaseSemaphore</B> function. </P>
+
+<P>This member function also takes two time parameters. These parameters are used in certain advanced buffering scenarios, when it is necessary to have an idea of the amount of time a buffer is required. The only place this is currently used is in the video renderer, when the time stamps are used as a guide to when the primary surfaces of Display Control Interface (DCI) and Microsoft® DirectDraw® should be returned (this is because filling a primary surface buffer corresponds directly to the actual rendering of the data). In all other cases, these parameters can be safely set to NULL. If one is non-NULL, both should be non-NULL; these times will not be set on the sample when it is subsequently returned. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

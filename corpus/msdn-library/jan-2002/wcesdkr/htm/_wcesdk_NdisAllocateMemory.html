@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisAllocateMemory</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisAllocateMemory"/>
+<MSHelp:RLTitle Title="NdisAllocateMemory"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisallocatememory"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisAllocateMemory</H1>
+
+<P>This function allocates resident (nonpaged) system-space memory. The memory can be allocated within a specified address limit and, if necessary, can be uncached as well.</P>
+
+<PRE class="syntax"><B>NDIS_STATUS NdisAllocateMemory(
+OUT PVOID</B> *<I>VirtualAddress</I>,
+<B>IN UINT</B> <I>Length</I>, <B>
+IN UINT</B> <I>MemoryFlags</I>,
+<B>IN NDIS_PHYSICAL_ADDRESS</B> <I>HighestAcceptableAddress</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>VirtualAddress</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns the base virtual address of the allocated memory or NULL if memory of the specified type is unavailable.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>Specifies the size, in bytes, to be allocated.</dd>
+
+<DT><I>MemoryFlags</I></DT>
+
+<DD>Specifies 0 or a bitmask designating the type(s) of memory to allocate. One of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=43%>Value</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>0</TD>
+<TD width=57%>Allocate nonpaged system-space memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>NDIS_MEMORY_CONTIGUOUS</TD>
+<TD width=57%>Not supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>NDIS_MEMORY_NONCACHED</TD>
+<TD width=57%>Allocate noncached memory.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>HighestAcceptableAddress</I></DT>
+
+<DD>Specifies &#0150;1.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>NDIS_STATUS_SUCCESS indicates that the caller can use the allocated memory range starting at the value returned at the <I>VirtualAddress</I> parameter. NDIS_STATUS_FAILURE indicates that the attempt to allocate the requested memory failed. This does not necessarily mean that a subsequent call will fail.</P>
+
+<H4>Remarks</H4>
+
+<P>If the NDIS_MEMORY_NONCACHED flag is specified, Windows CE NDIS uses the <A HREF="_wcesdk_win32_virtualalloc.htm"><B>VirtualAlloc</B></A> function to allocate the memory; otherwise, it uses the <A HREF="_wcesdk_win32_localalloc.htm"><B>LocalAlloc</B></A> function.</P>
+
+<P>Any NDIS driver might call this function with the <I>MemoryFlags</I> set to 0. for example, NDIS drivers that export a set of NDIS upper-edge (miniport) functions can call this function to allocate a context area in which the driver maintains per-network adapter or per-virtual-network adapter run-time state information and pass the pointer returned at <I>VirtualAddress</I> to the <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A> or the <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A> function. NDIS drivers that export a set of NDIS lower-edge (protocol) functions can also call this function whenever such a driver needs to allocate buffer space.</P>
+
+<P>Only network adapter miniports set the <I>MemoryFlags</I> with either or both of the flags when they make initialization-time calls to this function. During initialization, miniport drivers allocate these types of memory to be shared with their network adapters.</P>
+
+<P>If such a miniport specifies physically contiguous memory in a call to this function, the virtual memory allocation maps to a single physically contiguous region. If a miniport specifies noncached memory, the allocated virtual range is not cached. An network adapter driver can access noncached memory without flushing cache buffers during DMA operations.</P>
+
+<P>Whatever the value of the input <I>MemoryFlags</I>, a successful caller to this function uses a range of virtual addresses to access the allocated memory. Depending on the size of the allocation and on the type of memory requested, one or more physical memory ranges (pages) back this single virtual range.</P>
+
+<P>An network adapter driver should never request more noncached memory than it needs.</P>
+
+<P>If an initialization-time call fails, a network adapter driver can attempt to allocate one or more smaller blocks of noncached memory, rather than failing to initialize if it cannot allocate a large block.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_localalloc.htm"><B>LocalAlloc</B></A>, <A HREF="_wcesdk_ndisfreememory.htm"><B>NdisFreeMemory</B></A>, <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A>, <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A>, <A HREF="_wcesdk_win32_virtualalloc.htm"><B>VirtualAlloc</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

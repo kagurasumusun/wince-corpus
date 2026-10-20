@@ -1,0 +1,135 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::OnCtlColor</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::OnCtlColor"/>
+<MSHelp:RLTitle Title="CWnd::OnCtlColor"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_onctlcolor"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CWnd::OnCtlColor</H1>
+
+<P>This method is called by the framework when a child control is about to be drawn. Most controls send this message to their parent, usually a dialog box, to prepare the <I>pDC</I> for drawing the control using the correct colors.</P>
+
+<PRE class=syntax><B>afx_msg HBRUSH OnCtlColor(
+CDC* </B><I>pDC</I><B>,
+CWnd* </B><I>pWnd</I><B>,
+UINT </B><I>nCtlColor</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Contains a pointer to the display context for the child window. May be temporary.</DD>
+
+<DT><I>pWnd</I></DT>
+
+<DD>Contains a pointer to the control asking for the color. May be temporary.</DD>
+
+<DT><I>nCtlColor</I></DT>
+
+<DD>Contains one of the following values, specifying the type of control:
+
+<UL type=disc>
+	<LI>CTLCOLOR_BTN&nbsp;&nbsp;&nbsp;Button control</LI>
+
+	<LI>CTLCOLOR_DLG&nbsp;&nbsp;&nbsp;Dialog box</LI>
+
+	<LI>CTLCOLOR_EDIT&nbsp;&nbsp;&nbsp;Edit control</LI>
+
+	<LI>CTLCOLOR_LISTBOX&nbsp;&nbsp;&nbsp;List-box control</LI>
+
+	<LI>CTLCOLOR_MSGBOX&nbsp;&nbsp;&nbsp;Message box</LI>
+
+	<LI>CTLCOLOR_SCROLLBAR&nbsp;&nbsp;&nbsp;Scroll-bar control</LI>
+
+	<LI>CTLCOLOR_STATIC&nbsp;&nbsp;&nbsp;Static control</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P><B>OnCtlColor</B> must return a handle to the brush that is to be used for painting the control background.</P>
+
+<H4>Remarks</H4>
+
+<P>To change the text color, call the <B>SetTextColor</B> method with the desired red, green, and blue (RGB) values. </P>
+
+<P>To change the background color of a single-line edit control, set the brush handle in both the CTLCOLOR_EDIT and CTLCOLOR_MSGBOX message codes, and call the <B>CDC::SetBkColor</B> method in response to the CTLCOLOR_EDIT code.</P>
+
+<P><B>OnCtlColor</B> will not be called for the list box of a drop-down combo box because the drop-down list box is actually a child of the combo box and not a child of the window. To change the color of the drop-down list box, create a <B>CComboBox</B> with an override of <B>OnCtlColor</B> that checks for CTLCOLOR_LISTBOX in the <I>nCtlColor</I> parameter. In this handler, the <B>SetBkColor</B> method must be used to set the background color for the text.</P>
+
+<P>This method is called by the framework to allow your application to handle a Windows CE message. The parameters passed to your method reflect the parameters received by the framework when the message was received. If you call the base-class implementation of this method, that implementation will use the parameters originally passed with the message and not the parameters you supply to the method.</P>
+
+<H4>Example</H4>
+
+<PRE>// This OnCtlColor handler will change the color of a static control
+// with the ID of IDC_MYSTATIC. The code assumes that the CMyDialog
+// class has an initialized and created CBrush member named m_brush.
+// The control will be painted with red text and a background
+// color of m_brush.
+
+HBRUSH CZilchDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+&nbsp;&nbsp;// Call the base class implementation first! Otherwise, it may
+&nbsp;&nbsp;// undo what we are trying to accomplish here.
+&nbsp;&nbsp;HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
+
+&nbsp;&nbsp;// Are we painting the IDC_MYSTATIC control? We can use
+&nbsp;&nbsp;// CWnd::GetDlgCtrlID() to perform the most efficient test.
+&nbsp;&nbsp;if (pWnd-&gt;GetDlgCtrlID() == IDC_MYSTATIC)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Set the text color to red.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;SetTextColor(RGB(255, 0, 0));
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Set the background mode for text to transparent
+&nbsp;&nbsp;&nbsp;&nbsp;// so background will show thru.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;SetBkMode(TRANSPARENT);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Return handle to our CBrush object.
+&nbsp;&nbsp;&nbsp;&nbsp;hbr = m_brush;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;return hbr;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdc_82.htm"><B>CDC::SetBkColor</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

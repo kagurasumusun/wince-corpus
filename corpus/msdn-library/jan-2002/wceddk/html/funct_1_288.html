@@ -1,0 +1,99 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisReturnPackets</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisReturnPackets"/>
+<MSHelp:RLTitle Title="NdisReturnPackets"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndisreturnpackets"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisReturnPackets</H1>
+
+<P>This function releases ownership of one or more packets after a protocol has consumed the received data.</P>
+
+<PRE class="syntax"><B>VOID NdisReturnPackets(
+ IN PNDIS_PACKET</B> *<I>PacketsToReturn</I>,
+ <B>IN UINT</B> <I>NumberOfPackets</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>PacketsToReturn</I></DT>
+
+<DD>Pointer to an array of pointers to packet descriptors to be returned to the underlying driver that allocated them for a receive indication.</dd>
+
+<DT><I>NumberOfPackets</I></DT>
+
+<DD>Specifies the number of pointers in the array.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>An NDIS intermediate driver should call this function as soon as possible after its <B>ProtocolReceivePacket</B> function has returned control. Otherwise, both the underlying driver that supports multipacket receive indications and the bound protocol driver that processes them suffer a performance degradation.</P>
+
+<P>When an underlying NIC driver runs low on available packet pool for receive indications or its NIC runs low on empty receive buffers, the miniport can force the NDIS library to call every bound protocol driver’s <B>ProtocolReceive</B> function with a single packet descriptor at a time until the miniport has regained ownership of its packet descriptors and the NIC has receive buffers available for incoming net packets. A <B>ProtocolReceive</B> function cannot begin postprocessing a packet of received data and forwarding the processed data to clients until the driver’s <B>ProtocolReceiveComplete</B> function is called.</P>
+
+<P>For a packet descriptor passed in to its <B>ProtocolReceivePacket</B> function, a highest-level protocol driver can process its copy of received data and forward the processed data to clients immediately because the protocol can control how long it retains ownership of the resources allocated by the indicating driver. Assuming a highest-level protocol driver does not manipulate the data that it indicates to its clients, the protocol can even set up the range of data within the receive buffer of interest to its client, and make a receive indication to its client(s) by forwarding the input packet descriptor to those clients.</P>
+
+<P>If an intermediate protocol driver’s <B>ProtocolReceivePacket</B> function returns a nonzero reference count to an input packet descriptor, that driver must call this function one or more times. When it has called this function with a particular packet descriptor as many times as the value returned by <B>ProtocolReceivePacket</B>, the NDIS library returns the packet descriptor to the driver that made the indication. For a highest-level protocol that forwards an input packet descriptor to its clients, those clients return the packet descriptor to the NDIS driver that allocated it by making calls to the <B>TdiReturnChainedReceives</B> function.</P>
+
+<P>A protocol driver can rely on NDIS to manage the reference count for every receive packet passed to <B>ProtocolReceivePacket</B>. When the reference count for a packet descriptor originally set to the return from <B>ProtocolReceivePacket</B> goes to 0, the NDIS library calls the indicating driver’s <B>MiniportReturnPacket</B> function with the released packet descriptor.</P>
+
+<P>This function cannot be called from <B>ProtocolReceivePacket</B>.</P>
+
+<P>A driver that calls this function runs at IRQL &lt;= DISPATCH_LEVEL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_186.htm"><B>NdisAllocatePacket</B></A>, <A HREF="funct_1_203.htm"><B>NdisFreePacket</B></A>, <A HREF="funct_1_229.htm"><B>NdisMIndicateReceivePacket</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

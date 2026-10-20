@@ -1,0 +1,168 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fscanf, fwscanf</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="fscanf, fwscanf"/>
+<MSHelp:RLTitle Title="fscanf, fwscanf"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fscanf_fwscanf"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>fscanf, fwscanf</H1>
+
+<P>Read formatted data from a stream.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fscanf</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fwscanf</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>int fscanf( FILE</B> *<B>stream</B>, <B>const char</B> *<B>format</B> [, <B>argument</B> ]... <B>);</B>
+<B>int fwscanf( FILE</B> *<B>stream</B>, <B>const wchar_t</B> *<B>format</B> [, <B>argument</B> ]... <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Pointer to FILE structure</dd>
+
+<DT><I>format</I></DT>
+
+<DD>Format-control string</dd>
+
+<DT><I>argument</I></DT>
+
+<DD>Optional arguments</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Values</H4>
+
+<P>Each of these functions returns the number of fields successfully converted and assigned; the return value does not include fields that were read but not assigned. A return value of 0 indicates that no fields were assigned. If an error occurs, or if the end of the file stream is reached before the first conversion, the return value is EOF for <B>fscanf</B> and <B>fwscanf</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>fscanf</B> function reads data from the current position of stream into the locations given by argument (if any). Each argument must be a pointer to a variable of a type that corresponds to a type specifier in format. format controls the interpretation of the input fields and has the same form and function as the format argument for <B>scanf</B>; see <B>scanf</B> for a description of format. If copying takes place between strings that overlap, the behavior is undefined.</P>
+
+<P><B>fwscanf</B> is a wide-character version of <B>fscanf</B>; the format argument to <B>fwscanf</B> is a wide-character string. These functions behave identically otherwise.</P>
+
+<H4>Generic-Text Routine Mappings</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>TCHAR.H Routine </TH>
+<TH width=70%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>_ftscanf</TD>
+<TD width=70%>fwscanf</TD>
+</TR>
+</TABLE><BR>
+
+<P>For more information, see Format Specification Fields&#0151;<B>scanf</B> functions and <B>wscanf</B> Functions.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">/* FSCANF.C: This program writes formatted
+ * data to a file. It then uses fscanf to
+ * read the various data back from the file.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream;
+
+void main( void )
+{
+   long l;
+   float fp;
+   char s[81];
+   char c;
+
+   stream = fopen( "fscanf.out", "w+" );
+   if( stream == NULL )
+      printf( "The file fscanf.out was not opened\n" );
+   else
+   {
+      fprintf( stream, "%s %ld %f%c", "a-string",
+               65000, 3.14159, 'x' );
+
+      /* Set pointer to beginning of file: */
+      fseek( stream, 0L, SEEK_SET );
+
+      /* Read data back from file: */
+      fscanf( stream, "%s", s );
+      fscanf( stream, "%ld", &amp;l );
+
+      fscanf( stream, "%f", &amp;fp );
+      fscanf( stream, "%c", &amp;c );
+
+      /* Output data read: */
+      printf( "%s\n", s );
+      printf( "%ld\n", l );
+      printf( "%f\n", fp );
+      printf( "%c\n", c );
+
+      fclose( stream );
+   }
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">a-string
+65000
+3.141590
+x
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt2_36.htm"><B>fprintf</B></A>, <A HREF="crt2_102.htm"><B>scanf</B></A>, <A HREF="crt3_7.htm"><B>sscanf</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

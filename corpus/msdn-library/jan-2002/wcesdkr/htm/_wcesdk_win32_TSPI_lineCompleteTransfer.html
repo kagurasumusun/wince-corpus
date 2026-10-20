@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TSPI_lineCompleteTransfer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TSPI_lineCompleteTransfer"/>
+<MSHelp:RLTitle Title="TSPI_lineCompleteTransfer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_tspi_linecompletetransfer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>TSPI_lineCompleteTransfer</H1>
+
+<P>The <B>TSPI_lineCompleteTransfer</B> function completes the transfer of the specified call to the party connected in the consultation call. If <I>dwTransferMode</I> is LINETRANSFERMODE_CONFERENCE, the original call handle is changed to a conference call. Otherwise, the service provider should send call state messages changing the calls to <I>idle</I>.</P>
+
+<PRE class="syntax"><B>LONG TSPIAPI TSPI_lineCompleteTransfer(
+DRV</B>_<B>REQUESTID</B> <I>dwRequestId,</I>
+<B>HDRVCALL</B><I> hdCall,</I>
+<B>HDRVCALL</B><I> hdConsultCall,</I>
+<B>HTAPICALL</B><I> hConfCall,</I>
+<B>LPHDRVCALL</B><I> lphdConfCall,</I>
+<B>DWORD</B><I> dwTransferMode,</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwRequestID </I></DT>
+
+<DD>The identifier of the asynchronous request. </dd>
+
+<DT><I>hdCall</I> </DT>
+
+<DD>The service provider's handle to the call to be transferred. The call state of <I>hdCall</I> can be <I>onHoldPendingTransfer.</I> </dd>
+
+<DT><I>hdConsultCall</I> </DT>
+
+<DD>A handle to the call that represents a connection to the destination of the transfer. The call state of <I>hdConsultCall</I> can be <I>connected</I>, <I>ringback</I>, <I>busy</I>, or <I>proceeding</I>. </dd>
+
+<DT><I>htConfCall</I> </DT>
+
+<DD>This parameter is only valid if <I>dwTransferMode</I> is specified as LINETRANSFERMODE_CONFERENCE. The service provider must save this parameter value and use it in all subsequent calls to the <B>LINEEVENT </B>procedure reporting events on the call. Otherwise this parameter is ignored. </dd>
+
+<DT><I>lphdConfCall</I> </DT>
+
+<DD>A pointer to an HRDVCALL representing the service provider's identifier for the call. This parameter is only valid if <I>dwTransferMode</I> is specified as LINETRANSFERMODE_CONFERENCE. The service provider must fill this location with its handle for the new conference call <I>before</I> returning from this function. </dd>
+
+<DT><I>dwTransferMode</I> </DT>
+
+<DD>Specifies how the initiated transfer request is to be resolved. This parameter uses one of the LINETRANSFERMODE_constants. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns <I>dwRequestID</I> or an error number if an error occurs. The <I>lResult</I> actual parameter of the corresponding <B>ASYNC_COMPLETION </B>is zero if the function succeeds or an error number if an error occurs. Possible return values are as follows: </P>
+
+<P>LINEERR_INVALCALLHANDLE, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALCALLSTATE, LINEERR_OPERATIONFAILED, LINEERR_NOMEM, LINEERR_RESOURCEUNAVAIL. </P>
+
+<H4>Remarks</H4>
+
+<P>This function completes the transfer of the original call, <I>hdCall</I>, to the party currently connected through <I>hdConsultCall</I>. The consultation call is typically dialed on the consultation call allocated as part of <B>TSPI_lineSetupTransfer </B>but it can be any call to which the switch is capable of transferring <I>hdCall</I>.</P>
+
+<P>The transfer request can be resolved either as a transfer or as a three-way conference call. When resolved as a transfer, the parties connected through <I>hdCall</I> and <I>hdConsultCall</I> are connected to each other, and both <I>hdCall</I> and <I>hdConsultCall</I> transition to the idle state.</P>
+
+<P>When resolved as a conference, all three parties enter into a conference call. Both existing call handles remain valid, but transition to the <I>conferenced</I> state. A conference call handle is created and returned, and it transitions to the <I>connected</I> state.</P>
+
+<P>It may also be possible to perform a blind transfer of a call using <B>TSPI_lineBlindTransfer</B>.</P>
+
+<P>This function differs from the corresponding TAPI function in that it follows the TSPI model for beginning the lifetime of a call. TAPI and the service provider exchange opaque handles representing the call with one another. In addition, the service provider is permitted to do callbacks for the new call before it returns from this procedure. In any case, the service provider must also treat the handle it returned as "not yet valid" until after the matching <B>ASYNC_COMPLETION </B>message reports success. In other words, it must not issue any <B>LINEEVENT </B>message for the new call or include it in call counts in messages or status data structures for the line.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Tapicomn.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_tspi_lineblindtransfer.htm"><B>TSPI_lineBlindTransfer</B></A>, <A HREF="_wcesdk_win32_tspi_lineclosecall.htm"><B>TSPI_lineCloseCall</B></A>, <A HREF="_wcesdk_win32_tspi_linesetuptransfer.htm"><B>TSPI_lineSetupTransfer</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

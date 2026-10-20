@@ -1,0 +1,181 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMediaEvent Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMediaEvent Interface"/>
+<MSHelp:RLTitle Title="IMediaEvent Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_imediaevent_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMediaEvent Interface</H1>
+
+<P>The <B>IMediaEvent</B> interface supports event notification from the filter graph and filters within it to the application. It is decoupled by using a queuing scheme rather than callbacks, because events can be notified from worker threads that cannot safely call back into application code. </P>
+
+<P>An event code and two <B>DWORD</B> values represent event notification information. Your application can use this for typical completion of asynchronous operations, errors that occur during asynchronous operation, or user-initiated events, such as when a user clicks a hot spot. </P>
+
+<P>Filters within the filter graph and the filter graph itself raise event notifications. Possible events include playback completion or asynchronous playback errors. In addition, the filter graph provides a method to generate events at specific reference clock times. The filter graph exposes an <A HREF="_wcesdk_imediaeventsink_interface.htm"><B>IMediaEventSink</B></A> interface that the filters within the graph can call to pass event notifications to the application. </P>
+
+<P>Event notifications are placed in a queue. An application calls the <A HREF="_wcesdk_imediaevent__getevent.htm"><B>IMediaEvent::GetEvent</B></A> method to retrieve the next notification from the queue. This method blocks until there is an event to return. The <A HREF="_wcesdk_imediaevent__getevent.htm"><B>GetEvent</B></A> time-out parameter (<I>msTimeout</I>) allows the application to specify the time, in milliseconds, to wait for an event, including values of zero and INFINITE. After calling <B>GetEvent</B>, applications should always call <A HREF="_wcesdk_imediaevent__freeeventparams.htm"><B>FreeEventParams</B></A> to release any resource associated with the event. </P>
+
+<P>In addition, applications can retrieve the event handle. <A HREF="_wcesdk_imediaevent__geteventhandle.htm"><B>IMediaEvent::GetEventHandle</B></A> returns a handle to a manual-reset event created by the Microsoft® Win32® <B>CreateEvent</B> function. This event is in a signaled state as long as there are event notifications to collect. The <A HREF="_wcesdk_imediaevent__getevent.htm"><B>IMediaEvent::GetEvent</B></A> method clears the event when there are no more event notifications to collect. This enables an application to use an application programming interface (API), such as <B>MsgWaitForMultipleObjects</B>, to wait for events and other occurrences at the same time. This event handle will be closed when the filter graph is released; therefore, applications should ensure that they are not using it after this point. </P>
+
+<P>The filter graph manager handles some events raised by filters that are not passed to the application. One example of this is the <A HREF="_wcesdk_event_notification_codes__ec_repaint.htm">EC_REPAINT</A> event notification. By default the filter graph manager handles this event by pausing the filter graph and repainting the video renderer's static images. An application can override default handling for a specific event by calling the <A HREF="_wcesdk_imediaevent__canceldefaulthandling.htm"><B>IMediaEvent::CancelDefaultHandling</B></A> method with the event value as a parameter. The <A HREF="_wcesdk_imediaevent__restoredefaulthandling.htm"><B>IMediaEvent::RestoreDefaultHandling</B></A> method reinstates default handling for the specified event value. These methods have no effect on events that have no default handling. </P>
+
+<P>If an error occurs during the transition to a running state on any filter, the <A HREF="_wcesdk_imediacontrol__run.htm"><B>IMediaControl::Run</B></A> method returns an error value. In this case, some filters within the graph might be running successfully. The filter graph leaves it up to the application to determine whether to stop the graph in case of an error. After the <B>IMediaControl::Run</B> method has returned, event notifications report any additional errors. The <A HREF="_wcesdk_event_notification_codes__ec_errorabort.htm">EC_ERRORABORT</A> and <A HREF="_wcesdk_event_notification_codes__ec_userabort.htm">EC_USERABORT</A> event notifications indicate that playback has probably stopped in the graph (certainly in the filter that reported it). Other errors and events indicate that it is still running. Note, however, that in all cases the graph remains in running mode until the application explicitly changes it to stopped or paused mode. </P>
+
+<P>If the streams in the filter graph detect the end of the stream, the streams report this by using the <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> event notification. The filter graph manager asks filters if they can report EC_COMPLETE by means of seekable renderers. </P>
+
+<P>A seekable renderer is one that supports the <A HREF="_wcesdk_imediaposition_interface.htm"><B>IMediaPosition</B></A> interface from the filter and that has only input pins, or whose input pins report through <A HREF="_wcesdk_ipin__queryinternalconnections.htm"><B>IPin::QueryInternalConnections</B></A> that they are rendered. The filter graph uses <B>IPin::QueryInternalConnections</B> and <B>IMediaPosition</B> to detect seekable renderers. A seekable renderer should report <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> when all seekable streams on that filter have reached the stream's end. </P>
+
+<P>A renderer can produce <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> (and a regular filter produce <A HREF="_wcesdk_ipin__endofstream.htm"><B>EndOfStream</B></A>) for one of four reasons as follows:
+
+<UL type="disc">
+	<LI>The typical case: Whether there is data arriving or not, if it succeeds all calls to <A HREF="_wcesdk_cbaserenderer__receive.htm"><B>Receive</B></A> it will eventually get <A HREF="_wcesdk_ipin__endofstream.htm"><B>EndOfStream</B></A>. If the end of the media is reached and when all data and <B>EndOfStream</B> has been processed it will signal <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A>. </li>
+
+	<LI>The filter can never produce any data. In that case it just passes <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> immediately when a Run method is called. For example, a filter would pass <B>EC_COMPLETE</B> if none if its input pins is connected. </li>
+
+	<LI>The complicated case, sometimes used by the wave renderer: It can't render data right now even though it's getting it but it might be able to later. In that case, it fails the first <A HREF="_wcesdk_cbaserenderer__receive.htm"><B>Receive</B></A>, schedules an <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> for a time <I>tStop</I> minus <I>tStart</I> in the future (based on the <A HREF="_wcesdk_ipin__newsegment.htm">NewSegment</A> parameters). If it finds it can start sending data it signals an <A HREF="_wcesdk_event_notification_codes__ec_need_restart.htm">EC_NEED_RESTART</A>. A better approach could be to use stream control for this to avoid stopping and starting the graph. </li>
+
+	<LI>It detects an unrecoverable error. Then, like any filter, it signals end of stream which for a renderer means signaling <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A>. </li>
+</UL>
+
+<P>The filter graph manager will not pass <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> to the application until an <B>EC_COMPLETE</B> event notification has been received from each stream. For example, if a live camera stream is playing as the background for a video playing from a file, the application will be notified about <B>EC_COMPLETE</B> when the video and audio streams from the file have come to the stream's end, even though the live source is still playing. In this case, too, the filter graph remains in running mode until the application explicitly calls the <A HREF="_wcesdk_imediacontrol__pause.htm"><B>IMediaControl::Pause</B></A> or <A HREF="_wcesdk_imediacontrol__stop.htm"><B>IMediaControl::Stop</B></A> method. </P>
+
+<P>Your application can disable the aggregation of <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> messages by calling <A HREF="_wcesdk_imediaevent__canceldefaulthandling.htm"><B>IMediaEvent::CancelDefaultHandling</B></A> with <B>EC_COMPLETE</B> as the parameter. In this case, all <B>EC_COMPLETE</B> events raised by the filters will be passed directly to the application. </P>
+
+<P>For a list of system-defined event notifications, see <A HREF="_wcesdk_event_notification_codes.htm">Event Notification Codes</A>. </P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;All events must be handled if a handle to an <B>IMediaEvent</B> interface is obtained otherwise events will pile up and cause the heap to be used up. </P>
+
+<H4>When to Implement</H4>
+
+<P>The filter graph manager implements this interface. </P>
+
+<P>You can use the <A HREF="_wcesdk_cmediaevent__cmediaevent.htm"><B>CMediaEvent</B></A> class, which handles the <A HREF="_wcesdk_oa96_itypeinfo_interface.htm#_oa96_idispatch_interface"><B>IDispatch</B></A> implementation for Automation, to help implement this interface. </P>
+
+<H4>When to Use</H4>
+
+<P>Applications use this interface to retrieve event notifications or event handles from the filter graph manager. For example, an application can retrieve the <A HREF="_wcesdk_event_notification_codes__ec_complete.htm">EC_COMPLETE</A> notification to find out when a media stream has been rendered completely. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IUnknown methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IDispatch methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_oa96_idispatch_gettypeinfocount.htm"><B>GetTypeInfoCount</B></A></TD>
+<TD width=50%>Determines whether there is type information available for this dispinterface. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_oa96_idispatch_gettypeinfo.htm"><B>GetTypeInfo</B></A></TD>
+<TD width=50%>Retrieves the type information for this dispinterface if <B>GetTypeInfoCount</B> returned successfully. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_oa96_idispatch_getidsofnames.htm"><B>GetIDsOfNames</B></A></TD>
+<TD width=50%>Converts text names of properties and methods (including arguments) to their corresponding DISPIDs. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_oa96_idispatch_invoke.htm"><B>Invoke</B></A></TD>
+<TD width=50%>Calls a method or accesses a property in this dispinterface if given a DISPID and any other necessary parameters. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IMediaEvent methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaevent__geteventhandle.htm"><B>GetEventHandle</B></A></TD>
+<TD width=50%>Retrieves a handle to a manual-reset event that will be signaled. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaevent__getevent.htm"><B>GetEvent</B></A></TD>
+<TD width=50%>Retrieves the next notification event. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaevent__waitforcompletion.htm"><B>WaitForCompletion</B></A></TD>
+<TD width=50%>Blocks execution of the application thread until the graph's operation finishes. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaevent__canceldefaulthandling.htm"><B>CancelDefaultHandling</B></A></TD>
+<TD width=50%>Cancels any default handling of the specified event by the filter graph. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaevent__restoredefaulthandling.htm"><B>RestoreDefaultHandling</B></A></TD>
+<TD width=50%>Restores default handling for this event. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_imediaevent__freeeventparams.htm"><B>FreeEventParams</B></A></TD>
+<TD width=50%>Frees resources associated with the parameters to an event. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

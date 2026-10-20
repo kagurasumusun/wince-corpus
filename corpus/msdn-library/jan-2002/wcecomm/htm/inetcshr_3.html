@@ -1,0 +1,91 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DNS Proxy</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DNS Proxy"/>
+<MSHelp:RLTitle Title="DNS Proxy"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dns_proxy"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>DNS Proxy</H1>
+
+<P>Name resolution is automated in Windows CE by having the DHCP server supply the addresses of DNS servers to DHCP clients during address assignment. This scheme fails for the home network, because the DNS server resides either with an ISP or on a corporate network, and the correct DNS server address does not become known until a connection is established. Moreover, a typical home network does not have a DHCP server configured.</P>
+
+<P>To deal with these characteristics of the home network, the DHCP allocator on the gateway device can give the local-area address of the gateway as the DNS server address to DHCP clients. Once the Internet connection is established, the gateway device can forward address-resolution requests to the address of the Internet DNS server obtained for the connection. This DNS proxy makes name resolution transparent from the point of view of devices on the home network.</P>
+
+<P>The DNS proxy relays DNS requests to the current public network DNS server for the proxy, and replies as a DNS resolver to the client device on the home network. The DNS proxy must also keep track of the state of the public DNS requests and try the next DNS server in the configuration if the previous DNS resolution fails.</P>
+
+<P>When the home network already has a DNS server configured, the DNS proxy is still useful. The existing DNS server most likely would be configured to forward Internet name-resolution requests to a DNS server with a static Internet address. This static configuration can fail when the Internet address of the DNS server changes. With automatic name resolution, the existing DNS server can be configured to forward Internet DNS requests to the local-area address of the DNS proxy, and the DNS proxy can handle the task of dynamically finding the internet DNS server addresses when the internet connection is established.</P>
+
+<P>The DNS proxy performs the following functions:
+
+<UL type="disc">
+	<LI>Receives DNS inquiries and forwards them to external DNS address on the Internet.</li>
+
+	<LI>Initiates demand-dial when it receives DNS inquiry but has no Internet connection.</li>
+</UL>
+
+<P>The DNS proxy does not require any specific protocol actions. When the DNS proxy receives a DNS question message, the proxy:
+
+<OL type="1">
+	<LI>Selects a unique new identifier.</li>
+
+	<LI>Records a tuple that contains the original 16-bit identifier of the message, the newly selected identifier, and the endpoint from which the message originated.</li>
+
+	<LI>Writes the new identifier in the request.</li>
+
+	<LI>Transmits the question to the configured DNS server for the proxy.</li>
+</OL>
+
+<P>When the DNS proxy receives a DNS response message, the proxy:
+
+<OL type="1">
+	<LI>Searches for a tuple associated with the identifier in the response message.</li>
+
+	<LI>Writes the original identifier in the response message.</li>
+
+	<LI>Transmits the response to the endpoint from which the question originated.</li>
+</OL>
+
+<P><B>To enable DNS proxy</B>
+
+<OL type="1">
+	<LI>Enable the DHCP Allocator as described in <A HREF="inetcshr_1.htm">DHCP Allocator</A>.</li>
+
+	<LI>Set the <A HREF="inetcshr_17.htm"><B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\EnableDNSProxy</B></A> registry key equal to a non-zero value.</li>
+
+	<LI>Set the <A HREF="inetcshr_27.htm"><B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\PrivateInterface</B></A><B> </B>registry key to a list of private interfaces that you want to enable the DNS proxy on.</li>
+</OL>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

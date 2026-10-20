@@ -1,0 +1,105 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OhcdMdd_CreateMemoryObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="OhcdMdd_CreateMemoryObject"/>
+<MSHelp:RLTitle Title="OhcdMdd_CreateMemoryObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ohcdmdd_creatememoryobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>OhcdMdd_CreateMemoryObject</H1>
+
+<P>This function creates the OHCI shared memory area.</P>
+
+<PRE class="syntax"><B>LPVOID</B> <B>OhcdMdd_CreateMemoryObject(
+DWORD</B> <I>cbSize</I><B>,
+DWORD</B> <I>cbHighPrioritySize</I><B>,
+PUCHAR</B> <I>pVirtAddr</I><B>,
+PUCHAR</B> <I>pPhysAddr</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>cbSize</I></DT>
+
+<DD>[IN] Specifies the total size of OHCD shared memory area.</dd>
+
+<DT><I>cbHighPrioritySize</I></DT>
+
+<DD>[IN] Specifies the bytes reserved for high-priority isochronous or interrupt transfers and OHCI host controller communication area.</dd>
+
+<DT><I>pVirtAddr</I></DT>
+
+<DD>[IN] Pointer to the virtual address, which may be NULL, of a memory area.</dd>
+
+<DT><I>pPhysAddr</I></DT>
+
+<DD>[IN] Pointer to the physical address, which may be NULL, of a memory area.</dd>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A pointer to an OHCD memory object indicates success. NULL indicates failure.</P>
+
+<H4>Remarks</H4>
+
+<P>This function is called by the OHCD PDD to initialize the shared memory area used by the OHCI driver. This memory contains the the Host Controller Communication Area (HCCA) for communicating with the OHCI hardware and is used to allocate DMA buffers for USB driver data transfers. Two options are available. If a platform has an area of memory set aside that can be used by OHCI, as specified in the Config.bib file, it can pass the virtual and physical address pointers in to this function. This is the recommended method. Alternatively, the PDD may pass NULL in for the physical and virtual address pointers, in which case the <B>OhcdMdd_CreateMemoryObject</B> function attempts to allocate a suitable memory buffer from system RAM.</P>
+
+<P>The OHC interface shared memory area is broken into two separate areas: a high-priority pool of buffers for the HCCA and for isochronous client buffers and a lower-priority pool of buffers for other client transfers.</P>
+
+<P>The size of the shared memory area is dependent on the perceived usage of USB within the platform. The OHC interface controller uses 4-KB page boundaries for internal data structures, so the size should be a multiple of 4 KB and must be at least 8 KB for the control structures and memory needed for device configuration. Additionally, client drivers may need to utilize this area for their transfers, so it is recommended that OEMS provide additional memory. The maximum DMA memory used for a client transfer is 8 KB, so OEMs should try to determine what a reasonable number of outstanding client transfers may be.</P>
+
+<P>A recommended value for general-purpose USB operation is 38 KB, with 20 KB reserved for high-priority transfers. OEMs that anticipate less demand on the USB subsystem can safely reduce this to 28 KB, of which 20 KB is high priority. Reducing the size of the high-priority buffer may cause isochronous transfers to fail if memory cannot be allocated, whereas reducing the size of the non-high-priority buffer reduces performance on bulk transfers. However, reducing the non-high-priority buffer does not cause failures, because bulk transfers can block to wait for memory to become available.</P>
+
+<P>If possible, OEMs should consider placing the OHCD shared memory area in high-speed memory, particularly to support streaming (isochronous) data transfers.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=17%>Ohcdddsi.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

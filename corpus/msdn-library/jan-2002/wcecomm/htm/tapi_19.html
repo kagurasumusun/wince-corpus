@@ -1,0 +1,96 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Shutting Down TAPI</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Shutting Down TAPI"/>
+<MSHelp:RLTitle Title="Shutting Down TAPI"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_shutting_down_tapi"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_lineDrop" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Shutting Down TAPI</H1>
+
+<P>Ending a call works the same for incoming and outgoing calls. When the call ends, the application should disconnect and terminate the call by using the <A HREF="JavaScript:hhobj_1.Click()"><B>lineDrop</B></A> function. If the incoming call hangs up on the other end, TAPI automatically drops the line.</P>
+
+<P><B>To drop a line</B>
+
+<OL type="1">
+	<LI>Call the <B>lineDrop</B> function.</li>
+
+	<LI>Free memory by using the <B>lineDeallocateCall</B> function.</li>
+</OL>
+
+<P>The following code example shows how to use the <B>lineDrop</B> and <B>lineDeallocateCall</B> functions.</P>
+
+<P>To drop a line, you first must call <B>lineDrop</B>.</P>
+
+<PRE class="code">g_DropCallRequestID = lineDrop (g_hCall, NULL, 0);</PRE>
+
+<P>After receiving a LINECALLSTATE_IDLE message, you must call the <B>lineDeallocateCall</B> function.</P>
+
+<PRE class="code">lineDeallocateCall (g_hCall);</PRE>
+
+<P>Deallocating a call handle means that the system must free system-allocated memory that is related to the call after the call has been dropped. The application must call the <B>lineDeallocatedCall</B> function to free allocated memory.</P>
+
+<P>To close the line, the application should call the <B>lineClose</B> function. After the line has closed successfully, the handle is no longer valid.</P>
+
+<P><B>To close a line for the incoming call</B>
+
+<OL type="1">
+	<LI>Cancel the call by using <B>lineDrop</B> function.</li>
+
+	<LI>Close the open line by using the <B>lineClose</B> function.</li>
+
+	<LI>Reinitialize the variables.</li>
+</OL>
+
+<P>The following code example shows how to use the <B>lineClose</B> function to close the line.</P>
+
+<PRE class="code">VOID CurrentLineClose ()
+{
+  // Close the current line.
+  if (g_CurrentLineInfo.hLine)
+    lineClose (g_CurrentLineInfo.hLine);
+
+  // Reinitialize the variables.
+  g_CurrentLineInfo.hLine = NULL;
+  g_bCurrentLineAvail = TRUE;
+  g_hCall = NULL;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Deriving from DDGPE</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Deriving from DDGPE"/>
+<MSHelp:RLTitle Title="Deriving from DDGPE"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_deriving_from_ddgpe_ddhal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Deriving from DDGPE</H1>
+
+<P>There are several minor changes and additions you can make to your <B>DDGPE</B>-based driver that will add greater functionality and power to your implementation. These changes include functions you should override, member variables you should set, and functions you should call. Each of these items is covered under its own topic.</P>
+
+<H2>Functions You Should Override</H2>
+
+<P>This section describes the <B>DDGPE</B> class functions your <B>DDGPE</B>-based display driver should override and implement in order to improve its <B>DDGPE</B> support.</P>
+
+<P><B>AllocSurface</B></P>
+
+<P>The <B>AllocSurface</B> function allows the <B>EDDGPEPixelFormat</B> data type to be integrated into your driver. With the addition of this data type, your driver can begin to support a wide variety of surface types.</P>
+
+<PRE class="code">virtual SCODE AllocSurface (
+DDGPESurf **ppSurf,
+int width,
+int height,
+EGPEFormat format,
+EDDGPEPixelFormat pixelFormat,
+int surfaceFlags
+);</PRE>
+
+<P><B>GetModeInfoEx</B></P>
+
+<P>The <B>GetModeInfoEx</B> function provides <B>DDGPE</B> with extended pixel format information that applies to a specific mode. This is useful to both <B>DDGPE</B> classes and the <B>DDGPE</B> DDHAL implementation.</P>
+
+<P>To override this function, you need to store detailed information about the different modes that are supported by your driver.</P>
+
+<PRE class="code">virtual SCODE GetModeInfoEx (
+GPEModeEx *pModeEx,
+int modeNo
+);</PRE>
+
+<P><B>SetMode</B></P>
+
+<P>The <B>SetMode</B> function is a standard function that must be implemented by any <B>GPE</B>-based driver. This function has been overloaded in <B>DDGPE</B> with a new version that supports an extra flag. This flag, bChangeGDISurfaceMode, allows the caller to indicate whether the GDI primary surface should be modified or if just the physical hardware mode needs to be changed. This difference is important in situations where <B>DDGPE</B> or DirectDraw require that the GDI surface be separated from the surface that is actually being displayed on the screen.</P>
+
+<P>The <B>SetMode</B> function should behave as usual if the bChangeGDISurfaceMode flag is set to TRUE. Otherwise, it should simply change the hardware mode and update any corresponding flags. (For example, it should update the m_dwPhysicalModeID flag, which is also described in this section.)</P>
+
+<PRE class="code">virtual SCODE SetMode (
+int modeNo,
+HPALETTE *pPalette,
+BOOL bChangeGDISurfaceMode
+);</PRE>
+
+<P><B>SetVisibleSurface</B></P>
+
+<P>The <B>SetVisibleSurface</B> function has been added by <B>DDGPE</B>. By default, the <B>DDGPE</B> implementation of this function does nothing. However, to support DirectDraw surface Flips, you should implement this function. It should change the display to show the selected surface. The current GDI primary surface should not be changed.</P>
+
+<PRE class="code">virtual void SetVisibleSurface (
+GPESurf *pSurf,
+BOOL bWaitForVBlank = FALSE
+);</PRE>
+
+<H2>Member Variables You Should Set</H2>
+
+<P>This section points out some of <B>DDGPE</B>’s member variables and indicates when and why they should be updated.</P>
+
+<P><B>m_pModeEx</B></P>
+
+<P>This member variable should always point to the extended mode information for GDI’s current display mode. You should update it at initialization time, and whenever the GDI primary surface’s mode is changed. As a rule of thumb, the m_pModeEx member variable should be updated whenever the <B>GPE</B> member variable m_pMode is updated. Note that because of the structure of GPEModeEx, m_pModeEx and m_pMode can point to the same block of memory.</P>
+
+<P>To support this member variable, you will need to store extended information for all modes supported by your driver.</P>
+
+<PRE class="code">GPEModeEx m_pModeEx;</PRE>
+
+<P><B>m_dwPhysicalModeID</B></P>
+
+<P>The m_dwPhysicalModeID member variable indicates the index of the mode that is actually being displayed on the screen. This does not necessarily correspond to the current mode of the GDI primary surface.</P>
+
+<P>This value should be updated whenever the hardware’s display mode changes, regardless of whether or not the pixel format of the GDI primary surface has changed.</P>
+
+<PRE class="code">DWORD m_dwPhysicalModeID;</PRE>
+
+<H2>Functions You Should Call</H2>
+
+<P><B>SetDriverGUID</B></P>
+
+<P>You should call the <B>SetDriverGUID</B> function to supply the <B>DDGPE</B> object with a unique way to identify your driver from other drivers. <B>DDGPESurf</B> objects that your driver creates should also be tagged with this GUID.</P>
+
+<PRE class="code">virtual void SetDriverGUID (
+GUID guidDriverGUID
+);</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

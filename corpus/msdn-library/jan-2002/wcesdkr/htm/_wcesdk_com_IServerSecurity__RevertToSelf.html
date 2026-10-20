@@ -1,0 +1,103 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IServerSecurity::RevertToSelf</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IServerSecurity::RevertToSelf"/>
+<MSHelp:RLTitle Title="IServerSecurity::RevertToSelf"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iserversecurity__reverttoself"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IServerSecurity::RevertToSelf</H1>
+
+<P>This method restores a thread's authentication information. </P>
+
+<PRE class="syntax"><B>HRESULT RevertToSelf( )</B></PRE>
+
+<H4>Return Values</H4>
+
+<P>This method supports the standard return value E_FAIL, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>Success.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>In Windows NT 4, <B>IServerSecurity::RevertToSelf</B> sets the thread token to NULL. In Windows 2000, <B>RevertToSelf</B> restores the thread's authentication information. This behavior is described as follows. </P>
+
+<P><B>RevertToSelf</B> restores the authentication information on a thread to the authentication information on the thread before impersonation began. If the server does not call <B>RevertToSelf</B> before the end of the current call, it will be called automatically by COM. </P>
+
+<P>When <A HREF="_wcesdk_com_iserversecurity__impersonateclient.htm"><B>ImpersonateClient</B></A> is called on a thread that is not currently impersonating, COM saves the token currently on the thread. A subsequent call to <B>RevertToSelf</B> restores the saved token, and <A HREF="_wcesdk_com_iserversecurity__isimpersonating.htm"><B>IsImpersonating</B></A> will then return false. This means that if a series of impersonation calls are made using different <B>IServerSecurity</B> objects, <B>RevertToSelf</B> will restore the token that was on the thread when the first call to <B>ImpersonateClient</B> was made. Also, only one <B>RevertToSelf</B> call is needed to undo any number of <B>ImpersonateClient</B> calls. </P>
+
+<P>This method will only revert impersonation changes made by <B>IServerSecurity::ImpersonateClient</B>. If the thread token is modified by other means (through the <B>SetThreadToken</B> or <B>RpcImpersonateClient</B> Win32 functions) the result of this function is undefined.</P>
+
+<P><B>RevertToSelf </B>affects only the current method invocation. If there are nested method invocations, each invocation can have its own impersonation token and DCOM will correctly restore the impersonation token before returning to them (regardless of whether or not <A HREF="_wcesdk_com_coreverttoself.htm"><B>CoRevertToSelf</B></A> or <B>IServerSecurity::RevertToSelf</B> was called).</P>
+
+<P>It is important to understand that an instance of <B>IServerSecurity</B> is valid on any thread in the apartment until the call represented by <B>IServerSecurity</B> completes. However, impersonation is local to a particular thread for the duration of the current call on that thread. Therefore, if two threads in the same apartment use the same <B>IServerSecurity</B> instance to call <B>IServerSecurity::ImpersonateClient</B>, one thread can call <B>RevertToSelf</B> without affecting the other. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_coreverttoself.htm"><B>CoRevertToSelf</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

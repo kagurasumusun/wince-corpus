@@ -1,0 +1,63 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SnmpExtensionQuery</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SnmpExtensionQuery"/>
+<MSHelp:RLTitle Title="SnmpExtensionQuery"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_snmpextensionquery"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SnmpExtensionQuery</H1>
+
+<P>The master agent calls the <B>SnmpExtensionQuery</B> function to pass on to the appropriate extension agent the variable bindings of each authenticated <B>GetRequest</B>, <B>GetNextRequest</B>, and <B>SetRequest</B> message that the SNMP agent received. Before calling any extension agent, the master agent separates the variables into individual lists that are based on the extension agent that supports them. The master agent then delivers each list to the <B>SnmpExtensionQuery</B> function of the associated extension agent, along with the type of request (<B>Get</B>, <B>Set</B>, or <B>GetNext</B>).</P>
+
+<P>The extension agent determines whether the request is valid, processes the request, and returns the data that is collected to the master agent. The master agent combines the results that are returned from the individual extension-agent requests and sends back a response to the management console. The <B>SnmpExtensionQuery</B> function should return TRUE if the query was processed successfully or FALSE if the query failed. If one of the extension agents fails to complete a request, the entire request is aborted. Failure to complete a request is different from returning an error.</P>
+
+<P>The <B>SnmpExtensionQuery</B> function has the following parameters:
+
+<UL type="disc">
+	<LI>A value that represents the type of request that is being passed to the extension agent by this call (<B>GetRequest</B>, <B>Set</B>, <B>GetNext</B>, <B>GetBulk</B>).</li>
+
+	<LI>A list of variable bindings that are contained within the request message and are registered as being supported by the extension agent. Each binding must be parsed, and the specified <B>GetRequest</B>, <B>GetNextRequest</B>, or <B>SetRequest</B> operation must be applied to its OID and value. If the extension agent changes any variable-length data that is pointed to by <I>pVariableBindings</I>, it must free and reallocate the memory in the specific <B>Varbind</B> object by calling the <B>SnmpUtilOidFree</B> function.</li>
+
+	<LI>An <B>errorStatus</B> value that is included in the <B>GetResponse</B> message in the event of an error.</li>
+
+	<LI>An error index that refers to the variable binding that caused the error. If no error occurred, a value of 0 is returned.</li>
+</UL>
+
+<P>The following diagram diagram provides an outline of the <B>SnmpExtensionQuery</B> function:</P>
+
+<P class="fig"><IMG SRC="extquery.gif" ALT="" BORDER=0></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

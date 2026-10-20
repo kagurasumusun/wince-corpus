@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineGetAppPriority</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineGetAppPriority"/>
+<MSHelp:RLTitle Title="lineGetAppPriority"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_linegetapppriority"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>lineGetAppPriority</H1>
+
+<P>The <B>lineGetAppPriority</B> function allows an application to determine whether or not it is in the handoff priority list for a particular media mode or Assisted Telephony request mode and, if so, its position in the priority list. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineGetAppPriority(</B>
+<B>LPCSTR </B><I>lpszAppFilename</I><B>,</B>
+<B>DWORD </B><I>dwMediaMode</I><B>,</B>
+<B>LPLINEEXTENSIONID </B><I>lpExtensionID</I><B>,</B>
+<B>DWORD </B><I>dwRequestMode</I><B>,</B>
+<B>LPVARSTRING </B><I>lpExtensionName</I><B>,</B>
+<B>LPDWORD </B><I>lpdwPriority</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszAppFilename</I> </DT>
+
+<DD>A pointer to a string containing the application executable module file name (without directory information). In API version 2.0 or later, the parameter can be in long file name format, of which the 8.3 file name format is a proper subset. Long file names, unlike 8.3 file names, are case preserving. Neither file name format is case sensitive. See File Name Conventions. In API versions earlier than 2.0, the parameter must specify a file name in the 8.3 format; long file names cannot be used. </dd>
+
+<DT><I>dwMediaMode</I> </DT>
+
+<DD>The media mode for which the priority information is to be obtained. The value can be one of the LINEMEDIAMODE_ Constants; only a single bit can be on. The value 0 should be used if checking application priority for Assisted Telephony requests. </dd>
+
+<DT><I>lpExtensionID</I> </DT>
+
+<DD>A pointer to structure of type <B>LINEEXTENSIONID</B>. This parameter is ignored. </dd>
+
+<DT><I>dwRequestMode</I> </DT>
+
+<DD>If the <I>dwMediaMode</I> parameter is zero, this parameter specifies the Assisted Telephony request mode for which priority is to be checked. It must be either LINEREQUESTMODE_MAKECALL or LINEREQUESTMODE_MEDIACALL. This parameter is ignored if <I>dwMediaMode</I> is non-zero. </dd>
+
+<DT><I>lpExtensionName</I> </DT>
+
+<DD>This parameter is ignored. </dd>
+
+<DT><I>lpdwPriority</I> </DT>
+
+<DD>A pointer to a DWORD-size memory location into which TAPI writes the priority of the application for the specified media or request mode. The value 0 is returned if the application is not in the stored priority list and does not currently have any line device open with ownership requested of the specified media mode or having registered for the specified request mode.
+
+<P>In API versions earlier than 2.0, the value &#0150;1 (0xFFFFFFFF) is returned if the application has the line open for the specified media mode or has registered for the specified requests, but the application is not in the stored priority list (that is, it is in the temporary priority list only). In API version 2.0 or later, the value 0 is returned to indicate this condition.
+
+
+<P>Otherwise, the value indicates the application's position in the list (with 1 being highest priority, and increasing values indicating decreasing priority).
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns zero if the request succeeds or a negative error number if an error occurs. Possible return values are: </P>
+
+<P>LINEERR_INIFILECORRUPT, LINEERR_INVALREQUESTMODE, LINEERR_INVALAPPNAME, LINEERR_NOMEM, LINEERR_INVALMEDIAMODE, LINEERR_OPERATIONFAILED, LINEERR_INVALPOINTER, LINEERR_STRUCTURETOOSMALL.</P>
+
+<H4>Remarks</H4>
+
+<P>If LINEERR_INVALMEDIAMODE is returned, the value specified in <I>dwMediaMode</I> is not zero, not a valid extended media mode, and not one of the LINEMEDIAMODE_ Constants, or more than one bit is on in the parameter value. </P>
+
+<P>Although this is a new function that older applications would not be expected to call, for backward compatibility they should not be prevented from doing so; the function works the same way for all applications. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Tapi.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_varstring_str.htm"><B>VARSTRING</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

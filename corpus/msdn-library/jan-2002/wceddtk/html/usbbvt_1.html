@@ -1,0 +1,119 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_usb_basic_transfer_verification_running_the_test"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Running the Test</H1>
+
+<P>The architecture of the USB client driver relies on a separate Device Driver Loader/TUX Extender DLL module (DDLX), which is used to automate the large number of USB test cases. </P>
+
+<P>The following command line shows the syntax for using Tux.exe and Ddlx.dll to run the test, where <I>test_case</I> is the specific test case or range of test cases to run.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d ddlx.dll &#0150;c usbbvt.dll -x <I>test_case</I></PRE>
+
+<P>The following command line shows the syntax for using Tux.exe and Ddlx.dll to run the entire test.</P>
+
+<PRE class="code">tux &#0150;o &#0150;d ddlx.dll &#0150;c usbbvt.dll</PRE>
+
+<P>The following command line shows the syntax for outputting a list of all available test cases. </P>
+
+<PRE class="code">tux &#0150;o &#0150;l &#0150;d ddlx.dll &#0150;c usbbvt.dll </PRE>
+
+<P>Usbbvt.dll uses the <B>RegisterClientSettings</B> API to register itself as the client driver that will be loaded when the Intel I80930Ax test board is connected. This registration is performed either during the connection of the unknown device, which occurs when the USB subsystem presents the user with a dialog prompt for the driver DLL name (Usbbvt.dll), or during execution of the Usbload.exe utility. </P>
+
+<P>The following command line shows the syntax for installing the Usbbvt.dll driver.</P>
+
+<PRE class="code">s usbload.exe usbbvt.dll</PRE>
+
+<P>Once registered, the client driver is not loaded until a USB device is connected. At that time, USB enumerates the device and uses callback to notify Usbbvt.dll of the event. The USB client driver then accepts control of the device and callback because it is now fully installed in memory.</P>
+
+<P>Once Usbbvt.dll is installed as an Intel I80930Ax test board client driver, any corresponding devices inserted from that point on will use it as a client driver. Usbbvt.dll does not affect any devices that have already been connected before its registration.</P>
+
+<P>The following command line shows the syntax for listing the currently registered USB drivers.</P>
+
+<PRE class="code">s usbload.exe</PRE>
+
+<P>The registry entries for Usbbvt.dll that are installed and reported by the Usbload.exe utility are as follows:</P>
+
+<PRE class="code">[USB]
+     [LoadClients]
+         [1118_37642]
+             [Default]
+                 [0_0_0]
+                     [USBBVT I80930AE Driver]
+                         SZ: DLL = usbbvt
+     [ClientDrivers]
+         [USBBVT I80930AE Driver]</PRE>
+
+<P>After it is no longer needed, the Usbbvt.dll client driver can be unloaded with the Usbload.exe utility. This is necessary so that normal USB functionality can resume. All devices that were using the driver must be disconnected to fully remove it from memory.</P>
+
+<P>The following command line shows the syntax for uninstalling the Usbbvt.dll driver:</P>
+
+<PRE class="code">s usbload.exe usbbvt.dll unload</PRE>
+
+<P>The following table shows the test cases.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=19%>Test Case</TH>
+<TH width=81%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1001</TD>
+<TD width=81%>Bulk endpoint-loopback transfer test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1002</TD>
+<TD width=81%>Interrupt endpoint-loopback transfer test</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1003</TD>
+<TD width=81%>Isochronous endpoint-loopback transfer test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>1004</TD>
+<TD width=81%>Run all endpoint-loopback transfers at same time.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+<DIV CLASS="footer">Built on Tuesday, January 09, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

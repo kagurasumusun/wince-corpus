@@ -1,0 +1,228 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CHKBOOK</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CHKBOOK"/>
+<MSHelp:RLTitle Title="CHKBOOK"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_chkbook"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="mfc_AfxMessageBox" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_GetWindowText" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_SetWindowText" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_crt_strlen.2c_.wcslen.2c_._mbslen.2c_._mbstrlen" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_crt_atof.2c_.atoi.2c_._atoi64.2c_.atol" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_crt_atof.2c_.atoi.2c_._atoi64.2c_.atol" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>CHKBOOK</H1>
+<OBJECT ID="CHKBOOK" WIDTH=182 HEIGHT=24 HSPACE=0 ALIGN=MIDDLE
+   CLASSID="CLSID:16DDA4B1-C7FE-11D1-9823-0000F875AC65">
+   <PARAM name="ButtonText" value="Open Pocket PC Sample">
+   <PARAM name="RegKey" value="SOFTWARE\Microsoft\Windows CE Developer Tools\PPC 3.0 SDK\Samples">
+   <PARAM name="SampleDir" value="\mfc\chkbook">
+   <PARAM name="ProjectFile" value="chkbook.vcw">
+<P CLASS="sample"> Install a Platform SDK </P>
+</OBJECT>
+<P>The CHKBOOK sample demonstrates how to simulate multiple views in Windows CE by hiding/showing windows. (Windows CE does not support Multi-Document Interface (MDI).)</P>
+
+<P>There is only one view of the document, implemented in class CCheckBookView. To enter or view data for a single check, select the menu item View Check, and a dialog is displayed. To show a summary of each check in the checkbook, select the menu item <B>View</B> <B>Book</B>, and an edit window is displayed. The two views cannot be seen at the same time, but you can toggle between them.</P>
+
+<P>You can change the current selection in the checkbook view by using the menu items <B>Previous</B> and <B>Next</B>, or by tapping a check item with the stylus. The check view always shows the current selection in the checkbook view.</P>
+
+<P>The check amount field in the check form view validates and converts a textual representation such as "19.98" to an internal <B>DWORD</B> representation. CHKBOOK does not do arithmetic, but it easily could be extended to add up all the check amounts and display the total on a bottom line.</P>
+
+<P><B>Record-Based Documents</B></P>
+
+<P>A CHKBOOK file is a record-based document. The system updates the persistent data (on disk or hard drive) of a record-based document each time the user adds, deletes, or modifies some portion of its data. For file-based documents, by contrast, the system reads a file entirely into memory when you open a file and writes it entirely back to the disk only when you close the document. </P>
+
+<P><B>CHKBOOK Simplifications</B></P>
+
+<P>The CHKBOOK sample has several simplifications to keep the code focused on MFC features and techniques the sample is designed to illustrate. For example:
+
+<UL type=disc>
+	<LI>CHKBOOK supports only checks. Other money transactions, such as deposits, are not supported. CHKBOOK also does not support the deletion (voiding) of checks. Check data is written using fixed-length records rather than the more space-efficient variable length records. These simplifications allow the CHKBOOK Doc class to access individual check records according to the following very simple algorithm. The location of the check is equal to the length of the file header, plus n times the fixed length of a check record, where n is the number of sequentially issued checks before the check in question.</LI>
+
+	<LI>CHKBOOK does not fully support resource-based localization to other languages. In particular, the check amount field assumes dollars and cents, and the written-out check amount&#0151;for example, "Nineteen and 98/100ths Dollars"&#0151;is displayed in English</LI>
+</UL>
+
+<P><B>Creating a new CHKBOOK File</B></P>
+
+<P>CHKBOOK does not have a “new” file option. To create a new file, you need to open the blank check file (BlankCheck.chb), modify it as desired, and then save it under a different file name.</P>
+
+<P>To use the Blankcheck.chb sample, you need to copy it to the My Documents directory on the device. If you want to save it as a template, copy it to the My Documents\Template directory. You can use pfile to copy the file to the device by typing the following command:</P>
+
+<PRE>pfile copy BlankCheck.chb "wce:\My Documents\Templates\BlankCheck.chb"
+</PRE>
+
+<P>When you commit a check, CHKBOOK writes the check to the CURRENT file When you select <B>Save As, </B>CHKBOOK will save the last uncommitted check in the specified file. It will not save the committed checks to the specified file, because the committed files have already been written into the open CURRENT file. </P>
+
+<P><B>To save a committed check in a file</B>
+
+<OL>
+	<LI>In the current file, write and commit the check.</LI>
+
+	<LI>Select <B>Save As</B>, enter a new file name and select<B> OK</B>. Nothing is saved at this point since all your checks are written to your original file.</LI>
+
+	<LI>Open the new file as the current file. Any check committed from now on will be saved to this new file.</LI>
+</OL>
+
+<P>This sample demonstrates the following keywords:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="carchi_10.htm"><B>CArchive::IsStoring</B></A></TD>
+<TD width=50%><A HREF="cstring_10.htm"><B>CString::Format</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="ccmdui_4.htm"><B>CCmdUI::Enable</B></A></TD>
+<TD width=50%><A HREF="cstring_20.htm"><B>CString::LoadString</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="ccmdui_5.htm"><B>CCmdUI::SetCheck</B></A></TD>
+<TD width=50%><A HREF="cstring_16.htm"><B>CString::GetLength</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cdc_48.htm"><B>CDC::GetTextMetrics</B></A></TD>
+<TD width=50%><A HREF="cstring_19.htm"><B>CString::Left</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cdataxch_3.htm"><B>CDataExchange::Fail</B></A></TD>
+<TD width=50%><A HREF="cwinapp_3.htm"><B>CWinApp::AddDocTemplate</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cdataxch_5.htm"><B>CDataExchange::PrepareEditCtrl</B></A></TD>
+<TD width=50%><A HREF="cwinapp_23.htm"><B>CWinApp::OnFileNew</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cdialog_5.htm"><B>CDialog::DoModal</B></A></TD>
+<TD width=50%><A HREF="cwnd_15.htm"><B>CWnd::Create</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cdocumnt_8.htm"><B>CDocument::GetFirstViewPosition</B></A></TD>
+<TD width=50%><A HREF="cwnd_24.htm"><B>CWnd::DoDataExchange</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cdocumnt_9.htm"><B>CDocument::GetNextView</B></A></TD>
+<TD width=50%><A HREF="cwnd_36.htm"><B>CWnd::GetClientRect</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cedit_4.htm"><B>CEdit::CharFromPos</B></A></TD>
+<TD width=50%><A HREF="cwnd_93.htm"><B>CWnd::MessageBox</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cedit_22.htm"><B>CEdit::LineIndex</B></A></TD>
+<TD width=50%><A HREF="cwnd_138.htm"><B>CWnd::OnShowWindow</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cedit_35.htm"><B>CEdit::SetSel</B></A></TD>
+<TD width=50%><A HREF="cwnd_171.htm"><B>CWnd::SendMessage</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cedit_36.htm"><B>CEdit::SetTabStops</B></A></TD>
+<TD width=50%><A HREF="cwnd_180.htm"><B>CWnd::SetFocus</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cfile_4.htm"><B>CFile::Close</B></A></TD>
+<TD width=50%><A HREF="cwnd_193.htm"><B>CWnd::SetWindowText</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cfile_12.htm"><B>CFile::Open</B></A></TD>
+<TD width=50%><A HREF="cwnd_196.htm"><B>CWnd::ShowWindow</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cfile_13.htm"><B>CFile::Read</B></A></TD>
+<TD width=50%><A HREF="cwnd_201.htm"><B>CWnd::UpdateData</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cfile_17.htm"><B>CFile::Seek</B></A></TD>
+<TD width=50%><A HREF="cwnd_203.htm"><B>CWnd::UpdateWindow</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cfile_23.htm"><B>CFile::Write</B></A></TD>
+<TD width=50%><A HREF="JavaScript:hhobj_1.Click()"><B>AfxMessageBox</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cframwnd_4.htm"><B>CFrameWnd::AddAdornments</B></A></TD>
+<TD width=50%><A HREF="JavaScript:hhobj_2.Click()"><B>GetWindowText</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cframwnd_11.htm"><B>CFrameWnd::GetActiveDocument</B></A></TD>
+<TD width=50%><A HREF="JavaScript:hhobj_3.Click()"><B>SetWindowText</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cframwnd_19.htm"><B>CFrameWnd::InsertButtons</B></A></TD>
+<TD width=50%><A HREF="JavaScript:hhobj_4.Click()"><B>_tcslen</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cobject_3.htm"><B>CObject::AssertValid</B></A></TD>
+<TD width=50%><A HREF="JavaScript:hhobj_5.Click()"><B>_ttoi</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cobject_4.htm"><B>CObject::Dump</B></A></TD>
+<TD width=50%><A HREF="JavaScript:hhobj_6.Click()"><B>_ttol</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="cobject_6.htm"><B>CObject::IsKindOf</B></A></TD>
+<TD width=50%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

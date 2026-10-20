@@ -1,0 +1,59 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Termination</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Handling Termination"/>
+<MSHelp:RLTitle Title="Handling Termination"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_handling_termination"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_event_notification_codes__ec_userabort" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ivideowindow__put_visible" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_event_notification_codes__ec_repaint" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_event_notification_codes__ec_window_destroyed" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ibasefilter__joinfiltergraph" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Handling Termination</H1>
+
+<P>Video renderers must correctly handle termination events from the user. This implies correctly hiding the window and knowing what to do if a window is subsequently forced to be displayed. Also, video renderers must notify the filter graph manager when its window is destroyed (or more accurately, when the renderer is removed from the filter graph) to free resources. </P>
+
+<P>If the user closes the video window (for instance by pressing ALT+F4), the convention is to hide the window immediately and send an <A HREF="JavaScript:hhobj_1.Click()"><B>EC_USERABORT</B></A> notification to the filter graph manager. This notification is passed through to the application, which will stop the graph playing. After sending <B>EC_USERABORT</B>, a video renderer should reject any additional samples delivered to it. </P>
+
+<P>The abort flag should be left on by the renderer until it is subsequently stopped, at which point it should be reset so that an application can override the user action and continue playing the graph if it desires. If ALT+F4 is pressed while the video is running, the window will be hidden and all further samples delivered will be rejected. If the window is subsequently shown (perhaps through <A HREF="JavaScript:hhobj_2.Click()"><B>IVideoWindow::put_Visible</B></A>), then no <A HREF="JavaScript:hhobj_3.Click()"><B>EC_REPAINT</B></A> notifications should be generated. </P>
+
+<P>The video renderer should also send the <A HREF="JavaScript:hhobj_4.Click()"><B>EC_WINDOW_DESTROYED</B></A> notification to the filter graph when the video renderer is terminating. In fact, it is best to handle this when the renderer's <A HREF="JavaScript:hhobj_5.Click()"><B>IBaseFilter::JoinFilterGraph</B></A> method is called with a null parameter (indicating that the renderer is about to be removed from the filter graph), rather than waiting until the actual video window is destroyed. Sending this notification enables the plug-in distributor in the filter graph manager to pass on resources that depend on window focus to other filters (such as audio devices). </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

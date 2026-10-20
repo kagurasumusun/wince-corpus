@@ -1,0 +1,113 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateFileMoniker</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CreateFileMoniker"/>
+<MSHelp:RLTitle Title="CreateFileMoniker"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_createfilemoniker"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CreateFileMoniker</H1>
+
+<P>This function creates a file moniker based on the specified path.</P>
+
+<PRE class="syntax"><B>WINOLEAPI CreateFileMoniker(
+LPCOLESTR </B><I>lpszPathName</I><B>,
+LPMONIKER FAR *</B><I>ppmk</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszPathName</I></DT>
+
+<DD>[in] Pointer to a zero-terminated wide character string (two bytes per character) containing the path on which this moniker is based.</dd>
+
+<DT><I>ppmk</I></DT>
+
+<DD>[out] Address of <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A>* pointer variable that receives the interface pointer to the new file moniker. When successful, the function has called <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A> on the file moniker and the caller is responsible for calling <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>. When an error occurs, the value of the interface pointer is NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return value E_OUTOFMEMORY, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The moniker has been created successfully.</dd>
+
+<DT>MK_E_SYNTAX</DT>
+
+<DD>Error in the syntax of a path was encountered while creating a moniker.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CreateFileMoniker</B> creates a moniker for an object that is stored in a file. A moniker provider (an object that provides monikers to other objects) can call this function to create a moniker to identify a file-based object that it controls, and can then make the pointer to this moniker available to other objects. An object identified by a file moniker must also implement the <A HREF="_wcesdk_com_ipersistfile.htm"><B>IPersistFile</B></A> interface so it can be loaded when a file moniker is bound. </P>
+
+<P>When each object resides in its own file, as in an OLE server application that supports linking only to file-based documents in their entirety, file monikers are the only type of moniker necessary. To identify objects smaller than a file, the moniker provider must use another type of moniker (such as an item moniker) in addition to file monikers, creating a composite moniker. Composite monikers would be needed in an OLE server application that supports linking to objects smaller than a document (such as sections of a document or embedded objects).</P>
+
+<P>The <I>lpszPathName</I> can be a relative path, a UNC path (e.g., \\server\share\path), or a drive-letter-based path (e.g., c:\). If based on a relative path, the resulting moniker must be composed onto another file moniker before it can be bound.</P>
+
+<P>A file moniker can be composed to the right only of another file moniker when the first moniker is based on an absolute path and the other is a relative path, resulting in a single file moniker based on the combination of the two paths. A moniker composed to the right of another moniker must be a refinement of that moniker, and the file moniker represents the largest unit of storage. To identify objects stored within a file, you would compose other types of monikers (usually item monikers) to the right of a file moniker.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

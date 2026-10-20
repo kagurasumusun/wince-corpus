@@ -1,0 +1,121 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIXERLINECONTROLS</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MIXERLINECONTROLS"/>
+<MSHelp:RLTitle Title="MIXERLINECONTROLS"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_am_mixerlinecontrols"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>MIXERLINECONTROLS</H1>
+
+<P>The <B>MIXERLINECONTROLS</B> structure contains information about the controls of an audio line.</P>
+
+<PRE class="syntax"><B>typedef struct</B> <B>{</B>
+<B>DWORD</B> <I>cbStruct</I><B>;</B>
+<B>DWORD</B> <I>dwLineID</I><B>;</B>
+<B>union</B> <B>{</B>
+<B>DWORD</B> <I>dwControlID</I><B>;</B>
+<B>DWORD</B> <I>dwControlType</I><B>;</B>
+<B>};</B>
+<B>DWORD</B>          <I>cControls</I><B>;</B>
+<B>DWORD</B>          <I>cbmxctrl</I><B>;</B>
+<B>LPMIXERCONTROL</B> <I>pamxctrl</I><B>;</B>
+<B>}</B> <B>MIXERLINECONTROLS;</B> </PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>cbStruct </I></DT>
+
+<DD>Size, in bytes, of the <B>MIXERLINECONTROLS</B> structure. This member must be initialized before calling the <A HREF="_wcesdk_am_mixergetlinecontrols.htm"><B>mixerGetLineControls</B></A> function. The size specified in this member must be large enough to contain the <B>MIXERLINECONTROLS</B> structure. When <B>mixerGetLineControls</B> returns, this member contains the actual size of the information returned. The returned information will not exceed the requested size, nor will it be smaller than the <B>MIXERLINECONTROLS</B> structure. </dd>
+
+<DT><I>dwLineID </I></DT>
+
+<DD>Line identifier for which controls are being queried. This member is not used if the MIXER_GETLINECONTROLSF_ONEBYID flag is specified for the <B>mixerGetLineControls</B> function, but the mixer device still returns this member in this case. The <B>dwControlID</B> and <B>dwControlType</B> members are not used when MIXER_GETLINECONTROLSF_ALL is specified. </dd>
+
+<DT><I>dwControlID </I></DT>
+
+<DD>Control identifier of the desired control. This member is used with the MIXER_GETLINECONTROLSF_ONEBYID flag for the <A HREF="_wcesdk_am_mixergetlinecontrols.htm"><B>mixerGetLineControls</B></A> function to retrieve the control information of the specified control. Note that the <B>dwLineID</B> member of the <B>MIXERLINECONTROLS</B> structure will be returned by the mixer device and is not required as an input parameter. This member overlaps with the <B>dwControlType</B> member and cannot be used in conjunction with the MIXER_GETLINECONTROLSF_ONEBYTYPE query type. </dd>
+
+<DT><I>dwControlType </I></DT>
+
+<DD>Class of the desired control. This member is used with the MIXER_GETLINECONTROLSF_ONEBYTYPE flag for the <B>mixerGetLineControls</B> function to retrieve the first control of the specified class on the line specified by the <B>dwLineID</B> member of the <B>MIXERLINECONTROLS</B> structure. This member overlaps with the <B>dwControlID</B> member and cannot be used in conjunction with the MIXER_GETLINECONTROLSF_ONEBYID query type. </dd>
+
+<DT><I>cControls </I></DT>
+
+<DD>Number of <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structure elements to retrieve. This member must be initialized by the application before calling the <A HREF="_wcesdk_am_mixergetlinecontrols.htm"><B>mixerGetLineControls</B></A> function. This member can be 1 only if MIXER_GETLINECONTROLSF_ONEBYID or MIXER_GETLINECONTROLSF_ONEBYTYPE is specified or the value returned in the <B>cControls</B> member of the <A HREF="_wcesdk_am_mixerline.htm"><B>MIXERLINE</B></A> structure returned for an audio line. This member cannot be zero. If an audio line specifies that it has no controls, <B>mixerGetLineControls</B> should not be called. </dd>
+
+<DT><I>cbmxctrl </I></DT>
+
+<DD>Size, in bytes, of a single <B>MIXERCONTROL</B> structure. The size specified in this member must be at least large enough to contain the base <B>MIXERCONTROL</B> structure. The total size, in bytes, required for the buffer pointed to by the <B>pamxctrl</B> member is the product of the <B>cbmxctrl</B> and <B>cControls</B> members of the <B>MIXERLINECONTROLS</B> structure. </dd>
+
+<DT><I>pamxctrl </I></DT>
+
+<DD>Pointer to one or more <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structures to receive the properties of the requested audio line controls. This member cannot be NULL and must be initialized before calling the <B>mixerGetLineControls</B> function. Each element of the array of controls must be at least large enough to contain a base <B>MIXERCONTROL</B> structure. The <B>cbmxctrl</B> member must specify the size, in bytes, of each element in this array. No initialization of the buffer pointed to by this member is required by the application. All members are filled in by the mixer device (including the <B>cbStruct</B> member of each <B>MIXERCONTROL</B> structure) upon returning successfully.</dd>
+</DL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>mmsystem.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A>, <A HREF="_wcesdk_am_mixerline.htm"><B>MIXERLINE</B></A>, <A HREF="_wcesdk_am_mixergetlinecontrols.htm"><B>mixerGetLineControls</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

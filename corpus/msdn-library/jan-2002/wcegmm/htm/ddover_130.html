@@ -1,0 +1,95 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Displaying a Window in Full-Screen Mode</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Displaying a Window in Full-Screen Mode"/>
+<MSHelp:RLTitle Title="Displaying a Window in Full-Screen Mode"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_displaying_a_window_in_full-screen_mode"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ddcaps_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_idirectdraw4_fliptogdisurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Displaying a Window in Full-Screen Mode</H1>
+
+<P>In full-screen mode, DirectDraw has exclusive control over the display. As a result, dialog boxes and other windows created through GDI are not normally visible. However, by using special techniques you can incorporate a Windows dialog box, HTML Help, or any other kind of window in your application.</P>
+
+<P>The FSWindow Sample illustrates how a dialog box can be displayed and updated in a full-screen application, and how mouse clicks and keystrokes work just as if the dialog box were being displayed by GDI.</P>
+
+<P>In FSWindow, the dialog box is created and "shown" as an ordinary dialog window:</P>
+
+<PRE class="code">hWndDlg = CreateDialog(g_hInstance,
+        MAKEINTRESOURCE(IDD_DIALOG_SAMPLE),
+        hWnd, (DLGPROC) SampleDlgProc);
+ShowWindow(hWndDlg, SW_SHOWNORMAL);</PRE>
+
+<P>Of course, at this point the dialog box is shown only on the hidden GDI surface. It does not appear on the primary surface, which is controlled by DirectDraw. </P>
+
+<P>If the hardware capabilities include DDCAPS2_CANRENDERWINDOWED (see <A HREF="JavaScript:hhobj_1.Click()">DDCAPS</A>), displaying and updating the dialog box is easy. The application simply calls the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectDraw4::FlipToGDISurface</B></A> method, which makes the GDI surface the primary surface. From now on, all updates to the dialog box will be displayed automatically, because GDI is now rendering directly to the front buffer. The application continues rendering to the back buffer, and on each pass through the rendering loop the contents of the back buffer are blitted to the front buffer by DirectDraw. The dialog box is not overwritten because the front buffer is clipped to the application window, and the dialog box is obscuring part of that window.</P>
+
+<P>The following code, from the <B>FSWindow_Init</B> function, creates the clipper, associates it with the application window, and brings the GDI surface to the front:</P>
+
+<PRE class="code">if (ddObject-&gt;CreateClipper(0, &amp;ddClipper, NULL) == DD_OK)
+    ddClipper-&gt;SetHWnd(0, hwndAppWindow);
+ddObject-&gt;FlipToGDISurface();</PRE>
+
+<P>Then, in the <B>FSWindow_Update</B> function, the following code blits the rendered contents of the back buffer to the clipping region:</P>
+
+<PRE class="code">ddFrontBuffer-&gt;SetClipper(ddClipper);
+ddFrontBuffer-&gt;Blt(NULL, ddBackBuffer, NULL, DDBLT_WAIT, NULL);</PRE>
+
+<P>Note that because the GDI surface is the primary surface, Windows continues displaying the mouse cursor. (This would not be the case, however, if the application were using DirectInput with the mouse device at the exclusive cooperative level.)</P>
+
+<P>For hardware that does not have the DDCAPS2_CANRENDERWINDOWED capability, the process of displaying and updating a window in full-screen mode is somewhat more complicated. In this case, the application is responsible for obtaining the image of the window created by GDI and blitting it to the back buffer after the full-screen rendering has been done. The entire back buffer is then flipped to the front in the usual way.</P>
+
+<P>The FSWindow sample provides two different methods for accessing the display memory of the window, depending on whether the content is static or dynamic. The method for static content is faster because it involves blitting from a memory device context rather than a screen device context. This method should be used for windows that do not change, such as informational dialog boxes. (Remember, though, that unless you manually update the bitmap in response to events, even basic animations such as a button press will not be visible to the user.)</P>
+
+<P>If the content is static, FSWindow calls the <B>CreateBMPFromWindow</B> function when the window is initialized. This function creates a bitmap and blits the contents of the window into it. The bitmap handle is stored in the global variable <I>hwndFSWindowBMP</I>. Whenever the primary surface is about to be updated, this bitmap is blitted to the back buffer, as follows:</P>
+
+<PRE class="code">if (FSWindow_IsStatic)
+{
+    hdcMemory = CreateCompatibleDC(NULL);
+    SelectObject(hdcMemory, hwndFSWindowBMP);
+    BitBlt(hdcBackBuffer, x, y, cx, cy, hdcMemory, 0, 0, SRCCOPY);
+    DeleteDC(hdcMemory);
+}</PRE>
+
+<P>If, on the other hand, the content of the window is dynamic, the following code is executed. It blits the image directly from the GDI surface (represented by the <I>hdcScreen</I> device context) to the back buffer.</P>
+
+<PRE class="code">BitBlt(hdcBackBuffer, x, y, cx, cy, hdcScreen, x, y, SRCCOPY);</PRE>
+
+<P>The coordinates represent the position and dimensions of the window on the GDI surface, as retrieved through a call to <B>GetWindowRect</B>.</P>
+
+<P>When the FSWindow application is running on hardware that does not have the DDCAPS2_CANRENDERWINDOWED capability, it does not use the GDI surface, so Windows cannot display the mouse cursor. The application takes over this task by obtaining information about the cursor and displaying it on the back buffer just before the flip.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

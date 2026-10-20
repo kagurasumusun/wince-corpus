@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TSPI_lineConfigDialogEdit</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TSPI_lineConfigDialogEdit"/>
+<MSHelp:RLTitle Title="TSPI_lineConfigDialogEdit"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_tspi_lineconfigdialogedit"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>TSPI_lineConfigDialogEdit</H1>
+
+<P>The <B>TSPI_lineConfigDialogEdit</B> function causes the provider of the specified line device to display a modal dialog box as a child window <I>of hwndOwner</I> to allow the user to configure parameters related to the line device.</P>
+
+<PRE class="syntax"><B>LONG TSPIAPI TSPI_lineConfigDialogEdit(</B>
+<B>DWORD</B> <I>dwDeviceID</I>,
+<B>HWND</B> <I>hwndOwner</I>,
+<B>LPCWSTR</B> <I>lpszDeviceClass</I>,
+<B>LPVOID</B> <I>const lpDeviceConfigIn</I>,
+<B>DWORD</B> <I>dwSize</I>,
+<B>LPVARSTRING</B> <I>lpDeviceConfigOut</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwDeviceID</I> </DT>
+
+<DD>The line device to be configured. </dd>
+
+<DT><I>hwndOwner</I> </DT>
+
+<DD>A handle to a window to which the dialog box is to be attached. </dd>
+
+<DT><I>lpszDeviceClass</I> </DT>
+
+<DD>A pointer to a null-terminated Unicode string that identifies a device class name. This device class allows the caller to select a specific subscreen of configuration information applicable to that device class. If this parameter is NULL or points to an empty string, the highest level configuration is selected. The permitted strings are the same as for <B>TSPI_lineGetID</B>. </dd>
+
+<DT><I>lpDeviceConfigIn</I> </DT>
+
+<DD>A pointer to the opaque configuration data structure that was returned by <B>TSPI_lineGetDevConfig</B> (or a previous invocation of <B>TSPI_lineConfigDialogEdit</B>) in the variable portion of the <B>VARSTRING</B> structure. </dd>
+
+<DT><I>dwSize</I> </DT>
+
+<DD>The number of bytes in the structure pointed to by <I>lpDeviceConfigIn</I>. This value is returned in the <I>dwStringSize</I> member in the <B>VARSTRING</B> structure returned by <B>TSPI_lineGetDevConfig</B> or a previous invocation of <B>TSPI_lineConfigDialogEdit</B>. </dd>
+
+<DT><I>lpDeviceConfigOut</I> </DT>
+
+<DD>A pointer to the memory location of type <B>VARSTRING</B> where the device configuration structure is returned. Upon successful completion of the request, this location is filled with the device configuration. The <I>dwStringFormat</I> member in the VARSTRING structure is set to STRINGFORMAT_BINARY. Prior to calling <I>lineGetDevConfig</I> (or a future invocation of <B>lineConfigDialogEdit</B>), the application should set the <I>dwTotalSize</I> member of this structure to indicate the amount of memory available to TAPI for returning information. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns zero if the request succeeds or an error number if an error occurs. Possible return values are: </P>
+
+<P>LINEERR_INVALDEVICECLASS, LINEERR_OPERATIONFAILED, LINEERR_INVALPARAM, LINEERR_RESOURCEUNAVAIL, LINEERR_NODRIVER, LINEERR_OPERATIONUNAVAIL, LINEERR_NOMEM. </P>
+
+<H4>Remarks</H4>
+
+<P>This function causes the service provider to display a modal dialog box (attached to <I>hwndOwner</I>) to allow the user to configure parameters related to the line specified by <I>dwDeviceID</I>.</P>
+
+<P>The <I>lpszDeviceClass</I> parameter selects a specific subscreen of configuration information applicable to the device class in which the user is interested; the permitted strings are the same as for <B>TSPI_lineGetID</B>. For example, if the line supports the Comm API, passing comm/datamodem as <I>lpszDeviceClass</I> causes the provider to display the parameters related specifically to Comm (or, at least, start at the corresponding point in a multilevel configuration dialog box chain, so the user doesn't have to "dig" to find the parameters of interest).</P>
+
+<P>The <I>lpszDeviceClass</I> parameter is "tapi/line" , "", or NULL to cause the provider to display the highest level configuration for the line.</P>
+
+<P>The difference between this function and <B>TSPI_lineConfigDialog</B> is the source of the parameters to edit and the result of the editing. In <B>TSPI_lineConfigDialog</B>, the parameters edited are those currently in use on the device (or set for use on the next call), and any changes made have (to the maximum extent possible) an immediate impact on any active connection; also, the application must use <B>lineGetDevConfig</B> to fetch the result of parameter changes from <B>TSPI_lineConfigDialog</B>. With <B>TSPI_lineConfigDialogEdit</B>, the parameters to edit are passed in from the application, and the results are returned to the application, with no impact on active connections; the results of the editing are returned with this function, and the application does not need to call <B>lineGetDevConfig</B>. Thus, <B>TSPI_lineConfigDialogEdit</B> permits an application to provide the ability for the user to set up parameters for future calls without having an impact on any active call. However, the output of this function can be passed to <B>TSPI_lineSetDevConfig</B> to affect the current call or next call.</P>
+
+<P>For backward compatibility, this function is not exported by older service providers. TAPI detects this condition and reports <B>LINEERR</B>_<B>OPERATIONUNAVAIL</B> if an application attempts to call this function on an older provider.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Tapicomn.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_tspi_linegetdevconfig.htm"><B>TSPI_lineGetDevConfig</B></A>, <A HREF="_wcesdk_win32_tspi_linegetid.htm"><B>TSPI_lineGetID</B></A>, <A HREF="_wcesdk_win32_tspi_linesetdevconfig.htm"><B>TSPI_lineSetDevConfig</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,270 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::SetSockOpt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CAsyncSocket::SetSockOpt"/>
+<MSHelp:RLTitle Title="CAsyncSocket::SetSockOpt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_setsockopt"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CAsyncSocket::SetSockOpt</H1>
+
+<P>Call this method to set a socket option. <B>SetSockOpt</B> sets the current value for a socket option associated with a socket of any type, in any state. Although options can exist at multiple protocol levels, this specification only defines options that exist at the uppermost socket level. Options affect socket operations, such as whether expedited data is received in the normal data stream, whether broadcast messages can be sent on the socket, and so on.</P>
+
+<PRE class=syntax><B>BOOL SetSockOpt(
+int </B><I>nOptionName</I><B>,
+const void* </B><I>lpOptionValue</I><B>,
+int </B><I>nOptionLen</I><B>,
+int </B><I>nLevel</I><B> = SOL_SOCKET );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nOptionName</I></DT>
+
+<DD>The socket option for which the value is to be set.</DD>
+
+<DT><I>lpOptionValue</I></DT>
+
+<DD>A pointer to the buffer in which the value for the requested option is supplied.</DD>
+
+<DT><I>nOptionLen</I></DT>
+
+<DD>The size of the <I>lpOptionValue</I> buffer in bytes.</DD>
+
+<DT><I>nLevel</I></DT>
+
+<DD>The level at which the option is defined; the only supported levels are <B>SOL_SOCKET</B> and <B>IPPROTO_TCP</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero, and a specific error code can be retrieved by calling <B>GetLastError</B>. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</DD>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</DD>
+
+<DT>WSAEFAULT</DT>
+
+<DD><I>lpOptionValue</I> is not in a valid part of the process address space.</DD>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</DD>
+
+<DT>WSAEINVAL</DT>
+
+<DD><I>nLevel</I> is not valid, or the information in <I>lpOptionValue</I> is not valid.</DD>
+
+<DT>WSAENETRESET</DT>
+
+<DD>Connection has timed out when SO_KEEPALIVE is set.</DD>
+
+<DT>WSAENOPROTOOPT</DT>
+
+<DD>The option is unknown or unsupported. In particular, SO_BROADCAST is not supported on sockets of type SOCK_STREAM, while SO_DONTLINGER, SO_KEEPALIVE, SO_LINGER, and SO_OOBINLINE are not supported on sockets of type SOCK_DGRAM.</DD>
+
+<DT>WSAENOTCONN</DT>
+
+<DD>Connection has been reset when SO_KEEPALIVE is set.</DD>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>There are two types of socket options: Boolean options that enable or disable a feature or behavior, and options which require an integer value or structure. To enable a Boolean option, <I>lpOptionValue</I> points to a nonzero integer. To disable the option <I>lpOptionValue</I> points to an integer equal to zero. <I>nOptionLen</I> should be equal to <B>sizeof(BOOL)</B> for Boolean options. For other options, <I>lpOptionValue</I> points to the integer or structure that contains the desired value for the option, and <I>nOptionLen</I> is the length of the integer or structure.</P>
+
+<P><B>SO_LINGER</B> controls the action taken when unsent data is queued on a socket and the <B>Close</B> function is called to close the socket. </P>
+
+<P>By default, a socket cannot be bound to a local address that is in use. On occasion, however, you may want to reuse an address in this way. Because every connection is uniquely identified by the combination of local and remote addresses, there is no problem with having two sockets bound to the same local address as long as the remote addresses are different. </P>
+
+<P>To inform the Windows CE Sockets implementation that a <B>Bind</B> call on a socket should not be disallowed because the desired address is in use by another socket, the application should set the <B>SO_REUSEADDR</B> socket option for the socket before issuing the <B>Bind</B> call. The option is interpreted only at the time of the <B>Bind</B> call. It is unnecessary, but harmless, to set the option on a socket that is not to be bound to an existing address. Setting or resetting the option after the <B>Bind</B> call has no effect on this or any other socket.</P>
+
+<P>An application can request that the Windows CE Sockets implementation enables the use of keep-alive packets on Transmission Control Protocol (TCP) connections by turning on the <B>SO_KEEPALIVE</B> socket option. A Windows CE Sockets implementation need not support the use of keep-alive packets; if it does, the precise semantics are implementation-specific but should conform to section 4.2.3.6 of RFC 1122: “Requirements for Internet Hosts&#0151;Communication Layers.” If a connection is dropped as the result of keep-alive packets, the error code <B>WSAENETRESET</B> is returned to any calls in progress on the socket, and any subsequent calls fail with <B>WSAENOTCONN</B>. </P>
+
+<P>The <B>TCP_NODELAY</B> option disables the Nagle algorithm. The Nagle algorithm is used to reduce the number of small packets sent by a host by buffering unacknowledged send data until a full-size packet can be sent. However, for some applications this algorithm can impede performance, and <B>TCP_NODELAY</B> can be used to turn it off. Application writers should not set <B>TCP_NODELAY</B> unless the impact of doing so is well-understood and desired, because setting <B>TCP_NODELAY</B> can have a significant negative impact on network performance. <B>TCP_NODELAY</B> is the only supported socket option that uses level <B>IPPROTO_TCP</B>; all other options use level <B>SOL_SOCKET</B>.</P>
+
+<P>Some implementations of Windows CE Sockets supply output debug information if the <B>SO_DEBUG</B> option is set by an application.</P>
+
+<P>The following options are supported for <B>SetSockOpt</B>. Type identifies the type of data addressed by <I>lpOptionValue</I>.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=21%>Type</TH>
+<TH width=50%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_BROADCAST</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Allow transmission of broadcast messages on the socket.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_DEBUG</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Record debugging information. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_DONTLINGER</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Do not block <B>Close</B> if waiting for unsent data to be sent. Setting this option is equivalent to setting <B>SO_LINGER</B> with <B>l_onoff</B> set to zero.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_DONTROUTE</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Do not route. Send directly to interface.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_KEEPALIVE</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Send keep-alive packets.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_LINGER</TD>
+<TD width=21%><B>struct LINGER</B></TD>
+<TD width=50%>Linger on <B>Close</B> if unsent data is present.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_OOBINLINE</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Receive out-of-band data in the normal data stream.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_RCVBUF</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Specify buffer size for receives.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_REUSEADDR</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Allow the socket to be bound to an address that is in use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_SNDBUF</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Specify buffer size for sends.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>TCP_NODELAY</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Disables the Nagle algorithm for send coalescing.</TD>
+</TR>
+</TABLE><BR>
+
+<P>The following Berkeley Software Distribution (BSD) options are not supported for <B>SetSockOpt</B>:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=21%>Type</TH>
+<TH width=50%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_ACCEPTCONN</TD>
+<TD width=21%><B>BOOL</B></TD>
+<TD width=50%>Socket is listening</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_ERROR</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Get error status and clear</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_RCVLOWAT</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Receive low water mark</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_RCVTIMEO</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Receive timeout</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_SNDLOWAT</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Send low water mark</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_SNDTIMEO</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Send timeout</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>SO_TYPE</TD>
+<TD width=21%><B>int</B></TD>
+<TD width=50%>Type of the socket</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>IP_OPTIONS</TD>
+<TD width=21%>&nbsp;</TD>
+<TD width=50%>Set options field in IP header</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_5.htm"><B>CAsyncSocket::Bind</B></A>, <A HREF="casyncso_8.htm"><B>CAsyncSocket::Create</B></A>, <A HREF="casyncso_13.htm"><B>CAsyncSocket::GetSockOpt</B></A>, <A HREF="casyncso_14.htm"><B>CAsyncSocket::IOCtl</B></A>, <A HREF="funct_56.htm"><B>AFXSOCKETINIT</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

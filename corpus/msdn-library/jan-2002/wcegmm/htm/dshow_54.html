@@ -1,0 +1,77 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Instantiate the Filter</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Instantiate the Filter"/>
+<MSHelp:RLTitle Title="Instantiate the Filter"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_instantiate_the_filter"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_cfactorytemplate_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_com_DllGetClassObject" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Instantiate the Filter</H1>
+
+<P>All filters must add code to let the base classes instantiate the filter. To instantiate a filter, you must include two pieces of code in your filter: a static <B>CreateInstance</B> member function in the derived filter class, and a means of informing the class factory in the base classes how to access this function. </P>
+
+<P>Typically, the <B>CreateInstance</B> member function calls the constructor for the derived filter class. The following examples show how to implement the <B>CreateInstance</B> member function. </P>
+
+<PRE class="code">CUnknown *CGargle::CreateInstance(LPUNKNOWN punk, HRESULT *phr) {
+
+    CGargle *pNewObject = new CGargle(NAME("Gargle Filter"), punk, phr);
+    if (pNewObject == NULL) {
+        *phr = E_OUTOFMEMORY;
+    }
+
+    return pNewObject;
+} // CreateInstance
+</PRE>
+
+<P>To communicate with the class factory, declare a global array of <A HREF="JavaScript:hhobj_1.Click()"><B>CFactoryTemplate</B></A> objects as <I>g_Templates</I> and provide the name of your filter, the class identifier (CLSID) of your filter, and a pointer to the static <B>CreateInstance</B> member function that creates your filter object. </P>
+
+<PRE class="code">// Needed for the CreateInstance mechanism
+CFactoryTemplate g_Templates[2]=
+    { { L"Gargle filter"              , &amp;CLSID_Gargle ,
+Gargle::CreateInstance          }
+    , { L"Gargle filter Property Page", &amp;CLSID_GargProp,
+GargleProperties::CreateInstance}
+    };
+
+int g_cTemplates = sizeof(g_Templates)/sizeof(g_Templates[0]);
+</PRE>
+
+<P>You can add additional parameters to the <B>CFactoryTemplate</B> templates if you want your filter to be self-registering. For more information on this, see <A HREF="dshow_48.htm">How to Register DirectShow Filters</A>. </P>
+
+<P>Finally, link your filter to Strmbase.lib and export <A HREF="JavaScript:hhobj_2.Click()"><B>DllGetClassObject</B></A> and <B>DllCanUnloadNow</B> using a .def file. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

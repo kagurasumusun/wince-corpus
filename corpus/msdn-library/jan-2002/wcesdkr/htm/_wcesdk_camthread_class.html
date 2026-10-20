@@ -1,0 +1,142 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAMThread Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CAMThread Class"/>
+<MSHelp:RLTitle Title="CAMThread Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_camthread_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CAMThread Class</H1>
+
+<P class="fig"><IMG SRC="util04.gif" ALT="" BORDER=0></P>
+
+<P><B>CAMThread</B> is an abstract class, a worker thread class that provides creation, synchronization, and communication with a worker thread. The worker thread can be accessed from several client threads. The class provides member functions to create the thread, pass commands to it, and wait for it to exit. </P>
+
+<P>Use a <A HREF="_wcesdk_ccritsec_class.htm"><B>CCritSec</B></A> object to ensure that only one thread can make a request at a time. Use two <A HREF="_wcesdk_camevent_class.htm"><B>CAMEvent</B></A> objects: one to signal to the worker that a request is outstanding, and the other to signal to the client thread that the request has been completed. A nonblocking <A HREF="_wcesdk_camthread__checkrequest.htm"><B>CAMThread::CheckRequest</B></A> member function allows the worker thread to check for new requests while working asynchronously. </P>
+
+<P>Derive from this class to provide your own thread member function. You might also want to provide type-safe signaling member functions that package parameters and return values using the <A HREF="_wcesdk_camthread__callworker.htm"><B>CAMThread::CallWorker</B></A> member function. </P>
+
+<P>Thread creation is independent of object creation. Create a member variable derived from <B>CAMThread</B>, and then use the member functions to start and stop the thread when needed. </P>
+
+<H4>Data Members</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%>m_AccessLock </TD>
+<TD width=50%>Critical section object that locks access by client threads. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>m_WorkerLock </TD>
+<TD width=50%>Critical section object that locks access to shared objects. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__callworker.htm"><B>CallWorker</B></A></TD>
+<TD width=50%>Makes a request to the worker thread. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__camthread.htm"><B>CAMThread</B></A></TD>
+<TD width=50%>Constructs a <B>CAMThread</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__checkrequest.htm"><B>CheckRequest</B></A></TD>
+<TD width=50%>Determines if there is an outstanding request. This is a nonblocking member function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__close.htm"><B>Close</B></A></TD>
+<TD width=50%>Blocks until the thread has exited and released its resources. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__create.htm"><B>Create</B></A></TD>
+<TD width=50%>Starts the thread running. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__getrequest.htm"><B>GetRequest</B></A></TD>
+<TD width=50%>Blocks until the next request is made and then returns a <B>DWORD</B> balue. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__getrequesthandle.htm"><B>GetRequestHandle</B></A></TD>
+<TD width=50%>Retrieves an event handle. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__getrequestparam.htm"><B>GetRequestParam</B></A></TD>
+<TD width=50%>Retrieves the latest request. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__initialthreadproc.htm"><B>InitialThreadProc</B></A></TD>
+<TD width=50%>Retrieves a <B>this</B> pointer. Carry out this member function before calling the <A HREF="_wcesdk_camthread__threadproc.htm"><B>CAMThread::ThreadProc</B></A> member function. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__reply.htm"><B>Reply</B></A></TD>
+<TD width=50%>Retrieves a <B>DWORD</B> value to the requesting thread and releases it, signaling completion of the request. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__threadexists.htm"><B>ThreadExists</B></A></TD>
+<TD width=50%>Determines whether a thread exists or has exited. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_camthread__threadproc.htm"><B>ThreadProc</B></A></TD>
+<TD width=50%>Indicates a pure virtual member function that is called on the worker thread. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

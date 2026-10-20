@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CComBSTR::ReadFromStream</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CComBSTR::ReadFromStream"/>
+<MSHelp:RLTitle Title="CComBSTR::ReadFromStream"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccombstr_readfromstream"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CComBSTR::ReadFromStream</H1>
+
+<P>This method sets the <B>m_str</B> data member to the <B>BSTR</B> contained in the specified stream. <B>ReadToStream</B> requires a previous call to WriteToStream.</P>
+
+<PRE class=syntax><B>HRESULT ReadFromStream(
+IStream* </B><I>pStream</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStream</I></DT>
+
+<DD>[in] A pointer to the <B>IStream</B> interface on the stream containing the data.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A standard <B>HRESULT</B> value.</P>
+
+<H4>Example</H4>
+
+<PRE>void CMyView::OnEditCopy()
+{
+IDataObject* pDataObj;
+
+// Fill in the FORMATETC struct to retrieve the desired format
+// from the clipboard.
+FORMATETC formatetcIn = {CF_TEXT, NULL, DVASPECT_CONTENT, &#0150;1,
+TYMED_ISTREAM};
+STGMEDIUM medium;
+ZeroMemory(&amp;medium, sizeof(STGMEDIUM));
+
+// Get the IDataObject from clipboard.
+HRESULT hr = ::OleGetClipboard(&amp;pDataObj);
+
+// Retrieve data from the clipboard.
+hr = pDataObj-&gt;GetData(&amp;formatetcIn, &amp;medium);
+
+if ( SUCCEEDED(hr) &amp;&amp; medium.tymed == TYMED_ISTREAM)
+{
+CComBSTR bstrStr;
+// Get BSTR out of the stream.
+hr = bstrStr.ReadFromStream(medium.pstm);
+
+// Release the stream.
+::ReleaseStgMedium(&amp;medium);
+}
+
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlbase.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

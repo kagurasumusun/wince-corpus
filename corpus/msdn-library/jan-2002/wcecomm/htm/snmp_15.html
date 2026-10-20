@@ -1,0 +1,67 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SnmpExtensionInit</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SnmpExtensionInit"/>
+<MSHelp:RLTitle Title="SnmpExtensionInit"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_snmpextensioninit"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SnmpExtensionInit</H1>
+
+<P>At startup time, the SNMP service or master agent reads from the registry a list of the extension-agent DLLs that need to be loaded. After successfully loading an SNMP extension agent, the master agent calls the <B>SnmpExtensionInit</B> function that is defined in the DLL to supply the extension agent with startup data, and to have the extension agent register an OID to initialize the SNMP service.</P>
+
+<P>The <B>SnmpExtensionInit</B> function must return TRUE if initialization was successful and FALSE if initialization failed. In case of initialization failure, the SNMP service will not register the extension agent; the failure of the extension agent to start will be recorded in an event log.</P>
+
+<P>The <B>SnmpExtensionInit</B> function causes an extension agent to register an event to notify the master agent when to send a trap to the manager. For example, if the MIB-II extension agent returns an event that is associated with a timer, the master agent starts calling the <B>SnmpExtensionTrap</B> function of the extension agent periodically, inducing the extension agent to check the status of each of its links. If the status of any link has changed since the last time the <B>SnmpExtensionTrap</B> function was called, the extension agent informs the master agent that a LINKUP or LINKDOWN trap must be sent.</P>
+
+<P>When calling the <B>SnmpExtensionInit</B> function of the extension agent, the master agent passes a time-zero reference, which the extension agent can use later to determine its uptime. The extension agent requires the uptime to implement various MIBs, and to have the master agent send a trap on its behalf. In order to calculate the length of the uptime, the extension agent subtracts <I>dwTimeZeroReference</I> from the value that is returned from the system call to the <B>GetTickCount</B> function.</P>
+
+<P>After registering a MIB subtree with the SNMP service, the extension agent must free the memory that is allocated to the OID and that is passed back to the master agent (a static variable works best because there is no <B>SnmpExtensionCleanup</B> routine). The master agent then calls SnmpExtensionInitEx, if it is implemented to discover if the extension agent has any further subtrees to support. This function is called until it returns FALSE, indicating that the extension agent has given the master agent all of its subtree OIDs. The master agent lexicographically sorts each of the OIDs that is returned and creates a table of reference for incoming requests for variables.</P>
+
+<P>The <B>SnmpExtensionInit</B> function has the following parameters:
+
+<UL type="disc">
+	<LI>A time value that identifies the number of centiseconds that have elapsed since the SNMP service has started. The extension agent stores this value and subtracts it from the current system time. Make sure that the <I>dwTimeZeroReference</I> parameter is set to zero prior to initialization.</li>
+
+	<LI>An event handle through which the extension agent communicates traps to the master agent. If the extension agent does not need to send traps, the value of this handle (<I>hPollForTrapEvent</I>) is set to NULL.</li>
+
+	<LI>An OID representing the first or only subtree the extension agent supports.</li>
+</UL>
+
+<P>The following diagram diagram provides an outline of the <B>SnmpExtensionInit</B> function:</P>
+
+<P class="fig"><IMG SRC="extinit.gif" ALT="" BORDER=0></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

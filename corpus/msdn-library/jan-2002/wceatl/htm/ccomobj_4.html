@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CComObject::CreateInstance</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CComObject::CreateInstance"/>
+<MSHelp:RLTitle Title="CComObject::CreateInstance"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomobject_createinstance"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CComObject::CreateInstance</H1>
+
+<P>This static method allows you to create a new <B>CComObject&lt;</B><I>Base</I><B>&gt;</B> object, without the overhead of <B>CoCreateInstance</B>.</P>
+
+<PRE class=syntax><B>static HRESULT WINAPI CreateInstance(
+CComObject&lt; </B><I>Base</I><B> &gt;** </B><I>pp</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pp</I></DT>
+
+<DD>[out] A pointer to a <B>CComObject&lt;</B><I>Base</I><B>&gt;</B> pointer. If <B>CreateInstance</B> is unsuccessful, <I>pp</I> is set to <B>NULL</B>.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A standard <B>HRESULT</B> value.</P>
+
+<H4>Example</H4>
+
+<PRE>// Definition of CMyCircle.
+class CMyCircle :
+public IDispatchImpl&lt;IMyCircle, &amp;IID_IMyCircle, &amp;LIBID_CIRCCOLLLib&gt;,
+public ISupportErrorInfo,
+public CComObjectRoot
+{
+public:
+CMyCircle();
+BEGIN_COM_MAP(CMyCircle)
+COM_INTERFACE_ENTRY(IDispatch)
+COM_INTERFACE_ENTRY(IMyCircle)
+COM_INTERFACE_ENTRY(ISupportErrorInfo)
+END_COM_MAP()
+DECLARE_NOT_AGGREGATABLE(CMyCircle)
+
+// IMyCircle
+STDMETHOD(get_XCenter)(double* pXCenter);
+...
+...
+}
+
+// Create a local instance of COM object CMyCircle.
+double x;
+CComObject&lt;CMyCircle&gt;* pCircle;
+HRESULT hRes = CComObject&lt;CMyCircle&gt;::CreateInstance(&amp;pCircle);
+_ASSERTE(SUCCEEDED(hRes));
+
+// Access method of COM object.
+hRes = pCircle-&gt;get_XCenter(&amp;x);
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

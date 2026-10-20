@@ -1,0 +1,112 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Event Notification</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using Event Notification"/>
+<MSHelp:RLTitle Title="Using Event Notification"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_using_event_notification"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imediaeventex__setnotifywindow" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediaeventex_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_imediaevent__getevent" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_imediaevent__freeeventparams" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_imediacontrol__stop" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_imediaevent__waitforcompletion" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Using Event Notification</H1>
+
+<P>The sample application handles events from within the main window message loop. It works by having the filter graph manager post a message when a new event occurs. The application responds by retrieving the event and taking the appropriate action. </P>
+
+<P>To handle events from the main window message loop, define the message that will be sent to the application window when a new event occurs. Applications can use message numbers in the range from WM_APP through 0xBFFF as private messages, as shown in the following example.</P>
+
+<PRE class="code">#define WM_GRAPHNOTIFY  WM_APP + 1</PRE>
+
+<P>Next, set the filter graph manager to deliver this message to the application's main window.</P>
+
+<PRE class="code">pEvent-&gt;SetNotifyWindow((OAHWND)g_hwnd, WM_GRAPHNOTIFY, 0);</PRE>
+
+<P>The <A HREF="JavaScript:hhobj_1.Click()"><B>IMediaEventEx::SetNotifyWindow</B></A> method designates the specified window (g_hwnd) as the recipient of the message. Call this method after you create the filter graph and specify the owner window, but before running the graph. For details, see <A HREF="dshow_15.htm">Sample Code</A>. The <A HREF="JavaScript:hhobj_2.Click()"><B>IMediaEventEx</B></A> interface is exposed by the filter graph manager. </P>
+
+<P>When the application receives the WM_GRAPHNOTIFY message, the message's <I>lParam</I> parameter is equal to the third parameter passed to <B>SetNotifyWindow</B>. This parameter enables you to send instance data with the message. The sample code does not use this data, so it passes a value of zero. The message's <I>wParam</I> parameter is always zero. </P>
+
+<P>In the window's <B>WindowProc</B> function, add a case statement for the WM_GRAPHNOTIFY message.</P>
+
+<PRE class="code">case WM_GRAPHNOTIFY:
+    HandleEvent();
+    break;</PRE>
+
+<P>WM_GRAPHNOTIFY is an ordinary Windows message, and is posted separately from the DirectShow event notification queue. The sequence of events is as follows:</P>
+
+<P>A filter sends an event notification to the filter graph manager. </P>
+
+<P>If the filter graph manager does not handle the event, it places the event in the event queue. </P>
+
+<P>The filter graph manager posts a WM_GRAPHNOTIFY message to the application window. </P>
+
+<P>The application responds to the message from within the window's message loop. </P>
+
+<P>The application retrieves the event notification from the queue. </P>
+
+<P>In the event handler function, call the <A HREF="JavaScript:hhobj_3.Click()"><B>IMediaEvent::GetEvent</B></A> method to retrieve events from the queue.</P>
+
+<PRE class="code">long evCode, param1, param2;
+HRESULT hr;
+while (hr = pEvent-&gt;GetEvent(&amp;evCode, &amp;param1, &amp;param2, 0), SUCCEEDED(hr))
+{
+    hr = pEvent-&gt;FreeEventParams(evCode, param1, param2);
+    if ((EC_COMPLETE == evCode) || (EC_USERABORT == evCode))
+    {
+        CleanUp();
+        break;
+    }
+}</PRE>
+
+<P>The <B>GetEvent</B> method retrieves the event code and the two event parameters. The last parameter to <B>GetEvent</B> specifies how long the method will wait for an event. Because the application calls this method in response to a WM_GRAPHNOTIFY message, the event is already queued, so use a time-out value of zero.</P>
+
+<P>Because event notification and the message loop are both asynchronous, the queue might hold more than one event by the time your application responds to the message. Also, the filter graph manager can clear events from the queue, if they become invalid. Therefore, call <B>GetEvent</B> until it returns a failure code, indicating that the queue is empty.</P>
+
+<P>If the sample program receives an EC_COMPLETE or EC_USERABORT event, it invokes the application-defined CleanUp function, which causes the application to quit gracefully. It ignores the two event parameters (param1 and param2). After you retrieve an event, call <A HREF="JavaScript:hhobj_4.Click()"><B>IMediaEvent::FreeEventParams</B></A> to free resources associated with the event parameters. For example, the parameter may be a BSTR, whose memory was allocated by the filter graph manager.</P>
+
+<P>When an EC_COMPLETE event occurs, the filter graph does not automatically switch to a stopped state. The application must stop or pause the graph. When the graph stops, filters release any resources they hold. When it pauses, they continue to hold resources. Also, when a video renderer pauses, it displays a static image of the most recent frame. The sample program stops the graph. Stopping the graph is not instantaneous, however, and the <A HREF="JavaScript:hhobj_5.Click()"><B>IMediaControl::Stop</B></A> method might return before the process finishes. It is a good practice to wait for the state to change before releasing interfaces or posting a quit message. Use the <A HREF="JavaScript:hhobj_6.Click()"><B>IMediaEvent::WaitForCompletion</B></A> method to wait for the operation to complete, as shown in the following example.</P>
+
+<PRE class="code">pMediaControl-&gt;Stop();
+
+long evCode;
+pEvent-&gt;WaitForCompletion(INFINITE, &amp;evCode);</PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

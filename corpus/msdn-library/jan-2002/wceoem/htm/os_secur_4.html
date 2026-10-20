@@ -1,0 +1,99 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Signature</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Signature"/>
+<MSHelp:RLTitle Title="Creating a Signature"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_creating_a_signature"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Creating a Signature</H1>
+
+<P>To create a digital signature from a file, run the file through a hash function, and then sign the resulting hash with a private key. An easy way to create a digital signature from a file is to use <A HREF="os_secur_6.htm">Signfile.exe</A>, which is included in Platform Builder. Signfile.exe is a tool for signing an executable file with a private key supplied by a CSP.</P>
+
+<P>Signfile.exe uses the Secure Hashing Algorithm (SHA) to compute the cryptographic hash. SHA generates a 20-byte hash from an arbitrarily sized byte string. Signfile.exe pads the hash as specified by Public-Key Cryptography Standards #1 (PKCS1) and encrypts it by using the RSA public key algorithm. The key modulus length can be from 512 through 1,024 bits&#0151;64 and 128 bytes, respectively. The resulting signature is the same size as the modulus. For example, the signature for a 1,024 bit key is 128 bytes. Signfile.exe then uses the <B>ImageAddCertificate</B> and <B>ImageGetDigestStream</B> Windows NT functions to embed the signature in a portable executable (PE) file. The following illustration shows the memory layout of a PE file.</P>
+
+<P class="fig"><IMG SRC="pe_file.gif" ALT="" BORDER=0></P>
+
+<P>The PE header begins with a 4-byte sequence, "PE\0\0" that identifies the Microsoft&reg; MS-DOS&reg; header. The MS-DOS header is followed by a standard Common Object File Format (COFF) header. This COFF header is followed by an optional header that is always present on Windows .exe and .dll files. The last field in a PE header is an optional data directory table. The following table shows the size of the PE header elements.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=51%>PE header element</TH>
+<TH width=49%>Size</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>"PE\0\0"</TD>
+<TD width=49%>4 bytes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>COFF header</TD>
+<TD width=49%>20 bytes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>Optional header; standard for Windows files</TD>
+<TD width=49%>96 bytes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>Optional header; data directory table</TD>
+<TD width=49%>Size varies</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>Each entry in the data directory table consists of an <B>IMAGE_DATA_DIRECTORY</B> structure. The fifth structure in the data directory table contains certificate table information, which is stored in an array of <B>WIN_CERTIFICATE</B> structures. A certificate is a digitally signed statement that contains information about an entity and the entity’s public key. Certificates are not loaded into memory as part of the PE file.</P>
+
+<P>The following code example shows the format of a <B>WIN_CERTIFICATE</B> structure that is needed to support the PKCS1 standard. </P>
+
+<PRE class="code">typedef struct {
+        // Standard WIN_CERTIFICATE fields (8 bytes)
+        DWORD dwLength;
+        WORD wRevision;
+        WORD wCertificateType;    // = WIN_CERT_TYPE_PKCS1_SIGN
+
+        // WIN_CERT_TYPE_PKCS1_SIGN fields follow
+        DWORD cbSignedData;
+        // optional signed attributes
+        BYTE bSignedData[MAX_WIN_CERT_SIGN_DATA_LEN];
+        BYTE bSign[MAX_RSA_KEY_BITS/8]; // PKCS1 signature
+} PKCS1_MODULE_SIGN ;</PRE>
+
+<P>Signfile.exe appends the <B>WIN_CERTIFICATE</B> structure to the end of the file and updates the file header accordingly. For sample Signfile.exe code, see Public\Common\Oak\Tools\Signfile.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

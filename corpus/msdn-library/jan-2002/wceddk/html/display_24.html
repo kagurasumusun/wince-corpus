@@ -1,0 +1,145 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample Blit Acceleration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Sample Blit Acceleration"/>
+<MSHelp:RLTitle Title="Sample Blit Acceleration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_sample_blit_acceleration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Sample Blit Acceleration</H1>
+
+<P>By default, a display driver routes all blits to the GPE. As alternatives, a display driver can route blit handling to the emulation library or directly to the hardware. </P>
+
+<P>The ATI display driver serves as a model to demonstrate how a display driver can invoke all three of these methods. The ATI sample code is located in the Platform\CEPC\Drivers\Display\ATI directory.</P>
+
+<P>The following code example is drawn from the sample ATI display driver contained in the Platform Builder. It shows how blit processing begins when the GDI calls the driver’s <B>BltPrepare</B> function. The driver initializes the blit parameters and determines which function to use to perform the individual blits. Typically, the driver initializes the GPE to handle default blit processing. The following code example shows this initialization.</P>
+
+<PRE class="code">SCODE ATI::BltPrepare(GPEBltParms *pBltParms)
+{
+// Put debug messages and optional timing processing here.
+
+pBltParms-&gt;pBlt = EmulatedBlt; // Generic BLT processing
+</PRE>
+
+<P>For improved performance, <B>BltPrepare</B> can examine the characteristics of the blit and the associated display surfaces to determine whether an accelerated blit is appropriate. After the initialization code, the display driver can contain code for hardware or software accelerations.</P>
+
+<P>After setting the default handler, the ATI driver dispatches blits to hardware acceleration, if available, and then to software-accelerated emulation, if available. First it checks whether the destination surface is in video memory. This is an important check that most display drivers must make before using hardware acceleration, because the GDI uses the display driver to render printer output, as well as display output. Printer output is rendered in system memory, and not in video memory. Most display hardware is able to perform accelerated drawing in only two situations: when the destination surface is in video memory, for blits without a source surface; or when both the source and destination surfaces are in video memory, for blits with a source surface. Therefore, if the hardware has this limitation, the driver must check the source and destination surfaces before calling the acceleration function.</P>
+
+<P>The following code example shows how the driver evaluates the raster operation (ROP) code and directs the blit to a supported hardware acceleration, when available. The SRCCOPY ROP illustrates how the driver checks for a source surface in video memory before invoking hardware acceleration.</P>
+
+<PRE class="code">if (((ATISurf*)(pBltParms-&gt;pDst))-&gt;InVideoMemory() ) {
+    switch( pBltParms-&gt;rop4 ) {
+        case 0x0000:// BLACKNESS
+            pBltParms-&gt;solidColor = 0x0;
+            pBltParms-&gt;pBlt = (SCODE (GPE::*)
+           (struct GPEBltParms *)) AcceleratedFillRect;
+            break;
+        case 0xFFFF:// WHITENESS
+            pBltParms-&gt;solidColor = 0xffffff;
+            pBltParms-&gt;pBlt = (SCODE (GPE::*)
+            (struct GPEBltParms *))AcceleratedFillRect;
+            break;
+        case 0xF0F0:// PATCOPY and PATINVERT: emulate color
+        case 0x5A5A:// conversion.
+            if (pBltParms-&gt;solidColor == -1) // emulate if not solid
+            {                                // color
+                break;
+            }
+            pBltParms-&gt;pBlt = (SCODE (GPE::*)(struct GPEBltParms *))
+                              AcceleratedFillRect;
+            break;
+        case 0x6666:// SRCINVERT, SRCAND, SRCCOPY and SRCPAINT:
+        case 0x8888:// cannot accelerate if src is not in video ram.
+        case 0xCCCC:// cannot accelerate if there are color translations.
+        case 0xEEEE:
+            if (!pBltParms-&gt;pSrc-&gt;InVideoMemory() ||
+                pBltParms-&gt;pLookup ||
+                pBltParms-&gt;pConvert ||
+                pBltParms-&gt;bltFlags &amp; BLT_STRETCH)
+                break;
+            pBltParms-&gt;pBlt = (SCODE (GPE::*)(struct GPEBltParms *))
+            AcceleratedSrcCopyBlt;
+            break;
+    } // end switch
+</PRE>
+
+<P>The following code example from the ATI display driver shows how to use the blit emulation library. After setting the default blit handler and handling hardware accelerations, the driver checks for possible software accelerations. </P>
+
+<P>The emulation library contains blit selection functions for 8 and 16 bpp modes. These selection functions make it easy to select the correct software accelerated blit function. You can either use these selection functions directly in your driver, or use them as a template for writing your own selection logic. The following code example shows how the ATI driver sample uses the selection functions to select from any available software accelerated blit functions.</P>
+
+<PRE class="code">if (pBltParms-&gt;pBlt == EmulatedBlt)
+    {
+        EmulatedBltSelect08 (pBltParms);
+        EmulatedBltSelect16 (pBltParms);
+    }
+</PRE>
+
+<P>Since the ATI driver can run at several different color depths, the selection function must check for conditions that would prevent the blit from using emulation. The software accelerated blit functions in the emulation library have the following restrictions: the destination surface’s color depth must match the emulated function’s color depth, no transparency or stretching is allowed, and no color conversion or lookup is allowed. The following code example shows how the selection function determines whether the blit can use any of the software accelerated blit functions.</P>
+
+<PRE class="code">// check the input parameters for validity
+if (pBltParms-&gt;pDst-&gt;Format() != gpe8Bpp)
+{
+    return S_OK;
+}
+if ((pParms-&gt;bltFlags &amp; (BLT_TRANSPARENT | BLT_STRETCH)))
+{
+    return S_OK;
+}
+if ((pParms-&gt;pLookup) || (pParms-&gt;pConvert))
+{
+    return S_OK;
+}</PRE>
+
+<P>After confirming that the emulation library functions can perform a blit, the selection function examines the ROPs, dispatching supported ROPs to the appropriate function. The following code example shows how the selection function checks the ROP4 value to choose which blit function to use.</P>
+
+<PRE class="code">#define FUNCNAME(basename) (SCODE (GPE::*)(struct GPEBltParms \
+*))Emulator::Emulated##basename
+switch (pBltParms-&gt;rop4) {
+    case 0x0000:    // BLACKNESS
+        pBltParms-&gt;solidColor = 0;
+        pBltParms-&gt;pBlt = FUNCNAME(BltFill08);
+        break;
+    case 0xFFFF:    // WHITENESS
+        pBltParms-&gt;solidColor = 0x00ffffff;
+        pBltParms-&gt;pBlt = FUNCNAME(BltFill08);
+        break;
+    case 0xF0F0: // PATCOPY
+        if (pParms-&gt;solidColor == -1) // really a patterned brush?
+        {
+            pParms-&gt;pBlt = FUNCNAME(BltPatternCopy08);
+        }
+        else // must be a solid colored brush
+        {
+            pParms-&gt;pBlt = FUNCNAME(BltFill08);
+        }
+        break;
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

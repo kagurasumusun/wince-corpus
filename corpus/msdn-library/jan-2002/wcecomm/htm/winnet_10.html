@@ -1,0 +1,183 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Determining Available Network Resources</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Determining Available Network Resources"/>
+<MSHelp:RLTitle Title="Determining Available Network Resources"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_determining_available_network_resources"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_NETRESOURCE_str" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_WNetCloseEnum" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_WNetEnumResource" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_win32_WNetCloseEnum" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_win32_WnetAddConnection3" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Determining Available Network Resources</H1>
+
+<P>To determine the resources available on a network, an application passes the address of a <A HREF="JavaScript:hhobj_1.Click()"><B>NETRESOURCE</B></A> structure to the <B>WNetOpenEnum</B> function. Calling <A HREF="JavaScript:hhobj_2.Click()"><B>WNetOpenEnum</B></A> initializes an enumeration instance with the <B>NETRESOURCE</B> structure specifying the enumeration parameters.</P>
+
+<P><B>To identify available network resources</B>
+
+<OL type="1">
+	<LI>Set up the <B>NETRESOURCE</B> structure to define enumeration.
+<P>To enumerate a <I>shared directory</I> on a server, change the <I>lpRemoteName</I> member in <B>NETRESOURCE</B> to the name of the server. Similarly, to enumerate servers in a domain, change the <I>lpRemoteName</I> to the name of the domain.
+
+<P>The following code example shows how to enumerate a shared directory on a server.
+
+<PRE class="code">NETRESOURCE nr;
+
+nr.dwScope = RESOURCE_GLOBALNET;
+nr.dwType = RESOURCETYPE_DISK;
+nr.dwUsage = RESOURCEUSAGE_CONTAINER;
+nr.lpLocalName = TEXT("");
+nr.lpRemoteName = TEXT("\\\\MyServer");
+nr.lpComment = TEXT("");
+nr.lpProvider = TEXT("");
+
+EnumerateFunc (hwnd, &amp;nr); </PRE>
+
+<P>The following code example shows how to enumerate servers in a domain.
+
+<PRE class="code">NETRESOURCE nr;
+
+nr.dwScope = RESOURCE_GLOBALNET;
+nr.dwType = RESOURCETYPE_DISK;
+nr.dwUsage = RESOURCEUSAGE_CONTAINER;
+nr.lpLocalName = TEXT("");
+nr.lpRemoteName = TEXT("MyDomain");
+nr.lpComment = TEXT("");
+nr.lpProvider = TEXT("");
+
+EnumerateFunc (hwnd, &amp;nr); </PRE>
+</li>
+
+	<LI>Call <B>WNetOpenEnum</B> to create an enumeration handle to the resource defined by <B>NETRESOURCE</B>.</li>
+
+	<LI>Call <A HREF="JavaScript:hhobj_3.Click()"><B>WNetEnumResource</B></A> with the enumeration handle created in the previous step to package the resource data in an array of <B>NETRESOURCE</B> structures.
+<P class=atl><b class="le">Note&nbsp;&nbsp;&nbsp;</b>Enumeration of network shares on a server (e.g. <B>WNetEnumResource</B>, or dir \\server\*) may return incorrect share information if share names contain extended characters. This is due to the fact that the Windows CE redirector uses the <B>NetShareEnum</B> API, which does not support Unicode. If the complete \\server\share path is specified, file operations operate correctly, even if the share contains extended characters.
+</li>
+
+	<LI>Call <A HREF="JavaScript:hhobj_4.Click()"><B>WNetCloseEnum</B></A> to close the enumeration handle.
+<P>An application can continue enumerating any container’s resources.
+</li>
+</OL>
+
+<P>If the <I>dwUsage</I> member of <B>NETRESOURCE</B> returned by <B>WNetEnumResource</B> is RESOURCEUSAGE_CONTAINER, an application can continue enumerating that container by passing the address of that structure to <B>WNetOpenEnum</B>. If <I>dwUsage</I> is RESOURCEUSAGE_CONNECTABLE, an application can add a connection to the resource by passing the structure address to the <A HREF="JavaScript:hhobj_5.Click()"><B>WNetAddConnection3</B></A> function. For more information, see <A HREF="winnet_12.htm">Establishing a Network Connection</A>.</P>
+
+<P>The following code example shows how an application-defined function, <B>EnumerateFunc</B>, that enumerates all the resources in a subdirectory on a network. This function takes a pointer to a <B>NETRESOURCE</B> structure describing the subdirectory. Whenever <B>WNetEnumResource</B> returns a <B>NETRESOURCE</B> structure with the <I>dwUsage</I> member corresponding to RESOURCEUSAGE_CONTAINER, <B>EnumerateFunc</B> calls itself and passes a pointer to this structure in its call to <B>WNetOpenEnum</B>.</P>
+
+<PRE class="code">BOOL WINAPI EnumerateFunc (HWND hwnd, LPNETRESOURCE lpnr)
+{
+  HANDLE hEnum;
+
+  DWORD dwIndex,
+        dwResult,
+        dwBufferSize = 16384,
+        dwNumEntries = 0xFFFFFFFF;  // Enumerate all possible entries.
+
+  LPNETRESOURCE lpnrLocal;          // Pointer to enumerated structures.
+
+  dwResult = WNetOpenEnum (
+                    RESOURCE_GLOBALNET, // All resources on the network
+                    RESOURCETYPE_ANY,   // All resources
+                    0,                  // Enumerate all resources.
+                    lpnr,               // The container to enumerate
+                    &amp;hEnum);            // Handle to resource
+
+  if (dwResult != ERROR_SUCCESS)
+  {
+    ErrorHandler (hwnd, dwResult, TEXT("WNetOpenEnum"));
+    return FALSE;
+  }
+
+  // Allocate memory for NETRESOURCE structures.
+  if (!(lpnrLocal = (LPNETRESOURCE) LocalAlloc (LPTR, dwBufferSize)))
+    MessageBox (hwnd, TEXT("Not enough memory"), TEXT("Error"), MB_OK);
+
+  do
+  {
+    dwResult = WNetEnumResource (
+                    hEnum,              // Resource handle
+                    &amp;dwNumEntries,      // Number of entries
+                    lpnrLocal,          // LPNETRESOURCE
+                    &amp;dwBufferSize);     // Buffer size
+
+    if (dwResult == ERROR_SUCCESS)
+    {
+      for (dwIndex = 0; dwIndex &lt; dwNumEntries; dwIndex++)
+      {
+        // Insert code here to perform operations with lpnrLocal
+        // for example, to display contents of NETRESOURCE structures.
+        // ...
+
+        // If this NETRESOURCE is a container, call the function
+        // recursively.
+        if (RESOURCEUSAGE_CONTAINER ==
+            (lpnrLocal[dwIndex].dwUsage &amp; RESOURCEUSAGE_CONTAINER))
+        {
+          if(!EnumerateFunc (hwnd, &amp;lpnrLocal[dwIndex]))
+              MessageBox (hwnd, TEXT("EnumerateFunc returned FALSE."),
+                          TEXT("Error"), MB_OK);
+        }
+      }
+    }
+    else if (dwResult != ERROR_NO_MORE_ITEMS)
+    {
+      ErrorHandler (hwnd, dwResult, TEXT("WNetEnumResource"));
+      break;
+    }
+  } while (dwResult != ERROR_NO_MORE_ITEMS);
+
+  LocalFree (lpnrLocal);
+
+  dwResult = WNetCloseEnum (hEnum);
+
+  if (dwResult != ERROR_SUCCESS)
+  {
+    ErrorHandler (hwnd, dwResult, TEXT("WNetCloseEnum"));
+    return FALSE;
+  }
+
+  return TRUE;
+} </PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

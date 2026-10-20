@@ -1,0 +1,115 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoDisconnectObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoDisconnectObject"/>
+<MSHelp:RLTitle Title="CoDisconnectObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_codisconnectobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoDisconnectObject</H1>
+
+<P>This function disconnects all remote process connections being maintained on behalf of all the interface pointers that point to a specified object. Only the process that actually manages the object should call <B>CoDisconnectObject</B>. </P>
+
+<PRE class="syntax"><B>STDAPI CoDisconnectObject(
+IUnknown *</B><I>pUnk</I><B>,
+DWORD </B><I>dwReserved</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pUnk</I></DT>
+
+<DD>[in] Pointer to any <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A>-derived interface on the object to be disconnected.</dd>
+
+<DT><I>dwReserved</I></DT>
+
+<DD>[in] Reserved for future use; must be zero. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>All connections to remote processes were successfully deleted.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CoDisconnectObject</B> function enables a server to correctly disconnect all external clients to the object specified by <I>pUnk</I>.</P>
+
+<P>The <B>CoDisconnectObject</B> function performs the following tasks:
+
+<OL type="1">
+	<LI>Checks to see if the object to be disconnected implements the <A HREF="_wcesdk_com_imarshal.htm"><B>IMarshal</B></A> interface. If so, it gets the pointer to that interface; if not, it gets a pointer to the standard marshaler's (i.e., COM's) <B>IMarshal</B> implementation.</li>
+
+	<LI>Using whichever <B>IMarshal</B> interface pointer it has acquired, the function then calls <A HREF="_wcesdk_com_imarshal__disconnectobject.htm"><B>IMarshal::DisconnectObject</B></A> to disconnect all out-of-process clients.</li>
+</OL>
+
+<P>An object's client does not call <B>CoDisconnectObject</B> to disconnect itself from the server (clients should use <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A> for this purpose). Rather, an OLE server calls <B>CoDisconnectObject</B> to forcibly disconnect an object's clients, usually in response to a user closing the server application.</P>
+
+<P>Similarly, an OLE container that supports external links to its embedded objects can call <B>CoDisconnectObject</B> to destroy those links. Again, this call is normally made in response to a user closing the application. The container should first call <A HREF="_wcesdk_com_ioleobject_close.htm"><B>IOleObject::Close</B></A> for all its OLE objects, each of which should send <A HREF="_wcesdk_com_iadvisesink_onclose.htm"><B>IAdviseSink::OnClose</B></A> notifications to their various clients. Then the container can safely call <B>CoDisconnectObject</B> to close any existing connections.</P>
+
+<P><B>CoDisconnectObject</B> does not necessarily disconnect out-of-process clients immediately. If any marshaled calls are pending on the server object, <B>CoDisconnectObject</B> disconnects the object only when those calls have returned. In the meantime, <B>CoDisconnectObject</B> sets a flag that causes any new marshaled calls to return CO_E_OBJECTNOTCONNECTED.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

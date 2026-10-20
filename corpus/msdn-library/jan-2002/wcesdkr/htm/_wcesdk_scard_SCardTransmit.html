@@ -1,0 +1,261 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SCardTransmit</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SCardTransmit"/>
+<MSHelp:RLTitle Title="SCardTransmit"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_scard_scardtransmit"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SCardTransmit</H1>
+
+<P>This function sends a service request to the smart card and expects to receive data back from the card.</P>
+
+<PRE class="syntax"><B>LONG SCardTransmit(</B>
+<B>IN SCARDHANDLE<I> </I></B><I>hCard</I><B>, </B>
+<B>IN LPCSCARD_I0_REQUEST </B><I>pioSendPci</I><B>, </B>
+<B>IN LPCBYTE </B><I>pbSendBuffer</I><B>, </B>
+<B>IN DWORD </B><I>cbSendLength</I><B>, </B>
+<B>IN OUT LPSCARD_IO_REQUEST </B><I>pioRecvPci</I><B>, </B>
+<B>OUT LPBYTE </B><I>pbRecvBuffer</I><B>, </B>
+<B>IN OUT LPDWORD </B><I>pcbRecvLength</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCard</I></DT>
+
+<DD>Handle to the reference value returned from <B>SCardConnect</B>.</dd>
+
+<DT><I>pioSendPci</I></DT>
+
+<DD>Pointer to the protocol header structure for the instruction. This buffer is in the format of an <A HREF="_wcesdk_scard_scard_io_request.htm">SCARD_IO_REQUEST</A> structure, followed by the specific protocol control information.
+
+<P>For the T=0, T=1, and Raw protocols, the <B>PCI</B> structure is constant. The smart card subsystem supplies a global T=0, T=1, or Raw <B>PCI</B> structure, which you can reference by using the symbols <B>SCARD_PCI_T0</B>, <B>SCARD_PCI_T1</B>, and <B>SCARD_PCI_RAW</B> respectively.
+</dd>
+
+<DT><I>pbSendBuffer</I></DT>
+
+<DD>Pointer to the actual data to be written to the card.
+
+<P>For T=0, the data parameters are placed into the <I>pbSendBuffer</I> according to the following structure.
+
+
+<PRE class="code">struct {
+    BYTE
+        bCla,   // The instruction class
+        bIns,   // The instruction code
+        bP1,    // Parameter to the instruction
+        bP2,    // Parameter to the instruction
+        bP3;    // Size of I/O Transfer
+} CmdBytes;</PRE>
+
+
+<P><B>Members</B>
+
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=13%><I>bCla</I></TD>
+<TD width=87%>T=0 instruction class</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%><I>bIns</I></TD>
+<TD width=87%>Instruction code in the T=0 instruction class</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%><I>bP1</I>, <I>bP2</I></TD>
+<TD width=87%>Reference codes completing the instruction code</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=13%><I>bP3</I></TD>
+<TD width=87%>Number of data bytes which are to be transmitted during the command, per ISO 7816-4, Section 8.2.1.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>The data sent to the card should immediately follow the send buffer. In the special case where no data is sent to the card and no data is expected in return, <I>bP3</I> is not sent.
+</dd>
+
+<DT><I>cbSendLength</I></DT>
+
+<DD>Count of bytes that represent the length of the <I>pbSendBuffer</I> parameter.
+
+<P>For T=0, in the special case where no data is sent to the card and no data expected in return, this length must reflect that the <I>bP3</I> member is not being sent: the length should be <B>sizeof(CmdBytes)</B>&#0151;<B>sizeof(BYTE)</B>.
+</dd>
+
+<DT><I>pioRecvPci</I></DT>
+
+<DD>Pointer to the protocol header structure for the instruction, followed by a buffer in which to receive any returned protocol control information (PCI) specific to the protocol in use. This parameter may be NULL if no returned PCI is desired.</dd>
+
+<DT><I>pbRecvBuffer</I></DT>
+
+<DD>Pointer to any data returned from the card.
+
+<P>For T=0, the data is immediately followed by the SW1 and SW2 status bytes. If no data is returned from the card, then this buffer will only contain the SW1 and SW2 status bytes.
+</dd>
+
+<DT><I>pcbRecvLength</I></DT>
+
+<DD>Pointer to the length, in bytes, of the <I>pbRecvBuffer</I> parameter; receives the actual number of bytes received from the smart card.
+
+<P>For T=0, the receive buffer must be at least two bytes long in order to receive the SW1 and SW2 status bytes.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=20%>Value</TH>
+<TH width=80%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Succeeds</TD>
+<TD width=80%>SCARD_S_SUCCESS</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%>Fails</TD>
+<TD width=80%>An error value (see <A HREF="_wcesdk_scard_smart_card_error_values.htm">Smart Card Error values</A> for a list of all error values)</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P><B>SCardTransmit</B> is a smart card and reader access function.
+
+<DL>
+<DT><B>T=0 Protocol Remarks</B></DT>
+
+<DD>For the T=0 protocol, the data received back are the SW1 and SW2 status codes, possibly preceded by response data. The following paragraphs provide information on the send and receive buffers used to transfer data and issue a command.</dd>
+
+<DT><B>Sending data to the card</B></DT>
+
+<DD>To send <I>n</I> bytes of data to the card, where <I>n</I>&gt;0, the send and receive buffers must be formatted as follows.
+
+<P>The first four bytes of the <I>pbSendBuffer</I> buffer contain the CLA, INS, P1, and P2 values for the T=0 operation. The fifth byte is set to <I>n</I>: the size, in bytes, of the data to be transferred to the card. The next <I>n</I> bytes contain the data to be sent to the card.
+
+
+<P>The <I>cbSendLength</I> parameter is set to the size of the T=0 header information (CLA, INS, P1 and P2) plus a byte containing the length of the data to be transferred (<I>n</I>), plus the size of data to be sent. In this example, this is <I>n</I>+5.
+
+
+<P>The <I>pbRecvBuffer</I> receives the SW1 and SW2 status codes from the operation.
+
+
+<P>The <I>pcbRecvLength</I> should be at least 2, and will be set to 2 upon return.
+</dd>
+
+<DT><B>Obtaining data from the card</B></DT>
+
+<DD>To receive <I>n</I>&gt;0 bytes of data from the card, the send and receive buffers must be formatted as follows.
+
+<P>The first four bytes of the <I>pbSendBuffer</I> buffer contain the CLA, INS, P1, and P2 values for the T=0 operation. The fifth byte is set to <I>n</I>: the size, in bytes, of the data to be transferred from the card. If 256 bytes are to be transferred from the card, then this byte shall be set to 0.
+
+
+<P>The <I>cbSendLength</I> parameter is set to 5, the size of the T=0 header information.
+
+
+<P>The <I>pbRecvBuffer</I> receives the data returned from the card, immediately followed by the SW1 and SW2 status codes from the operation.
+
+
+<P>The <I>pcbRecvLength</I> should be at least <I>n</I>+2, and will be set to <I>n</I>+2 upon return.
+</dd>
+
+<DT><B>Issuing a command without exchanging data</B></DT>
+
+<DD>To issue a command to the card that does not involve the exchange of data (either sent or received), the send and receive buffers must be formatted as follows.
+
+<P>The <I>pbSendBuffer</I> buffer contains the CLA, INS, P1, and P2 values for the T=0 operation. The P3 value is not sent. This differentiates the header from the case where 256 bytes are expected to be returned.
+
+
+<P>The <I>cbSendLength</I> parameter is set to 4, the size of the T=0 header information (CLA, INS, P1, and P2).
+
+
+<P>The <I>pbRecvBuffer</I> will receive the SW1 and SW2 status codes from the operation.
+
+
+<P>The <I>pcbRecvLength</I> should be at least 2, and will be set to 2 upon return.
+</dd>
+</DL>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Winscard.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Winscard.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_scard_scardconnect.htm">SCardConnect</A>, <A HREF="_wcesdk_scard_scard_io_request.htm">SCARD_IO_REQUEST</A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

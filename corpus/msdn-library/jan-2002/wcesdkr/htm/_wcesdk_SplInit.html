@@ -1,0 +1,180 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SplInit</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SplInit"/>
+<MSHelp:RLTitle Title="SplInit"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_splinit"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SplInit</H1>
+
+<P>This function is called by an application to initialize a spelling session. <A HREF="#_wcesdk_splinit"><B>SplInit</B></A> generates a handle for a spelling session, allocates buffer memory, loads the main dictionary and external user dictionaries, and creates the internal user dictionaries.</P>
+
+<PRE class="syntax"><B>int SplInit( </B>
+<B>HSPL</B> * <I>phspl</I>,
+<B>int</B> <I>clex</I>,
+<B>WCHAR</B> ** <I>ppwsz </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>phspl</I></DT>
+
+<DD>Pointer to the handle of the new spelling session. The <B>SplInit</B> function creates this handle and places it at the location pointed to by this parameter. Subsequent calls by an application must include this handle to associate a call to a particular spelling session. </dd>
+
+<DT><I>clex</I></DT>
+
+<DD>Number of user<B> </B>dictionaries that are defined. If <I>clex</I> is 0, the <A HREF="_wcesdk_splcheck.htm"><B>SplCheck</B></A> function uses only the main dictionary.</dd>
+
+<DT><I>ppwsz</I></DT>
+
+<DD>Pointer to a list of pointers, each of which point to a null-terminated string that contains the path and file name for an external user dictionary. If <I>clex </I>is 0, this parameter must be NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>1 indicates success. 0 indicates failure.</P>
+
+<H4>Remarks</H4>
+
+<P>Windows CE supplies a read-only main spelling dictionary on the device. By default, this dictionary is used during<B> </B>every spelling session. Currently, Windows CE does not support replacing this main dictionary with a dictionary supplied by the application. </P>
+
+<P>In addition to loading the main dictionary, <B>SplInit</B> creates the following three internal user dictionaries:
+
+<DL>
+<DT>SPL_IGNORE_LEX</DT>
+
+<DD>Contains words that the spelling checker finds, but the user does not want to change. The spelling checker ignores words in this list for the remainder of the spelling session.</dd>
+
+<DT>SPL_CHANGE_ALWAYS_LEX</DT>
+
+<DD>Contains words that the spelling checker finds, paired with words that replace subsequent occurrences of the found words. </dd>
+
+<DT>SPL_CHANGE_ONCE</DT>
+
+<DD>Contains words that the spelling checker finds and the user changes. The spelling checker continues to find subsequent occurrences of the words.</dd>
+</DL>
+
+<P>These internal dictionaries are empty at initialization and removed by the <A HREF="_wcesdk_splquit.htm"><B>SplQuit</B></A> function when the spelling session is over.</P>
+
+<P>The application can also specify external user dictionaries to load. The <I>ppwsz</I> parameter points to a list of pointers, each of specify the path and file name of an external user dictionary. If you load one external user dictionary, <I>ppwsz</I> is a pointer to a single pointer. Use the <I>clex</I> parameter to indicate how many external user dictionaries to load. There is no limit to the number of external user dictionaries the application can define.</P>
+
+<P>External user dictionaries are typically created by the user and saved for use during future spelling sessions when an application calls the <B>SplQuit</B> function. During a spelling session, applications can add words to an external user dictionary using <A HREF="_wcesdk_spladduserdict.htm"><B>SplAddUserDict</B></A>, remove words using <A HREF="_wcesdk_splremuserdict.htm"><B>SplRemUserDict</B></A>, and clear the contents of an external user dictionary using <A HREF="_wcesdk_splclruserdict.htm"><B>SplClrUserDict</B></A>. </P>
+
+<P><B>SplInit</B> assigns identifiers to the internal user dictionaries and to any external user dictionaries pointed to by <I>ppwsz</I>. Use these identifiers in other spelling functions to specify a dictionary. The parameter that identifies a dictionary is <I>nID</I>. Values that <B>SplInit</B> assigns to <I>nID</I> are listed in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=9%>Value</TH>
+<TH width=91%>Dictionary</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>&#0150;3</TD>
+<TD width=91%>SPL_IGNORE_LEX</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>&#0150;2</TD>
+<TD width=91%>SPL_CHANGE_ALWAYS_LEX</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>&#0150;1</TD>
+<TD width=91%>SPL_CHANGE_ONCE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>0</TD>
+<TD width=91%>External user dictionary 1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%>1</TD>
+<TD width=91%>External user dictionary 2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=9%><I>clex</I>&#0150;1</TD>
+<TD width=91%>External user dictionary <I>clex</I></TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>To determine the value of the <I>nID</I> parameter for an external user dictionary, subtract one from its position in the dictionary list that the <I>ppwsz</I> parameter points to. For example, if there are three external user dictionaries to load, <I>clex</I> equals 3. The <I>nID</I> of the last dictionary loaded is <I>clex</I>&#0150;1, which equals 2.</P>
+
+<P>Because initializing a spelling session is time-consuming, consider doing it when the calling application starts and keeping the spelling session active until the calling application ends. Remember, however, that a spelling session has exclusive access to external user dictionaries until the calling application exits. This means that a second application cannot load external user dictionaries that are already in use.</P>
+
+<P>If it is possible for a user to simultaneously run multiple applications that can use the spelling checker, it might be best to initialize the spelling checker when the user requests it instead of initializing it when the calling application starts. When the application is done with the spelling checker, it calls the <B>SplQuit</B> function and the external user dictionary or dictionaries are available for use by another spelling session.</P>
+
+<P>The main dictionary is available for multiple spelling sessions because it is read-only. The internal user dictionaries are created for each spelling session and removed at the end of each session; therefore, access to them by multiple spelling sessions is not an issue. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Splapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Splusa.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_spladduserdict.htm"><B>SplAddUserDict</B></A>, <A HREF="_wcesdk_splclruserdict.htm"><B>SplClrUserDict</B></A>, <A HREF="_wcesdk_splquit.htm"><B>SplQuit</B></A>, <A HREF="_wcesdk_splremuserdict.htm"><B>SplRemUserDict</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

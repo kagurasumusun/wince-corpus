@@ -1,0 +1,165 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPin Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPin Interface"/>
+<MSHelp:RLTitle Title="IPin Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ipin_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IPin Interface</H1>
+
+<P>The <B>IPin</B> interface represents a single, unidirectional connection point on a filter. A pin connects to exactly one other pin on another filter. Other objects can use this interface on this pin. The interface between the filter and the pin is private to the implementation of a specific filter. </P>
+
+<P>During the connection process, one pin takes the lead. The base classes assume that this is the output pin of the upstream connecting filter. The filter graph manager calls the <A HREF="_wcesdk_ipin__connect.htm"><B>IPin::Connect</B></A> method on this pin's <B>IPin</B> interface, passing the <B>IPin</B> pointer for the connecting pin. This connecting pin then calls the <A HREF="_wcesdk_ipin__receiveconnection.htm"><B>IPin::ReceiveConnection</B></A> method located on the other pin, in addition to its format-enumeration, <A HREF="_wcesdk_iunknown__queryinterface.htm"><B>IUnknown::QueryInterface</B></A>, and possibly <A HREF="_wcesdk_ipin__queryaccept.htm"><B>IPin::QueryAccept</B></A> methods, to establish whether the connection is possible. </P>
+
+<H4>When to Implement</H4>
+
+<P>All filters must implement this interface on each of its pins. Which methods are implemented depends on whether the pin is an input pin or an output pin. Use the <A HREF="_wcesdk_cbasepin__cbasepin.htm"><B>CBasePin</B></A>, <A HREF="_wcesdk_cbaseinputpin__cbaseinputpin.htm"><B>CBaseInputPin</B></A>, or <A HREF="_wcesdk_cbaseoutputpin__cbaseoutputpin.htm"><B>CBaseOutputPin</B></A> class, or classes derived from these classes, to implement this interface. </P>
+
+<H4>When to Use</H4>
+
+<P>This interface is used by other connecting pins and by the filter graph manager. Applications should not use this interface directly but should go through the filter graph manager. Connecting pins use the <A HREF="#_wcesdk_ipin_interface"><B>IPin</B></A> interface on the opposite pin to negotiate a common media type and an agreed allocator to use for passing samples. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IUnknown methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IPin methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__connect.htm"><B>Connect</B></A></TD>
+<TD width=50%>Makes a connection to another pin. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__receiveconnection.htm"><B>ReceiveConnection</B></A></TD>
+<TD width=50%>Makes a connection to this pin and is called by a connecting pin. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__disconnect.htm"><B>Disconnect</B></A></TD>
+<TD width=50%>Breaks a connection. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__connectedto.htm"><B>ConnectedTo</B></A></TD>
+<TD width=50%>Returns a pointer to the connecting pin. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__connectionmediatype.htm"><B>ConnectionMediaType</B></A></TD>
+<TD width=50%>Returns the media type of this pin's connection. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__querypininfo.htm"><B>QueryPinInfo</B></A></TD>
+<TD width=50%>Retrieves information about this pin (for example, the name, owning filter, and direction). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__queryid.htm"><B>QueryId</B></A></TD>
+<TD width=50%>Retrieves an identifier for the pin. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__queryaccept.htm"><B>QueryAccept</B></A></TD>
+<TD width=50%>Queries whether a given media type is acceptable by the pin. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__enummediatypes.htm"><B>EnumMediaTypes</B></A></TD>
+<TD width=50%>Provides an enumerator for this pin's preferred media types. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__queryinternalconnections.htm"><B>QueryInternalConnections</B></A></TD>
+<TD width=50%>Provides an array of the pins to which this pin internally connects. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__endofstream.htm"><B>EndOfStream</B></A></TD>
+<TD width=50%>Informs the pin that no additional data is expected until a new run command is issued. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__beginflush.htm"><B>BeginFlush</B></A></TD>
+<TD width=50%>Informs the pin to begin a flush operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__endflush.htm"><B>EndFlush</B></A></TD>
+<TD width=50%>Informs the pin to end a flush operation. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__newsegment.htm"><B>NewSegment</B></A></TD>
+<TD width=50%>Specifies that samples following this call are grouped as a segment with a given start time, stop time, and rate. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ipin__querydirection.htm"><B>QueryDirection</B></A></TD>
+<TD width=50%>Retrieves the direction for this pin. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

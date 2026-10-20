@@ -1,0 +1,143 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetFileSize</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GetFileSize"/>
+<MSHelp:RLTitle Title="GetFileSize"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_getfilesize"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>GetFileSize</H1>
+
+<P>This function retrieves the size, in bytes, of the specified file. A remote application interface (RAPI) version of this function exists, and it is named <A HREF="_wcesdk_cegetfilesize_rapi_.htm"><B>CeGetFileSize</B></A>. </P>
+
+<PRE class="syntax"><B>DWORD</B> <B>GetFileSize( </B>
+<B>HANDLE</B> <I>hFile</I><B>, </B>
+<B>LPDWORD</B> <I>lpFileSizeHigh</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hFile</I></DT>
+
+<DD>[in] Open handle of the file whose size is being returned. The handle must have been created with either GENERIC_READ or GENERIC_WRITE access to the file. </dd>
+
+<DT><I>lpFileSizeHigh</I></DT>
+
+<DD>[out] Pointer to the variable where the high-order word of the file size is returned. This parameter can be NULL if the application does not require the high-order word. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The low-order <B>DWORD</B> of the file size indicates success. If <I>lpFileSizeHigh</I> is non-NULL, the function puts the high-order <B>DWORD</B> of the file size into the variable pointed to by that parameter. If <I>lpFileSizeHigh</I> is NULL, 0xFFFFFFFF indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<P>If <I>lpFileSizeHigh</I> is non-NULL, 0xFFFFFFFF indicates failure and <B>GetLastError</B> returns a value other than NO_ERROR. </P>
+
+<H4>Remarks</H4>
+
+<P>Note that if the return value is 0xFFFFFFFF and <I>lpFileSizeHigh</I> is non-NULL, an application must call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> to determine whether the function has succeeded or failed. The following sample code illustrates this point: </P>
+
+<PRE class="code">//
+// Case One: calling the function with
+//           lpFileSizeHigh == NULL
+
+// Try to obtain hFile's size
+dwSize = GetFileSize (hFile, NULL) ;
+
+// If we failed ...
+if (dwSize == 0xFFFFFFFF) {
+
+    // Obtain the error code.
+    dwError = GetLastError() ;
+
+    // Deal with that failure.
+    .
+    .
+    .
+
+    } // End of error handler
+
+
+//
+// Case Two: calling the function with
+//           lpFileSizeHigh != NULL
+
+// Try to obtain hFile's huge size.
+dwSizeLow = GetFileSize (hFile, &amp; dwSizeHigh) ;
+
+// If we failed ...
+if (dwSizeLow == 0xFFFFFFFF
+    &amp;&amp;
+    (dwError = GetLastError()) != NO_ERROR ){
+
+    // Deal with that failure.
+    .
+    .
+    .
+
+    } // End of error handler. </PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_cegetfilesize_rapi_.htm"><B>CeGetFileSize</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

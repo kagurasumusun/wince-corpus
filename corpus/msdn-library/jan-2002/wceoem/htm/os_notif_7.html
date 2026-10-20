@@ -1,0 +1,70 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Generating Notifications</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Generating Notifications"/>
+<MSHelp:RLTitle Title="Generating Notifications"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_generating_notifications"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Generating Notifications</H1>
+
+<P>To generate notifications, Windows CE facilitates communication between the base notification engine and your notification UI. When an event occurs, the base notification engine creates a <B>NotifyPacket</B> structure in RAM containing notification parameters in the <I>sPacket</I> member. It then passes a handle to this structure to your notification UI through the <B>CeNotifyPublic_NewPacket</B> function. Your notification UI is then responsible for handling the notification.</P>
+
+<P><B>To handle a notification with your notification UI</B>
+
+<OL type="1">
+	<LI>Examine the <B>NotifyPacket</B> structure.
+<P>This step requires your notification UI to lock the notification database with the <B>CeNotifyPrivate_Lock</B> function.
+</li>
+
+	<LI>Obtain a pointer to the structure by calling the <B>CeNotifyPrivate_TranslateOID</B> function.
+<P>If this function returns NULL, the notification has been handled and the request to dismiss the UI has already been dispatched.
+</li>
+
+	<LI>Present the requested UI feature.
+<P>For example, launch a dialog box, play a sound, or launch the appropriate application if no UI is required for the notification.
+</li>
+
+	<LI>Unlock the notification database by calling the <B>CeNotifyPrivate_Unlock</B> function.
+<P>If your notification UI creates a dialog box, set GWL_USERDATA to M_WORD to correctly dispatch dialog box messages. The notification subsystem uses the value defined by M_WORD to clearly identify its windows and message-related processing.
+</li>
+</OL>
+
+<P>For a sample implementation of this procedure, see the <B>NewPacket</B> function in \Public\Common\Oak\Notify\Notifext.cxx.</P>
+
+<P>You should not maintain or use the <B>NotifyPacket</B> structure while the notification database is unlocked. Use a notification handle instead, and translate it to a <B>NotifyPacket</B> structure when locking the database. While the notification database is locked, the base notification engine is not functional. Consequently, do not lock the database for extended periods of time.</P>
+
+<P>If a user issues a request to postpone a notification, your notification UI can reschedule the notification with the <B>CeNotifyPrivate_Reschedule</B> function. Once a notification is handled, your notification UI should call the <B>CeNotifyPrivate_DeleteNotification</B> function, which causes the base notification engine to delete the database record and remove the <B>NotifyPacket</B> structure from the list of active notifications. <B>CeNotifyPrivate_DeleteNotification</B> will not free the structure itself, but will return it to the notification UI through the <B>CeNotifyPublic_DisposeOfPacket</B> function. The notification UI should then dismiss any UI features that are associated with the notification and free the pointer to the <B>NotifyPacket</B> structure with the <B>LocalFree</B> function.</P>
+
+<P>For an example of how to clear notification responses, see the <B>DisposeOfPacket</B> function in Public\Common\Oak\Notify\Notifext.cxx.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

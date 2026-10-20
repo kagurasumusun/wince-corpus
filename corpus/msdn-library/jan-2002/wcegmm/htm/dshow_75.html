@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Define and Instantiate Your Filter Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Define and Instantiate Your Filter Class"/>
+<MSHelp:RLTitle Title="Define and Instantiate Your Filter Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_define_and_instantiate_your_filter_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ctransformfilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ctransinplacefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_cvideotransformfilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_cbasefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_com_iunknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_cunknown_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_iunknown_macro__declare_iunknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_cfactorytemplate_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Define and Instantiate Your Filter Class</H1>
+
+<P>The following steps show you how to define and instantiate your filter class. </P>
+
+<P>Determine the base classes from which to derive your filter class (and pin classes, if necessary). Typically, your transform filter class derives from the <A HREF="JavaScript:hhobj_1.Click()"><B>CTransformFilter</B></A>, <A HREF="JavaScript:hhobj_2.Click()"><B>CTransInPlaceFilter</B></A>, or <A HREF="JavaScript:hhobj_3.Click()"><B>CVideoTransformFilter</B></A> transform base classes, or from the more generic <A HREF="JavaScript:hhobj_4.Click()"><B>CBaseFilter</B></A> class. If you want to transform video media (especially AVI data), derive from <B>CVideoTransformFilter</B>. If your filter must copy the input media samples, derive from <B>CTransformFilter</B>. If your filter can transform the sampled media in place, derive from <B>CTransInPlaceFilter</B>. If you don't want the simple transform filter support provided in the transform base classes, but prefer to implement your own member functions, derive from <B>CBaseFilter</B>. See <A HREF="dshow_53.htm">Determine Which Base Classes to Use</A> for more information. </P>
+
+<P>In the following example, the filter class derives from <B>CTransInPlaceFilter</B>. </P>
+
+<PRE class="code">    class CMyFilter  : public CTransInPlaceFilter</PRE>
+
+<P>Implement the <A HREF="JavaScript:hhobj_5.Click()"><B>IUnknown</B></A> interface for your object. </P>
+
+<P>In the public section of your filter class definition, create an instance of <A HREF="JavaScript:hhobj_6.Click()"><B>CUnknown</B></A>, and then call the <A HREF="JavaScript:hhobj_7.Click()"><B>DECLARE_IUNKNOWN</B></A> macro. </P>
+
+<PRE class="code">    public:
+        static CUnknown *WINAPI CreateInstance(LPUNKNOWN punk, HRESULT
+    *phr);
+        DECLARE_IUNKNOWN;</PRE>
+
+<P>Define your constructor. Also, define your <B>Transform</B> and <B>CheckInputType</B> functions (this does not apply if your filter class is derived from <B>CBaseFilter</B>). </P>
+
+<P>In the private section of your filter class definition, define your constructor by calling the constructor of the transform filter class you derived from, and then add code to perform the transform and check the input type. For example: </P>
+
+<PRE class="code">    // Define your constructor by calling the constructor of
+    // CTransInPlaceFilter.
+    CMyFilter(TCHAR *tszName, LPUNKNOWN punk, HRESULT *phr)
+    : CTransInPlaceFilter (tszName, punk, CLSID_MyFilter, phr)
+    { }
+
+    // Add the transform code.
+    HRESULT Transform(IMediaSample *pSample){
+    // Transform code here
+    }
+
+    // Add code to check the input type.
+    HRESULT CheckInputType(const CMediaType* mtIn) {
+    // Input checking code here
+    }</PRE>
+
+<P>Implement <B>CreateInstance</B> for your filter object. Typically, <B>CreateInstance</B> calls the constructor of your filter class. For example: </P>
+
+<PRE class="code">    CUnknown * WINAPI CMyFilter::CreateInstance(LPUNKNOWN punk, HRESULT *phr) {
+    CMyFilter *pNewObject = new CMyFilter(NAME("Description of My Filter"),
+        punk, phr );
+    if (pNewObject == NULL) {
+        *phr = E_OUTOFMEMORY;
+    }
+    return pNewObject;
+    } </PRE>
+
+<P>Declare a global array <I>g_Templates</I> of <A HREF="JavaScript:hhobj_8.Click()"><B>CFactoryTemplate</B></A> objects to inform the default class factory code how to access the <B>CreateInstance</B> function: </P>
+
+<PRE class="code">    CFactoryTemplate g_Templates[]=
+        {   { L"My Filter"
+            , &amp;CLSID_MyFilter
+            , CMyFilter::CreateInstance  // function called by class factory
+            , NULL
+            , &amp;sudMyFilter }     // address of the AMOVIESETUP_FILTER structure,
+                                 //   or NULL if no structure exists
+    };
+    int g_cTemplates = sizeof(g_Templates)/sizeof(g_Templates[0]);  </PRE>
+
+<P>The <I>g_cTemplates</I> variable defines the number of class factory templates for the filter. Each of these templates provides a link between COM and the filter and are used to create the base object for the filter. At a minimum, the filter has one template that provides the address of its own <B>CreateInstance</B> function, which, when called, creates the base object. </P>
+
+<P>For information about using <B>CFactoryTemplate</B> in registration, see <A HREF="dshow_48.htm">How to Register DirectShow Filters</A>. </P>
+
+<P>Generate a GUID for your filter object. </P>
+
+<P>For information about generating GUIDs in general, see "GUID Creation and Optimizations" and "The uuidgen Utility" in the Platform SDK. </P>
+
+<P>To generate a GUID in Microsoft&reg; Visual C++&reg; 5.<I>x</I>, choose <B>Create GUID</B> from the <B>Tools</B> menu. By default, the <B>GUID</B> is in DEFINE_GUID format, which is the format you want. Click the <B>Copy</B> button. Put the cursor in your source file beneath the include statements, and choose <B>Paste</B> from the <B>Edit</B> menu. The inserted code will look like the following example, except that it will have its own unique number and CLSID. Insert the code before your class definition in the header file or main file. </P>
+
+<PRE class="code">    // {3FA5D260-AF2F-11d0-AE9C-00A0C91F0841}
+    DEFINE_GUID(CLSID_MyFilter,
+    0x3fa5d260, 0xaf2f, 0x11d0, 0xae, 0x9c, 0x0, 0xa0, 0xc9, 0x1f, 0x8, 0x41);</PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

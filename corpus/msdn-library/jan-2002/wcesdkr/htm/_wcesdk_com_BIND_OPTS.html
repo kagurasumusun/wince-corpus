@@ -1,0 +1,117 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BIND_OPTS</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="BIND_OPTS"/>
+<MSHelp:RLTitle Title="BIND_OPTS"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_bind_opts"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>BIND_OPTS</H1>
+
+<P>This structure contains parameters used during a moniker-binding operation. The <A HREF="_wcesdk_com_bind_opts2.htm"><B>BIND_OPTS2</B></A> structure may be used in its place. A <B>BIND_OPTS</B> structure is stored in a bind context; the same bind context is used by each component of a composite moniker during binding, allowing the same parameters to be passed to all components of a composite moniker. See <B>IBindCtx</B> for more information about bind contexts.</P>
+
+<P>If you're a moniker client (that is, you use a moniker to acquire an interface pointer to an object), you typically do not need to specify values for the members of this structure. The <A HREF="_wcesdk_com_createbindctx.htm"><B>CreateBindCtx</B></A> function creates a bind context with the bind options set to default values that are suitable for most situations. The <A HREF="_wcesdk_com_bindmoniker.htm"><B>BindMoniker</B></A> function does the same thing when creating a bind context for use in binding a moniker. If you want to modify the values of these bind options, you can do so by passing a <B>BIND_OPTS</B> structure to the <B>IBindCtx::SetBindOptions</B> method. Moniker implementers can pass a <B>BIND_OPTS</B> structure to the <B>IBindCtx::GetBindOptions</B> method to retrieve the values of these bind options.</P>
+
+<P>The <B>BIND_OPTS</B> structure is defined in objidl.h. </P>
+
+<PRE class="syntax"><B>typedef struct tagBIND_OPTS{
+DWORD</B> <I>cbStruct</I>;
+<B>DWORD</B> <I>grfFlags</I>;
+<B>DWORD</B> <I>grfMode</I>;
+<B>DWORD</B> <I>dwTickCountDeadline</I>;
+<B>} BIND_OPTS, *LPBIND_OPTS; </B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><B>cbStruct</B></DT>
+
+<DD>Size of this structure in bytes (that is, the size of the <B>BIND_OPTS</B> structure). </dd>
+
+<DT><B>grfFlags</B></DT>
+
+<DD>Flags that control aspects of moniker binding operations. This value is any combination of the bit flags in the <A HREF="_wcesdk_com_bind_flags.htm"><B>BIND_FLAGS</B></A> enumeration. New values may be defined in the future, so moniker implementations should ignore any bits in this field that they do not understand. The <B>CreateBindCtx</B> function initializes this field to zero. </dd>
+
+<DT><B>grfMode</B></DT>
+
+<DD>Flags that should be used when opening the file that contains the object identified by the moniker. The values are taken from the <A HREF="_wcesdk_com_stgm.htm"><B>STGM</B></A> enumeration. The binding operation uses these flags in the call to <A HREF="_wcesdk_com_ipersistfile__load.htm"><B>IPersistFile::Load</B></A> when loading the file. If the object is already running, these flags are ignored by the binding operation. The <B>CreateBindCtx</B> function initializes this member to STGM_READWRITE. </dd>
+
+<DT><B>dwTickCountDeadline</B></DT>
+
+<DD>Clock time (in milliseconds, as returned by the <A HREF="_wcesdk_win32_gettickcount.htm"><B>GetTickCount</B></A> function) by which the caller wants the binding operation to be completed. This member lets the caller limit the execution time of an operation when speed is of primary importance. A value of zero indicates that there is no deadline. Callers most often use this capability when calling the <A HREF="_wcesdk_com_imoniker_gettimeoflastchange.htm"><B>IMoniker::GetTimeOfLastChange</B></A> method, though it can be usefully applied to other operations as well. The <B>CreateBindCtx</B> function initializes this member to zero.
+
+<P>Typical deadlines allow for a few hundred milliseconds of execution. This deadline is a recommendation, not a requirement; however, operations that exceed their deadline by a large amount may cause delays for the end user. Each moniker implementation should try to complete its operation by the deadline or fail with the error MK_E_EXCEEDEDDEADLINE.
+
+
+<P>If a binding operation exceeds its deadline because one or more objects that it needs are not running, the moniker implementation should register the objects responsible in the bind context using <B>IBindCtx::RegisterObjectParam</B>. The objects should be registered under the parameter names "ExceededDeadline", "ExceededDeadline1", "ExceededDeadline2", and so on. If the caller later finds the object in the Running Object Table, the caller can retry the binding operation.
+
+
+<P>The <B>GetTickCount</B> function indicates the number of milliseconds since system startup and wraps back to zero after 2^31 milliseconds. Consequently, callers should be careful not to inadvertently pass a zero value, which indicates no deadline, and moniker implementations should be aware of clock wrapping problems (see the <B>GetTickCount</B> function for more information).
+</dd>
+</DL>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Objidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_bind_flags.htm"><B>BIND_FLAGS</B></A>, <A HREF="_wcesdk_com_stgm.htm"><B>STGM</B></A>, <A HREF="_wcesdk_com_bindmoniker.htm"><B>BindMoniker</B></A>, <A HREF="_wcesdk_com_createbindctx.htm"><B>CreateBindCtx</B></A>, <A HREF="_wcesdk_win32_gettickcount.htm"><B>GetTickCount</B></A>, <A HREF="_wcesdk_com_imoniker_gettimeoflastchange.htm"><B>IMoniker::GetTimeOfLastChange</B></A>, <A HREF="_wcesdk_com_ipersistfile__load.htm"><B>IPersistFile::Load</B></A>, <A HREF="_wcesdk_com_bind_opts2.htm"><B>BIND_OPTS2</B></A>,  </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

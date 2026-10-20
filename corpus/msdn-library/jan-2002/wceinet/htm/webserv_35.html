@@ -1,0 +1,159 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Response Object Implementation</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Response Object Implementation"/>
+<MSHelp:RLTitle Title="Response Object Implementation"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_response_object_implementation"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Response Object Implementation</H1>
+
+<P>The <B>Response</B> object returns the values that the server processed to the client browser in response to an HTTP request. The following table lists the level of support for the <B>Response</B> object.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=32%>Response method or property</TH>
+<TH width=68%>Windows CE implementation</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Buffer</B></TD>
+<TD width=68%>(Property) Fully supported (see <B>Notes</B>).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>CacheControl</B></TD>
+<TD width=68%>Not supported. Use <B>AddHeader</B> with name =“Cache-Control”.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Charset</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Cookies</B></TD>
+<TD width=68%>See <A HREF="webserv_37.htm">Collection Objects</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>ContentType</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Expires</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>ExpiresAbsolute</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>IsClientConnected</B></TD>
+<TD width=68%>Not supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>PICS</B></TD>
+<TD width=68%>Not supported. Use <B>AddHeader</B> with name = “PICS”.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Status</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>AddHeader</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>AppendToLog</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>BinaryWrite</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Clear</B></TD>
+<TD width=68%>Fully supported (see <B>Notes</B>).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>End</B></TD>
+<TD width=68%>Fully supported (see <B>Notes</B>).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Flush</B></TD>
+<TD width=68%>Fully supported (see <B>Notes</B>).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Redirect</B></TD>
+<TD width=68%>Fully supported (see <B>Notes</B>).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>Write</B></TD>
+<TD width=68%>Fully supported.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Notes</b>&nbsp;&nbsp;&nbsp;The <B>Buffer</B> property indicates whether to buffer page output. When page output is buffered, the server does not send a response to the client browser until all of the server scripts on the current page have been processed, or until the <B>Flush</B> or <B>End</B> method has been called.</P>
+
+<P class=indent>If the current .asp file has buffering set to TRUE and does not call the <B>Flush</B> method, the server honors Keep-Alive requests that are made by the client browser. Avoiding the call to the <B>Flush</B> method saves time because the server does not have to create a new connection for each client browser request.</P>
+
+<P class=indent>If buffering is turned off, calls to the <B>Clear</B>, <B>End</B>, <B>Flush</B>, or <B>Redirect</B> method fail, just as on IIS. When buffering is off, response headers must be added at the very top of the ASP page, before any text is sent to the client browser.</P>
+
+<P>Windows CE does not support some of the advanced header-management functions that are available on IIS, such as <B>CacheControl</B>. To set one of these values, call the <B>Response.AddHeader</B> method with the name and value. For example,</P>
+
+<PRE class="code">&lt;% Response.CacheControl = “private” %&gt;</PRE>
+
+<P>can be implemented on Windows CE with this call:</P>
+
+<PRE class="code">&lt;%   Response.AddHeader(“Cache-control”,”private”) %&gt;</PRE>
+
+<P>If an advanced header management function such as <B>Response.CacheControl</B> is called repeatedly on IIS, only the value that was set in the last call to the method is sent to the client browser. On Windows CE ASP, calls to the <B>Response.AddHeader</B> method append data to the end of the headers and do not overwrite any of the existing headers of the same name.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

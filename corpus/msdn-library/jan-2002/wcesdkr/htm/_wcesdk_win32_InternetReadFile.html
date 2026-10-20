@@ -1,0 +1,132 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>InternetReadFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="InternetReadFile"/>
+<MSHelp:RLTitle Title="InternetReadFile"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_internetreadfile"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_HINTERNET_Handles" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_HINTERNET_Handles" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>InternetReadFile</H1>
+
+<P>This function reads data from a handle opened by the <A HREF="_wcesdk_win32_ftpopenfile.htm"><B>FtpOpenFile</B></A>, <A HREF="_wcesdk_win32_ftpfindfirstfile.htm"><B>FtpFindFirstFile</B></A>, or <A HREF="_wcesdk_win32_httpopenrequest.htm"><B>HttpOpenRequest</B></A> function. </P>
+
+<PRE class="syntax"><B>BOOL WINAPI InternetReadFile(
+IN</B> <B>HINTERNET</B> <I>hFile</I>,
+<B>IN</B> <B>LPVOID</B> <I>lpBuffer</I>,
+<B>IN</B> <B>DWORD</B> <I>dwNumberOfBytesToRead</I>,
+<B>OUT</B> <B>LPDWORD</B> <I>lpdwNumberOfBytesRead</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hFile </I></DT>
+
+<DD>Valid handle returned from a previous call to <A HREF="_wcesdk_win32_internetopenurl.htm"><B>InternetOpenUrl</B></A>, <B>FtpOpenFile</B>, or <B>HttpOpenRequest</B>.</dd>
+
+<DT><I>lpBuffer </I></DT>
+
+<DD>Long pointer to a buffer that receives the data read. </dd>
+
+<DT><I>dwNumberOfBytesToRead </I></DT>
+
+<DD>Specifies the number of bytes to read. </dd>
+
+<DT><I>lpdwNumberOfBytesRead </I></DT>
+
+<DD>Long pointer to a variable that receives the number of bytes read. <B>InternetReadFile</B> sets this value to zero before doing any work or error checking. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. An application can also use <A HREF="_wcesdk_win32_internetgetlastresponseinfo.htm"><B>InternetGetLastResponseInfo</B></A> when necessary. </P>
+
+<H4>Windows CE Remarks</H4>
+
+<P>Windows CE supports valid internet handles returned by <B>HttpOpenRequest</B>, <B>FtpOpenFile</B>, and <B>FtpFindFirstFile</B>.</P>
+
+<P>The <A HREF="#_wcesdk_win32_internetreadfile"><B>InternetReadFile</B></A> function can be completed in either synchronous or asynchronous mode.</P>
+
+<H4>Remarks</H4>
+
+<P>The operation of <B>InternetReadFile</B> is the same as that of the base Win32 <B>ReadFile</B> with a few caveats. Normally, data is read from an <A HREF="JavaScript:hhobj_1.Click()"><B>HINTERNET</B></A> handle as a sequential stream of bytes. The amount of data requested in the <I>dwNumberOfBytesToRead</I> parameter will be returned in <I>lpBuffer</I>. The only time during a normal read when less data than requested is returned, is when we have reached the end-of-file. In both cases, the number of bytes copied to <I>lpBuffer</I> will be returned in the <I>lpdwNumberOfBytesRead</I> parameter.</P>
+
+<P>If the data just read is also being written to the cache (automatically by Wininet unless the original request was made with INTERNET_FLAG_NO_CACHE_WRITE set) then the application must read all the way to the end-of-file to ensure that the file is cached properly. This means that the application must call <B>InternetReadFile()</B> until it returns TRUE and <I>*lpdwNumberOfBytesRead = 0</I>. This is incontrovertably the end-of-file indication, and will ensure that the downloaded file is correctly committed to cache. If the application determines the amount of data to be read from the HTTP Content-Length header for example, and reads only that amount of data, then the cache will not be properly updated and the file just downloaded will not be committed to the cache.</P>
+
+<P><B>InternetReadFile()</B> may return an unexpected ERROR_INSUFFICIENT_BUFFER when reading HTML from a handle created with <B>InternetOpenUrl</B>. This will only happen when Wininet is creating the HTML from a structured data format, for example when reading an FTP or gopher directory listing. Internally, Wininet converts the structured data to a HTML stream, line-by-line. If Wininet determines that the application's buffer is not large enough to hold at least one line of the generated HTML then the above error is returned. In this case, the application needs to reissue the request to <B>InternetReadFile()</B> with a larger buffer.</P>
+
+<P>If while reading generated HTML, Wininet determines that the buffer is not large enough to hold all the generated HTML, but at least some was copied to the buffer, then <B>InternetReadFile</B> can return control to the application but with less data copied to the buffer than requested. This situation is indistinguishable from end-of-file but is not the end-of-file. As long as the application reads to the end-of-stream (<B>InternetReadFile()</B> returns TRUE and <I>*lpdwNumberOfBytesRead = 0</I>) then it will receive all of the generated HTML.</P>
+
+<P>(Background: to make reading from the Internet easy for applications, Wininet attempts to make all data look like a file download to an application when it uses <B>InternetOpenUrl()</B>. Use of this API signals to Wininet that the application wants a simplified interface. For some types of information read from the Internet in this manner, such as FTP file directory listings and gopher directory listings, Wininet will convert the output from the FTP ls or dir commands, or the gopher listing to a HTML stream. It does this on a line-by-line basis, converting the FTP directory listing e.g. to a line of HTML. Wininet then returns to the application this generated HTML. Instead of writing the result a byte at a time however, Wininet attempts to write the data a line at a time. So if the application's buffer is too small to fit a line of generated HTML then ERROR_INSUFFICIENT_BUFFER is returned as an indication to the application that it needs a larger buffer.)</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Wininet.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Wininet.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="JavaScript:hhobj_2.Click()"><B>HINTERNET</B></A>,<A HREF="_wcesdk_win32_ftpfindfirstfile.htm"><B>FtpFindFirstFile</B></A>, <A HREF="_wcesdk_win32_ftpopenfile.htm"><B>FtpOpenFile</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_httpendrequest.htm"><B>HttpEndRequest</B></A>, <A HREF="_wcesdk_win32_httpopenrequest.htm"><B>HttpOpenRequest</B></A>, <A HREF="_wcesdk_httpsendrequestex.htm"><B>HttpSendRequestEx</B></A>, <A HREF="_wcesdk_win32_internetclosehandle.htm"><B>InternetCloseHandle</B></A>, <A HREF="_wcesdk_win32_internetgetlastresponseinfo.htm"><B>InternetGetLastResponseInfo</B></A>, <A HREF="_wcesdk_win32_internetopenurl.htm"><B>InternetOpenUrl</B></A>, <A HREF="#_wcesdk_win32_internetreadfile"><B>InternetReadFile</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,107 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RegisterDevice</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="RegisterDevice"/>
+<MSHelp:RLTitle Title="RegisterDevice"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_registerdevice"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>RegisterDevice</H1>
+
+<P>This function registers a new device driver with the file system so that applications can access the driver’s special device file names.</P>
+
+<PRE class="syntax"><B>HANDLE RegisterDevice(
+LPCWSTR </B><I>lpszType</I><B>
+DWORD </B><I>dwIndex </I><B>
+LPCWSTR</B><I> lpszLib, </I><B>
+DWORD </B><I>dwInfo</I> <B>)</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszType</I></DT>
+
+<DD>Pointer to the driver’s device file name prefix, such as COM, DEV, or PGR. The prefix must be 3 characters long.</dd>
+
+<DT><I>dwIndex</I></DT>
+
+<DD>Specifies a device identifier index. The index must be a number from 0 through 9. For example, the index value for “COM2:” is 2.</dd>
+
+<DT><I>lpszLib</I></DT>
+
+<DD>Pointer to the device driver DLL’s file name.</dd>
+
+<DT><I>dwInfo</I></DT>
+
+<DD>Specifies instance information. This is passed to the <B><I>XXX</I>_Init</B> function.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A handle to a device indicates success. Zero indicates failure. This is passed to the following functions exported by the client driver: <A HREF="funct_1_417.htm"><B>XXX_Deinit</B></A>, <A HREF="funct_1_420.htm"><B>XXX_Open</B></A>, <A HREF="funct_1_422.htm"><B>XXX_PowerUp</B></A>, and <A HREF="funct_1_421.htm"><B>XXX_PowerDown</B></A>.</P>
+
+<P>Stream interface drivers are initialized by a call to this function. For most stream interface drivers, the Device Manager calls this function on behalf of the driver. However, applications can load their own special-purpose stream interface drivers, in which case they also call this function to register the driver. The <I>IpszLib</I> parameter is used to open the device. The <I>IpszType</I> parameter is a three-character string that identifies the function entry points in the DLL so that multiple devices can exist in one DLL. The <I>lpszLib</I> parameter is the name of the DLL that contains the entry points. Finally, <I>dwInfo </I>is passed to the initialization routine. So, for example, if there are two serial ports on a device and Comm.dll is the DLL implementing the serial driver, it presents the following initialization calls:</P>
+
+<PRE class="code">h1 = RegisterDevice(L"COM", 1, L"comm.dll",0x3f8);
+</PRE>
+
+<H4>Remarks</H4>
+
+<P>The <A HREF="funct_1_63.htm"><B>DeregisterDevice</B></A> function is used if a device is removed from the system or is being shut down:</P>
+
+<P>In the following code example, h1 is returned from a call to this function.</P>
+
+<PRE class="code">DeregisterDevice(h1);
+</PRE>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ntcompat.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

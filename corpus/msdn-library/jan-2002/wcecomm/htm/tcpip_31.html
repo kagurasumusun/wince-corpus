@@ -1,0 +1,74 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TCP Timestamps (RFC 1323)</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TCP Timestamps (RFC 1323)"/>
+<MSHelp:RLTitle Title="TCP Timestamps (RFC 1323)"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_tcp_timestamps_(rfc 1323)"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>TCP Timestamps (RFC 1323)</H1>
+
+<P>Another RFC 1323 feature introduced in Windows CE is support for TCP Timestamps. Like SACK, this feature is important for connections using large window sizes. Timestamps were conceived to assist TCP in accurately measuring round trip time (RTT) in order to adjust retransmission time-outs. </P>
+
+<P>The TCP header option for Timestamps is shown here, from RFC&nbsp;1323:</P>
+
+<P>TCP Timestamps Option (TSopt):</P>
+
+<P>&nbsp;&nbsp;&nbsp;Kind: 8</P>
+
+<P>&nbsp;&nbsp;&nbsp;Length: 10 bytes</P>
+
+<PRE class="code">    +-------+-------+---------------------+---------------------+
+    |Kind=8 |  10   |   TS Value (TSval)  |TS Echo Reply (TSecr)|
+    +-------+-------+---------------------+---------------------+
+        1       1              4                     4</PRE>
+
+<P>The Timestamps option carries two four-byte timestamp fields. The Timestamp Value field (TSval) contains the current value of the timestamp clock of the TCP sending the option.</P>
+
+<P>The Timestamp Echo Reply field (TSecr) is only valid if the ACK bit is set in the TCP header; if it is valid, it echoes a timestamp value that was sent by the remote TCP in the TSval field of a Timestamps option. When TSecr is not valid, its value must be zero. The TSecr value will generally be from the most recent Timestamp option that was received; however, there are exceptions that are explained below.</P>
+
+<P>A TCP may send the Timestamps option (TSopt) in an initial &lt;SYN&gt; segment (i.e., segment containing a SYN bit and no ACK bit), and may send a TSopt in other segments only if it received a TSopt in the initial &lt;SYN&gt; segment for the connection.</P>
+
+<P>The timestamp option field can be viewed in a Network Monitor trace by expanding the TCP options field, as shown below:</P>
+
+<PRE class="code">    TCP: Timestamps Option
+        TCP: Option Type = Timestamps
+        TCP: Option Length = 10 (0xA)
+        TCP: Timestamp = 2525186 (0x268802)
+        TCP: Reply Timestamp = 1823192 (0x1BD1D8)</PRE>
+
+<P>Windows CE enables the use of timestamps by default. You can disable timestamps by setting the <B>Tcp1323Opts</B> registry entry equal to 0.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

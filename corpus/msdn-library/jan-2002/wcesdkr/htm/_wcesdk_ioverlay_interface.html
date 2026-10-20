@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOverlay Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IOverlay Interface"/>
+<MSHelp:RLTitle Title="IOverlay Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ioverlay_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IOverlay Interface</H1>
+
+<P>The <B>IOverlay</B> interface provides information so that a filter can write directly to video memory while placing the video in the correct window position. It is implemented on the input pin of the video renderer and communicates with an upstream filter (typically a video decompressor) by calling that filter's <A HREF="_wcesdk_ioverlaynotify_interface.htm"><B>IOverlayNotify</B></A> methods to notify it of changes to the video window. </P>
+
+<P>This interface has no relationship to the DirectDraw® overlay capability. The Microsoft video renderer draws data it receives through the <A HREF="_wcesdk_imeminputpin_interface.htm"><B>IMemInputPin</B></A> interface, using DirectDraw overlays when available. This interface, used in place of <B>IMemInputPin</B>, is intended to provide notification support for any upstream filter that bypasses the renderer's drawing capabilities, but needs notifications of other display properties. </P>
+
+<P>See the <A HREF="_wcesdk_ioverlaynotify_interface.htm"><B>IOverlayNotify</B></A> interface for more information on how the <B>IOverlay</B> and <B>IOverlayNotify</B> interfaces work together. </P>
+
+<H4>When to Implement</H4>
+
+<P>This interface is implemented on the Microsoft® DirectShow™ video renderer filter. It can also be implemented on replacement video renderer filters if desired. If doing so, implement this interface so that filters writing directly to the frame buffer or trying to position an overlay know where to display their video. To implement this interface, the renderer must be prepared to use methods on the <A HREF="_wcesdk_ioverlaynotify_interface.htm"><B>IOverlayNotify</B></A> interface of the filter doing the drawing, with notifications of video property changes. </P>
+
+<P>The window-based renderer in DirectShow supports both <A HREF="_wcesdk_imeminputpin_interface.htm"><B>IMemInputPin</B></A> and <A HREF="#_wcesdk_ioverlay_interface"><B>IOverlay</B></A> interfaces. These two interfaces are mutually exclusive. A filter chooses to use the <B>IOverlay</B> transport interface by providing a media type during connection that has a subtype of MEDIASUBTYPE_Overlay. After connection, it will be able to get and use successfully the <B>IOverlay</B> interface. If it connects with any other video formats (such as MEDIASUBTYPE_RGB8), trying to call through <B>IOverlay</B> returns <A HREF="_wcesdk_error_and_success_codes.htm">VFW_E_NOT_OVERLAY_CONNECTION</A>. </P>
+
+<H4>When to Use</H4>
+
+<P>Use the methods on this function from an upstream filter that must control video overlay properties and intends to handle the displaying of the video data itself. This typically is used by hardware video decoders that have an alternate connection to the video hardware. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IUnknown methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IOverlay methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__getpalette.htm"><B>GetPalette</B></A></TD>
+<TD width=50%>Retrieves the current palette. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__setpalette.htm"><B>SetPalette</B></A></TD>
+<TD width=50%>Sets the palette. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__getdefaultcolorkey.htm"><B>GetDefaultColorKey</B></A></TD>
+<TD width=50%>Retrieves the default color key. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__getcolorkey.htm"><B>GetColorKey</B></A></TD>
+<TD width=50%>Returns the identifier of the currently active color key. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__setcolorkey.htm"><B>SetColorKey</B></A></TD>
+<TD width=50%>Changes the color key. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__getwindowhandle.htm"><B>GetWindowHandle</B></A></TD>
+<TD width=50%>Returns the window handle. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__getcliplist.htm"><B>GetClipList</B></A></TD>
+<TD width=50%>Retrieves the clipping list. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__getvideoposition.htm"><B>GetVideoPosition</B></A></TD>
+<TD width=50%>Retrieves the current video source and destination rectangles. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__advise.htm"><B>Advise</B></A></TD>
+<TD width=50%>Sets up an advise link for the overlay events. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlay__unadvise.htm"><B>Unadvise</B></A></TD>
+<TD width=50%>Terminates the advise link. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

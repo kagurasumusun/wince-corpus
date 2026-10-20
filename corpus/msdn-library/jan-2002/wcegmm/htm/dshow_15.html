@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample Code</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Sample Code"/>
+<MSHelp:RLTitle Title="Sample Code"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_sample_code"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Sample Code</H1>
+
+<P>The following code does not include the functions WinMain or WindowProc. See the sample code in <A HREF="dshow_8.htm">Setting the Video Window</A> for these functions. </P>
+
+<PRE class="code">#include &lt;windows.h&gt;
+#include &lt;streams.h&gt;
+
+#define WM_GRAPHNOTIFY  WM_APP + 1
+#define CLASSNAME "EventNotify"
+
+IGraphBuilder   *pGraph = NULL;
+IMediaControl   *pMediaControl = NULL;
+IMediaEventEx   *pEvent = NULL;
+HWND            g_hwnd;
+
+void PlayFile(void)
+{
+    // Create the filter graph manager and render the file.
+    CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC, IID_IGraphBuilder, (void **)&amp;pGraph);
+    pGraph-&gt;RenderFile(L"C:\\Media\\Boys.avi", NULL);
+
+    // Specify the owner window.
+    IVideoWindow    *pVidWin = NULL;
+    pGraph-&gt;QueryInterface(IID_IVideoWindow, (void **)&amp;pVidWin);
+    pVidWin-&gt;put_Owner((OAHWND)g_hwnd);
+    pVidWin-&gt;put_WindowStyle( WS_CHILD | WS_CLIPSIBLINGS);
+
+    // Set the owner window to receive event notices.
+    pGraph-&gt;QueryInterface(IID_IMediaEventEx, (void **)&amp;pEvent);
+    pEvent-&gt;SetNotifyWindow((OAHWND)g_hwnd, WM_GRAPHNOTIFY, 0);
+
+    // Run the graph.
+    pGraph-&gt;QueryInterface(IID_IMediaControl, (void **)&amp;pMediaControl);
+    pMediaControl-&gt;Run();
+}
+
+void CleanUp(void)
+{
+    IVideoWindow    *pVidWin = NULL;
+    pGraph-&gt;QueryInterface(IID_IVideoWindow, (void **)&amp;pVidWin);
+    pVidWin-&gt;put_Visible(OAFALSE);
+    pVidWin-&gt;put_Owner(NULL);
+
+    // Stop the graph.
+    pMediaControl-&gt;Stop();
+
+    long evCode;
+    pEvent-&gt;WaitForCompletion(INFINITE, &amp;evCode);
+
+    pMediaControl-&gt;Release();
+    pEvent-&gt;Release();
+    pGraph-&gt;Release();
+    PostQuitMessage(0);
+}
+
+void HandleEvent()
+{
+    long evCode, param1, param2;
+    HRESULT hr;
+    while (hr = pEvent-&gt;GetEvent(&amp;evCode, &amp;param1, &amp;param2, 0), SUCCEEDED(hr))
+    {
+        hr = pEvent-&gt;FreeEventParams(evCode, param1, param2);
+        if ((EC_COMPLETE == evCode) || (EC_USERABORT == evCode))
+        {
+            CleanUp();
+            break;
+        }
+    }
+}
+
+/* WindowProc goes here. Add the following case statement:
+        case WM_GRAPHNOTIFY:
+            HandleEvent();
+            break;
+*/
+
+// WinMain goes here.</PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

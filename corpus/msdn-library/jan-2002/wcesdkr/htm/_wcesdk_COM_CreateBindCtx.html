@@ -1,0 +1,139 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateBindCtx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CreateBindCtx"/>
+<MSHelp:RLTitle Title="CreateBindCtx"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_createbindctx"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CreateBindCtx</H1>
+
+<P>This function supplies a pointer to an implementation of <B>IBindCtx</B>, an object that stores information about a particular moniker-binding operation. </P>
+
+<PRE class="syntax"><B>WINOLEAPI CreateBindCtx (
+DWORD</B> <I>reserved</I>,
+<B>LPBC FAR * </B><I>ppbc </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>reserved</I></DT>
+
+<DD>[in] Reserved for future use; set to zero.</dd>
+
+<DT><I>ppbc</I></DT>
+
+<DD>[out] Address of <B>IBindCtx</B>* pointer variable that receives the interface pointer to the new bind context object. When the function is successful, the caller is responsible for calling <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A> on the bind context. A NULL value for the bind context indicates that an error occurred.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates that the bind context was allocated and initialized successfully. The standard return value E_OUTOFMEMORY is also supported.</P>
+
+<H4>Remarks</H4>
+
+<P><B>CreateBindCtx</B> is most commonly used in the process of binding a moniker (locating and getting a pointer to an interface by identifying it through a moniker), as in the following steps:
+
+<OL type="1">
+	<LI>Get a pointer to a bind context by calling the <B>CreateBindCtx</B> function.</li>
+
+	<LI>Call the <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A> method on the moniker, retrieving an interface pointer to the object to which the moniker refers. </li>
+
+	<LI>Release the bind context.</li>
+
+	<LI>Use the interface pointer. </li>
+
+	<LI>Release the interface pointer. </li>
+</OL>
+
+<P>The following code example shows these steps.</P>
+
+<PRE class="code">// pMnk is an IMoniker * that points to a previously acquired moniker
+IFoo *pFoo;
+IBindCtx *pbc;
+
+CreateBindCtx( 0, &amp;pbc );
+pMnk-&gt;BindToObject( pbc, NULL, IID_IFoo, &amp;pFoo );
+pbc-&gt;Release();
+// pFoo now points to the object; safe to use pFoo
+pFoo-&gt;Release();
+ </PRE>
+
+<P>Bind contexts are also used in other methods of the <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A> interface besides <B>IMoniker::BindToObject</B>. </P>
+
+<P>A bind context retains references to the objects that are bound during the binding operation, causing the bound objects to remain active (keeping the object's server running) until the bind context is released. Reusing a bind context when subsequent operations bind to the same object can improve performance. You should, however, release the bind context as soon as possible, because you could be keeping the objects activated unnecessarily. </P>
+
+<P>A bind context contains a <A HREF="_wcesdk_com_bind_opts.htm"><B>BIND_OPTS</B></A> structure, which contains parameters that apply to all steps in a binding operation. When you create a bind context using <B>CreateBindCtx</B>, the fields of the <B>BIND_OPTS</B> structure are initialized to the following values:</P>
+
+<PRE class="code">cbStruct = sizeof(BIND_OPTS)
+grfFlags = 0
+grfMode = STGM_READWRITE
+dwTickCountDeadline = 0. </PRE>
+
+<P>You can call the <B>IBindCtx::SetBindOptions</B> method to modify these default values.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=19%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=19%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><B>IBindCtx</B>, <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A>, <B>IBindCtx::SetBindOptions</B>, <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A>, <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>, <A HREF="_wcesdk_com_bind_opts.htm"><B>BIND_OPTS</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

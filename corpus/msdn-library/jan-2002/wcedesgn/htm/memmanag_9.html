@@ -1,0 +1,55 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Recovering Memory through Application Hibernation</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Recovering Memory through Application Hibernation"/>
+<MSHelp:RLTitle Title="Recovering Memory through Application Hibernation"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_recovering_memory_through_application_hibernation"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Recovering Memory through Application Hibernation</H1>
+
+<P>Windows CE uses the WM_HIBERNATE message as its primary mechanism for asking applications to free memory. When freeing memory becomes necessary, the operating system  posts the message to one or more applications, beginning with the application that has been inactive the longest. The OS requests memory from the active application last and does not send WM_HIBERNATE messages to invisible windows. Your device platform may specify other ways to monitor and handle memory allocation. For more information, see the OEM-supplied SDK for your target device.</P>
+
+<P>As the amount of available memory decreases, the OS increasingly posts WM_HIBERNATE messages to its applications. If the system reaches a situation where a call to <B>VirtualAlloc</B> is about to fail, it will attempt to free pages by shrinking stacks. To minimize the risk of a stack fault, which causes an application to fail, the system shrinks stacks in first-in and first-out order. If the system cannot free any stack pages, <B>VirtualAlloc</B> fails and the function is returned to the application as a failed function call.</P>
+
+<P>An application must take the following step when it receives a WM_HIBERNATE message:
+
+<UL type="disc">
+	<LI>Free any large blocks of memory that were allocated by <B>VirtualAlloc</B>.</li>
+
+	<LI>Free as many Graphics, Windowing, and Event Subsystem (GWES) objects as possible.</li>
+
+	<LI>Save the state of the heap in order to restore it later, and then free the entire heap.</li>
+</UL>
+
+<P>In the low and critical memory states, the amount of memory an application can allocate is limited. In these states, if a request for virtual memory is larger than the allowable limit, it will be refused even if there is memory available to satisfy the request. Remember that not only virtual memory allocations are limited; allocations on the heap and stack will be rejected if those allocations require virtual memory allocations above the allowable limits, which are set by the OEM.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

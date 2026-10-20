@@ -1,0 +1,126 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CFactoryTemplate Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CFactoryTemplate Class"/>
+<MSHelp:RLTitle Title="CFactoryTemplate Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cfactorytemplate_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CFactoryTemplate Class</H1>
+
+<P class="fig"><IMG SRC="cbase03.gif" ALT="" BORDER=0></P>
+
+<P>This class provides a template used by the default class factory code. </P>
+
+<P>Create one <B>CFactoryTemplate</B> object in an array for every object class so that the default class factory code can create new instances. </P>
+
+<P>This class holds the name of the object, the object's class identifier (CLSID), and a pointer to the creation function for the corresponding object. Initialize one of these in an array called g_Templates for each CLSID the application's dynamic-link library (DLL) supports. The creation function should take an LPUNKNOWN parameter and an <B>HRESULT</B> pointer and return an object derived from the <A HREF="_wcesdk_cbaseobject_class.htm"><B>CBaseObject</B></A> class. Set the <B>HRESULT</B> to a failed value if there is any error in construction. An example declaration (from the Gargle sample filter) follows: </P>
+
+<PRE class="code">// list of class ids and creator functions for class factory
+
+CFactoryTemplate g_Templates[2]=
+  { { L"Gargle filter"         // CFactoryTemplate.m_name
+
+  , &amp;CLSID_Gargle            // CFactoryTemplate.m_ClsID
+
+  , CGargle::CreateInstance  // CFactoryTemplate.m_lpfnNew
+  , NULL                     // CFactoryTemplate.m_lpfnInit
+  , &amp;sudGargle               // CFactoryTemplate.m_pAMovieSetup_Filter
+                                   }
+  , { L"Gargle filter property page"
+  , &amp;CLSID_GargProp
+  , CGargleProperties::CreateInstance
+ }
+ };
+
+int g_cTemplates = sizeof(g_Templates) / sizeof(g_Templates[0]);</PRE>
+
+<P>Note that the name of the object is strictly necessary only if you are using the <B>DllRegisterServer</B> setup routine to implement self-registering of your filter. If you are not using this feature, you can set the first element of the g_Templates instance (<B>m_Name</B>) to NULL or L"". </P>
+
+<H4>Protected Data Members</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=43%>m_ClsID</TD>
+<TD width=57%>Pointer to the CLSID of the object class. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>m_lpfnNew</TD>
+<TD width=57%>Pointer to a function that creates an instance of the object class. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>m_lpfnInit </TD>
+<TD width=57%>Pointer to a function that initializes a new instance of the object class. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>m_Name </TD>
+<TD width=57%>Name of the filter; required when using filter self-registration services. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>m_pAMovieSetup_Filter</TD>
+<TD width=57%>Pointer to an <A HREF="_wcesdk_structs__amoviesetup_filter.htm"><B>AMOVIESETUP_FILTER</B></A> structure; required when using filter self-registration services. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="_wcesdk_cfactorytemplate__createinstance.htm"><B>CreateInstance</B></A></TD>
+<TD width=57%>Calls the object-creation function for the class. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><A HREF="_wcesdk_cfactorytemplate__isclassid.htm"><B>IsClassID</B></A></TD>
+<TD width=57%>Determines whether a CLSID matches this class template. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

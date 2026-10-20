@@ -1,0 +1,136 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStorage::SaveCompleted</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersistStorage::SaveCompleted"/>
+<MSHelp:RLTitle Title="IPersistStorage::SaveCompleted"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersiststorage_savecompleted"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IPersistStorage::SaveCompleted</H1>
+
+<P>This method notifies the object that it can revert from NoScribble or HandsOff mode, in which it must not write to its storage object, to Normal mode, in which it can.</P>
+
+<PRE class="syntax"><B>HRESULT SaveCompleted(
+IStorage *</B><I>pStgNew</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStgNew</I></DT>
+
+<DD>[in] <A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A> pointer to the new storage object, if different from the storage object prior to saving. This pointer can be NULL if the current storage object does not change during the save operation. If the object is in HandsOff mode, this parameter must be non-NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=25%>Value</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>S_OK</TD>
+<TD width=75%>The object was successfully returned to Normal mode.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_OUTOFMEMORY</TD>
+<TD width=75%>The object remained in HandsOff mode or NoScribble mode due to a lack of memory. Typically, this error occurs when the object is not able to open the necessary streams and storage objects in <I>pStgNew</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_INVALIDARG</TD>
+<TD width=75%>The <I>pStgNew</I> parameter is not valid. Typically, this error occurs if <I>pStgNew</I> is NULL when the object is in HandsOff mode.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>E_UNEXPECTED</TD>
+<TD width=75%>The object is in Normal mode, and there was no previous call to <A HREF="_wcesdk_com_ipersiststorage_save.htm"><B>IPersistStorage::Save</B></A> or <A HREF="_wcesdk_com_ipersiststorage_handsoffstorage.htm"><B>IPersistStorage::HandsOffStorage</B></A>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>This method notifies an object that it can revert to Normal mode and can once again write to its storage object. The object exits NoScribble mode or HandsOff mode.</P>
+
+<P>If the object is reverting from HandsOff mode, the <I>pStgNew</I> parameter must be non-NULL. In HandsOffFromNormal mode, this parameter is the new storage object that replaces the one that was revoked by the <B>IPersistStorage::HandsOffStorage</B> method. The data in the storage object is a copy of the data from the revoked storage object. In HandsOffAfterSave mode, the data is the same as the data that was most recently saved. It is not the same as the data in the revoked storage object.</P>
+
+<P>If the object is reverting from NoScribble mode, the <I>pStgNew</I> parameter can be NULL or non-NULL. If NULL, the object once again has access to its storage object. If it is not NULL, the component object should simulate receiving a call to its <B>IPersistStorage::HandsOffStorage</B> method. If the component object cannot simulate this call, its container must be prepared to actually call the <B>IPersistStorage::HandsOffStorage</B> method.</P>
+
+<P>The <B>IPersistStorage::SaveCompleted</B> method must recursively call any nested objects that are loaded or running.</P>
+
+<P>If this method returns an error code, the object is not returned to Normal mode. Thus, the container object can attempt different save strategies.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A>, <A HREF="_wcesdk_com_ipersiststorage_handsoffstorage.htm"><B>IPersistStorage::HandsOffStorage</B></A>, <A HREF="_wcesdk_com_ipersiststorage_save.htm"><B>IPersistStorage::Save</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

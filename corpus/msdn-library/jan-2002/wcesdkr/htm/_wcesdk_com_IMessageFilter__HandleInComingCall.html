@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMessageFilter::HandleInComingCall</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMessageFilter::HandleInComingCall"/>
+<MSHelp:RLTitle Title="IMessageFilter::HandleInComingCall"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imessagefilter__handleincomingcall"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMessageFilter::HandleInComingCall</H1>
+
+<P>This method is an object-based method that provides the ability to filter or reject incoming calls (or call backs) to an object or a process. This method is called prior to each method invocation originating outside the current process. </P>
+
+<PRE class="syntax"><B>DWORD HandleInComingCall(
+DWORD </B><I>dwCallType</I><B>,
+HTASK </B><I>threadIDCaller</I><B>,
+DWORD </B><I>dwTickCount</I><B>,
+LPINTERFACEINFO </B><I>lpInterfaceInfo</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwCallType</I></DT>
+
+<DD>[in] Kind of incoming call that has been received. Valid values are from the enumeration <B>CALLTYPE</B>. </dd>
+
+<DT><I>threadIDCaller</I></DT>
+
+<DD>[in] Handle of the task calling this task.</dd>
+
+<DT><I>dwTickCount</I></DT>
+
+<DD>[in] Elapsed tick count since the outgoing call was made if <I>dwCallType</I> is not CALLTYPE_TOPLEVEL. If <I>dwCallType</I> is CALLTYPE_TOPLEVEL, <I>dwTickCount</I> should be ignored.</dd>
+
+<DT><I>lpInterfaceInfo</I></DT>
+
+<DD>[in] Pointer to an <B>INTERFACEINFO</B> structure, which identifies the object, the interface, and the method making the call. In the case of DDE calls, <I>lpInterfaceInfo</I> can be NULL because the DDE layer does not return interface information. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>SERVERCALL_ISHANDLED</DT>
+
+<DD>The application might be able to process the call.</dd>
+
+<DT>SERVERCALL_REJECTED</DT>
+
+<DD>The application cannot handle the call due to an unforeseen problem, such as network unavailability, or if it is in the process of terminating.</dd>
+
+<DT>SERVERCALL_RETRYLATER</DT>
+
+<DD>The application cannot handle the call at this time. For example, an application might return this value when it is in a user-controlled modal state.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>If implemented, <B>IMessageFilter::HandleInComingCall</B> is called by COM when an incoming COM message is received. </P>
+
+<P>Depending on an application's current state, a call is either accepted and processed or rejected (permanently or temporarily). If SERVERCALL_ISHANDLED is returned, the application may be able to process the call, though success depends on the interface for which the call is destined. If the call cannot be processed, COM returns RPC_E_CALL_REJECTED. </P>
+
+<P>Input-synchronized and asynchronous calls are dispatched even if the application returns SERVERCALL_REJECTED or SERVERCALL_RETRYLATER. </P>
+
+<P><B>IMessageFilter::HandleInComingCall</B> should not be used to hold off updates to objects during operations such as band printing. For that purpose, use <A HREF="_wcesdk_com_iviewobject_freeze.htm"><B>IViewObject::Freeze</B></A>. </P>
+
+<P>You can also use <B>IMessageFilter::HandleInComingCall</B> to set up the application's state so the call can be processed in the future.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_iviewobject_freeze.htm"><B>IViewObject::Freeze</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

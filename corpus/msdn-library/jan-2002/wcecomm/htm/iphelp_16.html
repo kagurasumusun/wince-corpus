@@ -1,0 +1,107 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Deleting an Entry to the IP Forward Table</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Deleting an Entry to the IP Forward Table"/>
+<MSHelp:RLTitle Title="Deleting an Entry to the IP Forward Table"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_deleting_an_entry_to_the_ip_forward_table"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Deleting an Entry to the IP Forward Table</H1>
+
+<P>This code deletes a route with the destination Dest, netmask Mask and gateway Gateway. Note: IP will not allow default routes to be deleted.</P>
+
+<PRE class="code">
+   PMIB_IPFORWARDTABLE pIpForwardTable = NULL;
+   PMIB_IPFORWARDROW pRow = NULL;
+   ULONG dwSize = 0;
+   BOOL bOrder = FALSE;
+   DWORD dwStatus = 0;
+   DWORD Dest = 0xDDBBCCAA; // this is in host order Ip Address AA.BB.CC.DD is DDCCBBAA
+   DWORD Mask = 0x00FFFFFF; // 255.255.255.0
+   DWORD Gateway = 0xDDBBCCAA; // this is in host order Ip Address AA.BB.CC.DD is DDCCBBAA
+
+   // Find out how big our buffer needs to be
+   dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   if (dwStatus == ERROR_INSUFFICIENT_BUFFER) {
+
+      // Allocate the memory for the table
+      if (!(pIpForwardTable = (PMIB_IPFORWARDTABLE)malloc(dwSize))) {
+         OutputMessage(TEXT("Malloc failed, Out of Memory!\r\n"));
+         exit(1);
+      }
+
+      // Now get the table
+      dwStatus = GetIpForwardTable(pIpForwardTable, &amp;dwSize, bOrder);
+   }
+
+   if (dwStatus != ERROR_SUCCESS) {
+      OutputMessage(TEXT("GetIpForwardTable Failed, ERROR %d\r\n"), dwStatus);
+      if (pIpForwardTable)
+         free(pIpForwardTable);
+      exit(1);
+   }
+
+   // Search for the row in the table we want. The default gateway has a destination
+   // of 0.0.0.0 - Notice that we continue looking through the table, but only copy
+   // one row. This is so that if there happen to be multiple default gateways, we can
+   // be sure to delete them all.
+   for (unsigned long int i=0; i &lt; pIpForwardTable-&gt;dwNumEntries; i++) {
+
+      if ((pIpForwardTable-&gt;table[i].dwForwardDest == Dest) &amp;&amp;
+         (pIpForwardTable-&gt;table[i].dwForwardMask == Mask) &amp;&amp;
+         (pIpForwardTable-&gt;table[i].dwForwardNextHop == Gateway)) {
+
+         // Delete the old default gateway entry
+         dwStatus = DeleteIpForwardEntry(&amp;(pIpForwardTable-&gt;table[i]));
+
+         if (dwStatus != ERROR_SUCCESS) {
+            OutputMessage(TEXT("Could not delete route!\n"));
+            exit(1);
+         }
+      }
+   }
+
+   if (dwStatus == NO_ERROR)
+      OutputMessage(TEXT("Route deleted successfully\n"));
+   else if (dwStatus == ERROR_INVALID_PARAMETER)
+      OutputMessage(TEXT("Invalid Parameter\n"));
+   else
+      DisplayErrorMessage(dwStatus);
+
+   // Free resources
+   if (pIpForwardTable)
+      free(pIpForwardTable);</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

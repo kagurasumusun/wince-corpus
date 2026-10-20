@@ -1,0 +1,165 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IssueIsochTransfer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IssueIsochTransfer"/>
+<MSHelp:RLTitle Title="IssueIsochTransfer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_issueisochtransfer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IssueIsochTransfer</H1>
+
+<P>This function initiates an isochronous transfer with a USB device.</P>
+
+<PRE class="syntax"><B>USB_TRANSFER</B> <B>IssueIsochTransfer(
+USB_PIPE</B> <I>hPipe</I><B>,
+LPTRANSFER_NOTIFY_ROUTINE</B> <I>lpStartAddress</I><B>,
+LPVOID</B> <I>lpvNotifyParameter</I><B>,
+DWORD</B> <I>dwFlags</I><B>,
+DWORD</B> <I>dwStartingFrame</I><B>,
+DWORD</B> <I>dwFrames</I><B>,
+LPCDWORD</B> <I>lpdwLengths</I><B>,
+LPVOID</B> <I>lpvBuffer</I><B>,
+ULONG</B> <I>uBufferPhysicalAddress</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hPipe</I></DT>
+
+<DD>[IN] Handle to an open USB pipe.</dd>
+
+<DT><I>lpStartAddress</I></DT>
+
+<DD>[IN] Pointer to the address of a callback routine, or NULL if no callback routine is necessary. Any value other than NULL causes this function to act asynchronously (that is, to return immediately, before the transfer is complete), as if USB_NO_WAIT had been included in <I>dwFlags</I>.</dd>
+
+<DT><I>lpvNotifyParameter</I></DT>
+
+<DD>[IN] Pointer to the parameter to pass to a callback routine.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[IN] Flags for the transfer. These are declared in the Usbtypes.h header file. Some flags are specific to isochronous transfers. USB_START_ISOCH_ASAP starts transfer as soon as possible, instead of specifying a starting frame. USB_COMPRESS_ISOCH guarantees, for IN transfers, that data is copied contiguously to the user buffer, instead of being fragmented if the amount of data is less than the maximum requested for a particular frame. USB_COMPRESS_ISOCH only works if you do not specify a physical address. USB_NO_WAIT causes the function to act asynchronously.</dd>
+
+<DT><I>dwStartingFrame</I></DT>
+
+<DD>[IN] Specifies the frame number on which transfer starts.</dd>
+
+<DT><I>dwFrames</I></DT>
+
+<DD>[IN] Specifies the number of frames in transfer.</dd>
+
+<DT><I>lpdwLengths</I></DT>
+
+<DD>[IN/OUT] Pointer to an array of lengths, one entry per frame.</dd>
+
+<DT><I>lpvBuffer</I></DT>
+
+<DD>[IN/OUT] Pointer to a data buffer. If a physical buffer address is specified, this must contain the virtual address of the buffer.</dd>
+
+<DT><I>uBufferPhysicalAddress</I></DT>
+
+<DD>[IN/OUT] Specifies the physical address, which may be NULL, of the data buffer.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A USB_TRANSFER handle indicates success. NULL indicates failure.</P>
+
+<H4>Remarks</H4>
+
+<P>This function initiates an isochronous transfer to a USB device on the specified endpoint. Since isochronous transfers must be executed continuously, a sequence of buffers is provided, one of which is transferred for each frame. There is no limit on the number of buffers that may be provided, though each one must be less than or equal to the maximum packet size for the endpoint.</P>
+
+<P>Note: in Windows CE 2.12, if a USB client driver calls IssueIsochTransfer with the USB_NO_WAIT flag and with a callback function specified in <I>lpStartAddress</I>, then the USB client driver must not call <A HREF="funct_1_45.htm"><B>CloseTransfer</B></A> or <A HREF="funct_1_2.htm">AbortTransfer</A> before the isochronous transfer has completed (that is, before the callback function has been invoked).</P>
+
+<P><B>IssueIsochTransfer</B> behaves either synchronously or asynchronously, depending on the value you provide for <I>lpStartAddress</I> and whether <I>dwFlags</I> contains the USB_NO_WAIT flag, as shown in the following table:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=22%><I>lpStartAddress</I></TH>
+<TH width=35%><I>dwFlags</I> | USB_NO_WAIT</TH>
+<TH width=43%>Behavior</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>NULL</TD>
+<TD width=35%>0</TD>
+<TD width=43%>Synchronous</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>NULL</TD>
+<TD width=35%>USB_NO_WAIT</TD>
+<TD width=43%>Asynchronous</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>non-NULL</TD>
+<TD width=35%>0</TD>
+<TD width=43%>Asynchronous</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>non-NULL</TD>
+<TD width=35%>USB_NO_WAIT</TD>
+<TD width=43%>Asynchronous</TD>
+</TR>
+</TABLE><BR>
+
+<P>When behaving asynchronously, the function will invoke your callback function, if one is specified in <I>lpStartAddress</I>, when the transfer is complete.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>2.10 and later</TD>
+<TD width=18%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_2.htm"><B>AbortTransfer</B></A>, <A HREF="funct_1_104.htm"><B>GetIsochResults</B></A>, <A HREF="funct_1_109.htm"><B>GetTransferStatus</B></A>, <A HREF="funct_1_156.htm"><B>IsTransferComplete</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

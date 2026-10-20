@@ -1,0 +1,154 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IViewObject::Freeze</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IViewObject::Freeze"/>
+<MSHelp:RLTitle Title="IViewObject::Freeze"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iviewobject_freeze"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IViewObject::Freeze</H1>
+
+<P>This<B> </B>method freezes a certain aspect of the object’s presentation so that it does not change until the <A HREF="_wcesdk_com_iviewobject_unfreeze.htm"><B>IViewObject::Unfreeze</B></A> method is called. </P>
+
+<PRE class="syntax"><B>HRESULT Freeze( </B>
+<B>DWORD </B><I>dwAspect</I><B>, </B>
+<B>LONG </B><I>lindex</I><B>, </B>
+<B>void *</B><I>pvAspect</I><B>, </B>
+<B>DWORD *</B><I>pdwFreeze</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwAspect</I></DT>
+
+<DD>[in] Specifies how the object is to be represented. Representations include content, an icon, a thumbnail, or a printed document. Valid values are taken from the enumeration <A HREF="_wcesdk_com_dvaspect.htm"><B>DVASPECT</B></A>. </dd>
+
+<DT><I>lindex</I></DT>
+
+<DD>[in] Portion of the object that is of interest for the draw operation. Its interpretation varies with <I>dwAspect.</I> For more information, see the <A HREF="_wcesdk_com_dvaspect.htm"><B>DVASPECT</B></A> enumeration.</dd>
+
+<DT><I>pvAspect</I></DT>
+
+<DD>[in] Pointer to additional information about the view of the object specified in <I>dwAspect</I>. Because none of the current aspects support additional information, <I>pvAspect</I> must always be NULL.</dd>
+
+<DT><I>pdwFreeze</I></DT>
+
+<DD>[out] Pointer to where an identifying <B>DWORD</B> key is returned. This unique key is later used to cancel the freeze by calling <B>IViewObject::Unfreeze</B>. This key is an index that the default cache uses to keep track of which object is frozen.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=35%>Value</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>S_OK</TD>
+<TD width=65%>The presentation was successfully frozen.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>VIEW_S_ALREADYFROZEN</TD>
+<TD width=65%>Presentation has already been frozen. The value of <I>pdwFreeze</I> is the identifying key of the already frozen object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>OLE_E_BLANK</TD>
+<TD width=65%>Presentation not in cache.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>DV_E_LINDEX</TD>
+<TD width=65%>Invalid value for <I>lindex</I>; currently; only -1 is supported.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>DV_E_DVASPECT</TD>
+<TD width=65%>Invalid value for <I>dwAspect</I>. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The <B>IViewObject::Freeze</B> method causes the view object to freeze its drawn representation until a subsequent call to <B>IViewObject::Unfreeze</B> releases it. After calling <B>IViewObject::Freeze</B>, successive calls to <A HREF="_wcesdk_com_iviewobject_draw.htm"><B>IViewObject::Draw</B></A> with the same parameters produce the same picture until <A HREF="_wcesdk_com_iviewobject_unfreeze.htm"><B>IViewObject::Unfreeze</B></A> is called. </P>
+
+<P><B>IViewObject::Freeze</B> is not part of the persistent state of the object and does not continue across unloads and reloads of the object.</P>
+
+<P>The most common use of this method is for banded printing.</P>
+
+<P>While in a frozen state, view notifications are not sent. Pending view notifications are deferred to the subsequent call to <A HREF="_wcesdk_com_iviewobject_unfreeze.htm"><B>IViewObject::Unfreeze</B></A>.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_dvaspect.htm"><B>DVASPECT</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

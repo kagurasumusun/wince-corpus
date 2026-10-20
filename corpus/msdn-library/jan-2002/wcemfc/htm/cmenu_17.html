@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::GetMenuItemID</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMenu::GetMenuItemID"/>
+<MSHelp:RLTitle Title="CMenu::GetMenuItemID"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_getmenuitemid"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CMenu::GetMenuItemID</H1>
+
+<P>This method obtains the menu-item identifier for a menu item located at the position defined by <I>nPos</I>.</P>
+
+<PRE class=syntax><B>UINT GetMenuItemID(
+int </B><I>nPos</I><B> )
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nPos</I></DT>
+
+<DD>Specifies the position, zero-based, of the menu item whose ID is being retrieved.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The item ID for the specified item in a pop-up menu if the function is successful. If the specified item is a pop-up menu, as opposed to an item within the pop-up menu, the return value is &#0150;1. If <I>nPos</I> corresponds to a <B>SEPARATOR</B> menu item, the return value is zero.</P>
+
+<H4>Example</H4>
+
+<PRE>// CMainFrame::OnChangeFileMenu() is a menu command handler for
+// CMainFrame class, which in turn is a CFrameWnd-derived class.
+// It modifies the File menu by inserting, removing and renaming
+// some menu items. Other operations include associating a context
+// help id and setting default menu item to the File menu.
+// CMainFrame is a CFrameWnd-derived class.
+void CMainFrame::OnChangeFileMenu()
+{
+   // Get the menu from the application window.
+   CMenu* mmenu = GetMenu();
+
+   // Look for "File" menu.
+   int pos = FindMenuItem(mmenu, "&amp;File");
+   if (pos == -1)
+      return;
+
+   // Remove "New" menu item from the File menu.
+   CMenu* submenu = mmenu-&gt;GetSubMenu(pos);
+   pos = FindMenuItem(submenu, "&amp;New\tCtrl+N");
+   if (pos &gt; -1)
+      submenu-&gt;RemoveMenu(pos, MF_BYPOSITION);
+
+   // Look for "Open" menu item from the File menu. Insert a new
+   // menu item called "Close" right after the "Open" menu item.
+   // ID_CLOSEFILE is the command id for the "Close" menu item.
+   pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+   if (pos &gt; -1)
+      submenu-&gt;InsertMenu(pos + 1, MF_BYPOSITION, ID_CLOSEFILE, "&amp;Close");
+
+   // Rename menu item "Save" to "Save Selection".
+   pos = FindMenuItem(submenu, "&amp;Save\tCtrl+S");
+   if (pos &gt; -1)
+   {
+      UINT id = submenu-&gt;GetMenuItemID(pos);
+      submenu-&gt;ModifyMenu(id, MF_BYCOMMAND, id, "&amp;Save Selection");
+   }
+
+   // Associate a context help ID with File menu, if one is not found.
+   // ID_FILE_CONTEXT_HELPID is the context help ID for the File menu
+   // that is defined in resource file.
+   if (submenu-&gt;GetMenuContextHelpId() == 0)
+      submenu-&gt;SetMenuContextHelpId(ID_FILE_CONTEXT_HELPID);
+
+   // Set "Open" menu item as the default menu item for the File menu,
+   // if one is not found. So, when a user double-clicks the File
+   // menu, the system sends a command message to the menu owner
+   // window and closes the menu as if the File\Open command item had
+   // been chosen.
+   if (submenu-&gt;GetDefaultItem(GMDI_GOINTOPOPUPS, TRUE) == -1)
+   {
+      pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+      submenu-&gt;SetDefaultItem(pos, TRUE);
+   }
+}
+
+// FindMenuItem() will find a menu item string from the specified
+// popup menu and returns its position (0-based) in the specified
+// popup menu. It returns -1 if no such menu item string is found.
+int FindMenuItem(CMenu* Menu, LPCTSTR MenuString)
+{
+   ASSERT(Menu);
+   ASSERT(::IsMenu(Menu-&gt;GetSafeHmenu()));
+
+   int count = Menu-&gt;GetMenuItemCount();
+   for (int i = 0; i &lt; count; i++)
+   {
+      CString str;
+      if (Menu-&gt;GetMenuString(i, str, MF_BYPOSITION) &amp;&amp;
+         (strcmp(str, MenuString) == 0))
+         return i;
+   }
+
+   return -1;
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_52.htm"><B>CWnd::GetMenu</B></A>, <A HREF="cmenu_16.htm"><B>CMenu::GetMenuItemCount</B></A>, <A HREF="cmenu_21.htm"><B>CMenu::GetSubMenu</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

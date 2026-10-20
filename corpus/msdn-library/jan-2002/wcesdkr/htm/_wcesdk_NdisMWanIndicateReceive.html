@@ -1,0 +1,150 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMWanIndicateReceive</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMWanIndicateReceive"/>
+<MSHelp:RLTitle Title="NdisMWanIndicateReceive"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismwanindicatereceive"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>NdisMWanIndicateReceive</H1>
+
+<P>This function notifies the PPP protocol driver that a packet has been received for an established link to be forwarded to TCP/IP. </P>
+
+<PRE class="syntax"><B>VOID NdisMWanIndicateReceive(
+OUT PNDIS_STATUS  </B><I>Status</I><B>,
+IN NDIS_HANDLE  </B><I>MiniportAdapterHandle</I><B>,
+IN NDIS_HANDLE  </B><I>NdisLinkContext</I><B>,
+IN PUCHAR  </B><I>PacketBuffer</I><B>,
+IN UINT  </B><I>PacketSize</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status </I></DT>
+
+<DD>Points to a caller-supplied variable in which this function returns the status of the indication, which can be one of the following:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=41%>Value</TH>
+<TH width=59%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>NDIS_STATUS_SUCCESS </TD>
+<TD width=59%>NDISWAN recognized and accepted the packet. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>NDIS_STATUS_NOT_ACCEPTED </TD>
+<TD width=59%>NDISWAN did not recognize the frame. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>Any other status indicates that NDISWAN recognized the frame, but for some reason was unable to accept it.
+</dd>
+
+<DT><I>MiniportAdapterHandle</I> </DT>
+
+<DD>Specifies the handle originally input to <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>. </dd>
+
+<DT><I>NdisLinkContext</I> </DT>
+
+<DD>Specifies the handle supplied by NDISWAN in the <B>NDIS_MAC_LINE_UP</B> structure at the miniport's initial call to <A HREF="_wcesdk_ndismindicatestatus.htm"><B>NdisMIndicateStatus</B></A> for this link. </dd>
+
+<DT><I>PacketBuffer</I> </DT>
+
+<DD>Specifies the base virtual address of the buffer containing the received packet. </dd>
+
+<DT><I>PacketSize</I> </DT>
+
+<DD>Specifies the size in bytes of the received packet data. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None</P>
+
+<H4>Remarks</H4>
+
+<P>When a miniport calls <B>NdisMWanIndicateReceive</B>, the PPP protocol driver indicates the packet by calling the <A HREF="_wcesdk_protocolreceive.htm"><B>ProtocolReceive</B></A> functions of bound protocol drivers. The PPP protocol driver then forward then packet to TCP/IP. The entire packet is available for inspection by protocols, because WAN miniports never indicate partial packets with only a lookahead portion of the packet data.</P>
+
+<P>Consequently, such a protocol will never call <A HREF="_wcesdk_ndistransferdata.htm"><B>NdisTransferData</B></A> so the underlying miniport driver needs no <A HREF="_wcesdk_miniporttransferdata.htm"><B>MiniportTransferData</B></A> function. The miniport always passes up an entire packet due to compression and encryption that might be applied to the packet from the transmitting node. Also, because the link is point-to-point, at least one higher-level protocol accepts each received packet.</P>
+
+<P>For any protocol that receives an indication through <B>NdisMWanIndicateReceive</B>, the buffer at <I>PacketBuffer</I> is valid only during the current call to its <B>ProtocolReceive</B> function. Because the packet might be compressed, the entire packet must be available when this call is made. This buffer should contain the same data and size as the buffer sent by the driver on the remote node. </P>
+
+<P>The data contained in the header is the same as that received on the network adapter. A WAN miniport need not remove any headers or trailers from the data its network adapter receives. The transmitting driver does not add padding to the packet. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_miniporttransferdata.htm"><B>MiniportTransferData</B></A>, <A HREF="_wcesdk_ndismindicatestatus.htm"><B>NdisMIndicateStatus</B></A>, <A HREF="_wcesdk_ndismwanindicatereceivecomplete.htm"><B>NdisMWanIndicateReceiveComplete</B></A>, <A HREF="_wcesdk_ndistransferdata.htm"><B>NdisTransferData</B></A>, <A HREF="_wcesdk_protocolreceive.htm"><B>ProtocolReceive</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

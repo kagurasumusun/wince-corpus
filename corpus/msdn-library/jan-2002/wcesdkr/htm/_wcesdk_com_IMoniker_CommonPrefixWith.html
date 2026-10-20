@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMoniker::CommonPrefixWith</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMoniker::CommonPrefixWith"/>
+<MSHelp:RLTitle Title="IMoniker::CommonPrefixWith"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imoniker_commonprefixwith"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IMoniker::CommonPrefixWith</H1>
+
+<P>This<B> </B>method finds the prefix that the moniker has in common with another moniker.</P>
+
+<PRE class="syntax"><B>HRESULT CommonPrefixWith(
+IMoniker *</B><I>pmkOther</I>,
+<B>IMoniker **</B><I>ppmkPrefix</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pmkOther</I></DT>
+
+<DD>[in] Pointer to the <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A> interface on another moniker to be compared with this one to determine whether there is a common prefix.</dd>
+
+<DT><I>ppmkPrefix</I></DT>
+
+<DD>[out] Address of <B>IMoniker</B>* pointer variable that receives the interface pointer to the moniker that is the common prefix of this moniker and <I>pmkOther</I>. When successful, the implementation must call <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A> on the resulting moniker; it is the caller’s responsibility to call <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>. If an error occurs or if there is no common prefix, the implementation should set *<I>ppmkPrefix</I> to NULL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The method supports the standard return value E_OUTOFMEMORY, as well as the values described in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>S_OK</TD>
+<TD width=74%>A common prefix exists that is neither this moniker nor <I>pmkOther</I>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>MK_S_NOPREFIX</TD>
+<TD width=74%>No common prefix exists.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>MK_S_HIM</TD>
+<TD width=74%>The entire <I>pmkOther</I> moniker is a prefix of this moniker.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>MK_S_US</TD>
+<TD width=74%>The two monikers are identical.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>MK_S_ME</TD>
+<TD width=74%>This moniker is a prefix of the <I>pmkOther</I> moniker.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>MK_E_NOTBINDABLE</TD>
+<TD width=74%>This method was called on a relative moniker. It is not meaningful to take the common prefix on a relative moniker.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P><B>IMoniker::CommonPrefixWith</B> creates a new moniker that consists of the common prefixes of the moniker on this moniker object and another moniker. If, for example, one moniker represents the path “c:\projects\secret\art\pict1.bmp” and another moniker represents the path “c:\projects\secret\docs\chap1.txt,” the common prefix of these two monikers would be a moniker representing the path “c:\projects\secret.”</P>
+
+<H4>Notes to Callers</H4>
+
+<P>The <B>IMoniker::CommonPrefixWith</B> method is primarily called in the implementation of the <A HREF="_wcesdk_com_imoniker_relativepathto.htm"><B>IMoniker::RelativePathTo</B></A> method. Clients using a moniker to locate an object rarely need to call this method.</P>
+
+<P>Call this method only if <I>pmkOther</I> and this moniker are both absolute monikers. An absolute moniker is either a file moniker or a generic composite whose leftmost component is a file moniker that represents an absolute path. Do not call this method on relative monikers, because it would not produce meaningful results.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>Your implementation should first determine whether <I>pmkOther</I> is a moniker of a class that you recognize and for which you can provide special handling (for example, if it is of the same class as this moniker). If so, your implementation should determine the common prefix of the two monikers. Otherwise, it should pass both monikers in a call to the <A HREF="_wcesdk_com_monikercommonprefixwith.htm"><B>MonikerCommonPrefixWith</B></A> function, which correctly handles the generic case.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oaidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_monikercommonprefixwith.htm"><B>MonikerCommonPrefixWith</B></A>, <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A>, <A HREF="_wcesdk_com_imoniker_relativepathto.htm"><B>IMoniker::RelativePathTo</B></A>, <A HREF="_wcesdk_com_iunknown_addref.htm"><B>IUnknown::AddRef</B></A>, <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

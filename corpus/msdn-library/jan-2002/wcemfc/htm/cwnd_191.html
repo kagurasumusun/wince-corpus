@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::SetTimer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::SetTimer"/>
+<MSHelp:RLTitle Title="CWnd::SetTimer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_settimer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_timerproc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>CWnd::SetTimer</H1>
+
+<P>This method installs a system timer. A time-out value is specified, and every time a time-out occurs, the system posts a WM_TIMER message to the message queue of the installing application or passes the message to an application-defined <A HREF="JavaScript:hhobj_1.Click()"><B>TimerProc</B></A><B> </B>callback function. </P>
+
+<PRE class=syntax><B>UINT SetTimer(
+UINT </B><I>nIDEvent</I><B>,
+UINT </B><I>nElapse</I><B>,
+void (CALLBACK EXPORT* </B><I>lpfnTimer</I><B>)(
+HWND, UINT, UINT, DWORD) );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nIDEvent</I></DT>
+
+<DD>Specifies a nonzero timer identifier.</DD>
+
+<DT><I>nElapse</I></DT>
+
+<DD>Specifies the time-out value, in milliseconds.</DD>
+
+<DT><I>lpfnTimer</I></DT>
+
+<DD>Specifies the address of the application-supplied <B>TimerProc</B> callback function that processes the WM_TIMER messages. If this parameter is <B>NULL</B>, the WM_TIMER messages are placed in the application message queue and handled by the <B>CWnd</B> object.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The timer identifier of the new timer if the function is successful. An application passes this value to the <B>CWnd::KillTimer</B> method to kill the timer. Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The <I>lpfnTimer</I> callback function need not be named <B>TimerProc</B>, but it must be defined as follows:</P>
+
+<PRE>void CALLBACK EXPORT TimerProc(
+   HWND hWnd,      // handle of CWnd that called SetTimer
+   UINT nMsg,      // WM_TIMER
+   UINT nIDEvent   // timer identification
+   DWORD dwTime    // system time
+);
+</PRE>
+
+<P>Timers are a limited global resource; therefore it is important that an application check the value returned by the <B>SetTimer</B> method to verify that a timer is actually available.</P>
+
+<H4>Example</H4>
+
+<P>This example uses <B>CWnd::SetTimer, CWnd::OnTimer</B>, and <B>CWnd::KillTimer</B> to handle WM_TIMER messages. A timer is set up to send a WM_TIMER message to the main frame window every 2 seconds in <B>OnStartTimer</B>. <B>OnStopTimer</B> will stop the timer by calling <B>CWnd::KillTimer</B>. <B>OnTimer</B> was set up through ClassWizard to handle WM_TIMER messages for the main frame window. In this example, the PC speaker will beep every 2 seconds.</P>
+
+<PRE>void CMainFrame::OnStartTimer()
+{
+&nbsp;&nbsp;m_nTimer = SetTimer(1, 2000, 0);
+}
+
+void CMainFrame::OnStopTimer()
+{
+&nbsp;&nbsp;KillTimer(m_nTimer);&nbsp;&nbsp;
+}
+
+void CMainFrame::OnTimer(UINT nIDEvent)
+{
+&nbsp;&nbsp;MessageBeep(0xFFFFFFFF);&nbsp;&nbsp;// Beep
+
+&nbsp;&nbsp;// Call base class handler.
+&nbsp;&nbsp;CMDIFrameWnd::OnTimer(nIDEvent);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_91.htm"><B>CWnd::KillTimer</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

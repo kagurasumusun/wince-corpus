@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SetErrorInfo</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SetErrorInfo"/>
+<MSHelp:RLTitle Title="SetErrorInfo"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_oa96_seterrorinfo"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SetErrorInfo</H1>
+
+<P>This function sets the error information object for the current thread of execution.</P>
+
+<PRE class="syntax"><B>HRESULT SetErrorInfo(</B>
+<B>DWORD </B><I>dwReserved</I><B>,</B>
+<B>IErrorInfo *</B><I>perrinfo </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwReserved</I></DT>
+
+<DD>Reserved for future use; set to zero.</dd>
+
+<DT><I>perrinfo</I></DT>
+
+<DD>Pointer to an error object.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values obtained from the returned <B>HRESULT</B> and described in the following table is returned. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=15%>Value</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%>S_OK </TD>
+<TD width=85%>Success.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>This function releases the existing error information object, if one exists, and sets the pointer to <I>perrinfo</I>. Use this function after creating an error object that associates the object with the current thread of execution.</P>
+
+<P>If the property or method that calls <B>SetErrorInfo</B> is called by <A HREF="_wcesdk_oa96_dispinvoke.htm"><B>DispInvoke</B></A>, then <B>DispInvoke</B> will fill the EXCEPINFO parameter with the values specified in the error information object. <B>DispInvoke</B> will return DISP_E_EXCEPTION when the property or method returns a failure return value for <B>DispInvoke</B>.</P>
+
+<P>Virtual function table (VTBL) binding controllers that do not use <A HREF="_wcesdk_oa96_idispatch_invoke.htm"><B>IDispatch::Invoke</B></A> can get the error information object by using <A HREF="_wcesdk_com_geterrorinfo.htm"><B>GetErrorInfo</B></A>. This allows an object that supports a dual interface to use <B>SetErrorInfo</B>, regardless of whether the client uses VTBL binding or <B>IDispatch</B>. Passing into this function any invalid and, under some circumstances, NULL pointers will result in unexpected termination of the application.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">ICreateErrorInfo *pcerrinfo;
+&nbsp;&nbsp;IErrorInfo *perrinfo;
+&nbsp;&nbsp;HRESULT hr;
+
+hr = CreateErrorInfo(&amp;pcerrinfo);
+hr = pcerrinfo-&gt;QueryInterface(IID_IErrorInfo, (LPVOID FAR*) &amp;perrinfo);
+if (SUCCEEDED(hr))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;SetErrorInfo(0, perrinfo);
+&nbsp;&nbsp;&nbsp;&nbsp;perrinfo-&gt;Release();
+&nbsp;&nbsp;}
+&nbsp;&nbsp;pcerrinfo-&gt;Release();</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>Winbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Oleaut32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

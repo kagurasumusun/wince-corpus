@@ -1,0 +1,51 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Priority Inversion</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Priority Inversion"/>
+<MSHelp:RLTitle Title="Priority Inversion"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_priority_inversion"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Priority Inversion</H1>
+
+<P>Priority inversion occurs when a high priority thread is blocked from running because a lower priority thread owns a kernel object, such as a mutex or critical section, that the high priority thread needs. For example, a Windows CE application contains threads 1, 2, and 3. Thread 1 is high priority currently scheduled thread and it tries to acquire a critical section owned by Thread 2. Thread 2 could be in one of two states:
+
+<UL type="disc">
+	<LI>It could be ready to run</li>
+
+	<LI>It could be already blocked because it is waiting on a critical section owned by Thread 3</li>
+</UL>
+
+<P>In case (1), Thread 1 would block and Thread 2 would be boosted to the priority of Thread 1 in hopes that it will release the critical section. IN case (2) Thread 2 would be boosted along with Thread 3 and any other thread that was connected in the chain.</P>
+
+<P>In contrast, Windows CE 3.0 guarantees the handling of priority inversion only to a depth of one level for case (2). Therefore, Thread 1 will block until Thread 2 gives up the critical section. Thread 2 and 3 will be scheduled based on a normal scheduling algorithm. In a real-time system priority inversion cases are to be avoided for the basic reason that you lose control on the scheduling of your threads. Controlling the exact timing of a thread in a real-time environment is very important.</P>
+<DIV CLASS="footer">Built on Thursday, November 16, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+ <!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

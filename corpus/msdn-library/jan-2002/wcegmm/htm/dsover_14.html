@@ -1,0 +1,99 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enumeration of Sound Devices</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Enumeration of Sound Devices"/>
+<MSHelp:RLTitle Title="Enumeration of Sound Devices"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_enumeration_of_sound_devices_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_DirectSoundCreate_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_DSEnumCallback_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Enumeration of Sound Devices</H1>
+
+<P>For an application that is simply going to play sounds through the user's preferred playback device, you don't need to enumerate the available devices. When you create the DirectSound object with NULL as the device identifier, the interface will automatically be associated with the default device if one is present. (If no device driver is present, the call to the <A HREF="JavaScript:hhobj_1.Click()"><B>DirectSoundCreate</B></A> function fails.)</P>
+
+<P>However, if you are looking for a particular kind of device, wish to offer the user a choice of devices, or need to work with two or more devices, you must get DirectSound to enumerate the devices available on the system. </P>
+
+<P>Enumeration serves three purposes:
+
+<UL type="disc">
+	<LI>Reports what hardware is available</li>
+
+	<LI>Supplies a globally unique identifier (GUID) for each device</li>
+
+	<LI>Allows you to initialize DirectSound for each device as it is enumerated, so that you can check the capabilities of the device</li>
+</UL>
+
+<P>To enumerate devices you must first set up a callback function that will be called each time DirectSound finds a device. You can do anything you want within this function, and you can give it any name, but you must declare it in the same form as <A HREF="JavaScript:hhobj_2.Click()"><B>DSEnumCallback</B></A>, a prototype in this documentation. The callback function must return TRUE if enumeration is to continue, or FALSE otherwise (for instance, after finding a device with the capabilities you need).</P>
+
+<P>The following callback function adds information about each enumerated device to a combo box. Note that the first three parameters are supplied by the device driver. The fourth parameter is passed on from the <B>DirectSoundEnumerate</B> function.</P>
+
+<PRE class="code">BOOL CALLBACK DSEnumProc(LPGUID lpGUID,
+                         LPCTSTR lpszDesc,
+                         LPCTSTR lpszDrvName,
+                         LPVOID lpContext )
+{
+    HWND   hCombo = *(HWND *)lpContext;
+    LPGUID lpTemp = NULL;
+
+    if ( lpGUID != NULL )
+    {
+        if (( lpTemp = malloc( sizeof(GUID))) == NULL )
+        return( TRUE );
+
+        memcpy( lpTemp, lpGUID, sizeof(GUID));
+    }
+
+    ComboBox_AddString( hCombo, lpszDesc );
+    ComboBox_SetItemData( hCombo,
+                ComboBox_FindString( hCombo, 0, lpszDesc ),
+                lpTemp );
+    return( TRUE );
+}
+ </PRE>
+
+<P>The enumeration is set in motion when the dialog containing the combo box is initialized: </P>
+
+<PRE class="code">if FAILED(DirectSoundEnumerate((LPDSENUMCALLBACK)DSEnumProc,
+        &amp;hCombo))
+{
+    EndDialog( hDlg, TRUE );
+    return( TRUE );
+}
+ </PRE>
+
+<P>In this case the address of the combo box handle is passed into <B>DirectSoundEnumerate</B>, which in turn passes it to the callback function. This parameter can be any 32-bit value that you want to have access to within the callback.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

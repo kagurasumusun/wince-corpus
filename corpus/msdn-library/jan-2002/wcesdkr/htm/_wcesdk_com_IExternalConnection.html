@@ -1,0 +1,148 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IExternalConnection</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IExternalConnection"/>
+<MSHelp:RLTitle Title="IExternalConnection"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iexternalconnection"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IExternalConnection</H1>
+
+<P>This interface manages a server object's count of marshaled, or external, connections. A server that maintains such a count can detect when it has no external connections and shut itself down in an orderly fashion. </P>
+
+<P><B>IExternalConnection</B> is most commonly implemented on server objects to enable the safe and orderly shutdown of a link to an embedded object following a silent update. Objects that do not implement <B>IExternalConnection</B> risk losing data in such a situation: when the final link client releases the embedded (server) object, the last external connection on the object’s stub manager is released, causing the stub manager to release its pointers to interfaces on the embedded object and initiate shutdown of the object. At this point the server object calls <A HREF="_wcesdk_com_ioleclientsite_saveobject.htm"><B>IOleClientSite::SaveObject</B></A> on the link container, and the link container's return call to <A HREF="_wcesdk_com_ipersiststorage_save.htm"><B>IPersistStorage::Save</B></A> fails, because the stub manager no longer has a pointer to the embedded object. Any unsaved changes to the server object's data would then be lost. </P>
+
+<P>If the server object implements <B>IExternalConnection</B>, however, its stub manager will not release its connection to the object when the last external connection is released. Instead, it will stay connected until the object is ready to destroy itself. </P>
+
+<P>In standard marshaling, COM calls <A HREF="_wcesdk_com_iexternalconnection__addconnection.htm"><B>IExternalConnection::AddConnection</B></A> on the object when the object is first marshaled to increment its count of external connections. The stub manager calls the methods of <B>IExternalConnection</B> on the object as subsequent external connections are obtained and released. When the object’s count of external connections goes to zero, the object can save its data and then revoke itself from the running object table and do whatever else is necessary to reduce its object reference count to zero. </P>
+
+<P>An object that implements <B>IExternalConnection</B> should explicitly call <A HREF="_wcesdk_com_codisconnectobject.htm"><B>CoDisconnectObject</B></A> on itself when its external reference count drops to 0. This call will cause the stub manager to call Release on the object so the object can destroy itself. </P>
+
+<H4>When to Implement</H4>
+
+<P>Implement <B>IExternalConnection</B> on server objects that need to detect marshaled connections to themselves from clients that are either out-of-process or residing in another apartment in the same process. </P>
+
+<P>Implement <B>IExternalConnection</B> also on objects that need to keep the stub manager in memory independent of the proxy count. For example, as explained above, objects that can be linked and embedded should implement <B>IExternalConnection</B> to keep a container application running during a silent update. </P>
+
+<P>A class factory object can implement <B>IExternalConnection</B> to keep running even when no clients are requesting or using the objects it creates. </P>
+
+<P>An in-place container should also implement <B>IExternalConnection</B> to keep itself running while contained objects save their data before shutting down.</P>
+
+<H4>When to Use</H4>
+
+<P>You do not normally call the methods of <B>IExternalConnection</B> from your own code. In nearly every case, COM makes these calls for you. The only time to use <B>IExternalConnection</B> from your own code is when you write a custom marshaler that implements its own stub manager functionality. </P>
+
+<H4>Methods in VTable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%><A HREF="_wcesdk_com_iunknown.htm">IUnknown</A> Methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iunknown_addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iunknown_release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IExternalConnection Methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iexternalconnection__addconnection.htm"><B>AddConnection</B></A></TD>
+<TD width=50%>Increments count of external locks.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_com_iexternalconnection__releaseconnection.htm"><B>ReleaseConnection</B></A></TD>
+<TD width=50%>Decrements count of external locks.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_ioleobject.htm"><B>IOleObject</B></A>, <A HREF="_wcesdk_com_colockobjectexternal.htm"><B>CoLockObjectExternal</B></A>, <A HREF="_wcesdk_com_codisconnectobject.htm"><B>CoDisconnectObject</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

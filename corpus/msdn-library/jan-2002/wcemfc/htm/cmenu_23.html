@@ -1,0 +1,225 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::InsertMenu</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMenu::InsertMenu"/>
+<MSHelp:RLTitle Title="CMenu::InsertMenu"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_insertmenu"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CMenu::InsertMenu</H1>
+
+<P>This method inserts a new menu item at the position specified by <I>nPosition</I>, and move other items down the menu. The application can specify the state of the menu item by setting values in <I>nFlags</I>. </P>
+
+<P>Whenever a menu that resides in a window is changed (whether or not the window is displayed), the application should call <B>CWnd::DrawMenuBar</B>. </P>
+
+<PRE class=syntax><B>BOOL InsertMenu(
+UINT </B><I>nPosition</I><B>,
+UINT </B><I>nFlags</I><B>,
+UINT </B><I>nIDNewItem</I><B> = 0,
+LPCTSTR </B><I>lpszNewItem</I><B> = NULL );</B><I>
+</I>
+<B>BOOL InsertMenu(
+UINT </B><I>nPosition</I><B>,
+UINT </B><I>nFlags</I><B>,
+UINT </B><I>nIDNewItem</I><B>,
+const CBitmap* </B><I>pBmp</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nPosition</I></DT>
+
+<DD>Specifies the menu item before which the new menu item is to be inserted. The <I>nFlags</I> parameter can be used to interpret <I>nPosition</I> in the following ways:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>nFlags</TH>
+<TH width=66%>Interpretation of nPosition</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_BYCOMMAND</TD>
+<TD width=66%>Specifies that the parameter gives the command ID of the existing menu item. This is the default if neither MF_BYCOMMAND nor MF_BYPOSITION is set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_BYPOSITION</TD>
+<TD width=66%>Specifies that the parameter gives the position of the existing menu item. The first item is at position 0. If <I>nPosition</I> is &#0150;1, the new menu item is appended to the end of the menu.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies how <I>nPosition</I> is interpreted and specifies information about the state of the new menu item when it is added to the menu. For a list of the flags that may be set, see the <A HREF="cmenu_3.htm"><B>AppendMenu</B></A> method. To specify more than one value, use the bitwise OR operator to combine them with the MF_BYCOMMAND or MF_BYPOSITION flag.</DD>
+
+<DT><I>nIDNewItem</I></DT>
+
+<DD>Specifies either the command ID of the new menu item or, if <I>nFlags</I> is set to MF_POPUP, the menu handle (<B>HMENU</B>) of the pop-up menu. The <I>nIDNewItem</I> parameter is ignored (not needed) if <I>nFlags</I> is set to MF_SEPARATOR.</DD>
+
+<DT><I>lpszNewItem</I></DT>
+
+<DD>Specifies the content of the new menu item. <I>nFlags</I> can be used to interpret <I>lpszNewItem</I> in the following ways:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>nFlags</TH>
+<TH width=66%>Interpretation of lpszNewItem</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_OWNERDRAW</TD>
+<TD width=66%>Contains an application-supplied 32-bit value that the application can use to maintain additional data associated with the menu item. This 32-bit value is available to the application in the <I>itemData</I> member of the structure supplied by the WM_MEASUREITEM and WM_DRAWITEM messages. These messages are sent when the menu item is initially displayed or is changed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_STRING</TD>
+<TD width=66%>Contains a long pointer to a null-terminated string. This is the default interpretation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_SEPARATOR</TD>
+<TD width=66%>The <I>lpszNewItem</I> parameter is ignored, not needed.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>pBmp</I></DT>
+
+<DD>Points to a <B>CBitmap</B> object that will be used as the menu item.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>When <I>nIDNewItem</I> specifies a pop-up menu, it becomes part of the menu in which it is inserted. If that menu is destroyed, the inserted menu will also be destroyed. An inserted menu should be detached from a <B>CMenu</B> object to avoid conflict.</P>
+
+<P>If the active multiple document interface (MDI) child window is maximized and an application inserts a pop-up menu into the MDI application menu by calling this function and specifying the MF_BYPOSITION flag, the menu is inserted one position farther left than expected. This happens because the Control menu of the active MDI child window is inserted into the first position of the MDI frame window menu bar. To position the menu properly, the application must add 1 to the position value that would otherwise, be used. An application can use the WM_MDIGETACTIVE message to determine whether the currently active child window is maximized.</P>
+
+<P>Windows CE does not support the MF_BITMAP flag or the MF_DISABLED flag in the <I>nFlags</I> parameter. Menu items cannot be disabled without being grayed. To disable a menu item use the MF_GRAYED flag. </P>
+
+<P>Windows CE 1.0 does not support cascading menus, or the insertion of an MF_POPUP menu into another pop-up menu.</P>
+
+<H4>Example</H4>
+
+<PRE>// CMainFrame::OnChangeFileMenu() is a menu command handler for
+// CMainFrame class, which in turn is a CFrameWnd-derived class.
+// It modifies the File menu by inserting, removing and renaming
+// some menu items. Other operations include associating a context
+// help id and setting default menu item to the File menu.
+// CMainFrame is a CFrameWnd-derived class.
+void CMainFrame::OnChangeFileMenu()
+{
+   // Get the menu from the application window.
+   CMenu* mmenu = GetMenu();
+
+   // Look for "File" menu.
+   int pos = FindMenuItem(mmenu, "&amp;File");
+   if (pos == -1)
+      return;
+
+   // Remove "New" menu item from the File menu.
+   CMenu* submenu = mmenu-&gt;GetSubMenu(pos);
+   pos = FindMenuItem(submenu, "&amp;New\tCtrl+N");
+   if (pos &gt; -1)
+      submenu-&gt;RemoveMenu(pos, MF_BYPOSITION);
+
+   // Look for "Open" menu item from the File menu. Insert a new
+   // menu item called "Close" right after the "Open" menu item.
+   // ID_CLOSEFILE is the command id for the "Close" menu item.
+   pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+   if (pos &gt; -1)
+      submenu-&gt;InsertMenu(pos + 1, MF_BYPOSITION, ID_CLOSEFILE, "&amp;Close");
+
+   // Rename menu item "Save" to "Save Selection".
+   pos = FindMenuItem(submenu, "&amp;Save\tCtrl+S");
+   if (pos &gt; -1)
+   {
+      UINT id = submenu-&gt;GetMenuItemID(pos);
+      submenu-&gt;ModifyMenu(id, MF_BYCOMMAND, id, "&amp;Save Selection");
+   }
+
+   // Associate a context help ID with File menu, if one is not found.
+   // ID_FILE_CONTEXT_HELPID is the context help ID for the File menu
+   // that is defined in resource file.
+   if (submenu-&gt;GetMenuContextHelpId() == 0)
+      submenu-&gt;SetMenuContextHelpId(ID_FILE_CONTEXT_HELPID);
+
+   // Set "Open" menu item as the default menu item for the File menu,
+   // if one is not found. So, when a user double-clicks the File
+   // menu, the system sends a command message to the menu owner
+   // window and closes the menu as if the File\Open command item had
+   // been chosen.
+   if (submenu-&gt;GetDefaultItem(GMDI_GOINTOPOPUPS, TRUE) == -1)
+   {
+      pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+      submenu-&gt;SetDefaultItem(pos, TRUE);
+   }
+}
+
+// FindMenuItem() will find a menu item string from the specified
+// popup menu and returns its position (0-based) in the specified
+// popup menu. It returns -1 if no such menu item string is found.
+int FindMenuItem(CMenu* Menu, LPCTSTR MenuString)
+{
+   ASSERT(Menu);
+   ASSERT(::IsMenu(Menu-&gt;GetSafeHmenu()));
+
+   int count = Menu-&gt;GetMenuItemCount();
+   for (int i = 0; i &lt; count; i++)
+   {
+      CString str;
+      if (Menu-&gt;GetMenuString(i, str, MF_BYPOSITION) &amp;&amp;
+         (strcmp(str, MenuString) == 0))
+         return i;
+   }
+
+   return -1;
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmenu_3.htm"><B>CMenu::AppendMenu</B></A>, <A HREF="cmenu_12.htm"><B>CMenu::Detach</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::DrawItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMenu::DrawItem"/>
+<MSHelp:RLTitle Title="CMenu::DrawItem"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_drawitem"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CMenu::DrawItem</H1>
+
+<P>This method is called by the framework when a visual aspect of an owner-drawn menu changes.</P>
+
+<PRE class=syntax><B>virtual void DrawItem(
+LPDRAWITEMSTRUCT </B><I>lpDrawItemStruct</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpDrawItemStruct</I></DT>
+
+<DD>Specifies a pointer to a <A HREF="struct_12.htm"><B>DRAWITEMSTRUCT</B></A> structure that contains information about the type of drawing required.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <I>itemAction</I> member of the <B>DRAWITEMSTRUCT</B> structure defines the drawing action that is to be performed. Override this method to implement drawing for an owner-draw <B>CMenu</B> object. The application should restore all graphics device interface (GDI) objects selected for the display context supplied in <I>lpDrawItemStruct</I> before the termination of this method.</P>
+
+<P>See <A HREF="cwnd_114.htm"><B>CWnd::OnDrawItem</B></A> for a description of the <B>DRAWITEMSTRUCT</B> structure.</P>
+
+<H4>Example</H4>
+
+<PRE>// Override DrawItem() to implement drawing for an owner-draw CMenu
+// object.
+// CColorMenu is a CMenu-derived class.
+void CColorMenu::DrawItem(LPDRAWITEMSTRUCT lpDIS)
+{
+&nbsp;&nbsp;CDC* pDC = CDC::FromHandle(lpDIS-&gt;hDC);
+&nbsp;&nbsp;COLORREF cr = (COLORREF)lpDIS-&gt;itemData; // RGB in item data
+
+&nbsp;&nbsp;if (lpDIS-&gt;itemAction &amp; ODA_DRAWENTIRE)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Paint the color item in the color requested
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush br(cr);
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;FillRect(&amp;lpDIS-&gt;rcItem, &amp;br);
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;if ((lpDIS-&gt;itemState &amp; ODS_SELECTED) &amp;&amp;
+&nbsp;&nbsp;&nbsp;&nbsp;(lpDIS-&gt;itemAction &amp; (ODA_SELECT | ODA_DRAWENTIRE)))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// item has been selected - hilite frame
+&nbsp;&nbsp;&nbsp;&nbsp;COLORREF crHilite = RGB(255-GetRValue(cr),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;255-GetGValue(cr), 255-GetBValue(cr));
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush br(crHilite);
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;FrameRect(&amp;lpDIS-&gt;rcItem, &amp;br);
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;if (!(lpDIS-&gt;itemState &amp; ODS_SELECTED) &amp;&amp;
+&nbsp;&nbsp;&nbsp;&nbsp;(lpDIS-&gt;itemAction &amp; ODA_SELECT))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Item has been de-selected -- remove frame
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush br(cr);
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;FrameRect(&amp;lpDIS-&gt;rcItem, &amp;br);
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

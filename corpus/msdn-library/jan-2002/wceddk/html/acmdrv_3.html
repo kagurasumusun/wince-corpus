@@ -1,0 +1,44 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Interrupt Handling in Audio Drivers</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Interrupt Handling in Audio Drivers"/>
+<MSHelp:RLTitle Title="Interrupt Handling in Audio Drivers"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_interrupt_handling_in_audio_drivers"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Interrupt Handling in Audio Drivers</H1>
+
+<P>The MDD layer is responsible for interrupt handling. It creates and manages the audio driver’s interrupt service thread (IST). The IST calls the <B>PDD_AudioGetInterruptType</B> function to determine the cause of the audio interrupt. Based on the interrupt type, the MDD either performs a callback to the Wave API Manager or sends more data or buffer space to the PDD to be played or recorded.</P>
+
+<P>The PDD layer can support simultaneous playing and recording with one interrupt by merging the recording and playing status in the AUDIO_STATE return value for <B>PDD_AudioGetInterruptType</B>. The value can represent a state change of either the playing or recording hardware, or both. The lower four bits of the return code represent the input status, and the upper four bits represent the output status. If the current interrupt is for both recording and playing, the values can be combined using the logical <B>OR</B> operator. However, if the interrupt requires only one operation, the other four bits should remain 0; otherwise, the MDD interprets this as a change or update in the hardware’s status.</P>
+
+<P>If your audio device uses more than one hardware interrupt&#0151;typically, one for playing and one for recording&#0151;the driver’s interrupt service routines (ISRs) should both return the interrupt identifier specified by the PDD layer. When <B>PDD_AudioGetInterruptType</B> is called to determine the cause of the interrupt, the function can access the hardware to determine the actual playing or recording status for each interrupt event. If this mechanism is not suitable for your audio device, you must modify the sample MDD layer to handle multiple virtual interrupts and multiple ISTs.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,76 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Sample Custom Draw Function</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Sample Custom Draw Function"/>
+<MSHelp:RLTitle Title="Sample Custom Draw Function"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_sample_custom_draw_function"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Sample Custom Draw Function</H1>
+
+<P>Upon receiving the CDDS_PREPAINT prepaint message, the function requests item-specific messages by returning the CDRF_NOTIFYITEMDRAW value. When it receives the subsequent item-specific messages, it selects a previously created font into the provided device context and specifies new colors before it returns the CDRF_NEWFONT value. The following code example shows how an application-defined function processes custom draw notification messages that are sent by a child list view control.</P>
+
+<PRE>LRESULT DoNotify (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+  LPNMLISTVIEW pnm = (LPNMLISTVIEW)lParam;
+
+  switch (pnm-&gt;hdr.code)
+  {
+    case NM_CUSTOMDRAW:
+    {
+      LPNMLVCUSTOMDRAW  lplvcd = (LPNMLVCUSTOMDRAW)lParam;
+
+      if (lplvcd-&gt;nmcd.dwDrawStage == CDDS_PREPAINT)
+        return CDRF_NOTIFYITEMDRAW;
+
+      if (lplvcd-&gt;nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
+      {
+        if (!(lplvcd-&gt;nmcd.dwItemSpec % 3))
+          SelectObject (lplvcd-&gt;nmcd.hdc, g_hNewFont);
+        else
+          return CDRF_DODEFAULT;
+
+        lplvcd-&gt;clrText = RGB(150, 75, 150);
+        lplvcd-&gt;clrTextBk = RGB(255,255,255);
+
+        return CDRF_NEWFONT;
+      }
+    }
+
+    default:
+      break;
+  }
+
+  return 0;
+}
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enumerating Phone-Book Entries</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Enumerating Phone-Book Entries"/>
+<MSHelp:RLTitle Title="Enumerating Phone-Book Entries"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_enumerating_phone_book_entries"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Win32_RasEnumEntries" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Enumerating Phone-Book Entries</H1>
+
+<P>The <A HREF="JavaScript:hhobj_1.Click()"><B>RasEnumEntries</B></A> function is used to enumerate a list of phone-book entries. Using this list, a user can select a RAS connection.</P>
+
+<P><B>To enumerate phone-book entries</B>
+
+<OL type="1">
+	<LI>Allocate an array for the <B>RASENTRYNAME</B> structure.</li>
+
+	<LI>Call <B>RasEnumEntries</B> to list the names in the phone book.</li>
+
+	<LI>Display the list for a user.</li>
+</OL>
+
+<P>The following code example shows how to dial and connect to a phone-book entry in the registry.</P>
+
+<PRE class="code">BOOL GetPhonebookEntries (HWND hDlgWnd)
+{
+  int index;
+  DWORD dwSize,
+        dwEntries;
+  HWND hWndListBox;
+
+  // Allocate an array of RASENTRYNAME structures. Assume
+  // no more than 20 entries to be configured on the
+  // Windows CE-based device.
+
+  if (!(lpRasEntryName = new RASENTRYNAME [20]))
+  {
+    MessageBox (hDlgWnd, TEXT("Not enough memory"), szTitle, MB_OK);
+    return FALSE;
+  }
+
+  // Initialize the dwSize member of the first RASENTRYNAME structure
+  // in the array to the size of the structure to identify
+  // the version of the structure being passed.
+  lpRasEntryName[0].dwSize = sizeof (RASENTRYNAME);
+
+  // Size of the array, in bytes
+  dwSize = sizeof (RASENTRYNAME) * 20;
+
+  // List all entry names in a remote access phone book.
+  if ((RasEnumEntries (
+          NULL,               // Reserved, must be NULL
+          NULL,               // Phone book is stored in the Windows CE
+                              // registry.
+          lpRasEntryName,     // Pointer to structure to receive entries
+          &amp;dwSize,            // Size of lpRasEntryName, in bytes
+          &amp;dwEntries)) != 0)  // Number of entries placed in array
+  {
+    MessageBox (hDlgWnd, TEXT("Could not obtain RAS entries"), szTitle,
+                MB_OK);
+    return FALSE;
+  }
+
+  // Get the HWND of the list box control.
+  hWndListBox = GetDlgItem (hDlgWnd, IDC_RASNAMES);
+
+  // Remove all items from a list box.
+  SendMessage (hWndListBox, LB_RESETCONTENT, 0, 0);
+
+  // Add the names of each RAS connection to the list box.
+  for (index = 0; index &lt; (int)dwEntries; ++index)
+  {
+    SendMessage (hWndListBox, LB_INSERTSTRING, index,
+                 (LPARAM)lpRasEntryName[index].szEntryName);
+  }
+
+  return TRUE;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

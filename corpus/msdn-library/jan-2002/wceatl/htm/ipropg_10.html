@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>IPropertyPageImpl::SetObjects</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="IPropertyPageImpl::SetObjects"/>
+<MSHelp:RLTitle Title="IPropertyPageImpl::SetObjects"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_ipropertypageimpl_setobjects"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IPropertyPageImpl::SetObjects</H1>
+
+<P>This method provides an array of <B>IUnknown</B> pointers for the objects associated with the property page.</P>
+
+<P>The property page is required to keep the pointers returned by this method or others queried through them. If these specific <B>IUnknown</B> pointers are held, the property page must call <B>IUnknown::AddRef</B> through each when caching them, until the time when <B>IPropertyPageImpl::SetObjects</B> is called with <I>nObjects</I> equal to zero. At that time, the property page must call <B>IUnknown::Release</B> through each pointer, releasing any objects that it held.</P>
+
+<P>The caller must provide the property page with these objects before calling <B>IPropertyPageImpl::Activate</B>, and should call <B>IPropertyPageImpl::SetObjects</B> with zero as the parameter when deactivating the page or when releasing the object entirely. Each call to <B>SetObjects</B> with a non-<B>NULL</B> <I>**PpUnk</I> parameter must be matched with a later call to <B>SetObjects</B> with zero in the <I>nObjects</I> parameter.</P>
+
+<PRE class=syntax><B>STDMETHOD ( SetObjects )(
+ULONG </B><I>nObjects</I><B>,
+IUnknown </B><I>**ppUnk</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nObjects</I></DT>
+
+<DD>[in] Number of <B>IUnknown</B> pointers in the array pointed to by <I>**pUnk</I>. If zero, the property page must relaease any pointers previously passed to this method.</DD>
+
+<DT><I>**ppUnk</I></DT>
+
+<DD>[in] Pointer to an array of <B>IUnknown</B> interface pointers where each pointer identifies a unique object affected by the property sheet in which this (and possibly other) property pages are displayed. The property page must cache these pointers calling <B>IUnknown::AddRef</B> for each pointer at that time. This array of pointers is the same one that was passed to <B>OleCreatePropertyFrame</B> or <B>OleCreatePropertyFrameIndirect</B> to invoke the property sheet.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>This method supports the following return values:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The property page successfully saved the pointers it needed.</DD>
+
+<DT>E_POINTER</DT>
+
+<DD>The address in <I>**ppUnk</I> is not valid. For example, it may be <B>NULL</B>.</DD>
+</DL>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ipropg_3.htm"><B>IPropertyPageImpl::Apply</B></A>, <A HREF="ipropg_16.htm"><B>IPropertyPageImpl::m_nObjects</B></A>, <A HREF="ipropg_22.htm"><B>IPropertyPageImpl::m_ppUnk</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

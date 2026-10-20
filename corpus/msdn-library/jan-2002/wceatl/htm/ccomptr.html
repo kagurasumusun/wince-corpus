@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CComPtr</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CComPtr"/>
+<MSHelp:RLTitle Title="CComPtr"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_ccomptr"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CComPtr</H1>
+
+<P>A COM interface specifying the type of pointer to be stored.</P>
+
+<P>ATL uses this class and the <B>CComQIPtr</B> class to manage COM interface pointers. Both classes perform automatic reference counting through calls to <B>AddRef</B> and <B>Release</B>. Overloaded operators handle pointer operations. <B>CComQIPtr</B> additionally supports automatic querying of interfaces though <B>QueryInterface</B>.</P>
+
+<PRE class=syntax><B>template&lt; class </B><I>T </I><B>&gt;
+class CComPtr</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>T</I></DT>
+
+<DD>A COM interface specifying the type of pointer to be stored.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This code example illustrates the following:
+
+<UL type=disc>
+	<LI>The constructor for the <B>CComQIPtr</B> object, <CODE>pCPC</CODE>, calls <B>QueryInterface</B> on <CODE>pUnk</CODE> to obtain the <B>IConnectionPointContainer</B> pointer. The retrieved pointer is stored in <CODE>pCPC</CODE>.</LI>
+
+	<LI>The function declares the <B>CComPtr</B> object, <CODE>pCP</CODE>, to hold an <B>IConnectionPoint</B> pointer.</LI>
+</UL>
+
+<P><B>IConnectionPointContainer::FindConnectionPoint</B> is called through <CODE>pCPC</CODE> to retrieve an <B>IConnectionPoint</B> pointer via <CODE>pCP</CODE>.static HRESULT FireOnRequestEdit(IUnknown* pUnk, DISPID dispID)</P>
+
+<PRE>{
+   CComQIPtr&lt;IConnectionPointContainer,
+            &amp;IID_IConnectionPointContainer&gt; pCPC(pUnk);
+   if (!pCPC)
+      return S_OK;
+
+   CComPtr&lt;IConnectionPoint&gt; pCP;
+   pCPC-&gt;FindConnectionPoint(IID_IPropertyNotifySink, &amp;pCP);
+   if (!pCP)
+      return S_OK;
+
+   ...
+};
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlbase.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ccomptr_4.htm"><B>CComPtr::CComPtr</B></A>, <A HREF="ccomqi_4.htm"><B>CComQIPtr::CComQIPtr</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

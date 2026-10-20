@@ -1,0 +1,62 @@
+<HTML DIR=LTR xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Mounting and Unmounting a Database Volume</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Mounting and Unmounting a Database Volume"/>
+<MSHelp:RLTitle Title="Mounting and Unmounting a Database Volume"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_mounting_and_unmounting_a_database_volume"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Mounting and Unmounting a Database Volume</H1>
+
+<P>In order to create and use a database volume with Windows CE 2.10 and later, you first must <I>mount</I>, or open, the volume. This does not include the object store, which is mounted and identified always by a system CEGUID. After all operations are complete, you must <I>unmount</I>, or close, the volume. Mounting and unmounting add a level of complexity to your database programming, but allow you to store a database elsewhere on a device other than the object store. Note that you still can use the original database API in Windows CE 2.10 and later to gain access to a database in the object store. However, the earlier API exists for backward compatibility only; every new application should use the new API.</P>
+
+<P>Call the <B>CeMountDBVol</B> function to mount a volume that can store Windows CE databases on any file system, including the object store or an installed file system, such as the FAT file system on a PC Card. <B>CeMountDBVol</B> acts as a specialized version of the <B>CreateFile</B> function; instead of opening or creating a generic file, <B>CeMountDBVol</B> opens or creates a database volume. <B>CeMountDBVol</B> accepts the location of the file that is the database volume and returns a <B>PCEGUID</B> structure. Functions that are designed to manipulate mounted database volumes use <B>PCEGUID</B> as a handle to identify a given volume.</P>
+
+<P>Call the <B>CeUnmountDBVol</B> function to unmount a database volume. Like the <B>CloseHandle</B> function, <B>CeUnmountDBVol</B> returns to the system any resources that the database volume was using. The act of unmounting flushes the database volume so you do not have to call <B>CeFlushDBVol </B>to save any data. Windows CE automatically flushes the cache on a periodic basis; in the event of a power failure or reset you will lose only data altered since the last cache flush. Also, a power failure or reset does not alter the volume itself.</P>
+
+<P>Note that more than one process can mount the same database volume. Windows&nbsp;CE keeps track of how many processes have access to a given database volume. When the last process unmounts the database, Windows CE closes the file.</P>
+
+<P>The following code example shows how to unmount a database volume. For an example that shows how to mount a database volume, see <A HREF="objstore_31.htm">Mounted Database Example</A>.</P>
+
+<PRE class="code">void UnmountingDBs (PCEGUID pceguid)
+{
+  TCHAR szMsg[100];
+
+  if (!CeUnmountDBVol (pceguid))
+  {
+    wsprintf (szMsg, TEXT("Failed unmounting the database."));
+
+    // Your error-handling code goes here.
+  }
+} // End of UnmountingDBs example code</PRE>
+<DIV CLASS="footer">Built on Tuesday, February 13, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

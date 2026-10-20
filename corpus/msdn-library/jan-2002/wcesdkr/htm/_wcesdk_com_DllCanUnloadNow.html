@@ -1,0 +1,127 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DllCanUnloadNow</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DllCanUnloadNow"/>
+<MSHelp:RLTitle Title="DllCanUnloadNow"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_dllcanunloadnow"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>DllCanUnloadNow</H1>
+
+<P>This function determines whether the dynamic-link library (DLL) that implements this function is in use. If it is not, the caller can safely unload the DLL from memory.</P>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;OLE does not provide this function. DLLs that support the OLE Component Object Model (COM) should implement and export <B>DllCanUnloadNow</B>.</P>
+
+<PRE class="syntax"><B>STDAPI DllCanUnloadNow(void);</B></PRE>
+
+<H4>Parameters</H4>
+
+<P>None.</P>
+
+<H4>Return Values</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>Value</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>S_OK</TD>
+<TD width=70%>The DLL can be unloaded. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>S_FALSE</TD>
+<TD width=70%>The DLL cannot be unloaded now. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>A call to <B>DllCanUnloadNow</B> determines whether the DLL from which it is exported is still in use. A DLL is no longer in use when it is not managing any existing objects (the reference count on all of its objects is zero). </P>
+
+<H4>Notes to Callers</H4>
+
+<P>You should not have to call <B>DllCanUnloadNow</B> directly. OLE calls it only through a call to the <A HREF="_wcesdk_com_cofreeunusedlibraries.htm"><B>CoFreeUnusedLibraries</B></A> function. When it returns S_OK, <B>CoFreeUnusedLibraries</B> safely frees the DLL.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>You need to implement <B>DllCanUnloadNow</B> in, and export it from, DLLs that are to be dynamically loaded through a call to the <A HREF="_wcesdk_com_cogetclassobject.htm"><B>CoGetClassObject</B></A> function. You also need to implement and export the <B>DllGetClassObject</B> function in the same DLL.</P>
+
+<P>If a DLL loaded through a call to <B>CoGetClassObject</B> fails to export <B>DllCanUnloadNow</B>, the DLL will not be unloaded until the application calls the <A HREF="_wcesdk_com_couninitialize.htm"><B>CoUninitialize</B></A> function to release the OLE libraries.</P>
+
+<P>If the DLL links to another DLL, returning S_OK from <B>DllCanUnloadNow</B> will also cause the second dependent DLL to be unloaded. To eliminate the possibility of a crash, the primary DLL should call the <A HREF="_wcesdk_com_coloadlibrary.htm"><B>CoLoadLibrary</B></A> function, specifying the path to the second DLL as the first parameter and setting the auto free parameter to TRUE. This forces the COM library to reload the second DLL and set it up for a call to <B>CoFreeUnusedLibraries</B> to free it separately when appropriate. </P>
+
+<P><B>DllCanUnloadNow</B> should return S_FALSE if there are any existing references to objects that the DLL manages.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Objbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API. </P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_cofreeunusedlibraries.htm"><B>CoFreeUnusedLibraries</B></A>, <A HREF="_wcesdk_com_cogetclassobject.htm"><B>CoGetClassObject</B></A>, <A HREF="_wcesdk_com_coloadlibrary.htm"><B>CoLoadLibrary</B></A>, <A HREF="_wcesdk_com_couninitialize.htm"><B>CoUninitialize</B></A>, <A HREF="_wcesdk_com_dllgetclassobject.htm"><B>DllGetClassObject</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

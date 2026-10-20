@@ -1,0 +1,157 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisReset</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisReset"/>
+<MSHelp:RLTitle Title="NdisReset"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisreset"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisReset</H1>
+
+<P>This function forwards a reset request to an underlying driver.</P>
+
+<PRE class="syntax"><B>VOID NdisReset(
+OUT PNDIS_STATUS </B><I>Status</I><B>,
+IN NDIS_HANDLE </B><I>NdisBindingHandle</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable that is set on return from this function. The underlying driver determines which NDIS_STATUS_<I>XXX</I> is returned, but it is usually one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_SUCCESS</TD>
+<TD width=50%>The underlying driver reset its network adapter or virtual network adapter to its initial state.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_PENDING</TD>
+<TD width=50%>The request is being handled asynchronously, and the caller’s <A HREF="_wcesdk_protocolresetcomplete.htm"><B>ProtocolResetComplete</B></A> function will be called when it is completed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_RESET_IN_PROGRESS</TD>
+<TD width=50%>The underlying driver is currently resetting its network adapter, so this request is superfluous. Moreover, the caller’s <A HREF="_wcesdk_protocolstatus.htm"><B>ProtocolStatus</B></A> function was or will be called with NDIS_STATUS_RESET_START to indicate that a reset is in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_NOT_RESETTABLE</TD>
+<TD width=50%>The underlying network adapter cannot be reset by software commands.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_ADAPTER_REMOVED or NDIS_STATUS_FAILURE</TD>
+<TD width=50%>The caller’s binding is already closed, so no reset will be attempted for this caller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_CLOSING</TD>
+<TD width=50%>The caller’s binding is currently being closed, so no reset will be attempted for this caller.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_SOFT_ERRORS</TD>
+<TD width=50%>The underlying network adapter driver reset the netcard, but one or more recoverable hardware errors occurred during this operation. The network adapter driver has logged the error(s).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_HARD_ERRORS</TD>
+<TD width=50%>The underlying network adapter driver attempted to reset the netcard, but one or more unrecoverable hardware errors occurred during this operation. The network adapter driver has logged the error(s).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_NOT_ACCEPTED</TD>
+<TD width=50%>This value usually is a nonspecific default, returned when none of the more specific NDIS_STATUS_<I>XXX</I> caused NDIS or the underlying network adapter driver to fail the request.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>NdisBindingHandle</I></DT>
+
+<DD>Handle returned by the <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A> function that identifies the target network adapter or the virtual adapter of the next-lower driver to which the caller is bound.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The Windows CE version of this function always forwards reset requests to the underlying driver without waiting until the driver’s internal queues have been cleared.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>, <A HREF="_wcesdk_protocolresetcomplete.htm"><B>ProtocolResetComplete</B></A>,<B> <A HREF="_wcesdk_protocolstatus.htm">ProtocolStatus</A></B></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

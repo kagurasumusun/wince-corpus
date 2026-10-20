@@ -1,0 +1,87 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DirectSound HAL Architecture</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DirectSound HAL Architecture"/>
+<MSHelp:RLTitle Title="DirectSound HAL Architecture"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_directsound_hal_architecture"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IdirectSound_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IdirectSoundBuffer_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IDirectSound_CreateSoundBuffer_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>DirectSound HAL Architecture</H1>
+
+<P>The DirectSound subsystem of Windows CE consists of two basic components.  The client component (DSOUND.DLL) that is loaded into the client application’s process space, and the server (DSOUNDS.DLL) component that runs as a filesystem driver in the DEVICE.EXE process.</P>
+
+<P>The client component allows the client application to interact with the DirectSound subsystem using the standard DirectSound interfaces published in the DSOUND.H header file. Since many processes may all want to use DirectSound resources, it is the server component that actually manages hardware and buffers. The client portion simply proxies client application requests to the server component, where buffers are mixed and the primary buffer output is rendered.</P>
+
+<P>The DirectSound HAL drivers are simply DLLs that get loaded into DEVICE.EXE by the DirectSound server (DSOUNDS.DLL).</P>
+
+<P>The following articles detail the structure of the DirectSound HAL driver model:
+
+<UL type="disc">
+	<LI><A HREF="#_dxce_directsound_hal_driver_structure">DirectSound HAL Driver Structure</A></li>
+
+	<LI><A HREF="#_dxce_primary_and_secondary_buffers">Primary and Secondary Buffers</A></li>
+</UL>
+
+
+
+<H2><A NAME="_dxce_directsound_hal_driver_structure"></A>DirectSound HAL Driver Structure</H2>
+
+<P>The Windows CE DirectSound driver model is very similar to the one used in Windows 95/98. This will allow many drivers written for the desktop to be used with minimal changes.</P>
+
+<P>DirectSound drivers support two classes of logical objects within the driver. These are referred to as the DsDriver object and the DsDriverBuffer object. These driver objects support the <A HREF="dshal_5.htm"><B>IDsDriver</B></A> and <A HREF="dshal_12.htm"><B>IDsDriverBuffer</B></A> interfaces accessed by DirectSound.</P>
+
+<P>These two interfaces form the basic pattern of the driver. If you compare the definitions of the <B>IDsDriver</B> and <B>IDsDriverBuffer</B> interfaces to the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectSound</B></A> and <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSoundBuffer</B></A> interfaces, you can see how they map directly to the DirectSound structure.</P>
+
+<P>The Windows CE DirectSound HAL, unlike its Windows 95/98 counterpart, also supports capture through the <A HREF="dshal_23.htm"><B>IDsDriverCapture</B></A> and <A HREF="dshal_29.htm"><B>IDsDriverCaptureBuffer</B></A> interfaces.</P>
+
+
+
+<H2><A NAME="_dxce_primary_and_secondary_buffers"></A>Primary and Secondary Buffers</H2>
+
+<P>In DirectSound, the term <I>primary buffer</I> is used to describe the buffer that receives the output of the software mixer. The term <I>secondary buffer</I> is used to denote all other buffers - whether they be mixed in hardware or provide input to the software mixer. A <I>hardware secondary buffer</I> denotes a buffer that will be written directly to the hardware via the primary buffer without being mixed with any other secondary buffers.</P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>Software mixing is not optimal and is usually not desired, but if the demands of an application exceed the resources of the hardware, it is an attempt to perform in software tasks the hardware cannot do.</P>
+
+<P>When DirectSound is being initialized for a given device, it will first call <A HREF="dshal_7.htm"><B>IDsDriver::CreateSoundBuffer</B></A> and request the hardware to create the primary buffer. This means the first <A HREF="dshal_12.htm"><B>IDsDriverBuffer</B></A> object is reserved for the output of the software mixer.</P>
+
+<P>Later, when clients make calls to <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectSound::CreateSoundBuffer</B></A>, DirectSound will call down to the driver via <A HREF="dshal_7.htm"><B>IDsDriver::CreateSoundBuffer</B></A> to request a hardware buffer. This buffer will be a hardware secondary buffer. Once all hardware resources are exhausted, future calls to <B>IDsDriver::CreateSoundBuffer</B> will fail. This will cause DirectSound to create software secondary buffers.</P>
+
+<P>Clients can use the DSBCAPS_LOCHARDWARE and DSBCAPS_LOCSOFTWARE flags in the <B>IDirectSound::CreateSoundBuffer</B> method to optimize their hardware resources. This allows a client application to decide which buffers are in hardware, and which are in software. If the client specifies a buffer be in hardware and the hardware resources are exhausted, the <B>IDirectSound::CreateSoundBuffer</B> method will fail instead of creating a software buffer. </P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

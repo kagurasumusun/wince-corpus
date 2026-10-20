@@ -1,0 +1,97 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Client Memory Surfaces</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating Client Memory Surfaces"/>
+<MSHelp:RLTitle Title="Creating Client Memory Surfaces"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_creating_client_memory_surfaces"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ddsurfacedesc2_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_idirectdraw4_createsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Creating Client Memory Surfaces</H1>
+
+<P>Client memory surfaces are simply DirectDrawSurface objects that use system memory that your application has previously allocated to hold image data. Creating such a surface isn't common, but it isn't difficult to do and it can be useful for applications that need to use DirectDraw surface features on existing memory buffers. </P>
+
+<P>Like creating all surfaces, DirectDraw needs information about the dimensions of the surface (measured in pixels) and the surface pitch (measured in bytes), as well as the surface's pixel format. However, unlike creating other types of surfaces, this information doesn't tell DirectDraw how you want the surface to be created, it tells DirectDraw how you've already created it. You set these characteristics, plus the memory address of the buffer you've allocated, in the <A HREF="JavaScript:hhobj_1.Click()"><B>DDSURFACEDESC2</B></A> structure you pass to the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectDraw4::CreateSurface</B></A> method. </P>
+
+<P>A client memory surfaces works just like a normal system-memory surface, with the exception that DirectDraw does not attempt to free the surface memory when it's no longer needed; freeing client allocated memory is the application's responsibility.</P>
+
+<P>The following example shows how you might allocate memory and create a DirectDrawSurface object for a 64&times;64 pixel 24-bit RGB surface:</P>
+
+<PRE class="code">// For this example, g_lpDD4 is a valid IDirectDraw4 interface pointer.
+
+#define WIDTH  64 // in pixels
+#define HEIGHT 64
+#define DEPTH  3  // in bytes (3bytes == 24 bits)
+
+    HRESULT hr;
+    LPVOID  lpSurface  = NULL;
+    HLOCAL  hMemHandle = NULL;
+    DDSURFACEDESC2 ddsd2;
+    LPDIRECTDRAWSURFACE4 lpDDS4;
+
+    // Allocate memory for a 64 by 64, 24-bit per pixel buffer.
+    // REMEMBER: The application is responsible for freeing this
+    //           buffer when it is no longer needed.
+    if (lpSurface = malloc((size_t)WIDTH*HEIGHT*DEPTH))
+        ZeroMemory(lpSurface, (DWORD)WIDTH*HEIGHT*DEPTH);
+    else
+        return DDERR_OUTOFMEMORY;
+
+    // Initialize the surface description.
+    ZeroMemory(&amp;ddsd2, sizeof(DDSURFACEDESC2));
+    ZeroMemory(&amp;ddsd2.ddpfPixelFormat, sizeof(DDPIXELFORMAT));
+    ddsd2.dwSize = sizeof(ddsd2);
+    ddsd2.dwFlags = DDSD_WIDTH | DDSD_HEIGHT | DDSD_LPSURFACE |
+                    DDSD_PITCH | DDSD_PIXELFORMAT;
+    ddsd2.dwWidth = WIDTH;
+    ddsd2.dwHeight= HEIGHT;
+    ddsd2.lPitch  = (LONG)DEPTH * WIDTH;
+    ddsd2.lpSurface = lpSurface;
+
+    // Set up the pixel format for 24-bit RGB (8-8-8).
+    ddsd2.ddpfPixelFormat.dwSize = sizeof(DDPIXELFORMAT);
+    ddsd2.ddpfPixelFormat.dwFlags= DDPF_RGB;
+    ddsd2.ddpfPixelFormat.dwRGBBitCount = (DWORD)DEPTH*8;
+    ddsd2.ddpfPixelFormat.dwRBitMask    = 0x00FF0000;
+    ddsd2.ddpfPixelFormat.dwGBitMask    = 0x0000FF00;
+    ddsd2.ddpfPixelFormat.dwBBitMask    = 0x000000FF;
+
+    // Create the surface
+    hr = g_lpDD4-&gt;CreateSurface(&amp;ddsd2, &amp;lpDDS4, NULL);
+    return hr;
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

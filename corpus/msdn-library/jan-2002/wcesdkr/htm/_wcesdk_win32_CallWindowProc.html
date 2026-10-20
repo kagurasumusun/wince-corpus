@@ -1,0 +1,146 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CallWindowProc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CallWindowProc"/>
+<MSHelp:RLTitle Title="CallWindowProc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_callwindowproc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CallWindowProc </H1>
+
+<P>This function passes message information to the specified window procedure. </P>
+
+<PRE class="syntax"><B>LRESULT</B> <B>CallWindowProc(
+WNDPROC</B> <I>lpPrevWndFunc</I><B>,
+HWND</B> <I>hWnd</I><B>,
+UINT</B> <I>Msg</I><B>,
+WPARAM</B> <I>wParam</I><B>,
+LPARAM</B> <I>lParam </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpPrevWndFunc</I></DT>
+
+<DD>Long pointer to the previous window procedure.
+
+<P>If this value is obtained by calling the <A HREF="_wcesdk_win32_getwindowlong.htm"><B>GetWindowLong</B></A> function with the <I>nIndex</I> parameter set to GWL_WNDPROC or DWL_DLGPROC, it is actually either the address of a window or dialog box procedure, or a handle representing that address.
+</dd>
+
+<DT><I>hWnd</I></DT>
+
+<DD>Handle to the window procedure to receive the message. </dd>
+
+<DT><I>Msg</I></DT>
+
+<DD>Specifies the message. </dd>
+
+<DT><I>wParam</I></DT>
+
+<DD>Specifies additional message-specific information. The contents of this parameter depend on the value of the <I>Msg</I> parameter.</dd>
+
+<DT><I>lParam</I></DT>
+
+<DD>Specifies additional message-specific information. The contents of this parameter depend on the value of the <I>Msg</I> parameter.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The return value specifies the result of the message processing and depends on the message sent. </P>
+
+<H4>Remarks</H4>
+
+<P>Use the <B>CallWindowProc</B> function for window subclassing. Usually, all windows with the same class share one window procedure. A subclass is a window or set of windows with the same class whose messages are intercepted and processed by another window procedure (or procedures) before being passed to the window procedure of the class. </P>
+
+<P>The <A HREF="_wcesdk_win32_setwindowlong.htm"><B>SetWindowLong</B></A> function creates the subclass by changing the window procedure associated with a particular window, causing the system to call the new window procedure instead of the previous one. An application must pass any messages not processed by the new window procedure to the previous window procedure by calling <B>CallWindowProc</B>. This allows the application to create a chain of window procedures. </P>
+
+<P>If STRICT is defined, the <I>lpPrevWndFunc</I> parameter has the data type <B>WNDPROC</B>. The <B>WNDPROC</B> type is declared as follows: </P>
+
+<PRE class="code">LRESULT (CALLBACK* WNDPROC) (HWND, UINT, WPARAM, LPARAM);
+ </PRE>
+
+<P>If STRICT is not defined, the <I>lpPrevWndFunc</I> parameter has the data type <B>FARPROC</B>. The <B>FARPROC</B> type is declared as follows: </P>
+
+<PRE class="code">int (FAR WINAPI * FARPROC) ()
+ </PRE>
+
+<P>In C, the <B>FARPROC</B> declaration indicates a callback function that has an unspecified parameter list. In C++, however, the empty parameter list in the declaration indicates that a function has no parameters. This subtle distinction can break careless code. Following is one way to handle this situation: </P>
+
+<PRE class="code">#ifdef STRICT
+  WNDPROC MyWindowProcedure
+#else
+  FARPROC MyWindowProcedure
+#endif
+...
+    lResult = CallWindowProc(MyWindowProcedure, ...) ;
+ </PRE>
+
+<P>For further information about functions declared with empty argument lists, refer to <I>The C++ Programming Language, Second Edition,</I> by Bjarne Stroustrup. </P>
+
+<P><B>Windows NT:</B> The <B>CallWindowProc</B> function handles Unicode-to-ANSI conversion. You cannot take advantage of this conversion if you call the window procedure directly. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getwindowlong.htm"><B>GetWindowLong</B></A>, <A HREF="_wcesdk_win32_setclasslong.htm"><B>SetClassLong</B></A>, <A HREF="_wcesdk_win32_setwindowlong.htm"><B>SetWindowLong</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

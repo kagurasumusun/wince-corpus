@@ -1,0 +1,177 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Time and Clocks in DirectShow</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Time and Clocks in DirectShow"/>
+<MSHelp:RLTitle Title="Time and Clocks in DirectShow"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_time_and_clocks_in_directshow"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ireferenceclock_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediafilter__setsyncsource" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ireferenceclock__gettime" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_imediacontrol__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_imediafilter__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_ireferenceclock__advisetime" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_imediasample__settime" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_imediasample__setmediatime" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Time and Clocks in DirectShow</H1>
+
+<P>This article gives an overview of time and clocks in the Microsoft&reg; DirectShow&reg; architecture. It contains the following sections.
+
+<UL type="disc">
+	<LI><A HREF="#_wcesdk_reference_clocks">Reference Clocks</A></li>
+
+	<LI><A HREF="#_wcesdk_clock_times">Clock Times</A></li>
+
+	<LI><A HREF="#_wcesdk_time_stamps_and_media_times">Time Stamps and Media Times</A></li>
+
+	<LI><A HREF="#_wcesdk_live_sources">Live Sources</A></li>
+</UL>
+
+
+
+<H2><A NAME="_wcesdk_reference_clocks"></A>Reference Clocks</H2>
+
+<P>One function of the filter graph manager is to synchronize the filters in the graph. To accomplish this, the filter graph manager and the filters all rely on a single clock, called the reference clock. Any object that supports the <A HREF="JavaScript:hhobj_1.Click()"><B>IReferenceClock</B></A> interface can serve as a reference clock. A filter with access to a hardware timer can provide a clock (an example is the audio renderer), or the filter graph manager can create one that uses the system time.</P>
+
+<P>At run time, the filter graph manager selects a reference clock and calls <A HREF="JavaScript:hhobj_2.Click()"><B>IMediaFilter::SetSyncSource</B></A> on all the filters to inform them of the choice. An application can override the filter graph manager's choice by calling <B>SetSyncSource</B> on the filter graph manager. Only do this if you have a particular reason to prefer another clock. </P>
+
+<P>The filter graph manager uses the following heuristic to select the reference clock.
+
+<UL type="disc">
+	<LI>If any filter in the graph can provide a reference clock, use that filter. <I>Exception:</I> If the graph contains live sources, choose only a source filter clock. </li>
+
+	<LI>If no filter provides a suitable clock, use the system time. </li>
+</UL>
+
+<P>Reference clocks measure time in 100-nanosecond intervals. To retrieve a clock's current time, call the <A HREF="JavaScript:hhobj_3.Click()"><B>IReferenceClock::GetTime</B></A> method. A clock's baseline&#0151;the time from which it starts counting&#0151;depends on the clock's implementation, so the particular time value it returns is not inherently meaningful. What matters is that it returns monotonically increasing values at a rate of one per 100 nanoseconds.</P>
+
+
+
+<H2><A NAME="_wcesdk_clock_times"></A>Clock Times</H2>
+
+<P>DirectShow defines two related clock times: reference time and stream time.
+
+<UL type="disc">
+	<LI><I>Reference time</I> is the absolute time returned by the reference clock. </li>
+
+	<LI><I>Stream time</I> is defined relative to when the graph last started running.
+<UL type="disc">
+	<LI>While the graph is running, stream time equals reference time minus start time. </li>
+
+	<LI>While the graph is paused, stream time remains at the stream time when it was paused. </li>
+
+	<LI>While the graph is stopped, stream time is zero. </li>
+</UL>
+</li>
+</UL>
+
+<P>When an application calls <A HREF="JavaScript:hhobj_4.Click()"><B>IMediaControl::Run</B></A> to run the filter graph, the filter graph manager calls <A HREF="JavaScript:hhobj_5.Click()"><B>IMediaFilter::Run</B></A> on each filter. To compensate for the slight amount of time it takes for the filters to start running, the filter graph manager specifies a start time slightly in the future.</P>
+
+
+
+<H2><A NAME="_wcesdk_time_stamps_and_media_times"></A>Time Stamps and Media Times</H2>
+
+<P>A media sample has two time-based properties: a time stamp, and a media time.</P>
+
+<H3>Time Stamps</H3>
+
+<P>The <I>time stamp</I> defines the sample's start and finish times, measured in stream time. The time stamp is sometimes called the <I>presentation time</I>.</P>
+
+<P>When a renderer filter receives a sample, it schedules rendering based on the time stamp. If the sample arrives late, or has no time stamp, the filter renders the sample immediately. Otherwise, the filter waits until the sample's start time before it renders the sample. (It waits for the start time by calling the <A HREF="JavaScript:hhobj_6.Click()"><B>IReferenceClock::AdviseTime</B></A> method.)</P>
+
+<P>Source filters and parser filters are responsible for setting the correct time stamps on the samples they process. Use the following guidelines.
+
+<UL type="disc">
+	<LI>File playback: The first sample is time stamped with a start time of zero. Subsequent time stamps are determined by the sample length and the playback rate. </li>
+
+	<LI>Video and audio capture: Every sample is time stamped with a start time equal to the stream time when it was captured. Video preview frames are an exception. Because of graph latency, a preview frame that is time stamped with the current stream time will always arrive late at the video renderer. This may cause the renderer to drop frames, in an attempt at quality control. Therefore, preview frames should not be time stamped. For information about quality control, see <A HREF="dshow_44.htm">Quality-Control Management</A>. </li>
+</UL>
+
+<P>To set the time stamp on a sample, call the <A HREF="JavaScript:hhobj_7.Click()"><B>IMediaSample::SetTime</B></A> method.</P>
+
+<H3>Media Time</H3>
+
+<P><I>Media time</I> specifies the sample's original position within a seekable medium, such as a file on disk. For video, media time represents the frame number. For audio, media time represents the sample number in the packet. For example, if each packet contains one second of 44.1 kilohertz (kHz) audio, the first packet has a media start time of zero and a media stop time of 44100. Renderer filters can determine whether frames or samples have been dropped by checking for gaps in the media times.</P>
+
+<P>Whereas the time stamp depends on factors outside the source, such as seeking and playback rate, the media time is always calculated relative to the original source.</P>
+
+<P>To set the media time on a sample, call the <A HREF="JavaScript:hhobj_8.Click()"><B>IMediaSample::SetMediaTime</B></A> method.</P>
+
+
+
+<H2><A NAME="_wcesdk_live_sources"></A>Live Sources</H2>
+
+<P>A live source, also called a <I>push source</I>, receives media data in real time. Examples include video capture and network broadcasts. In general, a live source cannot control the rate at which data arrives. A live-source filter should implement the <B>IAMPushSource</B> interface on its output pin. The filter graph manager uses this interface to address two problems that can arise when a live source is rendered.
+
+<UL type="disc">
+	<LI><A HREF="#_wcesdk_latency">Latency</A><U> </U></li>
+
+	<LI><A HREF="#_wcesdk_rate_matching">Rate Matching</A><U> </U></li>
+</UL>
+
+
+
+<H3><A NAME="_wcesdk_latency"></A>Latency</H3>
+
+<P>A filter's latency is the amount of time it takes the filter to process a sample. For live sources, the latency is determined by the size of the buffer used to hold samples. Suppose that the filter graph renders a video source with a latency of 33 milliseconds (ms), and an audio source with a latency of 500 ms. Each video frame arrives at the video renderer about 470 ms before the matching audio sample reaches the audio renderer. Unless the graph compensates for the difference, the audio and video will not be synchronized.</P>
+
+<P>The filter graph manager does not synchronize live sources unless the application enables synchronization by calling the <B>IAMGraphStreams::SyncUsingStreamOffset</B> method. If synchronization is enabled, the filter graph manager queries each source filter for the <B>IAMPushSource</B> interface. For every filter that supports <B>IAMPushSource</B>, the graph calls <B>IAMLatency::GetLatency</B> to retrieve the filter's expected latency, and from these values determines the maximum expected latency. The graph then calls <B>IAMPushSource::SetStreamOffset</B> to give each source filter a stream offset, which that filter adds to the time stamps that it generates.</P>
+
+
+
+<H3><A NAME="_wcesdk_rate_matching"></A>Rate Matching</H3>
+
+<P>If a renderer filter schedules samples using one reference clock, but the source filter produces them using a different clock, glitches can occur in playback. If the renderer runs faster than the source, there will be gaps in the data. If the renderer runs slower than the source, samples will "bunch up," and at some point data will need to be dropped. Typically a live source cannot control its production rate, so instead the renderer matches clock rates with the source. </P>
+
+<P>To perform rate matching, a renderer filter must set its clock according to another clock. The choice of clocks depends on how the source filter generates time stamps.
+
+<UL type="disc">
+	<LI>If the source filter generates time stamps from a reference clock, and the renderer can access the same clock, then the renderer sets it clock to the reference clock. In this case, the source filter must not be using the renderer's own clock as the reference clock. Otherwise, the renderer will be matching rates with itself, possibly causing its clock to drift. </li>
+
+	<LI>If the source filter generates time stamps from a private clock&#0151;that is, a clock that the renderer cannot access&#0151;the renderer adjusts its clock rate based on the time stamps on incoming samples. </li>
+
+	<LI>If the source filter is not generating time stamps at all, the renderer calculates the source filter's delivery rate based on the number of bytes delivered and the bytes per second declared in the format block. </li>
+</UL>
+
+<P>The renderer calls <B>IAMPushSource::GetPushSourceFlags</B> on the source filter to determine how the source filter sets its time stamps. Currently, only the audio renderer performs rate matching, because glitches in audio playback are more noticeable than glitches in video.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

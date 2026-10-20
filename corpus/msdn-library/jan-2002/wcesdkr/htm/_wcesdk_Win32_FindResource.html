@@ -1,0 +1,291 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>FindResource</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="FindResource"/>
+<MSHelp:RLTitle Title="FindResource"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_findresource"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>FindResource</H1>
+
+<P>This function determines the location of a resource with the specified type and name in the specified module.</P>
+
+<PRE class="syntax"><B>HRSRC</B> <B>FindResource( </B>
+<B>HMODULE</B> <I>hModule</I><B>, </B>
+<B>LPCWSTR</B> <I>lpName</I><B>, </B>
+<B>LPCWSTR</B> <I>lpType </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hModule</I></DT>
+
+<DD>Handle to the module whose executable file contains the resource. In Windows CE, this can not be set to NULL.</dd>
+
+<DT><I>lpName</I></DT>
+
+<DD>Pointer to the name of the resource. For more information, see the Remarks section. </dd>
+
+<DT><I>lpType</I></DT>
+
+<DD>Pointer to the resource type. For more information, see the Remarks section. For standard resource types, this parameter can be one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=28%>Value</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_ACCELERATOR</TD>
+<TD width=72%>Accelerator table</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_BITMAP</TD>
+<TD width=72%>Bitmap resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_CURSOR</TD>
+<TD width=72%>Hardware-dependent cursor resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_DIALOG</TD>
+<TD width=72%>Dialog box</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_FONT</TD>
+<TD width=72%>Font resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_FONTDIR</TD>
+<TD width=72%>Font directory resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_GROUP_CURSOR</TD>
+<TD width=72%>Hardware-independent cursor resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_GROUP_ICON</TD>
+<TD width=72%>Hardware-independent icon resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_ICON</TD>
+<TD width=72%>Hardware-dependent icon resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_MENU</TD>
+<TD width=72%>Menu resource</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_MESSAGETABLE</TD>
+<TD width=72%>Message-table entry</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_RCDATA</TD>
+<TD width=72%>Application-defined resource (raw data)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_STRING</TD>
+<TD width=72%>String-table entry</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>RT_VERSION</TD>
+<TD width=72%>Version resource</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A handle to the specified resource’s info block indicates success. To obtain a handle to the resource, pass this handle to the <A HREF="_wcesdk_win32_loadresource.htm"><B>LoadResource</B></A> function. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>If the high-order word of the <I>lpName</I> or <I>lpType</I> parameter is zero, the low-order word specifies the integer identifier of the name or type of the given resource. Otherwise, those parameters are long pointers to null-terminated strings. If the first character of the string is a pound sign (#), the remaining characters represent a decimal number that specifies the integer identifier of the resource’s name or type. For example, the string “#258” represents the integer identifier 258. </P>
+
+<P>The <I>lpName</I> parameter does not support the resource ID zero&#0151;that is, <B>FindResource(</B>h, 0 ,t<B>)</B> will not work as expected. </P>
+
+<P>An application should reduce the amount of memory required for the resources by referring to them by integer identifier instead of by name. </P>
+
+<P>When you are finished using an accelerator table, bitmap, cursor, icon, or menu, you can release its associated memory by calling one of the functions in the following table. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=25%>Resource</TH>
+<TH width=75%>Release function</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Accelerator table</TD>
+<TD width=75%><A HREF="_wcesdk_win32_destroyacceleratortable.htm"><B>DestroyAcceleratorTable</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Bitmap</TD>
+<TD width=75%><A HREF="_wcesdk_win32_deleteobject.htm"><B>DeleteObject</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Cursor</TD>
+<TD width=75%><A HREF="_wcesdk_win32_destroycursor.htm"><B>DestroyCursor</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Icon</TD>
+<TD width=75%><A HREF="_wcesdk_win32_destroyicon.htm"><B>DestroyIcon</B></A></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>Menu</TD>
+<TD width=75%><A HREF="_wcesdk_win32_destroymenu.htm"><B>DestroyMenu</B></A></TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The system automatically deletes these resources when the process that created them terminates, however, calling the appropriate function saves memory and decreases the size of the process's working set. </P>
+
+<P>An application can use <B>FindResource</B> to find any type of resource, but this function should be used only if the application must access the binary resource data when making subsequent calls to <A HREF="_wcesdk_win32_loadlibrary.htm"><B>LoadLibrary</B></A>. </P>
+
+<P>To use a resource immediately, an application should use one of the following resource-specific functions to find and load the resources in one call: </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=25%>Function</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_formatmessage.htm"><B>FormatMessage</B></A></TD>
+<TD width=75%>Loads and formats a message-table entry.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_loadaccelerators.htm"><B>LoadAccelerators</B></A></TD>
+<TD width=75%>Loads an accelerator table.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_loadbitmap.htm"><B>LoadBitmap</B></A></TD>
+<TD width=75%>Loads a bitmap resource.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_loadcursor.htm"><B>LoadCursor</B></A></TD>
+<TD width=75%>Loads a cursor resource.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_loadicon.htm"><B>LoadIcon</B></A></TD>
+<TD width=75%>Loads an icon resource.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_loadmenu.htm"><B>LoadMenu</B></A></TD>
+<TD width=75%>Loads a menu resource.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%><A HREF="_wcesdk_win32_loadstring.htm"><B>LoadString</B></A></TD>
+<TD width=75%>Loads a string-table entry.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>For example, an application can use the <B>LoadIcon</B> function to load an icon for display on the screen. However, the application should use <B>FindResource</B> and <B>LoadResource</B> if it is loading the icon to copy its data to another application. </P>
+
+<P>String resources are stored in sections of up to 16 strings per section. The strings in each section are stored as a sequence of counted (not null-terminated) Unicode strings. The <B>LoadString</B> function will extract the string resource from its corresponding section. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Nk.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_deleteobject.htm"><B>DeleteObject</B></A>, <A HREF="_wcesdk_win32_destroyacceleratortable.htm"><B>DestroyAcceleratorTable</B></A>, <A HREF="_wcesdk_win32_destroycursor.htm"><B>DestroyCursor</B></A>, <A HREF="_wcesdk_win32_destroyicon.htm"><B>DestroyIcon</B></A>, <A HREF="_wcesdk_win32_destroymenu.htm"><B>DestroyMenu</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_loadaccelerators.htm"><B>LoadAccelerators</B></A>, <A HREF="_wcesdk_win32_loadbitmap.htm"><B>LoadBitmap</B></A>, <A HREF="_wcesdk_win32_loadicon.htm"><B>LoadIcon</B></A>, <A HREF="_wcesdk_win32_loadmenu.htm"><B>LoadMenu</B></A>, <A HREF="_wcesdk_win32_loadresource.htm"><B>LoadResource</B></A>, <A HREF="_wcesdk_win32_loadstring.htm"><B>LoadString</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

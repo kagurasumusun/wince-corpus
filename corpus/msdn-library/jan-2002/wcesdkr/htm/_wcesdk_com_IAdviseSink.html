@@ -1,0 +1,161 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IAdviseSink : IUnknown</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IAdviseSink : IUnknown"/>
+<MSHelp:RLTitle Title="IAdviseSink : IUnknown"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iadvisesink"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IAdviseSink : IUnknown</H1>
+
+<P>This interface enables containers and other objects to receive notifications of data, view, and compound-document changes occurring in objects of interest. Container applications, for example, require such notifications to keep cached presentations of their linked and embedded objects up-to-date. Calls to <B>IAdviseSink</B> methods are asynchronous, so the call is sent and then the next instruction is executed without waiting for the call’s return.</P>
+
+<P>The <B>IAdviseSink</B> interface enables containers and other objects to receive notifications of data changes, view changes, and compound-document changes occurring in objects of interest. Container applications, for example, require such notifications to keep cached presentations of their linked and embedded objects up-to-date. Calls to <B>IAdviseSink</B> methods are asynchronous, so the call is sent and then the next instruction is executed without waiting for the call’s return.</P>
+
+<P>For an advisory connection to exist, the object that is to receive notifications must implement <B>IAdviseSink</B>, and the objects in which it is interested must implement <A HREF="_wcesdk_com_ioleobject_advise.htm"><B>IOleObject::Advise</B></A> and <B>IDataObject::DAdvise</B>. In-process objects and handlers may also implement <A HREF="_wcesdk_com_iviewobject_setadvise.htm"><B>IViewObject::SetAdvise</B></A>. Objects implementing <B>IOleObject</B> must support all reasonable advisory methods.  <B>IViewObject</B> (and its advisory methods) is implemented in the default handler.</P>
+
+<P>As shown in the following table, an object that has implemented an advise sink registers its interest in receiving certain types of notifications by calling the appropriate method:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=29%>Call This Method</TH>
+<TH width=71%>To Register for These Notifications</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="_wcesdk_com_ioleobject_advise.htm"><B>IOleObject::Advise</B></A></TD>
+<TD width=71%>When a document is saved, closed, or renamed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><B>IDataObject::DAdvise</B></TD>
+<TD width=71%>When a document’s data changes.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="_wcesdk_com_iviewobject_setadvise.htm"><B>IViewObject::SetAdvise</B></A></TD>
+<TD width=71%>When a document’s presentation changes.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>When an event occurs that applies to a registered notification type, the object application calls the appropriate <B>IAdviseSink</B> method. For example, when an embedded object closes, it calls the <A HREF="_wcesdk_com_iadvisesink_onclose.htm"><B>IAdviseSink::OnClose</B></A> method to notify its container. These notifications are asynchronous, occurring after the events that trigger them.</P>
+
+<H4>When to Implement</H4>
+
+<P>Objects, such as container applications and compound documents, implement <B>IAdviseSink</B> to receive notification of changes in data, presentation, name, or state of their linked and embedded objects. Implementers register for one or more types of notification, depending on their needs.</P>
+
+<P>Notifications of changes to an embedded object originate in the server and flow to the container by way of the object handler. If the object is a linked object, the OLE link object intercepts the notifications from the object handler and notifies the container directly. All containers, the object handler, and the OLE link object register for OLE notifications. The typical container also registers for view notifications. Data notifications are usually sent to the OLE link object and object handler.</P>
+
+<H4>When to Use</H4>
+
+<P>Servers call the methods of <B>IAdviseSink</B> to notify objects with which they have an advisory connection of changes in an object’s data, view, name, or state.</P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>OLE does not permit synchronous calls in the implementation of asynchronous methods, so you cannot make synchronous calls within any of the the <B>IAdviseSink</B> interface’s methods. For example, an implementation of <A HREF="_wcesdk_com_iadvisesink_ondatachange.htm"><B>IAdviseSink::OnDataChange</B></A> cannot contain a call to <B>IDataObject::GetData</B>.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Method</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="_wcesdk_com_iadvisesink_onclose.htm"><B>IAdviseSink::OnClose</B></A></TD>
+<TD width=63%>Advises the sink that data has changed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="_wcesdk_com_iadvisesink_ondatachange.htm"><B>IAdviseSink::OnDataChange</B></A></TD>
+<TD width=63%>Advises the sink that an object view has changed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="_wcesdk_com_iadvisesink_onrename.htm"><B>IAdviseSink::OnRename</B></A></TD>
+<TD width=63%>Advises the sink that an object name has changed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="_wcesdk_com_iadvisesink_onsave.htm"><B>IAdviseSink::OnSave</B></A></TD>
+<TD width=63%>Advises the sink that an object has been saved to disk.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%><A HREF="_wcesdk_com_iadvisesink_onviewchange.htm"><B>IAdviseSink::OnViewChange</B></A></TD>
+<TD width=63%>Advises the sink that an object has been closed.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oaidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_iadvisesink_onclose.htm"><B>IAdviseSink::OnClose</B></A>, <A HREF="_wcesdk_com_iadvisesink_ondatachange.htm"><B>IAdviseSink::OnDataChange</B></A>, <A HREF="_wcesdk_com_iadvisesink_onrename.htm"><B>IAdviseSink::OnRename</B></A>, <A HREF="_wcesdk_com_iadvisesink_onsave.htm"><B>IAdviseSink::OnSave</B></A>, <A HREF="_wcesdk_com_iadvisesink_onviewchange.htm"><B>IAdviseSink::OnViewChange</B></A>, <A HREF="_wcesdk_com_ioleobject_advise.htm"><B>IOleObject::Advise</B></A>, <A HREF="_wcesdk_com_iviewobject_setadvise.htm"><B>IViewObject::SetAdvise</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

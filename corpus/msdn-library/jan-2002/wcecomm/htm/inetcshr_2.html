@@ -1,0 +1,88 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Operation of the DHCP Allocator</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Operation of the DHCP Allocator"/>
+<MSHelp:RLTitle Title="Operation of the DHCP Allocator"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_operation_of_the_dhcp_allocator"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Operation of the DHCP Allocator</H1>
+
+<P>When the gateway boots, the gateway sends out a DHCP discover packet to determine if another DHCP server is present. If the gateway locates another DHCP server, ICS turns off its DHCP services until the gateway restarts or cycles its power. The gateway monitors the home network to detect when a DHCP server becomes available, and turns off the DHCP services on the gateway if a server does become available. The allocator monitors UDP port 67 of the local-area interface of the gateway device to detect DHCP requests from clients on the home network.</P>
+
+<P>The allocator assigns addresses to clients on the home network based on the IP subnet of the current address that is specified for the network connection between the gateway and the home network. If the allocator is statically assigned an address, then the allocator assigns addresses on the same subnet. The allocator also uses the hardware address of the client, which is contained in the DHCP request, to compose the address that the allocator assigns to the client. Each assignment carries the address of the DHCP allocator as both the default gateway and the DNS server. ICS defends each address using Address Resolution Protocol (ARP) to ensure that no address conflicts exist.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;You should not use Automatic IP to obtain an address for the private network interface of the gateway computer.</P>
+
+<P>The following table shows the messages received by the DHCP allocator, and the action taken in response to each message.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=22%>Message</TH>
+<TH width=78%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=22%><B>DHCPDISCOVER</B></TD>
+<TD width=78%>Sent by the client to obtain an offer from the allocator. The allocator generates an address using the Auto IP hashing scheme, subject to conflict-detection, and replies to the client with a <B>DHCPOFFER</B> message.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=22%><B>DHCPREQUEST</B></TD>
+<TD width=78%>Sent by a client either to request a previously offered address, or to extend a lease on a previously assigned address. If no conflict is detected, the allocator generates a <B>DHCPACK</B> message. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=22%><B>DHCPDECLINE</B></TD>
+<TD width=78%>Sent by the client when the client detects an address conflict. The allocator takes no action other than to log an event or update its statistics.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=22%><B>DHCPRELEASE</B></TD>
+<TD width=78%>Sent by the client to relinquish an address. The allocator takes no action.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="normal" width=22%><B>DHCPINFORM</B></TD>
+<TD width=78%>Sent by a client to obtain options information from the allocator without acquiring an address from the allocator. The allocator responds with a <B>DHCPACK</B> message that contains the default gateway, the DNS proxy address, both, or neither, depending upon the configuration of the allocator.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

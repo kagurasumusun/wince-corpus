@@ -1,0 +1,149 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CComboBox</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CComboBox"/>
+<MSHelp:RLTitle Title="CComboBox"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ccombobox"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CComboBox</H1>
+
+<P>This class encapsulates the functionality of a Windows CE combo box, which is a control that combines a list box with an edit control or a static control. The list box portion of the control may be displayed at all times or may only drop down when the user selects the drop-down arrow next to the control.</P>
+
+<P>The selected item in the list box is displayed in the static or edit control. In addition, if the combo box has the drop-down list style, the user can type the initial character of an item in the list, and the list box, if visible, highlights the next item with that initial character.</P>
+
+<P>The following table compares the three combo box styles.&nbsp;&nbsp;</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=22%>Style</TH>
+<TH width=39%>When is list box visible?</TH>
+<TH width=39%>Static or edit control?</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Simple</TD>
+<TD width=39%>Always</TD>
+<TD width=39%>Edit</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Drop-down</TD>
+<TD width=39%>When dropped down</TD>
+<TD width=39%>Edit</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Drop-down list</TD>
+<TD width=39%>When dropped down</TD>
+<TD width=39%>Static</TD>
+</TR>
+</TABLE><BR>
+
+<P>You can create a <B>CComboBox</B> object from a dialog template or directly in code. In both cases, first call the constructor <B>CComboBox</B> to construct the <B>CComboBox</B> object; then call the <B>Create</B> method to create the control and attach it to the <B>CComboBox</B> object. </P>
+
+<P>To handle Windows notification messages sent by a combo box to its parent, usually a class derived from <B>CDialog</B>, add a message-map entry and message-handler method to the parent class for each message.</P>
+
+<P>Each message-map entry takes the following form:</P>
+
+<PRE><B>ON_</B>Notification<B>(</B> <I>id</I><B>,</B> <I>memberFxn</I> <B>)</B>
+</PRE>
+
+<P>where <I>id</I> specifies the child-window identifier of the combo box control sending the notification, and <I>memberFxn</I> is the name of the parent method you write to handle the notification.</P>
+
+<P>The function prototype of the parent is as follows:</P>
+
+<PRE><B>afx_msg</B> <B>void</B> <I>memberFxn</I><B>(</B> <B>);</B>
+</PRE>
+
+<P>The order in which certain notifications are sent cannot be predicted. In particular, a CBN_SELCHANGE notification may occur before or after a CBN_CLOSEUP notification.</P>
+
+<P>The following list shows potential message-map entries:
+
+<UL type=disc>
+	<LI>ON_CBN_CLOSEUP&nbsp;&nbsp;&nbsp;(Windows 3.1 and later.) The list box of a combo box has closed. This notification message is not sent for a combo box that has the CBS_SIMPLE style.</LI>
+
+	<LI>ON_CBN_DBLCLK&nbsp;&nbsp;&nbsp;The user double-clicks a string in the list box of a combo box. This notification message is only sent for a combo box with the CBS_SIMPLE style. For a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style, a double-click cannot occur because a single click hides the list box.</LI>
+
+	<LI>ON_CBN_DROPDOWN&nbsp;&nbsp;&nbsp;The list box of a combo box is about to drop down&#0151;be made visible. This notification message can occur only for a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.</LI>
+
+	<LI>ON_CBN_EDITCHANGE&nbsp;&nbsp;&nbsp;The user has taken an action that may have altered the text in the edit control portion of a combo box. Unlike the CBN_EDITUPDATE message, this message is sent after Windows updates the screen. It is not sent if the combo box has the CBS_DROPDOWNLIST style.</LI>
+
+	<LI>ON_CBN_EDITUPDATE&nbsp;&nbsp;&nbsp;The edit control portion of a combo box is about to display altered text. This notification message is sent after the control has formatted the text but before it displays the text. It is not sent if the combo box has the CBS_DROPDOWNLIST style.</LI>
+
+	<LI>ON_CBN_ERRSPACE&nbsp;&nbsp;&nbsp;The combo box cannot allocate enough memory to meet a specific request.</LI>
+
+	<LI>ON_CBN_SELENDCANCEL&nbsp;&nbsp;&nbsp;(Windows 3.1 and later.) The user’s selection should be canceled. The user clicks an item and then clicks another window or control to hide the list box of a combo box. This notification message is sent before the CBN_CLOSEUP notification message to indicate that the user’s selection should be ignored. The CBN_SELENDCANCEL or CBN_SELENDOK notification message is sent even if the CBN_CLOSEUP notification message is not sent, as in the case of a combo box with the CBS_SIMPLE style.</LI>
+
+	<LI>ON_CBN_SELENDOK&nbsp;&nbsp;&nbsp;The user selects an item and then presses the ENTER key or chooses the DOWN ARROW key to hide the list box of a combo box. This notification message is sent before the CBN_CLOSEUP message to indicate that the user’s selection should be considered valid. The CBN_SELENDCANCEL or CBN_SELENDOK notification message is sent even if the CBN_CLOSEUP notification message is not sent, as in the case of a combo box with the CBS_SIMPLE style.</LI>
+
+	<LI>ON_CBN_KILLFOCUS&nbsp;&nbsp;&nbsp;The combo box is losing the input focus.</LI>
+
+	<LI>ON_CBN_SELCHANGE&nbsp;&nbsp;&nbsp;The selection in the list box of a combo box is about to change as a result of the user clicking in the list box or changing the selection by using the arrow keys. When processing this message, the text in the edit control of the combo box can only be retrieved by <B>GetLBText</B> or another similar function. <B>GetWindowText</B> cannot be used.</LI>
+
+	<LI>ON_CBN_SETFOCUS&nbsp;&nbsp;&nbsp;The combo box receives the input focus.</LI>
+</UL>
+
+<P>If you create a <B>CComboBox</B> object within a dialog box, through a dialog resource, the <B>CComboBox</B> object is automatically destroyed when the user closes the dialog box. </P>
+
+<P>If you embed a <B>CComboBox</B> object in another window object, you do not need to destroy it. If you create the <B>CComboBox</B> object on the stack, it is destroyed automatically. If you create the <B>CComboBox</B> object on the heap by using the <B>new</B> function, you must call <B>delete</B> on the object to destroy it when the Windows combo box is destroyed.</P>
+
+<H4>Remarks</H4>
+
+<P>Because Windows CE does not support owner-drawn combo boxes, you cannot specify ODS_COMBOBOXEDIT in the <I>itemState</I> member of a <B>DRAWITEMSTRUCT</B> structure, or ODT_COMBOBOX in the <I>CtlType</I> member of a <B>DRAWITEMSTRUCT</B> or a <B>MEASUREITEMSTRUCT</B> structure. </P>
+
+<P>Use the following <B>FrameWnd</B> methods to manipulate combo boxes in the command bar of a Windows CE application:
+
+<UL type=disc>
+	<LI><B>CFrameWnd::AddComboBoxString</B> adds a string to a combo box in the command bar.</LI>
+
+	<LI><B>CFrameWnd::GetComboCount</B> retrieves the number of items in the list box part of a combo box in the command bar.</LI>
+
+	<LI><B>CFrameWnd::GetComboCurSel</B> determines which item is selected in a command bar combo box.</LI>
+
+	<LI><B>CFrameWnd::InsertComboBox</B> inserts a combo box into the command bar.</LI>
+
+	<LI><B>CFrameWnd::SetComboCurSel</B> selects a string in the list box part of a combo box in the command bar.</LI>
+</UL>
+
+<P>MFC for Windows CE does not support the <B>Ccombobx::Dir</B> method.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd.htm"><B>CWnd</B></A>, <A HREF="cbutton.htm"><B>CButton</B></A>, <A HREF="cedit.htm"><B>CEdit</B></A>, <A HREF="clistbox.htm"><B>CListBox</B></A>, <A HREF="cscrlbar.htm"><B>CScrollBar</B></A>, <A HREF="cstatic.htm"><B>CStatic</B></A>, <A HREF="cdialog.htm"><B>CDialog</B></A>, <A HREF="cframwnd_6.htm"><B>CFrameWnd::AddComboBoxString</B></A>, <A HREF="cframwnd_14.htm"><B>CFrameWnd::GetComboCount</B></A>, <A HREF="cframwnd_15.htm"><B>CFrameWnd::GetComboCurSel</B></A>, <A HREF="cframwnd_20.htm"><B>CFrameWnd::InsertComboBox</B></A>, <A HREF="cframwnd_26.htm"><B>CFrameWnd::SetComboCurSel</B></A>, <A HREF="struct_12.htm"><B>DRAWITEMSTRUCT</B></A>, <A HREF="struct_19.htm"><B>MEASUREITEMSTRUCT</B></A>, <A HREF="compare_15.htm">Control Classes</A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

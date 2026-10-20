@@ -1,0 +1,169 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateThread</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CreateThread"/>
+<MSHelp:RLTitle Title="CreateThread"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_createthread"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CreateThread</H1>
+
+<P>This function creates a thread to execute within the address space of the calling process. </P>
+
+<PRE class="syntax"><B>HANDLE</B> <B>CreateThread(</B>
+<B>LPSECURITY_ATTRIBUTES</B> <I>lpThreadAttributes</I><B>, </B>
+<B>DWORD</B> <I>dwStackSize</I><B>, </B>
+<B>LPTHREAD_START_ROUTINE</B> <I>lpStartAddress</I><B>, </B>
+<B>LPVOID</B> <I>lpParameter</I><B>, </B>
+<B>DWORD</B> <I>dwCreationFlags</I><B>, </B>
+<B>LPDWORD</B> <I>lpThreadId</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpThreadAttributes</I></DT>
+
+<DD>Ignored. Must be NULL. </dd>
+
+<DT><I>dwStackSize</I></DT>
+
+<DD>Ignored. The default stack size for a thread is determined by the linker setting /STACK. </dd>
+
+<DT><I>lpStartAddress</I></DT>
+
+<DD>Long pointer to the application-defined function of type LPTHREAD_START_ROUTINE to be executed by the thread and represents the starting address of the thread. For more information on the thread function, see <A HREF="_wcesdk_win32_threadproc.htm"><B>ThreadProc</B></A>.</dd>
+
+<DT><I>lpParameter</I></DT>
+
+<DD>Long pointer to a single 32-bit parameter value passed to the thread.</dd>
+
+<DT><I>dwCreationFlags</I></DT>
+
+<DD>Specifies flags that control the creation of the thread.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CREATE_SUSPENDED</TD>
+<TD width=67%>The thread is created in a suspended state, and will not run until the <A HREF="_wcesdk_win32_resumethread.htm"><B>ResumeThread</B></A> function is called.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>0</TD>
+<TD width=67%>The thread runs immediately after creation.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>lpThreadId</I></DT>
+
+<DD>Long pointer to a 32-bit variable that receives the thread identifier.
+
+<P>If this parameter is NULL, the thread identifier is not returned.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A handle to the new thread indicates success. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>The number of threads a process can create is limited by the available virtual memory. The number of threads that can be created depends on the default stack size. If every thread has one megabyte of stack space., you can create at most 32 threads. If you reduce the default stack size, you can create more threads. However, your application will have better performance if you create one thread per processor and build queues of requests for which the application maintains the context information. A thread would process all requests in a queue before processing requests in the next queue. </P>
+
+<P>The new thread handle is created with THREAD_ALL_ACCESS to the new thread. The handle can be used in any function that requires a thread object handle. </P>
+
+<P>The thread execution begins at the function specified by the <I>lpStartAddress</I> parameter. If this function returns, the <B>DWORD</B> return value is used to terminate the thread in an implicit call to the <A HREF="_wcesdk_win32_exitthread.htm"><B>ExitThread</B></A> function. Use the <A HREF="_wcesdk_win32_getexitcodethread.htm"><B>GetExitCodeThread</B></A> function to get the thread’s return value. </P>
+
+<P>The <B>CreateThread</B> function may succeed even if <I>lpStartAddress</I> points to data, code, or is not accessible. If the start address is invalid when the thread runs, an exception occurs, and the thread terminates. Thread termination due to a invalid start address is handled as an error exit for the thread’s process. This behavior is similar to the asynchronous nature of <A HREF="_wcesdk_win32_createprocess.htm"><B>CreateProcess</B></A>, where the process is created even if it refers to invalid or missing dynamic-link libraries (DLLs). </P>
+
+<P>The thread is created with a thread priority of THREAD_PRIORITY_NORMAL. Use the <A HREF="_wcesdk_win32_getthreadpriority.htm"><B>GetThreadPriority</B></A> and <A HREF="_wcesdk_win32_setthreadpriority.htm"><B>SetThreadPriority</B></A> functions to get and set the priority value of a thread. </P>
+
+<P>When a thread terminates, the thread object attains a signaled state, satisfying any threads that were waiting on the object. </P>
+
+<P>The thread object remains in the system until the thread has terminated and all handles to it have been closed through a call to <A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A>. </P>
+
+<P>The <B>ExitThread</B> function, <B>CreateThread</B> function, and a process that is starting (as the result of a call by <B>CreateProcess</B>) are serialized between each other within a process. Only one of these events can happen in an address space at a time. This means that the following restrictions hold:
+
+<UL type="disc">
+	<LI>During process startup and DLL initialization routines, new threads can be created, but they do not begin execution until DLL initialization is done for the process. </li>
+
+	<LI>Only one thread in a process can be in a DLL initialization or detach routine at a time. </li>
+</UL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.01 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Nk.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A>, <A HREF="_wcesdk_win32_createprocess.htm"><B>CreateProcess</B></A>, <A HREF="_wcesdk_win32_exitthread.htm"><B>ExitThread</B></A>, <A HREF="_wcesdk_win32_getexitcodethread.htm"><B>GetExitCodeThread</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_getthreadpriority.htm"><B>GetThreadPriority</B></A>, <A HREF="_wcesdk_win32_resumethread.htm"><B>ResumeThread</B></A>, <A HREF="_wcesdk_win32_setthreadpriority.htm"><B>SetThreadPriority</B></A>, <A HREF="_wcesdk_win32_threadproc.htm"><B>ThreadProc</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

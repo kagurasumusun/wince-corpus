@@ -1,0 +1,60 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Responsibilities of the Driver Writer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Responsibilities of the Driver Writer"/>
+<MSHelp:RLTitle Title="Responsibilities of the Driver Writer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_responsibilities_of_the_driver_writer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Responsibilities of the Driver Writer</H1>
+
+<P>What does Windows CE DirectSound audio driver look like from a driver writer’s point of view? It is a standard Windows CE DLL that implements the <B>DllGetClassObject</B> entry point as follows:</P>
+
+<H2>DllGetClassObject</H2>
+
+<P><B>Retrieves the class object from a DLL.</B></P>
+
+<PRE class="code">STDAPI DllGetClassObject(
+  REFCLSID <I>rclsid</I>,  //CLSID for the class object
+  REFIID<I> riid</I>,      //Reference to the identifier of the interface
+                    // that communicates with the class object
+  LPVOID *<I> ppv      </I>//Address of output variable that receives the
+                    // interface pointer requested in <I>riid
+</I>);</PRE>
+
+<P>This resembles the standard entry point that COM servers implement.  The DLL could be written in any language that supports the creation of vtables. In other words, while C++ might be most natural, as with COM objects in general, it could also be written in C or some other language.</P>
+
+<P>The driver DLL will be loaded by the system into the process space in which DSOUNDS.DLL is running &#0150; namely the DEVICE.EXE process space.</P>
+
+<P>Through the <B>DllGetClassObject</B> entry point to the DLL, the DirectSound system will attempt to create a driver object implementing the <A HREF="dshal_5.htm"><B>IDsDriver</B></A> interface. Using this interface, DirectSound will attempt to create <A HREF="dshal_12.htm"><B>IDsDriverBuffer</B></A> objects.</P>
+
+<P>The driver writer should allow for re-entrancy on the interfaces the driver exposes. DirectSound will not serialize calls to the driver and many threads may be simultaneously making calls to DirectSound that will be passed through to the driver.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

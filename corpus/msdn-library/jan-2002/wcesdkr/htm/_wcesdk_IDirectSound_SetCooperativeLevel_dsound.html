@@ -1,0 +1,168 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirectSound::SetCooperativeLevel</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IDirectSound::SetCooperativeLevel"/>
+<MSHelp:RLTitle Title="IDirectSound::SetCooperativeLevel"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_idirectsound_setcooperativelevel_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IDirectSound::SetCooperativeLevel</H1>
+
+<P>The <B>IDirectSound::SetCooperativeLevel</B> method sets the cooperative level of the application for this sound device.</P>
+
+<PRE class="syntax"><B>HRESULT SetCooperativeLevel( </B>
+<B>HWND</B><I> hwnd</I><B>, </B>
+<B>DWORD</B><I> dwLevel </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hwnd</I></DT>
+
+<DD>Window handle to the application. See Remarks.</dd>
+
+<DT><I>dwLevel</I></DT>
+
+<DD>Requested priority level. Specify one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=33%>DSSCL_EXCLUSIVE </TD>
+<TD width=67%>Sets the application to the exclusive level. When it has the input focus, the application will be the only one audible (sounds from applications with the DSBCAPS_GLOBALFOCUS flag set will be muted). With this level, it also has all the privileges of the DSSCL_PRIORITY level. DirectSound will restore the hardware format, as specified by the most recent call to the <A HREF="_wcesdk_idirectsoundbuffer_setformat_dsound.htm"><B>IDirectSoundBuffer::SetFormat</B></A> method, once the application gains the input focus. (Note that DirectSound will always restore the wave format no matter what priority level is set.) </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DSSCL_NORMAL </TD>
+<TD width=67%>Sets the application to a fully cooperative status. This level has the smoothest multitasking and resource-sharing behavior, but because it does not allow the primary buffer format to change, output is restricted to the default 44kHz, 16-bit, stereo format.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DSSCL_PRIORITY </TD>
+<TD width=67%>Sets the application to the priority level. Applications with this cooperative level can call the <A HREF="_wcesdk_idirectsoundbuffer_setformat_dsound.htm"><B>IDirectSoundBuffer::SetFormat</B></A> and <A HREF="_wcesdk_idirectsound_compact_dsound.htm"><B>IDirectSound::Compact</B></A> methods. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DSSCL_WRITEPRIMARY </TD>
+<TD width=67%>This is the highest priority level. The application has write access to the primary sound buffers. No secondary sound buffers can be played. This level cannot be set if the DirectSound driver is being emulated for the device; that is, if the <A HREF="_wcesdk_idirectsound_getcaps_dsound.htm"><B>IDirectSound::GetCaps</B></A> method returns the DSCAPS_EMULDRIVER flag in the <A HREF="_wcesdk_dscaps_dsound.htm"><B>DSCAPS</B></A> structure.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the method succeeds, the return value is DS_OK.</P>
+
+<P>If the method fails, the return value may be one of the following error values: </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_allocated_dsound">DSERR_ALLOCATED</A> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_invalidparam_dsound">DSERR_INVALIDPARAM</A> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_uninitialized_dsound">DSERR_UNINITIALIZED</A> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_unsupported_dsound">DSERR_UNSUPPORTED</A> </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The application must set the cooperative level by calling this method before its buffers can be played. The recommended cooperative level is DSSCL_PRIORITY; use other priority levels when necessary. For additional information, see “DirectSound” in the Graphics and Multimedia guide.</P>
+
+<P>The <I>hwnd</I> parameter should be the top-level application window handle. If you are also using DirectDraw, it must be the same handle passed to the <A HREF="_wcesdk_idirectdraw4_setcooperativelevel_ddraw.htm"><B>IDirectDraw4::SetCooperativeLevel</B></A> method.</P>
+
+<P>If your application cannot easily supply a window handle, you can obtain one by using the following code:</P>
+
+<PRE class="code">HWND hWnd = GetForegroundWindow();
+if (hWnd == NULL)
+{
+    hWnd = GetDesktopWindow();
+}</PRE>
+
+<P>On Windows CE, only the <B>DSSCL_NORMAL</B> priority level is supported. All playing secondary buffers from all processes will be mixed and played.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>dsound.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>dsound.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_idirectsound_compact_dsound.htm"><B>IDirectSound::Compact</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_getformat_dsound.htm"><B>IDirectSoundBuffer::GetFormat</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_getvolume_dsound.htm"><B>IDirectSoundBuffer::GetVolume</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_lock_dsound.htm"><B>IDirectSoundBuffer::Lock</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_play_dsound.htm"><B>IDirectSoundBuffer::Play</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_restore_dsound.htm"><B>IDirectSoundBuffer::Restore</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_setformat_dsound.htm"><B>IDirectSoundBuffer::SetFormat</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

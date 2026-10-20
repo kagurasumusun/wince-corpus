@@ -1,0 +1,112 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::AllocSurface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GPE::AllocSurface"/>
+<MSHelp:RLTitle Title="GPE::AllocSurface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_gpe_allocsurface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>GPE::AllocSurface</H1>
+
+<P>This method is called when the driver must allocate storage for surface pixels.</P>
+
+<PRE class="syntax"><B>SCODE GPE::AllocSurface(&nbsp;&nbsp;
+GPESurf **</B><I>ppSurf</I><B>,
+int </B><I>width</I><B>,
+int </B><I>height</I><B>,
+EGPEFormat </B><I>format</I><B>,&nbsp;&nbsp;
+int </B><I>surfaceFlags</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppSurf</I></DT>
+
+<DD>[OUT] Pointer to the memory allocated by the <B>AllocSurface</B> function.</dd>
+
+<DT><I>width</I></DT>
+
+<DD>[IN] Width, in pixels, of the surface to allocate.</dd>
+
+<DT><I>height</I></DT>
+
+<DD>[IN] Height, in pixels, of the surface to allocate.</dd>
+
+<DT><I>format</I></DT>
+
+<DD>Format of the surface.</dd>
+
+<DT><I>surfaceFlags</I></DT>
+
+<DD>[IN] One of the flags GPE_REQUIRE_VIDEO_MEMORY or GPE_PREFER_VIDEO_MEMORY, which specify where to allocate the memory</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If GPE_REQUIRE_VIDEO_MEMORY is set in the <I>surfaceFlags</I> parameter, the call returns one of two error values: if the available video memory is insufficient, the call returns E_NOT_ENOUGH_MEMORY, whereas if the allocation is inappropriate for video memory, such as an incorrect pixel format, the call returns E_INVALID_PARAMETER.</P>
+
+<H4>Remarks</H4>
+
+<P>For video memory allocation, the driver should implement a class, derived from <B>GPESurf</B>, that contains extra information, such as a pointer to the allocator used when freeing the memory. Refer to the <B>Node2D</B> class for information on a supplied memory allocator that can be used for rectangular allocation requirements.</P>
+
+<P>The following code example shows the system memory allocation for this method.</P>
+
+<PRE class="code">*ppSurf = new GPESurf( width, height, format );
+if( *ppSurf )
+&nbsp;&nbsp;return S_OK;
+return E_NOT_ENOUGH_MEMORY;
+</PRE>
+
+<P>The <I>surfaceFlags</I> member can contain GPE_REQUIRE_VIDEO_MEMORY or GPE_PREFER_VIDEO_MEMORY, although neither is required. For GPE_PREFER_VIDEO_MEMORY, the driver should, if possible, allocate the surface from video memory. Otherwise, the driver should use system memory.</P>
+
+<H4>Requirements</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

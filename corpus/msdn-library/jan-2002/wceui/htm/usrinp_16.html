@@ -1,0 +1,64 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Processing User Input</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Processing User Input"/>
+<MSHelp:RLTitle Title="Processing User Input"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_processing_user_input"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Processing User Input</H1>
+
+<P>To begin each session of input recognition with a clean HRC, use the context from a pre-established HRC as a template. Each time that you need a new HRC, pass the handle of the previous HRC object to the recognition engine, excluding any previous ink data. This procedure enables your application to save processing time by not having to recreate common HRC parameters that are used repeatedly in your application, such as <B>GUIDE</B> structures and alphabet codes.</P>
+
+<P>The process of character recognition begins when the input panel IM sends a call to the <B>HwxInput</B> function. This function adds ink to the HRC object to provide the <B>STROKEINFO</B> structure with the count of stylus stroke points that are generated. The <B>HwxProcess</B> function passes the HRC to the recognition engine where the stroke data is processed, based on predetermined character-recognition parameters. When the user finishes entering stroke data, your application calls the <B>HwxEndInput</B> function to tell the recognition engine that no additional ink will be added to the HRC.</P>
+
+<P>To improve the performance of the process of character recognition, pass the context for the previous character to the recognition engine through the <B>HwxSetContext</B> function. If this function is not called, the recognition engine assumes that no previous context is available. <B>HwxSetContext</B> is called before <B>HwxProcess</B>. <B>HwxProcess</B> processes the ink that is received by the HRC to perform the recognition. Full character recognition occurs only after the <B>HwxEndInput</B> function is called. Results of the recognition are returned by the <B>HwxGetResults</B> function.</P>
+
+<P><B>HwxGetResults</B> simplifies the task of recognizing characters and glyphs that are drawn within the boundaries of the defined box by responding with character alternatives on a per-box basis in one call. The following code example shows how to set the results for 10 boxes at a time, with 5 alternatives for each box.</P>
+
+<PRE>HANDLE hMem = GlobalAlloc( GHND, 10 * (sizeof( BOXRESULTS )
+       + (5-1) * sizeof( SYV )) );
+LPBOXRESULTS rgBoxR = (LPBOXRESULTS)GlobalLock( hMem );
+UINT indx = 0;
+Do
+{
+   int iRes = HwxGetResults( hrc, 5, indx, 10, rgBoxR);
+      .
+      .      // Check for errors and use rgBoxR
+      .
+   indx += (UINT)iRes;
+}
+while (iRes == 10);
+</PRE>
+
+<P>After all input, processing, recognition, and output have been completed, destroy the active HRC by calling the <B>HwxDestroy</B> function.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

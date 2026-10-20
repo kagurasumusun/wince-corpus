@@ -1,0 +1,59 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Access Rights</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Access Rights"/>
+<MSHelp:RLTitle Title="Access Rights"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_access_rights"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Access Rights</H1>
+
+<P>The following steps are required to gain access to a Web page that requires authentication (<B>A&gt;0</B>):
+
+<OL type="1">
+	<LI>The user must be authenticated for the given virtual path by using NTLM authentication or BASIC authentication, as described above. If this step fails, the user is denied access to the page.</li>
+
+	<LI>If NTLM authentication is used, the Web server requests information regarding the groups in which the user has membership. If this step fails, the user is assumed to not have membership in any group.</li>
+
+	<LI>If <B>0&lt;A&lt;3</B> and the name of the authenticated user (or a group containing the user) is listed in the <B>HKEY_LOCAL_MACHINE\Comm\HTTPD</B>\<B>AdminUsers</B> registry key, the user is granted access to the page as an Administrator.</li>
+
+	<LI>If <B>A=1</B> and the name of the authenticated user (or group containing the user) is listed in the <B>HKEY_LOCAL_MACHINECOMPUTER\Comm\HTTPD</B>\<B>Vroots\[vroot name]\UserList</B> registry key, the user is granted access to the Web page.
+<P class=atl><b class="le">Note</b>&nbsp;&nbsp;&nbsp;At this point, if the authentication level is set to 2, but no users are listed in the administrator list, the user is granted access as an Administrator. This is done for ease of initial setup. However, be aware that the <B>AdminUsers</B> list on the Web server computer should be configured appropriately and as soon as possible, or else the first user to access the site, and who also passes step 1, will be given Administrator privileges. As a result, users could use the administration page to lock themselves in as the Administrator.
+</li>
+
+	<LI>If the above conditions fail, the user is denied access to the Web page.</li>
+</OL>
+
+<P>The Administrative group check is performed only when using NTLM authentication. The user-name check is done for both types of authentication.</P>
+
+<P>The authentication registry keys support individual users and groups, as well as the ability to exclude specific users and groups. For more information, see <A HREF="webserv_11.htm">User Lists</A>.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

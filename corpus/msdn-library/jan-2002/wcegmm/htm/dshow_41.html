@@ -1,0 +1,103 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Generating New Samples</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Generating New Samples"/>
+<MSHelp:RLTitle Title="Generating New Samples"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_generating_new_samples"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_dshow_imemallocator__getbuffer" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imeminput__receive" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_imediasample_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_com_iunknown_addref" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_com_iunknown_release" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_imeminputpin__receivemultiple" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_IasyncReader_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_iasyncreader__request" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_iasyncreader__waitfornext" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_iasyncreader__syncread" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_11 keywords="_wcesdk_iasyncreader__syncreadaligned" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Generating New Samples</H1>
+
+<P>This section describes how source filters generate media samples.</P>
+
+
+
+<H2><A NAME="_dxce_dshow_push_model"></A>Push Model</H2>
+
+<P>In the push model, the source filter initiates the process, as follows:
+
+<UL type="disc">
+	<LI>The source filter calls <A HREF="JavaScript:hhobj_1.Click()"><B>IMemAllocator::GetBuffer</B></A> to retrieve an empty media sample. </li>
+
+	<LI>The source filter fills the media sample with data. How this occurs depends entirely on the nature of the source. </li>
+
+	<LI>The source filter calls <A HREF="JavaScript:hhobj_2.Click()"><B>IMemInputPin::Receive</B></A> on the downstream input pin, passing it a pointer to the sample's <A HREF="JavaScript:hhobj_3.Click()"><B>IMediaSample</B></A> interface. </li>
+
+	<LI>The downstream filter can either process the sample before returning from <B>Receive</B>, or else hold the sample and process it afterward. If the downstream filter holds the sample, it calls <A HREF="JavaScript:hhobj_4.Click()"><B>IUnknown::AddRef</B></A> on the sample. </li>
+
+	<LI>The source filter calls <A HREF="JavaScript:hhobj_5.Click()"><B>IUnknown::Release</B></A> on the sample. </li>
+</UL>
+
+<P>At this point, the downstream filter might hold a reference count on the sample, so the source filter cannot simply re-use the sample. To deliver the next sample, it must call <B>IMemAlloctor::GetBuffer</B> again, as described in step 1.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;To deliver multiple samples, in step 3 the source filter could call <A HREF="JavaScript:hhobj_6.Click()"><B>IMemInputPin::ReceiveMultiple</B></A> instead.</P>
+
+
+
+<H2><A NAME="_dxce_dshow_pull_model"></A>Pull Model</H2>
+
+<P>In the pull model, the parser filter requests data from the source filter. The parser filter uses the <A HREF="JavaScript:hhobj_7.Click()"><B>IAsyncReader</B></A> interface on the source filter's output pin, as follows:</P>
+
+<P>The parser filter calls <B>IMemAllocator::GetBuffer</B> to retrieve an empty media sample. </P>
+
+<P>It calls <A HREF="JavaScript:hhobj_8.Click()"><B>IAsyncReader::Request</B></A> to request data from the source filter. </P>
+
+<P>While the source filter is retrieving the data, the parser calls <A HREF="JavaScript:hhobj_9.Click()"><B>IAsyncReader::WaitForNext</B></A>. This method waits until the request from step 2 is completed. </P>
+
+<P>The parser filter processes the data (possibly by calling <B>IMemInputPin::Receive</B> on its own input pin) and delivers it downstream. </P>
+
+<P>Steps 2&#0150;3 perform an asynchronous read operation. The parser can request a synchronous read operation instead, using the <A HREF="JavaScript:hhobj_10.Click()"><B>IAsyncReader::SyncRead</B></A> or <A HREF="JavaScript:hhobj_11.Click()"><B>IAsyncReader::SyncReadAligned</B></A> method.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

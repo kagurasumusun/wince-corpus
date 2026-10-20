@@ -1,0 +1,115 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoCopyProxy</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoCopyProxy"/>
+<MSHelp:RLTitle Title="CoCopyProxy"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_cocopyproxy"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoCopyProxy</H1>
+
+<P>This function makes a private copy of the specified proxy.</P>
+
+<PRE class="syntax"><B>HRESULT CoCopyProxy(
+IUnknown *</B><I>pProxy</I><B>,
+IUnknown **</B><I>ppCopy</I><B> );</B></PRE>
+
+<H4>Parameter</H4>
+
+<DL>
+<DT><I>pProxy</I></DT>
+
+<DD>[in] Points to the <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A> interface on the proxy to be copied. May not be NULL.</dd>
+
+<DT><I>ppCopy</I></DT>
+
+<DD>[out] Address of <B>IUnknown</B>* pointer variable that receives the interface pointer to the copy of the proxy. It may not be NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>Success.</dd>
+
+<DT>E_INVALIDARG</DT>
+
+<DD>One or more arguments are invalid.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CoCopyProxy</B> makes a private copy of the specified proxy. Typically, this function is called when a client needs to change the authentication information of its proxy through a call to either <A HREF="_wcesdk_com_cosetproxyblanket.htm"><B>CoSetProxyBlanket</B></A> or <A HREF="_wcesdk_com_iclientsecurity__setblanket.htm"><B>IClientSecurity::SetBlanket</B></A> without changing this information for other clients. <B>CoSetProxyBlanket</B> affects all the users of an instance of a proxy, so creating a private copy of the proxy through a call to <A HREF="#_wcesdk_com_cocopyproxy"><B>CoCopyProxy</B></A> and then calling <B>CoSetProxyBlanket</B> (or <B>IClientSecurity::SetBlanket</B>) using the copy eliminates the problem.</P>
+
+<P>This helper function encapsulates the following sequence of common calls (error handling excluded):</P>
+
+<PRE class="code">    pProxy-&gt;QueryInterface(IID_IClientSecurity, (void**)&amp;pcs);
+    pcs-&gt;CopyProxy(punkProxy, ppunkCopy);
+    pcs-&gt;Release();</PRE>
+
+<P>Local interfaces may not be copied. <B>IUnknown</B> and <B>IClientSecurity</B> are examples of existing local interfaces.</P>
+
+<P>Copies of the same proxy have a special relationship with respect to <A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A>. Given a proxy, <I>a</I>, of the IA interface of a remote object, suppose a copy of <I>a</I> is created, called <I>b</I>. In this case, calling <B>QueryInterface</B> from the <I>b</I> proxy for IID_IA will not retrieve the IA interface on <I>b</I>, but the one on <I>a</I>, the original proxy with the "default" security settings for the IA interface.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

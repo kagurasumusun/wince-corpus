@@ -1,0 +1,98 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseObject Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseObject Class"/>
+<MSHelp:RLTitle Title="CBaseObject Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseobject_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseObject Class</H1>
+
+<P class="fig"><IMG SRC="cbase02.gif" ALT="" BORDER=0></P>
+
+<P>The <B>CBaseObject</B> class is an abstract base class that is the basis for all component objects. It maintains a process-wide count of active objects that can be queried from the <B>DllCanUnloadNow</B> entry point. </P>
+
+<P>All Component Object Model (COM) objects are derived from the <A HREF="_wcesdk_cunknown_class.htm"><B>CUnknown</B></A> class, which is derived from the <B>CBaseObject</B> class. Other objects can be derived from <B>CBaseObject</B> to assist in the detection of memory leaks, because <B>CBaseObject</B> maintains the count of created objects. </P>
+
+<P>The constructor requires a character-string name that describes the object being created. This string can be displayed on the debugging screen to trace the creation of objects; the string will also be displayed upon deletion of the object. The string should be created in static storage rather than in local-function storage. The string can be enclosed by the <A HREF="_wcesdk_misc_macros__name.htm"><B>NAME</B></A> macro, which compiles to NULL in retail builds so that the static strings are optimized out during compilation. </P>
+
+<PRE class="code">/* Typical object creation method */
+HRESULT CSomeClass::CreateMyObject(void)
+{
+   HRESULT hr = NOERROR;
+
+   CMyObject *pObject = new CMyObject(NAME("My filter object"),NULL,&amp;hr);
+      if (FAILED(hr)) {
+         return hr;
+   }
+
+   if (pObject == NULL) {
+      return E_OUTOFMEMORY;
+   }
+   m_pObject = pObject;
+   return NOERROR;
+}
+
+/* Incorrect object creation method */
+
+HRESULT CSomeClass::ThisMayAccessViolate(void)
+{
+   HRESULT hr = NOERROR;
+
+   TCHAR MyObjectName[] = TEXT("My GP faulting object");
+   CMyObject *pObject = new CMyObject(MyObjectName,NULL,&amp;hr);
+}</PRE>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_cbaseobject__cbaseobject.htm"><B>CBaseObject</B></A></TD>
+<TD width=66%>Constructs a <B>CBaseObject</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="_wcesdk_cbaseobject__objectsactive.htm"><B>ObjectsActive</B></A></TD>
+<TD width=66%>Retrieves the count of active objects. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

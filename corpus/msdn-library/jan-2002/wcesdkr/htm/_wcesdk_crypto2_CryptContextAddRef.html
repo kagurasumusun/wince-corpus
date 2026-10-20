@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptContextAddRef</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptContextAddRef"/>
+<MSHelp:RLTitle Title="CryptContextAddRef"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptcontextaddref"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CryptContextAddRef</H1>
+
+<P>This function is used to add one to the reference count on an <A HREF="_wcesdk_crypto2_hcryptprov.htm"><B>HCRYPTPROV</B></A> handle.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptContextAddRef( </B>
+<B>HCRYPTPROV </B><I>hProv</I><B>,</B>
+<B>DWORD *</B><I>pdwReserved</I><B>, </B>
+<B>DWORD </B><I>dwFlags</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hProv</I></DT>
+
+<DD>[in] <B>HCRYPTPROV</B> handle for which the reference count is being incremented.</dd>
+
+<DT><I>pdwReserved</I></DT>
+
+<DD>[in] Reserved for future use; set to NULL.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Specifies a bitmask of flags. This parameter is reserved for future use; set to 0.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. Common values for <B>GetLastError</B> are described in the following table. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=41%>Value</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>ERROR_INVALID_PARAMETER</TD>
+<TD width=59%>One of the parameters contains an invalid value. This is most often an illegal pointer.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P><B>CryptContextAddRef</B> is used to increase the reference count on a <B>HCRYPTPROV</B> handle so that multiple calls to <A HREF="_wcesdk_crypto2_cryptreleasecontext.htm"><B>CryptReleaseContext</B></A> are required to actually release the handle.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">HCRYPTPROV hProv = 0;
+
+// Acquire a context handle
+if (!CryptAcquireContext(&amp;hProv, NULL, NULL, PROV_RSA_SIG, 0)) {
+ printf("Error %x during CryptAcquireContext!\n", GetLastError);
+ return;
+}
+
+if (!CryptContextAddRef(&amp;hProv, NULL, 0)) {
+ printf("Error %x during CryptContextAddRef!\n", GetLastError);
+ return;
+}
+
+...
+
+// The first call to CryptReleaseContext will not release the provider handle
+// since the reference count has been bumped up.
+if (!CryptReleaseContext(hProv, 0)) {
+ printf("Error %x during CryptReleaseContext!\n", GetLastError);
+ return;
+}
+
+// Release the provider handle.
+if (!CryptReleaseContext(hProv, 0)) {
+ printf("Error %x during CryptReleaseContext!\n", GetLastError);
+ return;
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Cryptapi.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A>, <A HREF="_wcesdk_crypto2_cryptreleasecontext.htm"><B>CryptReleaseContext</B></A>, <A HREF="_wcesdk_crypto2_hcryptprov.htm"><B>HCRYPTPROV</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

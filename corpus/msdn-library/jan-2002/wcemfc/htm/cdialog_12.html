@@ -1,0 +1,84 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDialog::OnCancel</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CDialog::OnCancel"/>
+<MSHelp:RLTitle Title="CDialog::OnCancel"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdialog_oncancel"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CDialog::OnCancel</H1>
+
+<P>This method is called by the framework when the user chooses the <B>Cancel</B> button or presses the ESC key in a modal or modeless dialog box. </P>
+
+<PRE class=syntax><B>virtual void OnCancel( );</B><I> </I></PRE>
+
+<H4>Remarks</H4>
+
+<P>Override this method to perform <B>Cancel</B> button action. The default simply closes a modal dialog box by calling <B>EndDialog</B> and causing <B>DoModal</B> to return IDCANCEL.</P>
+
+<P>If you implement the <B>Cancel</B> button in a modeless dialog box, you must override the <B>OnCancel</B> method and call <B>DestroyWindow</B> from within it. Do not call the base-class method, because it calls <B>EndDialog</B>, which makes the dialog box invisible but does not destroy it.</P>
+
+<H4>Example</H4>
+
+<PRE>// MyDialog.cpp
+#include "MyDialog.h"
+
+void CMyDialog::OnCancel()
+{
+&nbsp;&nbsp;// TODO: Add extra cleanup.
+&nbsp;&nbsp;
+&nbsp;&nbsp;// Ensure that you reset all the values to the ones before
+&nbsp;&nbsp;// modification. This handler is called when the user does not
+&nbsp;&nbsp;// want to save the changes.
+&nbsp;&nbsp;
+&nbsp;&nbsp;if ( AfxMessageBox("Are you sure you want to abort the changes?",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MB_YESNO) == IDNO )
+&nbsp;&nbsp;&nbsp;&nbsp;return; // Give the user a chance if the Cancel button is accidently
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // hit. If the user says No, return. Do not reset. If the user
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // says Yes, reset the values and close the dialog.
+
+&nbsp;&nbsp;m_nMyValue = m_nPrevValue;
+&nbsp;&nbsp;m_pMyString = NULL;
+
+&nbsp;&nbsp;CDialog::OnCancel();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdialog_14.htm"><B>CDialog::OnOK</B></A>, <A HREF="cdialog_6.htm"><B>CDialog::EndDialog</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

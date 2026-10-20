@@ -1,0 +1,165 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMonthCalCtrl::GetRange</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMonthCalCtrl::GetRange"/>
+<MSHelp:RLTitle Title="CMonthCalCtrl::GetRange"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmonthcalctrl_getrange"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CMonthCalCtrl::GetRange</H1>
+
+<P>This method retrieves the minimum and maximum allowable dates set for a month calendar control.</P>
+
+<P>This method implements the behavior of the Windows CE message MCM_GETRANGE. </P>
+
+<P>In the MFC for Windows CE implementation of <B>GetRange</B>, you can specify a <B>COleDateTime</B> usage, a <B>CTime</B> usage, or a <B>SYSTEMTIME</B> structure usage.</P>
+
+<PRE class=syntax><B>DWORD GetRange(
+COleDateTime* </B><I>pMinRange</I><B>,
+COleDateTime* </B><I>pMaxRange</I><B> )
+const;</B><I> </I>
+
+<B>DWORD GetRange(
+CTime</B>* <I>pMinRange</I>,
+<B>CTime</B>* <I>pMaxRange</I> <B>)
+const;</B><I> </I>
+
+<B>DWORD GetRange(
+LPSYSTEMTIME</B> <I>pMinRange</I>,
+<B>LPSYSTEMTIME</B> <I>pMaxRange</I> <B>)
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pMinRange</I></DT>
+
+<DD>Specifies a pointer to a <B>COleDateTime</B> object, a <B>CTime</B> object, or <A HREF="struct_30.htm"><B>SYSTEMTIME</B></A> structure containing the date at the lowest end of the range. </DD>
+
+<DT><I>pMaxRange</I></DT>
+
+<DD>Specifies a pointer to a <B>COleDateTime</B> object, a <B>CTime</B> object, or <B>SYSTEMTIME</B> structure containing the date at the highest end of the range.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>A <B>DWORD</B> that can be zero, no limits are set, or a combination of the following values that specify limit information. </P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=23%>Value </TH>
+<TH width=77%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>GDTR_MAX </TD>
+<TD width=77%>A maximum limit is set for the control; <I>pMaxRange</I> is valid and contains the applicable date information. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%>GDTR_MIN </TD>
+<TD width=77%>A minimum limit is set for the control; <I>pMinRange</I> is valid and contains the applicable date information. </TD>
+</TR>
+</TABLE><BR>
+
+<H4>Example</H4>
+
+<PRE>// This code fragment sets a variety of ranges in the
+// control, and calls a separate function to show the
+// set range to the user.
+
+void CDatesDlg::OnButton2()
+{
+&nbsp;&nbsp;// Gain a pointer to the control
+&nbsp;&nbsp;CMonthCalCtrl* pCtrl = (CMonthCalCtrl*) GetDlgItem(IDC_MONTHCALENDAR1);
+&nbsp;&nbsp;ASSERT(pCtrl != NULL);
+
+&nbsp;&nbsp;// set minimum of January 1st, 1995 with no maximum
+&nbsp;&nbsp;COleDateTime dtMin;
+&nbsp;&nbsp;COleDateTime dtMax;
+
+&nbsp;&nbsp;dtMin = COleDateTime(1995, 1, 1, 0, 0, 0);
+&nbsp;&nbsp;dtMax.SetStatus(COleDateTime::null);
+&nbsp;&nbsp;pCtrl-&gt;SetRange(&amp;dtMin, &amp;dtMax);
+&nbsp;&nbsp;ShowRange(pCtrl);
+
+&nbsp;&nbsp;// set no minimum and a maximum of September 30th, 1997
+&nbsp;&nbsp;dtMin.SetStatus(COleDateTime::null);
+&nbsp;&nbsp;dtMax = COleDateTime(1997, 9, 30, 0, 0, 0);
+&nbsp;&nbsp;pCtrl-&gt;SetRange(&amp;dtMin, &amp;dtMax);
+&nbsp;&nbsp;ShowRange(pCtrl);
+
+&nbsp;&nbsp;// set minimum of April 15, 1992 and maximum of June 5, 2002
+&nbsp;&nbsp;dtMin = COleDateTime(1992, 4, 15, 0, 0, 0);
+&nbsp;&nbsp;dtMax = COleDateTime(2002, 6, 5, 0, 0, 0);
+&nbsp;&nbsp;pCtrl-&gt;SetRange(&amp;dtMin, &amp;dtMax);
+&nbsp;&nbsp;ShowRange(pCtrl);
+}
+
+void CDatesDlg::ShowRange(CMonthCalCtrl* pCtrl)
+{
+&nbsp;&nbsp;ASSERT(pCtrl != NULL);
+&nbsp;&nbsp;CString strMessage;
+&nbsp;&nbsp;COleDateTime dtMinimum;
+&nbsp;&nbsp;COleDateTime dtMaximum;
+
+&nbsp;&nbsp;// Get the range
+&nbsp;&nbsp;DWORD dwResult = pCtrl-&gt;GetRange(&amp;dtMinimum, &amp;dtMaximum);
+
+&nbsp;&nbsp;// If a minimum was specified, format it
+&nbsp;&nbsp;// otherwise,, indicate that there is no lower bound
+&nbsp;&nbsp;if (dwResult &amp; GDTR_MIN)
+&nbsp;&nbsp;&nbsp;&nbsp;strMessage += dtMinimum.Format(_T("Minimum range is %x %X.\r\n"));
+&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;strMessage += _T("No minimum range.\r\n");
+
+&nbsp;&nbsp;// Treat maximum similarly
+&nbsp;&nbsp;if (dwResult &amp; GDTR_MAX)
+&nbsp;&nbsp;&nbsp;&nbsp;strMessage += dtMaximum.Format(_T("Maximum range is %x %X.\r\n"));
+&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;strMessage += _T("No maximum range.\r\n");
+
+&nbsp;&nbsp;// Show the user
+&nbsp;&nbsp;AfxMessageBox(strMessage);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdtctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmonclct_21.htm"><B>CMonthCalCtrl::SetRange</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

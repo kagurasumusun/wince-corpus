@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>A Sample Transform Filter Declaration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="A Sample Transform Filter Declaration"/>
+<MSHelp:RLTitle Title="A Sample Transform Filter Declaration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_a_sample_transform_filter_declaration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ctransinplacefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_cbasefilter__getsetupdata" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ctransinplacefilter__transform" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_ctransformfilter__checkinputtype" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>A Sample Transform Filter Declaration</H1>
+
+<P>This sample illustrates a true minimalist filter, which does nothing except demonstrate the least you must implement for a filter. It uses the transform-inplace classes and derives its filter class from the <A HREF="JavaScript:hhobj_1.Click()"><B>CTransInPlaceFilter</B></A> class. Following is the class declaration for the derived filter class CNullNull. </P>
+
+<PRE class="code">// CNullNull
+//
+class CNullNull
+    : public CTransInPlaceFilter
+{
+
+public:
+
+    static CUnknown *CreateInstance(LPUNKNOWN punk, HRESULT *phr);
+
+    DECLARE_IUNKNOWN;
+
+    LPAMOVIESETUP_FILTER GetSetupData()
+    {
+        return &amp;sudNullNull;
+    }
+
+private:
+
+    // Constructor. Just calls the base class constructor.
+    CNullNull(TCHAR *tszName, LPUNKNOWN punk, HRESULT *phr)
+        : CTransInPlaceFilter (tszName, punk, CLSID_NullNull, phr)
+    { }
+
+    // Overrides the pure virtual Transform of CTransInPlaceFilter base
+lass.
+    // The "real work" of a transform is done by altering *pSample.
+    // The Null transform leaves it alone.
+    HRESULT Transform(IMediaSample *pSample){ return NOERROR; }
+
+    // This filter accepts any input type.
+    // (It would return S_FALSE for any it did not accept.)
+    HRESULT CheckInputType(const CMediaType* mtIn) { return S_OK; }
+};
+</PRE>
+
+<P>This example illustrates the following basic member functions required in the base class. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=23%>Function</TH>
+<TH width=77%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>CreateInstance</B><U> </U></TD>
+<TD width=77%>Needed by every filter so that it can be instantiated as a COM object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>GetSetupData</B><U> </U></TD>
+<TD width=77%>Overrides <A HREF="JavaScript:hhobj_2.Click()"><B>CBaseFilter::GetSetupData</B></A> and is used to provide the class with information required to register this particular filter. In this case, it provides the address of a structure defined in the Nullnull.cpp file included in the SDK. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>CNullNull</B><U> </U></TD>
+<TD width=77%>Class constructor, which typically just calls the base class constructor. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>Transform</B><U> </U></TD>
+<TD width=77%>Overrides <A HREF="JavaScript:hhobj_3.Click()"><B>CTransInPlaceFilter::Transform</B></A> and does the main work of CNullNull, which in this case is nothing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>CheckInputType</B><U> </U></TD>
+<TD width=77%>Overrides <A HREF="JavaScript:hhobj_4.Click()"><B>CTransInPlaceFilter::CheckInputType</B></A> to verify the media type during connection, and in this case accepts any media type offered, since it will simply pass it along to the next filter in line. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>Note that, strictly speaking, <B>GetSetupData</B> is required only if you want your filter to be self-registering. However, since the base classes implement this feature and it is easy to implement, it is a good idea to include this in your base class. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

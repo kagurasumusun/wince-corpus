@@ -1,0 +1,112 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DebugActiveProcess</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DebugActiveProcess"/>
+<MSHelp:RLTitle Title="DebugActiveProcess"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_debugactiveprocess"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>DebugActiveProcess</H1>
+
+<P>This function allows a debugger to attach to an active process and then debug it.</P>
+
+<PRE class="syntax"><B>BOOL DebugActiveProcess(
+DWORD</B> <I>dwProcessId </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwProcessId</I></DT>
+
+<DD>Specifies the identifier for the process to be debugged. The debugger gets debugging access to the process as if it created the process with the DEBUG_ONLY_THIS_PROCESS flag. See the Remarks section for more details.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<H4>Remarks</H4>
+
+<P>After a successful return from <B>DebugActiveProcess</B>, when the debugger is waiting for debug events using the <A HREF="_wcesdk_win32_waitfordebugevent.htm"><B>WaitForDebugEvent</B></A> function, the system sends a CREATE_PROCESS_DEBUG_EVENT debugging event that identifies the primary thread handle that is currently part of the process. The system sends an individual CREATE_THREAD_DEBUG_EVENT debugging event for each of the secondary thread handles that are currently part of the process. All of these handles have permission (that is, access rights) for getting and setting thread contexts using the <A HREF="_wcesdk_win32_getthreadcontext.htm"><B>GetThreadContext</B></A> and <A HREF="_wcesdk_win32_setthreadcontext.htm"><B>SetThreadContext</B></A> functions.</P>
+
+<P>For both the CREATE_PROCESS_DEBUG_EVENT and CREATE_THREAD_DEBUG_EVENT debugging events, the <I>lpStartAddress</I> member of the <A HREF="_wcesdk_win32_create_process_debug_info_str.htm"><B>CREATE_PROCESS_DEBUG_INFO</B></A> structure is NULL.</P>
+
+<P>Close each of these thread handles using the <A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A> function.</P>
+
+<P>No initial debug breakpoint is set when <B>DebugActiveProcess</B> successfully attaches.</P>
+
+<P>Windows CE versions 2.0 and later provide built in support for Just-In-Time (JIT) debugging. A JIT debugger is registered by placing the name of your debugger in the string registry value <B>JITDebugger</B> located at <B>HKEY_LOCAL_MACHINE\Debug</B>. To enable JIT, you must perform a warm reset on the Windows CE target platform after the above value is added to the registry. When your debugger is invoked by JIT, the process identifier of the debugee is passed on the command line. The Windows CE JIT is a First-Chance exception handler and not a Second-Chance exception handler, which is available on Windows NT.</P>
+
+<P>The debugger must have appropriate access to the target process; it must be able to open the process for PROCESS_ALL_ACCESS access. On Windows CE, the debugger has appropriate access if the process identifier is valid. </P>
+
+<P>After the system checks the process identifier and determines that a valid debugging attachment is being made, the function returns TRUE. The debugger is then expected to wait for debugging events by using the <A HREF="_wcesdk_win32_waitfordebugevent.htm"><B>WaitForDebugEvent</B></A> function. The system suspends all threads in the process and sends the debugger events representing the current state of the process. </P>
+
+<P>For each dynamic-link library (DLL) currently loaded into the address space of the target process, the system sends a LOAD_DLL_DEBUG_EVENT debugging event. The system arranges for the first thread in the process to execute a breakpoint instruction after it resumes. Continuing this thread causes it to return to whatever it was doing before the debugger was attached. </P>
+
+<P>After all of this has been done, the system resumes all threads in the process. When the first thread in the process resumes, it executes a breakpoint instruction that causes an EXCEPTION_DEBUG_EVENT debugging event to be sent to the debugger. All future debugging events are sent to the debugger by using the normal mechanism and rules. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Nk.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A>, <A HREF="_wcesdk_win32_createprocess.htm"><B>CreateProcess</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_getthreadcontext.htm"><B>GetThreadContext</B></A>, <A HREF="_wcesdk_win32_setthreadcontext.htm"><B>SetThreadContext</B></A>, <A HREF="_wcesdk_win32_waitfordebugevent.htm"><B>WaitForDebugEvent</B></A>, <A HREF="_wcesdk_win32_create_process_debug_info_str.htm"><B>CREATE_PROCESS_DEBUG_INFO</B></A>, <A HREF="_wcesdk_create_thread_debug_info.htm"><B>CREATE_THREAD_DEBUG_INFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

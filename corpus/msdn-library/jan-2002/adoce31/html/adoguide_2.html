@@ -1,0 +1,269 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Converting Data to a Device</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="Converting Data to a Device"/>
+<MSHelp:RLTitle Title="Converting Data to a Device"/>
+<MSHelp:Keyword Index="A" Term="adoguide_2"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceadoce_converting_data_to_a_device"></A><SUP></SUP>Converting Data to a Device</H1>
+
+<P>When you import an .mdb file to a Windows CE device, it is converted to a format that ADOCE can read and manipulate. Because the internal Windows&nbsp;CE database system is less robust than Microsoft Access or other ODBC sources, this conversion sometimes results in a loss of information. This topic describes the conversion process, including the types of information that are not converted to the ADOCE database format. The following table shows how data types are mapped from Microsoft Access to ADOCE.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=19%>Access type</TH>
+<TH width=31%>ODBC type</TH>
+<TH width=21%>Device type</TH>
+<TH width=29%>Sent to device</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Text</TD>
+<TD width=31%>sql_varchar</TD>
+<TD width=21%><B>Varchar</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Memo</TD>
+<TD width=31%>sql_longvarchar</TD>
+<TD width=21%><B>Text</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>LongInt</TD>
+<TD width=31%>sql_integer</TD>
+<TD width=21%><B>Integer</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>&nbsp;</TD>
+<TD width=31%>sql_bigint</TD>
+<TD width=21%><B>Integer</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Byte</TD>
+<TD width=31%>sql_tinyint</TD>
+<TD width=21%><B>Smallint</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Int</TD>
+<TD width=31%>sql_smallint</TD>
+<TD width=21%><B>Smallint</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Single</TD>
+<TD width=31%>sql_real</TD>
+<TD width=21%><B>Double</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Double</TD>
+<TD width=31%>sql_double</TD>
+<TD width=21%><B>Double</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>&nbsp;</TD>
+<TD width=31%>sql_float</TD>
+<TD width=21%><B>Double</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>ReplID</TD>
+<TD width=31%>sql_varbinary</TD>
+<TD width=21%><B>Varbinary</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Date/Time</TD>
+<TD width=31%>sql_timestamp</TD>
+<TD width=21%><B>Datetime</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Currency</TD>
+<TD width=31%>sql_numeric</TD>
+<TD width=21%><B>Double</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>AutoNumber</TD>
+<TD width=31%>sql_integer</TD>
+<TD width=21%><B>Integer</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>YesNo</TD>
+<TD width=31%>sql_bit</TD>
+<TD width=21%><B>Boolean</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>OleObject</TD>
+<TD width=31%>sql_longvarbinary</TD>
+<TD width=21%><B>Varbinary</B></TD>
+<TD width=29%>Yes, if field is selected by user; unselected is “default”</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>HyperLink</TD>
+<TD width=31%>sql_longvarchar</TD>
+<TD width=21%><B>Text</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=19%>Lookup</TD>
+<TD width=31%>sql_varchar</TD>
+<TD width=21%><B>Varchar</B></TD>
+<TD width=29%>Yes</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Table Conversion</H4>
+
+<P>During conversion, table names are truncated to 31 characters. If you choose not to overwrite tables, and if a table exists with the truncated name, the last character is deleted and replaced with the numeric character 0. Values from 1 through 9 are attempted in turn. If all ten tables already exist, the table is not copied.</P>
+
+<P>A table is not converted or copied to the device if either of the following conditions is true:
+
+<UL type=disc>
+	<LI>All the table fields are unsupported data types&#0151;a condition that causes the converted table to be empty.</LI>
+
+	<LI>The table is a system table. A system table is identified by the name <B>MSYS*</B>.</LI>
+</UL>
+
+<H4>Field Conversion</H4>
+
+<P>Field names map directly between Microsoft Access and ADOCE databases. The supported length of 64 characters is the same in both .mdb files and .cdb files.</P>
+
+<H4>Index Conversion</H4>
+
+<P>All index names are truncated to 64 characters. The only index attribute that is copied is <B>Ascending</B> or <B>Descending</B>. Extra Access index information is omitted. Included are the attributes <B>IgnoreNulls, Primary</B>, and <B>Unique</B>. Index names are not case-sensitive and only the first field of a multicolumn index is indexed on a device. Only three indexes are allowed in a database. When you reach the limit of three indexes, the rest are skipped.</P>
+
+<P>Indexes are created on a device in the three stages described in the following table.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=14%>Stage</TH>
+<TH width=86%>Event</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Stage 1</B></TD>
+<TD width=86%>Any unique index called PrimaryKey is processed first. If PrimaryKey is a single-field index and the field is being copied, PrimaryKey is recreated on the device. If the PrimaryKey consists of multiple fields, an index is created for each field that exists on the device. These have 0, 1, and 2 appended to their names, replacing the 64<SUP>th</SUP> character of the name, if necessary. If this causes a naming conflict&#0151;unlikely because there should be only one PrimaryKey index&#0151;then that index is skipped. Boolean fields are not indexed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Stage 2</B></TD>
+<TD width=86%>Unique indexes are created next. Unique indexes are not created if any of the following are true:
+<UL type=disc>
+	<LI>The indexed field is not copied to the device.</LI>
+
+	<LI>The index name, when truncated to 64 characters, matches an index name that is already present.</LI>
+
+	<LI>The field has an index on the device.</LI>
+
+	<LI>The indexed field is Boolean.</LI>
+</UL>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=14%><B>Stage 3</B></TD>
+<TD width=86%>Nonunique indexes are created next. Nonunique indexes are not created if any of the following are true:
+<UL type=disc>
+	<LI>The indexed field contains more than one field.</LI>
+
+	<LI>The indexed field is not copied to the device.</LI>
+
+	<LI>The index name, when truncated to 64 characters, matches an index name that is already present.</LI>
+
+	<LI>The field has an index on the device.</LI>
+
+	<LI>The indexed field is Boolean.</LI>
+</UL>
+</TD>
+</TR>
+</TABLE><BR>
+
+<P>These rules are designed to create the most useful indexes on a device. However, because device use differs from desktop computer use, you should examine the resulting indexes and adjust them to suit a particular application.</P>
+
+<H4>Database types</H4>
+
+<P>The Jet 3.51 (Access 97) database format stores international characters using multi-byte encoding. The Jet 4.0 (Access 2000) database format stores all characters using Unicode character sets. Because of these differences, an error may occur if the two formats are treated as interchangeable. </P>
+
+<P>The value of the following registry key determines which type of database is created.</P>
+
+<P>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\Services\Synchronization\Objects\MicrosoftTable\CreateLatestJetDBVer</P>
+
+<P>The following table shows the values and properties that can be set using this registry key.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=31%>DWORD Value</TH>
+<TH width=69%>Property</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Zero</TD>
+<TD width=69%>Jet 3.5 database</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>Non-Zero</TD>
+<TD width=69%>Jet 4.0 database</TD>
+</TR>
+</TABLE><BR>
+
+<P>If the registry key is nonexistent, a Jet 3.5 database is created.</P>
+
+<H4>Conversion Options</H4>
+
+<P>Windows&nbsp;CE filters may have user options. When converting .mdb data into the proprietary Windows CE data source format, the default for the "Overwrite existing tables" option is <B>TRUE</B>. When the default is used, the data in the tables is replaced with the converted data. If this option is set to <B>FALSE</B>, the new tables are renamed.</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

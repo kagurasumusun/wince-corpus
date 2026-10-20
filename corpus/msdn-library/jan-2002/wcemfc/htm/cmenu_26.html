@@ -1,0 +1,219 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMenu::ModifyMenu</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMenu::ModifyMenu"/>
+<MSHelp:RLTitle Title="CMenu::ModifyMenu"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmenu_modifymenu"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CMenu::ModifyMenu</H1>
+
+<P>This method changes an existing menu item at the position specified by <I>nPosition</I>. The application specifies the new state of the menu item by setting values in <I>nFlags</I>. If this function replaces a pop-up menu associated with the menu item, it destroys the old pop-up menu and frees the memory used by the pop-up menu. </P>
+
+<PRE class=syntax><B>BOOL ModifyMenu(
+UINT </B><I>nPosition</I><B>,
+UINT </B><I>nFlags</I><B>,
+UINT </B><I>nIDNewItem</I><B> = 0,
+LPCTSTR </B><I>lpszNewItem</I><B> = NULL );</B><I>
+</I>
+<B>BOOL ModifyMenu(
+UINT </B><I>nPosition</I><B>,
+UINT </B><I>nFlags</I><B>,
+UINT </B><I>nIDNewItem</I><B>,
+const CBitmap* </B><I>pBmp</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nPosition</I></DT>
+
+<DD>Specifies the menu item to be changed. The <I>nFlags</I> parameter can be used to interpret <I>nPosition</I> in the following ways:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>nFlags</TH>
+<TH width=66%>Interpretation of nPosition</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_BYCOMMAND</TD>
+<TD width=66%>Specifies that the parameter gives the command ID of the existing menu item. This is the default if neither MF_BYCOMMAND nor MF_BYPOSITION is set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_BYPOSITION</TD>
+<TD width=66%>Specifies that the parameter gives the position of the existing menu item. The first item is at position zero.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies how <I>nPosition</I> is interpreted and gives information about the changes to be made to the menu item. For a list of flags that may be set, see the <A HREF="cmenu_3.htm"><B>AppendMenu</B></A> method.</DD>
+
+<DT><I>nIDNewItem</I></DT>
+
+<DD>Specifies either the command ID of the modified menu item or, if <I>nFlags</I> is set to MF_POPUP, the menu handle (<B>HMENU</B>) of a pop-up menu. The <I>nIDNewItem</I> parameter is ignored, not needed, if <I>nFlags</I> is set to MF_SEPARATOR.</DD>
+
+<DT><I>lpszNewItem</I></DT>
+
+<DD>Specifies the content of the new menu item. The <I>nFlags</I> parameter can be used to interpret <I>lpszNewItem</I> in the following ways:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>nFlags</TH>
+<TH width=66%>Interpretation of lpszNewItem</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_OWNERDRAW</TD>
+<TD width=66%>Contains an application-supplied 32-bit value that the application can use to maintain additional data associated with the menu item. This 32-bit value is available to the application when it processes MF_MEASUREITEM and MF_DRAWITEM.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_STRING</TD>
+<TD width=66%>Contains a long pointer to a null-terminated string or to a <B>CString</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>MF_SEPARATOR</TD>
+<TD width=66%>The <I>lpszNewItem</I> parameter is ignored, not needed.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>pBmp</I></DT>
+
+<DD>Points to a <B>CBitmap</B> object that will be used as the menu item.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>When <I>nIDNewItem</I> specifies a pop-up menu, it becomes part of the menu in which it is inserted. If that menu is destroyed, the inserted menu will also be destroyed. An inserted menu should be detached from a <B>CMenu</B> object to avoid conflict.</P>
+
+<P>Whenever a menu that resides in a window is changed, whether or not the window is displayed, the application should call <B>CWnd::DrawMenuBar</B>. To change the attributes of existing menu items, it is much faster to use the <B>CheckMenuItem</B> and <B>EnableMenuItem</B> methods.</P>
+
+<H4>Example</H4>
+
+<PRE>// CMainFrame::OnChangeFileMenu() is a menu command handler for
+// CMainFrame class, which in turn is a CFrameWnd-derived class.
+// It modifies the File menu by inserting, removing and renaming
+// some menu items. Other operations include associating a context
+// help id and setting default menu item to the File menu.
+// CMainFrame is a CFrameWnd-derived class.
+void CMainFrame::OnChangeFileMenu()
+{
+   // Get the menu from the application window.
+   CMenu* mmenu = GetMenu();
+
+   // Look for "File" menu.
+   int pos = FindMenuItem(mmenu, "&amp;File");
+   if (pos == -1)
+      return;
+
+   // Remove "New" menu item from the File menu.
+   CMenu* submenu = mmenu-&gt;GetSubMenu(pos);
+   pos = FindMenuItem(submenu, "&amp;New\tCtrl+N");
+   if (pos &gt; -1)
+      submenu-&gt;RemoveMenu(pos, MF_BYPOSITION);
+
+   // Look for "Open" menu item from the File menu. Insert a new
+   // menu item called "Close" right after the "Open" menu item.
+   // ID_CLOSEFILE is the command id for the "Close" menu item.
+   pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+   if (pos &gt; -1)
+      submenu-&gt;InsertMenu(pos + 1, MF_BYPOSITION, ID_CLOSEFILE, "&amp;Close");
+
+   // Rename menu item "Save" to "Save Selection".
+   pos = FindMenuItem(submenu, "&amp;Save\tCtrl+S");
+   if (pos &gt; -1)
+   {
+      UINT id = submenu-&gt;GetMenuItemID(pos);
+      submenu-&gt;ModifyMenu(id, MF_BYCOMMAND, id, "&amp;Save Selection");
+   }
+
+   // Associate a context help ID with File menu, if one is not found.
+   // ID_FILE_CONTEXT_HELPID is the context help ID for the File menu
+   // that is defined in resource file.
+   if (submenu-&gt;GetMenuContextHelpId() == 0)
+      submenu-&gt;SetMenuContextHelpId(ID_FILE_CONTEXT_HELPID);
+
+   // Set "Open" menu item as the default menu item for the File menu,
+   // if one is not found. So, when a user double-clicks the File
+   // menu, the system sends a command message to the menu owner
+   // window and closes the menu as if the File\Open command item had
+   // been chosen.
+   if (submenu-&gt;GetDefaultItem(GMDI_GOINTOPOPUPS, TRUE) == -1)
+   {
+      pos = FindMenuItem(submenu, "&amp;Open...\tCtrl+O");
+      submenu-&gt;SetDefaultItem(pos, TRUE);
+   }
+}
+
+// FindMenuItem() will find a menu item string from the specified
+// popup menu and returns its position (0-based) in the specified
+// popup menu. It returns -1 if no such menu item string is found.
+int FindMenuItem(CMenu* Menu, LPCTSTR MenuString)
+{
+   ASSERT(Menu);
+   ASSERT(::IsMenu(Menu-&gt;GetSafeHmenu()));
+
+   int count = Menu-&gt;GetMenuItemCount();
+   for (int i = 0; i &lt; count; i++)
+   {
+      CString str;
+      if (Menu-&gt;GetMenuString(i, str, MF_BYPOSITION) &amp;&amp;
+         (strcmp(str, MenuString) == 0))
+         return i;
+   }
+
+   return -1;
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmenu_3.htm"><B>CMenu::AppendMenu</B></A>, <A HREF="cmenu_23.htm"><B>CMenu::InsertMenu</B></A>, <A HREF="cmenu_5.htm"><B>CMenu::CheckMenuItem</B></A>, <A HREF="cmenu_14.htm"><B>CMenu::EnableMenuItem</B></A>, <A HREF="cmenu_12.htm"><B>CMenu::Detach</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,105 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating Secondary Buffers</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating Secondary Buffers"/>
+<MSHelp:RLTitle Title="Creating Secondary Buffers"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_creating_secondary_buffers_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_DSBUFFERDESC_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IDirectSound_CreateSoundBuffer_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IDirectSoundBuffer_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IDirectSoundBuffer_GetCaps_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_DSBCAPS_dsound" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Creating Secondary Buffers</H1>
+
+<P>To create a sound buffer, your application fills a <A HREF="JavaScript:hhobj_1.Click()"><B>DSBUFFERDESC</B></A> structure and then passes its address to the <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectSound::CreateSoundBuffer</B></A> method. This method creates a DirectSoundBuffer object and returns a pointer to an <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectSoundBuffer</B></A> interface. Your application uses this interface to manipulate and play the buffer.</P>
+
+<P>The following example illustrates how to create a basic secondary sound buffer:</P>
+
+<PRE class="code">BOOL AppCreateBasicBuffer(
+        LPDIRECTSOUND lpDirectSound,
+        LPDIRECTSOUNDBUFFER *lplpDsb)
+{
+    PCMWAVEFORMAT pcmwf;
+    DSBUFFERDESC dsbdesc;
+    HRESULT hr;
+    // Set up wave format structure.
+    memset(&amp;pcmwf, 0, sizeof(PCMWAVEFORMAT));
+    pcmwf.wf.wFormatTag = WAVE_FORMAT_PCM;
+    pcmwf.wf.nChannels = 2;
+    pcmwf.wf.nSamplesPerSec = 22050;
+    pcmwf.wf.nBlockAlign = 4;
+    pcmwf.wf.nAvgBytesPerSec =
+        pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
+    pcmwf.wBitsPerSample = 16;
+    // Set up DSBUFFERDESC structure.
+    memset(&amp;dsbdesc, 0, sizeof(DSBUFFERDESC)); // Zero it out.
+    dsbdesc.dwSize = sizeof(DSBUFFERDESC);
+    // Need default controls (pan, volume, frequency).
+    dsbdesc.dwFlags = DSBCAPS_CTRLDEFAULT;
+    // 3-second buffer.
+    dsbdesc.dwBufferBytes = 3 * pcmwf.wf.nAvgBytesPerSec;
+    dsbdesc.lpwfxFormat = (LPWAVEFORMATEX)&amp;pcmwf;
+    // Create buffer.
+    hr = lpDirectSound-&gt;lpVtbl-&gt;CreateSoundBuffer(lpDirectSound,
+        &amp;dsbdesc, lplpDsb, NULL);
+    if SUCCEEDED(hr)
+    {
+        // Valid interface is in *lplpDsb.
+        return TRUE;
+    }
+    else
+    {
+        // Failed.
+        *lplpDsb = NULL;
+        return FALSE;
+    }
+} </PRE>
+
+<P>Your application should create buffers for the most important sounds first, and then create buffers for other sounds in descending order of importance. DirectSound allocates hardware resources to the first buffers that can take advantage of them.</P>
+
+<P>If your application must explicitly locate buffers in hardware or software, you can specify either the DSBCAPS_LOCHARDWARE or DSBCAPS_LOCSOFTWARE flag in the <B>DSBUFFERDESC</B> structure. If the DSBCAPS_LOCHARDWARE flag is specified and there is insufficient hardware memory or mixing capacity, the buffer creation request fails. </P>
+
+<P>You can ascertain the location of an existing buffer by using the <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectSoundBuffer::GetCaps</B></A> method and checking the <B>dwFlags</B> member of the <A HREF="JavaScript:hhobj_5.Click()"><B>DSBCAPS</B></A> structure for either the DSBCAPS_LOCHARDWARE or DSBCAPS_LOCSOFTWARE flags. One or the other is always specified.</P>
+
+<P>When you create a sound buffer, you can indicate that a buffer is static by specifying the DSBCAPS_STATIC flag. If you do not specify this flag, the buffer is a streaming buffer. For more information, see <A HREF="dsover_21.htm">Static and Streaming Sound Buffers</A>.</P>
+
+<P>DirectSoundBuffer objects are owned by the DirectSound object that created them. When the DirectSound object is released, all buffers created by that object also will be released and should not be referenced.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

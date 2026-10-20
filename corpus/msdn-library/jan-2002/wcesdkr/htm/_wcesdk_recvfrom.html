@@ -1,0 +1,135 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>recvfrom</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="recvfrom"/>
+<MSHelp:RLTitle Title="recvfrom"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_recvfrom"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>recvfrom </H1>
+
+<P>This function receives a datagram and stores the source address. </P>
+
+<PRE class="syntax"><B>int</B> <B>recvfrom</B> <B>(
+SOCKET</B> <I>s</I><B>,
+char</B> <I>*buf</I><B>,
+int</B> <I>len</I><B>,
+int</B> <I>flags</I><B>,
+struct</B> <B>sockaddr</B> <I>*from</I><B>,
+int</B> <I>*fromlen </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>s</I></DT>
+
+<DD>[in] Descriptor that identifies a bound socket.</dd>
+
+<DT><I>buf</I></DT>
+
+<DD>[out] Buffer for the incoming data.</dd>
+
+<DT><I>len</I></DT>
+
+<DD>[in] Length of <I>buf</I>.</dd>
+
+<DT><I>flags</I></DT>
+
+<DD>[in] Not supported; set to zero.</dd>
+
+<DT><I>from</I></DT>
+
+<DD>[out] Optional pointer to a buffer that will hold the source address upon return.</dd>
+
+<DT><I>fromlen</I></DT>
+
+<DD>[in/out] Optional pointer to the size of the <I>from</I> buffer.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Zero indicates that the connection has been gracefully closed. SOCKET_ERROR indicates failure. To get a specific error value, call <B>WSAGetLastError</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>recvfrom</B> function reads incoming data on both connected and unconnected sockets and captures the address from which the data was sent. The socket must not be connected. The local address of the socket must be known. For server applications, this is usually done explicitly through <A HREF="_wcesdk_bind.htm"><B>bind</B></A>. Explicit binding is discouraged for client applications. For client applications using this function, the socket can become bound implicitly to a local address through<B> <A HREF="_wcesdk_sendto.htm">sendto</A></B>.</P>
+
+<P>For stream-oriented sockets such as those of type SOCK_STREAM, a call to <B>recvfrom</B> returns as much information as is currently available&#0151;up to the size of the buffer supplied.  The <I>from</I> and <I>fromlen</I> parameters are ignored for connection-oriented sockets.</P>
+
+<P>For message-oriented sockets, data is extracted from the first queued message, up to the size of the buffer supplied. If the datagram or message is larger than the buffer supplied, the buffer is filled with the first part of the datagram, and <B>recvfrom</B> generates the error WSAEMSGSIZE. For unreliable protocols (for example, UDP) the excess data is lost.</P>
+
+<P>If the <I>from</I> parameter is nonzero and the socket is not connection oriented, (type SOCK_DGRAM for example), the network address of the peer that sent the data is copied to the corresponding <A HREF="_wcesdk_sockaddr.htm"><B>SOCKADDR</B></A> structure. The value pointed to by <I>fromlen</I> is initialized to the size of this structure and is modified, on return, to indicate the actual size of the address stored in the <B>SOCKADDR</B> structure.</P>
+
+<P>If no incoming data is available at the socket, the <B>recvfrom</B> call blocks and waits for data to arrive. When the socket is nonblocking, a value of SOCKET_ERROR is returned with the error value set to WSAEWOULDBLOCK. The <A HREF="_wcesdk_select.htm"><B>select</B></A> function can be used to determine when more data arrives. </P>
+
+<P>Any data that has already been received and buffered by the transport will be copied into the supplied user buffers. In the case of a blocking socket with no data currently having been received and buffered by the transport, the call will block until data is received. For byte-stream protocols, the stack tries to return as much data as possible, subject to the supplied buffer space and amount of received data available. However, receipt of a single byte is sufficient to unblock the caller. There is no guarantee that more than a single byte will be returned. For message-oriented protocols, a full message is required to unblock the caller.</P>
+
+<P>If the socket is connection oriented and the remote side has shut down the connection gracefully, the call to <B>recvfrom</B> will complete immediately with zero bytes received. If the connection has been reset <B>recvfrom</B> will fail with the error WSAECONNRESET.</P>
+
+<P>Windows CE does not support the MSG_OOB value for processing out-of-band data, and does not support the MSG_PEEK value for copying data into the buffer without removing the date from the input queue.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winsock.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_bind.htm"><B>bind</B></A>, <A HREF="_wcesdk_recv.htm"><B>recv</B></A>, <A HREF="_wcesdk_select.htm"><B>select</B></A>, <A HREF="_wcesdk_send.htm"><B>send</B></A>, <A HREF="_wcesdk_shutdown_function.htm"><B>shutdown</B></A>, <A HREF="_wcesdk_socket.htm"><B>socket</B></A>, <A HREF="_wcesdk_wsastartup.htm"><B>WSAStartup</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

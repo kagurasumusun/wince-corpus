@@ -1,0 +1,59 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>When Reconnections Occur</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="When Reconnections Occur"/>
+<MSHelp:RLTitle Title="When Reconnections Occur"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_when_reconnections_occur"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ipin__queryaccept" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>When Reconnections Occur</H1>
+
+<P>For transform filters that do not modify the media type from input pin to output pin (such as most in-place transforms and many copy transforms), a reconnection scheme must be in place for offering the downstream filter's media type to the upstream filter. To understand this, consider the media type negotiation of the transform-inplace Filter B in the following illustration. </P>
+
+<P class="fig"></P>
+
+<P class="normal"></P>
+
+<P class="fig"></P>
+
+<P>The input pin of Filter B is connected first and establishes a media type with the upstream output pin (AOutPin). When the output pin of Filter B is connected next, it must use the enumerator from the output pin of the connected upstream filter (AOutPin), because it does not have one of its own. </P>
+
+<P>If the pin of the downstream filter, CInPin, can accept this, then the connection is complete. However, assume that Filter C does not agree to this media type but proposes a media type that Filter B can handle. </P>
+
+<P>Before deciding that it can handle the media type, Filter B calls the <A HREF="JavaScript:hhobj_1.Click()"><B>IPin::QueryAccept</B></A> method on AOutPin to ensure that it is acceptable. If no media type can be found that is acceptable for all the filters, then the BOutPin to CInPin connection will fail. (It is possible to find that a transform-inplace filter will connect to either its upstream or its downstream neighbors, but not both simultaneously.) </P>
+
+<P>If a suitable type is found, BOutPin must force a reconnection on the entire filter, and pass the established media type (the media type of CInPin) to AOutPin, when AOutPin and BInPin are connected again. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

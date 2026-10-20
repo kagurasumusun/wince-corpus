@@ -1,0 +1,312 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptDeriveKey</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptDeriveKey"/>
+<MSHelp:RLTitle Title="CryptDeriveKey"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptderivekey"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Cryptography" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>CryptDeriveKey</H1>
+
+<P>This function generates cryptographic keys derived from base data. This function guarantees that all keys generated from the same base data are identical, provided the same cryptographic service provider (CSP) and algorithms are used. The base data can be a password or any other user data.</P>
+
+<P>This function is the same as <A HREF="_wcesdk_crypto2_cryptgenkey.htm"><B>CryptGenKey</B></A>, except that the generated session keys are derived from base data instead of being random. Another difference is that the <B>CryptDeriveKey</B> function cannot be used to generate public/private key pairs.</P>
+
+<P>A handle to the session key is returned in <I>phKey</I>. This handle can then be used as needed with any of the other CryptoAPI functions that require key handles.</P>
+
+<PRE class="syntax"><B>BOOL CRYPTFUNC CryptDeriveKey(</B>
+<B>HCRYPTPROV</B> <I>hProv</I><B>,</B>
+<B>ALG_ID</B> <I>Algid</I><B>,</B>
+<B>HCRYPTHASH</B> <I>hBaseData</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>HCRYPTKEY</B> <B>*</B><I>phKey</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hProv</I></DT>
+
+<DD>[in] Handle to the application's CSP. An application obtains this handle by using the <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A> function.</dd>
+
+<DT><I>Algid</I></DT>
+
+<DD>[in] Identifier for the algorithm for which the key is to be generated.
+
+<P>The valid values for this parameter will vary, depending on the CSP that is used. See the <B>Remarks</B> section for a list of common algorithm identifiers.
+</dd>
+
+<DT><I>hBaseData</I></DT>
+
+<DD>[in] Handle to a hash object that has been fed the exact base data.
+
+<P>To obtain this handle, an application must first create a hash object with <A HREF="_wcesdk_crypto2_cryptcreatehash.htm"><B>CryptCreateHash</B></A> and then add the base data to the hash object with <A HREF="_wcesdk_crypto2_crypthashdata.htm"><B>CryptHashData</B></A>. For more information about hashing and digital signatures, see <A HREF="JavaScript:hhobj_1.Click()">Cryptography</A>.
+</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Specifies the type of key generated. This parameter can be zero, or you can specify one or more of the following flags by using the bitwise <B>OR</B> operator to combine them:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>CRYPT_EXPORTABLE.</TD>
+<TD width=63%>If this flag is set, then the session key can be transferred out of the CSP into a key BLOB through the <A HREF="_wcesdk_crypto2_cryptexportkey.htm"><B>CryptExportKey</B></A> function. Because keys generally must be exportable, this flag should usually be set.
+<P>If this flag is not set, then the session key will <I>not</I> be exportable. This means the key will be available only within the current session and only the application that created it will be able to use it.</P>
+
+<P>This flag does not apply to public/private key pairs</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>CRYPT_CREATE_SALT.</TD>
+<TD width=63%>Typically, when a session key is made from a hash value, there are a number of leftover bits. For example, if the hash value is 128 bits and the session key is 40 bits, there will be 88 bits left over.
+<P>If this flag is set, then the key will be assigned a salt value based on the unused hash value bits. You can retrieve this salt value by using the <A HREF="_wcesdk_crypto2_cryptgetkeyparam.htm"><B>CryptGetKeyParam</B></A> function with the <I>dwParam</I> parameter set to KP_SALT.</P>
+
+<P>If this flag is not set, then the key will be given a salt value of zero.</P>
+
+<P>When keys with nonzero salt values are exported (by using <A HREF="_wcesdk_crypto2_cryptexportkey.htm"><B>CryptExportKey</B></A>), the salt value must also be obtained and kept with the key BLOB.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>CRYPT_NO_SALT. </TD>
+<TD width=63%>Specifies that a no salt value gets allocated for a 40-bit symmetric key.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>CRYPT_USER_PROTECTED. </TD>
+<TD width=63%>If this flag is set, then the user will be notified through a dialog box or another method when certain actions are attempted by using this key. The precise behavior is specified by the CSP being used. Prior to Microsoft Internet Explorer 4.0, Microsoft Cryptographic Providers ignore this flag. Starting with Microsoft Internet Explorer 4.0, Microsoft Providers support this flag value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>CRYPT_UPDATE_KEY. </TD>
+<TD width=63%>Some CSPs use session keys that are derived from multiple hash values. When this is the case, <B>CryptDeriveKey</B> must be called multiple times.
+<P>If this flag is set, a new session key is not generated. Instead, the key specified by <I>phKey</I> is modified. The precise behavior of this flag is dependent on the type of key being generated and on the particular CSP being used.</P>
+
+<P>The Microsoft Cryptographic Providers ignore this flag.</P>
+</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>phKey</I></DT>
+
+<DD>[out] Address to which the function copies the handle of the newly generated key.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. Common values for <B>GetLastError</B> are described in the following table. The error values prefaced by "NTE" are generated by the particular CSP you are using.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=40%>Value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>ERROR_INVALID_HANDLE</TD>
+<TD width=60%>One of the parameters specifies an invalid handle. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>ERROR_INVALID_PARAMETER</TD>
+<TD width=60%>One of the parameters contains an invalid value. This is most often an illegal pointer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NTE_BAD_ALGID</TD>
+<TD width=60%>The <I>Algid</I> parameter specifies an algorithm that this CSP does not support.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NTE_BAD_FLAGS</TD>
+<TD width=60%>The <I>dwFlags</I> parameter contains an invalid value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NTE_BAD_HASH</TD>
+<TD width=60%>The <I>hBaseData</I> parameter does not contain a valid handle to a hash object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NTE_BAD_HASH_STATE</TD>
+<TD width=60%>An attempt was made to add data to a hash object that is already marked "finished."</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NTE_BAD_UID</TD>
+<TD width=60%>The <I>hProv</I> parameter does not contain a valid context handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>NTE_FAIL</TD>
+<TD width=60%>The function failed in some unexpected way.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>To generate a key for a symmetric encryption algorithm, use the <I>Algid</I> parameter to specify the algorithm. The algorithms available will most likely be different for each CSP. If you are using the Microsoft Base Cryptographic Provider, use one of the following values to specify the algorithm.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=39%>Value</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>CALG_RC2</TD>
+<TD width=61%>RC2 block cipher</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>CALG_RC4</TD>
+<TD width=61%>RC4 stream cipher</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>When keys are generated for symmetric block ciphers, the key by default will be set up in cipher block chaining (CBC) mode with an initialization vector of zero. This cipher mode provides a good default method for bulk-encrypting data. To change these parameters, use the <A HREF="_wcesdk_crypto2_cryptsetkeyparam.htm"><B>CryptSetKeyParam</B></A> function.</P>
+
+<P>After the <B>CryptDeriveKey</B> function has been called, no more data can be added to the hash object. The <A HREF="_wcesdk_crypto2_cryptdestroyhash.htm"><B>CryptDestroyHash</B></A> function should be called at this point to destroy the hash object.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">#include &lt;wincrypt.h&gt;
+
+HCRYPTPROV hProv = 0;
+HCRYPTKEY hKey = 0;
+HCRYPTHASH hHash = 0;
+CHAR szPassword[ ] = "apple-camshaft";
+DWORD dwLength;
+
+// Get a handle to user default provider.
+if(!CryptAcquireContext(&amp;hProv, NULL, NULL, PROV_RSA_FULL, 0)) {
+ printf("Error %x during CryptAcquireContext!\n", GetLastError());
+ goto done;
+}
+
+// Create a hash object.
+if(!CryptCreateHash(hProv, CALG_MD5, 0, 0, &amp;hHash)) {
+ printf("Error %x during CryptCreateHash!\n", GetLastError());
+ goto done;
+}
+
+// Hash the password string.
+dwLength = strlen(szPassword);
+if(!CryptHashData(hHash, (BYTE *)szPassword, dwLength, 0)) {
+ printf("Error %x during CryptHashData!\n", GetLastError());
+ goto done;
+}
+
+// Create a block cipher session key based on the hash of the password.
+if(!CryptDeriveKey(hProv, CALG_RC2, hHash, CRYPT_EXPORTABLE, &amp;hKey)) {
+ printf("Error %x during CryptDeriveKey!\n", GetLastError());
+ goto done;
+}
+
+// Use 'hKey' to encrypt or decrypt a message.
+...
+
+done:
+
+// Destroy the hash object.
+if(hHash != 0) CryptDestroyHash(hHash);
+
+// Destroy the session key.
+if(hKey != 0) CryptDestroyKey(hKey);
+
+// Release the provider handle.
+if(hProv != 0) CryptReleaseContext(hProv, 0);</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Cryptapi.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A>, <A HREF="_wcesdk_crypto2_cryptcreatehash.htm"><B>CryptCreateHash</B></A>, <A HREF="_wcesdk_crypto2_cryptdestroyhash.htm"><B>CryptDestroyHash</B></A>, <A HREF="_wcesdk_crypto2_cryptdestroykey.htm"><B>CryptDestroykey</B></A>, <A HREF="_wcesdk_crypto2_cryptexportkey.htm"><B>CryptExportKey</B></A>, <A HREF="_wcesdk_crypto2_cryptgenkey.htm"><B>CryptGenKey</B></A>, <A HREF="_wcesdk_crypto2_cryptgetkeyparam.htm"><B>CryptGetKeyParam</B></A>, <A HREF="_wcesdk_crypto2_crypthashdata.htm"><B>CryptHashData</B></A>, <A HREF="_wcesdk_crypto2_cryptsetkeyparam.htm"><B>CryptSetKeyParam</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

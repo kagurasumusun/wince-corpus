@@ -1,0 +1,57 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Transactions to Collect Data</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="Using Transactions to Collect Data"/>
+<MSHelp:RLTitle Title="Using Transactions to Collect Data"/>
+<MSHelp:Keyword Index="A" Term="adoguide_17"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_wceadoce_using_transactions_to_collect_data"></A><SUP></SUP>Using Transactions to Collect Data</H1>
+
+<P>When collecting data, it is sometimes necessary to gather a group of related data. If data collection is interrupted for some reason and cannot be completed, it might be better to abort than to save incomplete data. In this case, a transaction can be used.</P>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;The Windows CE native database (Object Store and .cdb files) do not support transactions. This is dependant on the OLE DB provider as to whether they support transactions or not.</P>
+
+<P>A transaction is started using the <B>BeginTrans</B> method. Data can be collected and stored in memory but will not be written to the database until the <B>CommitTrans</B> method is called. If an error occurs or for some reason the data is not collected, calling the <B>RollbackTrans</B> method will delete all the captured data from memory and end the transaction. The default level of the IsolationLevel property is <B>adXactChaos</B>. Set the IsolationLevel property if a higher level of isolation is necessary. In general, since databases on Windows&nbsp;CE devices usually have only a single user, it is not necessary to set a higher level of isolation.</P>
+
+<P>If a transaction is aborted, you can reset the recordset by using the <B>Requery</B> method. The <B>Requery</B> method reopens the current recordset by querying the data source using the same information that was used when the current recordset was opened.</P>
+
+<P>The following code example shows how to use a transaction to prevent the collection of partial data.</P>
+
+<PRE>Dim cn, rs
+'Insert code here to open a connection to a data source
+'and open the table in the data source, myTable.
+cn.BeginTrans
+'Insert data collection code here.
+If MsgBox("Save all changes?", vbYesNo) = vbYes Then
+  cn.CommitTrans
+Else
+  cn.RollbackTrans
+End If
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

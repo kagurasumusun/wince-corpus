@@ -1,0 +1,143 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DllGetClassObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DllGetClassObject"/>
+<MSHelp:RLTitle Title="DllGetClassObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_dllgetclassobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>DllGetClassObject</H1>
+
+<P>This function retrieves the class object from a DLL object handler or object application. <B>DllGetClassObject</B> is called from within the <A HREF="_wcesdk_com_cogetclassobject.htm"><B>CoGetClassObject</B></A> function when the class context is a DLL.</P>
+
+<P>OLE does not provide this function. DLLs that support the OLE Component Object Model (COM) must implement <B>DllGetClassObject</B> in OLE object handlers or DLL applications.</P>
+
+<PRE class="syntax"><B>STDAPI DllGetClassObject(
+REFCLSID </B><I>rclsid</I><B>,
+REFIID </B><I>riid</I><B>,
+LPVOID *</B><I>ppv</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>rclsid</I></DT>
+
+<DD>[in] CLSID that will associate the correct data and code.</dd>
+
+<DT><I>riid</I></DT>
+
+<DD>[in] Reference to the identifier of the interface that the caller is to use to communicate with the class object. Usually, this is <B>IID_IClassFactory</B> (defined in the OLE headers as the interface identifier for <A HREF="_wcesdk_com_iclassfactory_iunknown.htm"><B>IClassFactory</B></A>).</dd>
+
+<DT><I>ppv</I></DT>
+
+<DD>[out] Address of pointer variable that receives the interface pointer requested in riid. Upon successful return, *<I>ppv</I> contains the requested interface pointer. If an error occurs, the interface pointer is NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return values E_INVALIDARG, E_OUTOFMEMORY and E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The object was retrieved successfully.</dd>
+
+<DT>CLASS_E_CLASSNOTAVAILABLE</DT>
+
+<DD>The DLL does not support the class (object definition).</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>If a call to the <B>CoGetClassObject</B> function finds the class object that is to be loaded in a DLL, <B>CoGetClassObject</B> uses the DLL's exported <B>DllGetClassObject</B> function. </P>
+
+<H4>Notes to Callers</H4>
+
+<P>You should not call <B>DllGetClassObject</B> directly. When an object is defined in a DLL, <B>CoGetClassObject</B> calls the <A HREF="_wcesdk_com_coloadlibrary.htm"><B>CoLoadLibrary</B></A> function to load the DLL, which, in turn, calls <B>DllGetClassObject</B>. </P>
+
+<H4>Notes to Implementers</H4>
+
+<P>You need to implement <B>DllGetClassObject</B> in (and export it from) DLLs that support the OLE Component Object Model.</P>
+
+<H4>Example</H4>
+
+<P>Following is an example (in C++) of an implementation of <B>DllGetClassObject</B>. In this example, <B>DllGetClassObject</B> creates a class object and calls its <A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A> method to retrieve a pointer to the interface requested in riid. The implementation safely releases the reference it holds to the <B>IClassFactory</B> interface because it returns a reference-counted pointer to <B>IClassFactory</B> to the caller.</P>
+
+<PRE class="code">HRESULT_export  PASCAL DllGetClassObject
+        (REFCLSID rclsid, REFIID riid, LPVOID * ppvObj)
+{
+    HRESULT hres = E_OUTOFMEMORY;
+    *ppvObj = NULL;
+
+    CClassFactory *pClassFactory = new CClassFactory(rclsid);
+    if (pClassFactory != NULL)   {
+        hRes = pClassFactory-&gt;QueryInterface(riid, ppvObj);
+        pClassFactory-&gt;Release();
+    }
+    return hRes; </PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_cogetclassobject.htm"><B>CoGetClassObject</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

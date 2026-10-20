@@ -1,0 +1,131 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetRows</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="GetRows"/>
+<MSHelp:RLTitle Title="GetRows"/>
+<MSHelp:Keyword Index="A" Term="ado30ref_21"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce_getrows"></A><SUP></SUP>GetRows</H1>
+
+<P>This method returns data stored in the recordset.</P>
+
+<PRE class=syntax><I>array</I> = <I>recordset</I>.<B>GetRows</B>(<I>Rows</I>, <I>Start</I>, <I>Fields</I>)</PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Array</I></DT>
+
+<DD><B>Variant</B> variable that contains returned data.</DD>
+
+<DT><I>Rows</I></DT>
+
+<DD>Optional. <B>Long</B> expression that specifies the number of records to retrieve. The default value is either <B>adGetRowsRest</B> or &#0150;1.</DD>
+
+<DT><I>Start</I></DT>
+
+<DD>Optional. String or <B>variant</B> that is the bookmark for the record from which the <B>GetRows</B> operation should begin.</DD>
+
+<DT><I>Fields</I></DT>
+
+<DD>Optional. <B>Variant</B> that represents a single field name or ordinal position or an array of field names or ordinal position numbers. ADOCE returns only the data in these fields.</DD>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None.</P>
+
+<H4>Remarks</H4>
+
+<P>Use the <B>GetRows</B> method to copy records from a <B>Recordset</B> object into a two-dimensional array. The first subscript identifies the field and the second subscript identifies the record number. The array variable is automatically set to the correct size when the <B>GetRows</B> method returns the data.</P>
+
+<P>If you do not specify a value for the <I>Rows</I> parameter, the <B>GetRows</B> method automatically retrieves all the records in the <B>Recordset</B> object. If you request more records than are available, <B>GetRows</B> returns only the number of available records.</P>
+
+<P>If the <B>Recordset</B> object supports bookmarks, you can specify at which record the <B>GetRows</B> method should begin retrieving data by passing the value of the bookmark for that record property.</P>
+
+<P>To restrict the fields that the <B>GetRows</B> call returns, pass a single field name or number, or an array of field names or numbers in the <I>Fields</I> parameter.</P>
+
+<P>After you call <B>GetRows</B>, the next unread record becomes the current record. If there are no more records, ADOCE sets the EOF property to <B>TRUE</B>.</P>
+
+<H4>Examples</H4>
+
+<P>The following code example shows how to use the <B>GetRows</B> method to retrieve and display data in a requested number of rows. </P>
+
+<PRE>Dim rstEmployees, strMessage
+Dim intRows, avarRecords
+Dim intRecord, intField
+Dim intRecCount, intFieldCount
+
+Set rstEmployees = CreateObject("ADOCE.Recordset.3.1")
+rstEmployees.Open "myTable"
+
+strMessage = "Enter number of rows to retrieve."
+intRows = CInt(InputBox(strMessage))
+
+If intRows &lt;= 0 Then intRows = 1
+
+' If GetRowsOK is successful, print the results,
+' noting if the end of the file was reached.
+If GetRowsOK(rstEmployees, intRows, avarRecords) Then
+  If intRows &gt; UBound(avarRecords, 2) + 1 Then
+    MsgBox "Less than " &amp; intRows &amp; " rows in recordset."
+  End If
+  intRecCount = UBound(avarRecords, 2) + 1
+  intFieldCount = UBound(avarRecords, 1) + 1
+  MsgBox intRecCount &amp; " records found."
+  MsgBox intFieldCount &amp; " fields found."
+  For intRecord = 0 To intRecCount - 1
+    strMessage = ""
+    For intField = 0 To intFieldCount - 1
+      strMessage = strMessage &amp; _
+        avarRecords(intField, intRecord) &amp; vbCrLf
+    Next
+    MsgBox strMessage
+  Next
+Else
+  MsgBox "GetRows failed!"
+End If
+
+rstEmployees.Close
+Set rstEmployees = Nothing
+
+Public Function GetRowsOK(rstTemp, intNumber, avarData)
+  ' Store the results of the GetRows method in an array.
+  avarData = rstTemp.GetRows(intNumber)
+  ' Return <B>FALSE</B> only if fewer than the desired
+  ' number of rows were returned, but not because the
+  ' end of the recordset was reached.
+  If intNumber &gt; UBound(avarData, 2) + 1 And Not rstTemp.EOF Then
+    GetRowsOK = False
+  Else
+    GetRowsOK = True
+  End If
+End Function
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,178 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GetObject"/>
+<MSHelp:RLTitle Title="GetObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_getobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>GetObject</H1>
+
+<P>This function obtains information about a specified graphics object. Depending on the graphics object, the function places a filled-in <A HREF="_wcesdk_win32_bitmap_str.htm"><B>BITMAP</B></A>, <A HREF="_wcesdk_win32_dibsection_str.htm"><B>DIBSECTION</B></A>, <A HREF="_wcesdk_win32_logbrush_str.htm"><B>LOGBRUSH</B></A>, <A HREF="_wcesdk_win32_logfont_str.htm"><B>LOGFONT</B></A>, or <A HREF="_wcesdk_win32_logpen_str.htm"><B>LOGPEN</B></A> structure into a specified buffer. </P>
+
+<PRE class="syntax"><B>int</B> <B>GetObject(
+HGDIOBJ</B> <I>hgdiobj</I><B>,
+int</B> <I>cbBuffer</I><B>,
+LPVOID</B> <I>lpvObject
+</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hgdiobj</I></DT>
+
+<DD>[in] Handle to the graphics object of interest. This can be a handle to one of the following: a logical bitmap, a brush, a font, a palette, a pen, or a device-independent bitmap created by calling the <A HREF="_wcesdk_win32_createdibsection.htm"><B>CreateDIBSection</B></A> function.</dd>
+
+<DT><I>cbBuffer</I></DT>
+
+<DD>[in] Specifies the number of bytes of information to be written to the buffer. </dd>
+
+<DT><I>lpvObject</I></DT>
+
+<DD>[out] Long pointer to a buffer that is to receive the information about the specified graphics object.
+
+<P>The following table shows the type of information the buffer receives for each type of graphics object you can specify with <I>hgdiobj</I>.
+
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Object type</TH>
+<TH width=62%>Data written to *<I>lpvObject</I></TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>HBITMAP</B></TD>
+<TD width=62%><B>BITMAP</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>HBITMAP</B> returned from a call to <B>CreateDIBSection</B></TD>
+<TD width=62%><B>DIBSECTION</B>, if <I>cbBuffer</I> is set to <B>sizeof</B>(<B>DIBSECTION</B>), or <B>BITMAP</B>, if <I>cbBuffer</I> is set to <B>sizeof</B>(<B>BITMAP</B>)</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>HPALETTE</B></TD>
+<TD width=62%>A <B>WORD</B> count of the number of entries in the logical palette</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>HPEN</B></TD>
+<TD width=62%><B>LOGPEN</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>HBRUSH</B></TD>
+<TD width=62%><B>LOGBRUSH</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%><B>HFONT</B></TD>
+<TD width=62%><B>LOGFONT</B></TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>If the <I>lpvObject </I>parameter is NULL, the function return value is the number of bytes required to store the information it writes to the buffer for the specified graphics object.
+
+
+<P>For Windows CE versions 1.0 and 1.01:
+
+
+<UL type="disc">
+	<LI>The <B>HPALETTE</B> object type is not supported.</li>
+
+	<LI><A HREF="#_wcesdk_win32_getobject"><B>GetObject</B></A> always returns a <B>BITMAP</B> when it is used on a DIB section.</li>
+</UL>
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, and <I>lpvObject</I> is a valid pointer, the return value is the number of bytes stored into the buffer.</P>
+
+<P>If the function succeeds, and <I>lpvObject</I> is NULL, the return value is the number of bytes required to hold the information the function would store into the buffer.</P>
+
+<P>If the function fails, the return value is zero. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<H4>Remarks</H4>
+
+<P>The buffer pointed to by the <I>lpvObject</I> parameter must be sufficiently large to receive the information about the graphics object. </P>
+
+<P>If <I>hgdiobj</I> identifies a bitmap created by calling <A HREF="_wcesdk_win32_createdibsection.htm"><B>CreateDIBSection</B></A>, and the specified buffer is large enough, the <B>GetObject</B> function returns a <A HREF="_wcesdk_win32_dibsection_str.htm"><B>DIBSECTION</B></A> structure. In addition, the <B>bmBits</B> member of the <A HREF="_wcesdk_win32_bitmap_str.htm"><B>BITMAP</B></A> structure contained within the <B>DIBSECTION</B> will contain a pointer to the bitmap's bit values. </P>
+
+<P>If <I>hgdiobj</I> identifies a bitmap created by any other means, <B>GetObject</B> returns only the width, height, and color format information of the bitmap. </P>
+
+<P>If <I>hgdiobj</I> identifies a logical palette, <B>GetObject</B> retrieves a 2-byte integer that specifies the number of entries in the palette. The function does not retrieve the <A HREF="_wcesdk_win32_logpalette_str.htm"><B>LOGPALETTE</B></A> structure defining the palette. To retrieve information about palette entries, an application can call the <A HREF="_wcesdk_win32_getpaletteentries.htm"><B>GetPaletteEntries</B></A> function. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Wingdi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Mgbase.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createdibsection.htm"><B>CreateDIBSection</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="#_wcesdk_win32_getobject"><B>GetObject</B></A>, <A HREF="_wcesdk_win32_getpaletteentries.htm"><B>GetPaletteEntries</B></A>, <A HREF="_wcesdk_win32_getregiondata.htm"><B>GetRegionData</B></A>, <A HREF="_wcesdk_win32_bitmap_str.htm"><B>BITMAP</B></A>, <A HREF="_wcesdk_win32_dibsection_str.htm"><B>DIBSECTION</B></A>, <A HREF="_wcesdk_win32_logbrush_str.htm"><B>LOGBRUSH</B></A>, <A HREF="_wcesdk_win32_logfont_str.htm"><B>LOGFONT</B></A>, <A HREF="_wcesdk_win32_logpalette_str.htm"><B>LOGPALETTE</B></A>, <A HREF="_wcesdk_win32_logpen_str.htm"><B>LOGPEN</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

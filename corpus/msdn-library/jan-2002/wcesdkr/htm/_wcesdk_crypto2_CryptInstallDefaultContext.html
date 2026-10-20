@@ -1,0 +1,182 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptInstallDefaultContext</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptInstallDefaultContext"/>
+<MSHelp:RLTitle Title="CryptInstallDefaultContext"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptinstalldefaultcontext"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CryptInstallDefaultContext</H1>
+
+<P>This function installs a previously acquired <A HREF="_wcesdk_crypto2_hcryptprov.htm"><B>HCRYPTPROV</B></A> context to be used as a default context. The values of two input parameters, <I>wDefaultType</I> and <I>pvDefaultPara</I>, specify where the default context is used.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptInstallDefaultContext(</B>
+<B>HCRYPTPROV</B> <I>hCryptProv</I><B>,</B>
+<B>DWORD</B> <I>dwDefaultType</I><B>,</B>
+<B>const void *</B><I>pvDefaultPara</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>void *</B><I>pvReserved</I><B>,</B>
+<B>HCRYPTDEFAULTCONTEXT</B> *<I>phDefaultContext
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCryptProv</I> </DT>
+
+<DD>[in] <B>HCRYPTPROV</B> handle to be used as the default context. This handle must have already been created using the <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A> function.</dd>
+
+<DT><I>dwDefaultType</I> </DT>
+
+<DD>[in] Sets the use of the default provider handle. The following table shows the possible values for the <I>dwDefaultType</I> parameter.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_DEFAULT_CONTEXT_CERT_SIGN_OID</TD>
+<TD width=53%>Installs a default <B>HCRYPTPROV</B> handle used to verify a certificate signature. <I>pvDefaultPara</I> points to the <I>szOID</I> value of the certificate signature algorithm; for example, szOID_OIWSEC_md5RSA. If <I>pvDefaultPara</I> is NULL, the <B>HCRYPTPROV</B> handle is used to verify all certificate signatures. Note, <I>pvDefaultPara</I> cannot be NULL when CRYPT_DEFAULT_CONTEXT_PROCESS_FLAG is set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_DEFAULT_CONTEXT_MULTI_CERT_SIGN_OID</TD>
+<TD width=53%>Same as CRYPT_DEFAULT_CONTEXT_CERT_SIGN_OID. However, the default <B>HCRYPT2PROV</B> structure is to be used for multiple signature <I>szOID</I> values. The <I>pvDefaultPara</I> parameter points to a <B>CRYPT_DEFAULT_CONTEXT_MULTI_OID_PARA</B> structure containing an array of <I>szOID</I> pointers.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pvDefaultPara</I> </DT>
+
+<DD>[in] Pointer to the <I>szOID</I> value of the certificate signature algorithm or to an array of <I>szOID</I> values defined in the <B>CRYPT_DEFAULT_CONTEXT_MULTI_OID_PARA</B> structure. It can be NULL if the <I>dwDefaultType</I> parameter is CRYPT_DEFAULT_CONTEXT_CERT_SIGN_OID and the default <B>HCRYPTPROV</B> value is used to verify all certificate signatures.</dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] Flags that determine the way the provider is released and, if applicable, all threads are shown in the following table.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_DEFAULT_CONTEXT_AUTO_RELEASE_FLAG</TD>
+<TD width=53%>The <I>hCryptProv</I> value is released automatically when the process ends. The <I>hCryptProv</I> value is not released by a call to the <A HREF="_wcesdk_crypto2_cryptuninstalldefaultcontext.htm"><B>CryptUninstallDefaultContext</B></A> function if the function is called before process or thread exit. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_DEFAULT_CONTEXT_PROCESS_FLAG</TD>
+<TD width=53%>The <I>hCryptProv</I> value is applicable to all threads in the process. This is the default flag.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pvReserved</I> </DT>
+
+<DD>[in] Reserved for future use.</dd>
+
+<DT><I>phDefaultContext</I> </DT>
+
+<DD>[out] Pointer to the handle of the new default context.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE) and the *<I>phDefaultContext</I> parameter is updated with the handle to be passed to the <B>CryptUninstallDefaultContext</B> function.</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<H4>Remarks</H4>
+
+<P>By default, the installed <B>HCRYPTPROV</B> value is only applicable to the current // thread. Set CRYPT_DEFAULT_CONTEXT_PROCESS_FLAG to allow the <B>HCRYPTPROV</B> value to be used by all threads in the current process.</P>
+
+<P>The installed <B>HCRYPTPROV</B> values are stack-ordered, thus the last installed <B>HCRYPTPROV</B> value is checked first. All thread-installed <B>HCRYPTPROV</B> values are checked before any process <B>HCRYPTPROV</B> values.</P>
+
+<P>The installed <B>HCRYPTPROV</B> value remains available for default usage until the <B>CryptUninstallDefaultContext</B> function is called or the thread or process exits.</P>
+
+<P>If CRYPT_DEFAULT_CONTEXT_AUTO_RELEASE_FLAG is set, then the <B>HCRYPTPROV</B> value is released by the <A HREF="_wcesdk_crypto2_cryptreleasecontext.htm"><B>CryptReleaseContext</B></A> function at thread or process exit. The provider is not re-released if the <B>CryptUninstallDefaultContext</B> function was previously called.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_hcryptprov.htm"><B>HCRYPTPROV</B></A>, <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A>, <A HREF="_wcesdk_crypto2_cryptreleasecontext.htm"><B>CryptReleaseContext</B></A>, <A HREF="_wcesdk_crypto2_cryptuninstalldefaultcontext.htm"><B>CryptUninstallDefaultContext</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

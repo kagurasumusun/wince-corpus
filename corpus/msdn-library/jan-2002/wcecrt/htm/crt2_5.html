@@ -1,0 +1,170 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>atof, atoi, atol</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="atof, atoi, atol"/>
+<MSHelp:RLTitle Title="atof, atoi, atol"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_atof_atoi_atoi64_atol"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>atof, atoi, _atoi64, atol</H1>
+
+<P>Convert strings to double (<B>atof</B>), integer (<B>atoi</B>, _<B>atoi64</B>), or long (<B>atol</B>).</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Routine</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>atof</B></TD>
+<TD width=74%>&lt;math.h&gt; and &lt;stdlib.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>atoi</B></TD>
+<TD width=74%>&lt;stdlib.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>_atoi64</B></TD>
+<TD width=74%>&lt;stdlib.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>atol</B></TD>
+<TD width=74%>&lt;stdlib.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>double atof( const char *</B><I>string</I> <B>);</B>
+<B>int atoi( const char *</B><I>string</I> <B>);</B>
+<B>_int64 _atoi64( const char *</B><I>string</I><B> );
+long atol( const char *</B><I>string</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>string</I></DT>
+
+<DD>String to be converted</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Values</H4>
+
+<P>Each function returns the double, <B>int</B>, <B>__int64</B> or long value produced by interpreting the input characters as a number. The return value is 0 (for <B>atoi</B> and <B>_atoi64</B>), 0L (for <B>atol</B>), or 0.0 (for <B>atof</B>) if the input cannot be converted to a value of that type. The return value is undefined in case of overflow.</P>
+
+<H4>Remarks</H4>
+
+<P>These functions convert a character string to a double-precision floating-point value (<B>atof</B>), an integer value (<B>atoi</B> and <B>_atoi64</B>), or a long integer value (<B>atol</B>). The input string is a sequence of characters that can be interpreted as a numerical value of the specified type. The output value is affected by the setting of the LC_NUMERIC category in the current locale. The longest string size that <B>atof</B> can handle is 100 characters. The function stops reading the input string at the first character that it cannot recognize as part of a number. This character may be the null character ('\0') terminating the string.</P>
+
+<P>The string argument to <B>atof</B> has the following form:</P>
+
+<P>[<I>whitespace</I>] [<I>sign</I>] [<I>digits</I>] [.<I>digits</I>] [ {<B>d</B> | <B>D</B> | <B>e</B> | <B>E</B> }[<I>sign</I>]<I>digits</I>]</P>
+
+<P>A <I>whitespace</I> consists of space and/or tab characters, which are ignored; sign is either plus (+) or minus ( &#0150; ); and digits are one or more decimal digits. If no digits appear before the decimal point, at least one must appear after the decimal point. The decimal digits may be followed by an exponent, which consists of an introductory letter ( d, D, e, or E) and an optionally signed decimal integer.</P>
+
+<P><B>atoi</B>, _<B>atoi64</B>, and <B>atol</B> do not recognize decimal points or exponents. The string argument for these functions has the form:</P>
+
+<P>[<I>whitespace] [sign]digits</I></P>
+
+<P>where <I>whitespace</I>, <I>sign</I>, and <I>digits</I> are exactly as described above for <B>atof</B>.</P>
+
+<H4>Generic-Text Routine Mappings</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=31%>TCHAR.H Routine </TH>
+<TH width=69%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>_ttoi</B></TD>
+<TD width=69%><B>_wtoi</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>_ttol</B></TD>
+<TD width=69%><B>_wtol</B></TD>
+</TR>
+</TABLE><BR>
+
+<H4>Example</H4>
+
+<PRE class="code">/* ATOF.C: This program shows how numbers stored
+ * as strings can be converted to numeric values
+ * using the atof, atoi, and atol functions.
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+void main( void )
+{
+   char *s; double x; int i; long l;
+
+   s = "  -2309.12E-15";    /* Test of atof */
+   x = atof( s );
+   printf( "atof test: ASCII string: %s\tfloat:  %e\n", s, x );
+
+   s = "7.8912654773d210";  /* Test of atof */
+   x = atof( s );
+   printf( "atof test: ASCII string: %s\tfloat:  %e\n", s, x );
+
+   s = "  -9885 pigs";      /* Test of atoi */
+   i = atoi( s );
+   printf( "atoi test: ASCII string: %s\t\tinteger: %d\n", s, i );
+
+   s = "98854 dollars";     /* Test of atol */
+   l = atol( s );
+   printf( "atol test: ASCII string: %s\t\tlong: %ld\n", s, l );
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">atof test: ASCII string:   -2309.12E-15&nbsp;&nbsp;float:  -2.309120e-012
+atof test: ASCII string: 7.8912654773d210&nbsp;&nbsp;float:  7.891265e+210
+atoi test: ASCII string:   -9885 pigs&nbsp;&nbsp;&nbsp;&nbsp;integer: -9885
+atol test: ASCII string: 98854 dollars&nbsp;&nbsp;&nbsp;&nbsp;long: 98854
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt2_16.htm"><B>_ecvt</B></A>, <A HREF="crt2_20.htm"><B>_fcvt</B></A>, <A HREF="crt2_47.htm"><B>_gcvt</B></A>, <A HREF="crt3_31.htm"><B>wcstol</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

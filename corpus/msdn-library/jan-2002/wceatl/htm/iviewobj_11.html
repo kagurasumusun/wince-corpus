@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>IViewObjectExImpl::QueryHitRect</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="IViewObjectExImpl::QueryHitRect"/>
+<MSHelp:RLTitle Title="IViewObjectExImpl::QueryHitRect"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_iviewobjecteximpl_queryhitrect"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IViewObjectExImpl::QueryHitRect</H1>
+
+<P>This method checks whether the display rectangle of the control overlaps any point in the specified location rectangle and returns a HITRESULT value in <I>pHitResult</I>. The value can be either HITRESULT_HIT or HITRESULT_OUTSIDE.</P>
+
+<P>Containers may need to test whether an object overlaps a given drawing aspect of another object. They can determine whether the objects overlap by requesting a region or at least a bounding rectangle of the aspect in question. However, a quicker way to do this is to call <B>IViewObjectExImpl::QueryHitRect</B> to ask the object whether a given rectangle intersects one of its drawing aspects.</P>
+
+<P>Unlike <B>IVewObjectExImpl::QueryHitPoint</B>, this method does not return HITRESULT_TRANSPARENT or HITRESULT_CLOSE. It is strictly hit or miss, returning HITRESULT_OUTSIDE if no point in the rectangle is hit and HITRESULT_HIT if at least one point in the rectangle is a hit.</P>
+
+<P>An object supporting <B>IViewObjectExImpl</B> is required to implement this method at least for the DVASPECT_CONTENT aspect. The object should not take any other action in response to this method other than to return the information; there should be no side-effects. If there is any ambiguity about whether a point is a hit, for instance due to coordinates not converting exactly, the object should return HITRESULT_HIT whenever any point in the rectangle might be a hit on the object. That is, it is permissable to claim a hit for a point that is not actually rendered, but never correct to claim a miss for any point that is in the rendered image of the object.</P>
+
+<PRE class=syntax><B>STDMETHOD ( QueryHitRect )(
+DWORD </B><I>dwAspect</I>, <B>
+LPCRECT </B><I>pRectBounds</I>, <B>
+LPCRECT </B><I>prcLoc</I>, <B>
+LONG </B><I>lCloseHint</I>, <B>
+DWORD* </B><I>pHitResult</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwAspect</I></DT>
+
+<DD>[in] Requested drawing aspect.</DD>
+
+<DT><I>pRectBounds</I></DT>
+
+<DD>[in] Object bounding rectangle in client coordinates of the containing window. This rectangle is computed and passed by the container so that the object can meaningfully interpret the hit location.</DD>
+
+<DT><I>prcLoc</I></DT>
+
+<DD>[in] Hit test rectangle in specified in HIMETRIC units, relative to the top-left corner of the object.</DD>
+
+<DT><I>lCloseHint</I></DT>
+
+<DD>[in] Suggested distance in HIMETRIC units that the container considers close. This value is a hint, and objects can interpret it in their own way. Objects can also use this hint to roughly infer output resolution to choose expansiveness of hit test implementation.</DD>
+
+<DT><I>pHitResult</I></DT>
+
+<DD>[out] Pointer to returned information about the hit expressed as the HITRESULT enumeration values.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>If <I>dwAspect</I> equals DVASPECT_CONTENT, the method returns S_OK. Otherwise, the method returns E_FAIL.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="iviewobj_10.htm"><B>IViewObjectExImpl::QueryHitPoint</B></A> </P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

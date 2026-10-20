@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Blitting with Blt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Blitting with Blt"/>
+<MSHelp:RLTitle Title="Blitting with Blt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_blitting_with_blt"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdrawsurface5_blt_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_idirectdrawsurface5_bltfast_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ddcaps_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_ddbltfx_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ddbltfx_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_ddcaps_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_idirectdraw4_getcaps_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_idirectdrawsurface5_blt_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_idirectdrawsurface5_alphablt_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_idirectdrawsurface5_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Blitting with Blt</H1>
+
+<P>When using the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDrawSurface5::Blt</B></A> method, you supply a valid rectangle in the source surface (or NULL to specify the entire surface), and a rectangle in the destination surface to which the source image will be copied (again, NULL means the rectangle covers the entire surface). If a clipper is attached to the destination surface, the bounds of the destination rectangle can fall outside the surface and clipping will be performed. If there is no clipper, the destination rectangle must fall entirely within the surface or else the method will fail with DDERR_INVALIDRECT. (For more information on clipping, see <A HREF="ddover_95.htm">Working with DirectDraw Clippers</A>.)</P>
+
+<P><B>Scaling</B></P>
+
+<P>The <B>Blt</B> method automatically rescales the source image to fit the destination rectangle. If resizing is not your intention, for best performance you should make sure that your source and destination rectangles are exactly the same size, or else use <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectDrawSurface5:BltFast</B></A>. (See <A HREF="ddover_51.htm">Blitting with BltFast</A>.)</P>
+
+<P>Hardware acceleration for scaling depends on the DDFXCAPS_BLT* flags in the <B>dwFXCaps</B> member of the <A HREF="JavaScript:hhobj_3.Click()"><B>DDCAPS</B></A> structure for the device. If, for example, a device has the DDFXCAPS_BLTSTRETCHXN capability but not DDFXCAPS_BLTSTRETCHX, it can assist when the x-axis of the source rectangle is being multiplied by a whole number but not when non-integral (arbitrary) scaling is being done.</P>
+
+<P>Devices might also support arithmetic scaling, which is scaling by interpolation rather than simple multiplication or deletion of pixels. For instance, if an axis was being increased by one-third, the pixels would be recolored to provide a closer approximation to the original image than would be produced by the doubling of every third pixel on that axis.</P>
+
+<P>Applications cannot control the type of scaling done by the driver, except by setting the DDBLTFX_ARITHSTRETCHY flag in the <B>dwDDFX</B> member of the <A HREF="JavaScript:hhobj_4.Click()"><B>DDBLTFX</B></A> structure passed to <B>Blt</B>. This flag requests that arithmetic stretching be done on the y-axis. Arithmetic stretching on the x-axis and arithmetic shrinking are not currently supported in the DirectDraw API, but a driver may perform them by default.</P>
+
+<P><B>Other Effects</B></P>
+
+<P>If you do not require any special effects other than scaling when using <B>Blt</B>, you can pass NULL as the <I>lpDDBltFx </I>parameter. Otherwise you can choose among a variety of effects specified in a <A HREF="JavaScript:hhobj_5.Click()"><B>DDBLTFX</B></A> structure. Among these, <A HREF="ddover_59.htm">color fills</A> and mirroring are supported by the HEL, so they are always available. Most other effects depend on hardware support. </P>
+
+<P>For a complete view of the effects capabilities of the HEL, run the DDraw Caps utility supplied with the DirectX Programmer's Reference and select HEL FX Caps from the HEL menu. For an explanation of the various flags, see <A HREF="JavaScript:hhobj_6.Click()"><B>DDCAPS</B></A>. You can also check HEL capabilities within your own application by using the <A HREF="JavaScript:hhobj_7.Click()"><B>IDirectDraw4::GetCaps</B></A> method.</P>
+
+<P>When you specify an effect that requires a value in one of the members of the <B>DDBLTFX</B> structure passed to the <A HREF="JavaScript:hhobj_8.Click()"><B>IDirectDrawSurface5::Blt</B></A> method, you must also include the appropriate flags in the <I>dwFlags</I> parameter to show which members of the structure are valid.</P>
+
+<P>Some effects require only the setting of a flag in the <B>dwFlags</B> member of <B>DDBLTFX.</B> One of these is DDBLTFX_NOTEARING. You can use this flag when you are blitting animated images directly to the front buffer, so that the blit is timed to coincide with the screen refresh and the possibility of tearing is minimized. Mirroring and rotation are also set by using flags.</P>
+
+<P>Blitting effects include the standard raster operations (ROPs) used by GDI functions such as <B>BitBlt</B>. The only ROPs supported by the HEL are SRCCOPY (the default), BLACKNESS, and WHITENESS. Hardware support for other ROPs can be examined in the <B>DDCAPS</B> structure for the driver. If you wish to use any of the standard ROPS with the <B>Blt</B> method, you flag them in the <B>dwROP</B> member of the <B>DDBLTFX</B> structure.</P>
+
+<P>The <B>dwDDROP</B> member of the <B>DDBLTFX</B> structure is for specifying ROPs specific to DirectDraw. However, no such ROPs are currently defined.</P>
+
+<P><B>Alpha and Z Values</B></P>
+
+<P>To perform blits that use and preserve alpha channel information, use the <A HREF="JavaScript:hhobj_9.Click()"><B>IDirectDrawSurface5::AlphaBlt</B></A> method. This method is currently unique to Windows CE, and fully supports alpha channel information during blit operations.</P>
+
+<P>Although z-buffers are currently used only in Direct3D applications, you can use <B>IDirectDrawSurface5::Blt</B> to set the depth value for a z-buffer surface, by setting the DDBLT_DEPTHFILL flag. </P>
+
+<P>For an explanation of the use of alpha channels, see <A HREF="ddover_103.htm">Alpha Blitting</A>.</P>
+
+<P><B>Blt Example</B></P>
+
+<P>The following example, in which it is assumed that <I>lpDDS</I> is a valid <A HREF="JavaScript:hhobj_10.Click()"><B>IDirectDrawSurface5</B></A> pointer, creates a symmetrical image within the surface by mirroring a rectangle from left to right:</P>
+
+<PRE class="code">RECT     rcSource, rcDest;
+DDBLTFX  ddbltfx;
+
+ZeroMemory(&amp;ddbltfx, sizeof(ddbltfx));
+ddbltfx.dwSize = sizeof(ddbltfx);
+ddbltfx.dwDDFX = DDBLTFX_MIRRORLEFTRIGHT;
+
+rcSource.top = 0; rcSource.left = 0;
+rcSource.bottom = 100; rcSource.right = 200;
+rcDest.top = 0; rcDest.left = 201;
+rcDest.bottom = 100; rcDest.right = 401;
+
+HRESULT hr = lpDDS-&gt;Blt(&amp;rcDest,
+                        lpDDS,
+                        &amp;rcSource,
+                        DDBLT_WAIT | DDBLT_DDFX,
+                        &amp;ddbltfx);
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

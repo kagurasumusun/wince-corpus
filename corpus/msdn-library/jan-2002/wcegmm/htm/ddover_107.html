@@ -1,0 +1,92 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Testing for DMA Support</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Testing for DMA Support"/>
+<MSHelp:RLTitle Title="Testing for DMA Support"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_testing_for_dma_support"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdraw4_getcaps_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ddcaps_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Testing for DMA Support</H1>
+
+<P>Before using DMA operations, you must test the device for DMA support and, if it does support DMA, how much support it provides. Begin by retrieving the driver capabilities by calling the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDraw4::GetCaps</B></A> method, then look for the DDCAPS_CANBLTSYSMEM flag in the <B>dwCaps</B> member of the associated <A HREF="JavaScript:hhobj_2.Click()"><B>DDCAPS</B></A> structure. If the flag is set, the device supports DMA. </P>
+
+<P>If you know that DMA is generally supported, you also need to find out how well the driver supports it. You do so by looking at some other structure members that provide information about system-to-video, video-to-system, and system-to-system blit operations. These capabilities are provided in 12 <B>DDCAPS</B> structure members that are named according to blit and capability type. The following table shows these new members.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=32%>System-to-video</TH>
+<TH width=32%>Video-to-system</TH>
+<TH width=36%>System-to-system</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>   dwSVBCaps</B></TD>
+<TD width=32%><B>   dwVSBCaps</B></TD>
+<TD width=36%><B>   dwSSBCaps </B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>   dwSVBCKeyCaps</B></TD>
+<TD width=32%><B>   dwVSBCKeyCaps</B></TD>
+<TD width=36%><B>   dwSSBCKeyCaps </B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>   dwSVBFXCaps</B></TD>
+<TD width=32%><B>   dwVSBFXCaps</B></TD>
+<TD width=36%><B>   dwSSBFXCaps </B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>   dwSVBRops</B></TD>
+<TD width=32%><B>   dwVSBRops</B></TD>
+<TD width=36%><B>   dwSSBRops </B></TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>For example, the system-to-video blit capability flags are provided in the <B>dwSVBCaps</B>, <B>dwSVBCKeyCaps</B>, <B>dwSVBFXCaps</B> and <B>dwSVBRops</B> members. Similarly, video-to-system blit capabilities are in the members whose names begin with "<B>dwVSB</B>," and system-to system capabilities are in the "<B>dwSSB</B>" members. Examine the flags present in these members to determine the level of hardware support for that blit category.</P>
+
+<P>The flags in these members are parallel with the blit-related flags included in the <B>dwCaps</B>, <B>dwCKeyCaps</B>, and <B>dwFXCaps</B> members, with respect to that member's blit type. For example, the <B>dwSVBCaps</B> member contains general blit capabilities as specified by the same flags you might find in the <B>dwCaps</B> member. Likewise, the raster operation values in the <B>dwSVBRops</B>, <B>dwVSBRops</B>, and <B>dwSSBRops</B> members provide information about the raster operations supported for a given type of blit operation.</P>
+
+<P>One of the key features to look for in these members is support for asynchronous DMA blit operations. If the driver supports asynchronous DMA blits between surfaces, the DDCAPS_BLTQUEUE flag will be set in the <B>dwSVBCaps</B>, <B>dwVSBCaps</B>, or <B>dwSSBCaps</B> member. (Generally, you'll see the best support for system-memory-to-video-memory surfaces.) If the flag isn't present, the driver isn't reporting support for asynchronous DMA blit operations.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

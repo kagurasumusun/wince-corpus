@@ -1,0 +1,83 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the IVideoWindow Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using the IVideoWindow Interface"/>
+<MSHelp:RLTitle Title="Using the IVideoWindow Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_using_the_ivideowindow_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_igraphbuilder__renderfile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ivideowindow__put_owner" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ivideowindow__put_windowstyle" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_ivideowindow__setwindowposition" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_win32_getclientrect" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_win32_rect_str" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Using the IVideoWindow Interface</H1>
+
+<P>This section describes how to use the <B>IVideoWindow</B> interface to set properties on the video window, including the owner and style of the window.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;Most of the code in the sample program performs standard windowing operations, and is not discussed in this article. In particular, the functions <B>WindowProc</B> and <B>WinMain</B> contain a typical framework for Microsoft&reg; Windows&reg; applications. The application-defined functions PlayFile and CleanUp are the ones of interest.</P>
+
+<P>First, create an instance of the filter graph manager and construct the filter graph (through a call to the <A HREF="JavaScript:hhobj_1.Click()"><B>IGraphBuilder::RenderFile</B></A> method). For more information on how to do this, see <A HREF="dshow_5.htm">How to Play a File</A>.</P>
+
+<P>Then, before starting playback, set the properties on the video window, as follows:</P>
+
+<P>Attach the video playback window to the desired parent window. To do this, call the <A HREF="JavaScript:hhobj_2.Click()"><B>IVideoWindow::put_Owner</B></A> method and pass it a handle to the owner window. This method takes a variable of type OAHWND, so cast the handle to this type, if necessary: </P>
+
+<PRE class="code">IVideoWindow    *pVidWin = NULL;
+pVidWin-&gt;put_Owner((OAHWND)g_hwnd);</PRE>
+
+<P>Change the style of the video window to a child window. To do this, call the <A HREF="JavaScript:hhobj_3.Click()"><B>IVideoWindow::put_WindowStyle</B></A> method and pass it a combination of style flags. The WS_CHILD flag indicates that the window is a child window; the WS_CLIPSIBLINGS flag prevents the window from drawing inside the client area of another child window. </P>
+
+<PRE class="code">pVidWin-&gt;put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);</PRE>
+
+<P>Set the position of the video window by calling the <A HREF="JavaScript:hhobj_4.Click()"><B>IVideoWindow::SetWindowPosition</B></A> method. This method takes device coordinates specifying the left edge (x-axis), top edge (y-axis), width, and height of the window. The sample program stretches the video window to fill the entire parent window: </P>
+
+<PRE class="code">RECT grc;
+GetClientRect(g_hwnd, &amp;grc);
+pVidWin-&gt;SetWindowPosition(0, 0, grc.right, grc.bottom);</PRE>
+
+<P>The <A HREF="JavaScript:hhobj_5.Click()"><B>GetClientRect</B></A> function fills a <A HREF="JavaScript:hhobj_6.Click()"><B>RECT</B></A> structure with the coordinates of the window's client area. The coordinates are relative to the upper-left corner of the client area, so the <B>left</B> and <B>top</B> members are both zero and the <B>right</B> and <B>bottom</B> members define the width and height, respectively. </P>
+
+<P>Before the application exits, it is important that you set the visibility of the video window to false. Otherwise, a video image remains on the screen and the user cannot get rid of it. Then, reset the owner to NULL; otherwise, messages are sent to the wrong window, likely causing errors.</P>
+
+<PRE class="code">HRESULT hr = pVidWin-&gt;put_Visible(OAFALSE);
+hr = pVidWin-&gt;put_Owner(NULL);   </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,157 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SetOOMEvent</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SetOOMEvent"/>
+<MSHelp:RLTitle Title="SetOOMEvent"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_setoomevent"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_GlobalMemoryStatus" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_VirtualAlloc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_WaitForSingleObject" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>SetOOMEvent</H1>
+
+<P>This function enables enhanced memory management features of Windows CE. </P>
+
+<PRE class="syntax"><B>void SetOOMEvent (</B>
+<B>HANDLE</B> <I>hEvent</I><B>,</B>
+<B>DWORD</B> <I>cpLow</I><B>,</B>
+<B>DWORD</B> <I>cpCritical</I><B>,</B>
+<B>DWORD</B> <I>cpLowBlockSize</I><B>,</B>
+<B>DWORD</B> <I>cpCriticalBlockSize </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hEvent</I></DT>
+
+<DD>A handle to the event that the kernel will set when memory has become low or critically low.</dd>
+
+<DT><I>cpLow</I></DT>
+
+<DD>The number of free memory pages that will trigger a low memory condition. When memory goes below this level <I>hEvent</I> is set.</dd>
+
+<DT><I>cpCritical</I></DT>
+
+<DD>The number of free memory pages that will trigger a critically low memory condition. When memory goes below this level <I>hEvent</I> is set.</dd>
+
+<DT><I>cpLowBlockSize</I></DT>
+
+<DD>The size of the largest block that the kernel will allocate with <B>VirtualAlloc</B> when the allocation would leave the system with fewer than <I>cpLow</I> pages.</dd>
+
+<DT><I>cpCriticalBlockSize</I></DT>
+
+<DD>The size of the largest block that the kernel will allocate with <B>VirtualAlloc</B> when the allocation would leave the system with fewer than <I>cpCritical</I> pages.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None.</P>
+
+<H4>Remarks</H4>
+
+<P>This function replaces <B>SetGwesOOMEvent</B>, which is obsolete. There is no need to call this function in an OS configuration that includes the OOM component. The OOM component takes care of calling this function and relies on registry settings to define the OEM’s preferred memory settings. If there are no registry settings, the OOM component will use the following parameter defaults:
+
+<UL type="disc">
+	<LI><I>cpLow</I> = 30</li>
+
+	<LI><I>cpCritical</I> = 15</li>
+
+	<LI><I>cpLowBlockSize</I> = 0x4000</li>
+
+	<LI><I>cpCriticalBlockSize</I> = 2</li>
+</UL>
+
+<P>If an OEM does not include the OOM component, the OEM must call this API in order to enable control of the following:
+
+<UL type="disc">
+	<LI>Page-out code
+<P>When memory is low, the kernel will page-out or discard code that is marked as discardable. This enables memory to be freed for use by other processes.
+</li>
+
+	<LI>Reclaim unused stack space
+<P>When memory is low, the kernel will attempt to reclaim memory used by a thread's stack that is no longer needed by the thread.
+</li>
+</UL>
+
+<P>If this API is not called, the defaults for the system are:
+
+<UL type="disc">
+	<LI><I>cpLow</I> = 0</li>
+
+	<LI><I>cpCritical</I> = 0</li>
+
+	<LI><I>cpLowBlockSize</I> = 0</li>
+
+	<LI><I>cpCriticalBlockSize</I> = 0</li>
+</UL>
+
+<P>Therefore, the kernel will not attempt to page-out code until memory reaches zero and will not reclaim unused stack memory. However, memory will be reclaimed when threads, processes, memory and kernel objects are deleted. In some circumstances, a system that does not discard memory or reclaim stack memory is usable by the OEMs. An OEM must completely investigate all the issues before deciding not to call this API.</P>
+
+<P>An application that needs to monitor a memory state would pass in the parameters and then wait for the event to be triggered by the kernel by calling <B>WaitForSingleObject</B>. When the kernel sets the event, the monitoring application would query the memory state to determine if memory was low or critical and take the appropriate action. To query the current memory state use the <B>GlobalMemoryStatus</B> API.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Pkfuncs.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="JavaScript:hhobj_1.Click()"><B>GlobalMemoryStatus</B></A>, <A HREF="JavaScript:hhobj_2.Click()"><B>VirtualAlloc</B></A>, <A HREF="JavaScript:hhobj_3.Click()"><B>WaitForSingleObject</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

@@ -1,0 +1,142 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoGetInstanceFromIStorage</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoGetInstanceFromIStorage"/>
+<MSHelp:RLTitle Title="CoGetInstanceFromIStorage"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_cogetinstancefromistorage"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoGetInstanceFromIStorage</H1>
+
+<P>This function creates a new object and initializes it from a storage object through an internal call to <A HREF="_wcesdk_com_ipersiststorage_load.htm"><B>IPersistStorage::Load</B></A>.</P>
+
+<PRE class="syntax"><B>HRESULT CoGetInstanceFromIStorage(
+COSERVERINFO *</B><I>pServerInfo</I><B>,
+CLSID *</B><I>pclsid</I><B>,
+IUnknown *</B><I>punkOuter</I><B>,
+DWORD </B><I>dwClsCtx</I><B>,
+IStorage *</B><I>pstg</I><B>,
+ULONG </B><I>cmq</I><B>,
+MULTI_QI *</B><I>rgmqResults</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pServerInfo</I></DT>
+
+<DD>[in] Pointer to a <A HREF="_wcesdk_com_coserverinfo.htm"><B>COSERVERINFO</B></A> structure that specifies the machine on which to instantiate the object and the authentication setting to be used. May be NULL, in which case the object is either instantiated (1) on the current machine, (2) at the machine specified under the <B>RemoteServerName</B> named-value for the class in the registry, or (3) at the machine where the storage object pointed to by pstg is located if the class is registered with <B>ActivateAtStorage</B> specified or has no local registry information.</dd>
+
+<DT><I>pclsid</I></DT>
+
+<DD>[in] Pointer to the class identifier (CLSID) of the object to be created. May be NULL, in which case there is a call to <A HREF="_wcesdk_com_istorage_stat.htm"><B>IStorage::Stat</B></A> to find the class of the object.</dd>
+
+<DT><I>punkOuter</I></DT>
+
+<DD>[in] When non-NULL, indicates the instance is being created as part of an aggregate, and <I>punkOuter</I> is to be used as the pointer to the new instance's controlling <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A>. Aggregation is currently not supported cross-process or cross-machine. When instantiating an object out of process, CLASS_E_NOAGGREGATION will be returned if <I>punkOuter</I> is non-NULL.</dd>
+
+<DT><I>dwClsCtx</I></DT>
+
+<DD>Values taken from the <B>CLSCTX</B> enumeration.</dd>
+
+<DT><I>pstg</I></DT>
+
+<DD>Pointer to storage to initialize the object with using <B>IPersistStorage::Load</B>. May not be NULL.</dd>
+
+<DT><I>cmq</I></DT>
+
+<DD>Number of <B>MULTI_QI</B> structures in <I>rgmqResults</I>. Must be greater than zero.</dd>
+
+<DT><I>rgmqResults</I></DT>
+
+<DD>Array of <B>MULTI_QI</B> structures. Each structure has three members: the identifier for a requested interface (<I>pIID</I>), the location to return the interface pointer (<I>pItf</I>) and the return value of the call to <A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A> (<I>hr</I>).</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return value E_INVALIDARG, as well as the following:
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>Indicates success.</dd>
+
+<DT>CO_S_NOTALLINTERFACES</DT>
+
+<DD>At least one, but not all of the interfaces requested in the <I>rgmqResults</I> array were successfully retrieved. The hr field of each of the <B>MULTI_QI</B> structures in <I>rgmqResults</I> indicates with S_OK or E_NOINTERFACE whether the specific interface pointer was retrieved.</dd>
+
+<DT>E_NOINTERFACE</DT>
+
+<DD>None of the interfaces requested in the <I>rgmqResults</I> array were successfully retrieved.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>CoGetInstanceFromIStorage</B> creates a new object and initializes it from a storage object through a call to <B>IPersistStorage::Load</B>. This function is similar to creating an instance using <A HREF="_wcesdk_com_cocreateinstanceex.htm"><B>CoCreateInstanceEx</B></A> followed by a call to <B>IPersistStorage::Load</B>, with the following important distinctions:
+
+<UL type="disc">
+	<LI>Fewer network round trips are required by this function when instantiating remotely.</li>
+
+	<LI>In the case where <I>dwClsCtx</I> is set to CLSCTX_REMOTE_SERVER and <I>pServerInfo</I> is NULL, if the class is registered with the <B>ActivateAtStorage</B> named value or has no associated registry information, this function will instantiate an object on the same machine where the storage object pointed to by <I>pstg</I> resides, providing the least possible network traffic. For example, if <I>pstg</I> were obtained through a call to <B>StgCreateDocfile</B>, specifying "\\myserver\users\johndo\file", the object would be instantiated on the "myserver" machine, and the object would access the storage object directly.</li>
+</UL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CWnd::RedrawWindow</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CWnd::RedrawWindow"/>
+<MSHelp:RLTitle Title="CWnd::RedrawWindow"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cwnd_redrawwindow"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CWnd::RedrawWindow</H1>
+
+<P>This method updates the specified rectangle or region in the specified window client area.</P>
+
+<P>When the <B>RedrawWindow</B> method is used to invalidate part of the desktop window, that window does not receive a WM_PAINT message. To repaint the desktop, an application should use <B>CWnd::UpdateWindow</B>, or <B>RedrawWindow</B> </P>
+
+<PRE class=syntax><B>BOOL RedrawWindow(
+LPCRECT </B><I>lpRectUpdate</I><B> = NULL,
+CRgn* </B><I>prgnUpdate</I><B> = NULL,
+UINT </B><I>flags</I><B> = WCE_IF( 0 RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE ));</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpRectUpdate</I></DT>
+
+<DD>Points to a <A HREF="struct_23.htm"><B>RECT</B></A> structure containing the coordinates of the update rectangle. This parameter is ignored if <I>prgnUpdate</I> contains a valid region handle.</DD>
+
+<DT><I>prgnUpdate</I></DT>
+
+<DD>Identifies the update region. If both <I>prgnUpdate</I> and <I>lpRectUpdate</I> are <B>NULL</B>, the entire client area is added to the update region.</DD>
+
+<DT><I>flags</I></DT>
+
+<DD>The following flags are used to invalidate the window:
+
+<UL type=disc>
+	<LI>RDW_ERASE&nbsp;&nbsp;&nbsp;Causes the window to receive a WM_ERASEBKGND message when the window is repainted. The RDW_INVALIDATE flag must also be specified; otherwise, RDW_ERASE has no effect.</LI>
+
+	<LI>RDW_FRAME&nbsp;&nbsp;&nbsp;Causes any part of the nonclient area of the window that intersects the update region to receive a WM_NCPAINT message. The RDW_INVALIDATE flag must also be specified; otherwise, RDW_FRAME has no effect.</LI>
+
+	<LI>RDW_INTERNALPAINT&nbsp;&nbsp;&nbsp;Causes a WM_PAINT message to be posted to the window regardless of whether the window contains an invalid region.</LI>
+
+	<LI>RDW_INVALIDATE&nbsp;&nbsp;&nbsp;Invalidate <I>lpRectUpdate</I> or <I>prgnUpdate,</I> only one may be not <B>NULL</B>. If both are <B>NULL</B>, the entire window is invalidated.</LI>
+</UL>
+
+
+<P>The following flags are used to validate the window:
+
+
+<UL type=disc>
+	<LI>RDW_NOERASE&nbsp;&nbsp;&nbsp;Suppresses any pending WM_ERASEBKGND messages.</LI>
+
+	<LI>RDW_NOFRAME&nbsp;&nbsp;&nbsp;Suppresses any pending WM_NCPAINT messages. This flag must be used with RDW_VALIDATE and is typically used with RDW_NOCHILDREN. This option should be used with care, as it could prevent parts of a window from painting properly.</LI>
+
+	<LI>RDW_NOINTERNALPAINT&nbsp;&nbsp;&nbsp;Suppresses any pending internal WM_PAINT messages. This flag does not affect WM_PAINT messages resulting from invalid areas.</LI>
+
+	<LI>RDW_VALIDATE&nbsp;&nbsp;&nbsp;Validates <I>lpRectUpdate</I> or <I>prgnUpdate,</I> only one may be not <B>NULL</B>. If both are <B>NULL</B>, the entire window is validated. This flag does not affect internal WM_PAINT messages.</LI>
+</UL>
+
+
+<P>The following flags control when repainting occurs. Painting is not performed by the <B>RedrawWindow</B> method unless one of these bits is specified.
+
+
+<UL type=disc>
+	<LI>RDW_ERASENOW&nbsp;&nbsp;&nbsp;Causes the affected windows, as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags, to receive WM_NCPAINT and WM_ERASEBKGND messages, if necessary, before the function returns. WM_PAINT messages are deferred.</LI>
+
+	<LI>RDW_UPDATENOW&nbsp;&nbsp;&nbsp;Causes the affected windows, as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags, to receive WM_NCPAINT, WM_ERASEBKGND, and WM_PAINT messages, if necessary, before the function returns.</LI>
+</UL>
+
+
+<P>By default, the windows affected by the <B>RedrawWindow</B> method depend on whether the specified window has the WS_CLIPCHILDREN style. The child windows of WS_CLIPCHILDREN windows are not affected. However, those windows that are not WS_CLIPCHILDREN windows are recursively validated or invalidated until a WS_CLIPCHILDREN window is encountered. The following flags control which windows are affected by the <B>RedrawWindow</B> function:
+
+
+<UL type=disc>
+	<LI>RDW_ALLCHILDREN&nbsp;&nbsp;&nbsp;Includes child windows, if any, in the repainting operation.</LI>
+
+	<LI>RDW_NOCHILDREN&nbsp;&nbsp;&nbsp;Excludes child windows, if any, from the repainting operation.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the window was redrawn successfully; otherwise, it is zero.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

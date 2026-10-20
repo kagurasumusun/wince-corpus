@@ -1,0 +1,77 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementing IOCTL_HAL_ILTIMING</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Implementing IOCTL_HAL_ILTIMING"/>
+<MSHelp:RLTitle Title="Implementing IOCTL_HAL_ILTIMING"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_qailtiming_implementing_ioctl_hal_iltiming"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Implementing IOCTL_HAL_ILTIMING</H1>
+
+<P>This I/O control is defined in %_WINCEROOT%\Public\Common\Oak\Inc\Pkfuncs.h. The interface for the control is in %_WINCEROOT%\Public\Common\Oak\Inc\Iltiming.h.</P>
+
+<P>The following example shows the syntax for the IOCTL_HAL_ILTIMING structure that the Qailtiming.exe application may use when it calls <B>KernelIoControl</B>.</P>
+
+<PRE class="syntax"><B>typedef struct tILTIMING_MESSAGE {
+WORD</B> <I>wMsg</I>;                     // Command to process
+<B>WORD</B> <I>wNumInterrupts</I>;           // Number of interrupts since last call
+<B>DWORD</B> <I>dwIsrTime1</I>;              // Start of ISR
+<B>DWORD</B> <I>dwIsrTime2</I>;              // End of ISR
+<B>DWORD</B> <I>dwSPC</I>;                   // Saved Program Counter at time of INT.
+<B>DWORD</B> <I>dwFrequency</I>;             // PerfCount frequency
+<B>PVOID</B> <I>pfnPerfCountSinceTick</I>;   // Pointer to OAL function
+<B>} ILTIMING_MESSAGE, *PILTIMING_MESSAGE;</B></PRE>
+
+<P>The OAL fills in the structure depending on the value of <I>wMsg</I>. The following list describes the four messages<I> </I>defined for<I> wMsg</I>:
+
+<DL>
+<DT>INTRTIME_MSG_ENABLE</DT>
+
+<DD>The OAL hooks the system tick from causing a SYSINTR_TIMING interrupt event. No structure fields are updated.</dd>
+
+<DT>INTRTIME_MSG_DISABLE</DT>
+
+<DD>The OAL unhooks the system tick from causing a SYSINTR_TIMING interrupt event. No structure fields are updated.</dd>
+
+<DT>INTRTIME_MSG_GET_TIMES</DT>
+
+<DD>The OAL fills in all structure fields except for <I>pfnPerfCountSinceTick</I>.</dd>
+
+<DT>INTRTIME_MSG_GET_PFN</DT>
+
+<DD>The OAL returns a pointer to the <B>PerfCountSinceTick</B> function in the <I>pfnPerfCountSinceTick</I> member. This function is called in kernel mode directly from the application to minimize overhead.</dd>
+</DL>
+
+<P>See the sample platforms in %_WINCEROOT%\Platform\Odo\Kernel\Hal\Oemioctl.c for an example of the OAL implementation.</P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>It is recommended that the <B>OEMIdle</B> function not be set to reprogram the timer during Qailtiming.exe measurements. Qailtiming.exe requires special modifications to the OAL, but not the kernel. See the sample platform implementation as an example.</P>
+<DIV CLASS="footer">Built on Tuesday, January 09, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

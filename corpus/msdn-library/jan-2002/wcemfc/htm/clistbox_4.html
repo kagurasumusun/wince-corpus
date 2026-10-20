@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CListBox::CharToItem</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CListBox::CharToItem"/>
+<MSHelp:RLTitle Title="CListBox::CharToItem"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_clistbox_chartoitem"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CListBox::CharToItem</H1>
+
+<P>This method is called by the framework when the parent window to the list box receives a WM_CHARTOITEM message from the list box.</P>
+
+<PRE class=syntax><B>virtual int CharToItem( </B>
+<B>UINT </B><I>nKey</I><B>,
+UINT </B><I>nIndex</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nKey</I></DT>
+
+<DD>Specifies the ANSI code of the character the user typed.</DD>
+
+<DT><I>nIndex</I></DT>
+
+<DD>Specifies the current position of the list-box caret.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Returns &#0150;1 or &#0150;2 for no further action or a nonnegative number to specify an index of a list-box item on which to perform the default action for the keystroke. The default implementation returns &#0150;1.</P>
+
+<H4>Remarks</H4>
+
+<P>The WM_CHARTOITEM message is sent to the list box when it receives a WM_CHAR message, but only if the list box meets all of these criteria:
+
+<UL type=disc>
+	<LI>Is an owner-draw list box.</LI>
+
+	<LI>Does not have the LBS_HASSTRINGS style set.</LI>
+
+	<LI>Has at least one item.</LI>
+</UL>
+
+<P>Never call this function yourself. Override this method to provide your own custom handling of keyboard messages.</P>
+
+<P>In your override, you must return a value to tell the framework what action you performed. A return value of &#0150;1 or &#0150;2 indicates that you handled all aspects of selecting the item and requires no further action by the list box. Before returning &#0150;1 or &#0150;2, you could set the selection or move the caret or both. To set the selection, use <B>SetCurSel</B> or <B>SetSel</B>. To move the caret, use <B>SetCaretIndex</B>.</P>
+
+<P>A return value of zero or greater specifies the index of an item in the list box and indicates that the list box should perform the default action for the keystroke on the given item.</P>
+
+<H4>Example</H4>
+
+<PRE>// CMyListBox is my owner-drawn list box derived from CListBox. This
+// example moves the caret down one item on a numeric key and up one item
+// on an alphabetic key. The list box control was created with the
+// following code:
+//&nbsp;&nbsp;pmyListBox-&gt;Create(
+//&nbsp;&nbsp;&nbsp;&nbsp;WS_CHILD|WS_VISIBLE|WS_BORDER|WS_HSCROLL|WS_VSCROLL|
+//&nbsp;&nbsp;&nbsp;&nbsp;LBS_SORT|LBS_MULTIPLESEL|LBS_WANTKEYBOARDINPU,
+//&nbsp;&nbsp;&nbsp;&nbsp;CRect(10,10,200,200), pParentWnd, 1);
+//
+int CMyListBox::CharToItem(UINT nKey, UINT nIndex)
+{
+&nbsp;&nbsp;// On a numeric key, move the caret up one item.
+&nbsp;&nbsp;if (isdigit(nKey) &amp;&amp; (nIndex &gt; 0))
+&nbsp;&nbsp;&nbsp;&nbsp;SetCaretIndex(nIndex-1);
+
+&nbsp;&nbsp;// On an alphabetic key, move the caret down one item.
+&nbsp;&nbsp;else if (isalpha(nKey) &amp;&amp; (nIndex &lt; GetCount()))
+&nbsp;&nbsp;&nbsp;&nbsp;SetCaretIndex(nIndex+1);
+
+&nbsp;&nbsp;// Do not perform any default processing.
+&nbsp;&nbsp;return &#0150;1;
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="clistbox_47.htm"><B>CListBox::VKeyToItem</B></A>, <A HREF="clistbox_38.htm"><B>CListBox::SetCurSel</B></A>, <A HREF="clistbox_44.htm"><B>CListBox::SetSel</B></A>, <A HREF="clistbox_36.htm"><B>CListBox::SetCaretIndex</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

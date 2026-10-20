@@ -1,0 +1,180 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersistFile"/>
+<MSHelp:RLTitle Title="IPersistFile"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersistfile"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IPersistFile</H1>
+
+<P>This interface provides methods that permit an object to be loaded from or saved to a disk file, rather than a storage object or stream. Because the information needed to open a file varies greatly from one application to another, the implementation of <A HREF="_wcesdk_com_ipersistfile__load.htm"><B>IPersistFile::Load</B></A> on the object must also open its disk file.</P>
+
+<P>The <B>IPersistFile</B> interface inherits its definition from <B>IPersist</B>, so all implementations must also include the <A HREF="_wcesdk_com_ipersist_getclassid.htm"><B>GetClassID</B></A> method of <B>IPersist</B>.</P>
+
+<H4>When to Implement</H4>
+
+<P>Implement <B>IPersistFile</B> when you want to read or write information from a separate file, which could be of any file format.</P>
+
+<P>This interface should be implemented on any objects that support linking through a file moniker, including the following:
+
+<UL type="disc">
+	<LI>Any object that supports links to its files or to pseudo-objects within its files</li>
+
+	<LI>A container application that supports links to objects within its compound file</li>
+</UL>
+
+<P>Typically, you implement the <B>IPersistFile</B> interface as part of an aggregate object that includes other interfaces that are appropriate for the type of moniker binding that is supported.</P>
+
+<P>For example, in either of the cases mentioned above, the moniker for the linked object can be a composite moniker. In the first case, a composite moniker identifies the pseudo-object contained within the file. In the second case, a composite moniker identifies the embedded object contained within the compound file. In either case of composite monikers, you must implement the <B>IPersistFile</B> interface as part of the same object on which the <B>IOleItemContainer</B> interface is implemented. Then, when the application for the linked object is run, OLE queries for the <B>IOleItemContainer</B> interface to locate the embedded object or the pseudo-object contained in the file.</P>
+
+<P>As another example, if the moniker is a simple file moniker (i.e., the link is to the entire file), OLE queries for the interface that the initiator of the bind operation requested. Typically, this is one of the compound document interfaces, such as <A HREF="_wcesdk_com_ioleobject.htm"><B>IOleObject</B></A> or <A HREF="_wcesdk_com_ipersiststorage.htm"><B>IPersistStorage</B></A>. </P>
+
+<H4>When to Use</H4>
+
+<P>Call methods in the <B>IPersistFile</B> interface to load or save a linked object in a specified file.</P>
+
+<P>When <B>IPersistFile</B> is implemented on an object that supports linking through a file moniker and the application for the linked object is run, OLE calls <B>IPersistFile::Load</B>. Once the file is loaded, OLE calls <B>IPersistFile::QueryInterface</B> to get another interface pointer to the loaded object. The <B>IPersistFile</B> interface is typically part of an aggregate object that offers other interfaces.</P>
+
+<P>In this case, the only <B>IPersistFile</B> method that OLE calls is the Load method to load a file linked to a container, running the application associated with the file. It would also be unusual for applications to call other methods in this case, which support saving an object to a file. Generally, it is left to the end user and the application for the linked object to decide when to save the object. This differs from the situation for an embedded object, in which the container application uses the <B>IPersistStorage</B> interface to provide the storage and to tell the object when to save itself.</P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%><A HREF="_wcesdk_com_iunknown.htm">IUnknown</A> Methods</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iunknown_queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=56%>Returns pointers to supported interfaces.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iunknown_addref.htm"><B>AddRef</B></A></TD>
+<TD width=56%>Increments the reference count.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_iunknown_release.htm"><B>Release</B></A></TD>
+<TD width=56%>Decrements the reference count.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>IPersist Method</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_ipersist_getclassid.htm"><B>GetClassID</B></A></TD>
+<TD width=56%>Returns the class identifier (CLSID) for the component object.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>IPersistFile Methods</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_ipersistfile__isdirty.htm"><B>IsDirty</B></A></TD>
+<TD width=56%>Checks an object for changes since it was last saved to its current file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_ipersistfile__load.htm"><B>Load</B></A></TD>
+<TD width=56%>Opens the specified file and initializes an object from the file contents.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_ipersistfile__save.htm"><B>Save</B></A></TD>
+<TD width=56%>Saves the object into the specified file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_ipersistfile__savecompleted.htm"><B>SaveCompleted</B></A></TD>
+<TD width=56%>Notifies the object that it can revert from NoScribble mode to Normal mode.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%><A HREF="_wcesdk_com_ipersistfile__getcurfile.htm"><B>GetCurFile</B></A></TD>
+<TD width=56%>Gets the current name of the file associated with the object.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WrapSurface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="WrapSurface"/>
+<MSHelp:RLTitle Title="WrapSurface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_wrapsurface_ddhal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>WrapSurface</H1>
+
+<P>The <B>WrapSurface</B> function creates a <B>DDGPESurf</B>-based object based on a pointer to an existing block of memory. The new object can optionally be associated with a DirectDraw surface.</P>
+
+<P>You would normally use this function to wrap a surface around surface memory you have created manually, either in video or system memory. If a pointer to allocated surface memory is not supplied, the <B>WrapSurface</B> function will result in a call to <B>AllocSurface</B>, which is implemented by the driver. Your driver is responsible for allocating video memory for these surfaces, if possible, and for requesting that <B>DDGPESurf</B> allocate system memory, if necessary.</P>
+
+<PRE class="syntax"><B>virtual SCODE WrapSurface (
+LPDDRAWI_DDRAWSURFACE_GBL</B> <I>lpDDSurface</I><B>,</B>
+<B>int</B> <I>width</I><B>,</B>
+<B>int</B> <I>height</I><B>,</B>
+<B>EGPEFormat</B> <I>format</I><B>,</B>
+<B>EDDGPEPixelFormat</B> <I>pixelFormat</I><B>,</B>
+<B>int</B> <I>stride</I><B>,</B>
+<B>int</B> <I>surfaceFlags</I>
+<B>);</B>
+<B>virtual</B> <B>SCODE WrapSurface (</B>
+<B>DDGPESurf **</B><I>ppSurf</I><B>,</B>
+<B>int</B> <I>width</I><B>,</B>
+<B>int</B> <I>height</I><B>,</B>
+<B>EGPEFormat</B> <I>format</I><B>,</B>
+<B>EDDGPEPixelFormat</B> <I>pixelFormat</I><B>,</B>
+<B>unsigned char *</B><I>pBits</I><B>,</B>
+<B>int</B> <I>stride</I>
+<B>);</B>
+<B>virtual SCODE WrapSurface (</B>
+<B>LPDDRAWI_DDRAWSURFACE_GBL</B> <I>lpDDSurface</I><B>,</B>
+<B>int</B> <I>width</I><B>,</B>
+<B>int</B> <I>height</I><B>,</B>
+<B>EGPEFormat</B> <I>format</I><B>,</B>
+<B>EDDGPEPixelFormat</B> <I>pixelFormat</I><B>,</B>
+<B>unsigned char *</B><I>pBits</I><B>,</B>
+<B>int</B> <I>stride</I>
+<B>);</B>
+<B>virtual SCODE WrapSurface (</B>
+<B>DDGPESurf **</B><I>ppSurf</I><B>,</B>
+<B>DDGPEAllocSurfaceData*</B><I>pddgpeAllocSurfaceData</I>
+<B>);</B>
+<B>virtual SCODE WrapSurface (</B>
+<B>LPDDRAWI_DDRAWSURFACE_GBL</B> <I>lpDDSurface</I><B>,</B>
+<B>DDGPEAllocSurfaceData*</B><I>pddgpeAllocSurfaceData</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppSurf</I></DT>
+
+<DD>Will contain a pointer to a new <B>DDGPESurf</B> object.</dd>
+
+<DT><I>lpDDSurface</I></DT>
+
+<DD>A pointer to an existing DirectDraw surface. A new <B>DDGPESurf</B> object will be attached to it. Any existing <B>DDGPESurf</B> object attached to this surface will be replaced. The driver is responsible for management of surfaces replaced in this manner. </dd>
+
+<DT><I>width</I></DT>
+
+<DD>The width of the surface.</dd>
+
+<DT><I>height</I></DT>
+
+<DD>The height of the surface.</dd>
+
+<DT><I>format</I></DT>
+
+<DD>The format of the surface.</dd>
+
+<DT><I>pixelFormat</I></DT>
+
+<DD>The display mode’s pixel format.</dd>
+
+<DT><I>pBits</I></DT>
+
+<DD>A pointer to an existing block of video or system memory that will be used to store the surface’s data.</dd>
+
+<DT><I>stride</I></DT>
+
+<DD>The stride of the surface.</dd>
+
+<DT><I>surfaceFlags</I></DT>
+
+<DD>GPE surface flags for the surface.
+
+<P><CODE>GPE_REQUIRE_VIDEO_MEMORY</CODE>:  Surface memory must be allocated in video memory.
+
+
+<P><CODE>GPE_PREFER_VIDEO_MEMORY</CODE>:  Surface memory should be allocated in video memory if possible, but can be allocated in system memory, if necessary.
+
+
+<P>If no flags are set (i.e. surfaceFlags is set to zero (0)), the surface will be allocated in system memory.
+</dd>
+
+<DT><I>pddgpeAllocSurfaceData</I></DT>
+
+<DD>See <A HREF="ddhal_29.htm">DDGPEAllocSurfaceData</A>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The return value is S_OK if the function is successful. Otherwise an error code is returned.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

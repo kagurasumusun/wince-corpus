@@ -1,0 +1,114 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPropertySheet::GetTabControl</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CPropertySheet::GetTabControl"/>
+<MSHelp:RLTitle Title="CPropertySheet::GetTabControl"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cpropertysheet_gettabcontrol"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CPropertySheet::GetTabControl</H1>
+
+<P>This method retrieves a pointer to a tab control which allows the application to make changes to the tab control. For example, call this method if you want to add bitmaps to each of the tabs during initialization.</P>
+
+<PRE class=syntax><B>CTabCtrl* GetTabControl( )
+const;</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Returns a pointer to a tab control.</P>
+
+<H4>Example</H4>
+
+<PRE>// Create and associate a tooltip control to the tab control of
+// CMyPropertySheet. CMyPropertySheet is a CPropertySheet-derived
+// class.
+BOOL CMyPropertySheet::OnInitDialog()
+{
+&nbsp;&nbsp;BOOL bResult = CPropertySheet::OnInitDialog();
+&nbsp;&nbsp;
+&nbsp;&nbsp;// Create a tooltip control. m_ToolTipCtrl is a member variable
+&nbsp;&nbsp;// of type CToolTipCtrl* in CMyPropertySheet class.  It is
+&nbsp;&nbsp;// initialized to NULL in the constructor, and destroyed in the
+&nbsp;&nbsp;// destructor of CMyPropertySheet class.
+&nbsp;&nbsp;m_ToolTipCtrl = new CToolTipCtrl;
+&nbsp;&nbsp;if (!m_ToolTipCtrl-&gt;Create(this))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE("Unable To create ToolTip\n");
+&nbsp;&nbsp;&nbsp;&nbsp;return bResult;
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Associate the tooltip control to the tab control
+&nbsp;&nbsp;// of CMyPropertySheet.
+&nbsp;&nbsp;CTabCtrl* tab = GetTabControl();
+&nbsp;&nbsp;tab-&gt;SetToolTips(m_ToolTipCtrl);
+
+&nbsp;&nbsp;// Get the bounding rectangle of each tab in the tab control of the
+&nbsp;&nbsp;// property sheet. Use this rectangle when registering a tool with
+&nbsp;&nbsp;// the tool tip control. IDS_FIRST_TOOLTIP is the first ID string
+&nbsp;&nbsp;// resource that contains the text for the tool.
+&nbsp;&nbsp;int count = tab-&gt;GetItemCount();
+&nbsp;&nbsp;int id = IDS_FIRST_TOOLTIP;
+&nbsp;&nbsp;for (int i = 0; i &lt; count; i++)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;id += i;
+&nbsp;&nbsp;&nbsp;&nbsp;CRect r;
+&nbsp;&nbsp;&nbsp;&nbsp;tab-&gt;GetItemRect(i, &amp;r);
+&nbsp;&nbsp;&nbsp;&nbsp;VERIFY(m_ToolTipCtrl-&gt;AddTool(tab, id, &amp;r, id));
+&nbsp;&nbsp;}
+
+&nbsp;&nbsp;// Activate the tooltip control.
+&nbsp;&nbsp;m_ToolTipCtrl-&gt;Activate(TRUE);
+
+&nbsp;&nbsp;return bResult;
+}
+
+// Override PreTranslateMessage() so RelayEvent() can be
+// called to pass a mouse message to CMyPropertySheet's
+// tooltip control for processing.
+BOOL CMyPropertySheet::PreTranslateMessage(MSG* pMsg)
+{
+&nbsp;&nbsp;if (NULL != m_ToolTipCtrl)
+&nbsp;&nbsp;&nbsp;&nbsp;m_ToolTipCtrl-&gt;RelayEvent(pMsg);
+&nbsp;&nbsp;
+&nbsp;&nbsp;return CPropertySheet::PreTranslateMessage(pMsg);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ctabctrl_2.htm"><B>CTabCtrl::CTabCtrl</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,191 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>InternetOpen</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="InternetOpen"/>
+<MSHelp:RLTitle Title="InternetOpen"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_internetopen"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>InternetOpen</H1>
+
+<P>This function<B> </B>initializes an application’s use of the Windows CE Internet functions.</P>
+
+<PRE class="syntax"><B>HINTERNET WINAPI InternetOpen(
+LPCTSTR</B> <I>lpszAgent</I><B>,</B>
+<B>DWORD </B><I>dwAccessType</I><B>,
+LPCTSTR </B><I>lpszProxy</I><B>,
+LPCTSTR </B><I>lpszProxyBypass</I><B>,
+DWORD </B><I>dwFlags</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszAgent </I></DT>
+
+<DD>Long pointer to a null-terminated string that contains the name of the application or entity calling the Internet functions (for example, Microsoft Internet Explorer). This name is used as the user agent in the HTTP protocol. </dd>
+
+<DT><I>dwAccessType </I></DT>
+
+<DD>Specifies the type of access required. It is one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=60%>Value</TH>
+<TH width=40%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=60%>INTERNET_OPEN_TYPE_DIRECT </TD>
+<TD width=40%>Resolves all host names locally. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=60%>INTERNET_OPEN_TYPE_PRECONFIG </TD>
+<TD width=40%>Retrieves the proxy or direct configuration from the registry. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=60%>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY </TD>
+<TD width=40%>Retrieves the proxy or direct configuration from the registry and prevents the use of a startup JScript or Internet Setup (INS) file. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=60%>INTERNET_OPEN_TYPE_PROXY </TD>
+<TD width=40%>Passes requests to the proxy unless a proxy bypass list is supplied and the name to be resolved bypasses the proxy. In this case, the function uses INTERNET_OPEN_TYPE_DIRECT. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>lpszProxy </I></DT>
+
+<DD>Long pointer to a null-terminated string that contains the name of the proxy server (or servers) to use if proxy access was specified. If this parameter is NULL, the function reads proxy information from the registry. Do not use an empty string, because <B>InternetOpen</B> will use it as the proxy name. The Win32 Internet functions only recognize CERN type proxies (HTTP only) and the TIS FTP gateway (FTP only). If Microsoft Internet Explorer is installed, the Win32 Internet functions also support SOCKS proxies. FTP requests can be made through a CERN type proxy either by changing them to an HTTP request or by using <A HREF="_wcesdk_win32_internetopenurl.htm"><B>InternetOpenUrl</B></A>. </dd>
+
+<DT><I>lpszProxyBypass </I></DT>
+
+<DD>Long pointer to a null-terminated string that contains an optional list of host names or IP addresses, or both, that should not be routed through the proxy. The list can contain wildcards. Do not use an empty string, because <B>InternetOpen</B> will use it as the proxy bypass list. If this parameter specifies the "&lt;local&gt;" macro as the only entry, the function bypasses any host name that does not contain a period. If this parameter is NULL, the function reads the bypass list from the registry. </dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>Specifies various options affecting the behavior of the function. It can be a combination of these values:
+
+<UL type="disc">
+	<LI>INTERNET_FLAG_ASYNC</li>
+
+	<LI>INTERNET_FLAG_FROM_CACHE</li>
+
+	<LI>INTERNET_FLAG_OFFLINE</li>
+
+	<LI>INTERNET_INVALID_PORT_NUMBER</li>
+</UL>
+
+
+<P>Specifying INTERNET_INVALID_PORT_NUMBER is the same as specifying the default port number.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A valid handle, which the application passes on to subsequent Win32 Internet functions, indicates success. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Windows CE Remarks</H4>
+
+<P>The <B>InternetOpen</B> function makes available most of the functionality of the corresponding Win32 Internet function, including basic direct connections, proxy connections, and pre-configuration proxy settings. The type of internet access is specified by one of the three values assigned to the <I>in</I> parameter, <I>dwAccessType</I>:
+
+<DL>
+<DT>INTERNET_OPEN_TYPE_DIRECT </DT>
+
+<DD>Requests are made directly to the nominated server.</dd>
+
+<DT>INTERNET_OPEN_TYPE_PROXY</DT>
+
+<DD>Request are made through the nominated proxy.</dd>
+
+<DT>INTERNET_OPEN_TYPE_PRECONFIG </DT>
+
+<DD>Gets configuration from the registry. <B>InternetOpen</B> looks under the HKEY_CURRENT_USER\Comm\Wininet\ProxyServer key to determine the proxy configuration to use. If this key does not exist, or the string is NULL, all requests will be made directly to the nominated server. The string stored in the key must be in the form [&lt;protocol&gt;=][&lt;scheme&gt;://]&lt;proxy&gt;[:&lt;port&gt;].If the proxy server list is not registered in the registry or the string is NULL, Windows CE defaults to the INTERNET_OPEN_TYPE_DIRECT access.</dd>
+</DL>
+
+<P>Windows CE does not support multiple proxy servers. Thus, only one proxy can be specified for <I>lpszProxy</I> in the form: [&lt;protocol&gt;=][&lt;scheme&gt;://]&lt;proxy&gt;[:&lt;port&gt;] For example, “http://proxy:80” is allowed, but "ftp=ftp://ftp-gw http=http://jerhico:80" is not.</P>
+
+<P>Windows CE does not support the proxy bypass lists; the <I>lpszProxyBypass</I> parameter must be NULL.</P>
+
+<P>An application can accept the INTERNET_FLAG_ASYNC value for the <I>dwFlags</I> parameter, but only the <A HREF="_wcesdk_win32_internetreadfile.htm"><B>InternetReadFile</B></A> and <A HREF="_wcesdk_win32_internetquerydataavailable.htm"><B>InternetQueryDataAvailable</B></A> functions can execute asynchronously. All other requests will be completed synchronously. However, it does not take the INTERNET_FLAG_OFFLINE flag as no caching features are available.</P>
+
+<H4>Remarks</H4>
+
+<P><B>InternetOpen</B> is the first Win32 Internet function called by an application. It tells the Internet DLL to initialize internal data structures and prepare for future calls from the application. When the application finishes using the Internet functions, it should call <A HREF="_wcesdk_win32_internetclosehandle.htm"><B>InternetCloseHandle</B></A> to free the handle and any associated resources. </P>
+
+<P>The application can make any number of calls to <B>InternetOpen</B>, although a single call is normally sufficient. The application might need to have separate behaviors defined for each <B>InternetOpen</B> instance, such as different proxy servers configured for each. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Wininet.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Wininet.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_internetclosehandle.htm"><B>InternetCloseHandle</B></A>, <A HREF="_wcesdk_win32_internetopenurl.htm"><B>InternetOpenUrl</B></A>, <A HREF="_wcesdk_win32_internetquerydataavailable.htm"><B>InternetQueryDataAvailable</B></A>, <A HREF="_wcesdk_win32_internetreadfile.htm"><B>InternetReadFile</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

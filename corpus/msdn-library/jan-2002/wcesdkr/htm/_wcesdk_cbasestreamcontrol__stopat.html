@@ -1,0 +1,81 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseStreamControl::StopAt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseStreamControl::StopAt"/>
+<MSHelp:RLTitle Title="CBaseStreamControl::StopAt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasestreamcontrol__stopat"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseStreamControl::StopAt</H1>
+
+<P>Informs the pin when to stop processing data and to discard any new samples. </P>
+
+<PRE class="syntax"><B>HRESULT StopAt(</B>
+<B>const REFERENCE_TIME *</B><I>ptStop</I> <B>= NULL,</B>
+<B>BOOL</B> <I>bSendExtra</I> <B>= FALSE,</B>
+<B>DWORD</B> <I>dwCookie</I> <B>= 0 );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ptStop </I></DT>
+
+<DD><B>REFERENCE_TIME</B> at which to stop streaming. If NULL, stop immediately (no notification). If MAX_TIME, cancels stop. </dd>
+
+<DT><I>bSendExtra </I></DT>
+
+<DD>Indicates whether to send an extra sample after scheduled <I>ptStop</I> time. </dd>
+
+<DT><I>dwCookie </I></DT>
+
+<DD>Specifies a particular value to be sent with the notification when the stop occurs. (Only used if <I>ptStart</I> if not NULL or MAX_TIME). </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns NOERROR. </P>
+
+<H4>Remarks</H4>
+
+<P>This member function implements the <A HREF="_wcesdk_iamstreamcontrol__stopat.htm"><B>IAMStreamControl::StopAt</B></A> method and is used by pins and filters that must support the stopping of streams. It sets the <A HREF="_wcesdk_dtypes__streamcontrolstate.htm"><B>StreamControlState</B></A> enumeration type to STREAM_DISCARDING. </P>
+
+<P>In a video capture scenario, specify <A HREF="_wcesdk_iamstreamcontrol__stopat.htm"><B>StopAt</B></A> on both the output pin of a capture filter and an input pin of a multiplexer and have the multiplexer send notification of completion. This ensures that the capture filter doesn't needlessly capture extra frames, while also guaranteeing that the multiplexer has written the last frame to disk. </P>
+
+<P>In addition, the capture output pin should specify TRUE for the <I>bSendExtra</I> variable while all other pins specify FALSE. If an extra frame is not sent the multiplexer will end up waiting for the stop time indefinitely and not realize it already has received all the capture information. </P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;If a stop time is given in the middle of a packet, the filter will deliver the whole packet before going into a discarding state. Also, if start and stop are scheduled for a single point in time, the effect is as if the start occurred an infinitesimal time before the stop. You can use this effect to capture a single frame. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

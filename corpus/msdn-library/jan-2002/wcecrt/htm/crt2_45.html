@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ftell</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ftell"/>
+<MSHelp:RLTitle Title="ftell"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_ftell"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>ftell</H1>
+
+<P>Gets the current position of a file pointer.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Function</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>ftell</B></TD>
+<TD width=73%>&lt;stdio.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>long ftell( FILE</B> *<I>stream</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>stream</I></DT>
+
+<DD>Target FILE structure</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Values</H4>
+
+<P><B>ftell</B> returns the current file position. The value returned by <B>ftell</B> may not reflect the physical byte offset for streams opened in text mode, because text mode causes carriage return&#0150;linefeed translation. Use <B>ftell</B> with <B>fseek</B> to return to file locations correctly. On error, <B>ftell</B> returns &#0150;1L. On devices incapable of seeking (such as terminals and printers), or when stream does not refer to an open file, the return value is undefined.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>ftell</B> function gets the current position of the file pointer (if any) associated with stream. The position is expressed as an offset relative to the beginning of the stream.</P>
+
+<P>Note that when a file is opened for appending data, the current file position is determined by the last I/O operation, not by where the next write would occur. For example, if a file is opened for an append and the last operation was a read, the file position is the point where the next read operation would start, not where the next write would start. (When a file is opened for appending, the file position is moved to end of file before any write operation.) If no I/O operation has yet occurred on a file opened for appending, the file position is the beginning of the file.</P>
+
+<P>In text mode, CTRL+Z is interpreted as an end-of-file character on input. In files opened for reading/writing, <B>fopen</B> and all related routines check for a CTRL+Z at the end of the file and remove it if possible. This is done because using <B>ftell</B> and <B>fseek</B> to move within a file that ends with a CTRL+Z may cause <B>ftell</B> to behave improperly near the end of the file. </P>
+
+<H4>Example</H4>
+
+<PRE class="code">/* FTELL.C: This program opens a file named FTELL.C
+ * for reading and tries to read 100 characters. It
+ * then uses ftell to determine the position of the
+ * file pointer and displays this position.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream;
+
+void main( void )
+{
+   long position;
+   char list[100];
+   if( (stream = fopen( "ftell.c", "rb" )) != NULL )
+   {
+      /* Move the pointer by reading data: */
+      fread( list, sizeof( char ), 100, stream );
+      /* Get position after read: */
+      position = ftell( stream );
+      printf( "Position after trying to read 100 bytes: %ld\n",
+              position );
+      fclose( stream );
+   }
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">Position after trying to read 100 bytes: 100
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt2_25.htm"><B>fgetpos</B></A>, <A HREF="crt2_43.htm"><B>fseek</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

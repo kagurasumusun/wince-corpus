@@ -1,0 +1,95 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Windows Messages to Manage Waveform Audio Playback</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using Windows Messages to Manage Waveform Audio Playback"/>
+<MSHelp:RLTitle Title="Using Windows Messages to Manage Waveform Audio Playback"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_using_windows_messages_to_manage_waveform_audio_playback"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Using Windows Messages to Manage Waveform Audio Playback</H1>
+
+<P>You can send a variety of Windows CE messages to a window procedure function to manage waveform audio playback. The following table shows these messages.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=25%>Message</TH>
+<TH width=75%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>MM_WIM_CLOSE</TD>
+<TD width=75%>Sent when the <B>waveOutClose</B> or the <B>waveInClose</B> function closes a device</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>MM_WIM_DATA</TD>
+<TD width=75%>Sent when the device driver finishes with a data block that is sent by the <B>waveOutWrite</B> or the <B>waveInAddBuffer</B> function</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=25%>MM_WIM_OPEN</TD>
+<TD width=75%>Sent when the <B>waveOutOpen</B> or the <B>waveInOpen</B> function opens a device</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The MM_WIM_DATA message is the most useful message in the preceding table. When MM_WIM_DATA signals a completed data block, you can clean up and free that data block. Unless you need to allocate memory or initialize variables, you probably do not need to process the MM_WIM_OPEN message or the MM_WIM_CLOSE message.</P>
+
+<P>Like other Windows-based messages, these Windows-based messages have a <I>wParam</I> parameter and an <I>lParam</I> parameter that are associated with them. The <I>wParam</I> parameter always specifies a handle to the open waveform audio output device. For the MM_WIM_DATA message, <I>lParam</I> specifies a pointer to a <B>WAVEHDR</B> structure. This structure identifies a completed data block. The MM_WIM_CLOSE and MM_WIM_OPEN messages do not use <I>lParam</I>.</P>
+
+<P>The following code example shows how to process the MM_WIM_DATA message.</P>
+
+<PRE class="code">// WndProc-Main window procedure
+LRESULT FAR PASCAL WndProc (HWND hWnd, UINT msg, WPARAM wParam,
+                            LPARAM lParam)
+{
+  switch (msg)
+  {
+    case MM_WIM_DATA:
+      // A waveform audio data block has been played and can now be
+      // freed.
+      waveOutUnprepareHeader ((HWAVEOUT)wParam, (LPWAVEHDR)lParam,
+                              sizeof (WAVEHDR));
+      // Free hData memory
+      waveOutClose ((HWAVEOUT)wParam);
+
+      break;
+  }
+
+  return DefWindowProc (hWnd, msg, wParam, lParam);
+}</PRE>
+
+<P>The preceding example assumes that the application does not play multiple data blocks, so it can close the output device after playing a single data block.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,80 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using Menu Creation Functions</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Using Menu Creation Functions"/>
+<MSHelp:RLTitle Title="Using Menu Creation Functions"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_using_menu_creation_functions"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Using Menu Creation Functions</H1>
+
+<P>You use menu creation functions when you want to create or change a menu at run time. To create an empty menu bar, use the <B>CreateMenu</B> function; to create an empty menu, use the <B>CreatePopupMenu</B> function. To add items to a menu, use the <B>AppendMenu</B> and <B>InsertMenu</B> functions.</P>
+
+<P>The following code example shows how to create an empty menu by using <B>CreatePopupMenu</B>, and how to add items to the menu by using <B>AppendMenu</B>.</P>
+
+<PRE>HMENU hmTrackPopup;    // The popup menu to track.
+
+// Create the popup menu.
+hmTrackPopup = CreatePopupMenu();
+
+// Append some items.
+AppendMenu(hmTrackPopup,MF_STRING, 1000,TEXT("Append Item 1"));
+AppendMenu(hmTrackPopup,MF_STRING, 1001, TEXT("Append Item 2"));
+</PRE>
+
+<P>When a menu contains more items than will fit in one column, the menu is truncated unless you force a line break. You can cause a column break to occur at a specific item in a menu by assigning the MFT_MENUBREAK menu item type flag to the item. Windows CE places that item and all subsequent items in a new column. You can also assign the MFT_MENUBARBREAK menu item type flag to the item, which has the same effect as the MFT_MENUBREAK menu item type flag except that a vertical line appears between the new and existing columns.</P>
+
+<P>To display a shortcut menu, use the <B>TrackPopupMenuEx</B> function. Shortcut menus, also called floating pop-up menus or context menus, are typically displayed when the WM_CONTEXTMENU message is processed. The older <B>TrackPopupMenu</B> function is supported, but new applications should use the <B>TrackPopupMenuEx</B> function.</P>
+
+<P>The following code example shows how to display a shortcut menu by using <B>TrackPopupMenuEx</B>.</P>
+
+<PRE>case WM_LBUTTONDOWN:
+  {
+    WORD xPos = LOWORD(lParam);  // horizontal position of the cursor
+    WORD yPos = HIWORD(lParam);  // vertical position of the cursor
+
+    if (fTrack &amp;&amp; hmTrackPopup){
+      TrackPopupMenuEx(hmTrackPopup,0, xPos, yPos, hWnd, NULL);
+    }
+  }
+  break;
+</PRE>
+
+<P>If a menu is assigned to a window and that window is destroyed, Windows CE automatically destroys the menu, freeing the menu handle and the memory occupied by the menu. Windows CE does not automatically destroy a menu that is not assigned to a window. An application must destroy the unassigned menu by calling the <B>DestroyMenu</B> function.</P>
+
+<P>The following code example shows how to destroy a menu by using the DestroyMenu function.</P>
+
+<PRE>// Ensure that the old menu is gone.
+DestroyMenu(hmTrackPopup);
+hmTrackPopup = NULL;
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

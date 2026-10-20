@@ -1,0 +1,126 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HalSetBusDataByOffset</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="HalSetBusDataByOffset"/>
+<MSHelp:RLTitle Title="HalSetBusDataByOffset"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcepb_halsetbusdatabyoffset"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>HalSetBusDataByOffset</H1>
+
+<P>This function sets bus-configuration data for a device on a dynamically configurable I/O bus with a published, standard interface.</P>
+
+<PRE class="syntax"><B>ULONG HalSetBusDataByOffset</B> <B>(</B>
+<B>BUS_DATA_TYPE</B> <I>BusDataType,</I>
+<B>ULONG </B><I>BusNumber,</I>
+<B>ULONG </B><I>SlotNumber</I>,
+<B>PVOID</B> <I>Buffer</I>,
+<B>ULONG </B><I>Offset</I>,
+<B>ULONG </B><I>Length </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>BusDataType</I></DT>
+
+<DD>[in] Specifies the type of bus data to be retrieved. This value can be PCIConfiguration. The upper bound on the types supported is always MaximumBusDataType.</dd>
+
+<DT><I>BusNumber</I></DT>
+
+<DD>[in] Specifies the zero-based and system-assigned number of the bus in systems with several buses of the same <I>BusDataType</I>.</dd>
+
+<DT><I>SlotNumber</I></DT>
+
+<DD>[in] Specifies the logical slot number or location of the device. If <B>PCIConfiguration</B> is specified as the <I>BusDataType</I>, this value is specified as a PCI_SLOT_NUMBER value (slot and function number combined).</dd>
+
+<DT><I>Buffer</I></DT>
+
+<DD>[in] Points to a caller-supplied buffer for configuration information specific to <I>BusDataType</I>.
+
+<P>If PCIConfiguration is specified, the buffer contains the <B>PCI_COMMON_CONFIG</B> information for the given <I>SlotNumber</I> and function number. The specified <I>Offset</I> and <I>Length</I> determine how much information is supplied. Certain members of <B>PCI_COMMON_CONFIG</B> have read-only values, and the caller is responsible for preserving the system-supplied values of read-only members.
+</dd>
+
+<DT><I>Offset</I></DT>
+
+<DD>[in] Specifies the byte offset in the <B>PCI_COMMON_CONFIG</B> structure at which the caller-supplied configuration values begin. Callers can use the system-defined constant PCI_COMMON_HDR_LENGTH to specify the device-specific area of <B>PCI_COMMON_CONFIG</B>.</dd>
+
+<DT><I>Length</I></DT>
+
+<DD>[in] Specifies the number of bytes in the <I>Buffer</I>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function returns the number of bytes of data successfully set for the specified <I>SlotNumber</I>. If the given <I>BusDataType</I> is not valid for the current platform or if the supplied information is invalid, this function returns zero.</P>
+
+<H4>Remarks</H4>
+
+<P>A driver can call <B>HalSetBusDataByOffset</B> or <B>HalSetBusData</B> if unusual circumstances or the nature of its device requires such a call. For example, a driver might call either of these functions to clear a bit in the PCI status register if its device signals a target abort during initialization. Usually, the hardware or startup code will configure the device appropriately.</P>
+
+<P>When accessing the device-specific area of the PCI configuration space, <B>HalSetBusDataByOffset</B> guarantees the following:
+
+<UL type="disc">
+	<LI>This function never reads or writes data outside the range specified by the input <I>Offset</I> and <I>Length</I>.</li>
+
+	<LI>Even if the input <I>Length</I> is exactly a byte or a (two-byte) word, this function never accesses any data outside the requested range.</li>
+</UL>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=19%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=19%>2.10 and later</TD>
+<TD width=18%>Ceddk.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="ceddk_f.htm"><B>HalGetBusData</B></A>, <A HREF="ceddk_f_1.htm"><B>HalGetBusDataByOffset</B></A>, <A HREF="ceddk_f_2.htm"><B>HalSetBusData</B></A>, <A HREF="ceddk_f_4.htm"><B>HalTranslateBusAddress</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Tuesday, May 15, 2001</font></center>
+</div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+
+</HTML>

@@ -1,0 +1,122 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMessageFilter::RetryRejectedCall</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMessageFilter::RetryRejectedCall"/>
+<MSHelp:RLTitle Title="IMessageFilter::RetryRejectedCall"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imessagefilter__retryrejectedcall"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMessageFilter::RetryRejectedCall</H1>
+
+<P>This client-based method gives the application an opportunity to display a dialog box so the user can retry or cancel the call, or switch to the task identified by threadIDCallee. </P>
+
+<PRE class="syntax"><B>DWORD RetryRejectedCall(
+HTASK </B><I>threadIDCallee</I><B>,
+DWORD </B><I>dwTickCount</I><B>,
+DWORD </B><I>dwRejectType</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>threadIDCallee</I></DT>
+
+<DD>[in] Handle of the server task that rejected the call.</dd>
+
+<DT><I>dwTickCount</I></DT>
+
+<DD>[in] Number of elapsed ticks since the call was made.</dd>
+
+<DT><I>dwRejectType</I></DT>
+
+<DD>[in] Specifies either SERVERCALL_REJECTED or SERVERCALL_RETRYLATER, as returned by the object application.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>-1</DT>
+
+<DD>The call should be canceled. COM then returns RPC_E_CALL_REJECTED from the original method call.</dd>
+
+<DT>Value &gt;= 0 and &lt;100</DT>
+
+<DD>The call is to be retried immediately.</dd>
+
+<DT>Value &gt;= 100</DT>
+
+<DD>COM will wait for this many milliseconds and then retry the call.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>COM calls <B>RetryRejectedCall</B> on the caller's <B>IMessageFilter</B> immediately after receiving SERVERCALL_RETRYLATER or SERVERCALL_REJECTED from the <A HREF="_wcesdk_com_imessagefilter__handleincomingcall.htm"><B>IMessageFilter::HandleInComingCall</B></A> method on the callee's <B>IMessageFilter</B>. </P>
+
+<P>If a called task rejects a call, the application is probably in a state where it cannot handle such calls, possibly only temporarily. When this occurs, COM returns to the caller and issues <B>IMessageFilter::RetryRejectedCall</B> to determine if it should retry the rejected call. </P>
+
+<P>Applications should silently retry calls that have returned with SERVERCALL_RETRYLATER. If, after a reasonable amount of time has passed, say about 30 seconds, the application should display the busy dialog box; a standard implementation of this dialog box is available in the OLEDLG library. The callee may momentarily be in a state where calls can be handled. The option to wait and retry is provided for special kinds of calling applications, such as background tasks executing macros or scripts, so that they can retry the calls in a nonintrusive way. </P>
+
+<P>If, after a dialog box is displayed, the user chooses to cancel, <B>RetryRejectedCall</B> returns -1 and the call will appear to fail with RPC_E_CALL_REJECTED. </P>
+
+<P>If a client implements <B>IMessageFilter</B> and calls a server method on a remote machine, <B>RetryRejectedCall</B> will not be called.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

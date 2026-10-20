@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SCardStatus</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<OBJECT TYPE="application/x-oleobject" CLASSID="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<PARAM NAME="ALink Name" VALUE="_wcesdk_scard_scardstatus">
+	<PARAM NAME="Keyword" VALUE="SCardStatus">
+</OBJECT>
+
+<H1>SCardStatus</H1>
+
+<P>This function provides the current status of a smart card in a reader. You can call it any time after a successful call to <B>SCardConnect</B> and before a successful call to <B>SCardDisconnect</B>. It does not affect the state of the reader or reader driver.</P>
+
+<PRE class="syntax"><B>LONG SCardStatus(</B>
+<B>IN SCARDHANDLE<I> </I></B><I>hCard</I><B>, </B>
+<B>OUT LPTSTR </B><I>mszReaderNames<B>,</B></I><B> </B>
+<B>IN OUT LPDWORD </B><I>pcchReaderLen<B>,</B></I><B> </B>
+<B>OUT LPDWORD<I> </I></B><I>pdwState</I><B>, </B>
+<B>OUT LPDWORD<I> </I></B><I>pdwProtocol</I><B>, </B>
+<B>OUT LPBYTE<I> </I></B><I>pbAtr</I><B>, </B>
+<B>IN OUT LPDWORD<I> </I></B><I>pbcAtrLen</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCard</I></DT>
+
+<DD>Handle to the reference value returned from <B>SCardConnect</B>.</dd>
+
+<DT><I>mszReaderNames</I></DT>
+
+<DD>Receives a list of friendly names (multi-string) by which the currently connected reader is known.</dd>
+
+<DT><I>pcchReaderLen</I></DT>
+
+<DD>On input, pointer to the length of the <I>mszReaderNames</I> buffer.
+
+<P>On output, pointer to the actual length (in characters) of the reader name list, including the trailing NULL character.
+</dd>
+
+<DT><I>pdwState</I></DT>
+
+<DD>Pointer that specifies the current state of the smart card in the reader. The following table shows state indicators, one of which <I>pdwState</I> receives upon success.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_ABSENT</TD>
+<TD width=63%>There is no card in the reader.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_PRESENT</TD>
+<TD width=63%>There is a card in the reader, but it has not been moved into position for use</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_SWALLOWED</TD>
+<TD width=63%>There is a card in the reader in position for use. The card is not powered.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_POWERED</TD>
+<TD width=63%>Power is being provided to the card, but the reader driver is unaware of the mode of the card.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_NEGOTIABLEMODE</TD>
+<TD width=63%>The card has been reset and is awaiting PTS negotiation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_SPECIFICMODE</TD>
+<TD width=63%>The card has been reset and specific communication protocols have been established.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pdwProtocol</I></DT>
+
+<DD>Pointer that specifies the current protocol, if any. The returned value is meaningful only if the returned value of <I>pdwState</I> is SCARD_SPECIFICMODE. The following table shows the possible return values for <I>pdwProtocol</I>.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_PROTOCOL_RAW</TD>
+<TD width=63%>The Raw Transfer protocol is in use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_PROTOCOL_T0</TD>
+<TD width=63%>The ISO 7816/3 T=0 protocol is in use.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>SCARD_PROTOCOL_T1</TD>
+<TD width=63%>The ISO 7816/3 T=1 protocol is in use.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pbAtr</I></DT>
+
+<DD>Pointer to a 32-byte buffer that receives the ATR string from the currently inserted card, if available.</dd>
+
+<DT><I>pbcAtrLen</I></DT>
+
+<DD>Pointer to a <B>DWORD</B> to receive the number of bytes in the ATR string (32 bytes maximum).</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=18%>Value</TH>
+<TH width=82%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Succeeds</TD>
+<TD width=82%>SCARD_S_SUCCESS</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=18%>Fails</TD>
+<TD width=82%>An error value (see <A HREF="_wcesdk_scard_smart_card_error_values.htm">Smart Card Error values</A> for a list of all error values)</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P><B>SCardStatus</B> is a smart card and reader access function. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Winscard.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Winscard.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_scard_scardconnect.htm">SCardConnect</A>, <A HREF="_wcesdk_scard_scarddisconnect.htm">SCardDisconnect</A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-ITS:dsmsdn.chm::/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<br>
+&nbsp;
+<br>
+</BODY>
+</HTML>

@@ -1,0 +1,154 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>strtok, wcstok</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="strtok, wcstok"/>
+<MSHelp:RLTitle Title="strtok, wcstok"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_strtok_wcstok"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>strtok, wcstok</H1>
+
+<P>Find the next token in a string.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=31%>Routine</TH>
+<TH width=69%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>strtok</B></TD>
+<TD width=69%>&lt;string.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%><B>wcstok</B></TD>
+<TD width=69%>&lt;string.h&gt; </TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>char *strtok( char</B> *<I>strToken</I>, <B>const</B> <B>char</B> *<I>strDelimit</I><B> );</B>
+<B>wchar_t *wcstok( wchar_t</B> *<I>strToken</I>, <B>const wchar_t</B> *<I>strDelimit</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>strToken</I></DT>
+
+<DD>String containing token(s)</dd>
+
+<DT><I>strDelimit</I></DT>
+
+<DD>Set of delimiter characters</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Value</H4>
+
+<P>All of these functions return a pointer to the next token found in <I>strToken</I>. They return <B>NULL</B> when no more tokens are found. Each call modifies <I>strToken</I> by substituting a <B>NULL</B> character for each delimiter that is encountered.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>strtok</B> function finds the next token in <I>strToken</I>. The set of characters in <I>strDelimit</I> specifies possible delimiters of the token to be found in <I>strToken</I> on the current call. <B>wcstok</B> is the wide-character version of <B>strtok</B>. The arguments and return value of <B>wcstok</B> are wide-character strings. These two functions behave identically otherwise.</P>
+
+<H4>Generic-Text Routine Mappings</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>TCHAR.H Routine </TH>
+<TH width=62%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>_tcstok</TD>
+<TD width=62%>wcstok </TD>
+</TR>
+</TABLE><BR>
+
+<P>On the first call to <B>strtok</B>, the function skips leading delimiters and returns a pointer to the first token in <I>strToken</I>, terminating the token with a null character. More tokens can be broken out of the remainder of <I>strToken</I> by a series of calls to <B>strtok</B>. Each call to <B>strtok</B> modifies <I>strToken</I> by inserting a null character after the token returned by that call. To read the next token from <I>strToken</I>, call <B>strtok</B> with a <B>NULL</B> value for the <I>strToken</I> argument. The <B>NULL</B> <I>strToken</I> argument causes <B>strtok</B> to search for the next token in the modified <I>strToken</I>. The <I>strDelimit</I> argument can take any value from one call to the next so that the set of delimiters may vary.</P>
+
+<P class=indent><b class="le">Warning&nbsp;&nbsp;&nbsp;</b>Each of these functions uses a static variable for parsing the string into tokens. If multiple or simultaneous calls are made to the same function, a high potential for data corruption and inaccurate results exists. Therefore, do not attempt to call the same function simultaneously for different strings and be aware of calling one of these functions from within a loop where another routine may be called that uses the same function.&nbsp;&nbsp;However, calling this function simultaneously from multiple threads does not have undesirable effects.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">/* STRTOK.C: In this program, a loop uses strtok
+ * to print all the tokens (separated by commas
+ * or blanks) in the string named "string".
+ */
+
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+
+char string[] = "A string\tof ,,tokens\nand some  more tokens";
+char seps[]   = " ,\t\n";
+char *token;
+
+void main( void )
+{
+   printf( "%s\n\nTokens:\n", string );
+   /* Establish string and get the first token: */
+   token = strtok( string, seps );
+   while( token != NULL )
+   {
+      /* While there are tokens in "string" */
+      printf( " %s\n", token );
+      /* Get next token: */
+      token = strtok( NULL, seps );
+   }
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">A string   of ,,tokens
+and some  more tokens
+
+Tokens:
+ A
+ string
+ of
+ tokens
+ and
+ some
+ more
+ tokens
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt3_13.htm">strcspn</A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

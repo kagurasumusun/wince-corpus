@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseReferenceClock::AdvisePeriodic</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseReferenceClock::AdvisePeriodic"/>
+<MSHelp:RLTitle Title="CBaseReferenceClock::AdvisePeriodic"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasereferenceclock__adviseperiodic"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseReferenceClock::AdvisePeriodic</H1>
+
+<P>Sets up a recurring advise with the reference clock. </P>
+
+<PRE class="syntax"><B>HRESULT AdvisePeriodic(</B>
+<B>REFERENCE_TIME</B> <I>StartTime</I><B>,</B>
+<B>REFERENCE_TIME</B> <I>PeriodTime</I><B>,</B>
+<B>HSEMAPHORE</B> <I>hSemaphore</I><B>,</B>
+<B>DWORD *</B><I>pdwAdviseToken</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>StartTime </I></DT>
+
+<DD>Start at this time. </dd>
+
+<DT><I>PeriodTime </I></DT>
+
+<DD>Time between notifications. </dd>
+
+<DT><I>hSemaphore </I></DT>
+
+<DD>Advise through a semaphore. </dd>
+
+<DT><I>pdwAdviseToken </I></DT>
+
+<DD>Advise token that identifies the link with the clock. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns one of the following <B>HRESULT</B> values: </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=30%>E_OUTOFMEMORY </TD>
+<TD width=70%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>E_INVALIDARG </TD>
+<TD width=70%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>NOERROR </TD>
+<TD width=70%>No error. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>A semaphore is used, rather than an event, to ensure that multiple notifications can be seen by the user. Each time an amount of time specified in the <I>PeriodTime</I> parameter elapses, the semaphore will be released. </P>
+
+<P>When no further notifications are required, call <A HREF="_wcesdk_cbasereferenceclock__unadvise.htm"><B>CBaseReferenceClock::Unadvise</B></A> and pass the <I>pdwAdviseToken</I> value returned from this call. </P>
+
+<P>For example, the following code extract sets up an advise link that fires its first advise five seconds from now and then signals every second until <A HREF="_wcesdk_cbasereferenceclock__unadvise.htm"><B>Unadvise</B></A> is called. By using a semaphore with a count of 10, the clock is effectively able to cache 10 events. </P>
+
+<PRE class="code">HANDLE hSemaphore = CreateSemaphore(NULL, 0, 10, NULL);
+    // Assume pRefClock is an IReferenceClock* variable.
+
+    REFERENCE_TIME rtPeriodTime = 1000 * (UNITS / MILLISECONDS);
+        // A one-second interval
+    REFERENCE_TIME rtNow;
+    DWORD    dwAdviseToken;
+    pRefClock-&gt;GetTime(&amp;rtNow);
+
+    pRefClock-&gt;AdvisePeriodic(rtNow+(5*rtPeriodTime),
+        PeriodTime, hSemaphore, &amp;dwAdviseToken);</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

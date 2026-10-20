@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AMovieDllRegisterServer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AMovieDllRegisterServer"/>
+<MSHelp:RLTitle Title="AMovieDllRegisterServer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dll_setup_functs__amoviedllregisterserver"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>AMovieDllRegisterServer</H1>
+
+<P>Registers filters. </P>
+
+<PRE class="syntax"><B>HRESULT AMovieDllRegisterServer(void);</B></PRE>
+
+<H4>Return Values</H4>
+
+<P>Returns an <B>HRESULT</B> value. </P>
+
+<H4>Remarks</H4>
+
+<P>Use this function to set up your filters. The following function shows an example of how this might be done.</P>
+
+<PRE class="code">static const WCHAR *g_wszName = L"Sample Compressor Filter" ;
+
+// Register Sample Compressor Filter
+STDAPI
+DllRegisterServer( void )
+{
+    // register the server
+    HRESULT hr = AMovieDllRegisterServer( );
+    if( FAILED(hr) )
+        return hr;
+
+    IFilterMapper2 *pFm2 = 0;
+
+    hr = CoCreateInstance( CLSID_FilterMapper2
+                           , NULL
+                           , CLSCTX_INPROC_SERVER
+                           , IID_IFilterMapper2
+                           , (void **)&amp;pFm2 );
+
+    if(FAILED(hr))
+        return hr;
+
+    static const AMOVIESETUP_MEDIATYPE sudAVICoTypeOut =  {
+        &amp;MEDIATYPE_Video,
+        &amp;MEDIASUBTYPE_SampleVideoType };
+
+    static const AMOVIESETUP_MEDIATYPE sudAVICoTypeIn =  {
+        &amp;MEDIATYPE_Video,
+        &amp;GUID_NULL };
+
+    static const AMOVIESETUP_PIN psudAVICoPins[] =
+    {
+        {
+            L"Input"        // strName
+            , FALSE         // bRendered
+            , FALSE         // bOutput
+            , FALSE         // bZero
+            , FALSE         // bMany
+            , &amp;CLSID_NULL   // clsConnectsToFilter
+            , 0             // strConnectsToPin
+            , 1             // nTypes
+            , &amp;sudAVICoTypeIn } // lpTypes
+        , { L"Output"       // strName
+            , FALSE         // bRendered
+            , TRUE          // bOutput
+            , FALSE         // bZero
+            , FALSE         // bMany
+            , &amp;CLSID_NULL   // clsConnectsToFilter
+            , 0             // strConnectsToPin
+            , 1             // nTypes
+            , &amp;sudAVICoTypeOut
+        }
+    };   // lpTypes
+
+    REGFILTER2 rf2;
+    rf2.dwVersion = 1;
+    rf2.dwMerit = MERIT_DO_NOT_USE;
+    rf2.cPins = NUMELMS(psudAVICoPins);
+    rf2.rgPins = psudAVICoPins;
+
+    hr = pFm2-&gt;RegisterFilter(
+        CLSID_SampleCompressorFilter,
+        g_wszName,              // name shown to the user
+        0,                      // device moniker
+        &amp;CLSID_VideoCompressorCategory,
+        g_wszName,              // unique instance name
+        &amp;rf2);
+
+    pFm2-&gt;Release();
+
+    return hr;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>AtlReportError</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="AtlReportError"/>
+<MSHelp:RLTitle Title="AtlReportError"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_atlreporterror"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>AtlReportError</H1>
+
+<P>This global function sets up the <B>IErrorInfo</B> interface to provide error information to clients of the object. The string <I>lpszDesc</I> is used as the text description of the error. When the client receives the <I>hRes</I> you return from <B>AtlReportError</B>, the client can access the <B>IErrorInfo</B> structure for details about the error.</P>
+
+<PRE class=syntax><B>inline HRESULT</B> <B>WINAPI</B> <B>AtlReportError(
+const</B> <B>CLSID&amp;</B> <I>clsid</I><B>,</B> <B>
+UINT </B><I>nID</I><B>,
+DWORD </B><I>dwHelpID</I><B>,
+LPCOLESTR </B><I>lpszHelpFile</I><B>,
+const IID&amp; </B><I>iid</I><B>,
+HRESULT </B><I>hRes</I><B>,
+HINSTANCE </B><I>hInst</I><B>);</B>
+
+<B>inline HRESULT</B> <B>WINAPI</B> <B>AtlReportError(
+const</B> <B>CLSID&amp;</B> <I>clsid</I><B>,</B> <B>
+LPCSTR </B><I>lpszDesc</I><B>,
+DWORD </B><I>dwHelpID</I><B>,
+LPCSTR </B><I>lpszHelpFile</I><B>,
+const IID* </B><I>iid</I><B>,
+HRESULT </B><I>hRes</I><B>);</B>
+
+<B>inline HRESULT</B> <B>WINAPI</B> <B>AtlReportError(
+const</B> <B>CLSID&amp;</B> <I>clsid</I><B>,</B> <B>
+LPCSTR</B> <I>lpszDesc</I><B>,</B> <B>
+const</B> <B>IID&amp;</B> <I>iid</I> <B>,</B> <B>
+HRESULT</B> <I>hRes</I><B>);</B>
+
+<B>inline HRESULT</B> <B>WINAPI</B> <B>AtlReportError(
+const</B> <B>CLSID&amp;</B> <I>clsid</I><B>,</B> <B>
+LPCOLESTR</B> <I>lpszDesc</I><B>,
+const</B> <B>IID&amp;</B> <I>iid</I> <B>,
+HRESULT</B> <I>hRes</I><B>);</B>
+
+<B>inline HRESULT</B> <B>WINAPI</B> <B>AtlReportError(
+const</B> <B>CLSID&amp;</B> <I>clsid</I><B>,</B> <B>
+LPCOLESTR </B><I>lpszDesc</I><B>,
+DWORD </B><I>dwHelpID</I><B>,
+LPCOLESTR </B><I>lpszHelpFile</I><B>,
+const IID&amp; </B><I>iid</I><B>,
+HRESULT </B><I>hRes</I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>clsid</I></DT>
+
+<DD>[in] The CLSID of the object reporting the error.</DD>
+
+<DT><I>lpszDesc</I></DT>
+
+<DD>[in] The string describing the error. The Unicode version specifies that <I>lpszDesc</I> is of type <B>LPCOLESTR</B>; the ANSI version specifies a type of <B>LPCSTR</B>.</DD>
+
+<DT><I>iid</I></DT>
+
+<DD>[in] The IID of the interface defining the error or <B>GUID_NULL</B> if the error is defined by the operating system.</DD>
+
+<DT><I>hRes</I></DT>
+
+<DD>[in] The <B>HRESULT</B> you want returned to the caller. </DD>
+
+<DT><I>nID</I></DT>
+
+<DD>[in] The resource identifier where the error description string is stored. This value should lie between 0x0200 and 0xFFFF, inclusively. In debug builds, an <B>ASSERT</B> will result if <I>nID</I> does not index a valid string. In release builds, the error description string will be set to "Unknown Error."</DD>
+
+<DT><I>dwHelpID</I></DT>
+
+<DD>[in] The help context identifier for the error.</DD>
+
+<DT><I>lpszHelpFile</I></DT>
+
+<DD>[in] The path and name of the help file describing the error.</DD>
+
+<DT><I>hInst</I></DT>
+
+<DD>[in] The handle to the resource. By default, this parameter is <B>_Module::GetResourceInstance</B>, where <B>_Module</B> is the global instance of <A HREF="ccommod.htm"><B>CComModule</B></A> or a class derived from it.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>If the <I>hRes</I> parameter is nonzero, returns the value of <I>hRes</I>. If <I>hRes</I> is zero, then the first four versions of <B>AtlReportError</B> return <B>DISP_E_EXCEPTION</B>. The last two versions return the result of the macro <B>MAKE_HRESULT( 1, FACILITY_ITF, </B><I>nID</I><B> )</B>.</P>
+
+<H4>Example</H4>
+
+<PRE>STDMETHODIMP CMyCtrl::MyMethod()
+{
+...
+if (bSucceeded)
+return S_OK;
+else
+// hRes is set to DISP_E_EXCEPTION
+return AtlReportError (GetObjectCLSID(), "My error message");
+}
+</PRE>
+
+<P class=indent><span class=blue><B>! WARNING</B></span>&nbsp;&nbsp;&nbsp;Do not use <B>AtlReportError</B> in C++ catch handlers. Some overrides of these functions use the ATL string conversion macros internally, which in tern use the <B>_alloca</B> function internally. Using <B>AtlReportError</B> in a C++ catch handler can cause exceptions in C++ catch handlers.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

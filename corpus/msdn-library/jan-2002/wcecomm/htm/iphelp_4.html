@@ -1,0 +1,204 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Managing IP Addresses</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Managing IP Addresses"/>
+<MSHelp:RLTitle Title="Managing IP Addresses"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_managing_ip_addresses"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Managing IP Addresses</H1>
+
+<P>IP Helper can assist you in managing IP addresses that are associated with interfaces on the local computer. Use the functions described following for IP address management.</P>
+
+<P>The <B>GetIpAddrTable</B> function retrieves a table that contains the mapping of IP addresses to interfaces. More than one IP address may to associated with the same interface.</P>
+
+<P>Use the <B>AddIPAddress</B> function to add an IP address to a particular interface. To remove IP addresses that were previously added using <B>AddIPAddress</B>, use the <B>DeleteIPAddress</B> function. IP addresses added using the <B>AddIPAddress</B> function will not remain after reboot. Typically a valid interface already has an IP Address assigned to it. This function is used when an application needs to add an IP address or needs to add multiple IP addresses. For example, this function can be used to map IP addresses to devices that do not support IP, but are using Windows CE as a front end to access the network. When <B>AddIPAddress</B> is called, an ARP packet is sent to ensure that the address is not in use.</P>
+
+<P>The <B>IpReleaseAddress</B> and <B>IpRenewAddress</B> functions require the local computer to be using Dynamic Host Configuration Protocol (DHCP). The <B>IpReleaseAddress</B> function releases an IP address that was previously obtained from DHCP. The <B>IpRenewAddress</B> function renews (or acquires) a DHCP lease on a particular IP address.</P>
+
+<P>The following table describes each <B>GetIpAddrTable</B> variable:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>pIpAddrTable</TD>
+<TD width=74%>Pointer to a buffer that, on successful return, contains the interface&#0150;to&#0150;IP address mapping table as a MIB_IPADDRTABLE structure</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>pdwSize</TD>
+<TD width=74%>Specifies the size of the buffer pointed to by the <I>pIpAddrTable</I> parameter. If the buffer is not large enough to hold the returned mapping table, the function sets this parameter equal to the required buffer size.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>bOrder</TD>
+<TD width=74%>Specifies whether the returned mapping table should be sorted in ascending order by IP address. If this parameter is TRUE, the table is sorted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>MIB_IPADDRTABLE
+<P>(The table is read-only, but addresses can be added and removed using <B>AddIPAddress</B> and <B>DeleteIPAddress</B>.)</P>
+</TD>
+<TD width=74%><B>dwNumEntries </B>
+<BLOCKQUOTE class="dtBlock">
+Specifies the number of IP address entries in the table.</BLOCKQUOTE>
+
+<P><B>table</B>[ANY_SIZE] </P>
+
+<BLOCKQUOTE class="dtBlock">
+Pointer to a table of IP address entries implemented as an array of <B>MIB_ADDRROW</B> structures.</BLOCKQUOTE>
+</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table describes each <B>AddIPAddress</B> variable:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>Address</TD>
+<TD width=74%>Specifies the IP address to add to the adapter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>IpMask</TD>
+<TD width=74%>Specifies the subnet mask for the IP address.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>IfIndex</TD>
+<TD width=74%>Specifies the adapter to which to add the address.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>NTEXontext</TD>
+<TD width=74%>Pointer to a <B>ULONG</B> variable that, on successful return, points to the Net Table Entry (NTE) context for this IP address. The caller can later use this context in a call to <B>DeleteIPAddress</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>NTEInstance</TD>
+<TD width=74%>Pointer to a <B>ULONG</B> variable that, on successful return, points to the NTE instance for this IP address.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table describes each <B>DeleteIPAddress</B> variable:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>NTEContext</TD>
+<TD width=74%>Specifies the Net Table Entry (NTE) context for the IP address. This context was returned by the previous call to <B>AddIPAddress</B>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table describes each <B>IpReleaseAddress</B> variable and <B>IP_ADAPTER_INDEX_MAP</B> member:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>AdapterInfo</TD>
+<TD width=74%>Pointer to an <B>IP_ADAPTER_INDEX_MAP </B>structure that identifies the adapter associated with the IP address to release.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>IP_ADAPTER_INDEX_MAP</TD>
+<TD width=74%><B>Index </B>
+<BLOCKQUOTE class="dtBlock">
+Specifies the index of the adapter.</BLOCKQUOTE>
+
+<P><B>Name</B>[MAX_ADAPTER_NAME]</P>
+
+<BLOCKQUOTE class="dtBlock">
+Pointer to a Unicode string that contains the name of the adapter. </BLOCKQUOTE>
+</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table describes each <B>IpRenewAddress</B> variable:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%>AdapterInfo</TD>
+<TD width=74%>Pointer to an <B>IP_ADAPTER_INDEX_MAP </B>structure that identifies the adapter associated with the IP address to release. (See <B>IpReleaseAddress</B> above for a description of <B>IP_ADAPTER_INDEX_MAP</B> members).</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

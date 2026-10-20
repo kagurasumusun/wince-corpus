@@ -1,0 +1,104 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COutputQueue</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="COutputQueue"/>
+<MSHelp:RLTitle Title="COutputQueue"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_coutputqueue__coutputqueue"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>COutputQueue::COutputQueue</H1>
+
+<P>Constructs a <A HREF="_wcesdk_coutputqueue_class.htm"><B>COutputQueue</B></A> object. </P>
+
+<PRE class="syntax"><B>COutputQueue(</B>
+<B>IPin</B> <I>*pInputPin</I><B>,</B>
+<B>HRESULT</B> <I>*phr</I><B>,</B>
+<B>BOOL</B> <I>bAuto</I> <B>=</B> <B>TRUE,</B>
+<B>BOOL</B> <I>bQueue</I> <B>=</B> <B>TRUE,</B>
+<B>LONG</B> <I>lBatchSize</I><B>,</B>
+<B>BOOL</B> <I>bBatchExact</I><B>,</B>
+<B>LONG</B> <I>lListSize</I><B>,</B>
+<B>DWORD</B> <I>dwPriority</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pInputPin </I></DT>
+
+<DD>Connected pin to which to send data. </dd>
+
+<DT><I>phr </I></DT>
+
+<DD><B>HRESULT</B> return code. </dd>
+
+<DT><I>bAuto </I></DT>
+
+<DD>If TRUE, the queuing mode is determined by asking the connected input pin if the pin can block (by calling <A HREF="_wcesdk_imeminputpin__receivecanblock.htm"><B>IMemInputPin::ReceiveCanBlock</B></A>). If FALSE, queued or direct mode is set by the <I>bQueue</I> parameter. </dd>
+
+<DT><I>bQueue </I></DT>
+
+<DD>Determines if samples are queued for delivery by a worker thread or are being sent directly. Ignored if <I>bAuto</I> is TRUE. </dd>
+
+<DT><I>lBatchSize </I></DT>
+
+<DD>Size of the batch (1 for no batching). </dd>
+
+<DT><I>bBatchExact </I></DT>
+
+<DD>Batch exactly to <I>lBatchSize</I> (but use <A HREF="_wcesdk_coutputqueue__sendanyway.htm">SendAnyway</A> to override batching). </dd>
+
+<DT><I>lListSize </I></DT>
+
+<DD>Likely number in the list. </dd>
+
+<DT><I>dwPriority </I></DT>
+
+<DD>Priority given to the created thread. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>No return value. </P>
+
+<H4>Remarks</H4>
+
+<P>The <I>phr</I> parameter should be updated only to report errors. Usually <I>bAuto</I> will be TRUE. In that case, the constructor calls <A HREF="_wcesdk_imeminputpin__receivecanblock.htm"><B>IMemInputPin::ReceiveCanBlock</B></A> on the downstream pin to determine whether to create a thread, and so to send samples asynchronously. If <I>bAuto</I> is FALSE, a thread is created if, and only if, <I>bQueue</I> is TRUE. </P>
+
+<P>If the batch size is not 1, data is not sent until <I>lBatchSize</I> samples have been received by the object. The exceptions are that, if fewer than <I>lBatchSize</I> samples are passed to <A HREF="_wcesdk_coutputqueue__receive.htm"><B>COutputQueue::Receive</B></A> or <A HREF="_wcesdk_coutputqueue__receivemultiple.htm"><B>COutputQueue::ReceiveMultiple</B></A> in this object and <I>bBatchExact</I> is FALSE, the samples will be sent anyway. </P>
+
+<P>If <I>bBatchExact</I> is TRUE, the <A HREF="_wcesdk_coutputqueue__sendanyway.htm"><B>COutputQueue::SendAnyway</B></A> member function will cause the samples to be sent to the thread (if the thread is created). </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

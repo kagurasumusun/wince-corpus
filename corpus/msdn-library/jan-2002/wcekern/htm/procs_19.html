@@ -1,0 +1,75 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Critical Section Objects</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Critical Section Objects"/>
+<MSHelp:RLTitle Title="Critical Section Objects"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_critical_section_objects"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Critical Section Objects</H1>
+
+<P>When multiple threads have shared access to the same data, the threads can interfere with one another. A critical section object protects a section of code from being accessed by more than one thread. A critical section is limited, however, to only one process or DLL and cannot be shared with other processes.</P>
+
+<P>Critical sections work by having a thread call the <B>EnterCriticalSection</B> or <B>TryEnterCriticalSection</B> functions to indicate that it has entered a critical section of code. If another thread calls <B>EnterCriticalSection</B> and references the same critical section object, it is blocked until the first thread calls the <B>LeaveCriticalSection</B> function. A critical section can protect more than one section of code as long as each section of code is protected by the same critical section object.</P>
+
+<P>To use a critical section, you must first declare a <B>CRITICAL_SECTION</B> structure. Because other critical section functions require a pointer to this structure, be sure to allocate it within the scope of all functions that are using the critical section. Then, create a handle to the critical section object by calling the<B> InitializeCriticalSection</B> function. </P>
+
+<P>To request ownership of a critical section, call <B>EnterCriticalSection or TryEnterCriticalSection</B>; to release ownership, call <B>LeaveCriticalSection</B>. When you are finished with a critical section, call the <B>DeleteCriticalSection</B> function to release the system resources that were allocated when you initialized the critical section.</P>
+
+<P>The following code example shows the prototype for the critical section functions. Notice that they all require a pointer to the <B>CRITICAL_SECTION</B> structure.</P>
+
+<PRE class="code">void InitializeCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+void EnterCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+void LeaveCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+void DeleteCriticalSection (LPCRITICAL_SECTION lpCriticalSection);</PRE>
+
+<P>The following code example shows how a thread initializes, enters, and leaves a critical section. This example uses the <B>try</B>-<B>finally</B> structured exception-handling syntax to ensure that the thread calls <B>LeaveCriticalSection</B> to release the critical section object. </P>
+
+<PRE class="code">void CriticalSectionExample (void)
+{
+  CRITICAL_SECTION csMyCriticalSection;
+
+  InitializeCriticalSection (&amp;csMyCriticalSection);
+
+  __try
+  {
+    EnterCriticalSection (&amp;csMyCriticalSection);
+
+    // Your code to access the shared resource goes here.
+  }
+  __finally
+  {
+    // Release ownership of the critical section
+    LeaveCriticalSection (&amp;csMyCriticalSection);
+  }
+} // End of CriticalSectionExample code</PRE>
+<DIV CLASS="footer">Built on Thursday, November 16, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+ <!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

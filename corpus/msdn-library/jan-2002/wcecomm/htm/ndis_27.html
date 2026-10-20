@@ -1,0 +1,53 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Bus Master-DMA Network Adapters</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Bus Master-DMA Network Adapters"/>
+<MSHelp:RLTitle Title="Bus Master-DMA Network Adapters"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wincesdk_busmaster-dma_network_adapters"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Bus Master-DMA Network Adapters</H1>
+
+<P>For bus master-DMA network adapters, a Windows NT miniport calls a set of functions that consist of <B>NdisQueryMapRegisters</B>, <B>NdisMAllocateMapRegisters</B>, <B>NdisMAllocateSharedMemory</B>, <B>NdisMFreeSharedMemory</B>, <B>NdisMStartBufferPhysicalMapping</B>, and <B>NdisMCompleteBufferPhysicalMapping</B> to facilitate the DMA transfer. The Windows CE implementation of NDIS does not support these functions. However, driver developers can implement a functionality that supports DMA transfers directly in the miniport.</P>
+
+<P>In Windows NT, a miniport generally transfers data that is received by a bus master-DMA network adapter into device-accessible buffers within a shared memory block that is allocated by the miniport. The miniport calls the <B>NdisMInidcateReceivePacket</B> function to indicate the packet to the protocol. The miniport can reserve a shared memory block, too, as described in the preceding “Subordinate DMA Network Adapter” section.</P>
+
+<P>To transfer packet data for a <B>send</B> request, a Windows NT miniport first maps the virtual range that contains the data to the <B>NdisMStartBufferPhysicalMapping</B> function to obtain the mapped range of device-accessible addresses for use by its network adapter. The miniport then downloads the returned physical addresses to the network adapter. If the driver allocated cached memory, then the miniport calls the <B>NdisFlushBuffer</B> and <B>NdisMUpdateSharedMemory</B> functions. After it has downloaded the physical addresses to the network adapter, the miniport programs the network adapter for the transfer operation.</P>
+
+<P>The network adapter indicates that the transfer operation has been completed, either by transmitting an interrupt or by a change of state that is discovered when the network adapter driver polls the <B>MiniportTimer</B> function. After the network adapter has completed the transfer operation, the miniport calls the <B>NdisMCompleteBufferPhysicalMapping</B> function, usually from the <B>MiniportHandleInterrupt</B> function.</P>
+
+<P>On Windows CE, a miniport can use the <B>LockPages</B>/<B>UnlockPages</B> functions, in place of the <B>NdisMStartBufferPhysicalMapping</B> and <B>NdisMCompleteBufferPhysicalMapping</B> NDIS functions, for mapping virtual addresses to physical address ranges</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

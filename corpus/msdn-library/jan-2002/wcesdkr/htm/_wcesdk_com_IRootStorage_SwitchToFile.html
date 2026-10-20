@@ -1,0 +1,138 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IRootStorage::SwitchToFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IRootStorage::SwitchToFile"/>
+<MSHelp:RLTitle Title="IRootStorage::SwitchToFile"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_irootstorage_switchtofile"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IRootStorage::SwitchToFile</H1>
+
+<P>This method copies the current file associated with the storage object to a new file, which is then used for the storage object and any uncommitted changes.</P>
+
+<PRE class="syntax"><B>HRESULT SwitchTofFile( </B>
+<B>LPOLESTR </B><I>pszFile</I><B>
+);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pszFile</I></DT>
+
+<DD>Pointer to the null-terminated string that contains the name for the new file. It cannot be the name of an existing file. If NULL, this method creates a temporary file with a unique name, and you can call <A HREF="_wcesdk_com_istorage_stat.htm"><B>IStorage::Stat</B></A> to retrieve the name of the temporary file.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Value</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>S_OK</TD>
+<TD width=62%>The file was successfully copied.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>STG_E_MEDIUMFULL</TD>
+<TD width=62%>The file was not copied because of insufficient space on the storage device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>STG_E_ACCESSDENIED</TD>
+<TD width=62%>The file was not copied because the caller does not have permission to access storage device.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>STG_E_INVALIDPOINTER</TD>
+<TD width=62%>The file was not copied because the <I>pszFile</I> pointer is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>STG_E_FILEALREADYEXISTS</TD>
+<TD width=62%>The file was not copied because the new filename (<I>pszFile</I>) points to an existing file.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The <B>IRootStorage::SwitchToFile</B> method copies the file associated with the storage object. A COM container calls <B>SwitchToFile</B> to perform a full save on a file in a low-memory situation. Typically, this is done only after a normal full save operation&#0151;save to temporary file, delete original file, and rename temporary file&#0151;has failed with an E_OUTOFMEMORY error.</P>
+
+<P>It is illegal to call <B>SwitchToFile</B> if the storage object or anything contained within it has been marshalled to another process. As a consequence, before calling <B>SwitchToFile</B>, the container must call the <A HREF="_wcesdk_com_ipersiststorage_handsoffstorage.htm"><B>IPersistStorage::HandsOffStorage</B></A> method for any element within the storage object that is loaded or running. The <B>HandsOffStorage</B> method forces the element to release its storage pointers and enter the hands-off storage mode. The container must also release all pointers to streams or storages that are contained in this root storage. After the full save operation is completed, the container returns the contained elements to normal storage mode.</P>
+
+<P>When storing storage objects on NTFS systems in native structured storage format, the files are automatically converted for all non-NTFS partitions, for example FAT partitions. The <B>IRootStorage::SwitchToFile</B> method is not supported for NTFS native structured storage files.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>If you are implementing your own storage objects, the <A HREF="_wcesdk_com_irootstorage.htm"><B>IRootStorage</B></A> methods (including <B>QueryInterface</B>, <B>AddRef</B>, and <B>Release</B>) must not consume additional memory or file handles.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,133 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportISR</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MiniportISR"/>
+<MSHelp:RLTitle Title="MiniportISR"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_miniportisr"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>MiniportISR</H1>
+
+<P><B>MiniportISR</B> is a required function if the driver’s network adapter generates interrupts.</P>
+
+<PRE class="syntax"><B>VOID</B>
+<B>MiniportISR(</B>
+<B>OUT PBOOLEAN</B> <I>InterruptRecognized</I><B>,</B>
+<B>OUT PBOOLEAN</B> <I>QueueMiniportHandleInterrupt</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterContext</I> <B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>InterruptRecognized </I></DT>
+
+<DD>Points to a variable in which <B>MiniportISR</B> returns whether the network adapter actually generated the interrupt. <B>MiniportISR</B> sets this to TRUE if it detects that the interrupt came from the network adapter designated at <I>MiniportAdapterContext</I>.
+
+<P>If its network adapter shares an IRQ with other devices on the same bus, <B>MiniportISR</B> should return FALSE as quickly as possible whenever it determines that the network adapter did not interrupt.
+</dd>
+
+<DT><I>QueueMiniportHandleInterrupt</I> </DT>
+
+<DD>Points to a variable that <B>MiniportISR</B> sets to TRUE if the <A HREF="_wcesdk_miniporthandleinterrupt.htm"><B>MiniportHandleInterrupt</B></A> function should be called to complete the interrupt-driven I/O operation.
+
+<P>If the variable at <I>InterruptRecognized</I> is set to FALSE, the value of this variable is irrelevant because <B>MiniportHandleInterrupt</B> will not be called.
+</dd>
+
+<DT><I>MiniportAdapterContext </I></DT>
+
+<DD>Specifies the handle to a miniport-allocated context area in which the driver maintains per-network adapter state, set up by <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Any network adapter driver should do as little work as possible in its <B>MiniportISR</B> function, deferring I/O operations for each interrupt the network adapter generates to the <B>MiniportHandleInterrupt</B> function. A network adapter driver’s ISR is not re-entrant on Windows CE-Based devices, although two instantiations of a <B>MiniportISR</B> function can execute concurrently in SMP machines, particularly if the miniport supports full-duplex sends and receives. Note that SMP is not supported for Windows CE.</P>
+
+<P><B>MiniportISR</B> is called under the following conditions:
+
+<UL type="disc">
+	<LI>An interrupt occurs on the network adapter while the driver’s <B>MiniportInitialize</B> or <A HREF="_wcesdk_miniporthalt.htm"><B>MiniportHalt</B></A> function is running. </li>
+
+	<LI>An interrupt occurs on the I/O bus and the network adapter shares an IRQ with other devices on that bus. </li>
+
+	<LI>If the network adapter shares an IRQ with other devices, that miniport’s ISR must be called on every interrupt to determine whether its network adapter actually generated the interrupt. If not, <B>MiniportISR</B> should return FALSE immediately so the driver of the device that actually generated the interrupt is called quickly. This strategy maximizes I/O throughput for every device on the same bus. </li>
+
+	<LI>An interrupt occurs and the network adapter driver specified that its ISR should be called to handle every interrupt when its <B>MiniportInitialize</B> function called <A HREF="_wcesdk_ndismregisterinterrupt.htm"><B>NdisMRegisterInterrupt</B></A>. </li>
+
+	<LI>Miniports that do not provide MiniportDisable/EnableInterrupt<B> </B>functionality must have their ISRs called on every interrupt. </li>
+</UL>
+
+<P><B>MiniportISR</B> dismisses the interrupt on the network adapter, saves whatever state it must about the interrupt, and defers as much of the I/O processing for each interrupt as possible to the <B>MiniportHandleInterrupt</B> function. </P>
+
+<P>The remaining information in this reference page does not apply to Windows CE because the functionality is not supported. However, if portability to Windows 2000 is a concern, the following information is provided.</P>
+
+<P>After <B>MiniportISR</B> returns control with the variables at <I>InterruptRecognized</I> and <I>QueueMiniportHandleInterrupt </I>set to TRUE, the corresponding <B>MiniportHandleInterrupt</B> function runs at a lower hardware priority than that of the ISR. As a general rule, <B>MiniportHandleInterrupt</B> should do all the work for interrupt-driven I/O operations except for determining whether the network adapter actually generated the interrupt, and, if necessary, preserving the type (receive, send, reset...) of interrupt. </P>
+
+<P>However, a driver writer should not rely on a one-to-one correspondence between the execution of <B>MiniportISR</B> and <B>MiniportHandleInterrupt</B>. A <B>MiniportHandleInterrupt</B> function should be written to handle the I/O processing for more than one network adapter interrupt. Its <B>MiniportISR</B> and <B>MiniportHandleInterrupt</B> functions can run concurrently in SMP machines. Moreover, as soon as <B>MiniportISR</B> acknowledges a network adapter interrupt, the network adapter can generate another interrupt, while the <B>MiniportHandleInterrupt</B> DPC can be queued for execution once for such a sequence of interrupts. </P>
+
+<P>The <B>MiniportHandleInterrupt</B> function is not queued if the driver’s <B>MiniportHalt</B> or <B>MiniportInitialize</B> function is currently executing. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniporthandleinterrupt.htm"><B>MiniportHandleInterrupt</B></A>, <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_miniporthalt.htm"><B>MiniportHalt</B></A>, <A HREF="_wcesdk_ndismregisterinterrupt.htm"><B>NdisMRegisterInterrupt</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

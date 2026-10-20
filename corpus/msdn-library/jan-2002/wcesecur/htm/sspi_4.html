@@ -1,0 +1,235 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Context Semantics</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Context Semantics"/>
+<MSHelp:RLTitle Title="Context Semantics"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_context_semantics"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Context Semantics</H1>
+
+<P>The SSPI supports three types of security contexts: connection, datagram, and stream contexts.</P>
+
+<P>With a connection context, the caller of the function is responsible for formatting messages. The caller also relies on the security provider to authenticate connections and to ensure the integrity of specific parts of the message. Most context options are available to connection contexts. These options include mutual authentication, replay detection, and sequence detection. A security package sets the SECPKG_FLAG_CONNECTION flag to indicate that it supports connection semantics.</P>
+
+<P>A datagram context, or connectionless context, has slightly different semantics from a connection context. A connectionless context implies that the server has no way of determining when the client has shut down or otherwise terminated the connection. In other words, no termination notice is passed from the transport application to the server, as would occur in a connection context. A security package sets the SECPKG_FLAG_DATAGRAM flag to indicate that it supports datagram semantics. If a client specifies the ISC_REQ_DATAGRAM flag in its call to the <B>InitializeSecurityContext</B> function, the following characteristics apply:
+
+<UL type="disc">
+	<LI>The security package does not produce an authentication binary large object (BLOB) on the first call to <B>InitializeSecurityContext</B>. However, the client can immediately use the returned security context in a call to the <B>MakeSignature</B> function to generate a message signature.</li>
+
+	<LI>The security package must enable the context to be reestablished multiple times to enable the server to drop the connection without notice. This also implies that any keys used in the <B>MakeSignature</B> and <B>VerifySignature</B> functions can be reset to a consistent state. For more information on key states, see <A HREF="crypto.htm">Cryptography</A>.</li>
+
+	<LI>The security package must enable the caller to specify sequence data, and must enable the receiver to return that same sequence data back to the caller. This is not exclusive of any sequence data maintained by the package.</li>
+</UL>
+
+<P>A stream context is different from a connection context and a datagram context. A stream context handles secure stream protocols. A security package that supports stream contexts has the following characteristics:
+
+<UL type="disc">
+	<LI>The package sets the SECPKG_FLAG_STREAM flag to indicate that it supports stream semantics, just as it would set a flag to indicate support for connection and datagram semantics.</li>
+
+	<LI>A transport application requests stream semantics by setting the ISC_REQ_STREAM and ASC_REQ_STREAM flags in the calls to the <B>InitializeSecurityContext</B> and <B>AcceptSecurityContext</B> functions.</li>
+
+	<LI>The application calls the <B>QueryContextAttributes</B> function with a <B>SecPkgContext_StreamSizes</B> structure to query the security context for the number of buffers to provide, and the sizes to reserve for headers or trailers.</li>
+
+	<LI>The application provides extra buffer descriptors during actual data processing.</li>
+</UL>
+
+<P>By specifying stream semantics, the caller indicates it will perform extra operations so that the security provider can block messages. These extra operations include passing a list of buffers when the <B>MakeSignature</B> and <B>VerifySignature</B> functions are called. When a message is received from a stream-oriented channel, the caller passes a buffer. The following table shows the buffers.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=10%>Buffer</TH>
+<TH width=24%>Length</TH>
+<TH width=66%>Buffer type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>1</TD>
+<TD width=24%>Message length</TD>
+<TD width=66%>SECBUFFER_DATA</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>2</TD>
+<TD width=24%>0</TD>
+<TD width=66%>SECBUFFER_EMPTY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>3</TD>
+<TD width=24%>0</TD>
+<TD width=66%>SECBUFFER_EMPTY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>4</TD>
+<TD width=24%>0</TD>
+<TD width=66%>SECBUFFER_EMPTY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>5</TD>
+<TD width=24%>0</TD>
+<TD width=66%>SECBUFFER_EMPTY</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The security package then authenticates the BLOB. The following table shows what the buffer list looks like, if the function returns successfully.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=10%>Buffer</TH>
+<TH width=24%>Length</TH>
+<TH width=66%>Buffer type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>1</TD>
+<TD width=24%>Header length</TD>
+<TD width=66%>SECBUFFER_STREAM_HEADER</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>2</TD>
+<TD width=24%>Data length</TD>
+<TD width=66%>SECBUFFER_DATA</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>3</TD>
+<TD width=24%>Trailer length</TD>
+<TD width=66%>SECBUFFER_STREAM_TRAILER</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>4</TD>
+<TD width=24%>0</TD>
+<TD width=66%>SECBUFFER_EMPTY</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>5</TD>
+<TD width=24%>0</TD>
+<TD width=66%>SECBUFFER_EMPTY</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table shows an alternate return value for buffer 4.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=10%>Buffer</TH>
+<TH width=24%>Length</TH>
+<TH width=66%>Buffer type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>4</TD>
+<TD width=24%><I>x</I></TD>
+<TD width=66%>SECBUFFER_EXTRA</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The buffer listed in the previous table indicates data in this buffer is part of the next record, and has not yet been processed.</P>
+
+<P>Conversely, the following table shows what the returned buffer list would look like if the message function returns the SEC_E_INCOMPLETE_MESSAGE error message.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=10%>Buffer</TH>
+<TH width=24%>Length</TH>
+<TH width=66%>Buffer type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>1</TD>
+<TD width=24%><I>x</I></TD>
+<TD width=66%>SECBUFFER_MISSING</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The buffer described in this table indicates that more data is needed to process the record. Unlike most errors returned from a message function, this buffer type does not indicate that the context has been compromised. Security providers must not update their state in this condition.</P>
+
+<P>Similarly, on the sender’s side of the communication, the caller can call <B>MakeSignature</B>, in which case the security package may need to reallocate the buffer. The following table shows the buffer list that the caller can provide to be more efficient.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=10%>Buffer</TH>
+<TH width=24%>Length</TH>
+<TH width=66%>Buffer type</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>1</TD>
+<TD width=24%>Header Length</TD>
+<TD width=66%>SECBUFFER_STREAM_HEADER</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>2</TD>
+<TD width=24%>Data Length</TD>
+<TD width=66%>SECBUFFER_DATA</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=10%>3</TD>
+<TD width=24%>Trailer Length</TD>
+<TD width=66%>SECBUFFER_STREAM_TRAILER</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>Using a buffer, like the one described in the previous table, enables the caller to use buffers more efficiently. By calling the <B>QueryContextAttributes</B> function to determine the amount of space to reserve before calling <B>MakeSignature</B>, the operation is more efficient for the application and the security package.</P>
+<DIV CLASS="footer">Built on Friday, July 06, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

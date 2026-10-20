@@ -1,0 +1,154 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineInitialize</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineInitialize"/>
+<MSHelp:RLTitle Title="lineInitialize"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_lineinitialize"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>lineInitialize</H1>
+
+<P>This function initializes the application’s use of Tapi.dll for subsequent use of the line abstraction. It registers the application’s specified notification mechanism and returns the number of line devices available to the application. A line device is any device that provides an implementation for the <B>line</B>-prefixed functions in TAPI.</P>
+
+<PRE class="syntax"><B>LONG</B> <B>lineInitialize(</B>
+<B>LPHLINEAPP</B> <I>lphLineApp</I><B>, </B>
+<B>HINSTANCE</B> <I>hInstance</I><B>, </B>
+<B>LINECALLBACK</B> <I>lpfnCallback</I><B>, </B>
+<B>LPCTSTR</B> <I>lpszAppName</I><B>, </B>
+<B>LPDWORD</B> <I>lpdwNumDevs</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lphLineApp</I></DT>
+
+<DD>[out] Pointer to a location that is filled with the application's usage handle for TAPI.</dd>
+
+<DT><I>hInstance</I></DT>
+
+<DD>[in] Instance handle of the client application or DLL.</dd>
+
+<DT><I>lpfnCallback</I></DT>
+
+<DD>[in] Pointer to a callback function that is invoked to determine status and events on the line device, addresses, or calls. For more information, see <A HREF="_wcesdk_win32_linecallbackfunc.htm"><B>lineCallbackFunc</B></A>.</dd>
+
+<DT><I>lpszAppName</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that contains only displayable ASCII characters. If this parameter is not NULL, it contains an application-supplied name for the application. This name is provided in the <A HREF="_wcesdk_win32_linecallinfo_str.htm"><B>LINECALLINFO</B></A> structure to indicate, in a user-friendly way, which application originated, or originally accepted or answered the call. This data can be useful for call logging purposes. If <I>lpszAppName</I> is NULL, the application's filename is used instead.</dd>
+
+<DT><I>lpdwNumDevs</I></DT>
+
+<DD>[out] Pointer to a <B>DWORD</B>-sized location. Upon successful completion of this request, this location is filled with the number of line devices available to the application.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Zero indicates success. A negative error number indicates that an error occurred. Possible error values are as follows:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INVALAPPNAME</TD>
+<TD width=52%>LINEERR_REINIT</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_OPERATIONFAILED</TD>
+<TD width=52%>LINEERR_NODRIVER</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INIFILECORRUPT</TD>
+<TD width=52%>LINEERR_NODEVICE</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_RESOURCEUNAVAIL</TD>
+<TD width=52%>LINEERR_NOMEM</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>LINEERR_INVALPOINTER</TD>
+<TD width=52%>LINEERR_NOMULTIPLEINSTANCE</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>If LINEERR_REINIT is returned and TAPI reinitialization has been requested (for example as a result of adding or removing a telephony service provider), then <B>lineInitialize</B> requests are rejected with this error until the last application shuts down its usage of the API (using <A HREF="_wcesdk_win32_lineshutdown.htm"><B>lineShutdown</B></A>). At that time, the new configuration becomes effective and applications are once again permitted to call <B>lineInitialize</B>. If the LINEERR_INVALPARAM error value is returned, the specified <I>hInstance</I> parameter is invalid.</P>
+
+<P>The application can refer to individual line devices by using line device identifiers that range from zero to <I>dwNumDevs</I> minus one. An application should not assume that these line devices are capable of anything beyond what is specified by the Basic Telephony subset without first querying their device capabilities using <A HREF="_wcesdk_win32_linegetdevcaps.htm"><B>lineGetDevCaps</B></A>. </P>
+
+<P>Applications should not invoke <B>lineInitialize</B> without subsequently opening a line (at least for monitoring). If the application is not monitoring and not using any devices, it should call <B>lineShutdown</B> so that memory resources allocated by Tapi.dll can be released if unneeded, and Tapi.dll itself can be unloaded from memory while not needed.</P>
+
+<P>Another reason for performing a <B>lineShutdown</B> is that if a user changes the device configuration (adds or removes a line or phone), there is no way for TAPI to notify an application that has a line or phone handle open at the time. After a reconfiguration has taken place, causing a LINEDEVSTATE_REINIT message to be sent, no applications can open a device until all applications have performed a <B>lineShutdown</B>. If any service provider fails to initialize properly, this function fails and returns the error indicated by the service provider.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Tapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_linecallbackfunc.htm"><B>lineCallbackFunc</B></A>, <A HREF="_wcesdk_win32_linegetdevcaps.htm"><B>lineGetDevCaps</B></A>, <A HREF="_wcesdk_win32_lineshutdown.htm"><B>lineShutdown</B></A>, <A HREF="_wcesdk_win32_linecallinfo_str.htm"><B>LINECALLINFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

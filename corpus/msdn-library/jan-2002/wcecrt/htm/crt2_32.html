@@ -1,0 +1,216 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>fopen, _wfopen</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="fopen, _wfopen"/>
+<MSHelp:RLTitle Title="fopen, _wfopen"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_fopen_wfopen"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>fopen, _wfopen</H1>
+
+<P>Open a file.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Function</TH>
+<TH width=74%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>fopen</B></TD>
+<TD width=74%>&lt;stdio.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>_wfopen</B></TD>
+<TD width=74%>&lt;stdio.h&gt; </TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>FILE *fopen( const char</B> *<I>filename</I>, <B>const</B> <B>char</B> *<I>mode</I> <B>);</B>
+<B>FILE *_wfopen( const wchar_t</B> *<I>filename</I>, <B>const wchar_t</B> *<I>mode</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>filename</I></DT>
+
+<DD>Filename</dd>
+
+<DT><I>mode</I></DT>
+
+<DD>Type of access permitted</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<P>The c, n, and t mode options are Microsoft extensions for <B>fopen</B> and should not be used where ANSI portability is desired.</P>
+
+<H4>Return Values</H4>
+
+<P>Each of these functions returns a pointer to the open file. A null pointer value indicates an error. </P>
+
+<H4>Remarks</H4>
+
+<P>The <B>fopen</B> function opens the file specified by filename. <B>_wfopen</B> is a wide-character version of <B>fopen</B>; the arguments to <B>_wfopen</B> are wide-character strings. <B>_wfopen</B> and <B>fopen</B> behave identically otherwise.</P>
+
+<H4>Generic-Text Routine Mappings</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>TCHAR.H Routine </TH>
+<TH width=70%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%>_tfopen</TD>
+<TD width=70%>_wfopen</TD>
+</TR>
+</TABLE><BR>
+
+<P>The character string mode specifies the type of access requested for the file, as follows:
+
+<DL>
+<DT>"r"</DT>
+
+<DD>Opens for reading. If the file does not exist or cannot be found, the <B>fopen</B> call fails.</dd>
+
+<DT>"w"</DT>
+
+<DD>Opens an empty file for writing. If the given file exists, its contents are destroyed.</dd>
+
+<DT>"a"</DT>
+
+<DD>Opens for writing at the end of the file (appending) without removing the EOF marker before writing new data to the file; creates the file first if it doesn’t exist.</dd>
+
+<DT>"r+"</DT>
+
+<DD>Opens for both reading and writing. (The file must exist.)</dd>
+
+<DT>"w+"</DT>
+
+<DD>Opens an empty file for both reading and writing. If the given file exists, its contents are destroyed.</dd>
+
+<DT>"a+"</DT>
+
+<DD>Opens for reading and appending; the appending operation includes the removal of the EOF marker before new data is written to the file and the EOF marker is restored after writing is complete; creates the file first if it doesn’t exist.
+
+<P>When a file is opened with the "a" or "a+" access type, all write operations occur at the end of the file. The file pointer can be repositioned using <B>fseek</B>, but is always moved back to the end of the file before any write operation is carried out. Thus, existing data cannot be overwritten.
+
+
+<P>The "a" mode does not remove the EOF marker before appending to the file. After appending has occurred, the MS-DOS TYPE command only shows data up to the original EOF marker and not any data appended to the file. The "a+" mode does remove the EOF marker before appending to the file. After appending, the MS-DOS TYPE command shows all data in the file. The "a+" mode is required for appending to a stream file that is terminated with the CTRL+Z EOF marker.
+
+
+<P>When the "r+", "w+", or "a+" access type is specified, both reading and writing are allowed (the file is said to be open for “update”). However, when you switch between reading and writing, there must be an intervening <B>fflush</B>, <B>fsetpos</B>, or <B>fseek</B> operation. The current position can be specified for the <B>fsetpos</B> or <B>fseek</B> operation, if desired.
+
+
+<P>In addition to the above values, the following characters can be included in mode to specify the translation mode for newline characters:
+</dd>
+
+<DT>t</DT>
+
+<DD>Open in text (translated) mode. In this mode, CTRL+Z is interpreted as an end-of-file character on input. In files opened for reading/writing with "a+", <B>fopen</B> checks for a CTRL+Z at the end of the file and removes it, if possible. This is done because using <B>fseek</B> and <B>ftell</B> to move within a file that ends with a CTRL+Z, may cause <B>fseek</B> to behave improperly near the end of the file.
+
+<P>Also, in text mode, carriage return&#0150;linefeed combinations are translated into single linefeeds on input, and linefeed characters are translated to carriage return&#0150;linefeed combinations on output. When a Unicode stream-I/O function operates in text mode (the default), the source or destination stream is assumed to be a sequence of multibyte characters. Therefore, the Unicode stream-input functions convert multibyte characters to wide characters. For the same reason, the Unicode stream-output functions convert wide characters to multibyte characters.
+</dd>
+
+<DT>b</DT>
+
+<DD>Open in binary (untranslated) mode; translations involving carriage-return and linefeed characters are suppressed.
+
+<P>If t or b is not given in mode, the default translation mode is defined by the global variable _<B>fmode</B>. If t or b is prefixed to the argument, the function fails and returns NULL.
+
+
+<P>For more information about using text and binary modes in Unicode and multibyte stream-I/O, see Text and Binary Mode File I/O and Unicode Stream I/O in Text and Binary Modes.
+</dd>
+
+<DT>c</DT>
+
+<DD>Enable the commit flag for the associated filename so that the contents of the file buffer are written directly to disk if either <B>fflush</B> or <B>_flushall</B> is called.</dd>
+
+<DT>n</DT>
+
+<DD>Reset the commit flag for the associated filename to “no-commit.” This is the default. </dd>
+</DL>
+
+<H4>Example</H4>
+
+<PRE class="code">/* FOPEN.C: This program opens files named "data"
+ * and "data2".It  uses fclose to close "data" and
+ * _fcloseall to close all remaining files.
+ */
+
+#include &lt;stdio.h&gt;
+
+FILE *stream, *stream2;
+
+void main( void )
+{
+   int numclosed;
+
+   /* Open for read (will fail if file "data" does not exist) */
+   if( (stream  = fopen( "data", "r" )) == NULL )
+      printf( "The file 'data' was not opened\n" );
+   else
+      printf( "The file 'data' was opened\n" );
+
+   /* Open for write */
+   if( (stream2 = fopen( "data2", "w+" )) == NULL )
+      printf( "The file 'data2' was not opened\n" );
+   else
+      printf( "The file 'data2' was opened\n" );
+
+   /* Close stream */
+   if( fclose( stream ) )
+      printf( "The file 'data' was not closed\n" );
+
+   /* All other files are closed: */
+   numclosed = _fcloseall( );
+   printf( "Number of files closed by _fcloseall: %u\n", numclosed );
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">The file 'data' was opened
+The file 'data2' was opened
+Number of files closed by _fcloseall: 1
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt2_19.htm"><B>fclose</B></A>, <A HREF="crt2_22.htm"><B>ferror</B></A>, <A HREF="crt2_27.htm"><B>_fileno</B></A>, <A HREF="crt3_1.htm"><B>_setmode</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

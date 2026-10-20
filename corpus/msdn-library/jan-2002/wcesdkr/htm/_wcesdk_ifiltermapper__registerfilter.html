@@ -1,0 +1,124 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IFilterMapper::RegisterFilter</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IFilterMapper::RegisterFilter"/>
+<MSHelp:RLTitle Title="IFilterMapper::RegisterFilter"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ifiltermapper__registerfilter"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IFilterMapper::RegisterFilter</H1>
+
+<P>Adds a filter to the registry; the filter can then be enumerated. </P>
+
+<PRE class="syntax"><B>HRESULT RegisterFilter(</B>
+<B>CLSID</B> <I>clsid</I>,
+<B>LPCWSTR</B> <I>Name</I>,
+<B>DWORD </B><I>dwMerit</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>clsid</I> </DT>
+
+<DD>[in] Globally unique identifier (GUID) of the filter. </dd>
+
+<DT><I>Name</I> </DT>
+
+<DD>[in] Descriptive name for the filter. </dd>
+
+<DT><I>dwMerit</I> </DT>
+
+<DD>[in] Position in the order of enumeration. Filters with higher merit are enumerated first. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns an <B>HRESULT</B> value. </P>
+
+<H4>Remarks</H4>
+
+<P>The merit (as defined by the <I>dwMerit</I> parameter) controls the order in which the filter graph manager tries filters when performing an operation as a result of a call to <A HREF="_wcesdk_igraphbuilder__connect.htm"><B>IGraphBuilder::Connect</B></A>, <A HREF="_wcesdk_igraphbuilder__render.htm"><B>IGraphBuilder::Render</B></A>, or <A HREF="_wcesdk_igraphbuilder__renderfile.htm"><B>IGraphBuilder::RenderFile</B></A>. The filter graph manager finds all filters registered with the correct media type and then tries the one with the highest merit, using other criteria in the registration to choose between filters with equal merit. </P>
+
+<P>The following predefined values exist for the <I>dwMerit</I> parameter. Other values, such as MERIT_NORMAL-1, can be used. Using the formula (MERIT_NORMAL+MERIT_UNLIKELY)/2 to calculate the merit value is advisable, because it leaves some low-order bits available for making even finer distinctions. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=46%>0x900000 </TD>
+<TD width=54%>Hardware renderer filter. Filters with this merit value are tried first. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>MERIT_PREFERRED (0x800000) </TD>
+<TD width=54%>Filter, such as a renderer, that is likely to complete the operation directly. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>0x680000 </TD>
+<TD width=54%>MPEG decompression filter. These are tried before AVI decompressors because the latter require more time to determine if they work in the filter graph. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>MERIT_NORMAL (0x600000) </TD>
+<TD width=54%>Filter that may contribute to the completion of a connection. AVI decompression filters and splitter transform filters are registered to this value. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>MERIT_UNLIKELY (0x400000) </TD>
+<TD width=54%>Filter that may contribute to the completion of a connection (a color space conversion filter, for example). The filter graph manager uses this filter only if other options have failed. Register source filters with this value. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>MERIT_DO_NOT_USE (0x200000) </TD>
+<TD width=54%>Filter that will never contribute to the completion of a connection. Filters registered with this value (or less) will never be tried by the filter graph manager when automatically building a filter graph. Use this to register filters that must be added explicitly, either as part of a predefined filter graph or by adding them using <A HREF="_wcesdk_ifiltergraph__addfilter.htm"><B>IFilterGraph::AddFilter</B></A>. Examples include tee filters or effects filters. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>MERIT_HW_COMPRESSOR (0x100050) </TD>
+<TD width=54%>Hardware compressor filter. Filters registered with this value will never be tried by the filter graph manager when automatically building a filter graph. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=46%>MERIT_SW_COMPRESSOR (0x100000) </TD>
+<TD width=54%>Software compressor filter. Filters registered with this value will never be tried by the filter graph manager when automatically building a filter graph. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

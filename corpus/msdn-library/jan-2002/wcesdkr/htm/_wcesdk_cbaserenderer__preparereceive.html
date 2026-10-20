@@ -1,0 +1,67 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseRenderer::PrepareReceive</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseRenderer::PrepareReceive"/>
+<MSHelp:RLTitle Title="CBaseRenderer::PrepareReceive"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaserenderer__preparereceive"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseRenderer::PrepareReceive</H1>
+
+<P>Ensures that a sample can be rendered. </P>
+
+<PRE class="syntax"><B>virtual HRESULT PrepareReceive(</B>
+<B>IMediaSample *</B><I>pMediaSample</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pMediaSample </I></DT>
+
+<DD>Media sample. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns NOERROR if successful, VFW_E_SAMPLE_REJECTED if the delivered sample is later than the sample's timestamp, or E_UNEXPECTED if a renderable sample is already available. </P>
+
+<H4>Remarks</H4>
+
+<P>This member function is called when the upstream filter delivers a sample. If the upstream filter is running (streaming), the sample is scheduled with the reference clock. If the upstream filter is not streaming, a sample in paused mode has been received, so any state transition can be completed. On leaving this function, everything will be unlocked so an application thread can get in and change the state to stopped. In this case, it will also signal the thread event so that the wait call is stopped. </P>
+
+<P>This function is typically called from the <A HREF="_wcesdk_imeminputpin__receive.htm"><B>IMemInputPin::Receive</B></A> method on the renderer's input pin. Although <B>PrepareReceive</B> returns VFW_E_SAMPLE_REJECTED if the sample was delivered too late to be useful, the <B>IMemInputPin::Receive</B> method should not pass the VFW_E_SAMPLE_REJECTED error on to the upstream filter in this case. Instead, <B>IMemInputPin::Receive</B> should return NOERROR, because no error occurred. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

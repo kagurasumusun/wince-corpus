@@ -1,0 +1,142 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ungetc, ungetwc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ungetc, ungetwc"/>
+<MSHelp:RLTitle Title="ungetc, ungetwc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_ungetc_ungetwc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>ungetc, ungetwc</H1>
+
+<P>Pushes a character back onto the stream.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>Routine</TH>
+<TH width=70%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>ungetc</B></TD>
+<TD width=70%>&lt;stdio.h&gt;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>ungetwc</B></TD>
+<TD width=70%>&lt;stdio.h&gt; </TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>int ungetc( int </B><I>c</I><B>, FILE *</B><I>stream</I><B> );</B>
+<B>wint_t ungetwc( wint_t </B><I>c</I><B>, FILE *</B><I>stream</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>c</I></DT>
+
+<DD>Character to be pushed</dd>
+
+<DT><I>stream</I></DT>
+
+<DD>Pointer to <B>FILE</B> structure</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Value</H4>
+
+<P>If successful, each of these functions returns the character argument <I>c</I>. If <I>c</I> cannot be pushed back or if no character has been read, the input stream is unchanged and <B>ungetc</B> returns <B>EOF</B>; <B>ungetwc</B> returns <B>WEOF</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>ungetc</B> function pushes the character <I>c</I> back onto <I>stream</I> and clears the end-of-file indicator. The <I>stream</I> must be open for reading. A subsequent read operation on <I>stream</I> starts with <I>c</I>. An attempt to push <B>EOF</B> onto the stream using <B>ungetc</B> is ignored.</P>
+
+<P>Characters placed on the stream by <B>ungetc</B> may be erased if <B>fflush</B>, <B>fseek</B>, or <B>fsetpos</B> is called before the character is read from the stream. The file-position indicator will have the value it had before the characters were pushed back. The external storage corresponding to the stream is unchanged. On a successful <B>ungetc</B> call against a text stream, the file-position indicator is unspecified until all the pushed-back characters are read or discarded. On each successful <B>ungetc</B> call against a binary stream, the file-position indicator is decremented; if its value was 0 before a call, the value is undefined after the call.</P>
+
+<P>Results are unpredictable if <B>ungetc</B> is called twice without a read or file-positioning operation between the two calls. After a call to <B>fscanf</B>, a call to <B>ungetc</B> may fail unless another read operation has been performed. This is because <B>fscanf</B> itself calls <B>ungetc</B>.</P>
+
+<P><B>ungetwc</B> is a wide-character version of <B>ungetc</B>. However, on each successful <B>ungetwc</B> call against a text or binary stream, the value of the file-position indicator is unspecified until all pushed-back characters are read or discarded.</P>
+
+<H4>Generic-Text Routine Mappings</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>TCHAR.H Routine </TH>
+<TH width=62%>_UNICODE Defined</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>_ungettc</TD>
+<TD width=62%>ungetwc </TD>
+</TR>
+</TABLE><BR>
+
+<H4>Example</H4>
+
+<PRE class="code">/* UNGETC.C: This program first converts a character
+ * representation of an unsigned integer to an integer. If
+ * the program encounters a character that is not a digit,
+ * the program uses ungetc to replace it in the  stream.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+void main( void )
+{
+   int ch;
+   int result = 0;
+
+   printf( "Enter an integer: " );
+
+   /* Read in and convert number: */
+   while( ((ch = getchar()) != EOF) &amp;&amp; isdigit( ch ) )
+      result = result * 10 + ch - '0';    /* Use digit. */
+   if( ch != EOF )
+      ungetc( ch, stdin );                /* Put nondigit back. */
+   printf( "Number = %d\nNextcharacter in stream = '%c'",
+            result, getchar() );
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">Enter an integer: 521a
+Number = 521
+Nextcharacter in stream = 'a'
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

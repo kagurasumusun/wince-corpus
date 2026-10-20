@@ -1,0 +1,75 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Exchanging Data</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Exchanging Data"/>
+<MSHelp:RLTitle Title="Exchanging Data"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_exchanging_data"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Exchanging Data</H1>
+
+<P>As with most dialog boxes, the exchange of data between the property sheet and the application is one of the most important functions of the property sheet. The following paragraphs describe how to accomplish this task.</P>
+
+<P>Exchanging data with a property sheet is actually a matter of exchanging data with the individual property pages of the property sheet. The procedure for exchanging data with a property page is the same as for exchanging data with a dialog box, because a <B>CPropertyPage</B> object is simply a specialized <B>CDialog</B> object. The procedure takes advantage of the framework’s dialog data exchange (DDX) facility, which exchanges data between controls in a dialog box and member variables of the dialog box object.</P>
+
+<P>The important difference between exchanging data with a property sheet and with a normal dialog box is that the property sheet has multiple pages, so you must exchange data with all the pages in the property sheet.</P>
+
+<P>The following example illustrates exchanging data between a view and two pages of a property sheet:</P>
+
+<PRE>void CMyView::DoModalPropertySheet()
+{
+   CPropertySheet propsheet;
+   CMyFirstPage pageFirst; // derived from CPropertyPage
+   CMySecondPage pageSecond; // derived from CPropertyPage
+
+   // Move member data from the view (or from the currently
+   // selected object in the view, for example).
+   pageFirst.m_nMember1 = m_nMember1;
+   pageFirst.m_nMember2 = m_nMember2;
+
+   pageSecond.m_strMember3 = m_strMember3;
+   pageSecond.m_strMember4 = m_strMember4;
+
+   propsheet.AddPage(&amp;pageFirst);
+   propsheet.AddPage(&amp;pageSecond);
+
+   if (propsheeet.DoModal() == IDOK)
+   {
+      m_nMember1 = pageFirst.m_nMember1;
+      m_nMember2 = pageFirst.m_nMember2;
+      m_strMember3 = pageSecond.m_strMember3;
+      m_strMember4 = pageSecond.m_strMember4;
+      GetDocument()-&gt;SetModifiedFlag();
+      GetDocument()-&gt;UpdateAllViews(NULL);
+   }
+}
+</PRE>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

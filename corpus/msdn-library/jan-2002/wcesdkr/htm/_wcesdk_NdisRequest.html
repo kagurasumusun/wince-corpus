@@ -1,0 +1,194 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisRequest</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisRequest"/>
+<MSHelp:RLTitle Title="NdisRequest"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisrequest"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisRequest</H1>
+
+<P>This function forwards a request to the underlying driver that it query the capabilities or status of its network adapter or that it set the state of its network adapter.</P>
+
+<PRE class="syntax"><B>VOID NdisRequest(
+OUT PNDIS_STATUS </B><I>Status</I><B>,
+IN NDIS_HANDLE </B><I>NdisBindingHandle</I><B>,
+IN PNDIS_REQUEST </B><I>NdisRequest</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable that is set on return from this function. The underlying driver determines which NDIS_STATUS_<I>XXX</I> is returned, but it is usually one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_SUCCESS</TD>
+<TD width=50%>The requested operation completed successfully.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_PENDING</TD>
+<TD width=50%>The request is being handled asynchronously, and the caller’s <A HREF="_wcesdk_protocolrequestcomplete.htm"><B>ProtocolRequestComplete</B></A> function will be called when it is completed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_INVALID_OID</TD>
+<TD width=50%>The OID_<I>XXX</I> code specified in the <I>Oid</I> member of the <B>NDIS_REQUEST</B>-structured buffer at <I>NdisRequest</I> is invalid or unsupported by the underlying driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_INVALID_LENGTH or NDIS_STATUS_BUFFER_TOO_SHORT</TD>
+<TD width=50%>The value specified in the <I>InformationBufferLength</I> member of the <B>NDIS_REQUEST</B>-structured buffer at <I>NdisRequest</I> does not match the requirements for the given OID_<I>XXX</I> code. If the information buffer is too small, the <I>BytesNeeded</I> member contains the correct value for <I>InformationBufferLength</I> on return from this function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_INVALID_DATA</TD>
+<TD width=50%>The data supplied at <I>InformationBuffer</I> in the specified <B>NDIS_REQUEST</B> structure is invalid for the given OID_<I>XXX</I> code.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_NOT_SUPPORTED or NDIS_STATUS_NOT_RECOGNIZED</TD>
+<TD width=50%>The underlying driver does not support the requested operation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_RESOURCES</TD>
+<TD width=50%>The request could not be satisfied due to a resource shortage. Usually, this return indicates that an attempt to allocate memory was unsuccessful, but it does not necessarily indicate that the same request, submitted later, will fail for the same reason.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_NOT_ACCEPTED</TD>
+<TD width=50%>The underlying driver attempted the requested operation, usually a set, on its network adapter but it was failed by the netcard. For example, an attempt to set too many multicast addresses might cause the return of this value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_CLOSING or NDIS_STATUS_CLOSING_INDICATING</TD>
+<TD width=50%>The underlying driver failed the requested operation because a close is in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_RESET_IN_PROGRESS</TD>
+<TD width=50%>The underlying network adapter driver cannot satisfy the request at this time because it is currently resetting the netcard. The caller’s <A HREF="_wcesdk_protocolstatus.htm"><B>ProtocolStatus</B></A> function was or will be called with NDIS_STATUS_RESET_START to indicate that a reset is in progress. This return value does not necessarily indicate that the same request, submitted later, will fail for the same reason.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_FAILURE</TD>
+<TD width=50%>This value is usually a nonspecific default, returned when none of the more specific NDIS_STATUS_<I>XXX</I> caused the underlying driver to fail the request.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>NdisBindingHandle</I></DT>
+
+<DD>Handle returned by the <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A> function that identifies the target network adapter or the virtual adapter of the next-lower driver to which the caller is bound.</dd>
+
+<DT><I>NdisRequest</I></DT>
+
+<DD>Pointer to a buffered structure specifying the operation requested with a specified OID_<I>XXX</I> code for either a query or a set.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>A protocol driver must allocate sufficient memory for the information buffer associated with the OID_<I>XXX</I> of the operation it requests. The driver also must allocate and set up the buffer at <I>NdisRequest</I> before it calls this function. </P>
+
+<P>For callers layered above an intermediate NDIS driver, this function forwards a request to the next-lower driver that it return information about its own capabilities or directs that driver to handle specific functionality in a caller-determined manner. If the next-lower driver is an NDIS intermediate driver, it can call this function with an OID-specific request of its own before completing the request originally submitted by the higher-level protocol.</P>
+
+<P>Some errors returned at <I>Status</I> are recoverable, including the following:
+
+<UL type="disc">
+	<LI>NDIS_STATUS_INVALID_OID</li>
+
+	<LI>NDIS_STATUS_INVALID_LENGTH</li>
+
+	<LI>NDIS_STATUS_BUFFER_TOO_SHORT</li>
+
+	<LI>NDIS_STATUS_INVALID_DATA</li>
+
+	<LI>NDIS_STATUS_RESOURCES</li>
+
+	<LI>NDIS_STATUS_RESET_IN_PROGRESS</li>
+</UL>
+
+<P>This means that a driver can modify the packet at <I>NdisRequest</I> appropriately to correct the OID_<I>XXX</I> code and/or the size or contents of the buffer at <I>InformationBuffer</I> and resubmit the request packet to this function. The same packet might be satisfied on resubmission to this function if the original call indicated a reset in progress or that a resource shortage, which might be temporary, prevented that request from being carried out.</P>
+
+<P>The NDIS library maintains bindings for underlying miniport drivers. NDIS can return information for binding-specific queries if a specified object identifier is associated with a system-defined medium type for which the system provides a filter library.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>, <A HREF="_wcesdk_protocolrequestcomplete.htm"><B>ProtocolRequestComplete</B></A>, <A HREF="_wcesdk_protocolstatus.htm"><B>ProtocolStatus</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,121 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SnmpExtensionInit</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SnmpExtensionInit"/>
+<MSHelp:RLTitle Title="SnmpExtensionInit"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_snmpextensioninit"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SnmpExtensionInit</H1>
+
+<P>The Microsoft SNMP service calls the <B>SnmpExtensionInit</B> function to initialize the SNMP extension agent DLL. This function is an element of the SNMP Extension Agent API. </P>
+
+<PRE class="syntax"><B>BOOL SnmpExtensionInit</B>(
+<B>DWORD</B> <I>dwUptimeReference, </I>
+<B>Handle </B><I>dwUptimeReference</I><B>, </B>
+<B>AsnObjectIdentifier</B> <I>pFirstSupportedRegion</I>  </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwUptimeReference</I> </DT>
+
+<DD>[in] Specifies a time-zero reference for the extension agent. </dd>
+</DL>
+
+<P class=indent><B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>Extension agents should ignore this parameter. The SNMP extension agent DLL should use the <A HREF="_wcesdk_win32_snmpsvcgetuptime.htm"><B>SnmpSvcGetUptime</B></A>, function to retrieve the number of centiseconds the SNMP service has been running. For more information, see the following Remarks section.
+
+<DL>
+<DT><I>phSubagentTrapEvent</I></DT>
+
+<DD>[out] Pointer to an event handle the extension agent passes back to the SNMP service. This handle is used to notify the service that the extension agent has one or more traps to send. For additional information about allocating and deallocating the event handle, see the following Remarks section. </dd>
+
+<DT><I>pFirstSupportedRegion</I></DT>
+
+<DD>[out] Pointer to an <A HREF="_wcesdk_win32_asnobjectidentifier.htm"><B>AsnObjectIdentifier</B></A> structure to receive the first MIB subtree that the extension agent supports. For additional information about allocating and deallocating resources for this structure, see the following Remarks section.
+
+<P>The extension agent can register additional MIB subtrees by implementing the <A HREF="_wcesdk_win32_snmpextensioninitex.htm"><B>SnmpExtensionInitEx</B></A> entry point function.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is TRUE. </P>
+
+<P>If the function fails, the return value is FALSE</P>
+
+<H4>Remarks</H4>
+
+<P>Extension agents should ignore the <I>dwUptimeReference</I> parameter. Instead, they should call the <A HREF="_wcesdk_win32_snmpsvcgetuptime.htm"><B>SnmpSvcGetUptime</B></A> function to retrieve the number of centiseconds that the Microsoft SNMP service has been running. Because the <I>dwUptimeReference</I> parameter stores the elapsed time as a <B>DWORD</B> value in milliseconds, the time can wrap to zero and reflect an inaccurate time interval. </P>
+
+<P>The extension agent notifies the SNMP service that it needs to send one or more traps by setting the event handle passed back in the <I>phSubagentTrapEvent</I> parameter to the signaled state. After this event has been signaled, the SNMP service repeatedly calls the extension agent's <A HREF="_wcesdk_win32_snmpextensiontrap.htm"><B>SnmpExtensionTrap</B></A> entry point until the function returns a value of FALSE. This indicates that the extension agent has no more traps to send. If the extension agent does not generate traps, the <I>phSubagentTrapEvent </I>parameter should return a value of NULL. </P>
+
+<P>The SNMP extension agent must allocate and deallocate resources for the trap event handle. When the SNMP service calls the <B>SnmpExtensionInit </B>function, the extension agent must call the <A HREF="_wcesdk_win32_createevent.htm"><B>CreateEvent</B></A> function to allocate the event handle. The extension agent passes the handle to the SNMP service in the <I>phSubagentTrapEvent </I>parameter. When the SNMP service calls the <A HREF="_wcesdk_win32_snmpextensionclose.htm"><B>SnmpExtensionClose</B></A> function, the extension agent must deallocate resources for the trap event handle. </P>
+
+<P>The SNMP service makes a copy of the <A HREF="_wcesdk_win32_asnobjectidentifier.htm"><B>AsnObjectIdentifier</B></A> structure the extension agent returns in the <I>pFirstSupportedRegion</I> parameter. The extension agent must allocate and deallocate the resources associated with the original structure. It can do this when the SNMP service calls the <A HREF="_wcesdk_win32_snmpextensionclose.htm"><B>SnmpExtensionClose</B></A> function. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Snmp.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Snmp.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_asnobjectidentifier.htm"><B>AsnObjectIdentifier</B></A>, <A HREF="_wcesdk_win32_createevent.htm"><B>CreateEvent</B></A>, <A HREF="_wcesdk_win32_snmpextensiontrap.htm"><B>SnmpExtensionTrap</B></A>, <A HREF="_wcesdk_win32_snmpsvcgetuptime.htm"><B>SnmpSvcGetUptime</B></A>, <A HREF="_wcesdk_win32_snmpextensionclose.htm"><B>SnmpExtensionClose</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

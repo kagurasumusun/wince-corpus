@@ -1,0 +1,270 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CertAddSerializedElementToStore</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CertAddSerializedElementToStore"/>
+<MSHelp:RLTitle Title="CertAddSerializedElementToStore"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_certaddserializedelementtostore"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CertAddSerializedElementToStore</H1>
+
+<P>This function adds a serialized certificate element to the store. The serialized element contains the encoded certificate and its extended properties. Extended properties are associated with a certificate and are not part of a certificate as issued by a certificate authority (CA). Extended properties are not available on a certificate when it is used on a non-Microsoft platform.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CertAddSerializedElementToStore(</B>
+<B>HCERTSTORE </B><I>hCertStore</I><B>,</B>
+<B>const BYTE *</B><I>pbElement</I><B>, </B>
+<B>DWORD </B><I>cbElement</I><B>,</B>
+<B>DWORD </B><I>dwAddDisposition</I><B>, </B>
+<B>DWORD </B><I>dwFlags</I><B>, </B>
+<B>DWORD </B><I>dwContextTypeFlags</I><B>, </B>
+<B>DWORD *</B><I>pdwContextType</I><B>, </B>
+<B>const void **</B><I>ppvContext
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCertStore</I></DT>
+
+<DD>[in] Handle of a certificate store where the created certificate will be stored. If <I>hCertStore</I> is NULL, the function creates a copy of a certificate context with its extended properties, but the certificate is not persisted in any store.</dd>
+
+<DT><I>pbElement</I></DT>
+
+<DD>[in] Pointer to a buffer containing the certificate information to be serialized and added to the certificate store.</dd>
+
+<DT><I>cbElement</I></DT>
+
+<DD>[in] Size, in bytes, of the <I>pbElement</I> buffer.</dd>
+
+<DT><I>dwAddDisposition</I></DT>
+
+<DD>[in] Specifies the action to take if the certificate already exists in the store. Currently defined disposition values are shown in the following table.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=51%>Disposition value</TH>
+<TH width=49%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_NEW</TD>
+<TD width=49%>If the certificate is new, it is created and persisted to the store. The operation fails if an identical certificate already exists in the store. The last error code is set to CRYPT_E_EXISTS.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_USE_EXISTING</TD>
+<TD width=49%>If the certificate is new, it is added to the store. If an identical certificate already exists, the existing element is used. If <I>ppvContext</I> is not NULL, the existing context is duplicated. The function only adds properties that do not already exist. The SHA1 and MD5 hash properties are not copied.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_REPLACE_EXISTING</TD>
+<TD width=49%>If an identical certificate already exists in the store, the existing certificate context is deleted before creating and adding the new context.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_ALWAYS</TD>
+<TD width=49%>No check is made to see if an identical certificate already exists. A new element is always created. This can lead to duplicates in the store. To determine if the element already exists in the store, call the <A HREF="_wcesdk_crypto2_certgetsubjectcertificatefromstore.htm"><B>CertGetSubjectCertificateFromStore</B></A> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_NEWER</TD>
+<TD width=49%>If a matching certificate or a link to a matching certificate exists, the function compares the <B>NotBefore </B>times on the certificates. If the existing certificate has a <B>NotBefore</B> time less than the <B>NotBefore</B> time on the new certificate, the old certificate or link is replaced just as with CERT_STORE_ADD_REPLACE_EXISTING. If the existing certificate has a <B>NotBefore</B> time greater than or equal to the <B>NotBefore</B> time on the certificate to be added, the function fails with the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function returning the CRYPT_E_EXISTS code.
+<P>If a matching certificate or a link to a matching certificate is not found in the store, a new certificate is added to the store.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_NEWER_INHERIT_PROPERTIES</TD>
+<TD width=49%>The action is the same as for CERT_STORE_ADD_NEWER. However, if an older certificate is replaced, the properties of the older certificate are incorporated into the replacement certificate.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ADD_REPLACE_EXISTING_INHERIT_PROPERTIES</TD>
+<TD width=49%>If a matching certificate exists in the store, the existing context is deleted before creating and adding the new context. The new added context inherits properties from the existing certificate.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>[in] Reserved for future use and must be zero.</dd>
+
+<DT><I>dwContextTypeFlags </I></DT>
+
+<DD>[in] Specifics the contexts that can be added. For example, to add a certificate, set <I>dwContextTypeFlags</I> to CERT_STORE_CERTIFICATE_CONTEXT_FLAG.
+
+<P>Currently defined context type flags are shown in the following table.
+
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=51%>Context type flag </TH>
+<TH width=49%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_ALL_CONTEXT_FLAG</TD>
+<TD width=49%>Adds any context.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_CERTIFICATE_CONTEXT_FLAG </TD>
+<TD width=49%>Adds only a certificate context.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pdwContextType </I></DT>
+
+<DD>[out] Pointer to the context type of the added serialized element. This is an optional parameter and can be NULL, indicating that the calling application does not require the context type.
+
+<P>The currently defined context type is shown in the following table.
+
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=51%>Context type</TH>
+<TH width=49%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=51%>CERT_STORE_CERTIFICATE_CONTEXT</TD>
+<TD width=49%>Certificates</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>ppvContext </I></DT>
+
+<DD>[out] Pointer to a pointer to the decoded certificate context. This is an optional parameter and can be NULL, indicating that the calling application does not require the context of the added or existing certificate.
+
+<P>If <I>ppvContext</I> is not NULL, it must be the address of a pointer to a <A HREF="_wcesdk_crypto2_cert_context.htm"><B>CERT_CONTEXT</B></A> structure. When the application is finished with the context, the context must be freed by using the <A HREF="_wcesdk_crypto2_certfreecertificatecontext.htm"><B>CertFreeCertificateContext</B></A> function for a certificate.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is TRUE.</P>
+
+<P>If the function fails, the return value is FALSE.</P>
+
+<P>For extended error information, call the <B>GetLastError</B> function. The following table lists some possible error codes.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=40%>Error value</TH>
+<TH width=60%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>CRYPT_E_EXISTS</TD>
+<TD width=60%>If the <I>dwAddDisposition</I> parameter is set to CERT_STORE_ADD_NEW, the certificate already exists in the store.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=40%>E_INVALIDARG </TD>
+<TD width=60%>An invalid disposition value was specified in the <I>dwAddDisposition</I> parameter.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P class=indent><B>Note</B>&nbsp;&nbsp;&nbsp;The Windows CE version of this function does not support CRL and CTL flags.</P>
+
+<P>The desktop platform supports the following flags, but Windows CE does not:</P>
+
+<P>CERT_STORE_CRL_CONTEXT</P>
+
+<P>CERT_STORE_CRL_CONTEXT_FLAG</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_certfreecertificatecontext.htm"><B>CertFreeCertificateContext</B></A>, <A HREF="_wcesdk_crypto2_certgetsubjectcertificatefromstore.htm"><B>CertGetSubjectCertificateFromStore</B></A>, <A HREF="_wcesdk_crypto2_cert_context.htm"><B>CERT_CONTEXT</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

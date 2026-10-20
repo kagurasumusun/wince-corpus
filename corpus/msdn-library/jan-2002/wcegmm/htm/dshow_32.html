@@ -1,0 +1,126 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Learning When an Event Occurs</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Learning When an Event Occurs"/>
+<MSHelp:RLTitle Title="Learning When an Event Occurs"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_learning_when_an_event_occurs"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imediaevent__geteventhandle" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_event_notification_codes__ec_userabort" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_camevent_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_camevent__wait" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Learning When an Event Occurs</H1>
+
+<P>In addition to retrieving event notifications from the queue, as discussed above, an application needs a way to find out when events are waiting in the queue. The Filter Graph Manager provides two ways to do this.
+
+<UL type="disc">
+	<LI>Using window notification, the Filter Graph Manager sends a Windows message to an application window whenever there is a new event. </li>
+
+	<LI>Using event handles, the application retrieves a handle to a Windows manual-reset event. The Filter Graph Manager signals the manual-reset event when there are event notifications in the queue and resets it when the queue is empty. </li>
+</UL>
+
+<P>The following sections describe each technique.
+
+<UL type="disc">
+	<LI><A HREF="#_wcesdk_window_notification">Window Notification</A></li>
+
+	<LI><A HREF="#_wcesdk_event_handles">Event Handles</A></li>
+</UL>
+
+
+
+<H2><A NAME="_wcesdk_window_notification"></A>Window Notification</H2>
+
+<P>To set up window notification, call the <B>IMediaEventEx::SetNotifyWindow</B> method and specify a private message. Applications can use message numbers in the range from WM_APP through 0xBFFF as private messages. Whenever the Filter Graph Manager places a new event notification in the queue, it posts this message to the designated window. The application responds to the message from within the window's message loop.</P>
+
+<P>The following code example shows how to set the notification window.</P>
+
+<PRE class="code">#define WM_GRAPHNOTIFY WM_APP + 1   // Private message.
+
+pEvent-&gt;SetNotifyWindow((OAHWND)g_hwnd, WM_GRAPHNOTIFY, 0);</PRE>
+
+<P>The message is an ordinary Windows message, and is posted separately from the DirectShow event notification queue. The advantage of this approach is that most applications already implement a message loop. Therefore, you can incorporate DirectShow event handling without much additional work.</P>
+
+<P>The following code example shows an outline of how to respond to the notification message. For a complete example, see <A HREF="dshow_12.htm">Responding to Events</A>.</P>
+
+<PRE class="code">LRESULT CALLBACK WindowProc( HWND hwnd, UINT msg, UINT wParam, LONG lParam)
+{
+    switch (msg)
+    {
+        case WM_GRAPHNOTIFY:
+            HandleEvent();  // Application-defined function.
+            break;
+
+        // Handle other Windows messages here too.
+    }
+    return (DefWindowProc(hwnd, msg, wParam, lParam));
+}</PRE>
+
+<P>Because event notification and the message loop are both asynchronous, the queue might contain more than one event by the time your application responds to the message. Also, events can sometimes be cleared from the queue if they become invalid. Therefore, in your event handling code, call <B>GetEvent</B> until it returns a failure code, indicating that the queue is empty.</P>
+
+
+
+<H2><A NAME="_wcesdk_event_handles"></A>Event Handles</H2>
+
+<P>The filter graph keeps a manual-reset event that reflects the state of the event queue. If the queue contains pending event notifications, the filter graph signals the manual-reset event. If the queue is empty, a call to the <B>IMediaEvent::GetEvent</B> method resets the event. An application can use this event to determine the state of the queue.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;The terminology can be confusing here. The manual-reset event is the type of event created by the Windows <B>CreateEvent</B> function; it has nothing to do with the event notifications defined by DirectShow.</P>
+
+<P>The <A HREF="JavaScript:hhobj_1.Click()"><B>IMediaEvent::GetEventHandle</B></A> method retrieves a handle to the manual-reset event. Wait for the event to be signaled by calling a function such as <B>WaitForMultipleObjects</B>. Once the event is signaled, call the <B>IMediaEvent::GetEvent</B> method to retrieve the event notification. </P>
+
+<P>The following code example illustrates this approach. It retrieves the event handle, then waits in 100-millisecond intervals for the event to be signaled. If the event is signaled, it calls <B>GetEvent</B> and prints the event code and event parameters to the console window. The loop terminates when the <A HREF="JavaScript:hhobj_2.Click()">EC_USERABORT</A> event occurs, indicating that the user has interrupted playback. This example uses the DirectShow <A HREF="JavaScript:hhobj_3.Click()"><B>CAMEvent</B></A> class, a helper class that represents a manual-reset or automatic-reset event. The <A HREF="JavaScript:hhobj_4.Click()"><B>CAMEvent::Wait</B></A> method waits until the event is signaled or a specified timeout elapses.</P>
+
+<PRE class="code">CAMEvent hEvent;
+long evCode, param1, param2;
+BOOLEAN bDone = FALSE;
+
+HRESULT hr = pEvent-&gt;GetEventHandle((OAEVENT*)&amp;hEv);
+
+while(!bDone) {
+    if (hEvent.Wait(100)) {
+        if (hr = pEvent-&gt;GetEvent(&amp;evCode, &amp;param1, &amp;param2, 0), SUCCEEDED(hr)) {
+            printf("Event code: %#04x\n\tParams: %d, %d\n", evCode, param1, param2);
+            hr = pEvent-&gt;FreeEventParams(evCode, param1, param2);
+            bDone = (EC_USERABORT == evCode);
+        }
+    }
+} </PRE>
+
+<P>Because the filter graph automatically sets or resets the event when appropriate, your application should not do so. Also, when you release the filter graph, the filter graph closes the event handle, so do not use the event handle after that point.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Pin Base Classes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Pin Base Classes"/>
+<MSHelp:RLTitle Title="Pin Base Classes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_pin_base_classes"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_CBasePin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_CUnknown_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_IPin_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IQualityControl_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_CBaseOutputPin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_CBaseInputPin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_CTransformOutputPin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_CSourceStream_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_CTransformInputPin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_IMemInputPin_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_11 keywords="_wcesdk_IMemAllocator_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_12 keywords="_wcesdk_CMemAllocator_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_13 keywords="_wcesdk_CPullPin_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_14 keywords="_wcesdk_CAMThread_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_15 keywords="_wcesdk_IAsyncReader_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_16 keywords="_wcesdk_IMemInputPin__Receive" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Pin Base Classes</H1>
+
+<P>Pins have a greater share of the work than filters. A pin must expose methods so that the filter graph manager can connect it with a pin on another filter. Pins also expose methods so that connected pins can negotiate what media type they will pass between them, and which pin will provide the shared memory allocator for transporting the media sample. Additionally, the output pin is responsible for passing each media sample to its connected input pin; the input pin is responsible for receiving it. Finally, pins must support interfaces so that quality-control messages and position information can be passed through the stream from pin to pin. </P>
+
+<P>The following illustration shows the pin classes. All pin classes are derived from <A HREF="JavaScript:hhobj_1.Click()"><B>CBasePin</B></A>, a base class derived from <A HREF="JavaScript:hhobj_2.Click()"><B>CUnknown</B></A>. </P>
+
+<P class="fig"><IMG SRC="basecl2.gif" ALT="" BORDER=0></P>
+
+<P><B>CBasePin</B> implements the <A HREF="JavaScript:hhobj_3.Click()"><B>IPin</B></A> interface. The <B>IPin</B> interface specifies methods for connecting to other pins, negotiating the media type to be used with the connected pin, querying internal connections on the pin, and informing the pin of stream activity. </P>
+
+<P>Besides implementing the <B>IPin</B> methods, <B>CBasePin</B> also implements <A HREF="JavaScript:hhobj_4.Click()"><B>IQualityControl</B></A> methods so that quality-control messages can be passed through the filter graph from one pin to the next. Quality-control messages allow a filter, such as a renderer, to request another filter to adjust its sample rate. Typically, quality-control messages travel upstream from renderer to source filter. However, in cases such as a video capture filter, the source filter (for example, a VCR reader) can send quality-control messages downstream to the renderer filter to adjust its rate. </P>
+
+<P>The <B>CBasePin</B> class provides several virtual member functions that can be overridden to provide handling of the connection, media type negotiation, and disconnection processes. Two base classes derive from <B>CBasePin</B> to provide default handling for many of these tasks:
+
+<UL type="disc">
+	<LI><A HREF="JavaScript:hhobj_5.Click()"><B>CBaseOutputPin</B></A> implements an output pin. </li>
+
+	<LI><A HREF="JavaScript:hhobj_6.Click()"><B>CBaseInputPin</B></A> implements an input pin. </li>
+</UL>
+
+<P><B>CBaseOutputPin</B> is the base class for the <A HREF="JavaScript:hhobj_7.Click()"><B>CTransformOutputPin</B></A> and <A HREF="JavaScript:hhobj_8.Click()"><B>CSourceStream</B></A> classes. Likewise, <B>CBaseInputPin</B> is the base class for the <A HREF="JavaScript:hhobj_9.Click()"><B>CTransformInputPin</B></A> class. Before looking at these derived base pin classes, it is helpful to understand the basic model the <B>CBaseOutputPin</B> and <B>CBaseInputPin</B> classes use. </P>
+
+<P>In the connection and transport model used by two pins, the input pin supports the <A HREF="JavaScript:hhobj_10.Click()"><B>IMemInputPin</B></A> interface so that it can receive a media sample. The <B>CBaseInputPin</B> class implements the <B>IMemInputPin</B> interface. Also, one of the two pins must supply a shared memory allocator object, which is an object that contains the <A HREF="JavaScript:hhobj_11.Click()"><B>IMemAllocator</B></A> interface that generates media sample objects passed between pins. An <B>IMemInputPin</B> method, implemented by the <B>CBaseInputPin</B> class, supplies this allocator object, implemented by the <A HREF="JavaScript:hhobj_12.Click()"><B>CMemAllocator</B></A> class. The connected output pin also has the option of supplying its own allocator; if this is the case, it notifies the input pin (through another <B>IMemInputPin</B> method) of the final decision of which allocator is used. </P>
+
+<P>The <B>CBaseOutputPin</B> class provides extra member functions to set the size and count of samples in the allocator, retrieve a media sample from the allocator, deliver that media sample to the connected input pin, and deliver end-of-stream and end-flush messages downstream. It also implements many of the <B>IPin</B> methods. </P>
+
+<P><A HREF="JavaScript:hhobj_13.Click()"><B>CPullPin</B></A> is a class that is used on the input pin of a parser filter. It is derived from the <A HREF="JavaScript:hhobj_14.Click()"><B>CAMThread</B></A> class as shown in the following illustration. </P>
+
+<P class="fig"><IMG SRC="pulpin01.gif" ALT="" BORDER=0></P>
+
+<P>A <I>parser filter</I> pulls information from the disk, using the asynchronous file reader filter, or from the Internet, using the URL moniker filter. <B>CPullPin</B> works with the <A HREF="JavaScript:hhobj_15.Click()"><B>IAsyncReader</B></A> interface, which is implemented on the source reader filter upstream. <B>CPullPin</B> starts the thread, pulls data from the upstream filter, and then pushes the data downstream. That is, it can simply call its own <A HREF="JavaScript:hhobj_16.Click()"><B>IMemInputPin::Receive</B></A> method after pulling the sample from the source (or perform the equivalent routines elsewhere). </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

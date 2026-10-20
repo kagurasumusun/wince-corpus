@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AM_SAMPLE2_PROPERTIES</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AM_SAMPLE2_PROPERTIES"/>
+<MSHelp:RLTitle Title="AM_SAMPLE2_PROPERTIES"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_structs__am_sample2_properties"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>AM_SAMPLE2_PROPERTIES</H1>
+
+<P>Describes the properties of a generic media sample. </P>
+
+<PRE class="syntax"><B>typedef struct tagAM_SAMPLE2_PROPERTIES {
+DWORD    </B><I>cbData</I><B>;
+DWORD    </B><I>dwTypeSpecificFlags</I><B>;
+DWORD    </B><I>dwSampleFlags</I><B>;
+LONG     </B><I>lActual</I><B>;
+REFERENCE_TIME </B><I>tStart</I><B>;
+REFERENCE_TIME </B><I>tStop</I><B>;
+DWORD    </B><I>dwStreamId</I><B>;
+AM_MEDIA_TYPE *</B><I>pMediaType</I><B>;
+BYTE    *</B><I>pbBuffer</I><B>;
+LONG     </B><I>cbBuffer</I><B>;
+} AM_SAMPLE2_PROPERTIES;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>cbData</I></DT>
+
+<DD>Length of property data for extensibility; number of bytes including this field. </dd>
+
+<DT><I>dwTypeSpecificFlags</I></DT>
+
+<DD>Type-specific flag data. These flags are defined separately for each media type. Default is zero. </dd>
+
+<DT><I>dwSampleFlags</I></DT>
+
+<DD>Flags bits defined by the <A HREF="_wcesdk_dtypes__am_sample_property_flags.htm"><B>AM_SAMPLE_PROPERTY_FLAGS</B></A> enumerated data type or by the defined constants described in Remarks. All undefined bits are reserved (set them to zero, and do not copy them). </dd>
+
+<DT><I>lActual</I></DT>
+
+<DD>Length of data in the buffer pointed to by the <B>pbBuffer</B> member. </dd>
+
+<DT><I>tStart</I></DT>
+
+<DD>Start time if valid. </dd>
+
+<DT><I>tStop</I></DT>
+
+<DD>Stop time if valid. </dd>
+
+<DT><I>dwStreamId</I></DT>
+
+<DD>Stream identifier. Stream 0 is the normal media transport. Stream 1 is control. Currently, only Stream 0 is used. Filters should pass any other stream ID directly to their output pins without processing. </dd>
+
+<DT><I>pMediaType</I></DT>
+
+<DD>Copy of the media type. It becomes invalid after the sample has been released. </dd>
+
+<DT><I>pbBuffer</I></DT>
+
+<DD>Pointer to the buffer. The pointer becomes invalid after the sample is released. </dd>
+
+<DT><I>cbBuffer</I></DT>
+
+<DD>Total length of the buffer pointed to by <B>pbBuffer</B>, in bytes. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <A HREF="_wcesdk_imediasample2_interface.htm"><B>IMediaSample2</B></A> interface uses this structure. </P>
+
+<P>The <I>dwSampleFlags</I> parameter can take values from the <B>AM_SAMPLE_PROPERTY_FLAGS</B> enumerated data type or one or more of the following defined constants. High-end video is typically formatted as alternate scan lines rather than as whole frames. Thus, the first field of a high-end video sample often contains odd lines of the video (lines 1, 3, 5, and so on) while the second field of the sample often contains the even lines of the video (lines 2, 4, 6, and so on). Many of the following constants describe the samples of high-end video: whether the sample is a field1, field2, or frame, and how the sample should be displayed. </P>
+
+<P><B>AM_VIDEO_FLAG_FIELD_MASK </B></P>
+
+<P>Used to check whether the sample is a field1, field2, or frame. </P>
+
+<P><B>AM_VIDEO_FLAG_INTERLEAVED_FRAME </B></P>
+
+<P>specifies this sample is a frame (use AM_VIDEO_FLAG_FIELD_MASK when using this). </P>
+
+<P><B>AM_VIDEO_FLAG_FIELD1 </B></P>
+
+<P>specifies this sample is the field1 (use AM_VIDEO_FLAG_FIELD_MASK when using this). </P>
+
+<P><B>AM_VIDEO_FLAG_FIELD2 </B></P>
+
+<P>specifies this sample is the field2 (use AM_VIDEO_FLAG_FIELD_MASK when using this). </P>
+
+<P><B>AM_VIDEO_FLAG_FIELD1FIRST </B></P>
+
+<P>specifies display field1 first, else display field2 first. This bit is ignored for 1FieldPerSample mode. </P>
+
+<P><B>AM_VIDEO_FLAG_WEAVE </B></P>
+
+<P>if set, use weave display mode, otherwise use the bob display mode. </P>
+
+<P><B>AM_VIDEO_FLAG_IPB_MASK </B></P>
+
+<P>use this sample to set whether the sample is I, P, or B (see next 3 flags). </P>
+
+<P><B>AM_VIDEO_FLAG_I_SAMPLE </B></P>
+
+<P>specifies to use the <I>Intra</I> encoded method of MPEG frame compression. Use AM_VIDEO_FLAG_IPB_MASK when using this. </P>
+
+<P><B>AM_VIDEO_FLAG_P_SAMPLE </B></P>
+
+<P>specifies to use the <I>Predicted</I> encoded method of MPEG frame compression. Use AM_VIDEO_FLAG_IPB_MASK when using this. </P>
+
+<P><B>AM_VIDEO_FLAG_B_SAMPLE </B></P>
+
+<P>specifies to use the <I>Bidirectional</I> encoded method of MPEG frame compression. Use AM_VIDEO_FLAG_IPB_MASK when using this. </P>
+
+<P><B>AM_VIDEO_FLAG_REPEAT_FIELD </B></P>
+
+<P>specifies to display the first image displayed, after displaying both of the images. This bit is ignored for 1FieldPerSample mode. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

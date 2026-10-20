@@ -1,0 +1,129 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoRegisterPSClsid</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoRegisterPSClsid"/>
+<MSHelp:RLTitle Title="CoRegisterPSClsid"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_coregisterpsclsid"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoRegisterPSClsid</H1>
+
+<P>This function enables a downloaded DLL to register its custom interfaces within its running process so that the marshaling code will be able to marshal those interfaces.</P>
+
+<PRE class="syntax"><B>WINOLEAPI CoRegisterPSCLsid(
+REFIID </B><I>riid</I><B>,
+REFCLSID </B><I>rclsid</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>riid</I></DT>
+
+<DD>[in] Points to the IID of the interface to be registered.</dd>
+
+<DT><I>rclsid</I></DT>
+
+<DD>[in] Points to the CLSID of the DLL that contains the proxy/stub code for the custom interface specified by <I>riid</I>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The custom interface was successfully registered.</dd>
+
+<DT>E_INVALIDARG</DT>
+
+<DD>One of the parameters is invalid.</dd>
+
+<DT>E_OUTOFMEMORY</DT>
+
+<DD>There is insufficient memory to complete this operation.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Normally the code responsible for marshaling an interface pointer into the current running process reads the HKEY_CLASSES_ROOT\Interfaces section of the registry to obtain the CLSID of the DLL containing the ProxyStub code to be loaded. To obtain the ProxyStub CLSIDs for an existing interface, the code calls the <A HREF="_wcesdk_com_cogetpsclsid.htm"><B>CoGetPSClsid</B></A> function.</P>
+
+<P>In some cases, however, it may be desirable or necessary for an in-process handler or in-process server to make its custom interfaces available without writing to the registry. A DLL downloaded across a network may not even have permission to access the local registry, and because the code originated on another machine, the user, for security purposes, may want to run it in a restricted environment. Or a DLL may have custom interfaces that it uses to talk to a remote server and may also include the ProxyStub code for those interfaces. In such cases, a DLL needs an alternative way to register its interfaces. <B>CoRegisterPSClsid</B>, used in conjunction with <A HREF="_wcesdk_com_coregisterclassobject.htm"><B>CoRegisterClassObject</B></A>, provides that alternative.</P>
+
+<P>A DLL would normally call <B>CoRegisterPSClsid</B> as shown in the following code fragment:</P>
+
+<PRE class="code">HRESULT RegisterMyCustomInterface(DWORD *pdwRegistrationKey)
+{
+    HRESULT hr = CoRegisterClassObject(CLSID_MyProxyStubClsid,
+        pIPSFactoryBuffer,
+        CLSCTX_INPROC_SERVER,
+        REGCLS_MULTIPLEUSE
+        pdwRegistrationKey);
+    if(SUCCEEDED)(hr))
+    {
+        hr = CoRegisterPSClsid(IID_MyCustomInterface, CLSID_MyProxyStubClsid);
+    }
+
+    return hr;
+}
+ </PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

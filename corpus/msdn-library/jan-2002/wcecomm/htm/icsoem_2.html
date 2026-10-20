@@ -1,0 +1,65 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Operation of the NAT Editor</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Operation of the NAT Editor"/>
+<MSHelp:RLTitle Title="Operation of the NAT Editor"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_operation_of_the_nat_editor"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Operation of the NAT Editor</H1>
+
+<P>The NAT driver does not natively translate port and address information for custom protocols built on top of the TCP or UDP architecture for specific applications. As mentioned in the previous section, these protocols require specialized editors.</P>
+
+<P>For example, a multiplayer game sends a TCP configuration packet to a game server address that requests permission to join the game. In the data portion of the packet, the client includes the ports that the client monitors for the return connection. The server, in turn, receives the configuration packet and initiates new TCP sessions with the client on the ports specified.</P>
+
+<P>The following illustration shows this kind of communication between a server and a client in the absence of an intervening gateway that runs NAT.</P>
+
+<P class="fig"><IMG SRC="nated1.gif" ALT="" BORDER=0></P>
+
+<P>When a gateway that runs NAT separates the client and the server, however, the connection is less straightforward. Clients on the Internet and clients on a home network are handled differently, because the NAT driver handles outbound packets differently from inbound packets. If routing is enabled on the gateway, the NAT driver automatically forwards outbound packets. When the gateway forwards a packet, the NAT driver changes the source address in the packet header to match the public address of the gateway. For more information about automatic forwarding, see <A HREF="tcpip_12.htm">Routing</A>.</P>
+
+<P>In contrast to the way NAT handles outbound packets, NAT requires a port mapping in order to forward inbound packets to the correct destination on the home network. With a port mapping, the NAT driver changes the destination address and port in the header of the packet to match the mapped private address and port. Without a port mapping, the presence of unmapped addresses for the home network in the data portion of the packets prevents the computers on the Internet from finding devices on the home network that are located behind the gateway that runs NAT.</P>
+
+<P>The following illustration shows how this type of communication fails when a gateway that runs NAT separates the client and the server.</P>
+
+<P class="fig"><IMG SRC="nated2.gif" ALT="" BORDER=0></P>
+
+<P>Alternatively, if a NAT editor monitors network traffic for the configuration packets, parses the packets, makes the appropriate port mappings, and dynamically registers the NAT editor for those ports, the client and server can connect as if the gateway is absent.</P>
+
+<P>The following illustration shows how communication is re-established when the gateway that separates the client and the server runs a NAT editor.</P>
+
+<P class="fig"><IMG SRC="nated3.gif" ALT="" BORDER=0></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

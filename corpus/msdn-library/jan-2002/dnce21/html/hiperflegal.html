@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Optimizing Dreamcast Microsoft Direct3D Performance</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Optimizing Dreamcast Microsoft Direct3D Performance"/>
+<MSHelp:RLTitle Title="Optimizing Dreamcast Microsoft Direct3D Performance"/>
+<MSHelp:Keyword Index="A" Term="hiperflegal"/>
+<MSHelp:Keyword Index="K" Term="CE-based game applications, optimizing with Dreamcast Direct3D"/>
+<MSHelp:Keyword Index="K" Term="Direct3D, optimizing Dreamcast Direct3D performance"/>
+<MSHelp:Keyword Index="K" Term="Dreamcast, optimizing Direct3D performance"/>
+<MSHelp:Keyword Index="K" Term="game applications, optimizing performance with Direct3D"/>
+<MSHelp:Keyword Index="A" Term="msdn_hiperflegal"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<meta name="description" content="This article provides guidelines for achieving high performance for Microsoft® Windows® CE-based game applications. Game developers share useful implementations for those who want to write an efficient 3-D engine, based on Microsoft Direct3D® and the Windows CE operating system for the Dreamcast. Performance techniques, optimization methods, geometries and textures, and solutions to problems are all discussed."><meta name="keywords" content="Dreamcast, Microsoft Direct3D, Direct3D, CE-based game applications, Sega Dreamcast, game developer, 3-D hardware, Windows CE, Windows CE-based game applications"><META name="rtfFileName" content="hiperflegal.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="Provides guidelines for achieving high performance for Microsoft Windows CE-based game applications. Discusses performance techniques, optimization methods, geometries and textures, and solutions to problems. (11 printed pages)">
+<META NAME="msdnID" CONTENT="_661613">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="hiperflegal"></A>Optimizing Dreamcast Microsoft Direct3D Performance</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>By Sebastian Wloch<BR>
+Kalisto Entertainment</P>
+
+<P>March 1999</P>
+
+<P><b class="le">Summary: </b>This article provides guidelines for achieving high performance for Microsoft® Windows® CE-based game applications. Game developers share useful implementations for those who want to write an efficient 3-D engine, based on Microsoft Direct3D® and the Windows CE operating system for the Dreamcast. The article discusses performance techniques, optimization methods, geometries and textures, and solutions to problems. (11 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#hiperflegal_intro">Introduction</A><CODE><BR>
+</CODE><A HREF="#hiperflegal_dreamcast3d">Taking Advantage of the Power of the Dreamcast 3-D Chip</A><CODE><BR>
+</CODE><A HREF="#hiperflegal_improveperf">Improving Performance</A><CODE><BR>
+</CODE><A HREF="#hiperflegal_geomperf">Working with Geometry and Performance</A><CODE><BR>
+</CODE><A HREF="#hiperflegal_optimgame">Optimizing a Game</A><CODE><BR>
+</CODE><A HREF="#hiperflegal_summary">Summary</A></P>
+
+<H2 class="dtH1"><A NAME="hiperflegal_intro"></A>Introduction</H2>
+
+<P>While developing a Microsoft® Windows® CE&#0150;based game on the Sega Dreamcast, we discovered several techniques that help to optimize game code and make the best use of the Microsoft Direct3D® API. This article documents what we learned.</P>
+
+<P>A game developer might think that Direct3D techniques would be the same, whether you're developing your game for the PC or for the Dreamcast. However, in reality, Microsoft optimized Direct3D specifically for the Dreamcast hardware. Therefore, to obtain the best performance, you need to pay attention to Dreamcast-specific issues. In other words, you need to understand the Dreamcast hardware and the Direct3D for Dreamcast implementation.</P>
+
+<P>This article presents an overview of what we as game developers consider useful for anyone who wants to write an efficient 3-D engine, based on Direct3D and the Windows CE operating system for the Dreamcast. First, we will cover features of the Dreamcast's 3-D hardware. Then we will provide tips to help you implement the following techniques, which can improve the overall performance of your 3-D game engine.
+
+<UL type="disc">
+	<LI>Send less geometry to Direct3D.</li>
+
+	<LI>Choose the best way to send geometry to Direct3D.</li>
+
+	<LI>Test different optimizations, and then view the results by using the performance viewer tool of Direct3D.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="hiperflegal_dreamcast3d"></A>Taking Advantage of the Power of the Dreamcast 3-D Chip</H2>
+
+<P>As triangles are sent to it, the Dreamcast hardware 3-D chip does not render the triangles scan line by scan line. Instead, it stores the triangles in video memory as they are sent. Once the entire scene has been collected, the hardware sends all triangles to the screen tile by tile, not triangle by triangle.</P>
+
+<P>Every tile is 32 x 32 pixels. For each tile, the hardware selects the pixels that intersect the tile and retrieves for each pixel the closest triangle to the camera (viewport). Then this pixel is rendered to the screen by following the process of completing the interpolations, reading the texel, and so on. Thus, every pixel on the screen is actually rendered to the screen buffer only once. Other 3-D hardware systems render every pixel as often as that pixel is recovered by a triangle, but not the Dreamcast hardware.</P>
+
+<P>By using this method, the hardware is not limited by the fill rate. No matter how many triangles recover a single pixel, that single pixel is rendered only once. Therefore, with the Dreamcast hardware, you don't need a Z-Buffer, because only the closest triangle is rendered.</P>
+
+<P>In addition, with the Dreamcast hardware, you don't need to clip the triangles to the screen viewport, so there is no need for clipping tests and calculations. This is because the hardware renders graphics tile by tile. As a result, you don't need to test primitives, nor do you need to break up primitives into smaller primitives that fit on the screen.</P>
+
+<P>The Dreamcast hardware does have to do several passes to render transparency, which slows down the rendering process a little. However, during that process, the hardware sorts the transparent triangles automatically, so your game engine does not need to sort them. Because your game engine doesn't have to do the memory manipulations that come with sorting, it avoids disturbing (slowing down) your 3-D pipeline. Even if the polygons intersect, there won't be any artifacts because the translucency sorting is done for each pixel by the hardware.</P>
+
+<P>Not all transparent modes need several passes. The 5551 (Punch Through) mode does not need to combine the most recently rendered pixel with the pixel previously rendered to the screen buffer because 1 bit of alpha channel does not allow any degree of translucency. Such triangles are rendered with the same speed as opaque triangles&#0151;in a single pass.</P>
+
+<P>Another feature of the Dreamcast hardware is that it has SH4 native operations that are fully supported by a set of intrinsics. The ones that we use the most are the dot product and the reciprocal square root. One special function that computes the sine and cosine of an angle is also very useful for character animation and camera movement calculations.</P>
+
+<P>You can also apply the following Dreamcast hardware features to each pixel the hardware renders to the screen:
+
+<UL type="disc">
+	<LI>Use a special surface mode to perform realistic bump mapping.</li>
+
+	<LI>Use a special texture mode (VQ compression) to complete texture compression with an 8:1 compression ratio plus 2 KB of overhead for the codebook.</li>
+
+	<LI>Test the on-screen pixel with a set of volumes, and apply a specific operation to the pixels inside or outside of the volume (color modification, transparency, or the texture ID). This makes shadows, lighting, and other special effects easy, and it doesn't break up the 3-D geometry pipeline.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="hiperflegal_improveperf"></A>Improving Performance</H2>
+
+<P>Usually in games, the complete scene is much larger than the part a game user actually sees on the screen. Therefore, sending every triangle of the scene to Direct3D would waste resources and slow down performance. So, cull the triangles that are not currently visible from the triangle set sent to Direct3D.</P>
+
+<P>To eliminate the geometry that is outside the viewable area, you need to build efficient tests that meet all of the following rules:
+
+<UL type="disc">
+	<LI>They are called as infrequently as possible.</li>
+
+	<LI>They are as fast as possible.</li>
+
+	<LI>They eliminate as many triangles as possible.</li>
+</UL>
+
+<P>Tests are designed to eliminate the following three kinds of geometry:
+
+<UL type="disc">
+	<LI><b class="le">Triangles off the screen&#0151;</b>To test for this condition, apply view frustum elimination. That is, test every triangle, primitive, or object against the viewing frustum pyramid, and then eliminate the triangle, primitive, or object if it is outside the viewing frustum pyramid. This test generally eliminates a lot of triangles by using only a few tests.</li>
+
+	<LI><b class="le">Triangles not facing the screen&#0151;</b>To test for this condition, apply backface culling. That is, test every triangle or group of triangles to see if it faces the screen, and eliminate the geometry that is not facing the screen, such as the back of a person's head. This test generally eliminates 10-50 percent of the geometry, but the cost and overhead may be huge. The efficiency depends on the geometry; the more strips you find, the better.</li>
+
+	<LI><b class="le">Triangles completely hidden by other objects&#0151;</b>In this case, create an advanced scene organization to determine rapidly which triangles are hidden. This test generally eliminates 10-50 percent of the triangle geometry, but the performance depends on the geometrical organization. This method is not discussed in this article because it depends on the type of game. For example, there is a big difference between exteriors and interiors.</li>
+</UL>
+
+<P>To apply viewing frustum elimination, you need a test that rapidly determines whether or not a triangle is in the viewing frustum. The easiest way is to group the triangles into objects or primitives, and then test all the triangles of an object or a primitive together. Then you can easily have a bounding sphere that is larger than all the triangles, and test whether or not the bounding sphere touches the viewing frustum, is completely inside the frustum, or is completely outside the frustum. The center of the sphere may just be the barycentrum of the triangles.</P>
+
+<P>It is also very efficient to group primitives together into objects. Then you need only test the primitives if the object is on the edge of the viewing frustum. If the object is completely inside or outside the viewing frustum, you know that all the primitives share their container object's property.</P>
+
+<P>Direct3D already does backface culling very efficiently. In some cases, we can also group triangles and treat them together. For a series of connected triangles (a strip for example) that are completely or almost on the same plane, you can:
+
+<OL type="1">
+	<LI>Calculate an average normal vector.</li>
+
+	<LI>Compute the backface culling on the average vector.</li>
+
+	<LI>Use a tolerance value to know if the whole set of triangles is in the viewable area or not.</li>
+</OL>
+
+<P>By using this process, instead of testing each triangle, you can eliminate a strip of 10 triangles with a single test.</P>
+
+<P>If an object is getting very big and contains a lot of primitives or triangles, you may find it worthwhile to subdivide the object into a hierarchy of smaller objects. Indeed, a large object often does touch the viewing frustum even if only a small piece of it really intersects the frustum. This results in sending a large invisible piece to Direct3D for nothing. To solve this problem, you can apply a subdivision technique such as an Octree or a SEAD to test each piece of the large object. The idea is to create subgroups of objects based on a regular (SEAD) or irregular (Octree) subdivision. You could also use the logical hierarchy of the scene. For example, the hierarchy of a single character&#0151;if the arm isn't on the screen, you don't need to check to see if the hand is on the screen.</P>
+
+<P>All these elimination techniques are based on grouping triangles or primitives together. They are inefficient if applied to small groups of triangles or, worse, to single triangles.</P>
+
+<H3 class="dtH1">Summary</H3>
+
+<UL type="disc">
+	<LI>Do the fewest number of tests per triangle to eliminate it (1 bspere test for 1000 triangle objects costs 1/1000th of a test for 1 triangle).</li>
+
+	<LI>Create hierarchies to reduce the number of tests for each object.</li>
+
+	<LI>Subdivide objects that are too large into smaller hierarchies, so that you don't end up with one <B>DrawPrimitive</B> call for 10,000 triangles when only 1000 of the triangles are actually in the viewable area.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="hiperflegal_geomperf"></A>Working with Geometry and Performance</H2>
+
+<P>The way you store geometry and send it to Direct3D affects performance.</P>
+
+<P>In some games, you'll find that triangle lists provide better performance. In others, you'll find that triangle strips provide better performance. Test your situation to determine the best approach to use.</P>
+
+<P>Strips share vertices. Therefore, in very large strips, you'll find that the number of vertices in the primitive tends towards the number of triangles, so a large strip represents three times less data to send to Direct3D than does a list of triangles of the same size. Therefore, Direct3D transforms, lights, and sends three times less data to the hardware. This is why strips are much faster than single triangles.</P>
+
+<P>One difficulty with strips is that triangles must share the same state (texture and effects) and the adjacent vertices must be identical (xyz, rgb, normal vector, and so on). Those constraints are very important and the quality of the meshes directly influences the size and number of strips that can be found. To get the best results, you should ensure that meshes use as few different textures as possible and that texture mapping is done so that all adjacent vertices share the UV coordinates.</P>
+
+<P>There are two different ways to send geometry to Direct3D. You can use <B>DrawPrimitive</B> or <B>DrawIndexedPrimitive</B>. If you use the <B>DrawPrimitive</B> function, you should send triangles in the D3DPT_TRIANGLESTRIP mode, especially if you can do a simple backface culling test for the whole strip. Avoid using the D3DPT_TRIANGLELIST mode with the <B>DrawPrimitive</B> function.</P>
+
+<P>If you simply want to send a list of triangles, use <B>DrawIndexedPrimitive</B> instead. It is the best solution if you can't do backface culling on large groups of triangles. With <B>DrawIndexedPrimitive</B>, Direct3D automatically generates strips from the triangle list wherever the list of indexes makes it possible.</P>
+
+<P>Regarding the type of vertex data sent, generally, D3D_LVERTEX (lit by the game but transformed by Direct3D) is faster than D3D_TLVERTEX (lit and transformed by the game) because Direct3D has very efficient transformation code. But if you already have the screen coordinates (for On Screen Display for example) or if you can generate the geometry in the screen space (for Bezier patches for example), then you might prefer D3D_TLVERTEX.</P>
+
+<P>A problem may occur if you group several objects into a single list and these objects are positioned differently (different limbs of a character for example). In this case, the only way you can have Direct3D carry out the transformations is to split the triangle list into several smaller lists. This reduces performance because Direct3D is faster with large lists. It may be impossible to create some lists if several vertices of a triangle don't share the same matrix, which happens when you are putting skin on characters. In those cases, it is usually more efficient to do the transformation in the game code (for example, with the animation) and send the transformed vertices in larger lists by using the D3D_TLVERTEX type.</P>
+
+<P>While the Dreamcast hardware does the viewport clipping, Direct3D does the near plane clipping if the DONOTCLIP flag is not set. The DONOTCLIP flag tells Direct3D not to do clipping calculations. It is best to turn the DONOTCLIP flag on whenever possible. Test each object to see if it touches the near plane. If it does, then you know that all of its triangles won't have the DONOTCLIP flag set.</P>
+
+<P>Our final issue with geometry involves data locality and alignment. To be as efficient as possible, align all vertex data to 32 bytes. If the vertex data is misaligned, Direct3D has to copy the data to another memory block that is aligned to 32 bytes. An important thing to consider is that a block allocated with the <B>malloc</B> function is only aligned to 4 bytes.</P>
+
+<P>Also, you should not generate primitives on the fly. It is much faster to have everything ready in the final format. Then you can simply call the <B>DrawPrimitive</B> function. You should use D3D_VERTEX (transformed and lit by Direct3D) wherever possible.</P>
+
+<P>Finally, don't store the primitives in a random order. Try to group them in the same order that you're going to render them. This will be faster due to better cache coherence.</P>
+
+<H3 class="dtH1">Summary</H3>
+
+<UL type="disc">
+	<LI>Send as many vertices as possible in a single <B>DrawPrimitive</B> call. This is the most important optimization you can do. Do everything you can to keep from breaking up primitives.</li>
+
+	<LI>Do the transformation yourself if it would make you break up primitives, because vertices have different matrices.</li>
+
+	<LI>Try to share all states for the triangles you send.</li>
+
+	<LI>Group the triangles per state and matrix, but don't sort them on the fly in real time. If you arrange them by matrix and state beforehand, then object by object is fine.</li>
+</UL>
+
+<H2 class="dtH1"><A NAME="hiperflegal_optimgame"></A>Optimizing a Game</H2>
+
+<P>The Windows CE performance viewer is an interesting and important tool that you can use to do all the optimization work on a game. To activate this tool, you must activate it in the Monitor's drop-down menu in the Dreamcast Tool, but only after you have launched the game.</P>
+
+<P>When you activate the Windows CE performance viewer, you will see three horizontal bars on the screen. The first bar (light blue) represents the time the hardware takes to render the scene. The second bar (gray with red, green, or blue vertical lines) represents the time spent either in the application or in Direct3D. The third bar (purple) represents the frame rate.</P>
+
+<P>The three bars grow from left to right. The slower a part is, the longer its bar will be. On the second bar, you can differentiate between the time spent in the application (gray) and in Direct3D (colored lines).</P>
+
+<P>You can see the results of every optimization explained in this article by looking at the bars displayed by the Windows CE performance viewer.</P>
+
+<P>An efficient elimination algorithm reduces the time spent in Direct3D, so you'll see fewer colored lines and more gray. If the gray part of the bar grows more than the colored lines disappear, then the game code took more time to eliminate the triangles than to render them&#0151;thus increasing globally the time for each frame.</P>
+
+<P>Because each <B>DrawPrimitive</B> and <B>DrawIndexedPrimitive</B> call is represented by one colored line, if a geometry is rendered triangle by triangle, a large part will be interlaced with gray and colored lines. If the geometry is rendered with only one <B>DrawIndexedPrimitive</B> call, there will be one large colored line. But this line will be much smaller than the previous interlaced part. This shows how it can take less time to render the same number of triangles if they are sent together in one large list.</P>
+
+<P>If a geometry can be automatically transformed into strips by the <B>DrawIndexedPrimitive</B> call, the large colored block will shrink, and the global performance will be better. This is because the number of vertices will be reduced in the mesh and because the size of the colored line depends directly on the number of vertices sent.</P>
+
+<P>It is very easy with this tool to try out different modes, flags, and to precisely measure the difference between them. We really appreciated the direct feedback this tool can deliver. You can disconnect some functionality by pressing a key and immediately see the bar shrink.</P>
+
+<H3 class="dtH1">Examples from Optimization Process</H3>
+
+<P>The following examples include screen shots, which are from our optimization process&#0151;from a technical demo game. At the bottom of each screen shot, notice the bars that indicate performance. These bars are a performance monitor. Figure 1 illustrates the performance monitor used, so you may better understand the screen shots in Figures 2 through 5.</P>
+
+<P class="fig"><CODE><IMG SRC="hiperflegal1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. Performance monitor</B></P>
+
+<P>In the first screen shot in Figure 2, none of the optimizations has been implemented. The game is sending a lot of small primitives, as shown by every little red or blue line.</P>
+
+<P class="fig"><CODE><IMG SRC="hiperflegal2.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 2. No optimizations implemented</B></P>
+
+<P>In Figure 3, primitives are aligned to 32 bytes, lined up one behind the other.</P>
+
+<P class="fig"><CODE><IMG SRC="hiperflegal3.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 3. Primitives aligned</B></P>
+
+<P>In Figure 4, triangles are grouped by render state to reduce the number of primitives.</P>
+
+<P class="fig"><CODE><IMG SRC="hiperflegal4.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 4. Triangles grouped by render state</B></P>
+
+<P>In Figure 5, strips were generated to reduce the number of vertices.</P>
+
+<P class="fig"><CODE><IMG SRC="hiperflegal5.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 5. Strips generated to reduce vertices</B></P>
+
+<H2 class="dtH1"><A NAME="hiperflegal_summary"></A>Summary</H2>
+
+<P>By following the guidelines in this article, you will be able to achieve very high performance for your Windows CE&#0150;based game application with Direct3D.</P>
+
+<P>When we first launched our PC application on the Dreamcast, performance was worse than 10 frames per second. But after we applied the techniques explained in this article, performance improved significantly. Now the performance is close to 60 frames per second, and we still have more optimizations to do. We plan to increase the size of our primitives even further and use fewer textures for our objects. We are confident that, with these additional optimizations, we will be able to achieve a performance of better than 60 frames per second.</P>
+
+<P>The solutions discussed in this article don't all bring the same performance improvement, but the basic idea remains the same. Try to send as many triangles using as few <B>DrawPrimitive</B> or <B>DrawIndexedPrimitive</B> calls as possible. Once you've achieved that, reduce the number of vertices sent by sharing the vertices that you do send.</P>
+
+<P>It is very important to choose the right method for each kind of geometry (humans, animals, cars, and so on) and to train artists to create clean geometries that use just a few different textures with texture coordinates that can be shared by the vertices.</P>
+
+<P>--------------------------------------------</P>
+
+<P><I>This document is provided for informational purposes only. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, IN THIS SUMMARY.</I></P>
+
+<P><I>Microsoft, Direct3D and Windows are either registered trademarks or trademarks of Microsoft Corporation in the United States and/or other countries.</I></P>
+
+<P><I>Other product or company names mentioned herein may be the trademarks of their respective owners.</I></P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661613', 'XMSDNERR@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

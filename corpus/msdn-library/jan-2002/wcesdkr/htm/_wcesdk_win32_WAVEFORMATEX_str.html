@@ -1,0 +1,125 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>WAVEFORMATEX</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="WAVEFORMATEX"/>
+<MSHelp:RLTitle Title="WAVEFORMATEX"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_waveformatex_str"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>WAVEFORMATEX</H1>
+
+<P>This structure defines the format of waveform-audio data. Only format information common to all waveform-audio data formats is included in this structure. For formats that require additional information, this structure is included as the first member in another structure, along with the additional information.</P>
+
+<PRE class="syntax"><B>typedef struct {
+WORD </B><I>wFormatTag</I><B>;
+WORD </B><I>nChannels</I><B>;
+DWORD </B><I>nSamplesPerSec</I><B>;
+DWORD </B><I>nAvgBytesPerSec</I><B>;
+WORD </B><I>nBlockAlign</I><B>;
+WORD </B><I>wBitsPerSample</I><B>;
+WORD </B><I>cbSize</I><B>;}
+WAVEFORMATEX;</B> </PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>wFormatTag</I></DT>
+
+<DD>Waveform-audio format type. Format tags are registered with Microsoft Corporation for many compression algorithms. A complete list of format tags can be found in the Mmsystem.h header file.</dd>
+
+<DT><I>nChannels</I></DT>
+
+<DD>Number of channels in the waveform-audio data. Monaural data uses one channel and stereo data uses two channels.</dd>
+
+<DT><I>nSamplesPerSec</I></DT>
+
+<DD>Sample rate, in samples per second (hertz), that each channel should be played or recorded. If <I>wFormatTag</I> is WAVE_FORMAT_PCM, then common values for <I>nSamplesPerSec</I> are 8.0 kHz, 11.025 kHz, 22.05 kHz, and 44.1 kHz. For non-PCM formats, this member must be computed according to the manufacturer’s specification of the format tag.</dd>
+
+<DT><I>nAvgBytesPerSec</I></DT>
+
+<DD>Required average data-transfer rate, in bytes per second, for the format tag. If <I>wFormatTag</I> is WAVE_FORMAT_PCM, <I>nAvgBytesPerSec</I> should be equal to the product of <I>nSamplesPerSec</I> and <I>nBlockAlign</I>. For non-PCM formats, this member must be computed according to the manufacturer’s specification of the format tag.
+
+<P>Playback and record software can estimate buffer sizes by using the <I>nAvgBytesPerSec</I> member.
+</dd>
+
+<DT><I>nBlockAlign</I></DT>
+
+<DD>Block alignment, in bytes. The block alignment is the minimum atomic unit of data for the <I>wFormatTag</I><B> </B>format type. If <I>wFormatTag</I> is WAVE_FORMAT_PCM, <I>nBlockAlign</I> should be equal to the product of <I>nChannels</I> and <I>wBitsPerSample</I> divided by 8 (bits per byte). For non-PCM formats, this member must be computed according to the manufacturer’s specification of the format tag.
+
+<P>Playback and record software must process a multiple of <I>nBlockAlign</I> bytes of data at a time. Data written and read from a device must always start at the beginning of a block. For example, it is illegal to start playback of PCM data in the middle of a sample (that is, on a non-block-aligned boundary).
+</dd>
+
+<DT><I>wBitsPerSample</I></DT>
+
+<DD>Bits per sample for the <I>wFormatTag</I><B> </B>format type. If <I>wFormatTag</I> is WAVE_FORMAT_PCM, then <I>wBitsPerSample</I> should be equal to 8 or 16. For non-PCM formats, this member must be set according to the manufacturer’s specification of the format tag. Note that some compression schemes cannot define a value for <I>wBitsPerSample</I>, so this member can be zero.</dd>
+
+<DT><I>cbSize</I></DT>
+
+<DD>Size, in bytes, of extra format information appended to the end of the <B>WAVEFORMATEX</B> structure. This information can be used by non-PCM formats to store extra attributes for the <I>wFormatTag</I>. If no extra information is required by the <I>wFormatTag</I>, this member must be set to zero. For WAVE_FORMAT_PCM formats only, this member is ignored.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>An example of a format that uses extra information is the Microsoft Adaptive Delta Pulse Code Modulation (MS-ADPCM) format. The <I>wFormatTag</I> for MS-ADPCM is WAVE_FORMAT_ADPCM. The <I>cbSize</I> member is typically set to 32. The extra information stored for WAVE_FORMAT_ADPCM is coefficient pairs required for encoding and decoding the waveform-audio data.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Mmsystem.h </TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

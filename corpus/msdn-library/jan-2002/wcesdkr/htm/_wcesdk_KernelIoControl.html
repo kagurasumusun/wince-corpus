@@ -1,0 +1,198 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>KernelIoControl</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="KernelIoControl"/>
+<MSHelp:RLTitle Title="KernelIoControl"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_kerneliocontrol"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>KernelIoControl</H1>
+
+<P>This function is called to retrieve OEM/device specific information The implementation of the IOCTLS is dependent on the OEM.</P>
+
+<P>This IOCTL returns information supplied by the OEM about the processor.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B>KernelIoControl (</B>
+<B>DWORD </B><I>dwIoControlCode</I>,
+<B>LPVOID </B><I>lpInBuf</I><B>,</B>
+<B>DWORD </B><I>nInBufSize</I><B>,</B>
+<B>LPVOID </B><I>lpOutBuf</I><B>,</B>
+<B>DWORD </B><I>nOutBufSize</I><B>,</B>
+<B>LPDWORD </B><I>lpBytesReturned</I><B>)</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwIoControlCode </I></DT>
+
+<DD>Set to IOCTL_PROCESSOR_INFORMATION. </dd>
+
+<DT><I>lpInBuf</I> </DT>
+
+<DD>Set to NULL.</dd>
+
+<DT><I>nInBufSize</I> </DT>
+
+<DD>Set to 0.</dd>
+
+<DT><I>lpOutBuf</I> </DT>
+
+<DD>Pointer to the output buffer. This is set to a buffer allocated to hold the PROCESSOR_INFO structure.</dd>
+
+<DT><I>nOutBufSize</I> </DT>
+
+<DD>Maximum number of bytes that can be returned in <I>lpOutBuf</I>. Set to <I>sizeof</I>(PROCESSOR_INFO).</dd>
+
+<DT><I>lpBytesReturned</I> </DT>
+
+<DD>Actual number of bytes returned in<I> lpOutBuf</I>. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns TRUE if the processor information was found; otherwise returns FALSE.</P>
+
+<H4>Remarks</H4>
+
+<P>An OEM may elect to provide information about the microprocessor. If implemented, the PROCESSOR_INFO structure must contain the following information.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=41%>Flag</TH>
+<TH width=59%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>PROCESSOR_FLOATINGPOINT</TD>
+<TD width=59%>The CPU has hardware floating point enabled. If <A HREF="_wcesdk_win32_system_info_str.htm"><B>SYSTEM_INFO</B></A>.<I>WprocessorLevel</I> indicates that the current CPU is a “MIPS R4300” or x86 (with hardware floating point) then this flag is set.  This bit is only relative to the CPUs listed above in the 3.0 release of Windows CE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>PROCESSOR_DSP</TD>
+<TD width=59%>The CPU has DSP support enabled.  </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>PROCESSOR_16BITINSTRUCTION</TD>
+<TD width=59%>The CPU in question supports a 16bit instruction set. If <B>SYSTEM_INFO</B>.<I>WprocessorLevel</I> indicates that the current MIPS CPU is a “MIPS R4000” then this signafies that the CPU also support the MIPS16 instruction set. This bit is only relative to the MIPS R4000 family at this time.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The kernel does not process this API. It is provided to allow an OEM device driver to communicate with kernel mode HAL code. The implementation is the same as <A HREF="_wcesdk_win32_deviceiocontrol.htm"><B>DeviceIOControl</B></A>.</P>
+
+<P>Some of the possible values are:</P>
+
+<P>IOCTL_HAL_SET_DEVICE_INFO :</P>
+
+<P>IOCTL_HAL_GET_DEVICE_INFO :</P>
+
+<P>IOCTL_HAL_DDK_CALL:</P>
+
+<P>IOCTL_EDBG_REGISTER_CLIENT:</P>
+
+<P>IOCTL_EDBG_DEREGISTER_CLIENT:</P>
+
+<P>IOCTL_EDBG_REGISTER_DFLT_CLIENT:</P>
+
+<P>IOCTL_EDBG_SEND:</P>
+
+<P>IOCTL_EDBG_RECV:</P>
+
+<P>IOCTL_EDBG_SET_DEBUG:</P>
+
+<P>IOCTL_SET_KERNEL_COMM_DEV:</P>
+
+<P>IOCTL_HAL_REBOOT:</P>
+
+<P>IOCTL_SET_KERNEL_DEV_PORT:</P>
+
+<P>IOCTL_PROCESSOR_INFORMATION:</P>
+
+<P>An OEM may also provide any of the following information about the microprocessor:
+
+<UL type="disc">
+	<LI>The name of the processor core. For example MIPS or ARM.</li>
+
+	<LI>The revision number of the processor core. </li>
+
+	<LI>The actual processor name, for example, R4111.</li>
+
+	<LI>The processor revision number.</li>
+
+	<LI>The catalog number for the processor.</li>
+
+	<LI>The name of the processor vendor.</li>
+
+	<LI>The maximum clock speed of the CPU.</li>
+</UL>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>kfuncs.h</TD>
+<TD width=15%>Winbase.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_deviceiocontrol.htm"><B>DeviceIOControl</B></A>, <A HREF="_wcesdk_win32_system_info_str.htm"><B>SYSTEM_INFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Plug and Play</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Plug and Play"/>
+<MSHelp:RLTitle Title="Plug and Play"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wincesdk_plug_and_play"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Plug and Play</H1>
+
+<P>The dynamic adapter-binding feature that is supported in Windows CE 3.0 complies with the requirements for Plug and Play compatibility. Plug and Play enables a computer system to recognize hardware configuration changes automatically and configure attached devices with little or no user intervention. Plug and Play allows the user to attach a new network adapter and start working without having to configure the device manually. With Windows CE 3.0 you can unbind an adapter from a protocol driver and subsequently rebind without having to remove the adapter.</P>
+
+<P>Windows CE support for Plug and Play differs from the Windows 2000 Plug and Play support.</P>
+
+<P>Windows CE support for Plug and Play has the following capabilities and features:</P>
+
+<P>Automatic and dynamic recognition of installed hardware. This includes initial system installation, and response to run-time hardware events such as insertion or removal of cards.
+
+<OL type="1">
+	<LI>Streamlined hardware configuration in response to automatic and dynamic recognition of hardware, including dynamic hardware activation, resource arbitration, device driver loading, drive mounting, and so forth.</li>
+
+	<LI>Support for particular buses and other hardware standards that facilitate automatic and dynamic recognition of hardware and streamlined hardware configuration, including Plug and Play PCMCIA, PC Card/CardBus, USB, and 1394. This includes promulgation of standards and advice about how hardware should behave.</li>
+
+	<LI>An orderly Plug and Play framework in which driver writers can operate. This includes infrastructure such as application programming interfaces (APIs), kernel-mode notifications, executive interfaces, and so forth. </li>
+</OL>
+
+<P>Note that Plug and Play operation does not require Plug and Play hardware. To the degree possible, the first two bullets above apply to <I>legacy</I> hardware as well as Plug and Play hardware. In some cases orderly enumeration of legacy devices is not possible because the detection methods are destructive or inordinately time-consuming.</P>
+
+<P>The primary impact that Plug and Play support has on protocol stacks is that network interfaces can connect and disconnect at any time. The Windows CE TCP/IP stack and related components have been adapted to support Plug and Play.</P>
+
+<P>Windows CE Plug and Play is transparent to the miniport drivers. When the user attaches a network adapter, a miniport is installed, loaded, and bound automatically. When the network adapter is removed, the miniport is unbound, shut down, and unloaded. To implement Plug and Play on a Windows CE-based system, you must set the <B>DriverEntry</B> function to “init”. All of the other miniport initialization code should be “page ”, as it might be used after system initialization. The Windows NT DDK provides the standard registry keywords that can be used for Plug and Play.</P>
+
+<P>Miniport drivers for network adapters require a <B>HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Plug and Play ID\</B> registry key. This key typically is named after the Plug and Play ID of the network adapter, but this is not a requirement. The key contains the following subkeys.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=22%>Subkey</TH>
+<TH width=78%>Contents</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>DLL</TD>
+<TD width=78%>The literal value Ndis.dll</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Prefix</TD>
+<TD width=78%>The literal value NDS</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=22%>Miniport</TD>
+<TD width=78%>The name of the miniport driver for the network adapter, which corresponds with the name of the registry key within <BR>
+<B>HKEY_LOCAL_MACHINE\Comm\</B> for the miniport driver</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>For example, a network adapter can have the following additional keys: </P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Plug and Play ID]
+  DLL=“NDIS.DLL”
+  Prefix= “NDS”
+  Miniport=“NE2000”</PRE>
+
+<P>The NDIS interface sets the values for the BusNumber and BusType keys for network adapters. The BusNumber key contains the socket and function pair for the adapter. The BusType key contains the value for the network adapter bus. If the information structure of the network adapter contains a network address value, Ndis.dll will create a <B>\HKEY_LOCAL_MACHINE\Comm\&lt;miniport Name&gt;\&lt;miniport Instance&gt;\Network Address</B> registry key to store the network address.</P>
+
+<P>Miniport drivers for a network adapter typically implement an <B>Install_Driver</B> function for installing the appropriate registry settings that will allow dynamic recognition of the network adapter. For example, when a network adapter is inserted into a Windows&nbsp;CE system, it tries to recognize the appropriate driver for the adapter by matching its Plug and Play ID with an appropriate key in the registry. If the system fails to find a Plug and Play match, it will prompt the user to enter a driver name. If this user-supplied driver DLL exports <B>Install_Driver</B>, then the system calls this function. The primary purpose of this function is to populate the Windows&nbsp;CE registry with appropriate entries for this miniport driver, as described above, so that future insertions of the network adapter will lead to dynamic loading of the correct NDIS miniport driver.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

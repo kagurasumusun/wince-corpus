@@ -1,0 +1,72 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry-based Notification</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Registry-based Notification"/>
+<MSHelp:RLTitle Title="Registry-based Notification"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_registry-based_notification"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Registry-based Notification</H1>
+
+<P>In registry-based notification, an application places<B> </B>a command line in the desktop system registry in one of two keys:
+
+<UL type=disc>
+	<LI><B>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\AutoStartOnConnect</B></LI>
+
+	<LI><B>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE Services\AutoStartOnDisconnect</B></LI>
+</UL>
+
+<P>When the event specified by the key occurs, the command line is executed. That is, when a Windows CE&#0150;based device is connected to a desktop computer, the command line under <B>AutoStartOnConnect</B> is executed; likewise, when the device is disconnected, the command line under <B>AutoStartOnDisconnect</B> is executed. </P>
+
+<P>Registry-based notification is appropriate for applications that need neither some control of the connection manager nor the ability to register and deregister for connection notifications.</P>
+
+<P><B>To register an application for automatic execution</B>
+
+<OL>
+	<LI>Construct a registry value that uniquely identifies the application.
+<P>The registry value should include a company and product name &#0151; for example, <B>MicrosoftActiveSync</B>. Enter the registry value under the appropriate registry key, either <B>AutoStartOnConnect</B> or <B>AutoStartOnDisconnect</B>.
+</LI>
+
+	<LI>Set the registry value data as the application that is to be executed and include command line arguments. The application file path must be wrapped with double quotes if arguments are provided.</LI>
+</OL>
+
+<P>The following registry editor (.reg) file shows how to register a command line for both <B>AutoStartOnConnect</B> and <B>AutoStartOnDisconnect</B>. In this example, when the device is connected, Notepad.exe is started with a command line argument of <B>c:\config.sys</B>. When the device is disconnected, Notepad.exe is started with a command line argument of <B>c:\autoexec.bat</B>.</P>
+
+<PRE>REGEDIT4
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE
+Services\AutoStartOnConnect]
+"MicrosoftAutoConnectSample"="\"notepad"\ c:\\config.sys"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows CE
+Services\AutoStartOnDisconnect]
+"MicrosoftAutoDisconnectSample"="\"notepad"\ c:\\autoexec.bat"
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

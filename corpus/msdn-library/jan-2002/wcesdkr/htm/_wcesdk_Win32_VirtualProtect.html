@@ -1,0 +1,194 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VirtualProtect</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="VirtualProtect"/>
+<MSHelp:RLTitle Title="VirtualProtect"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_virtualprotect"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>VirtualProtect</H1>
+
+<P>This function changes the access protection on a region of committed pages in the virtual address space of the calling process. </P>
+
+<PRE class="syntax"><B>BOOL</B> <B>VirtualProtect( </B>
+<B>LPVOID</B> <I>lpAddress</I><B>, </B>
+<B>DWORD</B> <I>dwSize</I><B>, </B>
+<B>DWORD</B> <I>flNewProtect</I><B>, </B>
+<B>PDWORD</B> <I>lpflOldProtect
+</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpAddress</I></DT>
+
+<DD>Pointer to the base address of the region of pages whose access protection attributes are to be changed. All pages in the specified region must have been allocated in a single call to the <A HREF="_wcesdk_win32_virtualalloc.htm"><B>VirtualAlloc</B></A> function. The pages cannot span adjacent regions that were allocated by separate calls to <B>VirtualAlloc</B>.</dd>
+
+<DT><I>dwSize</I></DT>
+
+<DD>Specifies the size, in bytes, of the region whose access protection attributes are to be changed. The region of affected pages includes all pages containing one or more bytes in the range from the <I>lpAddress</I> parameter to <I>lpAddress</I>+<I>dwSize</I>. This means that a 2-byte range straddling a page boundary causes the protection attributes of both pages to be changed. </dd>
+
+<DT><I>flNewProtect</I></DT>
+
+<DD>Specifies the new access protection. You can specify any one of the flags listed in the following table, along with the PAGE_GUARD and PAGE_NOCACHE protection modifier flags, as necessary.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_READONLY</TD>
+<TD width=56%>Enables read access to the committed region of pages. An attempt to write to the committed region results in an access violation. If the system differentiates between read-only access and execute access, an attempt to execute code in the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_READWRITE</TD>
+<TD width=56%>Enables both read and write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_WRITECOPY</TD>
+<TD width=56%>Gives copy-on-write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_EXECUTE</TD>
+<TD width=56%>Enables execute access to the committed region of pages. An attempt to read or write to the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_EXECUTE_READ</TD>
+<TD width=56%>Enables execute and read access to the committed region of pages. An attempt to write to the committed region results in an access violation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_EXECUTE_READWRITE</TD>
+<TD width=56%>Enables execute, read, and write access to the committed region of pages.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_EXECUTE_WRITECOPY</TD>
+<TD width=56%>Enables execute, read, and write access to the committed region of pages. The pages are shared read-on-write and copy-on-write.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_GUARD</TD>
+<TD width=56%>Pages in the region become guard pages. Any attempt to access a guard page causes the system to raise a STATUS_GUARD_PAGE exception and turn off the guard page status. Guard pages thus act as a one-shot access alarm.
+<P>The PAGE_GUARD flag is a page protection modifier. An application uses it with one of the other page protection flags, with one exception: it cannot be used with PAGE_NOACCESS. When an access attempt leads the system to turn off guard page status, the underlying page protection takes over.</P>
+
+<P>If a guard page exception occurs during a system service, the service typically returns a failure status indicator.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_NOACCESS</TD>
+<TD width=56%>Disables all access to the committed region of pages. An attempt to read from, write to, or execute in the committed region results in an access violation exception, called a general protection (GP) fault.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>PAGE_NOCACHE</TD>
+<TD width=56%>Allows no caching of the committed regions of pages. The hardware attributes for the physical memory should be specified as "no cache." This is not recommended for general usage. It is useful for device drivers; for example, mapping a video frame buffer with no caching. This flag is a page protection modifier and is only valid when used with one of the page protections other than PAGE_NOACCESS.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>lpflOldProtect</I></DT>
+
+<DD>Long pointer to a variable that the function sets to the previous access protection value of the first page in the specified region of pages. If this parameter is NULL or does not point to a valid variable, the function fails. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<H4>Remarks</H4>
+
+<P>The following code example shows how to use the <B>VirtualProtect</B> function to change the characteristics of pages in virtual memory that were allocated with READ_WRITE access to READ_ONLY.</P>
+
+<PRE class="code">DWORD dwOldProtect;
+DWORD dwSize = (2 * PAGE_SIZE);  //To change a set of two pages,
+//whose size was defined earlier as PAGE_SIZE
+
+if (!VirtualProtect (lpPage,    // Beginning of the set of pages to change
+                     dwSize,    // Length, in bytes, of the set of pages
+                                //to change
+                     PAGE_READONLY, // What to change it to
+                     &amp;dwOldProtect  // Place to store the old setting
+                     ))
+{// Your error-handling code goes here.
+} </PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_virtualalloc.htm"><B>VirtualAlloc</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

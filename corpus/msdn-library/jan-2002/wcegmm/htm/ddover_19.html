@@ -1,0 +1,69 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Testing Cooperative Levels</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Testing Cooperative Levels"/>
+<MSHelp:RLTitle Title="Testing Cooperative Levels"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_testing_cooperative_levels"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdraw4_testcooperativelevel_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_dderr_noexclusivemode_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_idirectdrawsurface5_restore_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_idirectdraw4_restoreallsurfaces_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_dderr_exclusivemodealreadyset_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_dderr_wrongmode_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Testing Cooperative Levels</H1>
+
+<P>Developers often use messages such as WM_ACTIVATE as notification that their applications should restore or re-create the surfaces being used. In some cases, applications take action when they don't need to, or don't take action when they should. The <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDraw4::TestCooperativeLevel</B></A> method makes it possible for your application to retrieve more information about the DirectDraw object's cooperative level and take appropriate steps to continue execution without mishap.</P>
+
+<P>The <B>TestCooperativeLevel</B> method succeeds, returning DD_OK, if your application can restore its surfaces (if it has not already done so) and continue to execute. Failure codes, on the other hand, are interpreted differently depending on the cooperative-level your application uses: </P>
+
+<P><B>Full-screen applications</B></P>
+
+<P>Full-screen applications receive the <A HREF="JavaScript:hhobj_2.Click()">DDERR_NOEXCLUSIVEMODE</A> return value if they lose exclusive device access–for example, if the user pressed ALT+TAB to switch away from the current application. In this case, applications might call <B>TestCooperativeLevel</B> in a loop, exiting only when the method returns DD_OK (meaning that exclusive mode was returned). In the body of the loop, the application should relinquish control of the CPU to prevent using cycles unnecessarily. Windows supports functions such as the <B>WaitMessage</B> or <B>Sleep</B> Win32 functions for this purpose.</P>
+
+<P>Any existing surfaces should be restored by calling the <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectDrawSurface5::Restore</B></A> or <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectDraw4::RestoreAllSurfaces</B></A> methods, and their contents reloaded before displaying them.</P>
+
+<P><B>Windowed applications</B></P>
+
+<P>Windowed applications (those that use the normal cooperative level) receive <A HREF="JavaScript:hhobj_5.Click()">DDERR_EXCLUSIVEMODEALREADYSET</A> if another application has taken exclusive device access. In this case, no action should be taken until the application with exclusive access loses it. This situation is similar to the case for a full-screen application; a windowed application might loop until <B>TestCooperativeLevel</B> returns DD_OK before restoring and reloading its surfaces. As mentioned previously, in a loop like this applications should avoid unnecessarily using CPU cycles by relinquishing CPU control periodically during the loop.</P>
+
+<P>The <B>TestCooperativeLevel</B> method returns <A HREF="JavaScript:hhobj_6.Click()">DDERR_WRONGMODE</A> to windowed applications when the display mode has changed. In this case, the application should destroy and re-create any surfaces before continuing execution. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

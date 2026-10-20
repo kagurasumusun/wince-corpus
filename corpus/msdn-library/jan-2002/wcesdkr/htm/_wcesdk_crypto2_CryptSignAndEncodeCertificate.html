@@ -1,0 +1,221 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptSignAndEncodeCertificate</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptSignAndEncodeCertificate"/>
+<MSHelp:RLTitle Title="CryptSignAndEncodeCertificate"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptsignandencodecertificate"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CryptSignAndEncodeCertificate</H1>
+
+<P>This function encodes and signs a certificate or certificate request. This function performs the following operations:
+
+<UL type="disc">
+	<LI>Calls the <B>CryptEncodeObject</B> function using the <I>lpszStructType</I> parameter to encode the "to be signed" information.</li>
+
+	<LI>Calls the <A HREF="_wcesdk_crypto2_cryptsigncertificate.htm"><B>CryptSignCertificate</B></A> function to sign this encoded information.</li>
+
+	<LI>Calls the <B>CryptEncodeObject</B> function again, with the <I>lpszStructType</I> parameter set to X509_CERT, to further encode the resulting signed, encoded information.</li>
+</UL>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptSignAndEncodeCertificate(</B>
+<B>HCRYPTPROV </B><I>hCryptProv</I><B>,</B>
+<B>DWORD </B><I>dwKeySpec</I><B>,</B>
+<B>DWORD </B><I>dwCertEncodingType</I><B>,</B>
+<B>LPCSTR </B><I>lpszStructType</I><B>,</B>
+<B>const void *</B><I>pvStructInfo</I><B>,</B>
+<B>PCRYPT_ALGORITHM_IDENTIFIER </B><I>pSignatureAlgorithm</I><B>,</B>
+<B>const void *</B><I>pvHashAuxInfo</I><B>,</B>
+<B>PBYTE </B><I>pbEncoded</I><B>,</B>
+<B>DWORD *</B><I>pcbEncoded
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hCryptProv </I></DT>
+
+<DD>[in] Handle of the CSP to do the signature. This handle must have already been created using the <A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A> function.</dd>
+
+<DT><I>dwKeySpec </I></DT>
+
+<DD>[in] Identifies the private key to use from the provider's container. It can be AT_KEYEXCHANGE or AT_SIGNATURE.</dd>
+
+<DT><I>dwCertEncodingType </I></DT>
+
+<DD>[in] Specifies the encoding type used. Currently, only X509_ASN_ENCODING is used; however, additional encoding types may be added in the future.</dd>
+
+<DT><I>lpszStructType </I></DT>
+
+<DD>[in] The following predefined <I>lpszStructType</I> constants are used with encode operations:
+
+<P>X509_CERT_CRL_TO_BE_SIGNED
+
+
+<P>X509_CERT_REQUEST_TO_BE_SIGNED
+
+
+<P>X509_CERT_TO_BE_SIGNED
+
+
+<P>X509_KEYGEN_REQUEST_TO_BE_SIGNED
+</dd>
+
+<DT><I>pvStructInfo </I></DT>
+
+<DD>[in] Pointer to the structure to be signed and encoded. The most commonly used structures are:
+
+<P><A HREF="_wcesdk_crypto2_cert_info.htm"><B>CERT_INFO</B></A>
+
+
+<P><A HREF="_wcesdk_crypto2_cert_request_info.htm"><B>CERT_REQUEST_INFO</B></A>
+
+
+<P><A HREF="_wcesdk_crypto2_cert_keygen_request_info.htm"><B>CERT_KEYGEN_REQUEST_INFO</B></A>
+</dd>
+
+<DT><I>pSignatureAlgorithm </I></DT>
+
+<DD>[in] Pointer to a <A HREF="_wcesdk_crypto2_crypt_algorithm_identifier.htm"><B>CRYPT_ALGORITHM_IDENTIFIER</B></A> structure containing the OID of the signature algorithm and any additional parameters needed. The <B>CryptSignAndEncodeCertificate</B> function uses the following algorithm OIDs:
+
+<P>szOID_RSA_MD5RSA
+
+
+<P>szOID_RSA_SHA1RSA
+
+
+<P>szOID_X957_SHA1DSA
+</dd>
+
+<DT><I>pvHashAuxInfo </I></DT>
+
+<DD>[in] Reserved. Must be NULL.</dd>
+
+<DT><I>pbEncoded </I></DT>
+
+<DD>[out] Pointer to a buffer to receive the signed and encoded output.
+
+<P>This parameter can be NULL to set the size of this information for memory allocation purposes.
+</dd>
+
+<DT><I>pcbEncoded </I></DT>
+
+<DD>[in/out] Pointer to a <B>DWORD</B> that contains the size, in bytes, of the buffer pointed to by the <I>pbEncoded</I> parameter. When the function returns, the <B>DWORD</B> contains the number of bytes stored or to be stored in the buffer.
+
+<P class=atl><b class="le">Note</b>&nbsp;&nbsp;&nbsp;When processing the data returned in the buffer, applications need to use the actual size of the data returned. The actual size can be slightly smaller than the size of the buffer specified on input. (On input, buffer sizes are usually specified large enough to ensure that the largest possible output data will fit in the buffer.) On output, the variable pointed to by this parameter is updated to reflect the actual size of the data copied to the buffer.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;Errors from the called <A HREF="_wcesdk_crypto2_cryptcreatehash.htm"><B>CryptCreateHash</B></A>, <A HREF="_wcesdk_crypto2_cryptsignhash.htm"><B>CryptSignHash</B></A>, and <A HREF="_wcesdk_crypto2_crypthashdata.htm"><B>CryptHashData</B></A> functions might be propagated to this function.</P>
+
+<P>The following table shows the error codes for this function.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Error code</TH>
+<TH width=67%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>ERROR_MORE_DATA</TD>
+<TD width=67%>If the buffer specified by the <I>pbEncoded</I> parameter is not large enough to hold the returned data, the function sets the ERROR_MORE_DATA code and stores the required buffer size, in bytes, into the variable pointed to by the <I>pcbEncoded</I> parameter. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>ERROR_FILE_NOT_FOUND</TD>
+<TD width=67%>Invalid certificate encoding type. Currently only X509_ASN_ENCODING is supported. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>NTE_BAD_ALGID</TD>
+<TD width=67%>The signature algorithm's object Identifier (OID) does not map to a known or supported hash algorithm. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CRYPT_E_BAD_ENCODE</TD>
+<TD width=67%>An error was encountered while encoding or decoding. The most likely cause of this error is the improper initialization all of the fields in the structure pointed to by the <I>pvStructInfo</I> parameter. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The desktop platform supports the PKCS_7_ASN_ENCODING flag, but Windows CE does not. Windows CE ignores the flag when it is specified.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptacquirecontext.htm"><B>CryptAcquireContext</B></A>, <A HREF="_wcesdk_crypto2_cryptcreatehash.htm"><B>CryptCreateHash</B></A>, <A HREF="_wcesdk_crypto2_crypthashdata.htm"><B>CryptHashData</B></A>, <A HREF="_wcesdk_crypto2_cryptsigncertificate.htm"><B>CryptSignCertificate</B></A>, <A HREF="_wcesdk_crypto2_cryptsignhash.htm"><B>CryptSignHash</B></A>, <A HREF="_wcesdk_crypto2_cert_info.htm"><B>CERT_INFO</B></A>, <A HREF="_wcesdk_crypto2_cert_request_info.htm"><B>CERT_REQUEST_INFO</B></A>, <A HREF="_wcesdk_crypto2_cert_keygen_request_info.htm"><B>CERT_KEYGEN_REQUEST_INFO</B></A>, <A HREF="_wcesdk_crypto2_crypt_algorithm_identifier.htm"><B>CRYPT_ALGORITHM_IDENTIFIER</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

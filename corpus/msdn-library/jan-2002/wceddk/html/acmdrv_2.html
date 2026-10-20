@@ -1,0 +1,46 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Playing and Recording</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Playing and Recording"/>
+<MSHelp:RLTitle Title="Playing and Recording"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_playing_and_recording"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Playing and Recording</H1>
+
+<P>The basic operation for playing involves an interrupt and two direct memory access (DMA) buffers for output data. The Wave API Manager prepares the data blocks and sends them to the audio driver’s MDD layer. The MDD checks to see if the block has data to be played. If so, it calls the <B>PDD_WaveProc</B> function by using the WPDM_START message. The PDD is responsible for copying data from the block to the temporary DMA buffers. Then, the DMA is started to play the data. When the first of the two buffers is finished playing, an interrupt occurs. The PDD should report the interrupt to be of type AUDIO_STATE_OUT_PLAYING. If there is more data to be played, the MDD sends the message WPDM_CONTINUE. Otherwise, it sends WPDM_ENDOFDATA. As data blocks finish playing, the MDD marks them as done and sends them back to the Wave API Manager.</P>
+
+<P>The PDD should alternate between the two DMA buffers, filling one buffer as the other is playing. If the reserve buffer is not full before the first buffer’s data is finished playing, the PDD layer should report this with the return value AUDIO_STATE_OUT_UNDERFLOW. This gives the MDD layer an opportunity to synchronize and continue playing.</P>
+
+<P>Recording uses a mechanism that is similar to that used by playing, but in reverse order. Recording starts with the PDD message WPDM_START as before, but no data is copied until the first DMA buffer is full. Then, the PDD copies the data from the DMA buffer into the user block. Again, as blocks are filled, the MDD returns them to the Wave API Manager. Recording continues until the user application requests a stop and sends the WPDM_STOP message.</P>
+
+<P>Note that audio drivers should always inspect the header information on audio data to ensure that the format matches what the driver expects. Unusual alignments of the header with respect to physical page boundies can sometimes cause the format to appear different than it really is, in cases where some of the header data falls onto a page that has not been loaded yet. The driver should always verify that the audio data is in PCMWAVEFORMAT or WAVEFORMATEX format before accessing the data.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

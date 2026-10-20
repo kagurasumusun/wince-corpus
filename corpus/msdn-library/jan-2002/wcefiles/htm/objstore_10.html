@@ -1,0 +1,105 @@
+<HTML DIR=LTR xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Read/Write Example</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Read/Write Example"/>
+<MSHelp:RLTitle Title="Read/Write Example"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_read_write_example"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Read/Write Example</H1>
+
+<P>The following code example shows how to append one file to the end of another file. The example uses the <B>CreateFile</B> function to open two text (.txt) files: One.txt for reading and Two.txt for writing. Then, the example uses the <B>ReadFile</B> and <B>WriteFile</B> functions to append the contents of One.txt to the end of Two.txt by reading and writing 4-KB blocks.</P>
+
+<PRE class="code">void AppendExample (void)
+{
+  HANDLE hFile, hAppend;
+  DWORD dwBytesRead, dwBytesWritten, dwPos;
+  char buff[4096];
+  TCHAR szMsg[1000];
+
+  // Open the existing file.
+
+  hFile = CreateFile (TEXT("\\ONE.TXT"),      // Open One.txt
+                      GENERIC_READ,           // Open for reading
+                      0,                      // Do not share
+                      NULL,                   // No security
+                      OPEN_EXISTING,          // Existing file only
+                      FILE_ATTRIBUTE_NORMAL,  // Normal file
+                      NULL);                  // No template file
+
+  if (hFile == INVALID_HANDLE_VALUE)
+  {
+    // Your error-handling code goes here.
+    wsprintf (szMsg, TEXT("Could not open ONE.TXT"));
+    return;
+  }
+
+  // Open the existing file, or, if the file does not exist,
+  // create a new file.
+
+  hAppend = CreateFile (TEXT("\\TWO.TXT"),      // Open Two.txt.
+                        GENERIC_WRITE,          // Open for writing
+                        0,                      // Do not share
+                        NULL,                   // No security
+                        OPEN_ALWAYS,            // Open or create
+                        FILE_ATTRIBUTE_NORMAL,  // Normal file
+                        NULL);                  // No template file
+
+  if (hAppend == INVALID_HANDLE_VALUE)
+  {
+    wsprintf (szMsg, TEXT("Could not open TWO.TXT"));
+    CloseHandle (hFile);            // Close the first file.
+    return;
+  }
+
+  // Append the first file to the end of the second file.
+
+  dwPos = SetFilePointer (hAppend, 0, NULL, FILE_END);
+  do
+  {
+    if (ReadFile (hFile, buff, 4096, &amp;dwBytesRead, NULL))
+    {
+      WriteFile (hAppend, buff, dwBytesRead,
+                 &amp;dwBytesWritten, NULL);
+    }
+  }
+  while (dwBytesRead == 4096);
+
+  // Close both files.
+
+  CloseHandle (hFile);
+  CloseHandle (hAppend);
+
+  return;
+} // End of AppendExample code</PRE>
+<DIV CLASS="footer">Built on Tuesday, February 13, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

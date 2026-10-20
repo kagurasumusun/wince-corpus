@@ -1,0 +1,174 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CREATE TABLE</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CREATE TABLE"/>
+<MSHelp:RLTitle Title="CREATE TABLE"/>
+<MSHelp:Keyword Index="A" Term="ado30ref_97"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce_create_table"></A><SUP></SUP>CREATE TABLE</H1>
+
+<P>This statement creates a new table.</P>
+
+<PRE class=syntax><B>CREATE TABLE</B> <I>tablename</I> <B>(</B><I>fieldname fieldtype</I> <B>[</B>,<I>fieldname fieldtype</I><B>])</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>tablename</I></DT>
+
+<DD>The name for a new table.</DD>
+
+<DT><I>fieldname</I></DT>
+
+<DD>The name of the column to create in the table.</DD>
+
+<DT><I>fieldtype</I></DT>
+
+<DD>The data type for the column. The following table shows the data types that can be used.
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=30%>Data Type</TH>
+<TH width=70%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Varchar[(n)]</B></TD>
+<TD width=70%>NULL-terminated Unicode character string of length n, with a maximum of 255 characters. If n is not supplied, then 1 is assumed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Text</B></TD>
+<TD width=70%>Variable length string that can hold up to 32,000 characters. It is typically used for more than 255 characters.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Varbinary[(n)]</B></TD>
+<TD width=70%>Binary value of less than 256. If n is not specified, the default is 1.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Long Varbinary</B></TD>
+<TD width=70%>Binary value of less than 65,469 bytes. This type is also known as OLE Object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Integer, int</B></TD>
+<TD width=70%>4-byte signed integer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Smallint</B></TD>
+<TD width=70%>2-byte signed integer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Float</B></TD>
+<TD width=70%>Double-precision floating point value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Datetime</B></TD>
+<TD width=70%><B>Date</B> object value.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Bit</B></TD>
+<TD width=70%>Logical or Boolean value. Zero is <B>FALSE</B> and nonzero is <B>TRUE</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Uint</B></TD>
+<TD width=70%>Unsigned 4-byte integer, which is provided for backward compatibility only.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=30%><B>Usmallint</B></TD>
+<TD width=70%>Unsigned 2-byte integer, which is provided for backward compatibility only.</TD>
+</TR>
+</TABLE><BR>
+
+
+
+<P>The SQL data types <B>uint</B> and <B>usmallint</B> are provided for backward compatibility with existing Windows® CE-based tables. However, this compatibility does not apply to the conversion and filter tools and should not be generally relied upon. You should not use the <B>uint</B> or <B>usmallint</B> data types. Instead, use the signed equivalents of <B>int</B> and <B>smallint</B>.
+</DD>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the following error values can be returned:
+
+<UL type=disc>
+	<LI>E_OUTOFMEMORY</LI>
+
+	<LI>DB_E_ERRORSINCOMMAND</LI>
+
+	<LI>DB_E_DUPLICATETABLEID</LI>
+
+	<LI>DB_E_DUPLICATECOLUMNID</LI>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>In Windows® CE, you cannot have two tables with the same name on the same device. </P>
+
+<P>Types <B>uint</B> and <B>usmallint</B> are not standard data types on other database systems. Users should not use these data types.</P>
+
+<P>An SQL statement cannot be longer than 2,048 characters. A longer statement causes an error.</P>
+
+<H4>Examples</H4>
+
+<P>The following code example shows how to create a new table using SQL statements.</P>
+
+<PRE>Dim rs, i, sql(12), sqlcmd
+Set rs = CreateObject("ADOCE.Recordset.3.1")
+sql(0) = "CREATE TABLE allfields ("
+sql(1) = "f1 varchar ,"     'adVarWChar
+sql(2) = "f2 varchar(30),"  'adVarWChar
+sql(3) = "f3 text ,"        'adLongVarWChar
+sql(4) = "f4 varbinary ,"   'adVarbinary
+sql(5) = "f5 varbinary (30) ," 'adVarbinary
+sql(6) = "f6 long varbinary ," 'adLongVarbinary
+sql(7) = "f7 int ,"         'adInteger
+sql(8) = "f8 smallint ,"    'adSmallInt
+sql(9) = "f9 float ,"       'adDouble
+sql(10) = "f10 datetime ,"  'adDate
+sql(11) = "f11 bit"         'adBoolean
+sql(12) = ")"
+For i = 0 To 12
+  sqlcmd = sqlcmd &amp; sql(i)
+Next
+rs.Open sqlcmd
+rs.Open "allfields"
+MsgBox rs.Fields.Count, , "Fields"
+rs.Close
+Set rs = Nothing
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,241 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SCARD_READERSTATE</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SCARD_READERSTATE"/>
+<MSHelp:RLTitle Title="SCARD_READERSTATE"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_scard_scard_readerstate"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SCARD_READERSTATE</H1>
+
+<P>This structure is used by functions for tracking smart cards within readers.</P>
+
+<PRE class="syntax"><B>typedef struct {</B>
+<B>LPCTSTR </B><I>szReader</I>
+<B>LPVOID </B><I>pvUserData</I><B>;</B>
+<B>DWORD </B><I>dwCurrentState</I><B>;</B>
+<B>DWORD </B><I>dwEventState</I><B>;</B>
+<B>DWORD </B><I>cbAtr</I><B>;</B>
+<B>BYTE </B><I>rgbAtr</I>[36]<B>;</B>
+<B>} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>szReader</I></DT>
+
+<DD>Points to the name of the reader being monitored.</dd>
+
+<DT><I>pvUserData</I></DT>
+
+<DD>Not used by the smart card subsystem. Used by the application.</dd>
+
+<DT><I>dwCurrentState</I></DT>
+
+<DD>Supplies the current state of the reader, as seen by the application. This field can take on any of the following values, in combination, as a bit mask:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=43%>Value</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_UNAWARE</TD>
+<TD width=57%>The application is unaware of the current state, and would like to know. The use of this value results in an immediate return from state transition monitoring services. This is represented by all bits set to zero.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_IGNORE</TD>
+<TD width=57%>The application is not interested in this reader, and it should not be considered during monitoring operations. If this bit value is set, all other bits are ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD class="fineprint" width=43%>
+<P>SCARD_STATE_UNAVAILABLE</P>
+</TD>
+<TD width=57%>The application believes that this reader is not available for use. If this bit is set, then all the following bits are ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_EMPTY</TD>
+<TD width=57%>The application believes that there is not card in the reader. If this bit is set, all the following bits are ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_PRESENT</TD>
+<TD width=57%>The application believes that there is a card in the reader.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_ATRMATCH</TD>
+<TD width=57%>The application believes that there is a card in the reader with an ATR matching one of the target cards. If this bit is set, SCARD_STATE_PRESENT is assumed. This bit has no meaning to <B>SCardGetStatusChange</B> beyond SCARD_STATE_PRESENT.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_EXCLUSIVE</TD>
+<TD width=57%>The application believes that the card in the reader is allocated for exclusive use by another application. If this bit is set, SCARD_STATE_PRESENT is assumed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_INUSE</TD>
+<TD width=57%>The application believes that the card in the reader is in use by one or more other applications, but may be connected to in shared mode. If this bit is set, SCARD_STATE_PRESENT is assumed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_MUTE</TD>
+<TD width=57%>The application believes that there is an unresponsive card in the reader</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>dwEventState</I></DT>
+
+<DD>Receives the current state of the reader, as known by the smart card resource manager. This field can take on any of the following values, in combination, as a bit mask:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=43%>Value</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_IGNORE</TD>
+<TD width=57%>This reader should be ignored.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_CHANGED</TD>
+<TD width=57%>There is a difference between the state believed by the application, and the state known by the resource manager. When this bit is set, the application may assume a significant state change has occurred on this reader.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_UNKNOWN</TD>
+<TD width=57%>The given reader name is not recognized by the resource manager. If this bit is set, then SCARD_STATE_CHANGED and SCARD_STATE_IGNORE will also be set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_UNAVAILABLE</TD>
+<TD width=57%>The actual state of this reader is not available. If this bit is set, then all the following bits are clear.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_EMPTY</TD>
+<TD width=57%>There is no card in the reader. If this bit is set, all the following bits will be clear.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_PRESENT</TD>
+<TD width=57%>There is a card in the reader.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_ATRMATCH</TD>
+<TD width=57%>There is a card in the reader with an ATR matching one of the target cards. If this bit is set, SCARD_STATE_PRESENT will also be set. This bit is only returned on the <B>SCardLocateCards</B> function.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_EXCLUSIVE</TD>
+<TD width=57%>The card in the reader is allocated for exclusive use by another application. If this bit is set, SCARD_STATE_PRESENT will also be set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_INUSE</TD>
+<TD width=57%>The card in the reader is in use by one or more other applications, but may be connected to in shared mode. If this bit is set, SCARD_STATE_PRESENT will also be set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>SCARD_STATE_MUTE</TD>
+<TD width=57%>There is an unresponsive card in the reader.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>cbAtr</I></DT>
+
+<DD>The number of bytes in the returned ATR.</dd>
+
+<DT><I>rgbAtr</I></DT>
+
+<DD>The ATR of the inserted card, with extra alignment bytes.</dd>
+</DL>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Winscard.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_scard_scardgetstatuschange.htm">SCardGetStatusChange</A>, <A HREF="_wcesdk_scard_scardlocatecards.htm">SCardLocateCards</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

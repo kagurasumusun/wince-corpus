@@ -1,0 +1,126 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolTransferDataComplete</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolTransferDataComplete"/>
+<MSHelp:RLTitle Title="ProtocolTransferDataComplete"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_protocoltransferdatacomplete"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>ProtocolTransferDataComplete</H1>
+
+<P><B>ProtocolTransferDataComplete</B> is a required driver function if the protocol might bind itself to an underlying connectionless network adapter driver that does not indicate full-packet receives with <A HREF="_wcesdk_ndismindicatereceivepacket.htm"><B>NdisMIndicateReceivePacket</B></A>. <B>ProtocolTransferDataComplete</B> completes the processing of a protocol-initiated transfer-data request for which <A HREF="_wcesdk_ndistransferdata.htm"><B>NdisTransferData</B></A> returned NDIS_STATUS_PENDING.</P>
+
+<PRE class="syntax"><B>VOID
+ProtocolTransferDataComplete(</B>
+<B>IN NDIS_HANDLE</B> <I>ProtocolBindingContext</I>,
+<B>IN PNDIS_PACKET</B> <I>Packet</I>,
+<B>IN NDIS_STATUS</B><I> Status</I>,
+<B>IN UINT</B> <I>BytesTransferred</I> <B>);</B></PRE>
+
+<P>Exclusively connection-oriented protocols need no <B>ProtocolTransferDataComplete</B> function. </P>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ProtocolBindingContext</I> </DT>
+
+<DD>Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>. </dd>
+
+<DT><I>Packet</I> </DT>
+
+<DD>Points to the protocol-allocated packet descriptor the driver originally passed to <B>NdisTransferData</B>. </dd>
+
+<DT><I>Status</I> </DT>
+
+<DD>Specifies the final status of the transfer-data operation. </dd>
+
+<DT><I>BytesTransferred</I> </DT>
+
+<DD>Specifies the number of bytes of data that the network adapter driver transferred into the buffers mapped by buffer descriptors chained to the packet descriptor at <I>Packet</I>. The protocol uses this value to determine whether the miniport supplied all the requested data for the originally indicated network packet. </dd>
+</DL>
+
+<H4>Comments</H4>
+
+<P><B>ProtocolTransferDataComplete</B> can be called before <B>NdisTransferData</B> returns control. If this occurs, the protocol driver has no opportunity to inspect the status code that <B>NdisTransferData</B> returns at <I>Status</I>. The protocol must assume that the given packet descriptor at <I>Packet</I> was pending until <B>ProtocolTransferDataComplete</B> was called. </P>
+
+<P>When the underlying network adapter driver calls <B>NdisMTransferDataComplete</B>, NDIS forwards the miniport-supplied <I>Packet</I> pointer and <I>Status</I> value to <B>ProtocolTransferDataComplete</B>. When this occurs, the protocol regains ownership of the resources it allocated for a preceding call to <B>NdisTransferData</B>. <B>ProtocolTransferDataComplete</B> can postprocess the miniport-supplied data in the buffers the protocol chained to the packet descriptor at <I>Packet</I>, along with the data <A HREF="_wcesdk_protocolreceive.htm"><B>ProtocolReceive</B></A> copied in the corresponding indication. Then, <B>ProtocolTransferDataComplete</B> can notify interested clients of the received network data.</P>
+
+<P><B>ProtocolTransferDataComplete</B> also can either release the resources that the protocol allocated for its call to <B>NdisTransferData</B> or prepare the returned buffer and packet descriptors for reuse in a subsequent call to <B>NdisTransferData</B>. As a general rule, reusing such resources yields better performance than releasing them except, possibly, in periods of low network traffic if the protocol previously allocated a surplus of these resources to handle a period of heavy I/O demand. </P>
+
+<P>To prepare the buffer and packet descriptors for reuse, <B>ProtocolTransferDataComplete</B> should follow these guidelines:
+
+<UL type="disc">
+	<LI><I>Always</I> call an <B>NdisUnchainBufferAt<I>XXX</I></B> function as many times as necessary to save the buffer descriptor pointers before <B>ProtocolTransferDataComplete</B> calls <A HREF="_wcesdk_ndisreinitializepacket.htm"><B>NdisReinitializePacket</B></A> with the descriptor at <I>Packet</I>. </li>
+
+	<LI>Otherwise, <B>NdisReinitializePacket</B> sets the head of the buffer chain to NULL so the protocol cannot recover pointers to the buffer descriptors chained to the packet descriptor. In effect, the protocol loses a set of buffer descriptors that the protocol allocated with <A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A>, and possibly loses access to the protocol-allocated buffers mapped by these descriptors as well. </li>
+
+	<LI><I>Never</I> call <A HREF="_wcesdk_ndiszeromemory.htm"><B>NdisZeroMemory</B></A> with a pointer to a packet descriptor. Use <B>NdisReinitializePacket</B> instead. </li>
+
+	<LI>Otherwise, <B>NdisZeroMemory</B> destroys the packet descriptor the protocol allocated with <B>NdisAllocatePacket</B>, rendering it unusable for specifying subsequent data transfers and sends. </li>
+</UL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A>,<B> <A HREF="_wcesdk_ndisallocatepacket.htm">NdisAllocatePacket</A></B>,<B> <A HREF="_wcesdk_ndismindicatereceivepacket.htm">NdisMIndicateReceivePacket</A></B>,<B> <A HREF="_wcesdk_ndisopenadapter.htm">NdisOpenAdapter</A></B>,<B> <A HREF="_wcesdk_ndisreinitializepacket.htm">NdisReinitializePacket</A></B>, <A HREF="_wcesdk_ndistransferdata.htm"><B>NdisTransferData</B></A>,<A HREF="_wcesdk_ndiszeromemory.htm"><B> NdisZeroMemory</B></A>, <A HREF="_wcesdk_protocolreceive.htm"><B>ProtocolReceive</B></A>,<B> </B></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

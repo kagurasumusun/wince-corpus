@@ -1,0 +1,105 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMSetPeriodicTimer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMSetPeriodicTimer"/>
+<MSHelp:RLTitle Title="NdisMSetPeriodicTimer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndismsetperiodictimer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMSetPeriodicTimer</H1>
+
+<P>This function sets a timer to fire periodically, thus running an associated <B>MiniportTimer</B> function repeatedly at fixed intervals.</P>
+
+<PRE class="syntax"><B>VOID NdisMSetPeriodicTimer(
+IN PNDIS_MINIPORT_TIMER </B><I>Timer</I><B>,
+IN UINT </B><I>MillisecondsPeriod</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Timer</I></DT>
+
+<DD>Pointer to caller-supplied resident storage for a timer object previously initialized with the <A HREF="_wcesdk_ndisminitializetimer.htm"><B>NdisMInitializeTimer</B></A> function.</dd>
+
+<DT><I>MillisecondsPeriod</I></DT>
+
+<DD>Specifies the interval, in milliseconds, to time out before calling the <B>MiniportTimer</B> function unless the timer is canceled or this interval is reset.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function causes the driver-supplied <B>MiniportTimer</B> function, which was associated with the timer object when <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> called <B>NdisMInitializeTimer</B>, to be run repeatedly whenever the specified <I>MillisecondsPeriod</I> expires. At the initial call to this function, the timer object is queued until the <I>MillisecondsPeriod</I> expires; then the <B>MiniportTimer</B> function is run, and the timer object is automatically requeued for the next interval.</P>
+
+<P>By contrast, <A HREF="_wcesdk_ndismsettimer.htm"><B>NdisMSetTimer</B></A> causes the driver-supplied function associated with a particular timer object to run only once after the given <I>MillisecondsToDelay</I> expires. That is, execution of this function associated with the <I>Timer</I> passed to <B>NdisMSetTimer</B> is episodic, rather than periodic.</P>
+
+<P>As a general rule, a miniport should allocate and initialize two timer objects if it calls both this function and <B>NdisMSetTimer</B>. Such a driver is likely to have two <B>MiniportTimer</B> functions with different functionality, each associated with a particular timer object when it is initialized with <B>NdisMInitializeTimer</B>. For example, a <B>MiniportTimer</B> function that runs periodically might poll device state at regular intervals, whereas another <B>MiniportTimer</B> function might retry a particular run-time operation only if it times out on the network adapter.</P>
+
+<P>If a miniport calls this function, <A HREF="_wcesdk_ndismcanceltimer.htm"><B>NdisMCancelTimer</B></A>, or <B>NdisMSetTimer</B> with the same <I>Timer</I> pointer originally passed to this function, the current call cancels its preceding call to this function, possibly resetting the <I>MillisecondsPeriod</I> specified originally. Any call to an NDIS timer function resets the specified timer to expire at the interval specified in the most recent call and causes the associated <B>MiniportTimer</B> function to run when the most recently specified interval has expired.</P>
+
+<P>Timer resolution on the host varies. Consequently, calling this function with very small periods does not necessarily cause the execution of the <B>MiniportTimer</B> function exactly when the specified interval expires.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndismcanceltimer.htm"><B>NdisMCancelTimer</B></A>, <A HREF="_wcesdk_ndisminitializetimer.htm"><B>NdisMInitializeTimer</B></A>, <A HREF="_wcesdk_ndismsettimer.htm"><B>NdisMSetTimer</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

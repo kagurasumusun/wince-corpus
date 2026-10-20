@@ -1,0 +1,98 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AfxInitExtensionModule</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AfxInitExtensionModule"/>
+<MSHelp:RLTitle Title="AfxInitExtensionModule"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_afxinitextensionmodule"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>AfxInitExtensionModule</H1>
+
+<P>This function initializes an extension DLL in <B>DllMain</B>. </P>
+
+<PRE class=syntax><B>BOOL</B> <B>AFXAPI</B> <B>AfxInitExtensionModule(</B>
+<B>AFX_EXTENSION_MODULE&amp;</B> <I>state</I><B>,</B>
+<B>HMODULE</B> <I>hModule</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>state</I></DT>
+
+<DD>A reference to the <A HREF="struct_2.htm"><B>AFX_EXTENSION_MODULE</B></A> structure that will contain the state of extension DLL module after the initialization. The state includes a copy of the runtime class objects that have been initialized by the extension DLL as part of normal static object construction executed before <B>DllMain</B> is entered.</DD>
+
+<DT><I>hModule</I></DT>
+
+<DD>A handle of the extension DLL module. </DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P><B>TRUE</B> if the extension DLL is successfully initialized; otherwise, it is <B>FALSE</B>.</P>
+
+<H4>Remarks</H4>
+
+<P>For example:</P>
+
+<PRE>static AFX_EXTENSION_MODULE extensionDLL;
+extern "C" int APIENTRY
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
+{
+   if (dwReason == DLL_PROCESS_ATTACH)
+   {
+      // Extension DLL one-time initialization
+      if (!AfxInitExtensionModule(extensionDLL, hInstance))
+         return 0;
+...
+</PRE>
+
+<P><B>AfxInitExtensionModule</B> makes a copy of the DLL's <B>HMODULE</B> and captures the DLL's runtime-classes (<B>CRuntimeClass</B> structures) as well as its object factories (<B>COleObjectFactory</B> objects) for use later when the <B>CDynLinkLibrary</B> object is created. </P>
+
+<P>MFC extension DLLs need to do two things in their <B>DllMain</B> function:
+
+<UL type=disc>
+	<LI>Call <A HREF="#_wcemfc_afxinitextensionmodule"><B>AfxInitExtensionModule</B></A> and check the return value.</LI>
+
+	<LI>Create a <B>CDynLinkLibrary</B> object if the DLL will be exporting <A HREF="crunclas.htm"><B>CRuntimeClass</B></A> objects or has its own custom resources.</LI>
+</UL>
+
+<P>You can call <B>AfxTermExtensionModule</B> to clean up the extension DLL when each process detaches from the extension DLL (which happens when the process exits, or when the DLL is unloaded as a result of an <B>AfxFreeLibrary</B> call). </P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdll_.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palms-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_57.htm"><B>AfxTermExtensionModule</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

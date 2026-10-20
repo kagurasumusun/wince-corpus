@@ -1,0 +1,140 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Keys Used by the Device Manager</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Registry Keys Used by the Device Manager"/>
+<MSHelp:RLTitle Title="Registry Keys Used by the Device Manager"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_registry_keys_used_by_the_device_manager"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Registry Keys Used by the Device Manager</H1>
+
+<P>The Device Manager uses registry keys that are stored in the <B>HKEY_LOCAL_MACHINE\Drivers\</B> key. The following are the major subkeys of the <B>HKEY_LOCAL_MACHINE\Drivers\</B> key:
+
+<DL>
+<DT><B>Active\</B></DT>
+
+<DD>The <B>Active\</B> key contains subkeys that track currently active drivers that were loaded by the Device Manager. Device driver setup routines should not modify the <B>Active\</B> key’s contents, nor should they rely on the presence of any specific values within the <B>Active\</B> key.
+
+<P>When a device driver is loaded, the Device Manager passes the device driver the path to its <B>Active\</B> key as the <I>dwContext</I> parameter in the device driver’s <A HREF="funct_1_418.htm"><B><I>XXX_Init</I></B></A> function. The device driver can rely on the presence of the following values:
+
+
+<UL type="disc">
+	<LI><B>Hnd</B>
+<P>Device handle from the <B>RegisterDevice</B> or <B>ActivateDevice</B> function. Please note that in Windows CE 3.0 and later, <B>RegisterDevice</B> has been replaced with <B>ActivateDevice</B>.
+</li>
+
+	<LI><B>Name</B>
+<P>The device driver’s <A HREF="stream_6.htm">Device File Name</A>, for example “COM1:” or “SCR7:”.
+</li>
+
+	<LI><B>Key</B>
+<P>Registry path within <B>HKEY_LOCAL_MACHINE</B> to the device driver’s <B>Builtin\</B> or <B>PCMCIA\</B> key
+</li>
+</UL>
+
+
+<P>The <B>Active\</B> key for PC Card device drivers has the following additional values:
+
+
+<UL type="disc">
+	<LI><B>PnpId</B>
+<P>Plug and Play identifier string
+</li>
+
+	<LI><B>Sckt</B>
+<P>Current socket and function pair of the PC Card
+</li>
+</UL>
+
+
+<P>Device drivers should never modify any of the values in this part of the registry that are put there by the Device Manager. Once a device driver is loaded, it can add values to its <B>Active\</B> key. However, the Device Manager will delete the device driver’s <B>Active\</B> key and any values in it when the device driver is unloaded.
+</dd>
+
+<DT><B>Builtin\</B></DT>
+
+<DD>The <B>Builtin\</B> key contains subkeys that control which device drivers to load when the system starts up. Each driver-specific subkey can have the following values, some of which are optional:
+
+<UL type="disc">
+	<LI><B>Dll</B>
+<P>The name of the device driver’s .DLL file.
+</li>
+
+	<LI><B>Prefix</B>
+<P>The device driver’s <A HREF="stream_8.htm">Device File Name Prefix</A>.
+</li>
+
+	<LI><B>Index</B>
+<P>The device driver’s <A HREF="stream_9.htm">Device File Name Index</A>.
+</li>
+
+	<LI><B>Order</B>
+<P>The loading order for this device driver. The Device Manager loads device driver according to their Order numbers, starting with 0. This value is optional.
+</li>
+
+	<LI><B>FriendlyName</B>
+<P>A string containing a human-readable description or name for the device driver.
+</li>
+
+	<LI><B>Entry</B>
+<P>The name of a function for the Device Manager to call to initialize the device driver. This value is optional. If this value is not specified, the Device Manager will initialize the device driver by calling its <B>RegisterDevice</B> function.
+</li>
+
+	<LI><B>Keep</B>
+<P>If an <B>Entry</B> value is present, then the presence of a <B>Keep</B> value prevents the device manager from freeing the device driver DLL after calling the function named in the <B>Entry</B> value. The mere presence of a Keep value is sufficient; the actual value stored in <B>Keep</B> is irrelevant.
+</li>
+
+	<LI><B>Ioctl</B>
+<P>If an <B>Ioctl</B> value is present, the Device Manager will call the device driver’s IOControl function, as described in <A HREF="funct_1_419.htm"><B><I>XXX_IOControl</I></B></A>, after loading the driver.
+</li>
+
+	<LI><B>Context</B>
+<P>The value passed in the <I>dwInfo</I> parameter to <B>RegisterDevice</B> when the device driver is loaded.
+</li>
+</UL>
+</dd>
+
+<DT><B>PCMCIA\</B></DT>
+
+<DD>The <B>PCMCIA\</B> key contains subkeys that are related to PC Cards and their stream interface drivers. The most important information in these subkeys is the Plug and Play identifier of the PC Card, which corresponds to a specified driver.</dd>
+
+<DT><B>Detect\</B></DT>
+
+<DD>The <B>Detect\</B> subkey contains numbered entries that list DLL names and detection functions. The functions identify a generic stream interface driver for PC Cards with no Plug and Play identifier, or for PC Cards with an unknown Plug and Play identifier. </dd>
+
+<DT><B><I>Driver</I></B></DT>
+
+<DD><B><I>Driver</I></B> subkeys, named after generic PC Card drivers, contain values that are used to load the drivers. The Device Manager creates individual <B><I>Driver</I></B> subkeys when a generic stream interface driver detection function indicates that it can drive a particular device. The existence of a <B><I>Driver</I></B> subkey indicates detection by a driver that has an entry within the <B>PCMCIA\Detect\</B> key.</dd>
+
+<DT><B><I>Plug-and-Play ID</I></B></DT>
+
+<DD><B><I>Plug-and-Play ID</I></B> subkeys contain values that are used to load stream interface drivers for PC Cards. Typically, the setup routine for a PC Card driver creates these subkeys when the driver is installed on a Windows&nbsp;CE-based platform.</dd>
+</DL>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

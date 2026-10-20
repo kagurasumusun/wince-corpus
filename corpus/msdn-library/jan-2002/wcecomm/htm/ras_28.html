@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Copying a Phone-Book Entry</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Copying a Phone-Book Entry"/>
+<MSHelp:RLTitle Title="Copying a Phone-Book Entry"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_copying_a_phone_book_entry"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Win32_RasGetEntryProperties" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_Win32_RasSetEntryProperties" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Copying a Phone-Book Entry</H1>
+
+<P>An application can use the <A HREF="JavaScript:hhobj_1.Click()"><B>RasGetEntryProperties</B></A> or the <A HREF="JavaScript:hhobj_2.Click()"><B>RasSetEntryProperties</B></A> function to copy the configuration data to another entry. The <I>lpszEntryName</I> parameter can be used to change the entry.</P>
+
+<P><B>To copy a phone-book entry to the dialing list</B>
+
+<OL type="1">
+	<LI>Call <B>RasGetEntryProperties</B> to get current phone-book properties.</li>
+
+	<LI>Call <B>RasSetEntryProperties</B> to set new phone-book properties.</li>
+
+	<LI>Call <B>RasGetEntryDialParams</B> to retrieve current user data.</li>
+
+	<LI>Call <B>RasSetEntryDialParams</B> to set user password data.</li>
+
+	<LI>The return value is TRUE if successful, and FALSE if not.</li>
+</OL>
+
+<P>The following code example shows how to copy a RAS entry.</P>
+
+<PRE class="code">BOOL CopyRasEntry (LPTSTR lpszEntryName)
+{
+  BOOL bPasswordSaved;
+  TCHAR szNewEntryName[100];       // Name for the copied entry
+  TCHAR szError[100];              // Buffer for the error message
+  DWORD dwError,                   // Return code from the functions
+        dwRasEntrySize,            // Size of the RASENTRY structure
+        dwDevConfigSize,           // Size of DevConfigBuf
+        dwDeviceNum = 0xFFFFFFFF;  // Telephony API device number
+  BYTE DevConfigBuf[128];          // Buffer for device configuration
+                                   // data
+  RASENTRY RasEntry;               // RASENTRY structure
+  RASDIALPARAMS RasDialParams;     // RASDIALPARAMS structure
+  LPVARSTRING lpDevConfig = (LPVARSTRING)&amp;DevConfigBuf;
+                                   // Pointer to the memory location of
+                                   // the device configuration structure
+
+  // Assign the name for the copied phone-book entry.
+  wsprintf (szNewEntryName, TEXT("%s1"), lpszEntryName);
+
+  // Validate the format of a connection entry name.
+  if (dwError = RasValidateEntryName (NULL, szNewEntryName))
+  {
+    wsprintf (szError, TEXT("Unable to validate entry name.")
+              TEXT(" Error %ld"), dwError);
+
+    return FALSE;
+  }
+
+  dwDevConfigSize = sizeof (DevConfigBuf);
+  dwRasEntrySize = sizeof (RASENTRY);
+  RasEntry.dwSize = dwRasEntrySize;
+
+  // Retrieve the entry properties.
+  if (dwError = RasGetEntryProperties (NULL,
+                                       lpszEntryName,
+                                       (LPBYTE)&amp;RasEntry,
+                                       &amp;dwRasEntrySize,
+                                       DevConfigBuf,
+                                       &amp;dwDevConfigSize))
+  {
+    wsprintf (szError, TEXT("Unable to read entry properties.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  memset (&amp;RasDialParams, 0, sizeof (RasDialParams));
+  RasDialParams.dwSize = sizeof (RASDIALPARAMS);
+  _tcscpy (RasDialParams.szEntryName, lpszEntryName);
+
+  // Retrieve the connection data.
+  if (dwError = RasGetEntryDialParams (NULL, &amp;RasDialParams,
+                      &amp;bPasswordSaved))
+  {
+    wsprintf (szError, TEXT("Unable to get the connection information.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+// Create a new phone-book entry.
+  if (dwError = RasSetEntryProperties (NULL,
+                                       szNewEntryName,
+                                       (LPBYTE)&amp;RasEntry,
+                                       dwRasEntrySize,
+                                       DevConfigBuf,
+                                       dwDevConfigSize))
+  {
+    wsprintf (szError, TEXT("Unable to copy the phonebook entry.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  _tcscpy (RasDialParams.szEntryName, szNewEntryName);
+
+  // Change the connection data.
+  if (dwError = RasSetEntryDialParams (NULL, &amp;RasDialParams, FALSE))
+  {
+    wsprintf (szError, TEXT("Unable to set the connection information.")
+              TEXT(" Error %ld"), dwError);
+    return FALSE;
+  }
+
+  return TRUE;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

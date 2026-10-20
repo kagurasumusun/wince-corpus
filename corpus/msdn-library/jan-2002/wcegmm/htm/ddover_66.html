@@ -1,0 +1,105 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enumerating Surfaces</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Enumerating Surfaces"/>
+<MSHelp:RLTitle Title="Enumerating Surfaces"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_enumerating_surfaces"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdraw4_enumsurfaces_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_enumsurfacescallback_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ddsurfacedesc2_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_idirectdraw4_enumsurfaces_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ddsurfacedesc2_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_ddpixelformat_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_enumsurfacescallback_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Enumerating Surfaces</H1>
+
+<P>By calling the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDraw4::EnumSurfaces</B></A> method you can request that DirectDraw enumerate surfaces in various ways. The <B>EnumSurfaces</B> method enables you to look for surfaces that fit, or don't fit, a provided surface description. DirectDraw calls a <A HREF="JavaScript:hhobj_2.Click()"><B>EnumSurfacesCallback</B></A> that you include with the call for each enumerated surface. </P>
+
+<P>There are two general ways to search—you can search for surfaces that the DirectDraw object has already created, or for surfaces that the DirectDraw object is capable of creating at the time (given the surface description and available memory). You specify what type of search you want by combining flags in the method's <I>dwFlags</I> parameter.</P>
+
+<H2>Enumerating existing surfaces</H2>
+
+<P>This is the most common type of enumeration. You enumerate existing surfaces by calling <B>EnumSurfaces</B>, specifying a combination of the DDENUMSURFACES_DOESEXIST search-type flag and one of the matching flags (DDENUMSURFACES_MATCH, DDENUMSURFACES_NOMATCH, or DDENUMSURFACES_ALL) in the <I>dwFlags</I> parameter. If you're enumerating all existing surfaces, you can set the <I>lpDDSD</I> parameter to NULL, otherwise set it to the address of an initialized <A HREF="JavaScript:hhobj_3.Click()"><B>DDSURFACEDESC2</B></A> structure that describes the surface for which you're looking. You can set the third parameter, <I>lpContext</I>, to an address that will be passed to the enumeration function you specify in the fourth parameter, <I>lpEnumSurfacesCallback</I>.</P>
+
+<P>The following code fragment shows what this call might look like to enumerate all of a DirectDraw object's existing surfaces.</P>
+
+<PRE class="code">    HRESULT ddrval;
+    ddrval = lpDD-&gt;EnumSurfaces(DDENUMSURFACES_DOESEXIST |
+                                DDENUMSURFACES_ALL, NULL, NULL,
+                                EnumCallback);
+    if (FAILED(ddrval))
+        return FALSE;
+ </PRE>
+
+<P>When searching for existing surfaces that fit a specific description, DirectDraw determines a match by comparing each member of the provided surface description to those of the existing surfaces. Only exact matches are enumerated. DirectDraw increments the reference counts of the enumerated surfaces, so make sure to release a surface if you don't plan to use it (or when you're done with it).</P>
+
+<H2>Enumerating possible surfaces</H2>
+
+<P>This type of enumeration is less common than enumerating existing surfaces, but it can be helpful to determine if a surface is supported before you attempt to create it. To perform this search, combine the DDENUMSURFACES_CANBECREATED and DDENUMSURFACES_MATCH flags when you call <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectDraw4::EnumSurfaces</B></A> (no other flag combinations are valid). The <A HREF="JavaScript:hhobj_5.Click()"><B>DDSURFACEDESC2</B></A> structure you use with the call must be initialized to contain information about the surface characteristics that DirectDraw will use. </P>
+
+<P>To enumerate surfaces that use a particular pixel format, include the DDSD_PIXELFORMAT flag in the <B>dwFlags</B> member of the <B>DDSURFACEDESC2</B> structure. Additionally, initialize the <A HREF="JavaScript:hhobj_6.Click()"><B>DDPIXELFORMAT</B></A> structure in the surface description and set its <B>dwFlags</B> member to contain the desired pixel format flags—DDPF_RGB, DDPF_YUV, or both. You need not set any other pixel format values.</P>
+
+<P>If you include the DDSD_HEIGHT and DDSD_WIDTH flags in the <B>DDSURFACEDESC2</B> structure, you can specify the desired dimensions in the <B>dwHeight</B> and <B>dwWidth</B> members. If you exclude these flags, DirectDraw uses the dimensions of the primary surface.</P>
+
+<P>The following code fragment shows what this call could look like to enumerate all valid surface characteristics for 96&times;96 RGB or YUV surfaces:</P>
+
+<PRE class="code">    DDSURFACEDESC2 ddsd;
+    HRESULT        ddrval;
+    ZeroMemory(&amp;ddsd, sizeof(ddsd));
+
+    ddsd.dwSize  = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_PIXELFORMAT |
+                   DDSD_HEIGHT | DDSD_WIDTH;
+    ddsd.ddpfPixelFormat.dwFlags = DDPF_YUV | DDPF_RGB;
+    ddsd.dwHeight = 96;
+    ddsd.dwWidth  = 96;
+
+    ddrval = lpDD-&gt;EnumSurfaces(
+                     DDENUMSURFACES_CANBECREATED | DDENUMSURFACES_MATCH,
+                     &amp;ddsd, NULL, EnumCallback);
+    if (ddrval != DD_OK)
+        return FALSE;
+ </PRE>
+
+<P>When DirectDraw enumerates possible surfaces, it actually attempts to create a temporary surface that has the desired characteristics. If the attempt succeeds, then DirectDraw calls the provided <A HREF="JavaScript:hhobj_7.Click()"><B>EnumSurfacesCallback</B></A> function with only the characteristics that worked; it does not provide the callback function with pointer to the temporary surface. Do not assume that a surface isn't supported if it isn't enumerated. DirectDraw's attempt to create a temporary surface could fail due to memory constraints that exist at the time of the call, resulting in those characteristics not being enumerated, even if the driver actually supports them. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

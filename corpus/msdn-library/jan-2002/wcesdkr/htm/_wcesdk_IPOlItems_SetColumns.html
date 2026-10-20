@@ -1,0 +1,141 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPOlItems::SetColumns</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPOlItems::SetColumns"/>
+<MSHelp:RLTitle Title="IPOlItems::SetColumns"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ipolitems_setcolumns"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IPOlItems::SetColumns</H1>
+
+<P>This method is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This method applies only to collections of contacts. It enables you to retrieve contacts quicker by specifying only the properties you want to retrieve. When you retrieve a contact the specified properties will be set to their current values, and all other properties will be set to NULL.</P>
+
+<PRE class="syntax"><B>HRESULT SetColumns(&nbsp;BSTR</B> <I>Columns </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Columns</I></DT>
+
+<DD>Columns you want to retrieve. For example, to retrieve <B>FileAs</B> and BusinessTelephoneNumber, you would use the string “FileAs,BusinessTelephoneNumber” for <I>Columns</I>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates that the string was parsed correctly. If an error occurs, the appropriate <B>HRESULT</B> value is returned.</P>
+
+<H4>Remarks</H4>
+
+<P>Use this method when you want to examine one or two fields in a lot of contacts very quickly. For example, to look iteratively at the <B>FileAs</B> and <B>BusinessTelephoneNumber</B> properties of all Contacts, you can first call <B>SetColumns</B> as follows:</P>
+
+<PRE class="code">pContacts-&gt;SetColumns(“FileAs, BusinessTelephoneNumber”)</PRE>
+
+<P>Then when you use the <B>IPOutlookItemCollection</B> interface method <B>Item</B> to get a contact, it will have only these two properties set.</P>
+
+<P>The tradeoff for the enhanced performance is that you cannot modify the contacts found with the columns set. Therefore use <B>SetColumns</B> when you need to examine or use specified properties of all or many contacts in a collection, but you need to modify relatively few or none of the contacts.</P>
+
+<P>To modify a contact, you can use the <B>IPOutlookApp</B> interface method <B>GetItemFromOid</B> to get the contact and modify it. (<B>Oid</B> and <B>Application</B> are special properties still available after you call <B>SetColumns</B>.) Alternatively, you can use a second Contact Items collection pointer that has not had <B>SetColumns</B> called on it, and use the <B>Item</B> method on it to get the Contact and modify it.</P>
+
+<H4>Code Example</H4>
+
+<P>The following C++ code snippet shows how to set columns and get a contact:</P>
+
+<PRE class="code">void FindContact(IPOutlookItemCollection *pContacts)
+{
+IPOutlookApp *pApplication;
+IPOlItems *pContacts2;
+IContact *pContact;
+long lOid;
+
+pContacts-&gt;QueryInterface(IID_IPOlItems, (LPVOID *) &amp;pContacts2);
+pContacts2-&gt;SetColumns(TEXT(“CompanyName”));
+
+// Put all the companies you have into a list
+int numItems;
+pContacts2-&gt;get_Count(&amp;numItems);
+for (i = 1; i &lt;= numItems; i++)
+{
+// Read the contact
+pContacts2-&gt;Item(i, (IDispatch **) &amp;pContact);
+
+// Use or manipulate the company name in some way
+...
+// For example, if the company name is Hotmail, change to MSN
+if (IsCompanyHotmail(pContact))  {
+pContact-&gt;get_Application(&amp;pApplication);
+pContact-&gt;get_Oid(&amp;lOid);
+pApplication-&gt;GetItemFromOid(lOid, (IDispatch ** ) &amp;pContact);pContact-&gt;put_Company(TEXT(“MSN”));
+}
+}
+
+\\ Release objects
+pApplication-&gt;Release();
+pContacts2-&gt;Release();
+pContact-&gt;Release();
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ipolitems_unknown.htm">IPOlItems::Unknown</A>, <A HREF="_wcesdk_ipoutlookitemcollection__unknown.htm">IPOutlookItemCollection::Unknown</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,60 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Implementation Differences</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Implementation Differences"/>
+<MSHelp:RLTitle Title="Implementation Differences"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_implementation_differences"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Implementation Differences</H1>
+
+<H2>Entry Point Checking</H2>
+
+<P>Some Windows CE waveform audio drivers contain a check for the presence of the <B>waveOutOpen </B>entry point in<B><CODE> </CODE>coredll.dll</B>. This is intended to prevent the driver from loading if there is no API with which to use the driver. Under DirectSound, however, it is possible for the driver to be used even when the standard waveform API is not exposed by <B>coredll.dll</B>. A DirectSound-compliant waveform driver should not make this check.</P>
+
+<H2>GetPosition Support</H2>
+
+<P>Applications that use DirectSound for audio streaming for long periods of time can run into problems if the waveform driver does not handle the WODM_GETPOS correctly. In particular, drivers that bypass the MDD implementation of WODM_GETPOS need to correctly handle the case where the 32-bit position counter overflows and wraps back to zero.</P>
+
+<H2>Registry changes</H2>
+
+<P>Waveform Audio Drivers registry entries should include a "Dll" key that names the driver’s DLL, and the "Index" key should be set to 9 instead of 1. This allows the DirectSound waveform API emulation layer to be exposed to the core operating system as the standard wavedev driver.</P>
+
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\&lt;mydriver&gt;]
+   "Prefix"="WAV"
+   "Dll"="&lt;mydriver&gt;.dll"
+   "Index"=dword:9
+   "Order"=dword:0</PRE>
+
+<H2>Thread Priority</H2>
+
+<P>It is recommended that the waveform driver’s IST thread priority be set to 150 (96h) to work properly with the other DirectSound components. For more details see the thread priority section within Multimedia and Graphics.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AllocSurface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AllocSurface"/>
+<MSHelp:RLTitle Title="AllocSurface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_allocsurface_ddhal"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>AllocSurface</H1>
+
+<P>The DDGPE <B>AllocSurface</B> routines are extensions to its counterpart, the <B>GPE</B> <B>AllocSurface</B> function. With the addition of the pixelFormat parameter or the pddgpeAllocSurfaceData, your driver can allocate many different types of surfaces, instead of being restricted to the limited number of <B>GPE</B> surface types.</P>
+
+<P>Your driver should override the first <B>DDGPE</B> <B>AllocSurface</B> function below to perform the necessary allocation. Otherwise, the function merely wraps to the standard <B>GPE</B> <B>AllocSurface</B>, that you must define in your driver. In this case, the pixelFormat information is ignored. The default implementation of the second <B>DDGPE</B> <B>AllocSurface</B> routine below just calls the first one, ignoring the information you might have in <B>DDGPEStandardHeader</B>. Your driver needs to override it in case you want to take advantage of <B>DDGPEStandardHeader</B>.</P>
+
+<PRE class="syntax"><B>// Surface memory allocation
+virtual SCODE AllocSurface (
+DDGPESurf **</B><I>ppSurf</I><B>,</B>
+<B>int</B> <I>width</I><B>,</B>
+<B>int</B> <I>height</I><B>,</B>
+<B>EGPEFormat</B> <I>format</I><B>,</B>
+<B>EDDGPEPixelFormat</B> <I>pixelFormat</I><B>,</B>
+<B>int</B> <I>surfaceFlags</I>
+<B>);</B>
+<B>virtual SCODE AllocSurface (</B>
+<B>DDGPESurf **</B><I>ppSurf</I><B>,</B>
+<B>DDGPEAllocSurfaceData *</B><I>pddgpeAllocSurfaceData</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppSurf</I></DT>
+
+<DD>Will contain a pointer to a new <B>DDGPESurf</B> object.</dd>
+
+<DT><I>width</I></DT>
+
+<DD>The desired width of the surface.</dd>
+
+<DT><I>height</I></DT>
+
+<DD>The desired height of the surface.</dd>
+
+<DT><I>format</I></DT>
+
+<DD>The desired format of the surface.</dd>
+
+<DT><I>pixelFormat</I></DT>
+
+<DD>The desired pixel format of the surface.</dd>
+
+<DT><I>surfaceFlags</I></DT>
+
+<DD>GPE surface flags for the surface.
+
+<P>GPE_REQUIRE_VIDEO_MEMORY:  Surface memory must be allocated in video memory.
+
+
+<P>GPE_PREFER_VIDEO_MEMORY:  Surface memory should be allocated in video memory if possible, but can be allocated in system memory, if necessary.
+
+
+<P>If no flags are set (i.e. surfaceFlags is set to zero (0)), the surface will be allocated in system memory.
+</dd>
+
+<DT><I>pddgpeAllocSurfaceData</I></DT>
+
+<DD>See <A HREF="ddhal_29.htm"><B>DDGPEAllocSurfaceData</B></A>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The return value is S_OK if the function is successful. Otherwise an error code is returned.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AddReg</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="AddReg"/>
+<MSHelp:RLTitle Title="AddReg"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term=""/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H2><A NAME="_wcesdk_addreg"></A>AddReg</H2>
+
+<P>The AddReg key, under the [DefaultInstall] section, is required and describes the keys and values that the .cab file adds to the device registry.</P>
+
+<PRE class="code"> [<I>add_registry_section</I>]
+<I>registry_root_string</I> , <I>subkey,</I>[<I>value_name</I>], <I>flags, value</I>[,<I>value</I>]
+[<I>registry_root_string</I>, <I>subkey,</I>[<I>value_name</I>], <I>flags</I>, <I>value</I>[,<I>value</I>]]</PRE>
+
+<DL>
+<DT><I>registry_root_strings</I></DT>
+
+<DD>String that specifies the registry root location. The following table shows the values that are supported by Windows CE.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=15%>Root string</TH>
+<TH width=85%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>HKCR</B></TD>
+<TD width=85%>The same as <B>HKEY_CLASSES_ROOT</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>HKCU</B></TD>
+<TD width=85%>The same as <B>HKEY_CURRENT_USER</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>HKLM</B></TD>
+<TD width=85%>The same as <B>HKEY_LOCAL_MACHINE</B></TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>value_name</I></DT>
+
+<DD>Registry value name. If empty, the <B>“(default)” </B>registry value name is used.</dd>
+
+<DT><I>flags</I></DT>
+
+<DD>Numeric value that specifies information about the registry key. The following table shows the values that are supported by Window CE.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=41%>Flag</TH>
+<TH width=19%>Value</TH>
+<TH width=40%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>FLG_ADDREG_NOCLOBBER</TD>
+<TD width=19%><B>0x00000002</B></TD>
+<TD width=40%>If the registry key exists, do not overwrite it. This flag can be used in combination with any of the other flags in this table.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>FLG_ADDREG_TYPE_SZ</TD>
+<TD width=19%><B>0x00000000</B></TD>
+<TD width=40%>The <B>REG_SZ</B> registry data type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>FLG_ADDREG_TYPE_MULTI_SZ</TD>
+<TD width=19%><B>0x00010000</B></TD>
+<TD width=40%>The <B>REG_MULTI_SZ</B> registry data type. The value field that follows can be a list of strings separated by commas.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%>FLG_ADDREG_TYPE_BINARY</TD>
+<TD width=19%><B>0x00000001</B></TD>
+<TD width=40%>The <B>REG_BINARY</B> registry data type. The value field that follows must be a list of numeric values separated by commas, one byte per field, and must not use the 0x hexadecimal prefix.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=41%> FLG_ADDREG_TYPE_DWORD</TD>
+<TD width=19%><B>0x00010001</B></TD>
+<TD width=40%>The <B>REG_DWORD</B> data type. Only the non-compatible format in the Win32 Setup .inf documentation is supported.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<P>The following code example shows a typical AddReg section. </P>
+
+<PRE class="code">[DefaultInstall]
+AddReg = RegSettings
+[Strings]
+reg_path = Software\Company\AppName
+
+[RegSettings]
+HKLM,%reg_path%,,0x00000000,alpha        ; &lt;default&gt; = "alpha"
+HKLM,%reg_path%,test,0x00010001,3        ; Test = 3
+HKLM,%reg_path%\new,another,0x00010001,6; New\another = 6 </PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

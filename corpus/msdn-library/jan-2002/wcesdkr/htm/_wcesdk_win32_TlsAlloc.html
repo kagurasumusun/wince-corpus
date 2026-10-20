@@ -1,0 +1,105 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TlsAlloc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TlsAlloc"/>
+<MSHelp:RLTitle Title="TlsAlloc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_tlsalloc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>TlsAlloc </H1>
+
+<P>This function allocates a thread local storage (TLS) index. Any thread of the process can subsequently use this index to store and retrieve values that are local to the thread. </P>
+
+<PRE class="syntax"><B>DWORD TlsAlloc(void); </B></PRE>
+
+<H4>Return Values</H4>
+
+<P>A TLS index indicates success. 0xFFFFFFFF indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>The threads of the process can use the TLS index in subsequent calls to the <A HREF="_wcesdk_win32_tlsfree.htm"><B>TlsFree</B></A>, <A HREF="_wcesdk_win32_tlssetvalue.htm"><B>TlsSetValue</B></A>, or <A HREF="_wcesdk_win32_tlsgetvalue.htm"><B>TlsGetValue</B></A> functions. </P>
+
+<P>TLS indexes are typically allocated during process or dynamic-link library (DLL) initialization. Once allocated, each thread of the process can use a TLS index to access its own TLS storage slot. To store a value in its slot, a thread specifies the index in a call to <B>TlsSetValue</B>. The thread specifies the same index in a subsequent call to <B>TlsGetValue</B>, to retrieve the stored value. </P>
+
+<P>The constant TLS_MINIMUM_AVAILABLE defines the minimum number of TLS indexes available in each process. This minimum is guaranteed to be at least 64 for all systems. </P>
+
+<P>TLS indexes are not valid across process boundaries. A DLL cannot assume that an index assigned in one process is valid in another process. </P>
+
+<P>A DLL might use <B>TlsAlloc</B>, <B>TlsSetValue</B>, <B>TlsGetValue</B>, and <B>TlsFree</B> as follows:
+
+<OL type="1">
+	<LI>When a DLL attaches to a process, the DLL uses <B>TlsAlloc</B> to allocate a TLS index. The DLL then allocates some dynamic storage and uses the TLS index in a call to <B>TlsSetValue</B> to store the address in the TLS slot. This concludes the per-thread initialization for the initial thread of the process. The TLS index is stored in a global or static variable of the DLL. </li>
+
+	<LI>Each time the DLL attaches to a new thread of the process, the DLL allocates some dynamic storage for the new thread and uses the TLS index in a call to <B>TlsSetValue</B> to store the address in the TLS slot. This concludes the per-thread initialization for the new thread. </li>
+
+	<LI>Each time an initialized thread makes a DLL call requiring the data in its dynamic storage, the DLL uses the TLS index in a call to <B>TlsGetValue</B> to retrieve the address of the dynamic storage for that thread. </li>
+</OL>
+
+<P>For additional information on thread local storage, see Core Services.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coremain.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_tlsfree.htm"><B>TlsFree</B></A>, <A HREF="_wcesdk_win32_tlsgetvalue.htm"><B>TlsGetValue</B></A>, <A HREF="_wcesdk_win32_tlssetvalue.htm"><B>TlsSetValue</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

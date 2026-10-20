@@ -1,0 +1,137 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ReadFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ReadFile"/>
+<MSHelp:RLTitle Title="ReadFile"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_readfile"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>ReadFile</H1>
+
+<P>This function reads data from a file, starting at the position indicated by the file pointer. After the read operation has been completed, the file pointer is adjusted by the number of bytes actually read. </P>
+
+<PRE class="syntax"><B>BOOL</B> <B>ReadFile( </B>
+<B>HANDLE</B> <I>hFile</I><B>, </B>
+<B>LPVOID</B> <I>lpBuffer</I><B>, </B>
+<B>DWORD</B> <I>nNumberOfBytesToRead</I><B>, </B>
+<B>LPDWORD</B> <I>lpNumberOfBytesRead</I><B>, </B>
+<B>LPOVERLAPPED</B> <I>lpOverlapped</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hFile</I></DT>
+
+<DD>[in] Handle to the file to be read. The file handle must have been created with GENERIC_READ access to the file. This parameter cannot be a socket handle. </dd>
+
+<DT><I>lpBuffer</I></DT>
+
+<DD>[out] Pointer to the buffer that receives the data read from the file. </dd>
+
+<DT><I>nNumberOfBytesToRead</I></DT>
+
+<DD>[in] Number of bytes to be read from the file. </dd>
+
+<DT><I>lpNumberOfBytesRead</I></DT>
+
+<DD>[out] Pointer to the number of bytes read. <B>ReadFile</B> sets this value to zero before doing any work or error checking. </dd>
+
+<DT><I>lpOverlapped</I></DT>
+
+<DD>[in] Unsupported; set to NULL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<P>The <B>ReadFile</B> function returns when one of the following is true: the number of bytes requested has been read or an error occurs. </P>
+
+<P>If the return value is nonzero and the number of bytes read is zero, the file pointer was beyond the current end of the file at the time of the read operation. </P>
+
+<H4>Remarks</H4>
+
+<P>If part of the file is locked by another process and the read operation overlaps the locked portion, this function fails. </P>
+
+<P>Accessing the input buffer while a read operation is using the buffer may lead to corruption of the data read into that buffer. Applications must not read from, write to, reallocate, or free the input buffer that a read operation is using until the read operation completes.</P>
+
+<P>When reading from a communications device, the behavior of <B>ReadFile</B> is governed by the current communication time-outs as set and retrieved using the <A HREF="_wcesdk_win32_setcommtimeouts.htm"><B>SetCommTimeouts</B></A> and <A HREF="_wcesdk_win32_getcommtimeouts.htm"><B>GetCommTimeouts</B></A> functions. Unpredictable results can occur if you fail to set the time-out values. For more information about communication time-outs, see <A HREF="_wcesdk_win32_commtimeouts_str.htm"><B>COMMTIMEOUTS</B></A>.</P>
+
+<P>The <B>ReadFile</B> function may fail and return ERROR_INVALID_USER_BUFFER or ERROR_NOT_ENOUGH_MEMORY whenever there are too many outstanding asynchronous I/O requests. </P>
+
+<P>When a synchronous read operation reaches the end of a file, <B>ReadFile </B>returns TRUE and sets *<I>lpNumberOfBytesRead</I> to zero. Windows CE does not support asynchronous read operations on files. The following sample code tests for end-of-file for a synchronous read operation:</P>
+
+<PRE class="code">// Attempt a synchronous read operation.
+bResult = ReadFile(hFile, &amp;inBuffer, nBytesToRead, &amp;nBytesRead, NULL) ;
+// Check for end of file.
+if (bResult &amp;&amp;  nBytesRead == 0, )
+{
+    // we’re at the end of the file
+}
+ </PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Fsmain.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createfile.htm"><B>CreateFile</B></A>, <A HREF="_wcesdk_win32_getcommtimeouts.htm"><B>GetCommTimeouts</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_setcommtimeouts.htm"><B>SetCommTimeouts</B></A>, <A HREF="_wcesdk_win32_writefile.htm"><B>WriteFile</B></A>, <A HREF="_wcesdk_win32_commtimeouts_str.htm"><B>COMMTIMEOUTS</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,124 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Registry Settings</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Registry Settings"/>
+<MSHelp:RLTitle Title="Registry Settings"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_registry_settings"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Security_Support_Provider_Interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Registry Settings</H1>
+
+<P>The<I> EnableRemoteConnect </I>and <I>LegacyMutualAthentication </I>registry settings are not supported on Windows CE and, if they are present, will be ignored.</P>
+
+<P>The<I> DefaultAccessPermission</I>, <I>DefaultLaunchPermission</I>, <I>AccessPermission</I>, and <I>LaunchPermission</I> keys hold a REG_BINARY value that contains the access-control list (ACL) of the principals who can launch classes on the current system. The ACL has the following structure:</P>
+
+<PRE class="code">typedef struct {
+    WORD  wVersion;
+    WORD  wPad;
+    GUID  gClass;
+    WCHAR szPerms[1];
+} Permissions;
+</PRE>
+
+<P>The <I>wVersion</I> field should be set to = 3,</P>
+
+<P>The <I>gClass</I> field contains the globally unique identifier (GUID) of the <B>AccessControl</B> object and should be set to CLSID_DCOMAccessControl. This value is ignored in the <I>LaunchPermissions</I> and <I>DefaultLaunchPermission</I> keys.</P>
+
+<P>The <I>szPerms</I> field is an access string that the <B>AccessControl::Load</B> receives from the <B>IStream</B> interface. It uses the following BNF syntax:</P>
+
+<PRE class="code">szPerms := “”
+szPerms := AccessList
+AccessList := IndividualControl
+AccessList := IndividualControl;AccessList
+IndividualControl := Principal
+IndividualControl := -Principal
+Principal := @groupname
+Principal := username
+Principal := @star
+star := *
+</PRE>
+
+<H4>Examples</H4>
+
+<P>The following string allows “user1” and “user2”, and the “administrator” group; and restricts “user3” user and the “villains” group:</P>
+
+<PRE class="code">“user1;user2;-user3;@administrators;-@villains”
+</PRE>
+
+<P>Strings are interpreted sequentially&#0151;in other words, if “user1” is a member of the “group1” group, the following strings will allow “user1”:</P>
+
+<PRE class="code">user1
+@group1
+@group1;user1
+user1;@group1
+@group1;-user1
+user1;-@group1
+user1;-user1
+*;-user1;-@group1
+</PRE>
+
+<P>The following strings will restrict “user1”:</P>
+
+<PRE class="code">-user1
+-@group1
+-user1;@group1
+-@group1;user1
+-user1;user1
+-user1;*
+</PRE>
+
+<P>Note that:
+
+<UL type="disc">
+	<LI>Group names are prefixed by “@” (the “at” sign).</li>
+
+	<LI>User names or groups are prefixed by “-” to disallow access.</li>
+
+	<LI>The wildcard character “*” or “@*” allows all users, while the wildcard character “-*” or “-@*” denies all users. The wildcard character “*” is a group and must be marked as such. Parsers inside DCOM understand both “@*” and “*” syntax, but they always use “@*” syntax themselves.</li>
+</UL>
+
+<P>Note also that, in order to be able to use the remoting functionality of DCOM, the access credentials of the user must be set in the <B>HKEY_CURRENT_USER\Comm\Ident</B> ; the computer name should be set to a unique (on local network) value in the <B>HKEY_LOCAL_MACHINE\Ident</B> . In order for NTLM authentication to work, the domain must be configured in the <B>HKEY_LOCAL_MACHINE\Comm\Redir</B> .</P>
+
+<H4>Example</H4>
+
+<PRE class="code"><code class="ce"> [HKEY_LOCAL_MACHINE\Ident]
+    “Name”=“WinCEDCOMServer”
+    “Desc”=“DCOM server box”
+    “OrigName”=“WinCE”
+
+[HKEY_LOCAL_MACHINE\Comm\Redir]
+    “DefaultDomain”=“REDMOND”
+</code></PRE>
+
+<P>See the <A HREF="JavaScript:hhobj_1.Click()">Security Support Provider Interface</A> topic in this SDK documentation for more information on local and pass-through authentication, as well as usage and configuration.</P>
+<DIV CLASS="footer">Built on Thursday, March 15, 2001</DIV>
+
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

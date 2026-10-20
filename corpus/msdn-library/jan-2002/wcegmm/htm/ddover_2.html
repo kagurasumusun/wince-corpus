@@ -1,0 +1,95 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Device-Independent Bitmaps</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Device-Independent Bitmaps"/>
+<MSHelp:RLTitle Title="Device-Independent Bitmaps"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_device-independent_bitmaps"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Device-Independent Bitmaps</H1>
+
+<P>Windows CE and DirectX&reg; uses the device-independent bitmap (DIB) as its native graphics file format. Essentially, a DIB is a file that contains information describing an image's dimensions, the number of colors it uses, values describing those colors, and data that describes each pixel. Additionally, a DIB contains some lesser-used parameters, like information about file compression, significant colors (if all are not used), and physical dimensions of the image (in case it will end up in print). DIB files usually have the .bmp file extension, although they might occasionally have a .dib extension.</P>
+
+<P>Because the DIB is so pervasive in Windows programming, Windows CE already contains many functions that you can use with DirectX. For example, the following application-defined function combines Windows CE&reg; and DirectX functions to load a DIB onto a DirectX surface.</P>
+
+<PRE class="code">extern "C" IDirectDrawSurface * DDLoadBitmap(IDirectDraw *pdd,
+    LPCSTR szBitmap, int dx, int dy)
+{
+    HBITMAP             hbm;
+    BITMAP              bm;
+    DDSURFACEDESC       ddsd;
+    IDirectDrawSurface *pdds;
+
+    //
+    //  This is the Windows CE part.
+    //  Try to load the bitmap as a resource.
+    //  If that fails, try it as a file.
+   //
+    hbm = (HBITMAP)LoadImage(
+            GetModuleHandle(NULL), szBitmap,
+            IMAGE_BITMAP, dx, dy, LR_CREATEDIBSECTION);
+
+    if (hbm == NULL)
+        hbm = (HBITMAP)LoadImage(
+                NULL, szBitmap, IMAGE_BITMAP, dx, dy,
+                LR_LOADFROMFILE|LR_CREATEDIBSECTION);
+
+    if (hbm == NULL)
+        return NULL;
+
+    //
+    // Get the size of the bitmap.
+    //
+    GetObject(hbm, sizeof(bm), &amp;bm);
+
+    //
+    // Now, return to DirectX function calls.
+    // Create a DirectDrawSurface for this bitmap.
+    //
+    memset(&amp;ddsd, 0, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT |DDSD_WIDTH;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+    ddsd.dwWidth = bm.bmWidth;
+    ddsd.dwHeight = bm.bmHeight;
+
+    if (pdd-&gt;CreateSurface(&amp;ddsd, &amp;pdds, NULL) != DD_OK)
+        return NULL;
+
+    DDCopyBitmap(pdds, hbm, 0, 0, 0, 0);
+
+    DeleteObject(hbm);
+
+    return pdds;
+} </PRE>
+
+<P>For more detailed information about DIB files, see <A HREF="ddover_27.htm">Using Bitmaps</A>.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

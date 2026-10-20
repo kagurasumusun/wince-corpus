@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MQPROPVARIANT</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MQPROPVARIANT"/>
+<MSHelp:RLTitle Title="MQPROPVARIANT"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_mq_mqpropvariant"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>MQPROPVARIANT</H1>
+
+<DL>
+<DT>This structure is a general structure used to store property values and value type. It is used for the elements of the <A HREF="_wcesdk_mq_apropvar.htm"><I>aPropVar</I></A> array and <I>prval</I> array.</DT>
+</DL>
+
+<PRE class="syntax"><B>struct tagMQPROPVARIANT{</B>
+<B>VARTYPE </B><I>vt</I><B>;</B>
+<B>WORD </B><I>wReserved1</I><B>;</B>
+<B>WORD </B><I>wReserved2</I><B>;</B>
+<B>WORD </B><I>wReserved3</I><B>;</B>
+<I>union</I><B>{</B>
+<B>UCHAR             </B><I>bVal</I><B>;      /* VT_UI1   */</B>
+<B>short             </B><I>iVal</I><B>;      /* VT_I2    */</B>
+<B>USHORT            </B><I>uiVal</I><B>;     /* VT_UI2   */</B>
+<B>VARIANT_BOOL      </B><I>bool</I><B>;      /* VT_BOOL  */</B>
+<B>long              </B><I>lVal</I><B>;      /* VT_I4    */</B>
+<B>ULONG             </B><I>ulVal</I><B>;     /* VT_UI4   */</B>
+<B>SCODE             </B><I>scode</I><B>;     /*          */</B>
+<B>DATE              </B><I>date</I><B>;      /* VT_DATE  */</B>
+<B>CLSID  _RPC_FAR  *</B><I>puuid</I><B>;     /* VT_CLSID */</B>
+<B>BLOB              </B><I>blob</I><B>;      /* VT_BLOB  */</B>
+<B>LPOLESTR          </B>bstrVal<B>;   /*          */</B>
+<B>LPSTR             </B><I>pszVal</I><B>;    /* VT_LPSTR */</B>
+<B>LPWSTR            </B><I>pwszVal</I><B>;   /* VT_LPWSTR */</B>
+<B>CAUI1             </B><I>caub</I><B>;      /* VT_VECTOR | VT_UI1    */</B>
+<B>CAI2              </B><I>cai</I><B>;       /* VT_VECTOR | VT_I2     */</B>
+<B>CAUI2             </B><I>caus</I><B>;      /* VT_VECTOR | VT_UI2    */</B>
+<B>CABOOL            </B><I>cabool</I><B>;    /* VT_VECTOR | VT_BOOL   */</B>
+<B>CAI4              </B><I>cal</I><B>;       /* VT_VECTOR | VT_I4     */</B>
+<B>CAUI4             </B><I>caul</I><B>;      /* VT_VECTOR | VT_UI4    */</B>
+<B>CACLSID           </B>cauuid<B>;    /* VT_VECTOR | VT_CLSID  */</B>
+<B>CABSTR            </B><I>cabstr</I><B>;    /* VT_VECTOR | VT_BSTR   */</B>
+<B>CALPWSTR          </B><I>calpwstr</I><B>;  /* VT_VECTOR | VT_LPWSTR */</B>
+<B>CAPROPVARIANT   </B><I>capropvar</I><B>;   /*                       */</B>
+<B>}; </B>
+<B>};</B>
+<B>typedef struct MQPROPVARIANT MQPROPVARIANT;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><B>vt</B></DT>
+
+<DD>Type indicator of the property. The valid indicators for the VT field are a subset of the Automation VARENUM enumeration type (including VT_NULL, VT_I2, VT_I4, VT_LPWSTR, VT_UI1, VT_UI4, VT_CLSID, VT_VECTOR|VT_UI1, and VT_VECTOR|VT_LPWSTR ). </dd>
+
+<DT><B>wReserved1</B></DT>
+
+<DD>Reserved by MSMQ. </dd>
+
+<DT><B>wReserved2</B></DT>
+
+<DD>Reserved by MSMQ. </dd>
+
+<DT><B>wReserved3</B></DT>
+
+<DD>Reserved by MSMQ. </dd>
+
+<DT><B>union</B></DT>
+
+<DD>Specifies the value of the property. Depending on the type identifier specified by VT, the corresponding member of the union holds the value of the property. </dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Property values are tagged values, where the tag is the type indicator (an integer value) passed as an instance of VARTYPE.</P>
+
+<P>To specify a property (with the exception of some message properties passed to <A HREF="_wcesdk_mq_mqreceivemessage.htm"><B>MQReceiveMessage</B></A>) and queue properties passed to <A HREF="_wcesdk_mq_mqgetqueueproperties.htm"><B>MQGetQueueProperties</B></A>, you must know its type indicator and the member of the union associated with the type indicator (both are provided with each property description). For example, to specify the message body in <A HREF="_wcesdk_mq_propid_m_body.htm">PROPID_M_BODY</A>, the application must set VT to VT_UI1| VT_VECTOR and assign the message body to the caub member of the union.</P>
+
+<P>CA prefixed members of the union (<I>caub</I> through <I>capropvar</I>) are constructs used to pass buffers as counted arrays.</P>
+
+<P>For example, <B>CAUI1</B> is a counted array of bytes.</P>
+
+<PRE class="code">typedef struct tagCAUI1 {
+    ULONG cElems;               /* Byte Counter                  */
+    unsigned char *pElems;      /* Pointer to a buffer of bytes  */
+} CAUI1;</PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later. Versions prior to 2.12 require the MSMQ add-on pack.</TD>
+<TD width=18%>Mq.h</TD>
+<TD width=15%>Mq.h</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<DL>
+<DT><A HREF="_wcesdk_mq_apropvar.htm"><I>aPropVar</I></A>, <A HREF="_wcesdk_mq_mqgetqueueproperties.htm"><B>MQGetQueueProperties</B></A>, <A HREF="_wcesdk_mq_mqreceivemessage.htm"><B>MQReceiveMessage</B></A>, <A HREF="_wcesdk_mq_propid_m_body.htm">PROPID_M_BODY</A>, <A HREF="_wcesdk_mq_mqmsgprops.htm"><B>MQMSGPROPS</B></A>, <A HREF="_wcesdk_mq_mqqmprops.htm"><B>MQQMPROPS</B></A>, <A HREF="_wcesdk_mq_mqqueueprops.htm"><B>MQQUEUEPROPS</B></A></DT>
+</DL>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

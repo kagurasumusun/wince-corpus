@@ -1,0 +1,182 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>RegCreateKeyEx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="RegCreateKeyEx"/>
+<MSHelp:RLTitle Title="RegCreateKeyEx"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_regcreatekeyex"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>RegCreateKeyEx</H1>
+
+<P>This function creates the specified key. If the key already exists in the registry, the function opens it. A remote application interface (RAPI) version of this function exists, and it is called <A HREF="_wcesdk_ceregcreatekeyex_rapi_.htm"><B>CeRegCreateKeyEx</B></A>. </P>
+
+<PRE class="syntax"><B>LONG</B> <B>RegCreateKeyEx( </B>
+<B>HKEY</B> <I>hKey</I><B>, </B>
+<B>LPCWSTR</B> <I>lpSubKey</I><B>, </B>
+<B>DWORD</B> <I>Reserved</I><B>, </B>
+<B>LPWSTR</B> <I>lpClass</I><B>, </B>
+<B>DWORD</B> <I>dwOptions</I><B>, </B>
+<B>REGSAM</B> <I>samDesired</I><B>, </B>
+<B>LPSECURITY_ATTRIBUTES</B> <I>lpSecurityAttributes</I><B>, </B>
+<B>PHKEY</B> <I>phkResult</I><B>, </B>
+<B>LPDWORD</B> <I>lpdwDisposition </I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hKey</I></DT>
+
+<DD>[in] Handle to a currently open key or one of the following predefined reserved handle values:
+
+<UL type="disc">
+	<LI><B>HKEY_CLASSES_ROOT</B></li>
+
+	<LI><B>HKEY_CURRENT_USER</B></li>
+
+	<LI><B>HKEY_LOCAL_MACHINE</B></li>
+
+	<LI><B>HKEY_USERS</B></li>
+</UL>
+
+
+<P>Windows CE does not support the HKEY_CURRENT_CONFIG, HKEY_PERFORMANCE_DATA, or HKEY_DYN_DATA predefined reserved handle values.
+
+
+<P>The key opened or created by the <B>RegCreateKeyEx</B> function is a subkey of the key identified by the <I>hKey</I> parameter.
+</dd>
+
+<DT><I>lpSubKey</I></DT>
+
+<DD>[in] Pointer to a null-terminated string specifying the name of a subkey that this function opens or creates. The subkey specified must be a subkey of the key identified by the <I>hKey</I> parameter. This subkey must not begin with the backslash character (‘\’). This parameter cannot be NULL. In Windows CE, the maximum length of a key name is 255 characters, not including the terminating NULL character. You can also only nest 16 levels of sub-keys in Windows CE.</dd>
+
+<DT><I>Reserved</I></DT>
+
+<DD>[in] Reserved; set to 0. </dd>
+
+<DT><I>lpClass</I></DT>
+
+<DD>[in] Pointer to a null-terminated string that specifies the class (object type) of this key. This parameter is ignored if the key already exists. In Windows CE, the maximum length of a class string is 255 characters, not including the terminating NULL character.</dd>
+
+<DT><I>dwOptions</I></DT>
+
+<DD>[in] Ignored; set to 0 to ensure compatibility with future versions of Windows CE.</dd>
+
+<DT><I>samDesired</I></DT>
+
+<DD>[in] Ignored; set to 0 to ensure compatibility with future versions of Windows CE.</dd>
+
+<DT><I>lpSecurityAttributes</I></DT>
+
+<DD>[in] Set to NULL. Windows CE automatically assigns the key a default security descriptor.</dd>
+
+<DT><I>phkResult</I></DT>
+
+<DD>[out] Pointer to a variable that receives a handle to the opened or created key. When you no longer need the returned handle, call the <A HREF="_wcesdk_win32_regclosekey.htm"><B>RegCloseKey</B></A> function to close it.</dd>
+
+<DT><I>lpdwDisposition</I></DT>
+
+<DD>[out] Pointer to a variable that receives one of the following disposition values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=48%>Value</TH>
+<TH width=52%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>REG_CREATED_NEW_KEY</TD>
+<TD width=52%>The key did not exist and was created.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=48%>REG_OPENED_EXISTING_KEY</TD>
+<TD width=52%>The key existed and was simply opened without being changed.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>ERROR_SUCCESS indicates success. A nonzero error code defined in Winerror.h indicates failure. To get a generic description of the error, call <A HREF="_wcesdk_win32_formatmessage.htm"><B>FormatMessage</B></A> with the FORMAT_MESSAGE_FROM_SYSTEM flag set. The message resource is optional; therefore, if you call <B>FormatMessage</B> it could fail.</P>
+
+<H4>Remarks</H4>
+
+<P>The key that the <B>RegCreateKeyEx</B> function creates has no values. An application can use the <A HREF="_wcesdk_win32_regsetvalueex.htm"><B>RegSetValueEx</B></A> function to set key values. </P>
+
+<P>The key identified by the <I>hKey</I> parameter must have been opened with KEY_CREATE_SUB_KEY access. To open the key, use the <B>RegCreateKeyEx</B> or <A HREF="_wcesdk_win32_regopenkeyex.htm"><B>RegOpenKeyEx</B></A> function. </P>
+
+<P>An application can use <B>RegCreateKeyEx</B> to temporarily lock a portion of the registry. When the locking process creates a new key, it receives the disposition value REG_CREATED_NEW_KEY, indicating that it “owns” the lock. Another process attempting to create the same key receives the disposition value REG_OPENED_EXISTING_KEY, indicating that another process already owns the lock. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winreg.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Fsreg.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_regdeletekey.htm"><B>RegDeleteKey</B></A>, <A HREF="_wcesdk_win32_regopenkeyex.htm"><B>RegOpenKeyEx</B></A>, <A HREF="_wcesdk_win32_regsetvalueex.htm"><B>RegSetValueEx</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

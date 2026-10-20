@@ -1,0 +1,110 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolOpenAdapterComplete</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolOpenAdapterComplete"/>
+<MSHelp:RLTitle Title="ProtocolOpenAdapterComplete"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_protocolopenadaptercomplete"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>ProtocolOpenAdapterComplete</H1>
+
+<P><B>ProtocolOpenAdapterComplete</B> is a required driver function that completes processing of a binding operation for which <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A> returned NDIS_STATUS_PENDING.</P>
+
+<PRE class="syntax"><B>VOID
+ProtocolOpenAdapterComplete(
+IN NDIS_HANDLE</B> <I>ProtocolBindingContext</I>,
+<B>IN NDIS_STATUS</B> <I>Status</I>,
+<B>IN NDIS_STATUS</B> <I>OpenErrorStatus </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ProtocolBindingContext</I> </DT>
+
+<DD>Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <B>NdisOpenAdapter</B>. </dd>
+
+<DT><I>Status</I> </DT>
+
+<DD>Specifies the final status of the network adapter driver open operation, either NDIS_STATUS_SUCCESS if the binding was established or an error status determined by the underlying driver.
+
+<P>The underlying network adapter driver returns NDIS_STATUS_ADAPTER_NOT_READY for any requests it receives while the open operation is pending. After <B>ProtocolOpenAdapterComplete</B> returns control, the underlying driver cannot return this status.
+</dd>
+
+<DT><I>OpenErrorStatus</I> </DT>
+
+<DD>Specifies additional information about the reason for a failure if the value at <I>Status</I> is not NDIS_STATUS_SUCCESS and if the underlying driver supplied this information. For example, the driver of a Token Ring network adapter might return a ring error that NDIS forwards to <B>ProtocolOpenAdapterComplete</B>. This parameter can be NULL. </dd>
+</DL>
+
+<H4>Comments</H4>
+
+<P>When <B>NdisOpenAdapter</B> returns NDIS_STATUS_PENDING to the <A HREF="_wcesdk_protocolbindadapter.htm"><B>ProtocolBindAdapter</B></A> function of an NDIS protocol driver, NDIS calls that driver's <B>ProtocolOpenAdapterComplete</B> function when the asynchronous binding operation is complete. </P>
+
+<P>If the input <I>Status</I> is NDIS_STATUS_SUCCESS, <B>ProtocolOpenAdapterComplete</B> carries out whatever driver-determined per-binding operations its <B>ProtocolBindAdapter</B> function would have done in a synchronous binding operation. Next, <B>ProtocolOpenAdapterComplete</B> calls <B>NdisCompleteBindAdapter</B> with NDIS_STATUS_SUCCESS for the <I>Status</I> and <I>OpenStatus</I> arguments and with the <I>BindContext</I> handle stored at <I>ProtocolBindingContext</I> by the <B>ProtocolBindAdapter</B> function. Then, <B>ProtocolOpenAdapterComplete</B> returns control. </P>
+
+<P>Otherwise, <B>ProtocolOpenAdapterComplete</B> cleans up any per-binding state already set up by <B>ProtocolBindAdapter</B>. After releasing any state set up by <B>ProtocolBindAdapter</B> except for the <I>BindContext</I> handle, it calls <B>NdisCompleteBindAdapter</B> with an appropriate error for <I>Status</I> and the handle before it returns control. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisfreememory.htm"><B>NdisFreeMemory</B></A>, <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>, <A HREF="_wcesdk_protocolbindadapter.htm"><B>ProtocolBindAdapter</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

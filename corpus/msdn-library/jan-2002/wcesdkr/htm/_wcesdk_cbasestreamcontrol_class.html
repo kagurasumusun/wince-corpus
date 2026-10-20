@@ -1,0 +1,138 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseStreamControl Class</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseStreamControl Class"/>
+<MSHelp:RLTitle Title="CBaseStreamControl Class"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbasestreamcontrol_class"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseStreamControl Class</H1>
+
+<P class="fig"><IMG SRC="strmctl1.gif" ALT="" BORDER=0></P>
+
+<P>The <B>CBaseStreamControl</B> class implements the <A HREF="_wcesdk_iamstreamcontrol_interface.htm"><B>IAMStreamControl</B></A> interface on input and output pins in a filter graph. This class provides control of the starting and stopping of various components of the stream. Various streams can be turned on or off without affecting the rest of the graph. For example, an audio stream can be turned off while a video stream continues, for muting. Or perhaps a capture stream can be turned off while preview continues to flow. This could be used to assist in frame accuracy when exact capture start or stop times are important. </P>
+
+<P><B>CBaseStreamControl</B> enables you to specify start and stop times in the <A HREF="_wcesdk_cbasestreamcontrol__startat.htm"><B>StartAt</B></A> and <A HREF="_wcesdk_cbasestreamcontrol__stopat.htm"><B>StopAt</B></A> member functions and provides stream information in the <A HREF="_wcesdk_cbasestreamcontrol__getinfo.htm"><B>GetInfo</B></A> member function. <B>CBaseStreamControl</B> uses the <A HREF="_wcesdk_dtypes__streamcontrolstate.htm"><B>StreamControlState</B></A> enumerated data type to describe the various states a stream is in. If a stream is flowing it is indicated by the STREAM_FLOWING setting, otherwise it is in a discarding state indicated by the STREAM_DISCARDING setting. </P>
+
+<P>Filters that need to implement the interface on their own should typically inherit from <B>CBaseStreamControl</B> to obtain an implementation of the <A HREF="_wcesdk_cbasestreamcontrol__startat.htm"><B>StartAt</B></A>, <A HREF="_wcesdk_cbasestreamcontrol__stopat.htm"><B>StopAt</B></A>, and <A HREF="_wcesdk_cbasestreamcontrol__getinfo.htm"><B>GetInfo</B></A> methods. The <B>CBaseStreamControl</B> class also maintains state information and decides what to do with the sample. To implement your own filter with pins that support <B>CBaseStreamControl</B> you must:
+
+<UL type="disc">
+	<LI>Inform the filter object of all state changes through the <A HREF="_wcesdk_cbasestreamcontrol__notifyfilterstate.htm"><B>NotifyFilterState</B></A> member function. </li>
+
+	<LI>Inform the filter object of all <A HREF="_wcesdk_cbasestreamcontrol__setsyncsource.htm"><B>SetSyncSource</B></A> calls to the filter. </li>
+
+	<LI>Inform the filter object when in a flushing state. and when flushing has completed, in the <A HREF="_wcesdk_cbasestreamcontrol__flushing.htm"><B>CBaseStreamControl::Flushing</B></A> member function. </li>
+
+	<LI>Use the <A HREF="_wcesdk_cbasestreamcontrol__checkstreamstate.htm"><B>CheckStreamState</B></A> function to make decisions about discarding or passing along samples. </li>
+
+	<LI>Make sure output pins set discontinuity flags on the first sample flowed after samples have been discarded. </li>
+
+	<LI>Tell your pin what the sink is when your filter joins a filter graph, as shown in the following example. </li>
+
+	<LI>STDMETHODIMP CMyFilter::JoinFilterGraph(IFilterGraph * pGraph, LPCWSTR pName)</li>
+
+	<LI>{</li>
+
+	<LI>   HRESULT hr = CBaseFilter::JoinFilterGraph(pGraph, pName);</li>
+
+	<LI>   if (hr == S_OK)</li>
+
+	<LI>      m_pMyPin-&gt;SetFilterGraph(m_pSink);</li>
+
+	<LI>   return hr;</li>
+
+	<LI>}</li>
+</UL>
+
+<P>If you are implementing the <A HREF="_wcesdk_iamstreamcontrol_interface.htm"><B>IAMStreamControl</B></A> interface without using <B>CBaseStreamControl</B>, the last two preceding points do not apply. </P>
+
+<P>For sample code, see the video capture sample in the Samples\Multimedia\DShow\src\vidcap subdirectory of the DirectX Media SDK. </P>
+
+<H4>Member Functions</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__cbasestreamcontrol.htm"><B>CBaseStreamControl</B></A></TD>
+<TD width=55%>Constructs a <B>CBaseStreamControl</B> object. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__checkstreamstate.htm"><B>CheckStreamState</B></A></TD>
+<TD width=55%>Retrieves a stream's current state. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__flushing.htm"><B>Flushing</B></A></TD>
+<TD width=55%>Notifies the pin when the filter is flushing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__getinfo.htm"><B>GetInfo</B></A></TD>
+<TD width=55%>Retrieves information about the current streaming settings. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__notifyfilterstate.htm"><B>NotifyFilterState</B></A></TD>
+<TD width=55%>Notifies the pin of what state your filter is in. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__setfiltergraph.htm"><B>SetFilterGraph</B></A></TD>
+<TD width=55%>Sets the event sink notification that your filter graph is using. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__setsyncsource.htm"><B>SetSyncSource</B></A></TD>
+<TD width=55%>Identifies the reference clock being used by the graph your filter is in. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__startat.htm"><B>StartAt</B></A></TD>
+<TD width=55%>Informs the pin when to start sending streaming data. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=45%><A HREF="_wcesdk_cbasestreamcontrol__stopat.htm"><B>StopAt</B></A></TD>
+<TD width=55%>Informs the pin when to stop processing data and discard any new samples. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

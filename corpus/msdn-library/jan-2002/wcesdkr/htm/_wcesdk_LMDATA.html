@@ -1,0 +1,221 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>LMDATA</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="LMDATA"/>
+<MSHelp:RLTitle Title="LMDATA"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_lmdata"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>LMDATA</H1>
+
+<P>This structure is used by the <A HREF="_wcesdk_iimcallback2_sendalternatives2.htm"><B>IIMCallback2::SendAlternatives2</B></A> interface to send information from an input method (IM) to an input method editor (IME).</P>
+
+<PRE class="syntax"><B>typedef struct&nbsp;&nbsp;_tagLMDATA {</B>
+<B>DWORD </B><I>dwVersion</I><B>;</B>
+<B>DWORD </B><I>flags</I><B>;</B>
+<B>DWORD </B><I>cnt</I><B>;</B>
+<B>DWORD </B><I>dwOffsetSymbols</I><B>;</B>
+<B>DWORD </B><I>dwOffsetSkip</I><B>;</B>
+<B>DWORD </B><I>dwOffsetScore</I><B>;</B>
+<B>}LMDATA;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>dwVersion</I></DT>
+
+<DD>Version number of the structure. This must be set to 0x00010000.</dd>
+
+<DT><I>flags</I></DT>
+
+<DD>Flags to apply to the structure. This notifies the IME what kind of data a given offset type&#0151;symbol, skip, or score&#0151;contains. The following table lists the flags. This member is set to a combination of flags, with one flag for each offset type.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Flag</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SYMBOL_BYTE</TD>
+<TD width=63%>Symbol information store as a BYTE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SYMBOL_WORD</TD>
+<TD width=63%>Symbol information store as a WORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SYMBOL_DWORD</TD>
+<TD width=63%>Symbol information store as a DWORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SYMBOL_QWORD</TD>
+<TD width=63%>Symbol information store as a QUAD WORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SKIP_BYTE</TD>
+<TD width=63%>Skip information store as a BYTE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SKIP_WORD</TD>
+<TD width=63%>Skip information store as a WORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SCORE_BYTE</TD>
+<TD width=63%>Score information store as a BYTE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SCORE_WORD</TD>
+<TD width=63%>Score information store as a WORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SCORE_DWORD</TD>
+<TD width=63%>Score information store as a DWORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SCORE_QWORD</TD>
+<TD width=63%>Score information store as a QUAD WORD.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SCORE_FLOAT</TD>
+<TD width=63%>Score information store as a FLOAT.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>LMDATA_SCORE_DOUBLE</TD>
+<TD width=63%>Score information store as a DOUBLE.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>The skip flag is not required by the structure.
+</dd>
+
+<DT><I>cnt</I></DT>
+
+<DD>Number of rows of data. A row consisting of a symbol, a score, and optionally a skip. For each symbol sent there is a score and perhaps a skip that form a row.</dd>
+
+<DT><I>dwOffsetSymbols</I></DT>
+
+<DD>Offset to the start of the symbol table. The offset is from the end of the <B>LMDATA</B> structure.</dd>
+
+<DT><I>dwOffsetSkip</I></DT>
+
+<DD>Offset to the start of the skip table. The offset is from the end of the <B>LMDATA</B> structure.</dd>
+
+<DT><I>dwOffsetScore</I></DT>
+
+<DD>Offset to the start of the score table. The offset is from the end of the <B>LMDATA</B> structure.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The description of the <B>LMDATA</B> structure can vary from application to application. For example, if the symbol being sent is really a word then the symbol table can be used as an offset to the actual word. This implementation depends completely on the how an IME and IM have agreed to share data. </P>
+
+<P>In the following code sample, a memory dump is shown for a structure that contains WORD symbols and a score only. </P>
+
+<PRE class="code">Offset Value Comment
+0x0000&nbsp;0x00010000&nbsp;Version 1.0 data structure
+0x0004&nbsp;0x00000102&nbsp;LMDATA_SYMBOL_WORD | LMDATA_SCORE_DWORD
+0x0008&nbsp;0x00000007&nbsp;7 values in each column&nbsp;
+0x000c&nbsp;0x00000000&nbsp;offset to symbol data
+0x0010&nbsp;0x00000000&nbsp;offset to skip data
+0x0014&nbsp;0x00000010&nbsp;offset to score data
+0x0018&nbsp;0x6eae&nbsp;first symbol
+0x001a&nbsp;0x8a01&nbsp;second symbol
+0x001c&nbsp;0x4efe&nbsp;third symbol
+0x001e&nbsp;0x9f44&nbsp;fourth symbol
+0x0020&nbsp;0x7784&nbsp;fifth symbol
+0x0022&nbsp;0x888e&nbsp;sixth symbol
+0x0024&nbsp;0x900f&nbsp;seventh symbol
+0x0026&nbsp;0x0000&nbsp;padding for data type alignment
+0x0028&nbsp;0xfffe1008&nbsp;score for first symbol
+0x002c&nbsp;0xfffdcbfe&nbsp;score for second symbol
+0x0030&nbsp;0xfffda778&nbsp;score for third symbol
+0x0034&nbsp;0xfffcfed0&nbsp;score for fourth symbol
+0x0038&nbsp;0xfffb9965&nbsp;score for fifth symbol
+0x003c&nbsp;0xfffab430&nbsp;score for sixth symbol
+0x0040&nbsp;0xfffa7ffe&nbsp;score for seventh symbol</PRE>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 and later</TD>
+<TD width=18%>Sip.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_iimcallback2_sendalternatives2.htm"><B>IIMCallback2::SendAlternatives2</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

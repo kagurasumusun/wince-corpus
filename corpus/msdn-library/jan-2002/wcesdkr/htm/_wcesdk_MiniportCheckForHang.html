@@ -1,0 +1,109 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MiniportCheckForHang</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MiniportCheckForHang"/>
+<MSHelp:RLTitle Title="MiniportCheckForHang"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_miniportcheckforhang"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>MiniportCheckForHang</H1>
+
+<P><B>MiniportCheckForHang</B> is an optional function that reports the state of the network adapter or monitors the responsiveness of an underlying device driver.</P>
+
+<PRE class="syntax"><B>BOOLEAN</B>
+<B>MiniportCheckForHang(</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterContext</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>MiniportAdapterContext</I> </DT>
+
+<DD>Specifies the handle to a miniport-allocated context area in which the driver maintains per-network adapter state, set up by <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P><B>MiniportCheckForHang</B> returns TRUE if the driver determines that its network adapter is not operating or if an intermediate driver determines that the underlying device driver is unresponsive. </P>
+
+<H4>Comments</H4>
+
+<P>In network adapter drivers, <B>MiniportCheckForHang</B> does nothing more than check the internal state of the network adapter and return TRUE if it detects that the network adapter is not operating correctly. </P>
+
+<P>In intermediate drivers, <B>MiniportCheckForHang </B>can periodically check the state of the driver’s virtual network adapter to determine whether the underlying device driver appears to be hung. </P>
+
+<P>By default, the NDIS library calls <B>MiniportCheckForHang</B> approximately every two seconds. </P>
+
+<P>If <B>MiniportCheckForHang</B> returns TRUE, NDIS then calls the driver’s <A HREF="_wcesdk_miniportreset.htm"><B>MiniportReset</B></A> function. </P>
+
+<P>If a network adapter driver has no <B>MiniportCheckForHang</B> function and NDIS judges the driver unresponsive as, for example, when NDIS holds many pending sends and requests queued to the miniport for a time-out interval, NDIS calls the driver’s <B>MiniportReset</B> function. The NDIS library’s default time-out interval for queued sends and requests is around four seconds. However, a network adapter driver’s <B>MiniportInitialize</B> function can extend NDIS’s time-out interval by calling <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEX</B></A> from <B>MiniportInitialize</B> to avoid unnecessary resets. </P>
+
+<P>The <B>MiniportInitialize</B> function of an intermediate driver should disable NDIS’s time-out interval with <B>NdisMSetAttributesEx</B> because such a driver can neither control nor estimate a reasonable completion interval for the underlying device driver. </P>
+
+<P><B>MiniportCheckForHang</B> can be pre-empted by an interrupt. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_miniportreset.htm"><B>MiniportReset</B></A>, <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEX</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

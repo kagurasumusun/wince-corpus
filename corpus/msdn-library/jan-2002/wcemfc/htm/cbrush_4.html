@@ -1,0 +1,161 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBrush::CreateDIBPatternBrush</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBrush::CreateDIBPatternBrush"/>
+<MSHelp:RLTitle Title="CBrush::CreateDIBPatternBrush"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cbrush_createdibpatternbrush"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_localalloc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>CBrush::CreateDIBPatternBrush</H1>
+
+<P>This method initializes a brush with the pattern specified by a device-independent bitmap (DIB). You can select the brush for any device context that supports raster operations.</P>
+
+<PRE class=syntax><B>BOOL CreateDIBPatternBrush (
+HGLOBAL </B><I>hPackedDIB</I><B>,
+UINT </B><I>nUsage</I> <B>);
+</B>
+<B>BOOL CreateDIBPatternBrush(
+const void*</B> <I>lpPackedDIB</I>,<B>
+UINT</B> <I>nUsage</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hPackedDIB</I></DT>
+
+<DD>Identifies a global-memory object containing a packed DIB.</DD>
+
+<DT><I>nUsage</I></DT>
+
+<DD>Specifies whether the <B>bmiColors</B> fields of the <B>BITMAPINFO</B> data structure, a part of the packed DIB, contain explicit RGB values or indexes to the currently realized logical palette. The parameter must be one of the following values:
+
+<OL>
+	<LI>DIB_PAL_COLORS&nbsp;&nbsp;&nbsp;The color table consists of an array of 16-bit indexes.</LI>
+
+	<LI>DIB_RGB_COLORS&nbsp;&nbsp;&nbsp;The color table contains literal RGB values.</LI>
+</OL>
+
+
+<P>The following value is available only in the second version of this method:
+
+
+<OL start=3>
+	<LI>DIB_PAL_INDICES&nbsp;&nbsp;&nbsp;No color table is provided. The bitmap contains indexes to the logical palette of the device context into which the brush is to be selected.</LI>
+</OL>
+</DD>
+
+<DT><I>lpPackedDIB</I></DT>
+
+<DD>Points to a packed DIB consisting of a <B>BITMAPINFO</B> structure immediately followed by an array of bytes defining the pixels of the bitmap.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if it is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The two versions differ in the way you handle the DIB:
+
+<UL type=disc>
+	<LI>In the first version, to obtain a handle to the DIB you call the Windows CE <A HREF="JavaScript:hhobj_1.Click()"><B>LocalAlloc</B></A> function to allocate a block of global memory and fill the memory with the packed DIB.</LI>
+
+	<LI>In the second version, you do not need to call <B>LocalAlloc</B> to allocate memory for the packed DIB.</LI>
+</UL>
+
+<P>Bitmaps used as fill patterns should be 8 pixels by 8 pixels. If the bitmap is larger, Windows creates a fill pattern using only the bits corresponding to the first 8 rows and 8 columns of pixels in the upper-left corner of the bitmap.</P>
+
+<P>When an application selects a two-color DIB pattern brush into a monochrome device context, Windows ignores the colors specified in the DIB and displays the pattern brush using the current text and background colors of the device context. Pixels mapped to the first color, at offset zero in the DIB color table, of the DIB are displayed using the text color. Pixels mapped to the second color, at offset one in the color table, are displayed using the background color.</P>
+
+<P>For information about using the following Windows CE functions, see the SDK<I> </I>Programmer's Reference:
+
+<UL type=disc>
+	<LI><B>CreateDIBPatternBrush</B>&nbsp;&nbsp;&nbsp;This function is provided only for compatibility with applications written for versions of Windows earlier than 3.0; use the <B>CreateDIBPatternBrushPt</B> function.</LI>
+
+	<LI><B>CreateDIBPatternBrushPt</B>&nbsp;&nbsp;&nbsp;This function should be used for Windows CE-based applications.</LI>
+
+	<LI><B>LocalAlloc</B></LI>
+</UL>
+
+<P>Windows CE 1.0 does not support the DIB_PAL_COLORS flag for the <I>nUsage</I> parameter.</P>
+
+<H4>Example</H4>
+
+<PRE>// Resource handle to bitmap.
+HRSRC hRes;
+// Global handles to bitmap resource.
+HGLOBAL hData, hLockedData;
+CBrush brush;
+
+// Find the resource handle.
+hRes = ::FindResource(AfxGetResourceHandle(),
+&nbsp;&nbsp; MAKEINTRESOURCE(IDB_BRUSH), RT_BITMAP);
+if (hRes != NULL)
+{
+&nbsp;&nbsp;// Lock and Load (or Load and Lock).
+&nbsp;&nbsp;if (((hData = ::LoadResource(AfxGetResourceHandle(),
+&nbsp;&nbsp;&nbsp;&nbsp; hRes)) != NULL) &amp;&amp;
+&nbsp;&nbsp;&nbsp;&nbsp;((hLockedData = (HGLOBAL)::LockResource(hData)) != NULL))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Initialize the brush.
+&nbsp;&nbsp;&nbsp;&nbsp;brush.CreateDIBPatternBrush(hLockedData,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DIB_RGB_COLORS);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Select the brush into the device context.
+&nbsp;&nbsp;&nbsp;&nbsp;CBrush* pOldBrush = pDC-&gt;SelectObject(&amp;brush);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Draw.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;Rectangle(50, 50, 200, 200);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Restore the original device context.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;SelectObject(pOldBrush);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Free the resource.
+&nbsp;&nbsp;&nbsp;&nbsp;::FreeResource(hLockedData);
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cbrush_3.htm"><B>CBrush::CreateBrushIndirect</B></A>, <A HREF="cbrush_6.htm"><B>CBrush::CreateSolidBrush</B></A>, <A HREF="cgdiob_4.htm"><B>CGdiObject::CreateStockObject</B></A>, <A HREF="cdc_77.htm"><B>CDC::SelectObject</B></A>, <A HREF="cgdiob_5.htm"><B>CGdiObject::DeleteObject</B></A>, <A HREF="cdc_30.htm"><B>CDC::GetBrushOrg</B></A>, <A HREF="cdc_84.htm"><B>CDC::SetBrushOrg</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistStorage::Load</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersistStorage::Load"/>
+<MSHelp:RLTitle Title="IPersistStorage::Load"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersiststorage_load"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IPersistStorage::Load</H1>
+
+<P>This<B> </B>method loads an object from its existing storage.</P>
+
+<PRE class="syntax"><B>HRESULT Load( IStorage *</B><I>pStg</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStg</I></DT>
+
+<DD>[in] <A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A> pointer to the existing storage from which the object is to be loaded. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Value</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>S_OK</TD>
+<TD width=62%>The object was successfully loaded.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>CO_E_ALREADYINITIALIZED</TD>
+<TD width=62%>The object has already been initialized by a previous call to the <B>IPersistStorage::Load</B> method or the <A HREF="_wcesdk_com_ipersiststorage_initnew.htm"><B>IPersistStorage::InitNew</B></A> method.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>E_OUTOFMEMORY</TD>
+<TD width=62%>The object was not loaded due to lack of memory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>E_FAIL</TD>
+<TD width=62%>The object was not loaded due to some reason besides a lack of memory.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>This method initializes an object from an existing storage. The object is placed in the loaded state if this method is called by the container application. If called by the default handler, this method places the object in the running state.</P>
+
+<P>Either the default handler or the object itself can hold onto the <B>IStorage</B> pointer while the object is loaded or running.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>The container should cache the <A HREF="_wcesdk_com_ipersiststorage.htm"><B>IPersistStorage</B></A> pointer for use in later operations on the object.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>Your implementation should perform the following steps to load an object:
+
+<OL type="1">
+	<LI>Open the object’s streams in the storage object, and read the necessary data into the object’s internal data structures.</li>
+
+	<LI>Clear the object’s dirty flag.</li>
+
+	<LI>Call the <B>IPersistStorage::AddRef</B> method and cache the passed in storage pointer.</li>
+
+	<LI>Keep open and cache the pointers to any streams or storages that the object will need to save itself to this storage.</li>
+
+	<LI>Perform any other default initialization required for the object.</li>
+</OL>
+
+<P>Steps 3 and 4 are particularly important for ensuring that the object can save itself in low memory situations. Holding onto pointers to the storage and stream interfaces guarantees that a save operation to this storage will not fail due to insufficient memory.</P>
+
+<P>Your implementation of this method should return the CO_E_ALREADYINITIALIZED error code if it receives a call to either the <B>IPersistStorage::InitNew</B> method or the <B>IPersistStorage::Load</B> method after it is already initialized.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A>, <A HREF="_wcesdk_com_ipersiststorage.htm"><B>IPersistStorage</B></A><A HREF="_wcesdk_com_ipersiststorage_initnew.htm"><B> IPersistStorage::InitNew</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

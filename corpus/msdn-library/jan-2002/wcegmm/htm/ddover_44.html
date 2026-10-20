@@ -1,0 +1,87 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating an Off-Screen Surface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating an Off-Screen Surface"/>
+<MSHelp:RLTitle Title="Creating an Off-Screen Surface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_creating_an_off-screen_surface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_ddscaps2_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ddsurfacedesc2_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Creating an Off-Screen Surface</H1>
+
+<P>An off-screen surface is often used to cache bitmaps that will later be blitted to the primary surface or a back buffer. You must declare the dimensions of an off-screen surface by including the DDSD_WIDTH and DDSD_HEIGHT flags and the corresponding values in the <B>dwWidth</B> and <B>dwHeight</B> members. Additionally, you must include the DDSCAPS_OFFSCREENPLAIN flag in the accompanying <A HREF="JavaScript:hhobj_1.Click()"><B>DDSCAPS2</B></A> structure.</P>
+
+<P>By default, DirectDraw creates a surface in display memory unless it will not fit, in which case it creates the surface in system memory. You can explicitly choose display or system memory by including the DDSCAPS_SYSTEMMEMORY or DDSCAPS_VIDEOMEMORY flags in the <B>dwCaps</B> member of the <B>DDSCAPS2</B> structure. The method fails, returning an error, if it can't create the surface in the specified location.</P>
+
+<P>The following example shows how to prepare for creating a simple off-screen surface:</P>
+
+<PRE class="code">DDSURFACEDESC2 ddsd;
+ddsd.dwSize = sizeof(ddsd);
+
+// Tell DirectDraw which members are valid.
+ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+
+// Request a simple off-screen surface, sized
+// 100 by 100 pixels.
+//
+// (This assumes that the off-screen surface we are about
+// to create will match the pixel format of the
+// primary surface.)
+ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+ddsd.dwHeight = 100;
+ddsd.dwWidth = 100;
+ </PRE>
+
+<P>Additionally, you can create surfaces whose pixel format differs from the primary surface's pixel format. However, in this case there is one drawback—you are limited to using system memory. The following code fragment shows how to prepare the <A HREF="JavaScript:hhobj_2.Click()"><B>DDSURFACEDESC2</B></A> structure members in order to create an 8-bit palettized surface (assuming that the current display mode is something other than 8-bits per pixel).</P>
+
+<PRE class="code">memset(&amp;ddsd, 0, sizeof(ddsd));
+ddsd.dwSize  = sizeof(ddsd);
+ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
+ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
+ddsd.dwHeight = 100;
+ddsd.dwWidth  = 100;
+ddsd.ddpfPixelFormat.dwSize  = sizeof(DDPIXELFORMAT);
+ddsd.ddpfPixelFormat.dwFlags = DDPF_RGB | DDPF_PALETTEINDEXED8;
+
+// Set the bit depth for an 8-bit surface, but DO NOT
+// specify any RGB mask values. The masks must be zero
+// for a palettized surface.
+ddsd.ddpfPixelFormat.dwRGBBitCount = 8;
+ </PRE>
+
+<P>In previous versions of DirectX, the maximum width of off-screen surfaces was limited to the width of the primary surface. Beginning with DirectX 5.0, you can create surfaces as wide as you need, permitting that the display hardware can support them. Be careful when declaring wide off-screen surfaces; if the video card memory cannot hold a surface as wide as you request, the surface is created in system memory. If you explicitly choose video memory and the hardware can't support it, the call fails. For more information, see <A HREF="ddover_46.htm">Creating Wide Surfaces</A>.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

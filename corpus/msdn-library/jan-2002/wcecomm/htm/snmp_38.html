@@ -1,0 +1,137 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIB Header Sample</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MIB Header Sample"/>
+<MSHelp:RLTitle Title="MIB Header Sample"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_mib_header_sample"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>MIB Header Sample</H1>
+
+<P>The MIB header file provides additional definitions for MIB variables such as ranges, access rights and MIB entry definitions. It also contains macros and function prototypes for the MIB functions that are called in the MIB source file.</P>
+
+<PRE class="code">/**********************************************************************
+Module Name:
+  testmib.h
+
+Abstract:
+  Sample MIB Header.
+**********************************************************************/
+
+#ifndef testmib_h
+#define testmib_h
+
+#include &lt;snmp.h&gt;
+
+// MIB Specifics.
+#define MIB_PREFIX_LEN            MIB_OidPrefix.idLength
+#define MAX_STRING_LEN            255
+
+// Ranges and limits for specific MIB variables.
+#define MIB_TOASTER_UP            1
+#define MIB_TOASTER_DOWN          2
+
+#define MIB_TOASTER_LIGHTLYWARM   1
+#define MIB_TOASTER_BURNT         10
+
+#define MIB_TOASTER_WHITEBREAD    1
+#define MIB_TOASTER_OTHERBREAD    7
+
+// MIB function actions.
+#define MIB_ACTION_GET            ASN_RFC1157_GETREQUEST
+#define MIB_ACTION_SET            ASN_RFC1157_SETREQUEST
+#define MIB_ACTION_GETNEXT        ASN_RFC1157_GETNEXTREQUEST
+
+// MIB Variable access privileges.
+#define MIB_ACCESS_READ           0
+#define MIB_ACCESS_WRITE          1
+#define MIB_ACCESS_READWRITE      2
+
+// Macro to determine number of sub-oid's in array.
+#define OID_SIZEOF(Oid)           (sizeof (Oid) / sizeof (UINT))
+
+// MIB variable ENTRY definition. This structure defines the format for
+// each entry in the MIB.
+typedef struct mib_entry
+{
+  AsnObjectIdentifier Oid;
+  void *              Storage;
+  BYTE                Type;
+  UINT                Access;
+  UINT                (*MibFunc) (UINT, struct mib_entry *,
+                      RFC1157VarBind *);
+  struct mib_entry *  MibNext;
+} MIB_ENTRY;
+
+// Internal MIB structure.
+extern MIB_ENTRY Mib[];
+extern UINT      MIB_num_variables;
+
+// Prefix to every variable in the MIB.
+extern AsnObjectIdentifier MIB_OidPrefix;
+
+// Function Prototypes.
+UINT ResolveVarBind (
+  IN OUT RFC1157VarBind *VarBind,       // Variable Binding to resolve
+  IN UINT PduAction                     // Action that is specified in PDU
+);
+
+UINT MIB_leaf_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+UINT MIB_control_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+UINT MIB_doneness_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+UINT MIB_toasttype_func (
+  IN UINT Action,
+  IN MIB_ENTRY *MibPtr,
+  IN RFC1157VarBind *VarBind
+);
+
+#endif // testmib_h</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

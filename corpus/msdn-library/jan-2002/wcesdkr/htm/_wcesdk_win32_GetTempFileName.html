@@ -1,0 +1,160 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GetTempFileName</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GetTempFileName"/>
+<MSHelp:RLTitle Title="GetTempFileName"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_gettempfilename"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>GetTempFileName</H1>
+
+<P>This function creates a name for a temporary file. The filename is the concatenation of specified path and prefix strings, a hexadecimal string formed from a specified integer, and the .TMP extension. </P>
+
+<P>The specified integer can be nonzero, in which case, the function creates the filename but does not create the file. If you specify zero for the integer, the function creates a unique filename and creates the file in the specified directory. </P>
+
+<PRE class="syntax"><B>UINT GetTempFileName(
+LPCTSTR </B><I>lpPathName</I><B>,
+LPCTSTR </B><I>lpPrefixString</I><B>,
+UINT </B><I>uUnique</I><B>,
+LPTSTR </B><I>lpTempFileName</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpPathName</I></DT>
+
+<DD>[in] Points to a null-terminated string that specifies the directory path for the filename. This string must consist of characters in the ANSI character set. Note that the concept of a current directory does not exist in Windows CE, therefore you must specify the full directory path. If this parameter is NULL, the function fails. </dd>
+
+<DT><I>lpPrefixString</I></DT>
+
+<DD>[in] Points to a null-terminated prefix string. The function uses the first three characters of this string as the prefix of the filename. This string must consist of characters in the ANSI character set. </dd>
+
+<DT><I>uUnique</I></DT>
+
+<DD>[in] Specifies an unsigned integer that the function converts to a hexadecimal string for use in creating the temporary filename.
+
+<P>If <I>uUnique</I> is nonzero, the function appends the hexadecimal string to <I>lpPrefixString</I> to form the temporary filename. In this case, the function does not create the specified file, and does not test whether the filename is unique.
+
+
+<P>If <I>uUnique</I> is zero, the function uses a hexadecimal string derived from the current system time. In this case, the function uses different values until it finds a unique filename, and then it creates the file in the <I>lpPathName</I> directory.
+</dd>
+
+<DT><I>lpTempFileName</I></DT>
+
+<DD>[out] Points to the buffer that receives the temporary filename. This null-terminated string consists of characters in the ANSI character set. This buffer should be at least the length, in bytes, specified by MAX_PATH to accommodate the path. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value specifies the unique numeric value used in the temporary filename. If the <I>uUnique</I> parameter is nonzero, the return value specifies that same number. </P>
+
+<P>If the function fails, the return value is zero. To get extended error information, call <B>GetLastError</B>. </P>
+
+<H4>Remarks</H4>
+
+<P>The <B>GetTempFileName</B> function creates a temporary filename of the following form: </P>
+
+<PRE class="code">path\preuuuu.TMP </PRE>
+
+<P>The following table describes the file name syntax. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=21%>Component</TH>
+<TH width=79%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>path</TD>
+<TD width=79%>Path specified by the <I>lpPathName</I> parameter. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>pre</TD>
+<TD width=79%>First three letters of the <I>lpPrefixString</I> string. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%>uuuu</TD>
+<TD width=79%>Hexadecimal value of <I>uUnique</I>. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>When a Windows CE-based device is powered down, temporary files whose names have been created by this function are not automatically deleted. </P>
+
+<P>To avoid problems resulting from converting an ANSI character set string to a Windows string, an application should call the <A HREF="_wcesdk_win32_createfile.htm"><B>CreateFile</B></A> function to create a temporary file. </P>
+
+<P>If the <I>uUnique</I> parameter is zero, <B>GetTempFileName</B> attempts to form a unique number based on the current system time. If a file with the resulting filename exists, another number is generated and the test for existence is repeated. Testing continues until a unique filename is found. <B>GetTempFileName</B> then creates a file by that name and closes it. When <I>uUnique</I> is nonzero, no attempt is made to create and open the file. </P>
+
+<P>Windows CE '0' pads a file name that has fewer than four hexadecimal digits as part of its name. For example, Windows 2000 creates "foo34.tmp", while Windows CE creates "foo0034.tmp".</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createfile.htm"><B>CreateFile</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

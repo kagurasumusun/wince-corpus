@@ -1,0 +1,96 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CArchive::WriteObject</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CArchive::WriteObject"/>
+<MSHelp:RLTitle Title="CArchive::WriteObject"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_carchive_writeobject"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CArchive::WriteObject</H1>
+
+<P>This method stores the specified <B>CObject</B> to the archive.</P>
+
+<PRE class=syntax><B>void</B> <B>WriteObject(</B>
+<B>const</B> <B>CObject*</B> <I>pOb</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pOb</I></DT>
+
+<DD>A constant pointer to the object being stored.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function is normally called by the <B>CArchive</B> insertion (<B>&lt;&lt;</B>) operator overloaded for <B>CObject</B>. <B>WriteObject</B>, in turn, calls the <B>Serialize</B> function of the archived class. </P>
+
+<P>You must use the <B>IMPLEMENT_SERIAL</B> macro to enable archiving. <B>WriteObject</B> writes the ASCII class name to the archive. This class name is validated later during the load process. A special encoding scheme prevents unnecessary duplication of the class name for multiple objects of the class. This scheme also prevents redundant storage of objects that are targets of more than one pointer. </P>
+
+<P>The exact object encoding method, including the presence of the ASCII class name, is an implementation detail and could change in future versions of the library.</P>
+
+<P>Finish creating, deleting, and updating all your objects before you begin to archive them. Your archive will be corrupted if you mix archiving with object modification.</P>
+
+<H4>Example</H4>
+
+<P>For a definition of the class <B>CAge</B>, see the example for <A HREF="coblist_2.htm"><B>CObList::CObList</B></A>.</P>
+
+<PRE>CFile myFile("myfile.dat", CFile::modeCreate | CFile::modeReadWrite);
+CAge  age(21), *pAge;
+
+// Create a storing archive.
+CArchive arStore(&amp;myFile, CArchive::store);
+
+// Write the object to the archive.
+arStore.WriteObject( &amp;age );
+
+// Close the storing archive.
+arStore.Close();
+
+// Create a loading archive.
+myFile.SeekToBegin();
+CArchive arLoad(&amp;myFile, CArchive::load);
+
+// Verify the object is in the archive.
+pAge = (CAge*) arLoad.ReadObject( RUNTIME_CLASS(CAge) );
+ASSERT( age == *pAge );
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afx.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="carchi_14.htm"><B>CArchive::ReadObject</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

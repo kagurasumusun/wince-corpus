@@ -1,0 +1,66 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Managing a Certificate Store's State</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Managing a Certificate Store's State"/>
+<MSHelp:RLTitle Title="Managing a Certificate Store's State"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_managing_a_certificate_store's_state"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Managing a Certificate Store's State</H1>
+
+<P>Several functions provide services for managing a certificate store's state. </P>
+
+<P>To gain access to certificates, the certificate store in which they are stored must be opened through a call to <B>CertOpenStore</B> or <B>CertOpenSystemStore</B>.</P>
+
+<P>Usually a certificate store is opened in cached memory. It can be a new store or its contents can be loaded from the local registry, the registry on a remote computer, a disk file, a PKCS #7 message, or some other source.</P>
+
+<P>CryptoAPI certificate store functions also allow a store to maintain certificates outside cached memory in, for example, an external database of certificates such as the one provided by the Microsoft Certificate Server Database.</P>
+
+<P>One of the parameters of the <B>CertOpenStore </B>function, <I>lpszStoreProvider,</I> determines the type of store opened and the provider used to open that store. See Example C Code for Opening Certificate Stores for examples of opening certificate stores using various providers.</P>
+
+<P><B>CertCloseStore</B> closes a certificate store. When a certificate store is closed, each of the certificate contexts in that store has its reference count reduced by one. Memory is freed for certificates whose reference count goes to zero. </P>
+
+<P>Setting CERT_CLOSE_STORE_FORCE_FLAG with <B>CertCloseStore </B>closes the certificate store and frees memory for all of its certificate contexts regardless of their reference count. In some cases, such as in multithreaded programs, this cannot be desirable. If CERT_CLOSE_STORE_CHECK_FLAG is set, the store is closed, but a warning value is returned by the function if memory is still allocated for certificates whose reference counts have not been reduced to zero. If a certificate's reference count is greater than zero, a duplicate of that certificate context has not been freed. Use <B>CertFreeCertificateContext</B> to free any certificates left open.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;A <I>certificate context</I> is a structure of type <B>CERT_CONTEXT</B> that has, among other members, a pointer to the encoded certificate BLOB and a pointer to a <B>CERT_INFO</B> structure. The <B>CERT_INFO</B> structure contains the most significant certificate data. For more information about certificate context structures, see Encoding and Decoding a Certificate Context.</P>
+
+<P class=indent>Each certificate context also contains a reference count indicating the number of copies of the context's address that have been assigned. Each time a certificate context is duplicated in any way, its reference count is incremented by one. Each time a pointer to a certificate context is freed, the reference count in the certificate context is decremented by one. When the reference count on a certificate context reaches zero, the memory holding the context is de-allocated. Memory allocated for a certificate context is also de-allocated when that context is in a store and the store is closed using CERT_CLOSE_STORE_FORCE_FLAG. If the memory for a context is de-allocated and pointers to that context are still in use, those pointers become invalid. </P>
+
+<P><B>CertDuplicateStore </B>increases the reference count on the store. </P>
+
+<P><B>CertSaveStore</B> saves the contents of a store to a disk file or a memory location, and </P>
+
+<P><B>CertControlStore</B> manages a store while it is open. An application with an open store can be notified when the persisted state of that store has changed by some other process. This could happen if new certificates were copied to the local computer store from a domain control computer.</P>
+
+<P>When changes are discovered, the cached store can re-synchronize its cached store to match the persisted state of the store. <B>CertControlStore</B> also supports a process that copies cached store changes to permanent storage when these changes in the cached store are not automatically saved.</P>
+
+<P>Certificate store-like certificate contexts can have extended properties. <B>CertSetStoreProperty</B> adds extended properties to a certificate store. <B>CertGetStoreProperty</B> retrieves any properties set on a certificate store. Currently, the only predefined certificate store property is a store's localized name.</P>
+<DIV CLASS="footer">Built on Friday, July 06, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

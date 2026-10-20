@@ -1,0 +1,142 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DeviceIoControl</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DeviceIoControl"/>
+<MSHelp:RLTitle Title="DeviceIoControl"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_deviceiocontrol"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>DeviceIoControl</H1>
+
+<P>This function sends a control code directly to a specified device driver, causing the corresponding device to perform the specified operation.</P>
+
+<PRE class="syntax"><B>BOOL DeviceIoControl(
+HANDLE</B> <I>hDevice</I>,
+<B>DWORD</B> <I>dwIoControlCode</I>,
+<B>LPVOID</B> <I>lpInBuffer</I>,
+<B>DWORD</B> <I>nInBufferSize</I>,
+<B>LPVOID </B><I>lpOutBuffer</I>,
+<B>DWORD</B> <I>nOutBufferSize</I>,
+<B>LPDWORD</B> <I>lpBytesReturned</I>,
+<B>LPOVERLAPPED</B> <I>lpOverlapped</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hDevice</I></DT>
+
+<DD>[in] Handle to the device that is to perform the operation. Call the <A HREF="_wcesdk_win32_createfile.htm"><B>CreateFile</B></A> function to obtain a device handle. </dd>
+
+<DT><I>dwIoControlCode</I></DT>
+
+<DD>[in] Specifies the control code for the operation. This value identifies the specific operation to be performed and the type of device on which the operation is to be performed. No specific values are defined for the <I>dwIoControlCode </I>parameter. However, the writer of a custom device driver can define <I>IOCTL_XXXX</I> control codes, per the <B>CTL_CODE</B> macro. These control codes can then be advertised, and an application can use these control codes with <B>DeviceIoControl</B> to perform the driver-specific functions. </dd>
+
+<DT><I>lpInBuffer</I></DT>
+
+<DD>[in] Long pointer to a buffer that contains the data required to perform the operation.
+
+<P>This parameter can be NULL if the <I>dwIoControlCode</I> parameter specifies an operation that does not require input data.
+</dd>
+
+<DT><I>nInBufferSize</I></DT>
+
+<DD>[in] Size, in bytes, of the buffer pointed to by <I>lpInBuffer</I>. </dd>
+
+<DT><I>lpOutBuffer</I></DT>
+
+<DD>[out] Long pointer to a buffer that receives the operation’s output data.
+
+<P>This parameter can be NULL if the <I>dwIoControlCode</I> parameter specifies an operation that does not produce output data.
+</dd>
+
+<DT><I>nOutBufferSize</I></DT>
+
+<DD>[in] Size, in bytes, of the buffer pointed to by <I>lpOutBuffer</I>. </dd>
+
+<DT><I>lpBytesReturned</I></DT>
+
+<DD>[out] Long pointer to a variable that receives the size, in bytes, of the data stored into the buffer pointed to by <I>lpOutBuffer</I>.
+
+<P>The <I>lpBytesReturned</I> parameter cannot be NULL. Even when an operation produces no output data, and <I>lpOutBuffer</I> can be NULL, the <B>DeviceIoControl</B> function makes use of the variable pointed to by <I>lpBytesReturned</I>. After such an operation, the value of the variable is without meaning.
+</dd>
+
+<DT><I>lpOverlapped</I></DT>
+
+<DD>[in] Ignored; set to NULL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>When passed parameters such as DISK_IOCTL_GETINFO, the <B>DeviceIoControl</B> function does not change the <I>dwBytesReturned</I> parameter. This is because the IOCTL_GETINFO command interface returns the information to the input buffer specified with the <I>lpOutBuffer</I> parameter. <B>DeviceIoControl</B> sets <I>dwBytesReturned</I> only when the control code writes into the output buffer. Many other DISK_IOCTL_GET* command codes return this information in the input buffer, as well.</P>
+
+<P>Windows CE will add zeros to a filename that contains less than 4 hex digits. For example, Windows CE would rename the NT file foo34.tmp as foo0034.tmp.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Coredll.lib, Fsmain.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createevent.htm"><B>CreateEvent</B></A>, <A HREF="_wcesdk_win32_createfile.htm"><B>CreateFile</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

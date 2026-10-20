@@ -1,0 +1,80 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>When Reference Counts will Change</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="When Reference Counts will Change"/>
+<MSHelp:RLTitle Title="When Reference Counts will Change"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_when_reference_counts_will_change"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdraw4_enumsurfaces_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_idirectdrawsurface5_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_idirectdrawsurface5_getattachedsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_idirectdrawsurface5_addattachedsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_idirectdrawsurface5_deleteattachedsurface_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_idirectdrawsurface5_setclipper_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_idirectdrawsurface5_setpalette_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_idirectdrawsurface5_getclipper_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_idirectdrawsurface5_getpalette_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>When Reference Counts will Change</H1>
+
+<P>There are several DirectDraw methods that affect the reference count of a surface, and a few that affect other objects you can associate with a surface. You can think of these situations as "surface-only changes" and "cross-object changes":
+
+<DL>
+<DT><B>Surface-only changes</B></DT>
+
+<DD>Surface-only changes, as the name states, only affect the reference count of a surface object. For example, you might use the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDraw4::EnumSurfaces</B></A> to enumerate the current surfaces that fit a particular description. When the method invokes the callback function that you provide, it passes a pointer to an <A HREF="JavaScript:hhobj_2.Click()"><B>IDirectDrawSurface5</B></A> interface, but it increments the reference count for the object before your application receives the pointer. It's your responsibility to release the object when you are finished with it. This will typically be at the end of your callback routine, or later if you choose to keep the object.
+
+<P>Most other surface-only changes affect the reference counts of complex surfaces, such as a flipping chain. Reference counts are a little more tricky for complex surfaces, because (in most cases) DirectDraw treats a complex surface as if it was a single object, even though it is a set of surfaces. In short, the <A HREF="JavaScript:hhobj_3.Click()"><B>IDirectDrawSurface5::GetAttachedSurface</B></A> and <A HREF="JavaScript:hhobj_4.Click()"><B>IDirectDrawSurface5::AddAttachedSurface</B></A> methods increment reference counts of surfaces, and <A HREF="JavaScript:hhobj_5.Click()"><B>IDirectDrawSurface5::DeleteAttachedSurface</B></A> decrements the reference count. These methods don't affect the counts of any surfaces attached to the current surface. See the references for these methods and <A HREF="ddover_64.htm">Reference Counts for Complex Surfaces</A> for additional details.
+</dd>
+
+<DT><B>Cross-object changes</B></DT>
+
+<DD>Cross-object reference count changes occur when you create an association between a surface and another object that performs a task for the surface, such as a clipper or a palette.
+
+<P>The <A HREF="JavaScript:hhobj_6.Click()"><B>IDirectDrawSurface5::SetClipper</B></A> and <A HREF="JavaScript:hhobj_7.Click()"><B>IDirectDrawSurface5::SetPalette</B></A> methods increment the reference count of the object being attached. After they are attached, the surface manages them; if the surface is released, it automatically releases any objects it is using. (For this reason, some applications release the interface for the object after these calls succeed. This is a perfectly valid practice.)
+
+
+<P>Once a clipper or palette is attached to a surface, you can call the <A HREF="JavaScript:hhobj_8.Click()"><B>IDirectDrawSurface5::GetClipper</B></A> and <A HREF="JavaScript:hhobj_9.Click()"><B>IDirectDrawSurface5::GetPalette</B></A> methods to retrieve them again. Because these methods return a copy of an interface pointer, they implicitly increment the reference count for the object being retrieved. When you're done with the interfaces, don't forget to release them—the objects that the interfaces represent won't disappear so long as the surface they are attached to still holds a reference to them.
+</dd>
+</DL>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisMInitializeTimer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisMInitializeTimer"/>
+<MSHelp:RLTitle Title="NdisMInitializeTimer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisminitializetimer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisMInitializeTimer</H1>
+
+<P>This function initializes a timer object associated with a driver’s <B>MiniportTimer</B> function.</P>
+
+<PRE class="syntax"><B>VOID NdisMInitializeTimer(
+IN OUT PNDIS_MINIPORT_TIMER</B> <I>Timer</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>MiniportAdapterHandle</I><B>,</B>
+<B>IN PNDIS_TIMER_FUNCTION</B> <I>TimerFunction</I><B>,</B> <B>
+IN PVOID</B> <I>FunctionContext</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Timer</I></DT>
+
+<DD>Pointer to caller-supplied resident storage for a timer object. The timer object is opaque to the caller, but, when it has been initialized, this pointer is a required parameter to the NDIS timer functions.</dd>
+
+<DT><I>MiniportAdapterHandle</I></DT>
+
+<DD>Handle input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+
+<DT><I>TimerFunction</I></DT>
+
+<DD>Specifies the entry point of a caller-supplied <B>MiniportTimer</B> function.</dd>
+
+<DT><I>FunctionContext</I></DT>
+
+<DD>Pointer to a caller-supplied context area to be passed to the given <B>MiniportTimer</B> function when it is called.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P><B>MiniportInitialize</B> must call this function to set up the driver’s <B>MiniportTimer</B> function(s), if any. <B>MiniportInitialize</B> must call this function before the driver passes the <B><I>MiniportTimer</I></B> pointer to any other NDIS timer function.</P>
+
+<P>Drivers of network adapters that do not generate interrupts initialize at least one timer object for a polling <B>MiniportTimer</B> function that monitors the network adapter state for incoming receives and for send completions.</P>
+
+<P>Calls to the NDIS timer functions insert the timer object in the system timer queue. Calls to the <A HREF="_wcesdk_ndismcanceltimer.htm"><B>NdisMCancelTimer</B></A> function dequeue the timer object if it is currently queued. Only one instantiation of a particular timer object can be queued at any given moment.</P>
+
+<P><B>MiniportInitialize </B>can call this function more than once to initialize more than one timer object, each associated with a distinct <B>MiniportTimer</B> function. For example, a network adapter driver might have one <B>MiniportTimer</B> function that polls the network adapter state periodically and another that the miniport uses only to time-out a particular operation on its network adapter. Each such <B>MiniportTimer</B> function has different functionality should be associated with a different timer object by calling this function from <B>MiniportInitialize</B>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndismcanceltimer.htm"><B>NdisMCancelTimer</B></A>, <A HREF="_wcesdk_ndismsetperiodictimer.htm"><B>NdisMSetPeriodicTimer</B></A>, <A HREF="_wcesdk_ndismsettimer.htm"><B>NdisMSetTimer</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

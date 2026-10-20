@@ -1,0 +1,91 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Palette in Windowed Mode</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Palette in Windowed Mode"/>
+<MSHelp:RLTitle Title="Creating a Palette in Windowed Mode"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_creating_a_palette_in_windowed_mode"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_idirectdraw4_createpalette_ddraw" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Creating a Palette in Windowed Mode</H1>
+
+<P>The following example illustrates how to create a DirectDraw palette in nonexclusive (windowed) mode. In order for your palette to work correctly, it is vital that you set up every one of the 256 entries in the <B>PALETTEENTRY</B> structure that you submit to the <A HREF="JavaScript:hhobj_1.Click()"><B>IDirectDraw4::CreatePalette</B></A> method.</P>
+
+<PRE class="code">LPDIRECTDRAW4        lpDD; // Assumed to be initialized previously
+PALETTEENTRY         pPaletteEntry[256];
+int                  index;
+HRESULT              ddrval;
+LPDIRECTDRAWPALETTE2 lpDDPal;
+
+// First set up the Windows static entries.
+for (index = 0; index &lt; 10 ; index++)
+{
+    // The first 10 static entries:
+    pPaletteEntry[index].peFlags = PC_EXPLICIT;
+    pPaletteEntry[index].peRed = index;
+    pPaletteEntry[index].peGreen = 0;
+    pPaletteEntry[index].peBlue = 0;
+
+    // The last 10 static entries:
+    pPaletteEntry[index+246].peFlags = PC_EXPLICIT;
+    pPaletteEntry[index+246].peRed = index+246;
+    pPaletteEntry[index+246].peGreen = 0;
+    pPaletteEntry[index+246].peBlue = 0;
+}
+
+// Now set up private entries. In this example, the first 16
+// available entries are animated.
+for (index = 10; index &lt; 26; index ++)
+{
+    pPaletteEntry[index].peFlags = PC_NOCOLLAPSE|PC_RESERVED;
+    pPaletteEntry[index].peRed = 255;
+    pPaletteEntry[index].peGreen = 64;
+    pPaletteEntry[index].peBlue = 32;
+}
+
+// Now set up the rest, the nonanimated entries.
+for (; index &lt; 246; index ++) // Index is set up by previous for loop
+{
+    pPaletteEntry[index].peFlags = PC_NOCOLLAPSE;
+    pPaletteEntry[index].peRed = 25;
+    pPaletteEntry[index].peGreen = 6;
+    pPaletteEntry[index].peBlue = 63;
+}
+
+// All 256 entries are filled. Create the palette.
+ddrval = lpDD-&gt;CreatePalette(DDPCAPS_8BIT, pPaletteEntry,
+    &amp;lpDDPal,NULL);
+ </PRE>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

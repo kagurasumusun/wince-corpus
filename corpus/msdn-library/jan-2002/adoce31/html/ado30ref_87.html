@@ -1,0 +1,98 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SELECT - Join</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="SELECT - Join"/>
+<MSHelp:RLTitle Title="SELECT - Join"/>
+<MSHelp:Keyword Index="A" Term="ado30ref_87"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce_select___join"></A><SUP></SUP>SELECT &#0150; Join</H1>
+
+<P>This statement combines two tables using a field common to both tables. ADOCE uses a subset of the fields in the combined database to build a recordset. </P>
+
+<PRE class=syntax><B>SELECT</B> [<I>tablename</I>.]<I>fieldname</I> [,[<I>tablename</I>.]<I>fieldname</I> ...] <B>FROM</B> <I>tablename</I> <B>INNER</B><B> JOIN</B><br> <I>tablename2</I> <B>ON</B> <I>tablename</I><I>.fieldname</I> = <I>tablename2</I><I>.fieldname2</I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>fieldname</I></DT>
+
+<DD>The name of a field in the table to include in the recordset.</DD>
+
+<DT><I>tablename</I></DT>
+
+<DD>The name of the table from which to retrieve data.</DD>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None.</P>
+
+<H4>Remarks</H4>
+
+<P>Because the tables being combined may have fields with the same name, it may be necessary to specify the table name in addition to the field name using the dot convention. For example, if more than one table has the <B>ProductID </B>field, the table name is not optional and you must specify <I>tablename</I>.<B>ProductID</B> as the field name, where <I>tablename</I> is the name of a table that contains a field named <B>ProductID</B>.</P>
+
+<P>You can use an <B>INNER JOIN</B> operation in any <B>FROM</B> clause. This is the only join operation supported in ADOCE. <B>INNER JOIN </B>combines records from two tables whenever there are matching values in a field common to both tables.</P>
+
+<P>If you try to join fields containing <B>Memo</B> or <B>OLE</B> Object data, an error occurs. </P>
+
+<P>You can join a maximum of four tables, and only inner joins on equality are supported. Joins are possible only with the above explicit <B>INNER JOIN</B> syntax. Implied joins using the <B>WHERE</B> clause are not supported.</P>
+
+<P>At least one of the tables in each join clause must be indexed on the joined field. </P>
+
+<P>A recordset returned by a <B>JOIN</B> statement with one or more columns from a single table can be updated. If a returned column has data from more than one table, it is read-only and cannot be updated.</P>
+
+<P><B>INNER JOIN </B>clauses can be nested to create complex queries. Brackets must be used to enclose table names that contain spaces. </P>
+
+<H4>Examples</H4>
+
+<P>The following SQL statement shows how you could join the Categories and Products tables on the <B>CategoryID</B> field.</P>
+
+<PRE>SELECT CategoryName, ProductName
+FROM Categories INNER JOIN Products
+ON Categories.CategoryID = Products.CategoryID;
+</PRE>
+
+<P>In the preceding example, <B>CategoryID</B> is the joined field, but it is not included in the query output because it is not included in the <B>SELECT</B> statement. To include the joined field, include the field name in the <B>SELECT</B> statement. In this case, the field name is <B>Categories.CategoryID</B>. You must specify the table name when a field name is used in more than one table.</P>
+
+<P>The following SQL statement shows a complex query using <B>INNER JOIN.</B></P>
+
+<PRE>SELECT Orders.ShippedDate, Shippers.CompanyName, Orders.ShipName,
+       Products.ProductName, [Order Details].UnitPrice,
+       [Order Details].Quantity, [Order Details].Discount
+FROM Shippers INNER JOIN
+       (Products INNER JOIN
+         (Orders INNER JOIN [Order Details] ON
+          Orders.OrderID = [Order Details].OrderID) ON
+        Products.ProductID = [Order Details].ProductID) ON
+      Shippers.ShipperID = Orders.ShipVia
+WHERE (((Orders.ShippedDate) &gt;= #5/1/99# And
+        (Orders.ShippedDate) &lt;= #5/31/99#))
+ORDER BY Orders.ShippedDate
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

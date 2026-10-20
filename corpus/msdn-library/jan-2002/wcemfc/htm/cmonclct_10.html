@@ -1,0 +1,166 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CMonthCalCtrl::GetMonthRange</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CMonthCalCtrl::GetMonthRange"/>
+<MSHelp:RLTitle Title="CMonthCalCtrl::GetMonthRange"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cmonthcalctrl_getmonthrange"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CMonthCalCtrl::GetMonthRange</H1>
+
+<P>This method retrieves date information, using <B>SYSTEMTIME</B> structures, that represents the high and low limits of a display in a month calendar control.</P>
+
+<P>This method implements the behavior of the Windows CE message MCM_GETMONTHRANGE. </P>
+
+<P>In the MFC for Windows CE implementation of <B>GetMonthRange</B>, you can specify <B>COleDateTime</B> usage, a <B>CTime</B> usage, or a <B>SYSTEMTIME</B> structure usage.</P>
+
+<PRE class=syntax><B>int GetMonthRange(
+COleDateTime&amp; </B><I>refMinRange</I><B>,
+COleDateTime&amp; </B><I>refMaxRange</I><B>,
+DWORD </B><I>dwFlags</I><B> )
+const;</B><I> </I>
+
+<B>int GetMonthRange(
+CTime&amp;</B> <I>refMinRange</I>,
+<B>CTime&amp;</B> <I>refMaxRange</I>,
+<B>DWORD</B> <I>dwFlags</I> <B>)
+const;</B><I> </I>
+
+<B>int GetMonthRange(
+LPSYSTEMTIME</B> <I>pMinRange</I>,
+<B>LPSYSTEMTIME</B> <I>pMaxRange</I>,
+<B>DWORD</B> <I>dwFlags</I> <B>)
+const;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>refMinRange</I></DT>
+
+<DD>Specifies a reference to a <A HREF="coledati.htm"><B>COleDateTime</B></A> or <A HREF="ctime.htm"><B>CTime</B></A> object containing the minimum date allowed.</DD>
+
+<DT><I>refMaxRange</I></DT>
+
+<DD>Specifies a reference to a <B>COleDateTime</B> or <B>CTime</B> object containing the maximum date allowed.</DD>
+
+<DT><I>pMinRange</I></DT>
+
+<DD>Specifies a pointer to a <A HREF="struct_30.htm"><B>SYSTEMTIME</B></A> structure containing the date at the lowest end of the range.</DD>
+
+<DT><I>pMaxRange</I></DT>
+
+<DD>Specifies a pointer to a <B>SYSTEMTIME</B> structure containing the date at the highest end of the range.</DD>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Value specifying the scope of the range limits to be retrieved. This value must be one of the following.
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Value</TH>
+<TH width=73%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>GMR_DAYSTATE </TD>
+<TD width=73%>Include preceding and trailing months of visible range that are only partially displayed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>GMR_VISIBLE </TD>
+<TD width=73%>Include only those months that are entirely displayed. </TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>An integer that represents the range, in months, spanned by the two limits indicated by <I>refMinRange</I> and <I>refMaxRange</I> in the first and second versions, or <I>pMinRange</I> and <I>pMaxRange</I> in the third version.</P>
+
+<H4>Example</H4>
+
+<PRE>void CDatesDlg::OnButton2()
+{
+&nbsp;&nbsp;// Gain a pointer to the control
+
+&nbsp;&nbsp;CMonthCalCtrl* pCtrl = (CMonthCalCtrl*) GetDlgItem(IDC_MONTHCALENDAR1);
+&nbsp;&nbsp;ASSERT(pCtrl != NULL);
+
+&nbsp;&nbsp;// First, we must find the visible range. The array we pass to the
+&nbsp;&nbsp;// SetDayState() function must be large enough to hold days for all
+&nbsp;&nbsp;// of the visible months. Even if a month is _partially_ visible,
+&nbsp;&nbsp;// we must have MONTHDAYSTATE data for it in the array we pass.
+&nbsp;&nbsp;// GetMonthRange() returns the range of days currently visible in
+&nbsp;&nbsp;// the control, along with a count of visible months. This array
+&nbsp;&nbsp;// will be up to 2 months larger than the number of "pages" visible
+&nbsp;&nbsp;// in the control.
+
+&nbsp;&nbsp;SYSTEMTIME timeFrom;
+&nbsp;&nbsp;SYSTEMTIME timeUntil;
+&nbsp;&nbsp;int nCount = pCtrl-&gt;GetMonthRange(&amp;timeFrom, &amp;timeUntil, GMR_DAYSTATE);
+
+&nbsp;&nbsp;// Allocate the state array based on the return value.
+
+&nbsp;&nbsp;LPMONTHDAYSTATE pDayState;
+&nbsp;&nbsp;pDayState = new MONTHDAYSTATE[nCount];
+&nbsp;&nbsp;memset(pDayState, 0, sizeof(MONTHDAYSTATE) * nCount);
+
+&nbsp;&nbsp;// Find the first fully visible month.
+
+&nbsp;&nbsp;int nIndex = (timeFrom.wDay == 1) ? 0 : 1;
+
+&nbsp;&nbsp;// Set the 4th day, 19th day, and 26th day of the first
+&nbsp;&nbsp;// _fully_ visible month as bold.
+
+&nbsp;&nbsp;pDayState[nIndex] |= 1 &lt;&lt; 3;&nbsp;&nbsp;// 4th day
+&nbsp;&nbsp;pDayState[nIndex] |= 1 &lt;&lt; 18;&nbsp;&nbsp;// 19th day
+&nbsp;&nbsp;pDayState[nIndex] |= 1 &lt;&lt; 25;&nbsp;&nbsp;// 25th day
+
+&nbsp;&nbsp;// Set state and clean up
+
+&nbsp;&nbsp;VERIFY(pCtrl-&gt;SetDayState(nCount, pDayState));
+&nbsp;&nbsp;delete [] pDayState;
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdtctl.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cmonclct_11.htm"><B>CMonthCalCtrl::GetRange</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

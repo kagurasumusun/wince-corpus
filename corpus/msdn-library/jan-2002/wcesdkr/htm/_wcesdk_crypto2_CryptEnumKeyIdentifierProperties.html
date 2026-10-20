@@ -1,0 +1,205 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptEnumKeyIdentifierProperties</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptEnumKeyIdentifierProperties"/>
+<MSHelp:RLTitle Title="CryptEnumKeyIdentifierProperties"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptenumkeyidentifierproperties"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CryptEnumKeyIdentifierProperties</H1>
+
+<P>This function enumerates key identifiers and their properties. This function is not called in a loop. Rather, it loops internally until the last key identifier property is enumerated or the callback function returns FALSE. The callback function is called if the <I>dwPropId</I> parameter is zero or if the key identifier's properties match the <I>dwPropId</I> parameter.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptEnumKeyIdentifierProperties(</B>
+<B>const CRYPT_HASH_BLOB *</B><I>pKeyIdentifier</I><B>,</B>
+<B>DWORD</B> <I>dwPropId</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>LPCWSTR</B> <I>pwszComputerName</I><B>,</B>
+<B>void *</B><I>pvReserved</I><B>,</B>
+<B>void *</B><I>pvArg</I><B>,</B>
+<B>PFN_CRYPT_ENUM_KEYID_PROP</B> <I>pfnEnum
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pKeyIdentifier</I> </DT>
+
+<DD>[in/optional] Pointer to a <A HREF="_wcesdk_crypto2_blob.htm"><B>CRYPT_HASH_BLOB</B></A> structure containing the key identifier.
+
+<P>If the <I>pKeyIdentifier</I> parameter is NULL, the function enumerates all key identifiers.
+
+
+<P>If the <I>pKeyIdentifier</I> parameter is not NULL, the callback function <I>pfnEnum</I> is only called for the specified key identifier.
+</dd>
+
+<DT><I>dwPropId</I> </DT>
+
+<DD>[in] Indicates the property identifier to be listed.
+
+<P>If the <I>dwPropId</I> parameter is set to zero, this function calls the callback function with all the properties.
+
+
+<P>If <I>dwPropId</I> is not zero and <I>pKeyIdentifier</I> is NULL, the callback function is called only for those key identifiers that have the specified property (sets the <I>cProp</I> parameter of <I>pfnEnum</I> to one). All key identifiers that do not have the property are skipped.
+
+
+<P>Any certificate property identifier can be used.
+</dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] By default, the CurrentUser's list of key identifiers is searched. If CRYPT_KEYID_MACHINE_FLAG is set, the list of key identifiers of the <B>LocalMachine</B> (if <I>pwszComputerName</I> is NULL) or of a remote computer (if <I>pwszComputerName</I> is not NULL) is searched.</dd>
+
+<DT><I>pwszComputerName</I> </DT>
+
+<DD>[in/optional] Pointer to a name of a remote computer to be searched. If CRYPT_KEYID_MACHINE_FLAG is set in the <I>dwFlags</I> parameter, it searches the remote computer for a list of key identifiers. If the local computer is to be searched and not a remote computer, the <I>pwszComputerName</I> parameter is set to NULL.</dd>
+
+<DT><I>pvReserved</I> </DT>
+
+<DD>[in] Reserved for future use and must be NULL.</dd>
+
+<DT><I>pvArg</I> </DT>
+
+<DD>[in/optional] Pointer to data to be passed to the callback function. The type is a void that allows the application to declare, define, and initialize a structure or argument to hold any information.</dd>
+
+<DT><I>pfnEnum</I> </DT>
+
+<DD>[in] Pointer to an application-defined callback function that is executed for each key identifier entry matching the input parameters. For details about the callback functions parameters, see the <B>Remarks</B> section later in this topic.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The <B>CryptEnumKeyIdentifierProperties</B> function repeatedly calls the <I>pfnEnum</I> callback function until the last key identifier is enumerated or the callback returns FALSE.</P>
+
+<P>If the main function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<H4>Remarks</H4>
+
+<P>A key identifier can have the same properties as a certificate context.</P>
+
+<P>The following signature applies to <I>pfnEnum</I>.</P>
+
+<PRE class="code"><B>BOOL (WINAPI *PFN_CRYPT_ENUM_KEYID_PROP</B>)(
+<B>const CRYPT_HASH_BLOB *</B><I>pKeyIdentifier</I>,
+<B>DWORD</B> <I>dwFlags</I>,
+<B>void *</B><I>pvReserved</I>,
+<B>void *</B><I>pvArg</I>,
+<B>DWORD</B> <I>cProp</I>,
+<B>DWORD *</B><I>rgdwPropId</I>,
+<B>void **</B><I>rgpvData</I>,
+<B>DWORD *</B><I>rgcbData</I>);</PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pKeyIdentifier</I> </DT>
+
+<DD>Pointer to a <B>CRYPT_HASH_BLOB</B> (see <B>BLOB</B>) containing the key identifier.</dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>Reserved for future use and must be zero (0).</dd>
+
+<DT><I>pvReserved</I> </DT>
+
+<DD>Reserved for future use and must be NULL.</dd>
+
+<DT><I>pvArg</I> </DT>
+
+<DD>Pointer to an argument that is passed through from the callback function.</dd>
+
+<DT><I>cProp</I> </DT>
+
+<DD>Count of elements in the array of <I>rgdwPropId</I>.</dd>
+
+<DT><I>rgdwPropId</I> </DT>
+
+<DD>Pointer to an array of property identifiers. Each entry in the array will be one of the value types listed for in the table for <I>dwPropId</I> in the <A HREF="_wcesdk_crypto2_cryptsetkeyidentifierproperty.htm"><B>CryptSetKeyIdentifierProperty</B></A> function.</dd>
+
+<DT><I>rgpvData</I> </DT>
+
+<DD>Pointer to an array that contains pointers to <I>pvData</I> elements corresponding the <I>rgdwPropId</I> array elements.
+
+<P>For CERT_KEY_PROV_INFO_PROP_ID the <I>rgpvData</I> element points to a <A HREF="_wcesdk_crypto2_crypt_key_prov_info.htm"><B>CRYPT_KEY_PROV_INFO</B></A> structure. For all other properties, the <I>rgpvData</I> element points to an array of bytes.
+</dd>
+
+<DT><I>rgcbData</I> </DT>
+
+<DD>Array of <B>DWORDs</B> that specify the size, in bytes, of corresponding elements in the <I>rgpvData</I> array.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns TRUE to continue enumeration.</P>
+
+<P>Returns FALSE and sets the last error code to stop enumeration.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptgetkeyidentifierproperty.htm"><B>CryptGetKeyIdentifierProperty</B></A>, <A HREF="_wcesdk_crypto2_cryptsetkeyidentifierproperty.htm"><B>CryptSetKeyIdentifierProperty</B></A>, <A HREF="_wcesdk_crypto2_blob.htm"><B>CRYPT_HASH_BLOB</B></A>, <A HREF="_wcesdk_crypto2_crypt_key_prov_info.htm"><B>CRYPT_KEY_PROV_INFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

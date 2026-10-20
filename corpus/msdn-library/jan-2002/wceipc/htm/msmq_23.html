@@ -1,0 +1,78 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Troubleshooting Network Connections</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Troubleshooting Network Connections"/>
+<MSHelp:RLTitle Title="Troubleshooting Network Connections"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceipc_troubleshooting_network_connections"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Troubleshooting Network Connections</H1>
+
+<P>Connecting legacy devices to a network is not always a straightforward process. If you are unable to establish a network connection, consider the following:
+
+<UL type="disc">
+	<LI>Is the target device a Handheld PC 2.00 or a Palm-size PC 2.01? If so, it's likely that there are no installed Ethernet drivers. Ethernet drivers are available in the "Optional components" subdirectory on the Windows CE Services CD.</li>
+
+	<LI>Is the NetBIOS registered on the target CE device? Use nbt.exe on the desktop or nbtce.exe on Windows CE to check NetBIOS registration status.</li>
+
+	<LI>Are you using Remote Access Service (RAS) over a modem to connect your device to the network? In the RAS environment, IP address and WINS of a dial-up adapter are not exposed through a registry key. To enable name server registration, a fake adapter must be created in the registry to store the WINS address.
+<PRE class="code">[HKEY_LOCAL_MACHINE\Comm\RASMSMQ\Params\tcpip]
+    “WINS”=”x.x.x.x” </PRE>
+</li>
+
+	<LI>Does your device have unique name? Is it different from the default? If not, the name registration service will not load.</li>
+
+	<LI>Is there a DNS server on the net? Windows NT can operate without DNS server by using NetBIOS broadcasts. Windows CE requires DNS, WINS, or a subkey in [HKEY_LOCAL_MACHINE\Comm\Tcpip\hosts] for name resolution.</li>
+
+	<LI>Does the DNS server know about the target machine? Use the NSLOOKUP utility to find out.</li>
+
+	<LI>Which WINS servers are used? If DNS does not know about the device, or has an incorrect IP address, this usually means that the CE device did not sync up with the WINS server. Run IPCONFIG /ALL on Windows NT/2000 or look in [HKEY_LOCAL_MACHINE\Comm\your netcard driver name\Parms\Tcpip] subkey value “WINS” or “DhcpWINS.”</li>
+
+	<LI>What does WINS know about the name in question? You may need to query WINS to discover this information. RFC1001/1002 explains how to write your own small tool to do WINS queries.</li>
+
+	<LI>Is the device configured properly? Here are some common configuration errors:
+<UL type="disc">
+	<LI>The redirector is present on the device, yet NETREG is configured to emulate NetBIOS. On a device with a redirector, you can run cmd.exe and net view. This forces the redirector to load and attempt to register the name on the net.</li>
+
+	<LI>The redirector is not present, but NetBIOS has been configured to use redirector for network administration.</li>
+
+	<LI>44Network tracking was enabled on a device running a version of Windows CE earlier than 2.12 (this disables the redirector).</li>
+
+	<LI>Network tracking is disabled and the periodic update has a long cycle (remember, cycle value is in seconds).</li>
+</UL>
+</li>
+
+	<LI>Does WINS have the correct address for the device name? If WINS does not have the correct address, NETREG has probably failed to register the device. Make sure WINS is running. If WINS does have the correct address, check the [HKEY_LOCAL_MACHINE\Comm\Tcpip\hosts] key for possible outdated cache entries for the target computer.</li>
+
+	<LI>If all else fails, check the log files on the target machine. The source computer may not have NetBIOS service running and it may not be responding correctly to node status queries. In this case, MSMQ will not be able to retrieve a machine name for an incoming connection and will reject the connection. To check whether the connecting device answers a node status query, determine the IP address and run “ping &#0150;a &lt;device_ip_address&gt;”.</li>
+</UL>
+
+<P><A HREF="http://www.cam.com/vxutil.html">VxUtil</A> is a set of free tools that can help you troubleshoot the network right from the Windows CE device. </P>
+
+<P>Use the NETMON utility to track general connection problems.</P>
+<DIV CLASS="footer">Built on Thursday, March 15, 2001</DIV>
+
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,92 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisReinitializePacket</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisReinitializePacket"/>
+<MSHelp:RLTitle Title="NdisReinitializePacket"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_ndisreinitializepacket"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisReinitializePacket</H1>
+
+<P>This function removes any chained buffers from a given packet and reinitializes it for reuse.</P>
+
+<PRE class="syntax"><B>VOID NdisReinitializePacket(
+IN OUT PNDIS_PACKET </B><I>Packet</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Packet</I></DT>
+
+<DD>Pointer to the packet descriptor allocated by the caller.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function reinitializes a packet descriptor so that the <B>MiniportReserved</B> and <B>ProtocolReserved</B> arrays contain all 0s and the head of the buffer chain is set to NULL.</P>
+
+<P>A driver can call this function only with packet descriptors allocated by that driver. For example, a <B>MiniportReturnPacket</B> function is likely to call this function to prepare a driver-allocated packet for use in a subsequent receive indication.</P>
+
+<P>Before calling this function, a driver must call the <B>NdisFreeBuffer</B> or the <B>NdisUnchainBufferAt</B><I>XXX</I> functions as many times as necessary to release or to save all buffer descriptors chained to the packet. Otherwise, a call to this function causes a memory leak: all memory associated with the buffer descriptor chain cannot be used by NDIS or by the driver until the system is rebooted.</P>
+
+<P>A driver can call the <B>NdisQueryPacket</B> function to determine how many buffer descriptors are chained to a given packet and, therefore, how many calls to <B>NdisFreeBuffer</B> or <B>NdisUnchainBufferAt</B><I>XXX</I> are required. It can call the <B>NdisGetNextBuffer</B> function to retrieve each buffer descriptor pointer to pass to <B>NdisFreeBuffer</B>.</P>
+
+<P>A call to this function has no effect on the <B>NDIS_PACKET_OOB_DATA</B> structure associated with the packet descriptor. To prepare this block for reuse, the allocating driver can reset the relevant members with the appropriate <B>NDIS_SET_PACKET_</B><I>XXX</I> macro(s).</P>
+
+<P>A driver that calls this function can run at any IRQL.</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="funct_1_175.htm"><B>NDIS_SET_PACKET_HEADER_SIZE</B></A>, <A HREF="funct_1_176.htm"><B>NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</B></A>, <A HREF="funct_1_177.htm"><B>NDIS_SET_PACKET_STATUS</B></A>, <A HREF="funct_1_178.htm"><B>NDIS_SET_PACKET_TIME_RECEIVED</B></A>, <A HREF="funct_1_180.htm"><B>NDIS_SET_PACKET_TIME_TO_SEND</B></A>, <A HREF="funct_1_186.htm"><B>NdisAllocatePacket</B></A>, <A HREF="funct_1_200.htm"><B>NdisFreeBuffer</B></A>, <A HREF="funct_1_208.htm"><B>NdisGetNextBuffer</B></A>, <A HREF="funct_1_265.htm"><B>NdisQueryPacket</B></A>, <A HREF="funct_1_296.htm"><B>NdisUnchainBufferAtBack</B></A>, <A HREF="funct_1_297.htm"><B>NdisUnchainBufferAtFront</B></A>, <A HREF="funct_1_303.htm"><B>NdisZeroMemory</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

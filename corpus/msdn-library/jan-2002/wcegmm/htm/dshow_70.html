@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Connecting Filter Graphs: An Example</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Connecting Filter Graphs: An Example"/>
+<MSHelp:RLTitle Title="Connecting Filter Graphs: An Example"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_connecting_filter_graphs__an_example"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imeminputpin__getallocator" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Connecting Filter Graphs: An Example</H1>
+
+<P>To better understand the allocation model for a transform-inplace filter, the following illustration shows a simple and common example of a filter graph. </P>
+
+<P class="fig"></P>
+
+<P class="normal"></P>
+
+<P class="fig"></P>
+
+<P>This simple example demonstrates the model of the transform-inplace filter offering its downstream allocator to its upstream filter. Consider what happens when InPlace E is connected to VidRen F. </P>
+
+<P>Upon connection, the video renderer filter (VidRen F) offers its allocator for use by the upstream in-place filter (InPlace E). Because it is a transform-inplace filter, InPlace E offers the allocator to the next filter upstream, InPlace D, and so on. This reconnection and renegotiation occurs until it encounters either the source filter or a copy transform filter. In this case it meets a decompressor, CopyDec C. (The copy transform filter cannot offer its allocator upstream, because it must perform a copy operation.) So the decompressor will write directly to the video renderer's buffer, which might be a DirectDraw&reg; surface. This demonstrates why it is a good practice to write a transform filter as a transform-inplace filter and pass allocators from the renderer upstream, if possible. </P>
+
+<P>On the other hand, consider filters InPlace B and CopyDec C. What if the downstream filter from a transform-inplace filter is a copy transform filter instead of a renderer? In this case, the copy transform filter will offer to create its own allocator on its input pin (the base classes handle this), and the transform-inplace filter can then offer that allocator downstream upon reconnection (the same as if it were connected to a renderer filter). </P>
+
+<P>However, even though CopyDec C can create its own allocator (from its <A HREF="JavaScript:hhobj_1.Click()"><B>IMemInputPin::GetAllocator</B></A> method), the source filter, Source A, uses its own buffer - say, a file. So when InPlace B connects to CopyDec C, InPlace B will have accepted the source filter's allocator already and will force that allocator to be used for the transport between itself and the decompressor filter. InPlace B can then provide the upstream filter, Source A, with the option of using the allocator offered by CopyDec C, but the source filter will refuse this allocator so that an extra copy does not have to be made from the file buffer to the decompressor's input buffer. </P>
+
+<P>Therefore, any upstream filter can force the use of its allocator downstream but should have good reason to do so (such as if it already has a buffer). In this example, only one copy is being made (by the decompression filter) between the file buffer and the video memory. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

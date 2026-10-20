@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>COleSafeArray::GetElement</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="COleSafeArray::GetElement"/>
+<MSHelp:RLTitle Title="COleSafeArray::GetElement"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_colesafearray_getelement"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_oa96_SafeArrayGetElement" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>COleSafeArray::GetElement</H1>
+
+<P>This method retrieves a single element of the safe array.</P>
+
+<PRE class=syntax><B>void GetElement(
+long* </B><I>rgIndices</I><B>,
+void* </B><I>pvData</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>rgIndices</I></DT>
+
+<DD>Specifies a pointer to an array of indexes for each dimension of the array. </DD>
+
+<DT><I>pvData</I></DT>
+
+<DD>Specifies a pointer to the location to place the element of the array.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This method automatically calls the windows functions <B>SafeArrayLock</B> and <B>SafeArrayUnlock</B> before and after retrieving the element. If the data element is a string, object, or variant, the function copies the element in the correct way. The parameter <I>pvData</I> should point to a large enough buffer to contain the element.</P>
+
+<P>On error, the function throws a <A HREF="cmemex.htm"><B>CMemoryException</B></A> or <A HREF="coleexcp.htm"><B>COleException</B></A>.</P>
+
+<H4>Example</H4>
+
+<PRE>// sa is of type COleSafeArray with two dimensions.
+COleSafeArray sa;
+
+// Determine upper bounds for both dimensions.
+long lNumRows;
+long lNumCols;
+sa.GetUBound(1, &amp;lNumRows);
+sa.GetUBound(2, &amp;lNumCols);
+
+// Display the elements in the SAFEARRAY.
+long index[2];
+VARIANT val;
+
+// Determine upper bounds for both dimensions.
+long r, c;
+sa.GetLBound(1, &amp;r);
+sa.GetLBound(2, &amp;c);
+
+for(;r &lt;= lNumRows; r++ )
+{
+&nbsp;&nbsp;for(; c &lt;= lNumCols; c++ )
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;index[0]=r;
+&nbsp;&nbsp;&nbsp;&nbsp;index[1]=c;
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Retrieve each element of the safearray.
+&nbsp;&nbsp;&nbsp;&nbsp;sa.GetElement(index, &amp;val);
+
+&nbsp;&nbsp;&nbsp;&nbsp;switch(val.vt)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;case VT_R8:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%1.2f\n", val.dblVal);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;&nbsp;&nbsp;case VT_BSTR:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRACE("%s\n",(CString)val.bstrVal);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;...
+
+&nbsp;&nbsp;&nbsp;&nbsp;case VT_EMPTY:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRACE("&lt;empty&gt;\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdisp.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="csafeary_23.htm"><B>COleSafeArray::PutElement</B></A>, <A HREF="JavaScript:hhobj_1.Click()"><B>SafeArrayGetElement</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

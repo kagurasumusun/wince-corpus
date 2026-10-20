@@ -1,0 +1,172 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisSend</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisSend"/>
+<MSHelp:RLTitle Title="NdisSend"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndissend"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisSend</H1>
+
+<P>This function forwards a send request to the underlying driver.</P>
+
+<PRE class="syntax"><B>VOID NdisSend(
+OUT PNDIS_STATUS </B><I>Status</I><B>,
+IN NDIS_HANDLE </B><I>NdisBindingHandle</I><B>,
+IN PNDIS_PACKET </B><I>Packet</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable that is set on return from this function. The underlying driver determines which NDIS_STATUS_<I>XXX</I> is returned, but it is usually one of the following values:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Value</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_SUCCESS</TD>
+<TD width=50%>The specified packet is being transmitted over the network.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_PENDING</TD>
+<TD width=50%>The request is being handled asynchronously, and the caller’s <A HREF="_wcesdk_protocolsendcomplete.htm"><B>ProtocolSendComplete</B></A> function will be called when it is completed.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_INVALID_PACKET</TD>
+<TD width=50%>The size of the requested transfer is too large for the network adapter, or possibly the network adapter indicated an erroneous packet transmission to its driver.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_CLOSING</TD>
+<TD width=50%>The underlying driver is closing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_RESET_IN_PROGRESS</TD>
+<TD width=50%>The underlying driver is currently resetting the network adapter. The caller’s <A HREF="_wcesdk_protocolstatus.htm"><B>ProtocolStatus</B></A> function was or will be called with NDIS_STATUS_RESET_START to indicate that a reset is in progress.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>NDIS_STATUS_FAILURE</TD>
+<TD width=50%>This value is usually a nonspecific default returned when none of the more specific NDIS_STATUS_<I>XXX</I> caused the underlying driver to fail the request.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>The specific NDIS_STATUS_<I>XXX</I> returned for device I/O errors that occur during a transmit operation depends on the nature of the network adapter and the discretion of the network adapter driver writer. For example, a miniport might return NDIS_STATUS_NO_CABLE if its network adapter indicates this condition to the driver.
+</dd>
+
+<DT><I>NdisBindingHandle</I></DT>
+
+<DD>Handle returned by the <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A> function that identifies the target network adapter or the virtual adapter of the next-lower driver to which the caller is bound.</dd>
+
+<DT><I>Packet</I></DT>
+
+<DD>Pointer to the caller-supplied packet descriptor, allocated with the <A HREF="_wcesdk_ndisallocatepacket.htm"><B>NdisAllocatePacket</B></A> function, with chained buffer descriptors mapping buffers containing the data that the underlying network adapter driver should transmit over the wire.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Before calling this function, a protocol driver can call the <A HREF="_wcesdk_ndissetpacketflags.htm"><B>NdisSetPacketFlags</B></A> function to set the flags in the private header, reserved for use by NDIS, of the packet descriptor that it allocated. These flags specify caller-determined information about the requested send operation that is not contained in the packet data. The underlying network adapter driver’s <A HREF="_wcesdk_miniportsend.htm"><B>MiniportSend</B></A> function is given the send flags as an input parameter. The meaning of the packet flags bits is medium-specific and defined by the pair of collaborating drivers.</P>
+
+<P>However, such a pair of collaborating drivers can use the <B>NDIS_PACKET_OOB_DATA</B> structure associated with each packet descriptor to communicate far more information than the packet flags can convey. Before calling this function, a protocol can use the <B>NDIS_SET_PACKET_TIME_TO_SEND</B> and/or <B>NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO</B> macros to set up out-of-band information, if any, relevant to the underlying driver in the <B>NDIS_PACKET_OOB_DATA</B> structure associated with the protocol-allocated packet descriptor.</P>
+
+<P>When an underlying driver has insufficient resources to transmit a valid send packet, the driver has two alternatives:
+
+<UL type="disc">
+	<LI>Its <B>MiniportSend</B> function can insert the packet into an internal queue and return NDIS_STATUS_PENDING.
+<P>The driver holds the packet queued until resources become available and sends the packet when they are.
+</li>
+
+	<LI>Its <B>MiniportSend</B> function can return control with NDIS_STATUS_RESOURCES.
+<P>The NDIS library holds such a returned packet in an internal queue for resubmission to the miniport. The miniport indicates its readiness to accept send packets later by calling <A HREF="_wcesdk_ndismsendresourcesavailable.htm"><B>NdisMSendResourcesAvailable</B></A> or <A HREF="_wcesdk_ndismsendcomplete.htm"><B>NdisMSendComplete</B></A>, whichever call occurs first.
+</li>
+</UL>
+
+<P>In either of the preceding situations, this function returns NDIS_STATUS_PENDING to the caller, and the driver’s <B>ProtocolSendComplete</B> function is called when the packet is transmitted.</P>
+
+<P>As soon as a protocol calls this function, it relinquishes ownership of the packet descriptor at <I>Packet</I> of all buffers mapped by buffer descriptors that it chained to the packet and of any out-of-band information that it supplied with the packet descriptor. The protocol regains ownership of these resources when the packet is completed with a status other than NDIS_STATUS_PENDING or when its <B>ProtocolSendComplete</B> function is called.</P>
+
+<P>When either occurs, the protocol can call the <A HREF="_wcesdk_ndisreinitializepacket.htm"><B>NdisReinitializePacket</B></A> function to prepare the packet for reuse after saving the buffer descriptors chained to the packet descriptor with calls to an <B>NdisUnchainBufferAt<I>XXX</I></B> function. Reusing such a packet descriptor yields better performance than returning the packet to driver-allocated packet pool with the <A HREF="_wcesdk_ndisfreepacket.htm"><B>NdisFreePacket</B></A> function, and then reallocating it for another send later.</P>
+
+<P>An NDIS intermediate driver must repackage incoming sends from still higher level protocols in fresh packet descriptors before passing such a send request to the underlying miniport with this function.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportsend.htm"><B>MiniportSend</B></A>, <A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A>, <A HREF="_wcesdk_ndisallocatepacket.htm"><B>NdisAllocatePacket</B></A>, <A HREF="_wcesdk_ndisfreepacket.htm"><B>NdisFreePacket</B></A>, <A HREF="_wcesdk_ndisgetpacketflags.htm"><B>NdisGetPacketFlags</B></A>, <A HREF="_wcesdk_ndismsendcomplete.htm"><B>NdisMSendComplete</B></A>, <A HREF="_wcesdk_ndismsendresourcesavailable.htm"><B>NdisMSendResourcesAvailable</B></A>, <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>, <A HREF="_wcesdk_ndisreinitializepacket.htm"><B>NdisReinitializePacket</B></A>, <A HREF="_wcesdk_ndissetpacketflags.htm"><B>NdisSetPacketFlags</B></A>, <A HREF="_wcesdk_ndisunchainbufferatback.htm"><B>NdisUnchainBufferAtBack</B></A>, <A HREF="_wcesdk_ndisunchainbufferatfront.htm"><B>NdisUnchainBufferAtFront</B></A>, <A HREF="_wcesdk_protocolsendcomplete.htm"><B>ProtocolSendComplete</B></A>, <A HREF="_wcesdk_protocolstatus.htm"><B>ProtocolStatus</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

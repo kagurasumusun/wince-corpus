@@ -1,0 +1,164 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>LoadLibraryEx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="LoadLibraryEx"/>
+<MSHelp:RLTitle Title="LoadLibraryEx"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_loadlibraryex"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>LoadLibraryEx</H1>
+
+<P>This function maps a specified executable module into the address space of the calling process. The executable module can be a .dll or an .exe file. The specified module may cause other modules to be mapped into the address space.</P>
+
+<PRE class="syntax"><B>HMODULE LoadLibraryEx(
+LPCTSTR </B><I>lpLibFileName</I><B>,
+HANDLE </B><I>hFile</I><B>,
+DWORD </B><I>dwFlags </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpLibFileName </I></DT>
+
+<DD>[in] Pointer to a null-terminated string that names the executable module (either a .dll or an .exe file). The name specified is the file name of the executable module. This name is not related to the name stored in a library module itself, as specified by the LIBRARY keyword in the module-definition (.DEF) file.
+
+<P>If the string specifies a path, but the file does not exist in the specified directory, the function fails. When specifying a path, be sure to use backslashes (\), not forward slashes (/).
+
+
+<P>If the string does not specify a path, and the file name extension is omitted, the function appends the default library extension .dll to the file name. However, the file name string can include a trailing point character (.) to indicate that the module name has no extension.
+
+
+<P>If the string does not specify a path, the function uses a standard search strategy to find the file. See the <A HREF="_wcesdk_win32_loadlibrary.htm"><B>LoadLibrary</B></A> function.
+
+
+<P>If mapping the specified module into the address space causes the system to map in other, associated executable modules, the function uses the standard search strategy specified by <B>LoadLibrary</B>.
+</dd>
+
+<DT><I>hFile</I> </DT>
+
+<DD>This parameter is reserved for future use. It must be NULL. </dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] Specifies the action to take when loading the module. If no flags are specified, the behavior of this function is identical to that of the <B>LoadLibrary</B> function. This parameter can be one of the following values.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>Flag </TH>
+<TH width=50%>Meaning </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>DONT_RESOLVE_DLL_REFERENCES </TD>
+<TD width=50%>If this value is used, and the executable module is a DLL, the system does not call <A HREF="_wcesdk_win32_dllmain.htm"><B>DllMain</B></A> for process and thread initialization and termination. Also, the system does not load additional executable modules that are referenced by the specified module.
+<P>If this value is not used, and the executable module is a DLL, the system calls <B>DllMain</B> for process and thread initialization and termination. The system loads additional executable modules that are referenced by the specified module. </P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>LOAD_LIBRARY_AS_DATAFILE </TD>
+<TD width=50%>If this value is used, the system maps the file into the calling process's virtual address space as if it were a data file. Nothing is done to execute or prepare to execute the mapped file. Use this flag when you want to load a DLL only to extract messages or resources from it.
+<P>You can use the resulting module handle with any Win32 functions that operate on resources. </P>
+
+<P>DONT_RESOLVE_DLL_REFERENCES is implied.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%>LOAD_WITH_ALTERED_SEARCH_PATH </TD>
+<TD width=50%><B>Windows CE:</B> not supported. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is a handle to the mapped executable module.</P>
+
+<P>If the function fails, the return value is NULL. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>The calling process can use the handle returned by this function to identify the module in calls to the <A HREF="_wcesdk_win32_getprocaddress.htm"><B>GetProcAddress</B></A>, <A HREF="_wcesdk_win32_findresource.htm"><B>FindResource</B></A>, and <A HREF="_wcesdk_win32_loadresource.htm"><B>LoadResource</B></A> functions. </P>
+
+<P>The <B>LoadLibraryEx</B> function is very similar to the <B>LoadLibrary</B> function. The differences consist of a set of optional behaviors that <B>LoadLibraryEx</B> provides. First, <B>LoadLibraryEx</B> can map a DLL module without calling the <B>DllMain</B> function of the DLL. Second, <B>LoadLibraryEx</B> can load a module in a way that is optimized for the case where the module will never be executed, loading the module as if it were a data file. You select these optional behaviors by setting the <I>dwFlags</I> parameter; if <I>dwFlags</I> is zero, <B>LoadLibraryEx</B> behaves identically to <B>LoadLibrary</B>.</P>
+
+<P>It is not safe to call <B>LoadLibraryEx</B> from <B>DllMain</B>. For more information, see the Remarks section in <B>DllMain</B>. </P>
+
+<P>If no path is specified in the <I>lpLibFileName</I> parameter, and the base file name does not match the base file name of a loaded module, the <B>LoadLibraryEx</B> function uses the same standard file search strategy that <B>LoadLibrary</B> uses to find the executable module and any associated executable modules that it causes to be loaded. </P>
+
+<P>Because Windows CE will only load the same module exactly once, the <I>dwFlags</I> settings will be used for all further loads of the module. If the module was already loaded using different parameters then the second attempt to load it will fail.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Winbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Nk.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_dllmain.htm"><B>DllMain</B></A>, <A HREF="_wcesdk_win32_findresource.htm"><B>FindResource</B></A>, <A HREF="_wcesdk_win32_freelibrary.htm"><B>FreeLibrary</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_getprocaddress.htm"><B>GetProcAddress</B></A>, <A HREF="_wcesdk_win32_loadlibrary.htm"><B>LoadLibrary</B></A>, <A HREF="_wcesdk_win32_loadresource.htm"><B>LoadResource</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

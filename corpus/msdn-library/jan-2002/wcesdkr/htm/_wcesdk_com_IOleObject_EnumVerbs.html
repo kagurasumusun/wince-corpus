@@ -1,0 +1,184 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOleObject::EnumVerbs</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IOleObject::EnumVerbs"/>
+<MSHelp:RLTitle Title="IOleObject::EnumVerbs"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ioleobject_enumverbs"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IOleObject::EnumVerbs</H1>
+
+<P>This<B> </B>method<B> </B>exposes a pull-down menu listing the verbs available for an object in ascending order by verb number.</P>
+
+<PRE class="syntax"><B>HRESULT EnumVerbs( </B>
+<B>IEnumOleVerb **</B><I>ppEnumOleVerb</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppEnumOleVerb</I></DT>
+
+<DD>[out] Address of <B>IEnumOleVerb</B>* pointer variable that receives the interface pointer to the new enumerator object. Each time an object receives a call to <B>EnumVerbs</B>, it must increase the reference count on *<I>ppEnumOleVerb</I>. It is the caller’s responsibility to call <B>Release</B> when it is done with *<I>ppEnumOleVerb</I>. If an error occurs, *<I>ppEnumOleVerb</I> must be set to NULL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=28%>Value</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>S_OK</TD>
+<TD width=72%>Verb(s) enumerated successfully.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>OLE_S_USEREG</TD>
+<TD width=72%>Delegate to the default handler to use the entries in the registry to provide the enumeration.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>OLEOBJ_E_NOVERBS</TD>
+<TD width=72%>Object does not support any verbs.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<H4>Notes to Callers</H4>
+
+<P>Containers call this method to expose a pull-down menu of the verbs available for their embedded objects. You may want your container to call <B>IOleObject::EnumVerbs</B> each and every time such a menu is selected in order to enable such objects as media clips, whose verbs may change while they are running, to update their menus. The default verb for a media clip, for example, changes from “Play” before it is activated to “Stop” once it is running.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>The default handler’s implementation of <B>IOleObject::EnumVerbs</B> uses the registry to enumerate an object’s verbs. If an object application is to use the default handler’s implementation, it should return OLE_S_USEREG.</P>
+
+<P>The enumeration returned is of type <B>IEnumOLEVERB</B>:</P>
+
+<PRE class="code">typedef Enum &lt; OLEVERB &gt; IEnumOLEVERB;
+ </PRE>
+
+<P>where <B>OLEVERB</B> is defined as:</P>
+
+<PRE class="code">typedef struct tagOLEVERB
+{
+    LONG    iVerb;
+    LPOLESTR   lpszVerbName;
+    DWORD   fuFlags;
+    DWORD   grfAttribs;
+} OLEVERB;
+ </PRE>
+
+<P>The following list describes the members of the <B>OLEVERB</B> structure:
+
+<DL>
+<DT><I>iVerb</I></DT>
+
+<DD>Verb number being enumerated. If the object supports OLEIVERB_OPEN, OLEIVERB_SHOW and/or OLEIVERB_HIDE (or another predefined verb), these will be the first verbs enumerated, since they have the lowest verb numbers. </dd>
+
+<DT><I>lpszVerbName</I></DT>
+
+<DD>Long pointer to the null-terminated string that contains the name of the verb.
+
+<P>In Windows, this value, along with optional embedded ampersand characters to indicate accelerator keys, can be passed to the <B>AppendMenu</B> function.
+
+
+<P>On the Macintosh, the following metacharacters may be passed along with this value:
+
+
+<UL type="disc">
+	<LI>! marks the menu item with the subsequent character</li>
+
+	<LI>&lt; sets the character style of the item</li>
+
+	<LI>( disables the item.</li>
+</UL>
+
+
+<P>The metacharacters / and ^ are not permitted.
+</dd>
+
+<DT><I>fuFlags</I></DT>
+
+<DD>In Windows, a group of flags taken from the flag constants beginning with MF_ defined in <B>AppendMenu</B>. Containers should use these flags in building an object’s verb menu. All flags defined in <B>AppendMenu</B> are supported except for MF_BITMAP, MF_OWNERDRAW, and MF_POPUP.</dd>
+
+<DT><I>grfAttribs</I></DT>
+
+<DD>In Windows, a group of flag bits taken from the enumeration <B>OLEVERBATTRIB</B>. The flag OLEVERBATTRIB_NEVERDIRTIES indicates that executing this verb will not cause the object to become dirty and is therefore in need of saving to persistent storage.
+
+<P>OLEVERBATTRIB_ONCONTAINERMENU indicates that this verb should be placed on the container’s menu of object verbs when the object is selected. OLEIVERB_HIDE, OLEIVERB_SHOW, and OLEIVERB_OPEN never have this value set.
+</dd>
+</DL>
+
+<P>For more information on the Windows <B>AppendMenu</B> function, see the Microsoft <I>Win32 SDK</I>.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oleidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

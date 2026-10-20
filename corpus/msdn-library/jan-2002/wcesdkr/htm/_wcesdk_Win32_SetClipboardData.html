@@ -1,0 +1,184 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SetClipboardData</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SetClipboardData"/>
+<MSHelp:RLTitle Title="SetClipboardData"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_setclipboarddata"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SetClipboardData</H1>
+
+<P>This function places data on the clipboard in a specified clipboard format. </P>
+
+<PRE class="syntax"><B>HANDLE</B> <B>SetClipboardData(</B>
+<B>UINT</B> <I>uFormat</I><B>, </B>
+<B>HANDLE</B> <I>hMem</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>uFormat</I></DT>
+
+<DD>[in] Unsigned integer that specifies a clipboard format. This parameter can be a registered format or any of the standard clipboard formats. Windows CE supports the following standard clipboard:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Value</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_BITMAP</TD>
+<TD width=73%>A handle to a bitmap (<B>HBITMAP</B>). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_DIB</TD>
+<TD width=73%>A memory object containing a <A HREF="_wcesdk_win32_bitmapinfo_str.htm"><B>BITMAPINFO</B></A> structure followed by the bitmap bits. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_DIF</TD>
+<TD width=73%>Software Arts' Data Interchange Format. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_PALETTE</TD>
+<TD width=73%>Handle of a color palette. Whenever an application places data in the clipboard that depends on or assumes a color palette, it should place the palette on the clipboard as well.
+<P>If the clipboard contains data in the CF_PALETTE (logical color palette) format, the application should use the <A HREF="_wcesdk_win32_selectpalette.htm"><B>SelectPalette</B></A> and <A HREF="_wcesdk_win32_realizepalette.htm"><B>RealizePalette</B></A> functions to realize (compare) any other data in the clipboard against that logical palette. </P>
+
+<P>When displaying clipboard data, the clipboard always uses as its current palette any object on the clipboard that is in the CF_PALETTE format.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_PENDATA</TD>
+<TD width=73%>Data for the pen extensions to the Microsoft® Windows® for Pen Computing. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_RIFF</TD>
+<TD width=73%>Represents audio data more complex than can be represented in a CF_WAVE standard wave format.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_SYLK</TD>
+<TD width=73%>Microsoft Symbolic Link (SYLK) format. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_TEXT</TD>
+<TD width=73%>Text format. Each line ends with a carriage return/linefeed (CR-LF) combination. A null character signals the end of the data. Use this format for ANSI text. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_WAVE</TD>
+<TD width=73%>Represents audio data in one of the standard wave formats, such as 11 kHz or 22 kHz pulse code modulation (PCM). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_TIFF</TD>
+<TD width=73%>Tagged-image file format. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>CF_UNICODETEXT</TD>
+<TD width=73%>Unicode text format. Each line ends with a carriage return/linefeed (CR-LF) combination. A null character signals the end of the data.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>hMem</I></DT>
+
+<DD>[in] Handle to the data in the specified format. This parameter can be NULL, indicating that the window provides data in the specified clipboard format (renders the format) upon request. If a window delays rendering, it must process the <A HREF="_wcesdk_win32_wm_renderformat.htm">WM_RENDERFORMAT</A> and <A HREF="_wcesdk_win32_wm_renderallformats.htm">WM_RENDERALLFORMATS</A> messages.
+
+<P>After <B>SetClipboardData</B> is called, the system owns the object identified by the <I>hMem</I> parameter. The application can read the data, but must not free the handle or leave it locked. If the <I>hMem</I> parameter identifies a memory object, the object must have been allocated using the <A HREF="_wcesdk_win32_localalloc.htm"><B>LocalAlloc</B></A> function.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The handle of the data indicates success. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>The data to be set into the clipboard should be allocated using the <B>LocalAlloc</B> function. </P>
+
+<P>Windows CE does not perform any implicit conversions between formats. </P>
+
+<P>The window must be the current clipboard owner, and the application must have called the <A HREF="_wcesdk_win32_openclipboard.htm"><B>OpenClipboard</B></A> function.</P>
+
+<P>The system performs implicit data format conversions between certain clipboard formats when an application calls the <A HREF="_wcesdk_win32_getclipboarddata.htm"><B>GetClipboardData</B></A> function. For example, if the CF_OEMTEXT format is on the clipboard, a window can retrieve data in the CF_TEXT format. The format on the clipboard is converted to the requested format on demand. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Clipbd.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_bitmapinfo_str.htm"><B>BITMAPINFO</B></A>, <A HREF="_wcesdk_win32_getclipboarddata.htm"><B>GetClipboardData</B></A>, <A HREF="_wcesdk_win32_openclipboard.htm"><B>OpenClipboard</B></A>, <A HREF="_wcesdk_win32_registerclipboardformat.htm"><B>RegisterClipboardFormat</B></A>, <A HREF="_wcesdk_win32_wm_renderformat.htm">WM_RENDERFORMAT</A>, <A HREF="_wcesdk_win32_wm_renderallformats.htm">WM_RENDERALLFORMATS</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

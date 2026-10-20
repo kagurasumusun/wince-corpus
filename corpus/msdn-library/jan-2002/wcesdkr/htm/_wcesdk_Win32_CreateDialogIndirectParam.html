@@ -1,0 +1,164 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CreateDialogIndirectParam</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CreateDialogIndirectParam"/>
+<MSHelp:RLTitle Title="CreateDialogIndirectParam"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_createdialogindirectparam"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CreateDialogIndirectParam</H1>
+
+<P>This function creates a modeless dialog box from a dialog box template in memory. Before displaying the dialog box, the function passes an application-defined value to the dialog box procedure as the <I>lParam</I> parameter of the WM_INITDIALOG message. An application can use this value to initialize dialog box controls. </P>
+
+<PRE class="syntax"><B>HWND</B> <B>CreateDialogIndirectParam(
+HINSTANCE</B> <I>hInstance</I><B>,
+LPCDLGTEMPLATE</B> <I>lpTemplate</I><B>,
+HWND</B> <I>hWndParent</I><B>,
+DLGPROC</B> <I>lpDialogFunc</I><B>,
+LPARAM</B> <I>lParamInit</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hInstance</I></DT>
+
+<DD>[in] Handle to the module that will create the dialog box. </dd>
+
+<DT><I>lpTemplate</I></DT>
+
+<DD>[in] Long pointer to a global memory object containing a template that <B>CreateDialogIndirectParam</B> uses to create the dialog box. A dialog box template consists of a header that describes the dialog box, followed by one or more additional blocks of data that describe each of the controls in the dialog box. The template can use either the standard format or the extended format.
+
+<P>In a standard template, the header is a <A HREF="_wcesdk_win32_dlgtemplate_str.htm"><B>DLGTEMPLATE</B></A> structure followed by additional variable-length arrays. The data for each control consists of a <A HREF="_wcesdk_win32_dlgitemtemplate_str.htm"><B>DLGITEMTEMPLATE</B></A> structure followed by additional variable-length arrays.
+
+
+<P>In an extended dialog box template, the header uses the <A HREF="_wcesdk_win32_dlgtemplateex_str.htm"><B>DLGTEMPLATEEX</B></A> format and the control definitions use the <A HREF="_wcesdk_win32_dlgitemtemplateex_str.htm"><B>DLGITEMTEMPLATEEX</B></A> format.
+
+
+<P>After <B>CreateDialogIndirectParam</B> returns, you can free the template, which is only used to get the dialog box started.
+</dd>
+
+<DT><I>hWndParent</I></DT>
+
+<DD>[in] Handle to the window that owns the dialog box. </dd>
+
+<DT><I>lpDialogFunc</I></DT>
+
+<DD>[in] Long pointer to the dialog box procedure. For more information about the dialog box procedure, see <A HREF="_wcesdk_win32_dialogproc.htm"><B>DialogProc</B></A>. </dd>
+
+<DT><I>lParamInit</I></DT>
+
+<DD>[in] Specifies the value to pass to the dialog box in the <I>lParam</I> parameter of the WM_INITDIALOG message. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The window handle to the dialog box indicates success. NULL indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>CreateDialogIndirectParam</B> function uses the <A HREF="_wcesdk_win32_createwindowex.htm"><B>CreateWindowEx</B></A> function to create the dialog box. <B>CreateDialogIndirectParam</B> then sends a <A HREF="_wcesdk_win32_wm_initdialog.htm">WM_INITDIALOG</A> message to the dialog box procedure. The function displays the dialog box if the template specifies the WS_VISIBLE style. Finally, <B>CreateDialogIndirectParam</B> returns the window handle to the dialog box. </P>
+
+<P>After <B>CreateDialogIndirectParam</B> returns, you can use the <A HREF="_wcesdk_win32_showwindow.htm"><B>ShowWindow</B></A> function to display the dialog box (if it is not already visible). To destroy the dialog box, use the <A HREF="_wcesdk_win32_destroywindow.htm"><B>DestroyWindow</B></A> function. </P>
+
+<P>In a standard dialog box template, the <B>DLGTEMPLATE</B> structure and each of the <B>DLGITEMTEMPLATE</B> structures must be aligned on <B>DWORD</B> boundaries. The creation data array that follows a <B>DLGITEMTEMPLATE</B> structure must also be aligned on a <B>DWORD</B> boundary. All of the other variable-length arrays in the template must be aligned on <B>WORD</B> boundaries. </P>
+
+<P>In an extended dialog box template, the <B>DLGTEMPLATEEX</B> header and each of the <B>DLGITEMTEMPLATEEX</B> control definitions must be aligned on <B>DWORD</B> boundaries. The creation data array, if any, that follows a <B>DLGITEMTEMPLATEEX</B> structure must also be aligned on a <B>DWORD</B> boundary. All of the other variable-length arrays in the template must be aligned on <B>WORD</B> boundaries. </P>
+
+<P>All character strings in the dialog box template, such as titles for the dialog box and buttons, must be Unicode strings. </P>
+
+<P>Dialog boxes outside the visible area of the screen are not automatically repositioned.</P>
+
+<P>If the user presses ALT+H while the dialog box has the input focus, the system posts a WM_HELP message to the dialog procedure. An application should respond to this message by displaying context-sensitive help for the dialog box. </P>
+
+<P>The following styles are not supported for the <I>style</I> member of the <B>DLGTEMPLATE</B> structure:
+
+<DL>
+<DT>DS_SETFONT</DT>
+
+<DD>You cannot set the font inside dialog boxes. </dd>
+
+<DT>DS_3DLOOK</DT>
+
+<DD>Gives the dialog box a non-bold font and draws three-dimensional borders around control windows in the dialog box.
+
+<P>The DS_3DLOOK style is required only by Win32-based applications compiled for system versions earlier than Windows 95 or Windows NT 4.0. The system automatically applies the three-dimensional look to dialog boxes created by applications compiled for current versions of the system.
+</dd>
+
+<DT>DS_RECURSE</DT>
+
+<DD>Not required. Any child dialog box is automatically considered to be a recursive dialog box.</dd>
+
+<DT>DS_CONTROL</DT>
+
+<DD>Not required.</dd>
+</DL>
+
+<P>To get default positioning, use the DS_CENTER style. </P>
+
+<P>If the WS_CHILD style is not specified, the WS_POPUP style is assumed.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Winuser.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Dlgmgr.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createdialog.htm"><B>CreateDialog</B></A>, <A HREF="_wcesdk_win32_createdialogindirect.htm"><B>CreateDialogIndirect</B></A>, <A HREF="_wcesdk_win32_createdialogparam.htm"><B>CreateDialogParam</B></A>, <A HREF="_wcesdk_win32_createwindowex.htm"><B>CreateWindowEx</B></A>, <A HREF="_wcesdk_win32_destroywindow.htm"><B>DestroyWindow</B></A>, <A HREF="_wcesdk_win32_dialogproc.htm"><B>DialogProc</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_showwindow.htm"><B>ShowWindow</B></A>, <A HREF="_wcesdk_win32_wm_initdialog.htm">WM_INITDIALOG</A>, <A HREF="_wcesdk_win32_wm_setfont.htm">WM_SETFONT</A>, <A HREF="_wcesdk_win32_dlgitemtemplate_str.htm"><B>DLGITEMTEMPLATE</B></A>, <A HREF="_wcesdk_win32_dlgitemtemplateex_str.htm"><B>DLGITEMTEMPLATEEX</B></A>, <A HREF="_wcesdk_win32_dlgtemplate_str.htm"><B>DLGTEMPLATE</B></A>, <A HREF="_wcesdk_win32_dlgtemplateex_str.htm"><B>DLGTEMPLATEEX</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

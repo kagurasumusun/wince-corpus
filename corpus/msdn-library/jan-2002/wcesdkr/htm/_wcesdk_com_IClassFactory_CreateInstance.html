@@ -1,0 +1,141 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IClassFactory::CreateInstance</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IClassFactory::CreateInstance"/>
+<MSHelp:RLTitle Title="IClassFactory::CreateInstance"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_iclassfactory_createinstance"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IClassFactory::CreateInstance</H1>
+
+<P>This method creates an uninitialized object of a specified class identifier (CLSID).</P>
+
+<PRE class="syntax"><B>HRESULT CreateInstance(
+IUnknown *</B><I>pUnkOuter</I><B>,</B><I>
+</I><B>REFIID</B> <I>riid</I><B>,</B>
+<B>void</B> <B>**</B><I>ppvObject</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pUnkOuter</I></DT>
+
+<DD>[in] If the object is being created as part of an aggregate, pointer to the controlling <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A> interface of the aggregate. Otherwise, <I>pUnkOuter</I> must be NULL. </dd>
+
+<DT><I>riid</I></DT>
+
+<DD>[in] Reference to the identifier of the interface to be used to communicate with the newly created object. If <I>pUnkOuter</I> is NULL, this parameter is frequently the IID of the initializing interface; if <I>pUnkOuter</I> is non-NULL, <I>riid</I> must be <B>IID_IUnknown</B> (defined in the header as the IID for <B>IUnknown</B>).</dd>
+
+<DT><I>ppvObject</I></DT>
+
+<DD>[out] Pointer to a pointer variable that receives the interface pointer requested in <I>riid</I>. Upon successful return, *<I>ppvObject</I> contains the requested interface pointer. If the object does not support the interface specified in <I>riid</I>, the implementation must set *<I>ppvObject</I> to NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This method supports the standard return values E_UNEXPECTED, E_OUTOFMEMORY, and E_INVALIDARG, as well as the values described in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=37%>Value</TH>
+<TH width=63%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>S_OK</TD>
+<TD width=63%>The specified object was created.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>CLASS_E_NOAGGREGATION</TD>
+<TD width=63%>The <I>pUnkOuter</I> parameter was non-NULL and the object does not support aggregation.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=37%>E_NOINTERFACE</TD>
+<TD width=63%>The object that <I>ppvObject</I> points to does not support the interface identified by <I>riid</I>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The <A HREF="_wcesdk_com_iclassfactory_iunknown.htm"><B>IClassFactory</B></A> interface is always on a class object. The <B>CreateInstance</B> method creates an uninitialized object of the class identified with the specified CLSID. When an object is created in this way, the CLSID must be registered in the system registry with <B>CoRegisterClassObject</B>.</P>
+
+<P>The <I>pUnkOuter</I> parameter indicates whether the object is being created as part of an aggregate. Object definitions are not required to support aggregation&#0151;they must be specifically designed and implemented to support it. </P>
+
+<P>The <I>riid</I> parameter specifies the interface identifier (IID) of the interface through which you will communicate with the new object. If <I>pUnkOuter</I> is non-NULL (that indicates aggregation), the value of the <I>riid</I> parameter must be <B>IID_IUnknown</B>. If the object is not part of an aggregate, <I>riid</I> often specifies the interface though which the object will be initialized. </P>
+
+<P>For OLE embeddings, the initialization interface is <A HREF="_wcesdk_com_ipersiststorage.htm"><B>IPersistStorage</B></A>, but in other situations, other interfaces are used. To initialize the object, there must be a subsequent call to an appropriate method in the initializing interface. Common initialization functions include <A HREF="_wcesdk_com_ipersiststorage_initnew.htm"><B>IPersistStorage::InitNew</B></A> (for new, blank embeddable components), <A HREF="_wcesdk_com_ipersiststorage_load.htm"><B>IPersistStorage::Load</B></A> (for reloaded embeddable components),</P>
+
+<P>In general, if an application supports only one class of objects, and the class object is registered for single use, only one object can be created. The application must not create other objects, and a request to do so should return an error from <B>IClassFactory::CreateInstance</B>. The same is true for applications that support multiple classes, each with a class object registered for single use; a <B>CreateInstance</B> for one class followed by a <B>CreateInstance</B> for any of the classes should return an error.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Objbase.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_iclassfactory_iunknown.htm"><B>IClassFactory</B></A>, <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A>, <A HREF="_wcesdk_com_ipersiststorage.htm"><B>IPersistStorage</B></A>, <A HREF="_wcesdk_com_ipersiststorage_initnew.htm"><B>IPersistStorage::InitNew</B></A>, <A HREF="_wcesdk_com_ipersiststorage_load.htm"><B>IPersistStorage::Load</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

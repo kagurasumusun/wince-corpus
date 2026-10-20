@@ -1,0 +1,145 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMoniker::GetDisplayName</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMoniker::GetDisplayName"/>
+<MSHelp:RLTitle Title="IMoniker::GetDisplayName"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_imoniker_getdisplayname"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IMoniker::GetDisplayName</H1>
+
+<P>This method returns the display name.</P>
+
+<PRE class="syntax"><B>HRESULT GetDisplayName(
+IBindCtx *</B><I>pbc</I><B>,
+IMoniker *</B><I>pmkToLeft</I><B>,
+LPOlESTR * </B><I>ppszDisplayName</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pbc</I></DT>
+
+<DD>[in] Pointer to the <B>IBindCtx</B> interface on the bind context to be used in this operation. The bind context caches objects bound during the binding process, contains parameters that apply to all operations using the bind context, and provides the means by which the moniker implementation should retrieve information about its environment. For more information, see <B>IBindCtx</B>.</dd>
+
+<DT><I>pmkToLeft</I></DT>
+
+<DD>[in] If the moniker is part of a composite moniker, pointer to the moniker to the left of this moniker. This parameter is primarily used by moniker implementers to enable cooperation between the various components of a composite moniker. Moniker clients should pass NULL.</dd>
+
+<DT><I>ppszDisplayName</I></DT>
+
+<DD>[out] Address of <B>LPOLESTR</B> pointer variable that receives a pointer to the display name string. When successful, this string is a zero-terminated wide character string (two bytes per character) that contains the display name of the moniker. The implementation must use <B>IMalloc::Alloc</B> to allocate the string returned in <I>ppszDisplayName</I>, and the caller is responsible for calling <B>IMalloc::Free</B> to free it. Both the caller and the implementation of this method use the COM task allocator returned by <A HREF="_wcesdk_com_cogetmalloc.htm"><B>CoGetMalloc</B></A>. If an error occurs, the implementation must set *<I>ppszDisplayName</I> should be set to NULL.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The method supports the standard return value E_OUTOFMEMORY, as well as the values described in the following table.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Value</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>S_OK</TD>
+<TD width=62%>The display name was successfully supplied.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>MK_E_EXCEEDEDDEADLINE </TD>
+<TD width=62%>The binding operation could not be completed within the time limit specified by the bind context’s <A HREF="_wcesdk_com_bind_opts.htm"><B>BIND_OPTS</B></A> structure.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>E_NOTIMPL</TD>
+<TD width=62%>There is no display name.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P><B>IMoniker::GetDisplayName</B> provides a string that is a displayable representation of the moniker. A display name is not a complete representation of a moniker’s internal state; it is simply a form that can be read by users. As a result, it is possible (though rare) for two different monikers to have the same display name. While there is no guarantee that the display name of a moniker can be parsed back into that moniker when calling the <A HREF="_wcesdk_com_mkparsedisplayname.htm"><B>MkParseDisplayName</B></A> function with it, failure to do so is rare.</P>
+
+<P>As examples, the file moniker implementation of this method supplies the path the moniker represents, and an item moniker’s display name is the string identifying the item that is contained in the moniker. </P>
+
+<H4>Notes to Callers</H4>
+
+<P>It is possible that retrieving a moniker’s display name may be an expensive operation. For efficiency, you may want to cache the results of the first successful call to <B>IMoniker::GetDisplayName</B>, rather than making repeated calls.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>If you are writing a moniker class in which the display name does not change, simply cache the display name and supply the cached name when requested. If the display name can change over time, getting the current display name might mean that the moniker has to access the object’s storage or bind to the object, either of which can be expensive operations. If this is the case, your implementation of <B>IMoniker::GetDisplayName</B> should return MK_E_EXCEEDEDDEADLINE if the name cannot be retrieved by the time specified in the bind context’s <B>BIND_OPTS</B> structure.</P>
+
+<P>A moniker that is intended to be part of a generic composite moniker should include any preceding delimiter (such as ‘\’) as part of its display name. For example, the display name returned by an item moniker includes the delimiter specified when it was created with the <A HREF="_wcesdk_com_createitemmoniker.htm"><B>CreateItemMoniker</B></A> function. The display name for a file moniker does not include a delimiter because file monikers are always expected to be the leftmost component of a composite.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Oaidl.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_cogetmalloc.htm"><B>CoGetMalloc</B></A>, <A HREF="_wcesdk_com_createitemmoniker.htm"><B>CreateItemMoniker</B></A>, <B>IBindCtx</B>, <A HREF="_wcesdk_com_mkparsedisplayname.htm"><B>MkParseDisplayName</B></A>, <A HREF="_wcesdk_com_bind_opts.htm"><B>BIND_OPTS</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

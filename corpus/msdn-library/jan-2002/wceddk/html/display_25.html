@@ -1,0 +1,63 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Accelerating Line Drawing</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Accelerating Line Drawing"/>
+<MSHelp:RLTitle Title="Accelerating Line Drawing"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_accelerating_line_drawing"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Accelerating Line Drawing</H1>
+
+<P>Windows CE 2.0 and later include support for accelerating line drawing. The levels of accelerated line drawing are largely the same as for accelerated blit operations. The discussion of <A HREF="display_22.htm">accelerating bit block transfers</A> in the previous sections is relevant for line drawing as well, except that the emulation library provided in the Platform Builder does not provide software-accelerated line drawing. Developers can add software-accelerated line drawing functions, if necessary.</P>
+
+<P>Display drivers route line drawing to the GPE, to custom software acceleration routines, or directly to the hardware. The following code example from the ATI display driver sample shows how these methods are invoked. This source code is very similar in design to the acceleration processing performed for blit operations.</P>
+
+<PRE class="code">SCODE ATI::Line(GPELineParms *pLineParms, EGPEPhase phase)
+{
+    if (phase == gpeSingle || phase == gpePrepare) {
+        DispPerfStart (ROP_LINE);
+        pLineParms-&gt;pLine = EmulatedLine;
+        if (((ATISurf*)(pLineParms-&gt;pDst))-&gt;InVideoMemory() &amp;&amp;
+            pLineParms-&gt;mix == 0x0d0d)
+        {
+            pLineParms-&gt;pLine = (SCODE (GPE::*)(struct GPELineParms *))
+            AcceleratedSolidLine;
+        }
+        else if (phase == gpeComplete)
+        {
+            DispPerfEnd (0);
+        }
+    return S_OK;
+}
+</PRE>
+
+<P>Line drawing begins with a call to the driver’s <B>Line</B> function. For improved performance, the driver’s <B>Line</B> function can examine the characteristics of the line drawing and the associated surfaces to determine whether an accelerated form of line drawing is appropriate. The default line drawing function is set to the <B>EmulatedLine</B> function of the GPE. The driver checks for a destination surface in video memory and checks the line drawing parameters. If the parameters are valid for acceleration, the line drawing function is set to the driver’s <B>AcceleratedSolidLine</B> function.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

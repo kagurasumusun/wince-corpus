@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::StartDoc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CDC::StartDoc"/>
+<MSHelp:RLTitle Title="CDC::StartDoc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdc_startdoc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CDC::StartDoc</H1>
+
+<P>This method informs the device driver that a new print job is starting and that all subsequent <B>StartPage</B> and <B>EndPage</B> calls should be spooled under the same job until an <B>EndDoc</B> call occurs.</P>
+
+<PRE class=syntax><B>int StartDoc(
+LPCTSTR </B><I>lpszDocName</I><B> );
+</B>
+<B>int StartDoc(
+LPDOCINFO </B><I>lpDocInfo</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpszDocName</I></DT>
+
+<DD>Pointer to a null-terminated string that specifies the name of the document.</DD>
+
+<DT><I>lpDocInfo</I></DT>
+
+<DD>Pointer to a <B>DOCINFO</B> structure containing the name of the document file and the name of the output file.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The value &#0150;1 if there is an error such as insufficient memory or an invalid port specification occurs; otherwise, a positive value.</P>
+
+<H4>Remarks</H4>
+
+<P>For Windows versions 3.1 and later, this method replaces the <B>STARTDOC</B> printer escape. Using this method ensures that documents containing more than one page are not interspersed with other print jobs.</P>
+
+<P><B>StartDoc</B> should not be used inside metafiles.</P>
+
+<H4>Example</H4>
+
+<P>This code fragment gets the default printer, opens a print job, and spools one page with Hello, World! on it.</P>
+
+<PRE>// Get the default printer.
+CPrintDialog dlg(FALSE);
+dlg.GetDefaults();
+
+// Is a default printer set up?
+HDC hdcPrinter = dlg.GetPrinterDC();
+if (hdcPrinter == NULL)
+{
+   MessageBox(_T("Buy a printer!"));
+}
+else
+{
+   // Create a CDC and attach it to the default printer.
+   CDC dcPrinter;
+   dcPrinter.Attach(hdcPrinter);
+
+   // Call StartDoc() to begin printing.
+   DOCINFO docinfo;
+   memset(&amp;docinfo, 0, sizeof(docinfo));
+   docinfo.cbSize = sizeof(docinfo);
+   docinfo.lpszDocName = _T("CDC::StartDoc() Code Fragment");
+
+   // If it fails, complain and exit gracefully.
+   if (dcPrinter.StartDoc(&amp;docinfo) &lt; 0)
+   {
+      MessageBox(_T("Printer would not initalize"));
+   }
+   else
+   {
+      // Start a page.
+      if (dcPrinter.StartPage() &lt; 0)
+      {
+         MessageBox(_T("Could not start page"));
+         dcPrinter.AbortDoc();
+      }
+      else
+      {
+         // Do some printing.
+         CGdiObject* pOldFont = dcPrinter.SelectStockObject(SYSTEM_FONT);
+
+         dcPrinter.TextOut(50, 50, _T("Hello World!"), 12);
+
+         dcPrinter.EndPage();
+         dcPrinter.EndDoc();
+         dcPrinter.SelectObject(pOldFont);
+      }
+   }
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

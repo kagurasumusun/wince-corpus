@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CHAIN_MSG_MAP_MEMBER</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CHAIN_MSG_MAP_MEMBER"/>
+<MSHelp:RLTitle Title="CHAIN_MSG_MAP_MEMBER"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_chain_msg_map_member"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CHAIN_MSG_MAP_MEMBER</H1>
+
+<P>Defines an entry in a message map. <B>CHAIN_MSG_MAP_MEMBER</B> directs messages to the default message map of a data member, declared with <B>BEGIN_MSG_MAP</B>. To direct messages to an alternate message map of a data member, declared with <B>ALT_MSG_MAP</B>, use <B>CHAIN_MSG_MAP_ALT_MEMBER</B>.</P>
+
+<PRE class=syntax><B>CHAIN_MSG_MAP_MEMBER(
+</B><I>theChainMember</I><B>)</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>theChainMember</I></DT>
+
+<DD>[in] The name of the data member containing the message map.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>For example:</P>
+
+<PRE>class CMyClass : ...
+{
+public:
+  CMyContainedClass m_obj;
+  ...
+
+  BEGIN_MSG_MAP(CMyClass)
+     MESSAGE_HANDLER(WM_PAINT, OnPaint)
+     // chain to default message map of m_obj
+     CHAIN_MSG_MAP_MEMBER(m_obj)
+  ALT_MSG_MAP(1)
+     // chain to default message map of m_obj
+     CHAIN_MSG_MAP(m_obj)
+  ALT_MSG_MAP(2)
+     MESSAGE_HANDLER(WM_CHAR, OnChar)
+     // chain to alternate message map of m_obj
+     CHAIN_MSG_MAP_ALT(m_obj, 1)
+  END_MSG_MAP()
+
+  ...
+};
+</PRE>
+
+<P>This example illustrates the following:
+
+<UL type=disc>
+	<LI>If a window procedure is using the default message map of<CODE> </CODE><B>CMyClass</B> and <B>OnPaint </B>does not handle a message, the message is directed to the default message map of <CODE>m_obj</CODE> for processing.</LI>
+
+	<LI>If a window procedure is using the first alternate message map in <B>CMyClass</B>, all messages are directed to the default message map of m_obj.</LI>
+
+	<LI>If a window procedure is using the second alternate message map of<B> CMyClass</B> and <B>OnChar</B> does not handle a message, the message is directed to the specified alternate message map of <B>m_obj</B>. Class <B>CMyContainedClass</B> must have declared this message map with ALT_MSG_MAP(1).</LI>
+</UL>
+
+<P>Always begin a message map with <B>BEGIN_MSG_MAP</B>. You can then declare subsequent alternate message maps with <B>ALT_MSG_MAP</B>. The <B>END_MSG_MAP</B> macro marks the end of the message map. Every message map must have exactly one instance of <B>BEGIN_MSG_MAP</B> and <B>END_MSG_MAP</B>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlwin.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="atlapi_30.htm"><B>CHAIN_MSG_MAP</B></A>, <A HREF="atlapi_33.htm"><B>CHAIN_MSG_MAP_DYNAMIC</B></A>, <A HREF="atlapi2_25.htm"><B>MESSAGE_HANDLER</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

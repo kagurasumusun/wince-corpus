@@ -1,0 +1,113 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Terminating a Connection</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Terminating a Connection"/>
+<MSHelp:RLTitle Title="Terminating a Connection"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_terminating_a_connection"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_rasdial" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_Win32_RasHangup" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_Win32_RasEnumConnections" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Terminating a Connection</H1>
+
+<P>When a RAS application starts a connection operation, the <A HREF="JavaScript:hhobj_1.Click()"><B>RasDial</B></A> function receives a <B>RASCONN</B> connection handle to identify the connection. If the returned handle is not NULL, the client must eventually call the <A HREF="JavaScript:hhobj_2.Click()"><B>RasHangUp</B></A> function to end the connection. If an error occurs during the connection operation, the client must call the <B>RasHangUp</B> function even though the connection was never established.</P>
+
+<P>A client application might require a connection to end even though it does not have the handle returned by <B>RasDial</B>. For example, the application that called <B>RasDial</B> might have exited when the connection was successfully established. In this case, the disconnecting application can use <A HREF="JavaScript:hhobj_3.Click()"><B>RasEnumConnections</B></A> to get all the current connections. For each connection, <B>RasEnumConnections</B> returns a <B>RASCONN</B> structure containing the <B>RASCONN</B> connection handle and the phone-book entry name or phone number specified when the connection operation was started. This data can be used to display a list of connections from which a user can select the connection to end.</P>
+
+<P>If the application exits after calling <B>RasHangUp</B>, there may not be enough time for the modem to reset. To provide the modem time to reset, pause for a few seconds while the application exits.</P>
+
+<P>Before an application terminates one or more connections, it is useful to enumerate the existing connections and hang up. The <B>RasEnumConnections</B> retrieves the current connections. </P>
+
+<P><B>To terminate a connection</B>
+
+<OL type="1">
+	<LI>Call <B>RasEnumConnections</B> to find all RAS connections.</li>
+
+	<LI>Call <B>RasHangUp</B> to terminate the connection.</li>
+</OL>
+
+<P>The following code example shows how to terminate a connection.</P>
+
+<PRE class="code">DWORD CloseRasConnections ()
+{
+  int index;                 // An integer index
+  TCHAR szError[100];        // Buffer for error codes
+  DWORD dwError,             // Error code from a function call
+        dwRasConnSize,       // Size of RasConn in bytes
+        dwNumConnections;    // Number of connections found
+  RASCONN RasConn[20];       // Buffer for connection state data
+                             // Assume the maximum number of entries is
+                             // 20.
+
+  // Assume no more than 20 connections.
+  RasConn[0].dwSize = sizeof (RASCONN);
+  dwRasConnSize = 20 * sizeof (RASCONN);
+
+  // Find all connections.
+  if (dwError = RasEnumConnections (RasConn, &amp;dwRasConnSize,
+                                    &amp;dwNumConnections))
+  {
+    wsprintf (szError, TEXT("RasEnumConnections Error: %ld"), dwError);
+    return dwError;
+  }
+
+  // If there are no connections, return zero.
+  if (!dwNumConnections)
+  {
+    wsprintf (szError, TEXT("No open RAS connections"));
+    return 0;
+  }
+
+  // Terminate all of the remote access connections.
+  for (index = 0; index &lt; (int)dwNumConnections; ++index)
+  {
+    if (dwError = RasHangUp (RasConn[index].hrasconn))
+    {
+      wsprintf (szError, TEXT("RasHangUp Error: %ld"), dwError);
+      return dwError;
+    }
+  }
+
+  return 0;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

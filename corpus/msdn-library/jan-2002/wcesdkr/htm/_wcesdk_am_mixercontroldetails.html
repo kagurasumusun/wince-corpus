@@ -1,0 +1,224 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MIXERCONTROLDETAILS</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MIXERCONTROLDETAILS"/>
+<MSHelp:RLTitle Title="MIXERCONTROLDETAILS"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_am_mixercontroldetails"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_dxce_am_control_types" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>MIXERCONTROLDETAILS</H1>
+
+<P>The <B>MIXERCONTROLDETAILS</B> structure refers to control-detail structures, retrieving or setting state information of an audio mixer control. All members of this structure must be initialized before calling the <A HREF="_wcesdk_am_mixergetcontroldetails.htm"><B>mixerGetControlDetails</B></A> and <A HREF="_wcesdk_am_mixersetcontroldetails.htm"><B>mixerSetControlDetails</B></A> functions.</P>
+
+<PRE class="syntax"><B>typedef struct</B> <B>{</B>
+<B>DWORD</B> <I>cbStruct</I><B>;</B>
+<B>DWORD</B> <I>dwControlID</I><B>;</B>
+<B>DWORD</B> <I>cChannels</I><B>;</B>
+<B>union</B> <B>{</B>
+<B>HWND</B>  <I>hwndOwner</I><B>;</B>
+<B>DWORD</B> <I>cMultipleItems</I><B>;</B>
+<B>};</B>
+<B>DWORD</B>  <I>cbDetails</I><B>;</B>
+<B>LPVOID</B> <I>paDetails</I><B>;</B>
+<B>}</B> <B>MIXERCONTROLDETAILS;</B> </PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><I>cbStruct </I></DT>
+
+<DD>Size, in bytes, of the <B>MIXERCONTROLDETAILS</B> structure. The size must be large enough to contain the base <B>MIXERCONTROLDETAILS</B> structure. When <B>mixerGetControlDetails</B> returns, this member contains the actual size of the information returned. The returned information will not exceed the requested size, nor will it be smaller than the base <B>MIXERCONTROLDETAILS</B> structure. </dd>
+
+<DT><I>dwControlID </I></DT>
+
+<DD>Control identifier on which to get or set properties. </dd>
+
+<DT><I>cChannels </I></DT>
+
+<DD>Number of channels on which to get or set control properties. The following values are defined:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=42%>0 </TD>
+<TD width=58%>Use this value when the control is a MIXERCONTROL_CONTROLTYPE_CUSTOM control. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%>1 </TD>
+<TD width=58%>Use this value when the control is a MIXERCONTROL_CONTROLF_UNIFORM control or when an application needs to get and set all channels as if they were uniform. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_am_mixerline.htm"><B>MIXERLINE</B></A>.cChannels </TD>
+<TD width=58%>Use this value when the properties for the control are expected on all channels for a line. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>An application cannot specify a value that falls between 1 and the number of channels for the audio line. For example, specifying 2 or 3 for a four-channel line is not valid. This member cannot be 0 for noncustom control types.
+</dd>
+
+<DT><I>hwndOwner </I></DT>
+
+<DD>Handle to the window that owns a custom dialog box for a mixer control. This member is used when the MIXER_SETCONTROLDETAILSF_CUSTOM flag is specified in the <A HREF="_wcesdk_am_mixersetcontroldetails.htm"><B>mixerSetControlDetails</B></A> function. </dd>
+
+<DT><I>cMultipleItems </I></DT>
+
+<DD>Number of multiple items per channel on which to get or set properties. The following values are defined:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=42%>0 </TD>
+<TD width=58%>Use this value for all controls except for a MIXERCONTROL_CONTROLF_MULTIPLE or a MIXERCONTROL_CONTROLTYPE_CUSTOM control. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> <B>cMultipleItems</B> member. </TD>
+<TD width=58%>Use this value when the control class is MIXERCONTROL_CONTROLF_MULTIPLE. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=42%><B>MIXERCONTROLDETAILS</B> <B>hwndOwner</B> member. </TD>
+<TD width=58%>Use this value when the control is a MIXERCONTROL_CONTROLTYPE_CUSTOM control and the MIXER_SETCONTROLDETAILSF_CUSTOM flag is specified for the <A HREF="_wcesdk_am_mixersetcontroldetails.htm"><B>mixerSetControlDetails</B></A> function. In this case, the <B>hwndOwner</B> member overlaps with <B>cMultipleItems</B>, providing the value of the window handle. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+
+
+<P>When using a MIXERCONTROL_CONTROLTYPE_CUSTOM control without the MIXERCONTROL_CONTROLTYPE_CUSTOM flag, specify zero for this member.
+
+
+<P>An application cannot specify any value other than the value specified in the <B>cMultipleItems</B> member of the <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structure for a MIXERCONTROL_CONTROLF_MULTIPLE control.
+</dd>
+
+<DT><I>cbDetails </I></DT>
+
+<DD>Size, in bytes, of one of the following details structures being used:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_am_mixercontroldetails_boolean.htm"><B>MIXERCONTROLDETAILS_BOOLEAN</B></A><B><U> </U></B></TD>
+<TD width=50%>Boolean value for an audio line control. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_am_mixercontroldetails_listtext.htm"><B>MIXERCONTROLDETAILS_LISTTEXT</B></A><B><U> </U></B></TD>
+<TD width=50%>List text buffer for an audio line control. For information about the appropriate details structure for a specific control, see <A HREF="JavaScript:hhobj_1.Click()">Control Types</A>. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_am_mixercontroldetails_signed.htm"><B>MIXERCONTROLDETAILS_SIGNED</B></A><B><U> </U></B></TD>
+<TD width=50%>Signed value for an audio line control. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_am_mixercontroldetails_unsigned.htm"><B>MIXERCONTROLDETAILS_UNSIGNED</B></A><B><U> </U></B></TD>
+<TD width=50%>Unsigned value for an audio line control. If the control is a MIXERCONTROL_CONTROLTYPE_CUSTOM control, this member must be equal to the <B>cbCustomData</B> member of the <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structure.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>paDetails </I></DT>
+
+<DD>Pointer to an array of one or more structures in which properties for the specified control are retrieved or set. For MIXERCONTROL_CONTROLF_MULTIPLE controls, the size of this buffer should be the product of the <B>cChannels</B>, <B>cMultipleItems</B> and <B>cbDetails</B> members of the <B>MIXERCONTROLDETAILS</B> structure. For controls other than MIXERCONTROL_CONTROLF_MULTIPLE types, the size of this buffer is the product of the <B>cChannels</B> and <B>cbDetails</B> members of the <B>MIXERCONTROLDETAILS</B> structure.
+
+<P>For controls that are MIXERCONTROL_CONTROLF_MULTIPLE types, the array can be treated as a two-dimensional array that is channel major. That is, all multiple items for the left channel are given, then all multiple items for the right channel, and so on.
+
+
+<P>For controls other than MIXERCONTROL_CONTROLF_MULTIPLE types, each element index is equivalent to the zero-based channel that it affects. That is, <B>paDetails</B>[0] is for the left channel and <B>paDetails</B>[1] is for the right channel.
+
+
+<P>If the control is a MIXERCONTROL_CONTROLTYPE_CUSTOM control, this member must point to a buffer that is at least large enough to contain the size, in bytes, specified by the <B>cbCustomData</B> member of the <A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A> structure.
+</dd>
+</DL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>mmsystem.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_am_mixercontrol.htm"><B>MIXERCONTROL</B></A>, <A HREF="_wcesdk_am_mixergetcontroldetails.htm"><B>mixerGetControlDetails</B></A>, <A HREF="_wcesdk_am_mixersetcontroldetails.htm"><B>mixerSetControlDetails</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

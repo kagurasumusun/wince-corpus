@@ -1,0 +1,98 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Handling Drag-and-Drop Messages</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Handling Drag-and-Drop Messages"/>
+<MSHelp:RLTitle Title="Handling Drag-and-Drop Messages"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_handling_drag_and_drop_messages"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Handling Drag-and-Drop Messages</H1>
+
+<P>A tree-view control notifies the parent window when a user starts to drag an item by using a mouse or stylus. The parent window receives a TVN_BEGINDRAG notification message when a user begins dragging an item by using the left mouse button and a TVN_BEGINRDRAG notification message when a user begins dragging by using the right button. You can prevent a tree-view control from sending these messages by giving the tree-view control the TVS_DISABLEDRAGDROP style.</P>
+
+<P>You can obtain an image to display during a drag operation by using the TVM_CREATEDRAGIMAGE message. The tree-view control creates a dragging bitmap that is based on the label of the item that is being dragged. Then, the tree-view control creates an image list, adds the bitmap to it, and returns the handle to the image list.</P>
+
+<P>You must provide the code that actually drags the item. Typically, this task involves using the dragging capabilities of the functions that manipulate image lists, and including code for processing the WM_MOUSEMOVE and WM_LBUTTONUP messages that are sent to the parent window after the drag operation begins.</P>
+
+<P>To use an item in a tree-view control as the target of a drag-and-drop operation, use the <B>SendMessage</B> function to send a TVM_HITTEST message to determine when the mouse or stylus is on a target item. To do this, specify the address of a <B>TVHITTESTINFO</B> structure that contains the current coordinates of the mouse or stylus. When <B>SendMessage</B> returns, the structure contains a flag that indicates the location of the mouse or stylus relative to the tree-view control. If the mouse or stylus is over an item in the tree-view control, the structure contains the handle to the item, too.</P>
+
+<P>You can indicate that an item is the target of a drag-and-drop operation by using the TVM_SETITEM message to set the state to TVIS_DROPHILITED. An item that has this state is drawn in the style that is used to indicate a target for a drag-and-drop operation.</P>
+
+<P>The following code example shows how to handle drag-and-drop messages.</P>
+
+<PRE>case WM_NOTIFY:
+{
+  LPNMHDR  pnmh = (LPNMHDR) lParam;
+
+  switch (pnmh-&gt;code)
+  {
+    case TVN_BEGINDRAG:
+      {
+         // Notifies the tree-view control’s parent window that a
+         // drag-and-drop operation is being initiated.
+
+         return 0;
+      }
+
+      case TVN_BEGINLABELEDIT:
+      {
+         // Notifies the tree-view control’s parent window about the
+         // start of label editing for an item.
+
+         return 0;
+      }
+
+    case TVN_ITEMEXPANDED:
+    {
+      // Notifies a tree-view control’s parent window that a parent
+      // item’s list of child items has expanded or collapsed. This
+      // notification message is sent in the form of a WM_NOTIFY
+      // message.
+
+      return 0;
+    }
+
+    case TVN_ITEMEXPANDING:
+    {
+      // Notifies a tree-view control’s parent window that a parent
+      // item’s list of child items is about to expand or collapse.
+
+      return 0;
+    }
+
+    default:
+      return 0;
+  }
+  break;
+}
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

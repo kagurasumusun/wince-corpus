@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>BindMoniker</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="BindMoniker"/>
+<MSHelp:RLTitle Title="BindMoniker"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_bindmoniker"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>BindMoniker</H1>
+
+<P>This function locates an object by means of its moniker, activates the object if it is inactive, and retrieves a pointer to the specified interface on that object.</P>
+
+<PRE class="syntax"><B>HRESULT BindMoniker(
+LPMONIKER </B><I>pmk</I><B>,
+DWORD </B><I>grfOpt</I><B>,
+REFIID </B><I>iidResult</I><B>,
+LPVOID FAR *</B><I>ppvResult</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pmk</I></DT>
+
+<DD>[in] Pointer to the object's moniker.</dd>
+
+<DT><I>grfOpt</I></DT>
+
+<DD>[in] Reserved for future use; must be zero.</dd>
+
+<DT><I>iidResult</I></DT>
+
+<DD>[in] Interface identifier to be used to communicate with the object.</dd>
+
+<DT><I>ppvResult</I></DT>
+
+<DD>[out] Address of pointer variable that receives the interface pointer requested in <I>iidResult</I>. Upon successful return, *<I>ppvResult</I> contains the requested interface pointer. If an error occurs, *<I>ppvResult</I> is NULL. If the call is successful, the caller is responsible for releasing the pointer with a call to the object's <A HREF="_wcesdk_com_iunknown_release.htm"><B>IUnknown::Release</B></A>. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The object was located and activated, if necessary, and that a pointer to the requested interface was returned.</dd>
+
+<DT>MK_E_NOOBJECT</DT>
+
+<DD>The object that the moniker object identified could not be found. </dd>
+</DL>
+
+<P>This function can also return any of the error values returned by the <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A><B> </B>method.</P>
+
+<H4>Remarks</H4>
+
+<P><B>BindMoniker</B> is a helper function supplied as a convenient way for a client that has the moniker of an object to obtain a pointer to one of its interfaces. The <B>BindMoniker</B> function packages the following calls:</P>
+
+<PRE class="code">CreateBindCtx(0, &amp;pbc);
+pmk-&gt;BindToObject(pbc, NULL, riid, ppvObj); </PRE>
+
+<P><A HREF="_wcesdk_com_createbindctx.htm"><B>CreateBindCtx</B></A> creates a bind context object that supports the system implementation of <B>IBindContext</B>. The <I>pmk</I> parameter is actually a pointer to the <A HREF="_wcesdk_com_imoniker.htm"><B>IMoniker</B></A> implementation on a moniker object. This implementation's <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>BindToObject</B></A> method supplies the pointer to the requested interface pointer.</P>
+
+<P>If you have several monikers to bind in quick succession, and if you know that those monikers will activate the same object, it may be more efficient to call the <B>IMoniker::BindToObject</B> method directly, which allows you to use the same bind context object for all the monikers. See the <B>IBindCtx</B> interface for more information.</P>
+
+<P>Container applications that allow their documents to contain linked objects are a special client that generally does not make direct calls to <B>IMoniker</B> methods. Instead, the client manipulates the linked objects through the <B>IOleLink</B> interface. The default handler implements this interface and calls the appropriate <B>IMoniker</B> methods as needed. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_createbindctx.htm"><B>CreateBindCtx</B></A>, <A HREF="_wcesdk_com_imoniker_bindtoobject.htm"><B>IMoniker::BindToObject</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

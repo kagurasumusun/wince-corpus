@@ -1,0 +1,124 @@
+<HTML DIR=LTR xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Mounted Database Example</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Mounted Database Example"/>
+<MSHelp:RLTitle Title="Mounted Database Example"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_mounted_database_example"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Mounted Database Example</H1>
+
+<P>The following code example shows how to mount the MyDBVol database volume. The example opens the database volume if the volume already exists, or it creates the volume if the volume does not exist. The example also shows how to enumerate all of the mounted database volumes and transfer the data into permanent storage.</P>
+
+<PRE class="code">void MountingDBVolume (void)
+{
+  PCEGUID pceguid;            // Pointer to the mounted volume
+  LPWSTR lpBuf;               // Buffer to store the volume name
+  TCHAR szError[100];         // String to display with error message
+  DWORD dwError,              // Return value of GetLastError function
+        dwNumChars;           // Length of the buffer in characters
+  TCHAR * szFname = TEXT("\\Storage Card\\MyDBVol");
+                              // Name of the database volume
+  BOOLEAN bFinished = FALSE;  // Loop (enumeration) control
+
+  // Allocate memory for pceguid.
+  pceguid = (PCEGUID) LocalAlloc (LPTR, sizeof (CEGUID));
+
+  // Open the MyDBVol database volume on the storage card, if it exists.
+  // Create it if it does not exist.
+  if (!CeMountDBVol (pceguid,         // Pointer to a CEGUID.
+                     szFname,         // Database-volume name.
+                     OPEN_ALWAYS))    // Create the database volume
+                                      // if it does not exist.
+  {
+    // Your error-handling code goes here.
+
+    // If the database volume was not opened or created
+    wsprintf (szError, TEXT("ERROR: CeMountDBVol failed (%ld)"),
+                        GetLastError());
+  }
+
+  // Allocate memory for lpBuf.
+  lpBuf = (LPWSTR) LocalAlloc (LPTR, MAX_PATH);
+
+  // Assign MAX_PATH to dwNumChars.
+  dwNumChars = MAX_PATH;
+
+  // Create an invalid pceguid as the input parameter of
+  // CeEnumDBVolumes.
+  CREATE_INVALIDGUID (pceguid);
+
+  while (!bFinished)
+  {
+    // Enumerates database volumes
+    if (!CeEnumDBVolumes (pceguid,      // Points to a mounted volume
+                          lpBuf,        // Buffer to store the database-
+                                        // volume name
+                          dwNumChars))  // Length of buffer in char
+
+    {
+      // If error occurs in enumerating
+
+      bFinished = TRUE;    // Finished enumerating
+
+      dwError = GetLastError();
+
+      wsprintf (szError, TEXT("ERROR: CeMountDBVol failed (%ld)"),
+                          dwError);
+
+      if (dwError == ERROR_INSUFFICIENT_BUFFER)
+      {
+        // To avoid having to restart the enumeration,
+        // free lpBuf and reallocate a bigger buffer.
+
+        bFinished = FALSE;  // Continue with enumerating
+        LocalFree (lpBuf);  // Free lpBuf
+
+        // Your code to reallocate a bigger buffer goes here.
+        // ...
+      }
+    }
+    else  // Succeeded in enumerating
+    {
+      // Flush the database volume’s data to permanent storage.
+
+      if (!CeFlushDBVol (pceguid))
+      {
+        wsprintf (szError, TEXT("ERROR: CeFlushDBVol failed."));
+
+        // Your error-handling code goes here.
+      }
+    }
+  }
+} // End of MountingDBVolume example code</PRE>
+<DIV CLASS="footer">Built on Tuesday, February 13, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>lineInitializeEx</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="lineInitializeEx"/>
+<MSHelp:RLTitle Title="lineInitializeEx"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_lineinitializeex"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>lineInitializeEx</H1>
+
+<P>This function initializes the application's use of TAPI for subsequent use of the line abstraction. It registers the application's specified notification mechanism and returns the number of line devices available to the application. A line device is any device that provides an implementation for the line-prefixed functions in the Telephony API. </P>
+
+<PRE class="syntax"><B>LONG WINAPI lineInitializeEx(</B>
+<B>LPHLINEAPP </B><I>lphLineApp</I><B>,</B>
+<B>HINSTANCE </B><I>hInstance</I><B>,</B>
+<B>LINECALLBACK </B><I>lpfnCallback</I><B>,</B>
+<B>LPCSTR </B><I>lpszFriendlyAppName</I><B>,</B>
+<B>LPDWORD </B><I>lpdwNumDevs</I><B>,</B>
+<B>LPDWORD </B><I>lpdwAPIVersion</I><B>,</B>
+<B>LPLINEINITIALIZEEXPARAMS </B><I>lpLineInitializeExParams</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lphLineApp </I></DT>
+
+<DD>A pointer to a location that is filled with the application's usage handle for TAPI. </dd>
+
+<DT><I>hInstance</I> </DT>
+
+<DD>The instance handle of the client application or DLL. The application or DLL can pass NULL for this parameter, in which case TAPI uses the module handle of the root executable of the process (for purposes of identifying call handoff targets and media mode priorities). </dd>
+
+<DT><I>lpfnCallback</I> </DT>
+
+<DD>The address of a callback function that is invoked to determine status and events on the line device, addresses, or calls, when the application is using the "hidden window" method of event notification (for more information see <A HREF="_wcesdk_win32_linecallbackfunc.htm"><B>lineCallbackFunc</B></A>). This parameter is ignored and should be set to NULL when the application chooses to use the "event handle" or "completion port" event notification mechanisms. </dd>
+
+<DT><I>lpszFriendlyAppName</I> </DT>
+
+<DD>A pointer to a null-terminated text string that contains only displayable characters. If this parameter is not NULL, it contains an application-supplied name for the application. This name is provided in the <A HREF="_wcesdk_win32_linecallinfo_str.htm"><B>LINECALLINFO</B></A> structure to indicate, in a user-friendly way, which application originated, or originally accepted or answered the call. This information can be useful for call-logging purposes. If <I>lpszFriendlyAppName</I> is NULL, the application's module file name is used instead (as returned by the Windows API <A HREF="_wcesdk_getmodulefilename.htm"><B>GetModuleFileName</B></A>). </dd>
+
+<DT><I>lpdwNumDevs</I> </DT>
+
+<DD>A pointer to a <B>DWORD</B>-sized location. Upon successful completion of this request, this location is filled with the number of line devices available to the application. </dd>
+
+<DT><I>lpdwAPIVersion</I> </DT>
+
+<DD>A pointer to a <B>DWORD</B>-sized location. The application must initialize this DWORD, before calling this function, to the highest API version it is designed to support (for example, the same value it would pass into <I>dwAPIHighVersion</I> parameter of <A HREF="_wcesdk_win32_linenegotiateapiversion.htm"><B>lineNegotiateAPIVersion</B></A>). Artificially high values must not be used; the value must be accurately set. TAPI translates any newer messages or structures into values or formats supported by the application's version. Upon successful completion of this request, this location is filled with the highest API version supported by TAPI, thereby allowing the application to detect and adapt to having been installed on a system with a different version of TAPI. </dd>
+
+<DT><I>lpLineInitializeExParams</I> </DT>
+
+<DD>A pointer to a structure of type <A HREF="_wcesdk_win32_lineinitializeexparams.htm"><B>LINEINITIALIZEEXPARAMS</B></A> containing additional parameters used to establish the association between the application and TAPI (specifically, the application's selected event notification mechanism and associated parameters). </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns zero if the request succeeds or a negative error number if an error occurs. Possible return values are: </P>
+
+<P>LINEERR_INVALAPPNAME, LINEERR_OPERATIONFAILED, LINEERR_INIFILECORRUPT, LINEERR_INVALPOINTER, LINEERR_REINIT, LINEERR_NOMEM, LINEERR_INVALPARAM.</P>
+
+<H4>Remarks</H4>
+
+<P>Applications must select one of three mechanisms by which TAPI notifies the application of telephony events: Hidden Window, Event Handle, or Completion Port. </P>
+
+<P>The Hidden Window mechanism is selected by specifying LINEINITIALIZEEXOPTION_USEHIDDENWINDOW in the <I>dwOptions</I> member in the LINEINITIALIZEEXPARAMS structure. In this mechanism (which is the only mechanism available to TAPI verson 1.x applications), TAPI creates a window in the context of the application during the <B>lineInitializeEx</B> or <A HREF="_wcesdk_win32_lineinitialize.htm"><B>lineInitialize</B></A> (for TAPI version 1.3 and 1.4 applications) function, and subclasses the window so that all messages posted to it are handled by a WNDPROC in TAPI itself. When TAPI has a message to deliver to the application, TAPI posts a message to the hidden window. When the message is received (which can happen only when the application calls the Windows <A HREF="_wcesdk_win32_getmessage.htm"><B>GetMessage</B></A> function), Windows switches the process context to that of the application and invokes the WNDPROC in TAPI. TAPI then delivers the message to the application by calling the <A HREF="_wcesdk_win32_linecallbackfunc.htm"><B>lineCallbackProc</B></A>, a pointer to which the application provided as a parameter in its call to <B>lineInitializeEx</B> (or <B>lineInitialize</B>). This mechanism requires the application to have a message queue (which is not desirable for service processes) and to service that queue regularly to avoid delaying processing of telephony events. The hidden window is destroyed by TAPI during the <A HREF="_wcesdk_win32_lineshutdown.htm"><B>lineShutdown</B></A> function. </P>
+
+<P>The Event Handle mechanism is selected by specifying LINEINITIALIZEEXOPTION_USEEVENT in the <I>dwOptions</I> member in the <B>LINEINITIALIZEEXPARAMS</B> structure. In this mechanism, TAPI creates an event object on behalf of the application, and returns a handle to the object in the <I>hEvent</I> member in <B>LINEINITIALIZEEXPARAMS</B>. The application must not manipulate this event in any manner (for example, must not call <A HREF="_wcesdk_win32_setevent.htm"><B>SetEvent</B></A>, <A HREF="_wcesdk_win32_resetevent.htm"><B>ResetEvent</B></A>, <A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A>, and so on) or undefined behavior results; the application can only wait on this event using functions such as <A HREF="_wcesdk_win32_waitforsingleobject.htm"><B>WaitForSingleObject</B></A> or <A HREF="_wcesdk_win32_msgwaitformultipleobjects.htm"><B>MsgWaitForMultipleObjects</B></A>. TAPI signals this event whenever a telephony event notification is pending for the application; the application must call <A HREF="_wcesdk_win32_linegetmessage.htm"><B>lineGetMessage</B></A> to fetch the contents of the message. The event is reset by TAPI when no events are pending. The event handle is closed and the event object destroyed by TAPI during the <B>lineShutdown</B> function. The application is not required to wait on the event handle that is created; the application could choose instead to call <B>lineGetMessage</B> and have it block waiting for a message to be queued. </P>
+
+<P>If LINEERR_REINIT is returned and TAPI reinitialization has been requested, for example as a result of adding or removing a telephony service provider, then lineInitializeEx requests are rejected with this error until the last application shuts down its usage of the API (using lineShutdown), at which time the new configuration becomes effective and applications are once again permitted to call <B>lineInitializeEx</B>. </P>
+
+<P>If the LINEERR_INVALPARAM error value is returned, the specified <I>hInstance</I> parameter is invalid. </P>
+
+<P>The application can refer to individual line devices by using line device identifiers that range from zero to <I>dwNumDevs</I> minus one. An application should not assume that these line devices are capable of any particular TAPI function without first querying their device capabilities by <A HREF="_wcesdk_win32_linegetdevcaps.htm"><B>lineGetDevCaps</B></A>. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 and later</TD>
+<TD width=18%>Tapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_closehandle.htm"><B>CloseHandle</B></A>, <A HREF="_wcesdk_win32_getmessage.htm"><B>GetMessage</B></A>, <A HREF="_wcesdk_getmodulefilename.htm"><B>GetModuleFileName</B></A>, <A HREF="_wcesdk_win32_linecallbackfunc.htm"><B>lineCallbackFunc</B></A>, <A HREF="_wcesdk_win32_linecallbackfunc.htm"><B>lineCallbackProc</B></A>, <A HREF="_wcesdk_win32_linegetdevcaps.htm"><B>lineGetDevCaps</B></A>, <A HREF="_wcesdk_win32_linegetmessage.htm"><B>lineGetMessage</B></A>, <A HREF="_wcesdk_win32_lineinitialize.htm"><B>lineInitialize</B></A>, <A HREF="_wcesdk_win32_linenegotiateapiversion.htm"><B>lineNegotiateAPIVersion</B></A>, <A HREF="_wcesdk_win32_lineshutdown.htm"><B>lineShutdown</B></A>, <A HREF="_wcesdk_win32_msgwaitformultipleobjects.htm"><B>MsgWaitForMultipleObjects</B></A>, <A HREF="_wcesdk_win32_resetevent.htm"><B>ResetEvent</B></A>, <A HREF="_wcesdk_win32_setevent.htm"><B>SetEvent</B></A>, <A HREF="_wcesdk_win32_waitforsingleobject.htm"><B>WaitForSingleObject</B></A>, <A HREF="_wcesdk_win32_linecallinfo_str.htm"><B>LINECALLINFO</B></A>, <A HREF="_wcesdk_win32_lineinitializeexparams.htm"><B>LINEINITIALIZEEXPARAMS</B></A>, <A HREF="_wcesdk_win32_linemessage.htm"><B>LINEMESSAGE</B></A>,</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

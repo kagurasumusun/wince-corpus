@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TCP Retransmission Behavior</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TCP Retransmission Behavior"/>
+<MSHelp:RLTitle Title="TCP Retransmission Behavior"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_tcp_retransmission_behavior"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>TCP Retransmission Behavior</H1>
+
+<P>TCP starts a retransmission timer when each outbound segment is handed down to IP. If no acknowledgment has been received for the data in a given segment before the timer expires, the segment is retransmitted. For new connection requests, the retransmission timer is initialized to 3 seconds (controllable using the <I>TcpInitialRtt</I> per-adapter registry parameter), and the request (SYN) is resent up to the value specified in <I>TcpMaxConnectRetransmissions</I> (the default for Windows CE is two times). On existing connections, the number of retransmissions is controlled by the <I>TcpMaxDataRetransmissions</I> registry parameter (five by default). The retransmission time-out is adjusted on the fly to match the characteristics of the connection, using Smoothed Round Trip Time (SRTT) calculations as described in Van Jacobson's paper titled "Congestion Avoidance and Control." The timer for a given segment is doubled after each retransmission of that segment. Using this algorithm, TCP tunes itself to the normal delay of a connection. TCP connections over high-delay links take much longer to time out than those over low-delay links.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;Increasing either of the registry parameters <I>TcpMaxDataRetransmissions</I> or <I>TcpMaxConnectRetransmissions</I> by one approximately doubles the total retransmission time-out period<B>. </B>If it is necessary to configure longer time-outs, these parameters should be increased very gradually.</P>
+
+<P>The following network trace shows the retransmission algorithm for two hosts that are connected over Ethernet on the same subnet. An FTP file transfer was in progress when the receiving host was disconnected from the network. Because the SRTT for this connection was very small, the first retransmission was sent after about one-half second. The timer was then doubled for each of the retransmissions that followed. After the fifth retransmission, the timer was once again doubled. If no acknowledgment was received before it expired, the connection was aborted. </P>
+
+<PRE class="code">delta  source ip    dest ip      pro flags description
+0.000  10.57.10.32  10.57.9.138  TCP .A.., len: 1460, seq: 8043781, ack: 8153124, win: 8760
+0.521  10.57.10.32  10.57.9.138  TCP .A.., len: 1460, seq: 8043781, ack: 8153124, win: 8760
+1.001  10.57.10.32  10.57.9.138  TCP .A.., len: 1460, seq: 8043781, ack: 8153124, win: 8760
+2.003  10.57.10.32  10.57.9.138  TCP .A.., len: 1460, seq: 8043781, ack: 8153124, win: 8760
+4.007  10.57.10.32  10.57.9.138  TCP .A.., len: 1460, seq: 8043781, ack: 8153124, win: 8760
+8.130  10.57.10.32  10.57.9.138  TCP .A.., len: 1460, seq: 8043781, ack: 8153124, win: 8760</PRE>
+
+<P>There are some circumstances under which TCP retransmits data prior to the time that the retransmission timer expires. The most common of these occurs due to a feature known as <I>fast retransmit</I>. When a receiver that supports fast retransmit receives data with a sequence number beyond the current expected one, it assumes that some data was dropped. To help make the sender aware of this event, the receiver immediately sends an ACK, with the ACK number set to the sequence number that it was expecting. It continues to do this for each additional TCP segment that arrives containing data subsequent to the missing data in the incoming stream. When the sender starts to receive a stream of ACKs that are acknowledging the same sequence number and that sequence number is earlier than the current sequence number being sent, it can infer that a segment (or more) must have been dropped. Senders that support the fast retransmit algorithm immediately resend the segment that the receiver is expecting to fill in the gap in the data, without waiting for the retransmission timer to expire for that segment. This optimization greatly improves performance in a busy network environment. </P>
+
+<P>By default, Windows CE resends a segment if it receives three ACKs for the same sequence number and that sequence number lags the current one. This is controllable with the <I>TcpMaxDupAcks</I> registry parameter. For more information about how Windows CE acknowledges segments that do not have the most recent sequence number, see <A HREF="tcpip_30.htm">TCP Selective Acknowledgment</A>.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,190 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptAcquireCertificatePrivateKey</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptAcquireCertificatePrivateKey"/>
+<MSHelp:RLTitle Title="CryptAcquireCertificatePrivateKey"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptacquirecertificateprivatekey"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CryptAcquireCertificatePrivateKey</H1>
+
+<P>This function acquires a <A HREF="_wcesdk_crypto2_hcryptprov.htm"><B>HCRYPTPROV</B></A> cryptographic service provider (CSP) handle including access to its related key container and the <I>dwKeySpec</I> parameter for a user's specified certificate context. This function is used to get access to a user's private key when the user's certificate is available and the handle of a CSP with the user's key container is not available. This function can be used by the owner of a private key and not by any other user.</P>
+
+<P>If a CSP handle and the key container containing a user's private key are available, the <A HREF="_wcesdk_crypto2_cryptgetuserkey.htm"><B>CryptGetUserKey</B></A> function can be used.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B>WINAPI</B> CryptAcquireCertificatePrivateKey<B>(</B>
+<B>PCCERT_CONTEXT</B> <I>pCert</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>void *</B><I>pvReserved</I><B>,</B>
+<B>HCRYPTPROV *</B><I>phCryptProv</I><B>,</B>
+<B>DWORD *</B><I>pdwKeySpec</I><B>,</B>
+<B>BOOL *</B><I>pfCallerFreeProv
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pCert </I></DT>
+
+<DD>[in] Pointer to a <A HREF="_wcesdk_crypto2_cert_context.htm"><B>CERT_CONTEXT</B></A> structure containing the specified certificate context. This is the certificate context for which a private key will be acquired.</dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>[in] The following table defines the <I>dwFlags</I>.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_ACQUIRE_CACHE_FLAG</TD>
+<TD width=53%>An <B>HCRYPTPROV</B> value is returned as the <I>phCryptProv </I>parameter. If an <B>HCRYPTPROV</B> value is already acquired and cached, that <B>HCRYPTPROV</B> value is returned. Otherwise, a new <B>HCRYPTROV</B> value is acquired and cached by using the certificate's CERT_KEY_CONTEXT_PROP_ID.
+<P>In any case, when this flag is set, the <I>pfCallerFreeProv</I> parameter returns FALSE and the calling application must not free the cached <B>HCRYPTPROV</B> value.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_ACQUIRE_USE_PROV_INFO_FLAG</TD>
+<TD width=53%>Uses the certificate's property CERT_KEY_PROV_INFO_PROP_ID to determine if caching should be accomplished. For more information on CERT_KEY_PROV_INFO_PROP_ID, see the <A HREF="_wcesdk_crypto2_certsetcertificatecontextproperty.htm"><B>CertSetCertificateContextProperty</B></A><B> </B>function.
+<P>Uses caching, but only if during a previous call the <I>dwFlags</I> parameter of the <A HREF="_wcesdk_crypto2_crypt_key_prov_info.htm"><B>CRYPT_KEY_PROV_INFO</B></A> structure was CERT_SET_KEY_CONTEXT_PROP.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CRYPT_ACQUIRE_COMPARE_KEY_FLAG</TD>
+<TD width=53%>The public key in the certificate is compared with the public key returned by the CSP. If the keys do not match, the acquisition operation fails and the last error code is set to NTE_BAD_PUBLIC_KEY. If a cached <B>HCRYPTPROV</B> value is returned, no comparison is made.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pvReserved </I></DT>
+
+<DD>[in] Reserved for future use and must be NULL.</dd>
+
+<DT><I>phCryptProv</I> </DT>
+
+<DD>[out] Pointer to the returned <B>HCRYPTPROV</B> value. Depending on the <I>dwFlags</I> value, the <B>HCRYPTPROV </B>value must be freed by the calling application or explicitly freed on the last free action of the certificate context.</dd>
+
+<DT><I>pdwKeySpec </I></DT>
+
+<DD>[out] Pointer to a <B>DWORD</B> value identifying the private key to use from the acquired provider's key container. It can be AT_KEYEXCHANGE or AT_SIGNATURE.</dd>
+
+<DT><I>pfCallerFreeProv </I></DT>
+
+<DD>[out] Pointer to a BOOL flag. The flag is returned set to FALSE if:
+
+<UL type="disc">
+	<LI>Public key acquisition or comparison fails.</li>
+
+	<LI>CRYPT_ACQUIRE_CACHE_FLAG is set.</li>
+
+	<LI>CRYPT_ACQUIRE_USE_PROV_INFO_FLAG is set, the certificate context property is set to CERT_KEY_PROV_INFO_PROP_ID with the <B>CRYPT_KEY_PROV_INFO</B> structure, and the <I>dwFlags</I> parameter is set to CERT_SET_KEY_CONTEXT_PROP_ID.</li>
+</UL>
+
+
+<P>If the <I>fCallerFreeProv</I> flag is returned FALSE, the calling application must not release the returned <B>HCRYPTPROV</B> value. The returned <B>HCRYPTPROV</B> value is released on the last free action of the certificate context.
+
+
+<P>When the <I>fCallerFreeProv</I> flag is set to TRUE, the returned <B>HCRYPTPROV</B> value must be released by calling the <A HREF="_wcesdk_crypto2_cryptreleasecontext.htm"><B>CryptReleaseContext</B></A> function.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function. The following table shows one possible error code.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Value</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>NTE_BAD_PUBLIC_KEY</TD>
+<TD width=62%>The public key in the certificate does not match the public key returned by the CSP. This error code is returned if CRYPT_ACQUIRE_COMPARE_KEY_FLAG is set and the public key in the certificate does not match the public key returned by the cryptographic provider.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_hcryptprov.htm"><B>HCRYPTPROV</B></A>, <A HREF="_wcesdk_crypto2_certsetcertificatecontextproperty.htm"><B>CertSetCertificateContextProperty</B></A>, <A HREF="_wcesdk_crypto2_cryptgetuserkey.htm"><B>CryptGetUserKey</B></A>, <A HREF="_wcesdk_crypto2_cryptreleasecontext.htm"><B>CryptReleaseContext</B></A>, <A HREF="_wcesdk_crypto2_cert_context.htm"><B>CERT_CONTEXT</B></A>, <A HREF="_wcesdk_crypto2_crypt_key_prov_info.htm"><B>CRYPT_KEY_PROV_INFO</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

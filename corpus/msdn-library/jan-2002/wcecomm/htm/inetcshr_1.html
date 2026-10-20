@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>DHCP Allocator</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="DHCP Allocator"/>
+<MSHelp:RLTitle Title="DHCP Allocator"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_dhcp_allocator"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>DHCP Allocator</H1>
+
+<P>ICS can configure clients on the home network automatically by using DHCP. Windows CE does not support the services required to operate a full DHCP server. Windows CE does support, however, a subset of these services called the DHCP allocator. Windows CE implements the DHCP allocator as part of the ipnat component (Ipnat.dll).</P>
+
+<P><B>To enable the DHCP Allocator</B>
+
+<OL type="1">
+	<LI>Set the <A HREF="inetcshr_16.htm"><B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\EnableDhcpAllocator</B></A> registry key equal to a non-zero value.</li>
+
+	<LI>Set the <A HREF="inetcshr_27.htm"><B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\PrivateInterface</B></A><B> </B>registry key to a list of private interfaces that you want to enable the DHCP allocator on. If the list contains multiple private interfaces, those interfaces all must have the same subnet value in their IP addresses.</li>
+</OL>
+
+<P>DHCP can automatically assign addresses for the home network, including appropriate default gateway and DNS server information. This approach assumes that the DHCP allocation is performed from the gateway device, so that the gateway can advertise itself to DHCP clients as both the default gateway and the DNS server to the Internet.</P>
+
+<P>The Windows CE DHCP allocator stores the addresses that the allocator hands out in the <B><I>Address</I></B> subkeys under the <B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\Addresses</B> registry key. For more information about these registry entries, see <A HREF="inetcshr_6.htm">Mapping Machine Names to IP Addresses on the Local Network</A> and <A HREF="inetcshr_11.htm">ICS Registry Keys</A>. The allocator pseudorandomly assigns addresses, and checks the uniqueness of each address by using the same logic as Automatic IP. The allocator defends each address on the network before the assigning the address, and the allocator makes the address assignments for short, configurable periods of time to avoid collisions that arise when devices are not operating. The default period for address assignment is ten minutes.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This approach works when all machines on the home network have broadcast access to the gateway. If the configuration of the home network includes multiple routed segments, then you must use true DHCP server with a database. This requirement for a true DHCP server arises because a broadcast-based defense is not an adequate means of ensuring the uniqueness of assigned addresses for multiple routed segments. A broadcast-based defense is inadequate because not all devices on the home network have broadcast access to the DHCP server. Furthermore, multiple routed segments require the configuration of multiple DHCP scopes to ensure that separate subnets are used on each segment, as well as the configuration of DHCP relay agents to relay DHCP requests to the DHCP allocator.</P>
+
+<P><B>To change the length of time for which the DHCP allocator assigns addresses</B>
+
+<UL type="disc">
+	<LI>Set the <A HREF="inetcshr_13.htm"><B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\DHCPLeaseTime</B></A> registry key to length of time for which you want the allocator to assign addresses.</li>
+</UL>
+
+<P><B>To keep an address in the address table set permanently</B>
+
+<UL type="disc">
+	<LI>Set the <A HREF="inetcshr_19.htm"><B>HKEY_LOCAL_MACHINE\Comm\ConnectionSharing\Addresses\IP Address\Expires</B></A> registry key equal to 0xFFFFFFFFFFFFFFFF.</li>
+</UL>
+
+<P>For more information about DHCP, see <A HREF="tcpip_50.htm">Automatic Client Configuration</A>.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

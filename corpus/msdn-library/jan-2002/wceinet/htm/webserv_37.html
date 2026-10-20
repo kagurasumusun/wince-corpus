@@ -1,0 +1,82 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Collection Objects</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Collection Objects"/>
+<MSHelp:RLTitle Title="Collection Objects"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_collection_objects"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Collection Objects</H1>
+
+<P>Collection objects are data structures that are similar to arrays and that store strings, numbers, objects, and other values. The collections that Windows CE supports provide a convenient way to read query string, form, and cookie data that is sent from the client browser, and to create cookies on responses. Windows CE implements the <B>Response.Form</B>, <B>Response.QueryString</B>, <B>Request.Cookies</B>, and <B>Response.Cookies</B> methods as collections.</P>
+
+<P>Windows CE ASP uses the same syntax that is used on IIS for most of the collection objects.</P>
+
+<P><B>Request.ServerVariables</B> is implemented as a method&#0151;not as a collection&#0151;on Windows CE ASP; attempts to treat it as a collection object fail. For example, the following line is not valid on Windows CE ASP:</P>
+
+<PRE class="code">&lt;% Request.ServerVariables(“URL”).Count %&gt;</PRE>
+
+<P>IIS allows the <B>Response</B> object to be accessed as a collection object. The <B>Response </B>object searches for the value that is specified in the <B>QueryString</B>, <B>Form</B>, <B>Cookies</B>, <B>ClientCertificate</B>, and <B>ServerVariables</B> methods, and returns the value if it finds a match in this case. Windows CE has no support for this functionality. For example, the following action is valid on IIS, but not on Windows CE:</P>
+
+<PRE class="code">&lt;% Request(“URL”) %&gt; </PRE>
+
+<P>None of the collection objects supports iteration. For example, the VBScript operation</P>
+
+<PRE class="code">&lt;%
+for each Item in Request.Cookies
+   Response.Write Item
+   Next
+%&gt;</PRE>
+
+<P>returns an error message that states that the method is not implemented on Windows CE ASP.</P>
+
+<P>Cookies cannot be subindexed on Windows CE. Only one value may be set per named cookie. For example, calling</P>
+
+<PRE class="code">&lt;%  Response.Cookies(“Index”)(“Sub-index”) = “Value” %&gt;</PRE>
+
+<P>fails on Windows CE. Similarly, the <B>Request.Cookies</B> method does not parse out indexed arrays.</P>
+
+<P>Only the following use of cookies is valid on Windows CE:</P>
+
+<PRE class="code">&lt;%    Response.Cookies(“Index”) = “Value %&gt;</PRE>
+
+<P>The <B>Response.Cookies</B> method supports the <B>Path</B>, <B>Domain</B>, and <B>Expires</B> attributes, which can be set individually for each cookie value. The <B>Secure</B> attribute is not supported.</P>
+
+<P>On IIS, it is possible to assign attributes to a response cookie before setting the value of the cookie or without setting the value at all. For instance, the following sequence is valid:</P>
+
+<PRE class="code">&lt;%
+Response.Cookies(“Index”).Path = “/”
+Response.Cookies(“Index”) = “Value”  ` set the Path attribute before the cookie value
+%&gt;</PRE>
+
+<P>Windows CE requires that the value of the cookie be set before setting any of its attributes. Attempting to run the above code on Windows CE ASP would return the error “The collection object specified is read-only.”</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

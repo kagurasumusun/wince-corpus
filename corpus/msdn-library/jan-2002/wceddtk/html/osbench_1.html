@@ -1,0 +1,277 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Running the Test</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Running the Test"/>
+<MSHelp:RLTitle Title="Running the Test"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_osbench_running_the_test"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Running the Test</H1>
+
+<P>The following command line shows the syntax for running the test.</P>
+
+<PRE class="syntax"><B>osbench </B>[<B>-all</B>] [<B>-t</B> <I>test_case</I>] [<B>-list</B>] [<B>-v</B>] [<B>-n</B> <I>number</I>]
+[<B>-m</B> <I>address</I>] [<B>-o</B> <I>file_name</I>] [<B>-h</B>]</PRE>
+
+<P>The following table shows the test cases.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Test Case</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>0</TD>
+<TD width=73%>Critical sections test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>1</TD>
+<TD width=73%>Event set-wakeup test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>2</TD>
+<TD width=73%>Semaphore release/acquire test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>3</TD>
+<TD width=73%>Mutex test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>4</TD>
+<TD width=73%>Voluntary yield test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>5</TD>
+<TD width=73%>PSL API call test.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>6</TD>
+<TD width=73%>Interlocked APIs (decrement, increment, testexchange, exchange) test.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The following table shows the test case parameters.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Parameter</TH>
+<TH width=73%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-all</B></TD>
+<TD width=73%>Run all tests. Default: run only those specified by -t parameter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-t</B> <I>test_case</I></TD>
+<TD width=73%>ID of test case to run (separate <B>&#0150;t</B> parameter required for each test case).</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-list</B></TD>
+<TD width=73%>List test IDs with descriptions.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-v</B></TD>
+<TD width=73%>Output all samples. Default: output summary only.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-n</B> <I>number</I></TD>
+<TD width=73%>Number of samples per test. Default: 100.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>-<B>m</B> <I>address</I></TD>
+<TD width=73%>Virtual address to write marker values. Default: none.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-o</B> <I>file_name</I></TD>
+<TD width=73%>Output to comma-separated file. Default: output to debugger message window.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>-h</B></TD>
+<TD width=73%>Print help screen.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P><B>Test Case 0</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI><B>EnterCriticalSection</B> traditional (blocking) with priority inversion
+<P>Time from a lower priority thread calling <B>LeaveCS</B> to a higher priority thread unblocking from the <B>EnterCS</B> call.
+</li>
+
+	<LI><B>EnterCriticalSection</B> traditional (blocking) without priority inversion
+<P>Time from a higher priority thread calling <B>EnterCS</B> (blocked) to a lower priority running thread.
+</li>
+
+	<LI><B>EnterCriticalSection</B> fastpath (uncontested)</li>
+
+	<LI><B>LeaveCriticalSection</B> fastpath (uncontested)</li>
+
+	<LI><B>EnterCriticalSection</B> traditional (blocking) with priority inversion
+<P>Time from a lower priority thread calling <B>LeaveCS</B> to a higher priority thread unblocking from the <B>EnterCS</B> call.
+</li>
+
+	<LI><B>EnterCriticalSection</B> traditional (blocking) without priority inversion
+<P>Time from a higher priority thread calling <B>EnterCS</B> (blocked) to a lower priority unblocked thread running.
+</li>
+</UL>
+
+<P><B>Test Case 1</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Event intra-process
+<P>Time from <B>SetEvent</B> in one thread to a blocked <B>WaitForSingleObject</B> waking in another thread in the same process.
+</li>
+
+	<LI>Event inter-process
+<P>Time from <B>SetEvent</B> in one thread to a blocked <B>WaitForSingleObject</B> waking in another thread in a different process.
+</li>
+</UL>
+
+<P><B>Test Case 2</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Semaphore signaling intra-process
+<P>Time from a lower priority thread calling <B>ReleaseSemaphore</B> to a higher priority thread in the same process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+
+	<LI>Semaphore signaling inter-process
+<P>Time from a lower priority thread calling <B>ReleaseSemaphore</B> to a higher priority thread in a different process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+</UL>
+
+<P><B>Test Case 3</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Mutex inter-process
+<P>Time from a lower priority thread calling <B>ReleaseMutex</B> to a higher priority thread in a different process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+
+	<LI>Mutex intra-process
+<P>Time from a lower priority thread calling <B>ReleaseMutex</B> to a higher priority thread in the same process unblocking from a <B>WaitForSingleObject</B> call.
+</li>
+</UL>
+
+<P><B>Test Case 4</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>Yield to thread timing intra-process
+<P>Time from a thread calling <B>Sleep(0)</B> to a thread in the same process of the same priority which previously called <B>Sleep(0)</B>.
+</li>
+
+	<LI>Yield to thread timing inter-process
+<P>Time from a thread calling <B>Sleep(0)</B> to a thread in a different process of the same priority that previously called <B>Sleep(0)</B>.
+</li>
+</UL>
+
+<P><B>Test Case 5</B></P>
+
+<P>This test case tests the following:
+
+<UL type="disc">
+	<LI>PSL API call (roundtrip) intra-process
+<P>Calls an API function with no parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) intra-process
+<P>Calls an API function with 7 DWORD parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) intra-process
+<P>Calls an API function with 7 PVOID parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) inter-process
+<P>Calls an API function with no parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) inter-process
+<P>Calls an API function with 7 DWORD parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) inter-process
+<P>Calls an API function with 7 PVOID parameters and returns immediately.
+</li>
+
+	<LI>PSL API call (roundtrip) to NK.EXE
+<P>Calls the <B>GetOwnerProcess</B> API function in NK.EXE, which returns immediately.
+</li>
+</UL>
+
+<P><B>Test Case 6</B></P>
+
+<P>This test case tests the following interlocked APIs:
+
+<UL type="disc">
+	<LI><B>InterlockedIncrement</B></li>
+
+	<LI><B>InterlockedDecrement</B></li>
+
+	<LI><B>InterlockedExchange</B></li>
+
+	<LI><B>InterlockedTestExchange</B></li>
+</UL>
+<DIV CLASS="footer">Built on Tuesday, January 09, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

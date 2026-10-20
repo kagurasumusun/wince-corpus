@@ -1,0 +1,122 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CCHookProc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CCHookProc"/>
+<MSHelp:RLTitle Title="CCHookProc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_cchookproc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CCHookProc</H1>
+
+<P>This function is an application-defined or library-defined callback function that is used with the <B>Color</B> common dialog box. <B>CCHookProc</B> receives messages or notifications intended for the default dialog box procedure.</P>
+
+<PRE class="syntax"><B>UINT APIENTRY CCHookProc(
+HWND</B> <I>hdlg</I><B>,
+UINT</B> <I>uiMsg</I><B>,
+WPARAM</B> <I>wParam</I><B>,
+LPARAM</B> <I>lParam</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hdlg</I></DT>
+
+<DD>[in] Handle to the <B>Color</B> dialog box window for which the message is intended. </dd>
+
+<DT><I>uiMsg</I></DT>
+
+<DD>[in] Identifies the message being received.</dd>
+
+<DT><I>wParam</I></DT>
+
+<DD>[in] Specifies additional information about the message. The exact meaning depends on the value of the <I>uiMsg</I> parameter.</dd>
+
+<DT><I>lParam</I></DT>
+
+<DD>[in] Specifies additional information about the message. The exact meaning depends on the value of the <I>uiMsg </I>parameter.
+
+<P>If the <I>uiMsg</I> parameter indicates the <A HREF="_wcesdk_win32_wm_initdialog.htm">WM_INITDIALOG</A> message, <I>lParam</I> is a pointer to a <A HREF="_wcesdk_win32_choosecolor_str.htm"><B>CHOOSECOLOR</B></A> structure containing the values specified when the dialog was created.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Zero indicates that the default dialog box procedure processes the message. Nonzero indicates that the default dialog box procedure ignores the message.</P>
+
+<H4>Remarks</H4>
+
+<P>When you use the <A HREF="_wcesdk_win32_choosecolor.htm"><B>ChooseColor</B></A> function to create a <B>Color</B> dialog box, you can provide a <B>CCHookProc</B> hook procedure to process messages or notifications intended for the dialog box procedure. To enable the hook procedure, use the <B>CHOOSECOLOR</B> structure that you passed to the dialog creation function. Specify the address of the hook procedure in the <I>lpfnHook</I> member and specify the CC_ENABLEHOOK flag in the <I>Flags</I> member.</P>
+
+<P>The default dialog box procedure processes the WM_INITDIALOG message before passing it to the hook procedure. For all other messages, the hook procedure receives the message first. Then, the return value of the hook procedure determines whether the default dialog procedure processes the message or ignores it.</P>
+
+<P>If the hook procedure processes the <A HREF="_wcesdk_win32_wm_ctlcolordlg.htm">WM_CTLCOLORDLG</A> message, it must return a valid brush handle for painting the background of the dialog box. In general, if the hook procedure processes any WM_CTLCOLOR* message, it must return a valid brush handle for painting the background of the specified control.</P>
+
+<P>Do not call the <A HREF="_wcesdk_win32_enddialog.htm"><B>EndDialog</B></A> function from the hook procedure. Instead, the hook procedure can call the <A HREF="_wcesdk_win32_postmessage.htm"><B>PostMessage</B></A> function to post a WM_COMMAND message with the IDABORT value to the dialog box procedure. Posting IDABORT closes the dialog box and causes the dialog box function to return FALSE. If you need to know why the hook procedure closed the dialog box, you must provide your own communication mechanism between the hook procedure and your application.</P>
+
+<P>You can subclass the standard controls of the common dialog box. However, the common dialog box procedure may also subclass the controls. Because of this, you should subclass controls when your hook procedure processes the WM_INITDIALOG message. This ensures that your subclass procedure receives the control-specific messages before the subclass procedure set by the dialog box procedure. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Commdlg.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_choosecolor.htm"><B>ChooseColor</B></A>, <A HREF="_wcesdk_win32_choosecolor_str.htm"><B>CHOOSECOLOR</B></A>, <A HREF="_wcesdk_win32_enddialog.htm"><B>EndDialog</B></A>, <A HREF="_wcesdk_win32_postmessage.htm"><B>PostMessage</B></A>, <A HREF="_wcesdk_win32_wm_initdialog.htm">WM_INITDIALOG</A>, <A HREF="_wcesdk_win32_wm_ctlcolordlg.htm">WM_CTLCOLORDLG</A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

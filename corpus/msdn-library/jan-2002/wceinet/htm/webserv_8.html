@@ -1,0 +1,78 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Authentication</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Authentication"/>
+<MSHelp:RLTitle Title="Authentication"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_authentication"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Authentication</H1>
+
+<P>The authentication level for a virtual directory can be set to 0, 1, or 2. The following table describes each value.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=26%>Value</TH>
+<TH width=74%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A=0</B></TD>
+<TD width=74%>Anonymous users can access the virtual directory, and may have permission to read and/or execute scripts, depending on the <B>P</B> value for the virtual directory. With <B>A=0</B>, anyone who can access the Web server can access files in that virtual directory.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A=1</B></TD>
+<TD width=74%>A valid user ID and password are required to access a virtual directory with authentication that is set to <B>A=1</B>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>A=2</B></TD>
+<TD width=74%>Virtual directories with authentication that is set to <B>A=2</B> require the browser user to have Administrator privileges. A valid user ID and password are required to gain access to this virtual directory.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>The first attempt by a user to access a virtual directory that has an authentication value of 1 or 2 results in a “401 - Unauthorized” status code that is sent back to the browser. The forms of acceptable authentication are sent to the browser in the Httpd header fields of the message. The authentication types that are sent depend on the values that are set for BASIC and NTLM under the <B>HKEY_LOCAL_MACHINE\COMM\HTTPD</B> protected registry key. By setting both BASIC and NTLM values to 1, the Web server sends both authentication types in response to the same request, allowing the client browser to select the authentication method. A script also can include an authentication scheme by setting the “WWW-Authenticate” field and the desired value in the Httpd headers.</P>
+
+<P>If BASIC authentication is used, the client browser sends the user ID and password over the network in plain text (not encrypted). The Web server then checks the password against the client browser’s network password on that local computer. (The password can be set in Control Panel). If this fails, the Web server attempts to authenticate the user with NTLM, by using the same user name and password, as well as the domain controller, if one exists. This authentication process is transparent to the client browser.</P>
+
+<P>If NTLM authentication is used, the Web server and the client browser negotiate a means through which the client browser can send the password across the network in an encrypted format. The Web server acts as the middleman in this case, sending the requests between the authenticating domain controller and the client browser. The Web server determines which domain controller to use for pass-through authentication, based on the <B>HKEY_LOCAL_MACHINE\COMM\Redir\DefaultDomain</B> protected registry key. The Web server never has access to the client’s plain-text password when it communicates with the client browser using NTLM.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;The Web server supports only Basic authentication and NTLM authentication. SSL authentication is not supported.</P>
+
+<P>If the user ID and password are not valid, the Web server sends another "401 - Unauthorized" status code to the browser.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

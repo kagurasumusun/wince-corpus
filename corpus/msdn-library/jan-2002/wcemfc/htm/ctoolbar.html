@@ -1,0 +1,96 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CToolBar</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CToolBar"/>
+<MSHelp:RLTitle Title="CToolBar"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_ctoolbar"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CToolBar</H1>
+
+<P>Objects of this class are control bars that have a row of bitmapped buttons and optional separators. The buttons can act like push buttons, check-box buttons, or radio buttons. <B>CToolBar</B> objects are usually embedded members of frame-window objects derived from the <A HREF="cframwnd.htm"><B>CFrameWnd</B></A> class.</P>
+
+<P><A HREF="ctoolbar_11.htm"><B>CToolBar::GetToolBarCtrl</B></A> allows you to take advantage of Windows common control support for toolbar customization and additional functionality. <B>CToolBar</B> methods give you most of the functionality of the Windows CE common controls; however, when you call <B>GetToolBarCtrl</B>, you can give your toolbars even more of the characteristics of Windows 98 toolbars. When you call <B>GetToolBarCtrl</B>, it will return a reference to a <B>CToolBarCtrl</B> object. See <A HREF="ctbbrctl.htm"><B>CToolBarCtrl</B></A> for more information about designing toolbars using Windows CE common controls.</P>
+
+<P>Visual C++ for Windows CE provides you with two methods to create a toolbar. To create a toolbar resource using the Resource Editor, follow these steps:
+
+<OL>
+	<LI>Create a toolbar resource.</LI>
+
+	<LI>Construct the <B>CToolBar</B> object.</LI>
+
+	<LI>Call the <A HREF="ctoolbar_4.htm"><B>Create</B></A> (or <A HREF="ctoolbar_5.htm"><B>CreateEx</B></A>) function to create the Windows toolbar and attach it to the <B>CToolBar</B> object.</LI>
+
+	<LI>Call <A HREF="ctoolbar_13.htm"><B>LoadToolBar</B></A> to load the toolbar resource.</LI>
+</OL>
+
+<P>Otherwise, follow these steps:
+
+<OL>
+	<LI>Construct the <B>CToolBar</B> object.</LI>
+
+	<LI>Call the <A HREF="ctoolbar_4.htm"><B>Create</B></A> (or <A HREF="ctoolbar_5.htm"><B>CreateEx</B></A>) function to create the Windows CE toolbar and attach it to the <B>CToolBar</B> object.</LI>
+
+	<LI>Call <A HREF="ctoolbar_12.htm"><B>LoadBitmap</B></A> to load the bitmap that contains the toolbar button images.</LI>
+
+	<LI>Call <A HREF="ctoolbar_16.htm"><B>SetButtons</B></A> to set the button style and associate each button with an image in the bitmap.</LI>
+</OL>
+
+<P>All the button images in the toolbar are taken from one bitmap, which must contain one image for each button. All images must be the same size; the default is 16 pixels wide and 15 pixels high. Images must be side by side in the bitmap.</P>
+
+<P>The <B>SetButtons</B> method takes a pointer to an array of control IDs and an integer that specifies the number of elements in the array. The function sets the ID of each button to the value of the corresponding element of the array and assigns each button an image index, which specifies the position of the image of the button in the bitmap. If an array element has the value ID_SEPARATOR, no image index is assigned.</P>
+
+<P>The order of the images in the bitmap is typically the order in which they are drawn on the screen, but you can use the <A HREF="ctoolbar_15.htm"><B>SetButtonInfo</B></A> function to change the relationship between image order and drawing order.</P>
+
+<P>All buttons in a toolbar are the same size. The default is 24 x 22 pixels, in accordance with <I>Windows Interface Guidelines for Software Design</I>. Any additional space between the image and button dimensions is used to form a border around the image.</P>
+
+<P>Each button has one image. The various button states and styles (pressed, up, down, disabled, disabled down, and indeterminate) are generated from that one image. Although bitmaps can be any color, you can achieve the best results with images in black and shades of gray.</P>
+
+<P>Toolbar buttons imitate pushbuttons by default. However, toolbar buttons can also imitate check-box buttons or radio buttons. Check-box buttons have three states: checked, cleared, and indeterminate. Radio buttons have only two states: checked and cleared.</P>
+
+<P>To set an individual button or separator style without pointing to an array, call <A HREF="ctoolbar_7.htm"><B>GetButtonStyle</B></A> to retrieve the style, and then call <A HREF="ctoolbar_17.htm"><B>SetButtonStyle</B></A> instead of <B>SetButtons</B>. <B>SetButtonStyle</B> is most useful when you want to change the style of a button at run time.</P>
+
+<P>To assign text to appear on a button, call <A HREF="ctoolbar_8.htm"><B>GetButtonText</B></A> to retrieve the text to appear on the button, and then call <A HREF="ctoolbar_18.htm"><B>SetButtonText</B></A> to set the text. </P>
+
+<P>To create a check-box button, assign it the style <B>TBBS_CHECKBOX</B> or use the <B>SetCheck</B> method of a <B>CCmdUI</B> object in an <B>ON_UPDATE_COMMAND_UI</B> handler. Calling <B>SetCheck</B> turns a pushbutton into a check-box button. Pass <B>SetCheck</B> an argument of 0 for unchecked, 1 for checked, or 2 for indeterminate.</P>
+
+<P>To create a radio button, call the <A HREF="ccmdui_6.htm"><B>SetRadio</B></A> method of a <A HREF="ccmdui.htm"><B>CCmdUI</B></A> object from an <B>ON_UPDATE_COMMAND_UI</B> handler. Pass <B>SetRadio</B> an argument of 0 for unchecked or nonzero for checked. In order to provide the mutually exclusive behavior of a radio group, you must have <B>ON_UPDATE_COMMAND_UI</B> handlers for all of the buttons in the group.</P>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxext.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="compare_18.htm"><B>Control Bar Classes</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

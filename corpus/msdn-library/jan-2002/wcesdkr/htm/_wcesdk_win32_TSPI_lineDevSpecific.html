@@ -1,0 +1,145 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TSPI_lineDevSpecific</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TSPI_lineDevSpecific"/>
+<MSHelp:RLTitle Title="TSPI_lineDevSpecific"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_tspi_linedevspecific"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>TSPI_lineDevSpecific</H1>
+
+<P>The <B>TSPI_lineDevSpecific</B> function is used as a general extension mechanism to enable service providers to provide access to features not described in other operations. The meanings of the extensions are device-specific, and to take advantage of these extensions the application must be fully aware of them.</P>
+
+<PRE class="syntax"><B>LONG TSPIAPI TSPI_lineDevSpecific(</B>
+<B>DRV_REQUESTID </B><I>dwRequestID</I><B>,  </B>
+<B>HDRVLINE </B><I>hdLine</I><B>,            </B>
+<B>DWORD </B><I>dwAddressID</I><B>,          </B>
+<B>HDRVCALL </B><I>hdCall</I><B>,            </B>
+<B>LPVOID </B><I>lpParams</I><B>,            </B>
+<B>DWORD </B><I>dwSize</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwRequestID </I></DT>
+</DL>
+
+<P>The identifier of the asynchronous request.
+
+<DL>
+<DT><I>hdLine</I> </DT>
+</DL>
+
+<P>The service provider's handle to the line to be operated on.
+
+<DL>
+<DT><I>dwAddressID</I> </DT>
+</DL>
+
+<P>The address on the specified line to be operated on. An address identifier is permanently associated with an address; the identifier remains constant across operating system upgrades.
+
+<DL>
+<DT><I>hdCall</I> </DT>
+</DL>
+
+<P>The service provider's handle to the call to be operated on. This field may have the value NULL. The call state of <I>hdCall</I> is device specific.
+
+<DL>
+<DT><I>lpParams</I> </DT>
+</DL>
+
+<P>A pointer to a memory area used to hold a parameter block. The format of this parameter block is device specific.
+
+<DL>
+<DT><I>dwSize</I> </DT>
+</DL>
+
+<P>The size in bytes of the parameter block area. </P>
+
+<H4>Return Values</H4>
+
+<P>Returns <I>dwRequestID</I> or an error number if an error occurs. The <I>lResult </I>actual parameter of the corresponding ASYNC_COMPLETION is zero if the function succeeds or an error number if an error occurs. Possible return values are as follows: </P>
+
+<P>LINEERR_INVALLINEHANDLE, LINEERR_OPERATIONUNAVAIL, LINEERR_INVALADDRESSID, LINEERR_OPERATIONFAILED, LINEERR_NOMEM, LINEERR_RESOURCEUNAVAIL. </P>
+
+<H4>Remarks</H4>
+
+<P>Additional return values are device specific.</P>
+
+<P>This operation provides a generic parameter profile. The interpretation of the parameter structure is device specific. TAPI always specifies the <I>hdLine</I> parameter. Whether <I>dwAddressID</I> and/or <I>hdCall</I> are expected to be valid is device specific. If specified, they must belong to <I>hdLine</I>. Indications and replies sent back to the application that are device specific use the LINE_DEVSPECIFIC message.</P>
+
+<P>This function is called in direct response to an application calling the TAPI function <I>lineDevSpecific</I>. TAPI translates the hLin<I>e</I> and <I>hCall</I> parameters used at the TAPI level to the corresponding <I>hdLine</I> and <I>hdCall</I> parameters used at the TSPI level. The <I>lpParams</I> buffer is passed unmodified.</P>
+
+<P><B><b class="le">Note</b>&nbsp;&nbsp;&nbsp;</B>The <I>lpParams</I> data structure should not contain any pointers because they would not be properly translated (thunked) when running a 16-bit application in a 32-bit version of TAPI and vice versa.</P>
+
+<P>A service provider can provide access to device-specific functions by defining parameters for use with this operation. Applications that want to make use of these device-specific extensions should consult the device-specific documentation (in this case meaning vendor-specific) that describes which extensions are defined.</P>
+
+<P><b class="le">Note</b>&nbsp;&nbsp;&nbsp;An application that relies on device-specific extensions is not portable in working with other service provider environments. Use vendor-specific extensions.</P>
+
+<P>This operation is part of the Extended Telephony services. It only provides access to a device-specific feature without defining its meaning. This operation is only available if the application has successfully negotiated and selected a device-specific extension version.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Tapicomn.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_tspi_linenegotiateextversion.htm"><B>TSPI_lineNegotiateExtVersion</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

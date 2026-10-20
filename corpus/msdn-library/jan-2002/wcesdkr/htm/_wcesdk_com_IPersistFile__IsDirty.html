@@ -1,0 +1,109 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IPersistFile::IsDirty</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IPersistFile::IsDirty"/>
+<MSHelp:RLTitle Title="IPersistFile::IsDirty"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_ipersistfile__isdirty"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IPersistFile::IsDirty</H1>
+
+<P>This method checks an object for changes since it was last saved to its current file.</P>
+
+<PRE class="syntax"><B>HRESULT IsDirty(void);</B></PRE>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The object has changed since it was last saved.</dd>
+
+<DT>S_FALSE </DT>
+
+<DD>The object has not changed since the last save.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This method checks whether an object has changed since it was last saved. Call it to determine whether an object should be saved before closing it. The dirty flag for an object is conditionally cleared in the <A HREF="_wcesdk_com_ipersistfile__save.htm"><B>IPersistFile::Save</B></A> method.</P>
+
+<H4>Notes to Callers</H4>
+
+<P>OLE does not call <B>IPersistFile::IsDirty</B>. Applications would not call it unless they are also saving an object to a file.</P>
+
+<P>You should treat any error return codes as an indication that the object has changed. Unless this method explicitly returns S_FALSE, assume that the object must be saved.</P>
+
+<H4>Notes to Implementers</H4>
+
+<P>An object with no contained objects simply checks its dirty flag to return the appropriate result.</P>
+
+<P>A container with one or more contained objects must maintain an internal dirty flag that is set when any of its contained objects has changed since it was last saved. To do this, the container should maintain an advise sink by implementing the <A HREF="_wcesdk_com_iadvisesink.htm"><B>IAdviseSink</B></A> interface. Then, the container can register each link or embedding for data change notifications with a call to <B>IDataObject::DAdvise</B>. Then, the container can set its internal dirty flag when it receives an <A HREF="_wcesdk_com_iadvisesink_ondatachange.htm"><B>IAdviseSink::OnDataChange</B></A> notification. If the container does not register for data change notifications, the <B>IPersistFile::IsDirty</B> implementation would call <B>IPersistStorage::IsDirty</B> for each of its contained objects to determine whether they have changed.</P>
+
+<P>The container can clear its dirty flag whenever it is saved, as long as the file to which the object is saved is the current working file after the save. Therefore, the dirty flag would be cleared after a successful "Save" or "Save As" operation, but not after a "Save A Copy As . . ." operation. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objidl.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_iadvisesink_ondatachange.htm"><B>IAdviseSink::OnDataChange</B></A>, <A HREF="_wcesdk_com_ipersiststorage_isdirty.htm"><B>IPersistStorage::IsDirty</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

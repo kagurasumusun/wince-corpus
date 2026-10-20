@@ -1,0 +1,160 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OleDraw</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="OleDraw"/>
+<MSHelp:RLTitle Title="OleDraw"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_oledraw"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>OleDraw</H1>
+
+<P>This helper function provides a convenient way to draw objects by encapsulating the <B>IViewObject::Draw</B> method and other related maintenance functions for the drawing rectangle.</P>
+
+<PRE class="syntax"><B>WINOLEAPI</B> <B>OleDraw</B>(
+<B>IUnknown</B> <B>*</B><I>pUnk</I>,
+<B>DWORD</B> <I>dwAspect</I>,
+<B>HDC</B> <I>hdcDraw</I>,
+<B>LPCRECT</B> <I>lprcBounds</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pUnk</I></DT>
+
+<DD>[in] Pointer to the <B>IUnknown</B> interface on the view object that is to be drawn.</dd>
+
+<DT><I>dwAspect</I></DT>
+
+<DD>[in] Specifies how the object is to be represented. Representations include content, an icon, a thumbnail, or a printed document. Valid values are taken from the enumeration <A HREF="_wcesdk_com_dvaspect.htm"><B>DVASPECT</B></A>. See <B>DVASPECT</B> for more information.</dd>
+
+<DT><I>hdcDraw</I></DT>
+
+<DD>[in] Handle to the device context (DC) on which to draw. Cannot be a metafile device context.</dd>
+
+<DT><I>lprcBounds</I></DT>
+
+<DD>[in] Long pointer to a <B>RECT</B> structure specifying the rectangle in which the object should be drawn. This parameter is converted to a <A HREF="_wcesdk_rectl.htm"><B>RECTL</B></A> structure and passed to <A HREF="_wcesdk_com_iviewobject_draw.htm"><B>IViewObject::Draw</B></A>.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return values E_INVALIDARG and E_OUTOFMEMORY, as well as the following:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=31%>Value</TH>
+<TH width=69%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>S_OK</TD>
+<TD width=69%>Object was successfully drawn.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>OLE_E_BLANK</TD>
+<TD width=69%>No data to draw from.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>E_ABORT</TD>
+<TD width=69%>The draw operation was aborted.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>VIEW_E_DRAW</TD>
+<TD width=69%>An error occurred in drawing.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>OLE_E_INVALIDRECT</TD>
+<TD width=69%>The rectangle is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=31%>DV_E_NOIVIEWOBJECT</TD>
+<TD width=69%>The object does not support the <A HREF="_wcesdk_com_iviewobject.htm"><B>IViewObject</B></A> interface.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>Passing into this function any invalid and, under some circumstances, NULL pointers will result in unexpected termination of the application. </P>
+
+<P>The <B>OleDraw</B> helper function calls the <B>QueryInterface</B> method for the object specified (<I>pUnk</I>), asking for an <B>IViewObject</B> interface on that object. Then, <B>OleDraw</B> converts the <B>RECT</B> structure to a <B>RECTL</B> structure, and calls <A HREF="_wcesdk_com_iviewobject_draw.htm"><B>IViewObject::Draw</B></A> as follows:</P>
+
+<PRE class="code">lpViewObj-&gt;Draw(dwAspect,-1,0,0,0,hdcDraw,&amp;rectl,0,0,0);
+ </PRE>
+
+<P>Do not use <B>OleDraw</B> to draw into a metafile because it does not specify the <I>lprcWBounds</I> parameter required for drawing into metafiles.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Ole2.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_com_dvaspect.htm"><B>DVASPECT</B></A>, <A HREF="_wcesdk_rectl.htm"><B>RECTL</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

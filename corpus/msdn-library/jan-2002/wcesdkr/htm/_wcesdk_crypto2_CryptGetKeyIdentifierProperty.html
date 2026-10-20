@@ -1,0 +1,170 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CryptGetKeyIdentifierProperty</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CryptGetKeyIdentifierProperty"/>
+<MSHelp:RLTitle Title="CryptGetKeyIdentifierProperty"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cryptgetkeyidentifierproperty"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CryptGetKeyIdentifierProperty</H1>
+
+<P>This function acquires a specific property from a specified key identifier.</P>
+
+<PRE class="syntax"><B>BOOL WINAPI CryptGetKeyIdentifierProperty(</B>
+<B>const CRYPT_HASH_BLOB *</B><I>pKeyIdentifier</I><B>,</B>
+<B>DWORD</B> <I>dwPropId</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>,</B>
+<B>LPCWSTR</B> <I>pwszComputerName</I><B>,</B>
+<B>void *</B><I>pvReserved</I><B>,</B>
+<B>void *</B><I>pvData</I><B>,</B>
+<B>DWORD *</B><I>pcbData
+</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pKeyIdentifier</I> </DT>
+
+<DD>[in] Pointer to the <A HREF="_wcesdk_crypto2_blob.htm"><B>CRYPT_HASH_BLOB</B></A> structure containing the key identifier.</dd>
+
+<DT><I>dwPropId</I> </DT>
+
+<DD>[in] Identifies the property to retrieve. The value of the <I>dwPropId</I> parameter determines the type and content of the <I>pvData</I> parameter. Any certificate property ID can be used.</dd>
+
+<DT><I>dwFlags</I> </DT>
+
+<DD>[in] The following table shows the defined <I>dwFlags, </I>which can be combined with a bitwise <B>OR</B> operation.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=44%>Value</TH>
+<TH width=56%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>CRYPT_KEYID_MACHINE_FLAG</TD>
+<TD width=56%>Searches the list of key identifiers of <B>LocalMachine</B> (if the <I>pwszComputerName</I> parameter is NULL) or remote computer (if the <I>pwszComputerName</I> parameter is not NULL). </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>CRYPT_KEYID_ALLOC_FLAG</TD>
+<TD width=56%><B>LocalAlloc()</B> is called to allocate memory for <I>pvData</I>. The *<I>pvData</I> parameter is updated with a pointer to the allocated memory. <B>LocalFree()</B> must be called to free the allocated memory. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>pwszComputerName</I> </DT>
+
+<DD>[in] Pointer to a name of a remote computer to be searched. If CRYPT_KEYID_MACHINE_FLAG is set, it searches the remote computer for a list of key identifiers. If the local computer is to be searched and not a remote computer, set the <I>pwszComputerName</I> parameter to NULL.</dd>
+
+<DT><I>pvReserved</I> </DT>
+
+<DD>[in] Reserved for future use and must be NULL.</dd>
+
+<DT><I>pvData</I> </DT>
+
+<DD>[OUT] Pointer to a buffer to receive the data as determined by the <I>dwPropId</I> parameter. Elements pointed to by fields in the <I>pvData</I> parameter follow the structure. Therefore, the size contained in <I>pcbData</I> can exceed the size of the structure.
+
+<P>If <I>dwPropId</I> is CERT_KEY_PROV_INFO_PROP_ID, <I>pvData</I> points to a <A HREF="_wcesdk_crypto2_crypt_key_prov_info.htm"><B>CRYPT_KEY_PROV_INFO</B></A> structure containing the property of the key identifier.
+
+
+<P>If <I>dwPropId</I> is not CERT_KEY_PROV_INFO_PROP_ID, <I>pvData</I> points to an array of bytes containing the property of the key identifier.
+
+
+<P>When CRYPT_KEYID_ALLOC_FLAG is not set, this parameter can be NULL to get the size of this information for memory allocation purposes.
+
+
+<P>When CRYPT_KEYID_ALLOC_FLAG is set, <I>pvData</I> is the address of a pointer to the buffer that will be updated. Because memory is allocated and its pointer is stored at *<I>pvData</I>, <I>pvData</I> must be non-NULL.
+</dd>
+
+<DT><I>pcbData</I> </DT>
+
+<DD>[in/out] Pointer to a <B>DWORD</B> that contains the size, in bytes, of the buffer pointed to by the <I>pvData</I> parameter. When the function returns, the <B>DWORD</B> contains the number of bytes stored in the buffer. The size contained in the variable pointed to by <I>pcbData</I> can indicate a size larger than the <B>CRYPT_KEY_PROV_INFO</B> structure as the structure can contain pointers to auxiliary data. This size is the sum of the size needed by the structure and all auxiliary data.
+
+<P>When CRYPT_KEYID_ALLOC_FLAG is set, <I>pcibData</I> is the address of a pointer to the <B>DWORD</B> that will be updated.
+
+
+<P class=atl><B>Note&nbsp;&nbsp;&nbsp;</B>When processing the data returned in the buffer, applications need to use the actual size of the data returned. The actual size can be slightly smaller than the size of the buffer specified on input. (On input, buffer sizes are usually specified large enough to ensure that the largest possible output data fits in the buffer.) On output, the variable pointed to by this parameter is updated to reflect the actual size of the data copied to the buffer.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the function succeeds, the return value is nonzero (TRUE).</P>
+
+<P>If the function fails, the return value is zero (FALSE).</P>
+
+<P>For extended error information, call the <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A> function.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Crypt32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_crypto2_cryptenumkeyidentifierproperties.htm"><B>CryptEnumKeyIdentifierProperties</B></A>, <A HREF="_wcesdk_crypto2_cryptsetkeyidentifierproperty.htm"><B>CryptSetKeyIdentifierProperty</B></A>, <A HREF="_wcesdk_crypto2_blob.htm"><B>CRYPT_HASH_BLOB</B></A>, <A HREF="_wcesdk_crypto2_crypt_key_prov_info.htm"><B>CRYPT_KEY_PROV_INFO</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

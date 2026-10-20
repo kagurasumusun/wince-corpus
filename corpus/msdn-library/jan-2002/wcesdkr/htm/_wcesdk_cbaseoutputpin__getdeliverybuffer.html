@@ -1,0 +1,106 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CBaseOutputPin::GetDeliveryBuffer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CBaseOutputPin::GetDeliveryBuffer"/>
+<MSHelp:RLTitle Title="CBaseOutputPin::GetDeliveryBuffer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cbaseoutputpin__getdeliverybuffer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CBaseOutputPin::GetDeliveryBuffer</H1>
+
+<P>Retrieves an <A HREF="_wcesdk_imediasample_interface.htm"><B>IMediaSample</B></A> buffer suitable for passing across the connection. </P>
+
+<PRE class="syntax"><B>virtual HRESULT GetDeliveryBuffer(</B>
+<B>IMediaSample **</B><I>ppSample</I><B>,</B>
+<B>REFERENCE_TIME *</B><I>pStartTime</I><B>,</B>
+<B>REFERENCE_TIME *</B><I>pEndTime</I><B>,</B>
+<B>DWORD</B> <I>dwFlags</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ppSample </I></DT>
+
+<DD><A HREF="_wcesdk_imediasample_interface.htm"><B>IMediaSample</B></A> buffer to be provided. </dd>
+
+<DT><I>pStartTime </I></DT>
+
+<DD>Start time of the media sample (optional and can be NULL). </dd>
+
+<DT><I>pEndTime </I></DT>
+
+<DD>Stop time of the media sample (optional and can be NULL). </dd>
+
+<DT><I>dwFlags </I></DT>
+
+<DD>The following flags are supported.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=44%>AM_GBF_NOTASYNCPOINT </TD>
+<TD width=56%>Dynamic format changes are not allowed on this buffer because it is not a key frame. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>AM_GBF_PREVFRAMESKIPPED </TD>
+<TD width=56%>Buffer returned will not be filled with data contiguous with any previous data sent. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns E_NOINTERFACE if an allocator is not found; otherwise, returns the value returned from calling the <A HREF="_wcesdk_imemallocator__getbuffer.htm"><B>IMemAllocator::GetBuffer</B></A> method. </P>
+
+<H4>Remarks</H4>
+
+<P>The pin object must lock itself before calling this member function; otherwise, the filter graph could disconnect this pin from the input pin midway through the process. If the filter has no worker threads, the lock is best applied on the <A HREF="_wcesdk_imeminputpin__receive.htm"><B>IMemInputPin::Receive</B></A> call; otherwise, it should be done when the worker thread is ready to deliver the sample. </P>
+
+<P>This call can block; therefore, to avoid deadlocking with an <A HREF="_wcesdk_imediafilter__stop.htm"><B>IMediaFilter::Stop</B></A> command, a two-tier locking scheme (such as that implemented in <A HREF="_wcesdk_ctransformfilter_class.htm"><B>CTransformFilter</B></A>) is required. Only the second-level lock is acquired here. The <A HREF="_wcesdk_ibasefilter_interface.htm"><B>IBaseFilter</B></A> base class implementation of <B>IMediaFilter::Stop</B> first gets the first-level lock and then calls <A HREF="_wcesdk_imemallocator__decommit.htm"><B>IMemAllocator::Decommit</B></A> on the allocator. This has the effect of making <B>GetDeliveryBuffer</B> return with a failure code. The <A HREF="_wcesdk_cbasefilter__stop.htm"><B>Stop</B></A> member function then gets the second-level lock and completes the command by calling <A HREF="_wcesdk_cbaseoutputpin__inactive.htm"><B>Inactive</B></A> for this pin. </P>
+
+<P>No lock is needed when calling <B>CBaseOutputPin::GetDeliveryBuffer</B> when passing on samples using a worker thread. In this case, the <A HREF="_wcesdk_cbasefilter__stop.htm"><B>CBaseFilter::Stop</B></A> base class implementation acquires its filter-level lock and just calls <A HREF="_wcesdk_imemallocator__decommit.htm"><B>IMemAllocator::Decommit</B></A> on the allocator, at which point the worker thread is freed up to listen for a command to stop. </P>
+
+<P>You must release the sample yourself after this function. If the connected input pin needs to hold on to the sample beyond the function, it will add the reference for the sample itself through <A HREF="_wcesdk_iunknown__addref.htm"><B>IUnknown::AddRef</B></A>. You must release this one and call <B>CBaseOutputPin::GetDeliveryBuffer</B> for the next. (You cannot reuse it directly.) </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

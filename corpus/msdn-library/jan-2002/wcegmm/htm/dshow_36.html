@@ -1,0 +1,83 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Overview of the Connection Process</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Overview of the Connection Process"/>
+<MSHelp:RLTitle Title="Overview of the Connection Process"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_overview_of_the_connection_process"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imediacontrol__renderfile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_ifiltergraph__addfilter" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_ibasefilter__joinfiltergraph" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_ipin__connect" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ipin_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_igraphbuilder__connect" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_ifiltergraph__connectdirect" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_igraphbuilder__render" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_igraphbuilder__renderfile" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_imeminputpin_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Overview of the Connection Process</H1>
+
+<P>Before two filters can be connected, they must each be added to the filter graph. When building a filter graph using Intelligent Connect (such as within a call to <A HREF="JavaScript:hhobj_1.Click()"><B>IMediaControl::RenderFile</B></A>), the filter graph manager adds filters to the graph based on the media type in the file it has been given to render. The Graph Builder objects build specific types of graphs by selecting a predetermined configuration of filters. An application can also build a graph manually by instructing the filter graph manager to add specific filters. In any of these scenarios, the filter is added to the graph by the <A HREF="JavaScript:hhobj_2.Click()"><B>IFilterGraph::AddFilter</B></A> method, and the filter is notified that it has joined the graph by a call to the <A HREF="JavaScript:hhobj_3.Click()"><B>IBaseFilter::JoinFilterGraph</B></A> method. The added filter can then be connected to the filter(s) upstream and/or downstream from it. To initiate the connection process, the filter graph manager requests the filters to enumerate their pins and then, for each connection required, requests that an output pin connect to an input_pin by calling the output pin's <A HREF="JavaScript:hhobj_4.Click()"><B>IPin::Connect</B></A> method. All the details of the connection are then negotiated by the two pins within the scope of <B>Connect</B>. </P>
+
+<P>To say that two filters are "connected" means that they have agreed on the media type of the data that will pass between them, and the size and location of the shared data buffers. The connection type is closely related to the transport type. There are different types of transport depending on whether the data is being "pushed" or "pulled" and whether the data buffers are located in main memory or on a hardware device. </P>
+
+<P>The connection/tranport type discussed here is an IMemInputPin connection, in which the buffers are allocated from main memory and the data is "pushed" into the buffer from the upstream pin. The base classes handle much of this connection mechanism. However, it is important to understand the connection process when writing a filter so that you can identify what to override and what is expected of your filter. Before two connected filters are prepared to pass media between them, the following connection and negotiation processes must occur in this order.</P>
+
+<P>The initial pin connection occurs. </P>
+
+<P>The output pin of one filter retrieves interfaces from the connected input pin. </P>
+
+<P>Both pins negotiate for a common media type. </P>
+
+<P>Both pins negotiate for an appropriate transport to pass the media. </P>
+
+<P>In the first step, the filter graph manager informs the output pin of the upstream filter to connect to a specified input pin of the downstream filter. This results in an exchange of <A HREF="JavaScript:hhobj_5.Click()"><B>IPin</B></A> interface pointers. Filters should never connect to other filters by themselves. The filter graph manager must always be the agent that initiates a connection, because deadlocks can occur otherwise. A filter or an application can instruct the filter graph manager to connect two pins (through the <A HREF="JavaScript:hhobj_6.Click()"><B>IGraphBuilder::Connect</B></A> or <A HREF="JavaScript:hhobj_7.Click()"><B>IFilterGraph::ConnectDirect</B></A> method), or the filter graph manager can determine to connect filters when rendering a filter by using the <A HREF="JavaScript:hhobj_8.Click()"><B>IGraphBuilder::Render</B></A> or <A HREF="JavaScript:hhobj_9.Click()"><B>IGraphBuilder::RenderFile</B></A> method. </P>
+
+<P>In the second step, the output pin may request the <A HREF="JavaScript:hhobj_10.Click()"><B>IMemInputPin</B></A> interface from the connected input pin. This is in preparation for the fourth step, where the output pin will use <B>IMemInputPin</B> to retrieve a memory allocator from the input pin. If the output pin already has a memory allocator (or some other transport in the case of hardware filters), it can skip this step or can request some other interface in a proprietary design. </P>
+
+<P>In the third step, media types are tried until one is found that is acceptable to both pins or the pins run out of types to try (in which case the connection fails). First, the output pin asks the connected input pin to propose its list of media types. If none of these are acceptable to the output pin, the output pin proposes its own types. </P>
+
+<P>In the fourth step, the output pin asks the connected input pin for an interface to a memory allocator object. In the base classes, these objects are implemented by CBaseAllocator and CMemAllocator. These objects create the media samples and their associated data buffers that each pin will access in order to transfer the multimedia data. If the output pin does not accept the input pin's allocator (for reasons discussed below), it can propose its own allocator. In either case it must notify the input pin of the selection. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,120 @@
+<HTML DIR=LTR xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enumerating Databases and Database Volumes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Enumerating Databases and Database Volumes"/>
+<MSHelp:RLTitle Title="Enumerating Databases and Database Volumes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_enumerating_databases_and_database_volumes"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Enumerating Databases and Database Volumes</H1>
+
+<P>Enumerating databases is the process of sequentially accessing each database in a group. The group can include all of the databases in the object store, databases of a specified type, or databases in all of the mounted volumes. Use enumeration when you need to change all of the databases of a certain type or synchronize data between a desktop computer and a Windows CE–based device.</P>
+
+<P>Use the <B>CeFindFirstDatabaseEx</B> and <B>CeFindNextDatabaseEx</B> functions to enumerate databases in a specified database volume. The volume can be the object store or any mounted database volume. <B>CeFindFirstDatabaseEx</B> and <B>CeFindNextDatabaseEx</B> have an additional parameter that identifies the CEGUID of the volume. If you pass in an invalid CEGUID, Windows CE searches all of the mounted database volumes on a Windows CE–based device, including the object store. You also can enumerate the mounted database volumes by calling the <B>CeEnumDBVol</B> function.</P>
+
+<P>When you are finished, call the <B>CloseHandle</B> function to close the enumeration handle.</P>
+
+<P>The following code example shows how to enumerate the databases in the object store.</P>
+
+<PRE class="code">void EnumeratingDBs (void)
+{
+  DWORD dwError;          // Return value of GetLastError function.
+  TCHAR szMsg[100];       // String to display error message
+                          // and database data.
+  HANDLE hEnumDB;         // Handle to a database enumerator.
+  CEOID CeOid;            // Object identifier of a database.
+  CEOIDINFO CeObjectInfo; // Structure that contains
+                          // database data.
+  PCEGUID pceguid = NULL; // Pointer to the mounted volume identifier.
+                          // NULL means all mounted database volumes
+                          // are to be searched.
+
+  // Find the first database. Set the database type to 0, so all types
+  // of databases are enumerated. If pceguid is set to NULL or an
+  // invalid GUID is created by CREATE_INVALIDGUID, all mounted
+  // database volumes are searched.
+
+  hEnumDB = CeFindFirstDatabaseEx (pceguid, 0);
+
+  if (hEnumDB == INVALID_HANDLE_VALUE)
+  {
+    if (GetLastError () == ERROR_OUTOFMEMORY)
+      wsprintf (szMsg, TEXT("Out of memory."));
+    else
+      wsprintf (szMsg, TEXT("Unknown error."));
+
+    return;
+  }
+
+  while ((CeOid = CeFindNextDatabaseEx (hEnumDB, pceguid)) != 0)
+  {
+    // Retrieve database data.
+    if (!CeOidGetInfoEx (pceguid, CeOid, &amp;CeObjectInfo))
+    {
+      // Your error-handling code goes here.
+
+      CloseHandle (hEnumDB);  // Close the search handle.
+
+      return;
+    }
+    else
+    {
+      wsprintf (szMsg, TEXT("The name of the database is: %s"),
+                  CeObjectInfo.infDatabase.szDbaseName);
+    }
+  }
+
+  // Error handling if CeFindNextDatabaseEx fails
+  dwError = GetLastError ();
+
+  if (dwError == ERROR_KEY_DELETED)
+  {
+    // A database has been deleted during enumeration. You must
+    // restart the enumeration process.
+    wsprintf (szMsg,
+              TEXT("A database was deleted during enumeration."));
+  }
+  else if (dwError == ERROR_NO_MORE_ITEMS)
+  {
+    wsprintf (szMsg, TEXT("No more item to enumerates."));
+  }
+  else
+  {
+    wsprintf (szMsg, TEXT("Unknown error."));
+  }
+
+  // Close the search handle.
+  CloseHandle (hEnumDB);
+
+} // End of EnumeratingDBs example code</PRE>
+<DIV CLASS="footer">Built on Tuesday, February 13, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

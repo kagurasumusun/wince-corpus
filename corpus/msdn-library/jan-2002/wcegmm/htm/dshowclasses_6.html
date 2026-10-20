@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Enumerator Base Classes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Enumerator Base Classes"/>
+<MSHelp:RLTitle Title="Enumerator Base Classes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_enumerator_base_classes"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_CEnumPins_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_IEnumPins_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_CEnumMediaTypes_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IEnumMediaTypes_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_IEnumFilters_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_IEnumRegFilters_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_IBaseFilter__EnumPins" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_CBaseFilter__GetPin" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_IPin__EnumMediaTypes" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_CBasePin__GetMediaType" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_11 keywords="_wcesdk_CCritSec_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Enumerator Base Classes</H1>
+
+<P>An <I>enumerator</I> is an interface that provides methods for traversing a list of elements. Enumerators are used in COM programming, and the DirectShow model follows the COM model in enumerating objects. Two enumerator classes are provided in the class library: <A HREF="JavaScript:hhobj_1.Click()"><B>CEnumPins</B></A>, which implements the <A HREF="JavaScript:hhobj_2.Click()"><B>IEnumPins</B></A> interfaces, and <A HREF="JavaScript:hhobj_3.Click()"><B>CEnumMediaTypes</B></A>, which implements the <A HREF="JavaScript:hhobj_4.Click()"><B>IEnumMediaTypes</B></A> interface. Two other DirectShow enumerator interfaces, <A HREF="JavaScript:hhobj_5.Click()"><B>IEnumFilters</B></A> and <A HREF="JavaScript:hhobj_6.Click()"><B>IEnumRegFilters</B></A>, are not represented by base classes because they are implemented only by the filter graph manager. </P>
+
+<P class="fig"><IMG SRC="basecl3.gif" ALT="" BORDER=0></P>
+
+<P>The <B>CEnumPins</B> class creates an enumerator when the <A HREF="JavaScript:hhobj_7.Click()"><B>IBaseFilter::EnumPins</B></A> method is called. The enumerator returned by this method is a pointer to the <B>IEnumPins</B> interface, which is implemented by the <B>CEnumPins</B> class. The <B>CEnumPins</B> member functions can then be called to retrieve pointers to each of the pins on the filter, which this enumerator accomplishes by calling the <A HREF="JavaScript:hhobj_8.Click()"><B>CBaseFilter::GetPin</B></A> member function on the filter. The filter must override the base class <B>CBaseFilter::GetPin</B> member function to supply the enumerator with the next pin in the list each time it is called. </P>
+
+<P>The <B>CEnumMediaTypes</B> class creates an enumerator when the <A HREF="JavaScript:hhobj_9.Click()"><B>IPin::EnumMediaTypes</B></A> method is called. Pins store a list of the media types that they support. During negotiation of the media type, one pin typically calls the <B>EnumMediaTypes</B> method on its connected pin, retrieves the enumerator, and uses it to select a media type. Both of these enumerator classes support the <B>Next</B>, <B>Skip</B>, <B>Reset</B>, and <B>Clone</B> methods familiar to COM programmers. The media type enumerators call the <A HREF="JavaScript:hhobj_10.Click()"><B>CBasePin::GetMediaType</B></A> member function, which must be overridden by the derived pin class, to return the next media type in a list of media types accepted by the pin. </P>
+
+<P>Enumerators operate as threads, and must have synchronized access to the pin media type list. For this reason, the classes that implement enumerators inherit (through multiple inheritance) from the <A HREF="JavaScript:hhobj_11.Click()"><B>CCritSec</B></A> class, which provides critical section management. For more information about the <B>CCritSec</B> class, see <A HREF="dshowclasses_11.htm">Win32 Classes</A>. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

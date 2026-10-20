@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDsDriver::CreateSoundBuffer</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IDsDriver::CreateSoundBuffer"/>
+<MSHelp:RLTitle Title="IDsDriver::CreateSoundBuffer"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_idsdriver__createsoundbuffer"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IDsDriver::CreateSoundBuffer</H1>
+
+<P>The <B>IDsDriver::CreateSoundBuffer </B>method is called only when the device has been opened by DirectSound through a call to <A HREF="dshal_11.htm"><B>IDsDriver::Open</B></A>. DirectSound calls this method to request the driver to create a hardware sound buffer with specific attributes. If the driver is able to create the sound buffer and allocate the required resources, it returns a pointer to an <A HREF="dshal_12.htm"><B>IDsDriverBuffer</B></A> interface that DirectSound uses to control the sound buffer. Otherwise the driver fails the request by returning an error code. </P>
+
+<PRE class="syntax"><B>HRESULT CreateSoundBuffer(
+LPWAVEFORMATEX</B> <I>pwfx</I><B>,
+DWORD </B><I>dwFlags</I><B>,
+DWORD </B><I>dwCardAddress</I><B>,
+LPDWORD </B><I>pdwcbBufferSize</I><B>,
+LPBYTE *</B><I>ppbBuffer</I><B>,
+LPVOID *</B><I>ppvObj</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pwfx</I></DT>
+
+<DD>Pointer to a <B>WAVEFORMATEX</B> structure that contains a description of the desired wave format for the sound buffer. If the device cannot create a sound buffer with that format, it should fail the call by returning DSERR_BADFORMAT. </dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>The creation flags for this sound buffer. Note that these flags are a subset of those used by the <B>IDirectSound::CreateSoundBuffer</B> method; DirectSound intercepts and uses some of the flags so the driver does not have to worry about them.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=39%>Value</TH>
+<TH width=61%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DSBCAPS_PRIMARYBUFFER</TD>
+<TD width=61%>Primary buffer requested. If this flag is not specified, the application should attempt to create a secondary buffer. DirectSound only attempts to create secondary buffers if the driver has indicated (through the <B>DSDRIVERCAPS</B> structure returned by <A HREF="dshal_9.htm"><B>IDsDriver::GetCaps</B></A>) that it supports secondary hardware buffers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DSBCAPS_CTRLFREQUENCY</TD>
+<TD width=61%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DSBCAPS_CTRLPAN</TD>
+<TD width=61%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DSBCAPS_CTRLVOLUME </TD>
+<TD width=61%>These flags specify the controls required for the buffer. If these controls are not available, the driver should fail by returning DSERR_CONTROLUNAVAIL. Note that drivers should fail to create primary buffers if volume or pan control is requested; in the current release this doesn't work because of conflicts with the Windows 95 mixer controls. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DSBCAPS_CTRL3D</TD>
+<TD width=61%>Specified only for secondary buffers. Specifies that the secondary buffer requires 3-D audio acceleration.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>dwCardAddress</I></DT>
+
+<DD>If the device has onboard sound memory and the driver requests that DirectSound or DirectDraw manage the heap (that is, the driver specifies <B>DSDHEAP_CREATEHEAP</B> or <B>DSDHEAP_USEDIRECTDRAWHEAP</B>), this method points to the card address of the sound memory to be used by this buffer. DirectSound guarantees that this memory is free and is large enough to contain the buffer. </dd>
+
+<DT><I>pdwcbBufferSize</I></DT>
+
+<DD>Pointer to a doubleword containing the requested size of the sound buffer. As an input parameter, it contains the buffer size requested by the calling application. For primary buffers, it may also be an output parameter if the hardware imposes restrictions on the size of the buffer. For example, for DMA-based cards, the driver should fill in this value with the size of the DMA buffer allocated on startup. </dd>
+
+<DT><I>ppbBuffer</I></DT>
+
+<DD>Pointer to a value containing the start address (that is, a pointer to a pointer) of the buffer memory. If this is a secondary buffer and the driver specified the DSDDESC_USESYSTEMMEMORY flag in the <B>DSDRIVERDESC</B> structure returned by the <A HREF="dshal_10.htm"><B>IDsDriver::GetDriverDesc</B></A> call, <I>*ppbBuffer</I> is initialized with a pointer to the system memory allocated by DirectSound. </dd>
+
+<DT><I>ppvObj</I></DT>
+
+<DD>Pointer to an interface pointer that receives the <B>IDsDriverBuffer </B>interface to the buffer object created by the driver. If no buffer object and interface are created (that is, if the creation request fails), the driver should set the interface pointer to NULL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns DS_OK if successful, otherwise one of the following error values.
+
+<UL type="disc">
+	<LI>DSERR_ALLOCATED </li>
+
+	<LI>DSERR_INVALIDPARAM </li>
+
+	<LI>DSERR_OUTOFMEMORY </li>
+
+	<LI>DSERR_BADFORMAT </li>
+</UL>
+
+<H4>Remarks</H4>
+
+<P>The requested size of the buffer is passed in a doubleword pointed to by the <I>lpdwRequestedSize</I> parameter. When creating a primary buffer (that is, the DSBCAPS_PRIMARYBUFFER flag is specified), the driver may change this value to conform to hardware limitations (such as DMA buffer size). For secondary buffers, this value must not be changed. </P>
+
+<P>If a secondary buffer is requested and the driver specifies the DSDDESC_USESYSTEMMEMORY flag in the <B>DSDRIVERDESC</B> structure returned by the <A HREF="dshal_10.htm"><B>IDsDriver::GetDriverDesc</B></A> method, DirectSound allocates system memory for the buffer and passes a pointer to this memory in the location pointed to by <I>ppbBuffer</I>. The buffer will be large enough to contain the number of bytes specified in <I>*pdwcbBufferSize</I>. The driver must use this memory or fail the call. If the driver needs to allocate its own memory, it should do so for all buffers and not use the DSDDESC_USESYSTEMMEMORY flag. </P>
+
+<P>If a primary buffer is requested or the driver does not specify the DSDDESC_USESYSTEMMEMORY flag, no memory is allocated and the <I>ppbBuffer</I> parameter points to a NULL pointer. The driver should allocate the required buffer memory and return a pointer to this memory in the value pointed to by <I>ppbBuffer</I>. </P>
+
+<P>The driver should always check the DSBCAPS_CTRLxxx flags passed in the <I>dwFlags</I> parameter. If the driver cannot create a buffer with the requested control attributes, it should fail the creation request. If the driver succeeds the creation request, it is required to succeed the control requests (<A HREF="dshal_20.htm"><B>IDsDriverBuffer::SetVolumePan</B></A>, and so on) when called on this buffer. </P>
+
+<P>If the device has onboard sound memory and the driver requests that DirectSound or DirectDraw manage the heap (that is, the driver fills in the <B>dwMemStartAddress</B> and <B>dwMemEndAddress</B> members and specifies the DSDHEAP_CREATEHEAP or DSDHEAP_USEDIRECTDRAWHEAP flags in the <B>DSDRIVERDESC</B> structure), this method points to the card address of the sound memory to be used by this buffer. DirectSound guarantees that this memory is free and is large enough to contain the buffer. Otherwise this parameter is set to zero. </P>
+
+<P>Due to internal contention-management code in DirectSound, drivers should always make sure that the buffer memory for primary buffers is page-locked. </P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

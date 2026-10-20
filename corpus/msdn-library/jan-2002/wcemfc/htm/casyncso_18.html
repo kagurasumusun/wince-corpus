@@ -1,0 +1,168 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::OnConnect</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CAsyncSocket::OnConnect"/>
+<MSHelp:RLTitle Title="CAsyncSocket::OnConnect"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_onconnect"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CAsyncSocket::OnConnect</H1>
+
+<P>This method is called by the framework to notify the socket that its connection attempt is complete, whether successful or in error. Override this method to do special processing.</P>
+
+<P>In <B>CSocket</B>, the <B>OnConnect</B> notification function is never called. </P>
+
+<P>For connections, you simply call <B>Connect</B>, which returns when the connection is complete, whether successful or in error. How connection notifications are handled is an MFC for Windows CE implementation detail.</P>
+
+<PRE class=syntax><B>virtual void OnConnect(
+int </B><I>nErrorCode </I><B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nErrorCode</I></DT>
+
+<DD>The most recent error on a socket. The following error codes apply to the <B>OnConnect</B> method:
+
+<UL type=disc>
+	<LI>0&nbsp;&nbsp;&nbsp;The function executed successfully.</LI>
+
+	<LI>WSAEADDRINUSE&nbsp;&nbsp;&nbsp;The specified address is in use.</LI>
+
+	<LI>WSAEADDRNOTAVAIL&nbsp;&nbsp;&nbsp;The specified address is not available from the local machine.</LI>
+
+	<LI>WSAEAFNOSUPPORT&nbsp;&nbsp;&nbsp;Addresses in the specified family cannot be used with this socket.</LI>
+
+	<LI>WSAECONNREFUSED&nbsp;&nbsp;&nbsp;The attempt to connect was forcefully rejected.</LI>
+
+	<LI>WSAEDESTADDRREQ&nbsp;&nbsp;&nbsp;A destination address is required.</LI>
+
+	<LI>WSAEFAULT&nbsp;&nbsp;&nbsp;The <I>lpSockAddrLen</I> argument is incorrect.</LI>
+
+	<LI>WSAEINVAL&nbsp;&nbsp;&nbsp;The socket is already bound to an address.</LI>
+
+	<LI>WSAEISCONN&nbsp;&nbsp;&nbsp;&nbsp;The socket is already connected.</LI>
+
+	<LI>WSAEMFILE&nbsp;&nbsp;&nbsp;No more file descriptors are available.</LI>
+
+	<LI>WSAENETUNREACH&nbsp;&nbsp;&nbsp;The network cannot be reached from this host at this time.</LI>
+
+	<LI>WSAENOBUFS&nbsp;&nbsp;&nbsp;No buffer space is available. The socket cannot be connected.</LI>
+
+	<LI>WSAENOTCONN&nbsp;&nbsp;&nbsp;The socket is not connected.</LI>
+
+	<LI>WSAENOTSOCK&nbsp;&nbsp;&nbsp;The descriptor is a file, not a socket.</LI>
+
+	<LI>WSAETIMEDOUT&nbsp;&nbsp;&nbsp;The attempt to connect timed out without establishing a connection.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>void CMyAsyncSocket::OnConnect(int nErrorCode)&nbsp;&nbsp;// CMyAsyncSocket is
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// derived from CAsyncSocket
+{
+&nbsp;&nbsp;if (0 != nErrorCode)
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;switch( nErrorCode )
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEADDRINUSE:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The specified address is in use.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEADDRNOTAVAIL:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The specified address is not available from
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the local machine.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEAFNOSUPPORT:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Addresses in the specified family cannot be
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used with this socket.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAECONNREFUSED:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The attempt to connect was forcefully
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rejected.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEDESTADDRREQ:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("A destination address is required.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEFAULT:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The lpSockAddrLen argument is incorrect.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEINVAL:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The socket is already bound to an
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEISCONN:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The socket is already connected.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAEMFILE:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("No more file descriptors are available.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAENETUNREACH:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The network cannot be reached from this host
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;at this time.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAENOBUFS:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("No buffer space is available. The socket
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cannot be connected.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAENOTCONN:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The socket is not connected.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAENOTSOCK:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The descriptor is a file, not a socket.\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case WSAETIMEDOUT:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("The attempt to connect timed out without
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;establishing a connection. \n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCHAR szError[256];
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsprintf(szError, "OnConnect error: %d", nErrorCode);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox(szError);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;AfxMessageBox("Please close the application");
+&nbsp;&nbsp;}
+&nbsp;&nbsp;CAsyncSocket::OnConnect(nErrorCode);
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_7.htm"><B>CAsyncSocket::Connect</B></A>, <A HREF="casyncso_16.htm"><B>CAsyncSocket::OnAccept</B></A>, <A HREF="casyncso_17.htm"><B>CAsyncSocket::OnClose</B></A>, <A HREF="casyncso_19.htm"><B>CAsyncSocket::OnOutOfBandData</B></A>, <A HREF="casyncso_20.htm"><B>CAsyncSocket::OnReceive</B></A>, <A HREF="casyncso_21.htm"><B>CAsyncSocket::OnSend</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

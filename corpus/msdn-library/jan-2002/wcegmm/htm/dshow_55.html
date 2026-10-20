@@ -1,0 +1,74 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Make Added Interfaces Available Through NonDelegatingQueryInterface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Make Added Interfaces Available Through NonDelegatingQueryInterface"/>
+<MSHelp:RLTitle Title="Make Added Interfaces Available Through NonDelegatingQueryInterface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_make_added_interfaces_available_through_nondelegatingqueryinterface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_IUnknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_inondelegatingunknown_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_com_IUnknown__QueryInterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_cunknown__nondelegatingqueryinterface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_ctransinplacefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Make Added Interfaces Available Through NonDelegatingQueryInterface</H1>
+
+<P>Only filters that add interfaces that are not in the base classes, such as those required for creating property pages, need implement the <A HREF="JavaScript:hhobj_1.Click()"><B>IUnknown</B></A> member functions (called <A HREF="JavaScript:hhobj_2.Click()"><B>INonDelegatingUnknown</B></A> in the base classes). The base classes provide default implementations of the <B>IUnknown</B> methods. <B>IUnknown</B> methods in any COM-based code retrieve interfaces from an object, and increment and decrement the reference counts of those interfaces. For example, the <A HREF="JavaScript:hhobj_3.Click()"><B>IUnknown::QueryInterface</B></A> method retrieves interfaces from an object. </P>
+
+<P>DirectShow defines a special <B>IUnknown</B> class called <B>INonDelegatingUnknown</B>, whose methods do the same thing as <B>IUnknown</B>. (The reason for the name change is so that objects can be aggregated.) The <A HREF="JavaScript:hhobj_4.Click()"><B>NonDelegatingQueryInterface</B></A> method is called whenever some object or application wants to query a pin or filter for any interfaces it implements. If your filter implements any interface outside those listed in the base class implementation, you will need to override the <B>NonDelegatingQueryInterface</B> method to return a pointer to the implemented interface. For example, the following code example overrides the member function to distribute references to the <B>ISpecifyPropertyPages</B> and <B>IPersistStream</B> interfaces. </P>
+
+<PRE class="code">// Reveal our persistent stream, property pages, and IGargle interfaces.
+STDMETHODIMP CGargle::NonDelegatingQueryInterface(REFIID riid, void **ppv) {
+
+    if (riid == IID_IGargle) {
+        return GetInterface((IGargle *) this, ppv);
+    } else if (riid == IID_ISpecifyPropertyPages) {
+        return GetInterface((ISpecifyPropertyPages *) this, ppv);
+    } else if (riid == IID_IPersistStream) {
+        AddRef();     // add a reference count to ourselves
+        *ppv = (void *)(IPersistStream *)this;
+        return NOERROR;
+
+    } else {
+        return CTransInPlaceFilter::NonDelegatingQueryInterface(riid, ppv);
+    }
+} // NonDelegatingQueryInterface</PRE>
+
+<P class=indent><B>Note</B> This sample calls the <A HREF="JavaScript:hhobj_5.Click()"><B>CTransInPlaceFilter</B></A> implementation of the member function to finish up. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,142 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Window</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Window"/>
+<MSHelp:RLTitle Title="Creating a Window"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_creating_a_window"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Window_and_Control_Styles" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Creating a Window</H1>
+
+<P>Every window is a member of a <I>window class</I>. A window class is a template for creating a window. When you write an application, you must register all of the window classes that are used to create windows. To simplify the process of creating windows, Windows CE includes several system-defined window classes; because Windows CE registers these classes automatically, you can create windows with them immediately.</P>
+
+<P>You create windows with the <B>CreateWindow</B> or <B>CreateWindowEx</B> function. The only difference between these functions is that <B>CreateWindowEx</B> supports the extended style parameter, <I>dwExStyle</I>, but <B>CreateWindow</B> does not. These functions take a number of parameters that specify the attributes of the window that is being created. In Windows CE, <B>CreateWindow</B> is implemented as a macro that calls <B>CreateWindowEx</B>.</P>
+
+<P class=indent><span class=blue><B>Note</B></span>&nbsp;&nbsp;&nbsp;In multithreaded applications, the main thread must create the main application before creating threads for any child windows.</P>
+
+<P>Windows CE includes additional functions for creating special-purpose windows such as dialog boxes and message boxes, such as <B>DialogBox</B>, <B>CreateDialog</B>, and <B>MessageBox</B>.</P>
+
+<P>The <B>CreateWindowEx</B> function uses the following syntax:</P>
+
+<PRE>HWND
+CreateWindowEx(
+   DWORD       dwExStyle,       //Extended style
+   LPCWSTR     lpClassName,     //Class name
+   LPCWSTR     lpWindowName,    //Window name
+   DWORD       dwStyle,         //Style
+   int         X,               //Horizontal position
+   int         Y,               //Vertical position
+   int         nWidth,          //Width
+   int         nHeight,         //Height
+   HWND        hwndParent,      //Parent window
+   HMENU       hMenu,           //Menu
+   HINSTANCE   hInstance,       //Instance handle
+   LPVOID      lpParam);        //Creation data
+</PRE>
+
+<P>The <B>CreateWindow</B> function does not include the <I>dwExStyle</I> parameter. The following table shows the window attributes of <B>CreateWindowEx</B>.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Window attribute</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Extended style</TD>
+<TD width=67%>The dw<I>ExStyle</I> parameter specifies one or more window extended styles. These styles have their own set of WS_EX_* flags, which should not be confused with the WS_* flags.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Class name</TD>
+<TD width=67%>Every window belongs to a window class. Except for built-in classes, such as controls, an application must register a window class before creating any windows of that class. The <I>lpClassName</I> parameter specifies the name of the class that is used as a template for creating the window.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Window name</TD>
+<TD width=67%>The window name, also known as window text, is a text string that is associated with a window. The <I>lpWindowName</I> parameter specifies the window text for the newly created window. Windows use this text in different ways: A main window, dialog box, or message box typically displays its window text in its title bar; a button control, edit control, or static control displays its window text within the rectangle that is occupied by the control; a list box, combo box, or scroll bar control does not display its window name. All windows have the text attribute, even if they do not display the text. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Style</TD>
+<TD width=67%>The <I>dwStyle</I> parameter specifies one or more window styles. A window style is a named constant that defines an aspect of the window’s appearance and behavior. For example, a window with the WS_BORDER style has a border around it. Some window styles apply to all windows; others apply only to windows of specific window classes. For a list of message box styles that are supported by Windows CE, see <A HREF="JavaScript:hhobj_1.Click()">Window and Control Styles</A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Horizontal and vertical coordinates</TD>
+<TD width=67%>The <I>x</I> and <I>y</I> parameters specify the horizontal and vertical screen coordinates, respectively, of the upper-left corner of the window.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Width and height coordinates</TD>
+<TD width=67%>The <I>nWidth</I> and <I>nHeight</I> parameters determine the width and height, respectively, of the window, in device units.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Parent</TD>
+<TD width=67%>The <I>hwndParent</I> parameter specifies the parent window or the owner of a window, depending on the style of the flags that are passed in.
+<P>If neither the WS_POPUP style nor the WS_CHILD style is specified, the <I>hwndParent</I> parameter might be either a valid window handle or NULL. If the parameter is NULL, the new window is a top-level window without a parent window or owner window. If the parameter is non-NULL, the new window is created as a child window of the specified parent window.</P>
+
+<P>If the WS_CHILD style is specified, the <I>hwndParent</I> parameter must be a valid window handle. The new window is created as a child window of the parent window.</P>
+
+<P>If the WS_POPUP style is specified, the new window is created as a top-level window, and the <I>hwndParent</I> parameter specifies the owner window. If WS_POPUP is specified and the parameter is NULL, the new window is owned partially by Windows CE. The WS_POPUP style overrides the WS_CHILD style.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Menu</TD>
+<TD width=67%>Windows CE does not support menu bars. In Windows CE, you can use the <I>hMenu</I> parameter to identify a child window. Otherwise, it must be NULL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Instance handle</TD>
+<TD width=67%>The <I>hInstance</I> parameter identifies the handle of the specific instance of the application that creates the window.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>Creation data</TD>
+<TD width=67%>Every window receives a WM_CREATE message when it is created. The <I>lpParam</I> parameter is passed onas one of the message parameters. Although it can be any value, it is most commonly a pointer to a structure containing data that is required to create a particular window.</TD>
+</TR>
+</TABLE><BR>
+
+<P>The class name for a new window class has to be a Unicode string. You can use the <B>TEXT</B> macro to cast a string as Unicode, as in <CODE>TEXT("classname")</CODE>. You also can use the <B>_T</B> macro, as in <CODE>__T("classname")</CODE>. Another option is to declare the string as a <B>Long</B> string <CODE>(L"classname")</CODE>, which will make the string Unicode only.</P>
+
+<P>The system does not display the main window automatically after the system creates the window. Instead, the <B>WinMain</B> function of the application uses the <B>ShowWindow</B> function to display the window. An application uses the <B>SetWindowText</B> function to change the window text after it creates the window; it uses the <B>GetWindowTextLength</B> and <B>GetWindowText</B> functions to retrieve the window text from a window.</P>
+
+<P>For an example of how to call the <B>CreateWindowEx</B> function, see <A HREF="window_10.htm">Creating a Sample Application</A>.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

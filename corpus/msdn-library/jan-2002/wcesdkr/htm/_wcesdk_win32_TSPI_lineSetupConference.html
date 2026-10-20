@@ -1,0 +1,154 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>TSPI_lineSetupConference</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="TSPI_lineSetupConference"/>
+<MSHelp:RLTitle Title="TSPI_lineSetupConference"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_tspi_linesetupconference"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>TSPI_lineSetupConference</H1>
+
+<P>The <B>TSPI_lineSetupConference</B> function sets up a conference call for the addition of the third party.</P>
+
+<PRE class="syntax"><B>LONG TSPIAPI TSPI_lineSetupConference(</B>
+<B>DRV</B>_<B>REQUESTID</B> <I>dwRequestID</I>,
+<B>HDRVCALL</B> <I>hdCall</I>,
+<B>HDRVLINE</B> <I>hdLine</I>,
+<B>HTAPICALL</B> <I>htConfCall</I>,
+<B>LPHDRVCALL</B> <I>lphdConfCall</I>,
+<B>HTAPICALL</B> <I>htConsultCall</I>,
+<B>LPHDRVCALL</B> <I>lphdConsultCall</I>,
+<B>DWORD</B> <I>dwNumParties</I>,
+<B>LPLINECALLPARAMS</B> <B>const</B> lpCallParams <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwRequestID </I></DT>
+
+<DD>The identifier of the asynchronous request. </dd>
+
+<DT><I>hdCall</I> </DT>
+
+<DD>The handle to the initial call that identifies the first party of a conference call. In some environments, a call must exist in order to start a conference call. In other telephony environments, no call initially exists and <I>hdCall</I> is left NULL. The call state of hdCall can be <I>connected</I>. </dd>
+
+<DT><I>hdLine</I> </DT>
+
+<DD>The handle to the line device on which to originate the conference call if <I>hdCall</I> is NULL. The <I>hdLine</I> parameter is ignored if <I>hdCall</I> is non-NULL. The service provider reports which model it supports through the <I>setupConfNull</I> flag of the LINEADDRESSCAPS data structure. </dd>
+
+<DT><I>htConfCall</I> </DT>
+
+<DD>The TAPI handle to the new conference call. The service provider must save this and use it in all subsequent calls to the LINEEVENT procedure reporting events on the new call. </dd>
+
+<DT><I>lphdConfCall</I> </DT>
+
+<DD>A pointer to an HDRVCALL representing the service provider's identifier for the newly created conference call. The service provider must fill this location with its handle for the new call before this procedure returns. This handle is ignored by TAPI if the function results in an error. The call state of <I>hdConfCall</I> is not applicable. </dd>
+
+<DT><I>htConsultCall</I> </DT>
+
+<DD>The TAPI handle to the consultation call. When setting up a call for the addition of a new party, a new temporary call (consultation call) is automatically allocated. The service provider must save the <I>htConsultCall</I> and use it in all subsequent calls to the LINEEVENT procedure reporting events on the new consultation call. </dd>
+
+<DT><I>lphdConsultCall</I> </DT>
+
+<DD>A pointer to an HDRVCALL representing the service provider's identifier for a call. When setting up a call for the addition of a new party, a new temporary call (consultation call) is automatically allocated. The service provider must fill this location with its handle for the new consultation call before this procedure returns. This handle is ignored by TAPI if the function results in an error. The call state of <I>hdConsultCall</I> is not applicable. </dd>
+
+<DT><I>dwNumParties</I> </DT>
+
+<DD>The expected number of parties in the conference call. The service provider is free to do with this number as it pleases. For example, the service provider can ignore it, or use it as a hint to allocate the right size conference bridge inside the switch. TAPI does not validate this parameter when this function is called. </dd>
+
+<DT><I>lpCallParams</I> </DT>
+
+<DD>A pointer to call parameters to be used when establishing the consultation call. This parameter is set to NULL if no special call setup parameters are desired and the service provider uses default parameters. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns <I>dwRequestID</I>, or an error number if an error occurs. The <I>lResult</I> actual parameter of the corresponding ASYNC_COMPLETION is zero if the function succeeds, or an error number if an error occurs. Possible return values are as follows: </P>
+
+<P>LINEERR_INVALCALLHANDLE, LINEERR_INVALADDRESSMODE, LINEERR_INVALLINEHANDLE, LINEERR_INVALBEARERMODE, LINEERR_INVALCALLSTATE, LINEERR_INVALCALLPARAMS, LINEERR_CALLUNAVAIL, LINEERR_INVALLINESTATE, LINEERR_CONFERENCEFULL, LINEERR_INVALMEDIAMODE, LINEERR_NOMEM, LINEERR_INVALRATE, LINEERR_OPERATIONUNAVAIL, LINEERR_INUSE, LINEERR_OPERATIONFAILED, LINEERR_RATEUNAVAIL, LINEERR_RESOURCEUNAVAIL, LINEERR_USERUSERINFOTOOBIG, LINEERR_BEARERMODEUNAVAIL. </P>
+
+<H4>Remarks</H4>
+
+<P>The service provider returns LINEERR_INVALLINEHANDLE if the specified line handle for the line containing the conference call is invalid. This error can also indicate that the telephony environment requires an initial line to set up a conference but a non-NULL call handle was supplied instead.</P>
+
+<P>The service provider returns LINEERR_INVALCALLHANDLE if the telephony environment requires an initial call to set up a conference but a NULL call handle was supplied instead.</P>
+
+<P><B>TSPI_lineSetupConference</B> provides two ways to establish a new conference call, depending on whether a normal two-party call is required to pre-exist or not. When setting up a conference call from an existing two-party call, the <I>hdCall</I> parameter is a valid call handle that is initially added to the conference call by the TSPI_<B>lineSetupConference</B> request and <I>hdLine</I> is ignored. On switches where conference call setup does not start with an existing call, <I>hdCall</I> must be NULL and <I>hdLine</I> must be specified to identify the line device on which to initiate the conference call. In either case, a consultation call is allocated for connecting to the party that is to be added to the call. TAPI can use <B>TSPI</B>_<B>lineDial</B> to dial the address of the other party.</P>
+
+<P>The conference call typically transitions into the onHoldPendingConference state, the consultation call dialtone state and the initial call (if one) into the conferenced state.</P>
+
+<P>A conference call can also be set up using a <B>TSPI_lineCompleteTransfer</B> function that is resolved into a three-way conference.</P>
+
+<P>TAPI may be able to toggle between the consultation call and the conference call using <B>TSPI</B>_<B>lineSwapHold</B>.</P>
+
+<P>The <B>TSPI</B>_<B>lineUnhold</B> function can recover calls that have the call state onHoldPendingConference. If this is done, any consultation call typically goes to the idle state.</P>
+
+<P>A consultation call can be canceled by invoking <B>TSPI_lineDrop</B> on it. When dropping a consultation call, the existing conference call typically transitions back to the connected state. TAPI and its client applications should observe the LINE_CALLSTATE messages to determine exactly what happens to the calls. For example, if the conference call reverts back to a regular two-party call, the conference call becomes idle and the original participant call may revert to connected.</P>
+
+<P>This function differs from the corresponding TAPI function in that it follows the TSPI model for beginning the lifetime of a call. TAPI and the service provider exchange opaque handles representing the call with one another. In addition, the service provider is permitted to do callbacks for the new call before it returns from this procedure. In any case, the service provider must also treat the handle it returned as "not yet valid" until after the matching ASYNC_COMPLETION message reports success. In other words, it must not issue any LINEEVENT messages for the new call or include it in call counts in messages or status data structures for the line.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Tapicomn.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_tspi_lineaddtoconference.htm"><B>TSPI_lineAddToConference</B></A>, <A HREF="_wcesdk_win32_tspi_linedial.htm"><B>TSPI_lineDial</B></A>, <A HREF="_wcesdk_win32_tspi_lineprepareaddtoconference.htm"><B>TSPI_linePrepareAddToConference</B></A>, <A HREF="_wcesdk_win32_tspi_lineremovefromconference.htm"><B>TSPI_lineRemoveFromConference</B></A>, <A HREF="_wcesdk_win32_tspi_lineswaphold.htm"><B>TSPI_lineSwapHold</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

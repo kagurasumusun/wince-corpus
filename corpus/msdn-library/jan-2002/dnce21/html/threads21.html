@@ -1,0 +1,739 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Working With Processes and Threads in Windows CE 2.1</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Working With Processes and Threads in Windows CE 2.1"/>
+<MSHelp:RLTitle Title="Working With Processes and Threads in Microsoft Windows CE 2.1"/>
+<MSHelp:Keyword Index="A" Term="threads21"/>
+<MSHelp:Keyword Index="K" Term="Win32, process and thread model"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, processes"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, threads"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, working with processes and threads"/>
+<MSHelp:Keyword Index="A" Term="threads21"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="HostCPU" Value="kbx86"/>
+<MSHelp:Attr Name="HostOS" Value="Windows"/>
+<MSHelp:Attr Name="HostOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetCPU" Value="kbx86"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinOS"/>
+<MSHelp:Attr Name="Technology" Value="DllProc"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbDllProc"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="Technology" Value="Win32API"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbWin32API"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<meta name="description" content="This paper discusses how to create, manage, and terminate processes and threads using the Win32 process and thread model."><meta name="keywords" content="Microsoft Windows CE 2.1, Win32, threads, processes"><META name="rtfFileName" content="threads21.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="Windows CE is a preemptive multitasking OS that supports the Win32 process and thread model using a round-robin, priority-based scheduler. Discusses how to create, manage, and terminate processes and threads using this Win32 process and thread model.">
+<META NAME="msdnID" CONTENT="_661517">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="threads21"></A>Working With Processes and Threads in Microsoft Windows CE 2.1</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>April 2000</P>
+
+<P><B>Summary:</B> Microsoft® Windows® CE is a preemptive multitasking operating system that supports the Microsoft® Win32® process and thread model using a round-robin, priority-based scheduler. This paper discusses how to create, manage, and terminate processes and threads using this Win32 process and thread model. (15 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#threads21_intro">Introduction</A><CODE><BR>
+</CODE><A HREF="#threads21_process">Processes</A><CODE><BR>
+</CODE><A HREF="#threads21_thread">Threads</A><CODE><BR>
+</CODE><A HREF="#threads21_synchro">Interprocess Synchronization</A></P>
+
+<H2 class="dtH1"><A NAME="threads21_intro"></A>Introduction</H2>
+
+<P>Microsoft Windows CE is a compact, scalable operating system. It uses a subset of the Microsoft Win32 application programming interface (API) that is used on Windows-based desktop and server computers. You can use the same development tools, such as, Microsoft® Visual C++® or Microsoft® Visual Basic®, to create applications for Windows CE&#0150;powered devices. </P>
+
+<P>Windows CE is a preemptive multitasking operating system. Multiple applications, or processes, can run within the system at the same time. A process consists of one or more threads, where each thread executes code in that process. When you correctly use threads, your application runs more quickly and efficiently.</P>
+
+<P>Windows CE uses the hardware memory management unit (MMU) to implement virtual memory and to protect processes. While other operating systems either do not use the MMU or make limited use of it, Windows CE uses the MMU to make the system more flexible and reliable. The hardware protects processes from one another, making the system suitable for products where processes are added after the system is built, without the knowledge or help of the system builder. By enabling these third-party programs, the end product can be an open platform supporting a broader range of customer solutions without giving up reliability.</P>
+
+<P>Virtual memory allows the system builder to make more efficient use of memory and code space. Code can be executed in read-only memory (ROM), compressed in ROM, and paged into random access memory (RAM), or stored in a file system and paged into RAM at execution time.</P>
+
+<P>To help you take advantage of the efficiency offered by Windows CE, this paper provides information about how to create, manage, and terminate processes and threads using the Win32 process and thread model supported by Windows CE.</P>
+
+<H2 class="dtH1"><A NAME="threads21_process"></A>Processes</H2>
+
+<P>A process is a single instance of a running application. Windows CE supports a maximum of 32 simultaneous processes. Each process has at least a primary thread, which executes code within the process. You can also create additional threads in a process, limited only by RAM.</P>
+
+<P>Windows CE has a 4GB address space with full protection between processes. The virtual address space for each process is 32MB. You can allocate additional memory outside of the 32MB by using memory-mapped files. Also, allocations greater than 2MB using the VirtualAlloc function with the MEM_RESERVE and PAGE_NOACCESS flags and without a start address are allocated outside of the process address space.</P>
+
+<P>A process contains a default heap whose size is limited only by physical memory. The process can own other resources such as files and dynamic-link libraries (DLLs). Windows CE does not support environment variables or current directory, and the search order for .exe files is as follows:
+
+<UL type="disc">
+	<LI>Windows (\windows) directory </li>
+
+	<LI>Root directory (\) of the Windows CE device </li>
+
+	<LI>OEM-specified directories </li>
+
+	<LI>For Microsoft Windows CE Platform Builder 2.11 users only: OEM-defined shell (\ceshell) directory </li>
+</UL>
+
+<P>Also note that Windows CE does not support process priority classes, which restrict the thread priorities that can be assigned in a process.</P>
+
+<H3 class="dtH1">Creating a Process</H3>
+
+<P>When you create a process, Windows CE allocates memory for the stack and heap and creates the primary thread for the process. The system then schedules the process to be run.</P>
+
+<P>The CreateProcess function creates a process and returns the handles and identifiers for the process and its primary thread. Many of this function's parameters are set to NULL or FALSE because Windows CE does not support features on the desktop, such as, security, current directory, or handle inheritance. The resulting function and required parameters are as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL CreateProcess (LPCTSTR lpApplicationName, LPTSTR lpCommandLine, NULL, NULL, FALSE, DWORD dwCreationFlags, NULL, NULL, NULL, LPPROCESS_INFORMATION lpProcessInformation);</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=33%>Parameter</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>lpApplicationName</TD>
+<TD width=67%>Specifies the name of the application to execute. This is a Unicode sting, and you cannot pass NULL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>lpCommandLine</TD>
+<TD width=67%>Specifies the command line passed to the new process. The command line is always passed as a Unicode sting.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>dwCreationFlags</TD>
+<TD width=67%>Specifies the initial state of the process after it has been loaded. This parameter must be one of the following flags: 
+<BLOCKQUOTE class="dtBlock">
+0 creates a standard process. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+CREATE_SUSPENDED creates the process then suspends the primary thread. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DEBUG_PROCESS treats the process being created as a process being debugged by the caller. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DEBUG_ONLY_THIS_PROCESS, when combined with DEBUG_PROCESS, debugs a process but does not debug any child processes that are launched by the process being debugged. </BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+CREATE_NEW_CONSOLE forces creation of a new console. </BLOCKQUOTE>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>lpProcessInformation</TD>
+<TD width=67%>Points to a PROCESS_INFORMATION structure that the CreateProcess function fills with information about the new process. You can pass NULL.</TD>
+</TR>
+</table></div>
+
+<P>If the process cannot be run, the CreateProcess function returns FALSE. For more detailed information about the failure, use the GetLastError function.</P>
+
+<H3 class="dtH1">Terminating a Process</H3>
+
+<P>The preferred method for process termination is for a process to terminate itself by returning from its primary thread. You can terminate the primary thread of the process by calling the ExitThread function. For more information, see the section on Terminating a Thread. The ExitThread function returns the exit code of the process.</P>
+
+<P>You can also terminate a process with one of the following methods:
+
+<UL type="disc">
+	<LI>Use interprocess communication to tell the process to terminate itself. Interprocess communication is discussed later in this paper. </li>
+
+	<LI>If the process has a message queue, send a WM_CLOSE message to the main window of the process. An application may not close if it does not receive this message and may display a message box. </li>
+
+	<LI>As a last resort, you can use the TerminateProcess function, which does not notify attached DLLs that the process is terminating. Specify the handle and exit code of the process, as follows: 
+<P>BOOL TerminateProcess (HANDLE hProcess, DWORD uExitCode);
+</li>
+</UL>
+
+<P>You can determine the exit code for a process with the GetExitCodeProcess function. If the process is still running, the returned exit code is the constant STILL_ACTIVE. Specify the handle to the process, and the function returns the exit code, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL GetExitCodeProcess (HANDLE hProcess, LPDWORD lpExitCode);</BLOCKQUOTE>
+
+<P>As an alternative, you can also use the WaitForSingleObject function. Pass the process handle as the first parameter and a timeout value for the second parameter-for more information, see the section on Wait Functions. The process handle is signaled when the process terminates.</P>
+
+<P>Also, when you no longer need a process handle, close it by using the CloseHandle function. This function frees data associated with an object.</P>
+
+<H3 class="dtH1">Other Process Information</H3>
+
+<P>Windows CE also supports the following process functions.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=65%>If you want to know the:</TH>
+<TH width=35%>Use:</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=65%>Handle to a process</TD>
+<TD width=35%>HANDLE GetCurrentProcess (void);</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=65%>Identifier of a process</TD>
+<TD width=35%>DWORD GetCurrentProcessId (void);</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=65%>Handle of another process</TD>
+<TD width=35%>HANDLE OpenProcess (0, FALSE, DWORD dwProcessId);</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=65%>Process identifier for the process that created a particular window</TD>
+<TD width=35%>DWORD GetWindowThreadProcessId (HWND hWnd, LPWORD lpdwProcessId);</TD>
+</TR>
+</table></div>
+
+<P>A process can directly read from or write to an accessible memory space of another process using the ReadProcessMemory and WriteProcessMemory functions. The functions and required parameters are as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL ReadProcessMemory (HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, LPDWORD lpNumberOfBytesRead);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL WriteProcessMemory (HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, LPDWORD lpNumberOfBytesWritten);</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=55%>Parameter</TH>
+<TH width=45%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=55%>hProcess</TD>
+<TD width=45%>Specifies the handle of the other process. Use the OpenProcess function to return a process handle.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=55%>lpBaseAddress</TD>
+<TD width=45%>Specifies base address of the process to be read or written.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=55%>lpBuffer</TD>
+<TD width=45%>Specifies name of the local buffer from or to which the data is to be read or written.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=55%>nSize</TD>
+<TD width=45%>Specifies size of the local buffer from or to which the data is to be read or written.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=55%>lpNumberOfBytesReadlpNumberOfBytesWritten</TD>
+<TD width=45%>Specifies number of bytes read or written.</TD>
+</TR>
+</table></div>
+
+<H2 class="dtH1"><A NAME="threads21_thread"></A>Threads</H2>
+
+<P>A thread executes code in a process. Each thread has a stack, where the linker sets the stack size of all threads created in a process. Each process has a primary thread and can have as many additional threads as permitted by available RAM. Threads within a process share the address space of the process. </P>
+
+<P>A thread also has associated registers such as the instruction pointer. These associated registers are known as the context. You can use the GetThreadContext function to retrieve the context of the specified thread and the SetThreadContext function to set the context in the specified thread, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL GetThreadContext (HANDLE hThread, LPCONTEXT lpContext); BOOL SetThreadContext (HANDLE hThread, CONST CONTEXT *lpContext);</BLOCKQUOTE>
+
+<P>Threads can be in one of the following states: running, suspended, sleeping, blocked, or terminated. Multi-threaded applications must avoid two threading problems: deadlocks and race conditions. A deadlock occurs when each thread is waiting for the other to do something. A race condition occurs when threads are sharing a value and the final result of the value depends on the scheduling order of the threads. </P>
+
+<H3 class="dtH1">Creating a Thread</H3>
+
+<P>To create a thread, first define a thread routine and then call the CreateThread function, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+HANDLE CreateThread NULL, 0, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId);</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=35%>Parameter</TH>
+<TH width=65%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>lpStartAddress</TD>
+<TD width=65%>Points to the start of the thread routine.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>lpParameter</TD>
+<TD width=65%>Specifies an application-defined value that is passed to the thread routine.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>dwCreationFlags</TD>
+<TD width=65%>Set to 0 or CREATE_SUSPENDED.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=35%>lpThreadId</TD>
+<TD width=65%>Points to a DWORD that receives the new thread's identifier.</TD>
+</TR>
+</table></div>
+
+<P>The CreateThread function returns the handle and identifier of the new thread. If you otherwise need to know the identifier or handle of a thread, use the GetCurrentThreadId function to return the thread identifier, and the GetCurrentThread function to return a handle to the thread. These functions are defined as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+HANDLE GetCurrentThread (void);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD GetCurrentThreadId (void);</BLOCKQUOTE>
+
+<P>Threads are always created with a priority of THREAD_PRIORITY_NORMAL. To change the priority level of a thread, call the SetThreadPriority function. For more information about priorities, see the section on Scheduling Threads. </P>
+
+<H3 class="dtH1">Terminating a Thread</H3>
+
+<P>Thread termination is consistent with Windows-based desktop platforms. Thread and process termination are linked in the following ways:
+
+<UL type="disc">
+	<LI>If an exception occurs in a thread, its process is terminated. </li>
+
+	<LI>If a primary thread terminates, its process is also terminated. </li>
+
+	<LI>When a process is terminated, all its threads are terminated. </li>
+</UL>
+
+<P>The ExitThread function terminates a thread and frees all resources used by the thread. The only parameter is the thread's exit code, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+VOID ExitThread (DWORD dwExitCode);</BLOCKQUOTE>
+
+<P>You can determine the exit code of a thread by using the GetExitCodeThread function. If the thread is still running, the exit code is STILL_ACTIVE. The function takes the handle to the thread and returns the exit code, as follows: </P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL GetExitCodeThread (HANDLE hThread, LPDWORD lpExitCode);</BLOCKQUOTE>
+
+<P>As a last resort, you can use the TerminateThread function, which does not execute termination code and may not free resources. The parameters are the handle and exit code of the thread, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+TerminateThread (HANDLE hThread, DWORD dwExitCode);</BLOCKQUOTE>
+
+<P>When you no longer need a thread handle, be sure to close it with the CloseHandle function to free resources.</P>
+
+<H3 class="dtH1">Scheduling Threads</H3>
+
+<P>Windows CE uses a priority-based time-slice algorithm to schedule the execution of threads. Because Windows CE does not have priority classes, the process in which the thread runs does not influence thread priorities. All the priorities can be used in the same process. A thread can have one of the eight priorities shown in the following table.</P>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=44%>Priority Value</TH>
+<TH width=56%>Typically used for:</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_TIME_CRITICAL</TD>
+<TD width=56%>Real-time processing and device drivers</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_HIGHEST</TD>
+<TD width=56%>Real-time processing and device drivers</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_ABOVE_NORMAL</TD>
+<TD width=56%>Kernel threads and normal applications</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_NORMAL</TD>
+<TD width=56%>Kernel threads and normal applications</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_BELOW_NORMAL</TD>
+<TD width=56%>Kernel threads and normal applications</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_LOWEST</TD>
+<TD width=56%>Applications that can always be preempted</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_ABOVE_IDLE</TD>
+<TD width=56%>Applications that can always be preempted</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=44%>THREAD_PRIORITY_IDLE</TD>
+<TD width=56%>Applications that can always be preempted</TD>
+</TR>
+</table></div>
+
+<P>To query the priority level of a thread, call the GetThreadPriority function. To change the priority level of a thread, call the SetThreadPriority function. Both functions take the handle to the thread, and the SetThreadPriority function takes the new priority level, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+int GetThreadPriority (HANDLE hThread);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL SetThreadPriority (HANDLE hThread, int nPriority);</BLOCKQUOTE>
+
+<P>Threads with a higher priority are scheduled to run first. Threads with the same priority run in a round-robin fashion-when a thread has stopped running, all other threads of the same priority run before the original thread can continue. Threads at a lower priority do not run until all threads with a higher priority have finished, that is, until they either yield or are blocked. If one thread is running and a thread of higher priority is unblocked, the lower-priority thread is immediately suspended and the higher-priority thread is scheduled.</P>
+
+<P>Threads run for a time slice, or quantum, which has a default value of 25 milliseconds, but the OEM can specify a different quantum. After that time, if the thread has not relinquished its time slice and is not time critical, it is suspended and another thread is scheduled to run. Threads at the highest priority level-THREAD_PRIORITY_TIME_CRITICAL-continue executing without interruption until they have finished, unless interrupted by an Interrupt Service Routine (ISR). </P>
+
+<P>Thread priorities are fixed and do not change. Windows CE does not age priorities, boost foreground thread priorities, or mask interrupts based on these priority levels. The kernel can temporarily modify thread priorities when a low-priority thread is using a resource that delays the execution of a high-priority thread wanting to use the same resource. Windows CE boosts the priority of the low-priority thread until it releases the resource required by the higher priority thread. This scenario is called priority inheritance, and is designed to prevent a low-level thread running before higher-level threads, a problem known as priority inversion. Windows CE will go through the entire chain of threads trying to correct a priority inversion problem.</P>
+
+<P>You can suspend a thread using the SuspendThread function. To resume running a thread, call the ResumeThread function. You must match multiple calls to the SuspendThread function with the same number of calls to the ResumeThread function. The only parameter for both functions is the handle to the thread. To suspend a thread for a specified number of milliseconds, use the Sleep function. If you specify a sleep time of less than the quantum, the thread sleeps for a quantum. These functions are defined as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD SuspendThread (HANDLE hThread);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD ResumeThread (HANDLE hThread);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+void Sleep (DWORD dwMilliseconds);</BLOCKQUOTE>
+
+<P>You can profile the performance of a thread using the GetThreadTimes function, which returns how much time a thread has run.</P>
+
+<H3 class="dtH1">Thread Local Storage</H3>
+
+<P>Thread local storage (TLS) lets a thread maintain separate instances of data. Each thread within a process can have its own set of values that are guaranteed to be unique. The TlsAlloc function reserves a TLS slot and sets the value in the slot to zero for all currently running threads. New threads are also created with their TLS array initialized to zero.</P>
+
+<P>After being assigned a TLS slot, each thread can access its unique data by calling the TlsGetValue or TlsSetValue function. The TlsFree function frees the TLS slot. The TLS functions are defined as follows, where dwTlsIndex specifies the slot that contains the data and lpTlsValue specifies the value to be stored in the calling thread's TLS slot: </P>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD TlsAlloc (void);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL TlsSetValue (DWORD dwTlsIndex, LPVOID lpTlsValue);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+LPVOID TlsGetValue (DWORD dwTlsIndex);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL TlsFree (DWORD dwTlsIndex);</BLOCKQUOTE>
+
+<H3 class="dtH1">Thread Synchronization</H3>
+
+<P>Synchronization is needed to avoid conflict over shared resources. You can coordinate the activities of threads by using wait functions, synchronization objects, and interlocked functions. Windows CE supports the following synchronization objects:
+
+<UL type="disc">
+	<LI>Event objects </li>
+
+	<LI>Mutex (mutual exclusion) objects </li>
+
+	<LI>Critical sections </li>
+</UL>
+
+<P>Windows CE queues event, mutex, and critical section requests in "FIFO-by-priority" order: a different FIFO queue is defined for each of the eight priority levels. A new request from a thread at a given priority is placed at the end of that priority's list.</P>
+
+<H4 class="dtH1">Wait Functions</H4>
+
+<P>Windows CE supports single-object and multiple-object wait functions that block or unblock a thread based on a signaled or non-signaled state of an object. A wait function causes a thread to enter an efficient state that requires very little CPU processing power and battery power.</P>
+
+<P>The WaitForSingleObject function lets a thread wait on a single object. The object can be a synchronization object, such as, an event or mutex object, or can be handles to processes and threads. These handles are signaled when their processes or threads terminate. Thus, a process can monitor another process or thread and perform some action based on the status of the process or thread.</P>
+
+<P>The WaitForMultipleObjects function lets a thread wait on multiple synchronization objects. The wait can end when any one of the objects is signaled. Windows CE does not support waiting for all objects to be signaled.</P>
+
+<P>Do not use the WaitForSingleObject or WaitForMultipleObjects function on the thread that processes messages. A thread that is blocked waiting on an object cannot retrieve and dispatch messages. You can use the MsgWaitForMultipleObjects function. This function combines the WaitForMultipleObjects function with a check into the message queue so that the function returns if any of the selected categories of messages are received during the wait.</P>
+
+<P>The wait functions are defined as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD WaitForSingleObject (HANDLE hHandle, DWORD dwMilliseconds);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD WaitForMultipleObjects (DWORD nCount, CONST HANDLE *lpHandles, FALSE, DWORD dwMilliseconds);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD MsgWaitForMultipleObjects (DWORD nCount, LPHANDLE pHandles, FALSE, DWORD dwMilliseconds, DWORD dwWakeMasks);</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=28%>Parameter</TH>
+<TH width=72%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>hHandle</TD>
+<TD width=72%>Specifies the handle to the object being waited on.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>dwMilliseconds</TD>
+<TD width=72%>Specifies a timeout value. If you do not want a timeout, pass the value INFINITE.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>nCount</TD>
+<TD width=72%>Specifies a count of the number of event or mutex objects to wait on.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>*lpHandles orpHandles</TD>
+<TD width=72%>Specifies a pointer to the array of handles for the event or mutex object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=28%>dwWakeMasks</TD>
+<TD width=72%>Specifies a flag that indicates the message category that, when received in the message queue of the thread, causes the function to return. Windows CE supports the following flags: 
+<P>QS_ALLINPUT = any message </P>
+
+<P>QS_INPUT = input message </P>
+
+<P>QS_KEY = key up, key down, or syskey up or down message </P>
+
+<P>QS_MOUSE = mouse move or mouse click message </P>
+
+<P>QS_MOUSEBUTTON = mouse click message has been received </P>
+
+<P>QS_MOUSEMOVE = mouse move message </P>
+
+<P>QS_PAINT = WM_PAINT message </P>
+
+<P>QS_POSTMESSAGE = posted message, other than one in this list </P>
+
+<P>QS_SENDMESSAGE = sent message, other than one in this list </P>
+
+<P>QS_TIMER = WM_TIMER message </P>
+</TD>
+</TR>
+</table></div>
+
+<H4 class="dtH1">Event Objects</H4>
+
+<P>An event object notifies a thread that an event has occurred. Use the CreateEvent function to create an event object. An event object can be named or unnamed, as specified in the lpName parameter. It can automatically reset itself from a signaled state to a nonsignaled state or require a manual reset, as specified in the bManualReset parameter. The bInitialState parameter specifies whether the event object is created in the signaled or nonsignaled state. The function is as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+HANDLE CreateEvent (NULL, BOOL bManualReset, BOOL bInitialState, LPTSTR lpName);</BLOCKQUOTE>
+
+<P>Named events can be shared with other processes. Threads in other processes can open a handle to an existing event object by specifying its name in a call to the CreateEvent function. To determine whether a CreateEvent function created a new object or opened an existing object, you can call the GetLastError function immediately after calling the CreateEvent function. If the GetLastError function returns ERROR_ALREADY_EXISTS, the call opened an existing event. In other words, if the name specified in a call to the CreateEvent function matches the name of an existing event object, the function returns the handle of the existing object. When using this technique for event objects, none of the calling processes should request immediate ownership of the event, because it is uncertain which process actually gets ownership.</P>
+
+<P>To signal an event, use the SetEvent or PulseEvent function. SetEvent does not automatically reset the event object to a nonsignaled state. The PulseEvent function signals the event then resets it. For manual events, the PulseEvent function unblocks all threads waiting on the event. For automatic events, the PulseEvent function unblocks only one thread.</P>
+
+<P>If an event object can reset itself, you need only use the SetEvent function to signal. The event object is then automatically reset to the nonsignaled state when one thread is unblocked after waiting on that event. To manually reset an event, use the ResetEvent function. These event functions are defined as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL ResetEvent (HANDLE hEvent);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL SetEvent (HANDLE hEvent);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL PulseEvent (HANDLE hEvent);</BLOCKQUOTE>
+
+<P>To close an event object, call the CloseHandle function. If the event object is named, Windows CE maintains a use count on the object, and you must make one call to the CloseHandle function for every call to the CreateEvent function.</P>
+
+<H4 class="dtH1">Mutex Objects</H4>
+
+<P>A mutex (mutual exclusion) object is a synchronization object that is signaled when it is not owned by a thread and nonsignaled when it is owned. A mutex object is especially useful for coordinating exclusive access to a resource, such as, a block of memory across multiple threads, including threads in other processes. </P>
+
+<P>Use the CreateMutex function to create a mutex object. A mutex object can be named or unnamed, as specified in the lpName parameter. The bInitialOwner parameter specifies if the calling thread should immediately own the newly created mutex object, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+HANDLE CreateMutex (NULL, BOOL bInitialOwner, LPCTSTR lpName);</BLOCKQUOTE>
+
+<P>Threads in other processes can open a handle to an existing mutex object by specifying its name in a call to the CreateMutex function. To determine whether a mutex object already exists, you can call the GetLastError function immediately after calling the CreateMutex function. If the GetLastError function returns ERROR_ALREADY_EXISTS, the call opened an existing mutex object.</P>
+
+<P>A thread requests ownership of a mutex object by using a wait function. If another thread owns the mutex object, the wait function blocks the requesting thread until the owning thread releases the mutex object with the ReleaseMutex function. This function takes the handle to the mutex, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL ReleaseMutex (HANDLE hMutex);</BLOCKQUOTE>
+
+<P>If a thread owns a mutex object and specifies it in repeated calls to one of the wait functions, the wait call immediately returns. This prevents a thread from blocking itself while waiting for a mutex object that the thread already owns. To release ownership of a mutex object, the thread must call the ReleaseMutex function once for each call to the wait function.</P>
+
+<P>If a thread terminates without releasing ownership of a mutex object, the object is considered abandoned. A waiting thread can acquire ownership of an abandoned mutex object, but the return value for the wait function indicates that the mutex object is abandoned. To be safe, assume that an abandoned mutex object indicates that an error has occurred and that any shared resource protected by the mutex object is in an undefined state. If the thread proceeds as though the mutex object had not been abandoned, the object's abandoned flag is cleared when the thread releases ownership. Clearing the abandoned flag restores typical behavior if a handle to the mutex object is subsequently specified in a wait function.</P>
+
+<P>Now a few words about naming mutex and event objects. The name of an event or mutex object is limited to the number of characters defined by MAX_PATH. The name can include any character except the backward slash (\). The names of mutex and event objects share the same space. When you create an object, if you specify a name that is in use by an object of another type, the function succeeds, but the GetLastError function returns ERROR_ALREADY_EXISTS. To avoid this error, use unique names and check return values for duplicate-name errors.</P>
+
+<H4 class="dtH1">Critical Sections</H4>
+
+<P>When multiple threads have shared access to the same resource, the threads can interfere with one another. A critical section protects a section of code by blocking other threads from entering that section when it already contains a thread. A critical section cannot be shared with other processes.</P>
+
+<P>To use a critical section, you first declare a CRITICAL_SECTION structure and then create a critical section handle with the InitializeCriticalSection function. A thread calls the EnterCriticalSection function to request ownership of a critical section and the LeaveCriticalSection function to release ownership. If another thread already owns a critical section, the thread calling the EnterCriticalSection function is blocked until the other thread releases the critical section.</P>
+
+<P>If a thread owns a critical section and makes additional calls to the EnterCriticalSection function, the function returns immediately. This prevents a thread from blocking itself while waiting for a critical section that the thread already owns. To release ownership, the thread must call the LeaveCriticalSection function once for each time the thread entered the critical section. When you are finished with a critical section, call the DeleteCriticalSection function to release the system resources that were allocated when you initialized the critical section.</P>
+
+<P>All of the critical section functions take a pointer to a CRITICAL_SECTION structure, as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+void InitializeCriticalSection (LPCRITICAL_SECTION lpCriticalSection);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+void EnterCriticalSection (LPCRITICAL_SECTION lpCriticalSection);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+void LeaveCriticalSection (LPCRITICAL_SECTION lpCriticalSection);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+void DeleteCriticalSection (LPCRITICAL_SECTION lpCriticalSection);</BLOCKQUOTE>
+
+<H4 class="dtH1">Interlocked Functions </H4>
+
+<P>Interlocked functions synchronize access to a variable that is shared by multiple threads. The purpose is to prevent a thread from being preempted when it is in the middle of modifying or checking a variable.</P>
+
+<P>The InterlockedIncrement and InterlockedDecrement functions increment and decrement a shared variable and check the resulting value. The InterlockedExchange function exchanges the values of the specified variables. The InterlockedTestExchange function exchanges the values of the specified variables if one of the variables is equal to a specified value. These functions are defined as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+LONG InterlockedIncrement (LPLONG lpAddend);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+LONG InterlockedDecrement (LPLONG lpAddend);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+LONG InterlockedExchange (LPLONG Target, LONG Value);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+LONG WINAPI InterlockedTestExchange (LPLONG Target, LONG OldValue, LONG NewValue);</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=17%>Parameter</TH>
+<TH width=83%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=17%>lpAddend</TD>
+<TD width=83%>Specifies a pointer to the variable to increment or decrement.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=17%>Target</TD>
+<TD width=83%>Specifies pointer to target variable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=17%>Value</TD>
+<TD width=83%>Specifies new value of the variable.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=17%>OldValue</TD>
+<TD width=83%>Specifies value to check against.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=17%>NewValue</TD>
+<TD width=83%>Specifies value to set to if Target is equal to OldValue.</TD>
+</TR>
+</table></div>
+
+<H3 class="dtH1">Messages</H3>
+
+<P>Threads rely on messages to initiate processing, control system resources and communicate with the operating system and user. Windows messages originate from a variety of sources, including the operating system; user activity, such as, keyboard, mouse, or touch screen actions; and other running processes or threads. </P>
+
+<P>When a message is sent to a thread, that message is placed in a message queue for that thread for eventual handling. Each thread owns a message queue that is completely independent of message queues owned by other threads. Threads typically have a message loop that runs continuously, retrieving and handling messages. When no messages are in the queue and the thread is not engaged in any other activity, the system can suspend the thread, thereby saving CPU resources. Not all threads have a message queue. Only a thread that has an associated window has a message queue.</P>
+
+<P>You can use messages for control purposes, to initiate various types of processing in your application, and to pass data using message parameters. For example, a thread might receive a message indicating that a touch screen has been activated, and the message parameter might indicate the x and y coordinates of the user's action. In another type of message, the parameter might include a pointer or handle to a data structure, window, or other object. </P>
+
+<H2 class="dtH1"><A NAME="threads21_synchro"></A>Interprocess Synchronization</H2>
+
+<P>Walls between processes protect against the casual exchange of data; however, two processes may need to communicate at times. Windows CE does not support the DuplicateHandle function or handle inheritance. You can use WM_COPYDATA or a memory-mapped object to communicate between processes.</P>
+
+<H3 class="dtH1">WM_COPYDATA</H3>
+
+<P>WM_COPYDATA sends blocks of data from one process to another, but is limited to copying fixed blocks of data at a specific time.</P>
+
+<P>WM_COPYDATA wParam = (WPARAM)(HWND) hwndFrom; lParam = (LPARAM)(PCOPYDATASTRUCT) pcds;</P>
+
+<P>The hwnd parameter is the handle to the window passing the data, and the pcds parameter is a pointer to a COPYDATASTRUCT structure that contains the data to be passed.</P>
+
+<H3 class="dtH1">Memory-Mapped Objects</H3>
+
+<P>Two processes can use a named memory-mapped object to allocate a shared block of memory that is equally accessible to both processes at the same time. With a named memory-mapped object, the system keeps a proper use count on the object to prevent one process from freeing the block while the other process is still using the block. </P>
+
+<P>To synchronize processes when they are reading and writing data in the memory block, you can use named event and mutex objects. Once a process has created a named event or mutex object, other processes can use the name in a call to the CreateEvent or CreateMutex function to open a handle to the object. Because multiple processes can have handles to the same event or mutex object, these objects can be used to synchronize processes. Note that name comparison is case sensitive.</P>
+
+<P>When using a memory-mapped object for interprocess communication, you only need to share memory, which means you are not required to have a memory-mapped file created by the CreateFileForMapping function. You just need to pass -1 in the handle field of the CreateFileMapping function. You can then use the MapViewOfFile function to map a view to the object, which allocates system resources and returns a pointer to the memory-mapped object. You now have a cheap and effective way to access a region of memory from multiple processes. When you are finished, unmap the view by calling the UnmapViewOfFile function. </P>
+
+<P>The mapping functions are defined as follows:</P>
+
+<BLOCKQUOTE class="dtBlock">
+HANDLE CreateFileMapping (HANDLE hFile, NULL, DWORD flProtect,</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD dwMaximumSizeHigh, DWORD dwMaximumSizeLow, LPCTSTR lpName);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+LPVOID MapViewofFile (HANDLE hFileMappingObject, DWORD dwDesiredAccess,</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD dwFileOffsetHigh, DWORD dwFileOffsetLow,</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+DWORD dwNumberOfBytesToMap);</BLOCKQUOTE>
+
+<BLOCKQUOTE class="dtBlock">
+BOOL UnmapViewofFile (LPCVOID lpBaseAddress);</BLOCKQUOTE>
+<div class="tablediv"><table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=54%>Parameter</TH>
+<TH width=46%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>hFile</TD>
+<TD width=46%>Specifies handle to an open memory-mapped file. Set to -1 if you are not using a memory-mapped file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>flProtect</TD>
+<TD width=46%>Specifies protection flags for the virtual pages that will contain the file data.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>dwMaximumSizeHigh anddwMaximumSizeLow</TD>
+<TD width=46%>Specify expected maximum size of the object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>lpName</TD>
+<TD width=46%>Specifies name of object.v</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>hFileMappingObject</TD>
+<TD width=46%>Specifies handle of the mapping object.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>dwDesiredAccess</TD>
+<TD width=46%>Specifies access rights: FILE_MAP_READ, FILE_MAP_WRITE, or FILE_MAP_ALL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>dwFileOffsetHigh anddwFileOffsetLow</TD>
+<TD width=46%>Specify the starting point in the file where the view starts.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>dwNumberOfBytesToMap</TD>
+<TD width=46%>Specifies the size of the view window.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=54%>lpBaseAddress</TD>
+<TD width=46%>Specifies the pointer to the base address of the view.</TD>
+</TR>
+</table></div>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661517', 'XMSDNERR@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

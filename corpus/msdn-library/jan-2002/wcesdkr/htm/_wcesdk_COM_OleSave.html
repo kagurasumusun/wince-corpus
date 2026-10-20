@@ -1,0 +1,128 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>OleSave</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="OleSave"/>
+<MSHelp:RLTitle Title="OleSave"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_olesave"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>OleSave</H1>
+
+<P>This function saves an object opened in transacted mode into the specified storage object.</P>
+
+<PRE class="syntax"><B>WINOLEAPI OleSave(</B>
+<B>IPersistStorage</B> <B>*</B><I>pPS</I>,
+<B>IStorage</B> <B>*</B><I>pStg</I>,
+<B>BOOL</B> <I>fSameAsLoad</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pPS</I></DT>
+
+<DD>[in] Pointer to the <B>IPersistStorage</B> interface on the object to be saved.</dd>
+
+<DT><I>pStg</I></DT>
+
+<DD>[in] Pointer to the <B>IStorage</B> interface on the destination storage object to which the object indicated in <I>pPS</I> is to be saved.</dd>
+
+<DT><I>fSameAsLoad</I></DT>
+
+<DD>[in] Boolean that is set to TRUE if <I>pStg</I> is the same storage object from which the object was loaded or created, or to FALSE if <I>pstg</I> was loaded or created from a different storage object.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<DL>
+<DT>S_OK </DT>
+
+<DD>The object was successfully saved.</dd>
+
+<DT>STG_E_MEDIUMFULL</DT>
+
+<DD>The object could not be saved due to lack of disk space.</dd>
+</DL>
+
+<P>This function can also return any of the error values returned by the <A HREF="_wcesdk_com_ipersiststorage_save.htm"><B>IPersistStorage::Save</B></A> method.</P>
+
+<H4>Remarks</H4>
+
+<P>Passing into this function any invalid and, under some circumstances, NULL pointers will result in unexpected termination of the application. </P>
+
+<P>The <B>OleSave</B> helper function handles the common situation in which an object is open in transacted mode and is then to be saved into the specified storage object which uses the OLE-provided compound file implementation. Transacted mode means that changes to the object are buffered until either of the <B>IStorage</B> methods <B>Commit</B> or <B>Revert</B> is called. Callers can handle other situations by calling the <B>IPersistStorage</B> and <A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A> interfaces directly.</P>
+
+<P><B>OleSave</B> does the following:
+
+<OL type="1">
+	<LI>Calls the <B>IPersistStorage::GetClassID</B> method to get the CLSID of the object.</li>
+
+	<LI>Writes the CLSID to the storage object using the <A HREF="_wcesdk_com_writeclassstg.htm"><B>WriteClassStg</B></A> function. </li>
+
+	<LI>Calls the <A HREF="_wcesdk_com_ipersiststorage_save.htm"><B>IPersistStorage::Save</B></A> method to save the object.</li>
+
+	<LI>If there were no errors on the save; calls the <A HREF="_wcesdk_com_istorage_commit.htm"><B>IStorage::Commit</B></A> method to commit the changes.</li>
+</OL>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>Static objects are saved into a stream called CONTENTS. Static metafile objects get saved in "placeable metafile format" and static DIB data gets saved in "DIB file format." These formats are defined to be the OLE standards for metafile and DIB. All data transferred using an <A HREF="_wcesdk_com_istream.htm"><B>IStream</B></A> interface or a file transferred using <B>IDataObject::GetDataHere</B> must be in these formats. Also, all objects whose default file format is a metafile or DIB must write their data into a CONTENTS stream using these standard formats.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Ole2.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

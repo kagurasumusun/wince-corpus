@@ -1,0 +1,54 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Dynamic NDIS Adapter Binding</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Dynamic NDIS Adapter Binding"/>
+<MSHelp:RLTitle Title="Dynamic NDIS Adapter Binding"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_dynamic_ndis_adapter_binding"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Dynamic NDIS Adapter Binding</H1>
+
+<P>Windows CE 3.0 features an inherent dynamic adapter handling system that provides Plug and Play compatibility for built-in&#0151;as well as removable&#0151;network adapters. Windows CE 3.0 supports a set of new functions that allow protocol drivers greater control over the creation of adapter instances and over adapter binding and unbinding.</P>
+
+<P>When a protocol driver registers with NDIS, the currently registered adapters are bound to the protocol via the <B>BindAdapterHandler</B> function, just as if the adapters were newly inserted PCMCIA netcards. Protocol drivers no longer require registry keys that specify the built-in adapter instances to which they must bind. A Plug and Play-ready protocol driver can support dynamic binding to underlying network adapters by providing the <B>ProtocolBindAdapter</B> and <B>ProtocolUnbindAdapter</B> functions. NDIS calls the <B>ProtocolBindAdapter</B> function of a protocol driver to notify it that an adapter is available. The protocol can choose to ignore this notification or it can try to bind to the adapter by calling the <B>NdisOpenAdapter</B> function.</P>
+
+<P>Previously, the built-in and removable network adapters featured different binding mechanisms. For built-in adapters, the protocol was responsible for binding to a network adapter by calling the <B>NdisOpenAdapter</B> function according to registry settings. TCP/IP and IrDA each had its own set of registry settings that defined the names of the adapters to which it was to bind during initialization. Driver developers could modify the binding process by manipulating the registry settings for protocol drivers.</P>
+
+<P>In Windows CE version 2.10 or earlier, NDIS informed the protocol driver of the presence of a new network adapter by calling the <B>BindAdapterHandler</B> function only if the network adapter was a removable PCMCIA netcard. With Windows CE 3.0, this binding mechanism applies to built-in and removable adapters. That is, when a protocol driver registers with NDIS, it is informed about all current adapters via its <B>BindAdapterHandler</B> function. Note that the Windows CE implementation of NDIS is slightly different than the Microsoft® Windows® NT version; Windows NT passes a string containing a registry path in the <I>SS1</I> parameter of a protocol driver’s bind handler, while Windows CE passes NULL.</P>
+
+<P>Although driver developers no longer can control the binding mechanism by manipulating the protocol registry settings (except for IrDA, which statically binds to a single adapter and, thus, does not use the <B>BindAdapterHandler</B> function), Windows CE 3.0 features an alternate mechanism that enables driver developers to specify which adapters get bound to which protocols. You can define the protocols that an adapter is to bind to by specifying the required protocol in the <B>HKEY_LOCAL_MACHINE\Comm\&lt;Adapter Name&gt;\Parms\ProtocolsToBindTo</B> registry entry of the adapter. This entry corresponds to a MULTI_SZ value that lists the names of all of the protocols that should be informed about the presence of the adapter. If the first entry is “NOT”, then the remaining entries will list the protocols that should not be informed about the adapter. If this registry entry is not set for an adapter, then all of the protocol drivers will be informed about the adapter instance and might attempt to bind to it.</P>
+
+<P>If a Windows CE-based device has a PCMCIA card inserted into its PCMCIA slot, the system will not automatically suspend on idle activity. To allow a Windows CE-based device to suspend on no user activity, you must make the following registry entry under HKEY_LOCAL_MACHINE:</P>
+
+<P><B>HKEY_LOCAL_MACHINE\Comm\Cxport\NoIdleTimerReset</B>,</P>
+
+<P>The TCP/P protocol stack checks for this registry setting during initialization time. If <B>NoIdleTimerReset</B> has been entered in the registry and set to non-zero, the system won't call the <B>SystemIdleTimerReset </B>function. Note that when the system goes into suspend you will have to re-initialize all your networking activity, for example, you will have to obtain a new IP address. Also, because TCP/IP checks for the registry setting during initialization time, you need to restart the device if you want to change from one registry setting to another. Failure to set the above registry key will result in the system not suspending.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

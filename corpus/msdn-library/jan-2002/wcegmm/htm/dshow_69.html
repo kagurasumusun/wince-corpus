@@ -1,0 +1,51 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>How Allocator Negotiation Works</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="How Allocator Negotiation Works"/>
+<MSHelp:RLTitle Title="How Allocator Negotiation Works"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_how_allocator_negotiation_works"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imeminputpin__getallocator" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>How Allocator Negotiation Works</H1>
+
+<P>For information about the connection process, including media type and allocator negotiation, see <A HREF="dshow_35.htm">How Filters Connect</A>. When you are determining your transform filter characteristics, it might help for you to understand the model of allocator negotiation for transform filters. </P>
+
+<P>If your transform filter requires copying, then it will copy media samples from a buffer established by its input pin to a buffer established by its output pin. These buffers are provided by allocators that might actually be located in other filters, perhaps even several filters removed if the filters in between do not copy the data. </P>
+
+<P>A copying transform filter typically tries to use the allocator of the upstream filter for its input pin, and the allocator of the downstream filter for its output pin. During the connection process, the output pin of the upstream filter determines which allocator to use for the upstream transport, so the input pin of the copy transform must be prepared to create an allocator for the upstream transport if its <A HREF="JavaScript:hhobj_1.Click()"><B>IMemInputPin::GetAllocator</B></A> method is called by the connecting output pin. The base classes provide a way to create a new allocator from the input pin of any connection. </P>
+
+<P>On the other hand, transform-inplace filters do not make copies, but rather modify the data in an existing buffer. These filters should always offer the allocator from the downstream filter to the upstream filter. This requires a reconnection, because the filter does not know about the downstream filter when its input pin is first connected. Also, because in-place transforms do not change the media type, the media type from the downstream filter should be offered to the upstream filter upon reconnection. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

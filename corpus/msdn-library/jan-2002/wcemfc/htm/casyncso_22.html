@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CAsyncSocket::Receive</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CAsyncSocket::Receive"/>
+<MSHelp:RLTitle Title="CAsyncSocket::Receive"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_casyncsocket_receive"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CAsyncSocket::Receive</H1>
+
+<P>Call this method to receive data from a socket. This function is used for connected stream or datagram sockets, and is used to read incoming data. </P>
+
+<PRE class=syntax><B>virtual int Receive(
+void* </B><I>lpBuf</I><B>,
+int </B><I>nBufLen</I><B>,
+int </B><I>nFlags</I><B> = 0 );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>lpBuf</I></DT>
+
+<DD>A buffer for the incoming data.</DD>
+
+<DT><I>nBufLen</I></DT>
+
+<DD>The length of <I>lpBuf</I> in bytes.</DD>
+
+<DT><I>nFlags</I></DT>
+
+<DD>Specifies the way in which the call is made. The semantics of this function are determined by the socket options and the <I>nFlags</I> parameter. The latter is constructed by combining any of the following values with the C++ <B>OR</B> operator:
+
+<UL type=disc>
+	<LI>MSG_PEEK&nbsp;&nbsp;&nbsp;Peek at the incoming data. The data is copied into the buffer but is not removed from the input queue.</LI>
+
+	<LI>MSG_OOB&nbsp;&nbsp;&nbsp;Process out-of-band data.</LI>
+</UL>
+</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>If no error occurs, <B>Receive</B> returns the number of bytes received. If the connection is closed, it returns zero. Otherwise, a value of <B>SOCKET_ERROR</B> is returned, and a specific error code can be retrieved by calling <B>GetLastError</B>. The following errors apply to this method:
+
+<DL>
+<DT>WSANOTINITIALISED</DT>
+
+<DD>A successful <B>AfxSocketInit</B> must occur before using this API.</DD>
+
+<DT>WSAENETDOWN</DT>
+
+<DD>The Windows CE Sockets implementation detected that the network subsystem failed.</DD>
+
+<DT>WSAENOTCONN</DT>
+
+<DD>The socket is not connected.</DD>
+
+<DT>WSAEINPROGRESS</DT>
+
+<DD>A blocking Windows CE Sockets operation is in progress.</DD>
+
+<DT>WSAENOTSOCK</DT>
+
+<DD>The descriptor is not a socket.</DD>
+
+<DT>WSAEOPNOTSUPP</DT>
+
+<DD><B>MSG_OOB</B> was specified, but the socket is not of type <B>SOCK_STREAM</B>.</DD>
+
+<DT>WSAESHUTDOWN</DT>
+
+<DD>The socket is shut down. It is not possible to call <B>Receive</B> on a socket after <B>ShutDown</B> is invoked with <I>nHow</I> set to zero or two.</DD>
+
+<DT>WSAEWOULDBLOCK</DT>
+
+<DD>The socket is marked as nonblocking and the <B>Receive</B> operation would block.</DD>
+
+<DT>WSAEMSGSIZE</DT>
+
+<DD>The datagram is too large to fit into the specified buffer and has been truncated.</DD>
+
+<DT>WSAEINVAL</DT>
+
+<DD>The socket has not been bound with <B>Bind</B>.</DD>
+
+<DT>WSAECONNABORTED</DT>
+
+<DD>The virtual circuit was aborted due to timeout or other failure.</DD>
+
+<DT>WSAECONNRESET</DT>
+
+<DD>The virtual circuit was reset by the remote side.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>For sockets of type <B>SOCK_STREAM</B>, as much information as is currently available up to the size of the buffer supplied is returned. If the socket is configured for in-line reception of out-of-band data (socket option <B>SO_OOBINLINE</B>) and out-of-band data is unread, only out-of-band data is returned. The application can use the <B>IOCtl</B> <B>SIOCATMARK</B> option or <B>OnOutOfBandData</B> to determine whether any more out-of-band data remains to be read. </P>
+
+<P>For datagram sockets, data is extracted from the first enqueued datagram, up to the size of the buffer supplied. If the datagram is larger than the buffer supplied, the buffer is filled with the first part of the datagram, the excess data is lost, and <B>Receive</B> returns a value of <B>SOCKET_ERROR</B> with the error code set to <B>WSAEMSGSIZE</B>. If no incoming data is available at the socket, a value of <B>SOCKET_ERROR</B> is returned with the error code set to <B>WSAEWOULDBLOCK</B>. The <B>OnReceive</B> callback function can be used to determine when more data arrives. </P>
+
+<P>If the socket is of type <B>SOCK_STREAM</B> and the remote side has shut down the connection gracefully, a <B>Receive</B> completes immediately with 0 bytes received. If the connection has been reset, a <B>Receive</B> fails with the error <B>WSAECONNRESET</B>. </P>
+
+<H4>Example</H4>
+
+<P>See the example for <A HREF="casyncso_20.htm"><B>CAsyncSocket::OnReceive</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxsock.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="casyncso_8.htm"><B>CAsyncSocket::Create</B></A>, <A HREF="casyncso_23.htm"><B>CAsyncSocket::ReceiveFrom</B></A>, <A HREF="casyncso_24.htm"><B>CAsyncSocket::Send</B></A>, <A HREF="funct_56.htm"><B>AFXSOCKETINIT</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

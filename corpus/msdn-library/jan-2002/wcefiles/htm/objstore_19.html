@@ -1,0 +1,101 @@
+<HTML DIR=LTR xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Accessing Files on Other Storage Media</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Accessing Files on Other Storage Media"/>
+<MSHelp:RLTitle Title="Accessing Files on Other Storage Media"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_accessing_files_on_other_storage_media"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Accessing Files on Other Storage Media</H1>
+
+<P>A Windows CE–based device has other areas to store data besides the object store. You can access a file that is stored in ROM just like any other file: by calling the file API. However, you cannot alter a file that is stored in ROM. Instead, ROM-based files are marked with the FILE_ATTRIBUTE_INROM value, which indicates that they are read-only. Windows&nbsp;CE also uses the FILE_ATTRIBUTE_ROMMODULE value to indicate that a file is designated to be executed in ROM, instead of copied to RAM. You cannot use the <B>CreateFile</B> function to open files that are designated with FILE_ATTRIBUTE_ROMMODULE. Instead, use the <B>LoadLibrary</B> and <B>CreateProcess</B> functions to gain access to the module.</P>
+
+<P>Also, Windows CE supports PC Cards, such as ATA flash cards, and linear flash cards. These cards can have an installed file system that can utilize the storage space for files and databases. However, a mounted file system must be used in conjunction with an installed file-system driver, such as FAT. After you install a PC Card, you can copy database objects between the object store and the mounted volume.</P>
+
+<P>Windows CE does not assign a letter label to a storage card in the same manner that a desktop computer assigns a drive letter to a hard disk. Instead, the file driver creates directories in the root directory that represent each partition on each storage card. In Windows CE 2.0 and earlier, these directories were given default names, such as “Storage Card” or “PC Card”. In Windows CE 2.10, the FAT file-system driver queries the PC Card driver for a default name. If the PC Card driver does not supply a default name, Windows CE uses “Storage Card”. You can tell the difference between a object store directory and a mounted volume directory also by the file attributes. All of the directories on a mounted file system have the FILE_ATTRIBUTE_TEMPORARY file attribute flag set.</P>
+
+<P>The following code example tries to open any Storage Card directories that exist and tests them to see if they are located on a storage card.</P>
+
+<PRE class="code">void FindingStorageCards (void)
+{
+  TCHAR szMsg[100];       // String to store the error message
+  HANDLE hSearch;         // Search handle returned by FindFirstFile
+  WIN32_FIND_DATA  fd;    // Data structure describes the file found
+  BOOL bFinished = FALSE; // Flag to indicate whether the loop is done
+  TCHAR *szFname = TEXT("\\Storage Card*");
+                          // Name that matches all storage cards
+
+  // Ensure that Storage Card exists.
+  hSearch = FindFirstFile(szFname, &amp;fd);
+
+  if (hSearch == INVALID_HANDLE_VALUE)
+  {
+    wsprintf(szMsg, TEXT("No storage card found."));
+    return;
+  }
+
+  do {
+    // Test whether the file is really on a storage card, and
+    // not just a directory in the root directory.
+    // It must have both the directory attribute and
+    // the temporary attribute.
+
+    if (  (fd.dwFileAttributes &amp; FILE_ATTRIBUTE_TEMPORARY)
+       &amp;&amp; (fd.dwFileAttributes &amp; FILE_ATTRIBUTE_DIRECTORY) )
+    {
+      wsprintf (szMsg,
+                TEXT("%s is a storage card."), fd.cFileName);
+    }
+    else
+    {
+      wsprintf (szMsg,
+                TEXT("%s is not a storage card."), fd.cFileName);
+    }
+
+    if (!FindNextFile (hSearch, &amp;fd))
+    {
+      bFinished = TRUE;
+      if (GetLastError () != ERROR_NO_MORE_FILES)
+      {
+        wsprintf (szMsg,
+                  TEXT("Error trying to find files matching \"%s\"."),
+                  szFname);
+      }
+    }
+  }
+  while (!bFinished);
+
+  FindClose (hSearch);  // Close the search handle.
+
+} // End of FindingStorageCards example code</PRE>
+<DIV CLASS="footer">Built on Tuesday, February 13, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

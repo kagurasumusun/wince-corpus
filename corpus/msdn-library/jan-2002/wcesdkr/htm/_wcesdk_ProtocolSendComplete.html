@@ -1,0 +1,137 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ProtocolSendComplete</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ProtocolSendComplete"/>
+<MSHelp:RLTitle Title="ProtocolSendComplete"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_protocolsendcomplete"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>ProtocolSendComplete</H1>
+
+<P><B>ProtocolSendComplete</B> is a required driver function that completes the processing of a protocol-initiated send previously passed to <B>NdisSendPackets</B> or <A HREF="_wcesdk_ndissend.htm"><B>NdisSend</B></A>, which returned NDIS_STATUS_PENDING. </P>
+
+<P>A connection-oriented protocol that calls <B>NdisCoSendPackets</B> but never <B>NdisSendPackets</B> (nor <B>NdisSend</B>) must have a fully functional ProtocolCoSendComplete function, rather than a <B>ProtocolSendComplete</B> function.</P>
+
+<PRE class="syntax"><B>VOID
+ProtocolSendComplete(</B>
+<B>IN NDIS_HANDLE</B><I> ProtocolBindingContext</I>,
+<B>IN PNDIS_PACKET</B> <I>Packet</I>,
+<B>IN NDIS_STATUS</B> <I>Status</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ProtocolBindingContext</I> </DT>
+
+<DD>Specifies the handle to a protocol-allocated context area in which the protocol driver maintains per-binding runtime state. The driver supplied this handle when it called <A HREF="_wcesdk_ndisopenadapter.htm"><B>NdisOpenAdapter</B></A>. </dd>
+
+<DT><I>Packet</I> </DT>
+
+<DD>Points to the protocol-supplied packet descriptor for the completed send. </dd>
+
+<DT><I>Status</I> </DT>
+
+<DD>Specifies the final status of the send operation. </dd>
+</DL>
+
+<H4>Comments</H4>
+
+<P><B>ProtocolSendComplete</B> performs whatever postprocessing is necessary for a completed transmit operation, such as notifying the client that originally requested the protocol to send data over the network. </P>
+
+<P>Completion of a send operation usually implies that the underlying network adapter driver actually has transmitted the given packet over the network. However, the driver of a so-called intelligent network adapter can consider a send complete as soon as it downloads the net packet to its network adapter. The underlying driver's call to <A HREF="_wcesdk_ndismsendcomplete.htm"><B>NdisMSendComplete</B></A> or <A HREF="_wcesdk_ndismwansendcomplete.htm"><B>NdisMWanSendComplete</B></A> causes NDIS to call the <B>ProtocolSendComplete</B> function. </P>
+
+<P>When <B>ProtocolSendComplete</B> is called, the driver regains ownership of the following protocol-allocated resources:
+
+<UL type="disc">
+	<LI>The packet descriptor at <I>Packet</I> </li>
+
+	<LI>All buffer descriptors chained to the packet descriptor that map buffers containing the net packet data and any protocol-allocated buffers mapped by these descriptors </li>
+
+	<LI>Any out-of-band block associated with the packet descriptor </li>
+
+	<LI>Any protocol-allocated buffer specified in the out-of-band block at <B>MediaSpecificInformation</B> </li>
+</UL>
+
+<P>Consequently, <B>ProtocolSendComplete</B> can either release these resources or prepare them for reuse in a subsequent call to <B>NdisSend</B>. As a general rule, reusing such resources yields better performance than releasing them except, possibly, in periods of low network traffic if the protocol previously allocated a surplus of these resources to handle a period of heavy I/O demand. </P>
+
+<P>To prepare the buffer and packet descriptors for reuse, <B>ProtocolSendComplete</B> should follow these guidelines:
+
+<UL type="disc">
+	<LI><I>Always</I> call an <B>NdisUnchainBufferAt<I>XXX</I></B> function as many times as necessary to save the buffer descriptor pointers before <B>ProtocolSendComplete</B> calls <A HREF="_wcesdk_ndisreinitializepacket.htm"><B>NdisReinitializePacket</B></A> with the descriptor at <I>Packet</I>. </li>
+
+	<LI>Otherwise, <B>NdisReinitializePacket</B> sets the head of the buffer chain to NULL so the protocol cannot recover pointers to the buffer descriptors chained to the packet descriptor. Either the protocol loses MDL(s) mapping client-supplied buffer(s) or it loses a set of buffer descriptors the protocol allocated with <A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A>. </li>
+
+	<LI><I>Always</I> pass the pointer returned by NDIS_OOB_DATA_FROM_PACKET to <B>NdisZeroMemory</B> to clear an associated out-of-band data block, <I>never</I> the <I>Packet</I> pointer. </li>
+
+	<LI>Otherwise, <A HREF="_wcesdk_ndiszeromemory.htm"><B>NdisZeroMemory</B></A> destroys the packet descriptor the protocol allocated with <B>NdisAllocatePacket</B>, rendering it unusable for specifying subsequent sends. </li>
+
+	<LI>As an alternative to clearing the out-of-band block, the protocol can reinitialize only those members that the protocol normally sets up for sends with the appropriate <B>NDIS_SET_PACKET_<I>XXX</I></B> macros. </li>
+</UL>
+
+<P>Until <B>ProtocolSendComplete</B> is called, the current status of a protocol-initiated send is volatile. A protocol temporarily releases ownership of all resources it allocated for a send when it calls <B>NdisSend</B>, even if the protocol supplies out-of-band information with the packet descriptors it allocates for sends. In particular, a protocol should <I>never</I> attempt to examine the <B>Status</B> member of the associated out-of-band data block when <B>NdisSend</B> returns control. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ndisallocatebuffer.htm"><B>NdisAllocateBuffer</B></A>,<B> <A HREF="_wcesdk_ndisallocatepacket.htm">NdisAllocatePacket</A></B>,<B> <A HREF="_wcesdk_ndisopenadapter.htm">NdisOpenAdapter</A></B>,<B> <A HREF="_wcesdk_ndismsendcomplete.htm">NdisMSendComplete</A></B>, <A HREF="_wcesdk_ndismwansendcomplete.htm"><B>NdisMWanSendComplete</B></A>, <A HREF="_wcesdk_ndisreinitializepacket.htm"><B>NdisReinitializePacket</B></A>,<B> <A HREF="_wcesdk_ndiszeromemory.htm">NdisZeroMemory</A></B>, <A HREF="_wcesdk_ndissend.htm"><B>NdisSend</B></A>, <A HREF="_wcesdk_protocolstatus.htm"><B>ProtocolStatus</B></A>, <A HREF="_wcesdk_protocolstatuscomplete.htm"><B>ProtocolStatusComplete</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

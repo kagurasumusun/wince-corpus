@@ -1,0 +1,93 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CPrintDialog::GetDefaults</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CPrintDialog::GetDefaults"/>
+<MSHelp:RLTitle Title="CPrintDialog::GetDefaults"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cprintdialog_getdefaults"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CPrintDialog::GetDefaults</H1>
+
+<P>This method retrieves the device defaults of the default printer without displaying a dialog box. The retrieved values are placed in the <B>m_pd </B>structure.</P>
+
+<PRE class=syntax><B>BOOL GetDefaults( );</B><I> </I></PRE>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function was successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>In some cases, a call to this function will call the <A HREF="cprntdlg_2.htm"><B>constructor</B></A> for <B>CPrintDialog</B> with <I>bPrintSetupOnly</I> set to <B>FALSE</B>. In these cases, a printer DC and <I>hDevNames</I> and <I>hDevMode,</I> two handles located in the <B>m_pd</B> data member, are automatically allocated.</P>
+
+<P>If the constructor for <B>CPrintDialog</B> was called with <I>bPrintSetupOnly</I> set to <B>FALSE</B>, this method not only returns <B>hDevNames</B> and <B>hDevMode,</B> located in <B>m_pd.hDevNames</B> and <B>m_pd.hDevMode</B>, to the caller, but also returns a printer DC in <B>m_pd.hDC</B>. It is the responsibility of the caller to delete the printer DC and call the Windows <B>GlobalFree</B> function on the handles when you are finished with the <B>CPrintDialog</B> object.</P>
+
+<H4>Example</H4>
+
+<P>This code fragment gets the device context of the default printer and reports to the user the resolution of the printer in dots per inch. This attribute of printer capabilities is often referred to as DPI.</P>
+
+<PRE>CPrintDialog dlg(FALSE);
+
+if (!dlg.GetDefaults())
+   AfxMessageBox(_T("You have no default printer!"));
+else
+{
+   // Attach to the DC which was given.
+   CDC dc;
+   dc.Attach(dlg.m_pd.hDC);
+
+   // Ask for the measurements.
+   int nHorz = dc.GetDeviceCaps(LOGPIXELSX);
+   int nVert = dc.GetDeviceCaps(LOGPIXELSY);
+
+   // Almost always the same in both directions, but sometimes not!
+   CString str;
+   if (nHorz == nVert)
+      str.Format(_T("Your printer supports %d pixels per inch"), nHorz);
+   else
+      str.Format(_T("Your printer supports %d pixels per inch ")
+         _T("horizontal resolution, and %d pixels per inch vertical ")
+         _T("resolution"), nHorz, nVert);
+
+   // Tell the user.
+   AfxMessageBox(str);
+
+   // Note: no need to call Detach() because we want the CDC destructor
+   // to call FreeDC() on the DC we borrowed from the common dialog.
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.10 and later&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxdlgs.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro</P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

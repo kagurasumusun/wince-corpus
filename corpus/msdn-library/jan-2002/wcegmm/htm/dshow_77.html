@@ -1,0 +1,73 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Override the Transform Function</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Override the Transform Function"/>
+<MSHelp:RLTitle Title="Override the Transform Function"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_override_the_transform_function"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_cbasefilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Override the Transform Function</H1>
+
+<P>To perform the desired transformation on your input media, your must override the <B>Transform</B> function of your transform base class, or implement your own transformation functions. (This does not apply to filter classes derived from <A HREF="JavaScript:hhobj_1.Click()"><B>CBaseFilter</B></A>.) </P>
+
+<P>For example, consider the following code from the Contrast sample. You override the CContrast::Transform function as follows: </P>
+
+<PRE class="code">    HRESULT CContrast::Transform(IMediaSample *pIn, IMediaSample *pOut)
+    {
+            HRESULT hr = Copy(pIn, pOut);
+        if (FAILED(hr)) {
+            return hr;
+        }
+            return Transform(pOut);
+
+    }</PRE>
+
+<P>The first CContrast::Transform function copies the media data, and then passes the copy (pointed to by the <I>pOut</I> parameter) to a second Transform function. The first Transform function in the Contrast sample is an overloaded function, and the second form of the Transform function performs an in-place transform on the copy of the input media, as shown in the following code fragment. </P>
+
+<PRE class="code">    HRESULT CContrast::Transform(IMediaSample *pMediaSample)
+    {
+        signed char ContrastLevel;
+        ContrastLevel = m_ContrastLevel;
+        AM_MEDIA_TYPE *pAdjustedType = NULL;
+
+        pMediaSample-&gt;GetMediaType(&amp;pAdjustedType);
+      HRESULT hr = Transform(&amp;AdjustedType, ContrastLevel);
+        pMediaSample-&gt;SetMediaType(&amp;AdjustedType);
+        return NOERROR;
+    }</PRE>
+
+<P>Note that the second form of the overloaded Transform function calls a third form of the overloaded Transform function. </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

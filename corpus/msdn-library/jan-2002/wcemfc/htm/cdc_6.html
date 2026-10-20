@@ -1,0 +1,118 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::CreateCompatibleDC</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CDC::CreateCompatibleDC"/>
+<MSHelp:RLTitle Title="CDC::CreateCompatibleDC"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdc_createcompatibledc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CDC::CreateCompatibleDC</H1>
+
+<P>This method creates a memory device context that is compatible with the device specified by the pointer, <I>pDC</I>.</P>
+
+<PRE class=syntax><B>BOOL CreateCompatibleDC(
+CDC* </B><I>pDC</I><B> );</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pDC</I></DT>
+
+<DD>Pointer to a device context. If <I>pDC</I> is <B>NULL</B>, the function creates a memory device context that is compatible with the system display.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>A memory device context is a block of memory that represents a display surface. It can be used to prepare images in memory before copying them to the actual device surface of the compatible device.</P>
+
+<P>When a memory device context is created, the GDI automatically selects a 1 x 1 monochrome stock bitmap for it. GDI output functions can be used with a memory device context only if a bitmap is created and selected for that context.</P>
+
+<P>This function can only be used to create compatible device contexts for devices that support raster operations. See the <B>CDC::BitBlt</B> method for information regarding bit-block transfers between device contexts. To determine whether a device context supports raster operations, see the <B>RC_BITBLT</B> raster capability in the method <B>CDC::GetDeviceCaps</B>.</P>
+
+<H4>Example</H4>
+
+<PRE>// This OnDraw() handler loads a bitmap from system resources, centers
+// it in the view, and uses BitBlt to paint the bitmap bits.
+
+void CBlat2View::OnDraw(CDC* pDC)
+{
+&nbsp;&nbsp;CBlat2Doc* pDoc = GetDocument();
+&nbsp;&nbsp;ASSERT_VALID(pDoc);
+
+&nbsp;&nbsp;// Load IDB_BITMAP1 from the resources.
+&nbsp;&nbsp;CBitmap bmp;
+&nbsp;&nbsp;if (bmp.LoadBitmap(IDB_BITMAP1))
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;// Get the size of the bitmap.
+&nbsp;&nbsp;&nbsp;&nbsp;BITMAP bmpInfo;
+&nbsp;&nbsp;&nbsp;&nbsp;bmp.GetBitmap(&amp;bmpInfo);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Create an in-memory device context compatible with the
+&nbsp;&nbsp;&nbsp;&nbsp;// display device context that is used to paint.
+&nbsp;&nbsp;&nbsp;&nbsp;CDC dcMemory;
+&nbsp;&nbsp;&nbsp;&nbsp;dcMemory.CreateCompatibleDC(pDC);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Select the bitmap into the in-memory device context.
+&nbsp;&nbsp;&nbsp;&nbsp;CBitmap* pOldBitmap = dcMemory.SelectObject(&amp;bmp);
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Find a center point for the bitmap in the client area.
+&nbsp;&nbsp;&nbsp;&nbsp;CRect rect;
+&nbsp;&nbsp;&nbsp;&nbsp;GetClientRect(&amp;rect);
+&nbsp;&nbsp;&nbsp;&nbsp;int nX = rect.left + (rect.Width() - bmpInfo.bmWidth) / 2;
+&nbsp;&nbsp;&nbsp;&nbsp;int nY = rect.top + (rect.Height() - bmpInfo.bmHeight) / 2;
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Copy the bits from the in-memory device context to the on-
+&nbsp;&nbsp;&nbsp;&nbsp;// screen device context to do the painting. Use the computed center
+&nbsp;&nbsp;&nbsp;&nbsp;// point for the target offset.
+&nbsp;&nbsp;&nbsp;&nbsp;pDC-&gt;BitBlt(nX, nY, bmpInfo.bmWidth, bmpInfo.bmHeight, &amp;dcMemory,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0, 0, SRCCOPY);
+
+&nbsp;&nbsp;&nbsp;&nbsp;dcMemory.SelectObject(pOldBitmap);
+&nbsp;&nbsp;}
+&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;TRACE0("ERROR: Where is IDB_BITMAP1?\n");
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdc_2.htm"><B>CDC::CDC</B></A>, <A HREF="cdc_37.htm"><B>CDC::GetDeviceCaps</B></A>, <A HREF="cdc_5.htm"><B>CDC::BitBlt</B></A>, <A HREF="cdc_7.htm"><B>CDC::DeleteDC</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

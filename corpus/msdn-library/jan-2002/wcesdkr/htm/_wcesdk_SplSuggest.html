@@ -1,0 +1,208 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>SplSuggest</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="SplSuggest"/>
+<MSHelp:RLTitle Title="SplSuggest"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_splsuggest"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>SplSuggest</H1>
+
+<P>This function writes the spelling checker’s suggested spelling corrections to an output buffer pointed to by the <I>pwszOut</I> member of the <A HREF="_wcesdk_splsuggest_str.htm"><B>SPLSUGGEST</B></A> structure. It also can provide a score for each suggestion that indicates the likelihood that the suggestion is correct.</P>
+
+<PRE class="syntax"><B>int SplSuggest( </B>
+<B>HSPL</B> <I>hspl</I>,
+<B>SPLBUFFER</B> * <I>psb </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hspl</I></DT>
+
+<DD>Handle to the spelling session. An application initiates a spelling session by calling the <A HREF="_wcesdk_splinit.htm"><B>SplInit</B></A> function, which then generates this handle.</dd>
+
+<DT><I>psb</I></DT>
+
+<DD>Pointer to the <A HREF="_wcesdk_splbuffer_str.htm"><B>SPLBUFFER</B></A> structure in which the application locates the suggestions.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>1 indicates success. 0 indicates failure.</P>
+
+<H4>Remarks</H4>
+
+<P>The suggested words in the output buffer are null-terminated and ordered from the most likely to be correct to the least likely to be correct. An additional NULL character indicates the end of the output buffer. The size of the output buffer needs to be large enough for eight suggestions of a reasonable length; 128 characters is usually sufficient. </P>
+
+<P>To score suggestions, set the SPL_SCORE_SUGGESTIONS flag in the <I>dw</I> parameter of the <A HREF="_wcesdk_sploptionset.htm"><B>SplOptionSet</B></A> function. </P>
+
+<P>The score for a suggestion is based on the error types, as described in the following table. The score of each error type is determined by subtracting its value as defined in Splapi.h from 256. The higher the score, the more severe the error. </P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=49%>Error Type</TH>
+<TH width=10%>Score</TH>
+<TH width=41%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_NONE</TD>
+<TD width=10%>0</TD>
+<TD width=41%>The only spelling suggestion returned is for a word that is correctly spelled one way. For example, the suggestion for “i” is “I,” and the suggestion for “thier” is “their.”</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_CAPITAL</TD>
+<TD width=10%>1</TD>
+<TD width=41%>An error is corrected by capitalizing the initial letter of the word.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_DROP_DOUBLE_CONSONANT</TD>
+<TD width=10%>14</TD>
+<TD width=41%>An error is corrected by substituting a double consonant for a single consonant.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_ADD_DOUBLE_CONSONANT</TD>
+<TD width=10%>14</TD>
+<TD width=41%>An error is corrected by substituting a single consonant for a double consonant.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_TRANSPOSE_VOWEL</TD>
+<TD width=10%>15</TD>
+<TD width=41%>An error is corrected by transposing<B> </B>two vowels.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_DROP_DOUBLE_VOWEL</TD>
+<TD width=10%>16</TD>
+<TD width=41%>An error is corrected by substituting a single vowel for a double vowel.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_ADD_DOUBLE_VOWEL</TD>
+<TD width=10%>16</TD>
+<TD width=41%>An error is corrected by substituting a double vowel for a single vowel.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_TRANSPOSE_CONSONANT</TD>
+<TD width=10%>18</TD>
+<TD width=41%>An error is corrected by transposing two consonants.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_TRANSPOSE</TD>
+<TD width=10%>19</TD>
+<TD width=41%>An error is corrected by transposing any two letters.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_SUBSTITUTE_VOWEL</TD>
+<TD width=10%>21</TD>
+<TD width=41%>An error is corrected by substituting a vowel for another vowel.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_DROP</TD>
+<TD width=10%>31</TD>
+<TD width=41%>An error is corrected by dropping a letter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_ADD</TD>
+<TD width=10%>35</TD>
+<TD width=41%>An error is corrected by adding a letter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_SUBSTITUTE_CONSONANT</TD>
+<TD width=10%>41</TD>
+<TD width=41%>An error is corrected by substituting a consonant for another consonant.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=49%>SPL_LIMIT_SUBSTITUTE</TD>
+<TD width=10%>43</TD>
+<TD width=41%>An error is corrected by substituting a letter for another letter.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P>For each suggestion, the error type describes what the spelling checker changed in the misspelled word to produce the suggestion. If the spelling checker capitalized the word to produce the suggestion, the score is 1. If the spelling checker substituted a double vowel for a single vowel to produce the suggestion, the score is 16. An application can use scores to determine whether to present suggestions to a user.</P>
+
+<P>When the spelling checker corrects more than one error to arrive at a suggestion, the score is the sum of the error types. For example, a suggestion for the inputted word “monduy” is “Monday,” with a score of 22. The spelling checker capitalized the word&#0151;the SPL_LIMIT_CAPITAL error value is1&#0151;and changed “u” to “a”&#0151;the SPL_LIMIT_SUBSTITUTE_VOWEL error is 21.</P>
+
+<P>The <A HREF="_wcesdk_spllimitset.htm"><B>SplLimitSet</B></A> function uses the same error types to set an error tolerance for an application that implements an inline spelling checker with an automatic replacement feature. </P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Splapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>Splusa.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_splbuffer_str.htm"><B>SPLBUFFER</B></A>, <A HREF="_wcesdk_splinit.htm"><B>SplInit</B></A>, <A HREF="_wcesdk_spllimitset.htm"><B>SplLimitSet</B></A>, <A HREF="_wcesdk_sploptionset.htm"><B>SplOptionSet</B></A>, <A HREF="_wcesdk_splsuggest_str.htm"><B>SPLSUGGEST</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

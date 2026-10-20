@@ -1,0 +1,81 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IAMStreamControl::StopAt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IAMStreamControl::StopAt"/>
+<MSHelp:RLTitle Title="IAMStreamControl::StopAt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_iamstreamcontrol__stopat"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IAMStreamControl::StopAt</H1>
+
+<P>Informs the pin when to suspend processing and supplying data. </P>
+
+<PRE class="syntax"><B>HRESULT StopAt(</B>
+<B>const REFERENCE_TIME * </B><I>ptStop</I><B>,</B>
+<B>BOOL </B><I>bSendExtra</I><B>,</B>
+<B>DWORD </B><I>dwCookie</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>ptStop </I></DT>
+
+<DD>[in] Time at which to stop streaming as specified in the <B>REFERENCE_TIME</B> structure. If you specify NULL for <I>ptStop</I>, it will stop immediately (no notification); if MAX_TIME, cancels stop. </dd>
+
+<DT><I>bSendExtra </I></DT>
+
+<DD>[in] Indicates whether to send an extra sample after scheduled <I>ptStop</I> time. </dd>
+
+<DT><I>dwCookie </I></DT>
+
+<DD>[in] Specifies a particular value to send with the notification when the stop occurs (used only if <I>ptStart</I> if not NULL or MAX_TIME). </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns an <B>HRESULT</B> value that depends on the implementation of the interface.</P>
+
+<H4>Remarks</H4>
+
+<P>This method is exposed by pins that support the stopping of streams. It sets the <A HREF="_wcesdk_dtypes__streamcontrolstate.htm"><B>StreamControlState</B></A> enumeration type to STREAM_DISCARDING. </P>
+
+<P>In video capture, you would typically call <B>StopAt</B> on both the output pin of a capture filter and the input pin of a multiplexer, and pay attention only to the notification from the multiplexer. This ensures that the capture filter doesn't needlessly capture extra frames, while guaranteeing that the multiplexer has, in fact, saved the last frame to a file. </P>
+
+<P>In addition, you should specify TRUE for the <I>bSendExtra</I> parameter on the capture pin, and specify FALSE to the multiplexer pin. If an extra frame is not sent, the multiplexer will wait for the stop time indefinitely and not realize it already has received all the capture information. The multiplexer will discard the extra sample sent by the capture pin, so it will not get written to the file. Do not set <I>bSendExtra</I> to TRUE unless you also use <A HREF="_wcesdk_iamstreamcontrol_interface.htm"><B>IAMStreamControl</B></A> on another downstream pin too, like in the preceding case. </P>
+
+<P>If you call <B>StopAt</B> with a time that is in the middle of a packet, the filter will deliver the whole packet before going into a discarding state. Also, if start and stop are scheduled for a single point in time, the effect is as if the start occurred an infinitesimal time before the stop. You can use this effect to capture a single frame (see <A HREF="_wcesdk_cbasestreamcontrol__cbasestreamcontrol.htm"><B>CBaseStreamControl</B></A> for an implementation example).</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

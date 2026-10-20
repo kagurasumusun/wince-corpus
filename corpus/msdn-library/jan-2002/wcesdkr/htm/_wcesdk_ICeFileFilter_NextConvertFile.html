@@ -1,0 +1,164 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>ICeFileFilter::NextConvertFile</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="ICeFileFilter::NextConvertFile"/>
+<MSHelp:RLTitle Title="ICeFileFilter::NextConvertFile"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_icefilefilter_nextconvertfile"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Transferring_Files" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_Transferring_Files" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>ICeFileFilter::NextConvertFile</H1>
+
+<P>This method is called by Windows CE Services when the user selects a conversion type from the Windows CE Services conversion selection dialog box.</P>
+
+<PRE class="syntax"><B>STDMETHODIMP ICeFileFilter::NextConvertFile(
+int</B> <I>nConversion</I><B>,
+PFF_CONVERTINFO</B> <B>*</B><I>pci</I><B>,
+PFF_SOURCEFILE</B> <B>*</B><I>psf</I><B>,</B>
+<B>PFF_DESTINATIONFILE</B> <B>*</B><I>pdf</I><B>,
+volatile BOOL</B> <B>*</B><I>pbCancel</I><B>,
+PR_ERROR</B> <B>*</B><I>perr</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>nConversion </I></DT>
+
+<DD>Counter for converting a single source file into multiple destination files. This parameter is zero the first time <B>NextConvertFile</B> is called and is incremented for each successive call. A simple filter should return HRESULT_FROM_WIN32<B>(</B>ERROR_NO_MORE_ITEMS<B>)</B> if this parameter is not zero. </dd>
+
+<DT><I>pci </I></DT>
+
+<DD>Pointer to a <A HREF="_wcesdk_cff_convertinfo.htm"><B>CFF_CONVERTINFO</B></A> structure that contains a pointer to an <B>ICeFileFilterSite</B> object. A file filter uses this interface to create an <A HREF="_wcesdk_com_istream.htm"><B>IStream</B></A> or <A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A> object to read the contents of the source file or to write to the destination file. The type of interface object to create is determined by the <I>nHowToOpen</I> parameter in the <A HREF="_wcesdk_icefilefiltersite_opensourcefile.htm"><B>ICeFileFilterSite::OpenSourceFile</B></A> and <A HREF="_wcesdk_icefilefiltersite_opendestinationfile.htm"><B>ICeFileFilterSite::OpenDestinationFile</B></A> methods. Any files opened in this way should be closed using the corresponding <A HREF="_wcesdk_icefilefiltersite_closesourcefile.htm"><B>ICeFileFilterSite::CloseSourceFile</B></A> or <A HREF="_wcesdk_icefilefiltersite_closedestinationfile.htm"><B>ICeFileFilterSite::CloseDestinationFile</B></A> method. </dd>
+
+<DT><I>psf </I></DT>
+
+<DD>Pointer to a <A HREF="_wcesdk_cff_sourcefile.htm"><B>CFF_SOURCEFILE</B></A> structure that contains information about the source file. </dd>
+
+<DT><I>pdf </I></DT>
+
+<DD>Pointer to a <A HREF="_wcesdk_cff_destinationfile.htm"><B>CFF_DESTINATIONFILE</B></A> structure that contains information about the destination file. </dd>
+
+<DT><I>pbCancel </I></DT>
+
+<DD>Pointer to a Boolean that is set to TRUE if the user cancels the file conversion before it is completed, or set to FALSE otherwise. Because this variable is updated asynchronously by another thread, its contents can change at any time. A file filter must check this variable regularly during the conversion process, and return ERROR_CANCELLED, after cleaning up, if it is ever set to TRUE. </dd>
+
+<DT><I>perr </I></DT>
+
+<DD>Pointer to a filter-defined error value that can be passed by the Windows CE Services application to the <A HREF="_wcesdk_icefilefilter_formatmessage.htm"><B>ICeFileFilter::FormatMessage</B></A> method. This error value is ignored unless the return value from <B>NextConvertFile</B> is E_FAIL. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=34%>Value</TH>
+<TH width=66%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>NOERROR</TD>
+<TD width=66%>The subconversion was successful; proceed to the next subconversion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>HRESULT_FROM_WIN32 (ERROR_CANCELLED)</TD>
+<TD width=66%>The user canceled the conversion.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>HRESULT_FROM_WIN32 (ERROR_NO_MORE_ITEMS)</TD>
+<TD width=66%>The conversion, or last subconversion, was successful. End calls to <A HREF="#_wcesdk_icefilefilter_nextconvertfile"><B>ICeFileFilter::NextConvertFile</B></A>.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%>E_FAIL</TD>
+<TD width=66%>The <I>perr</I> parameter contained an error value that should be passed to <B>ICeFileFilter::FormatMessage</B>.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>The Explorer window for the mobile device calls the <B>ICeFileFilter::NextConvertFile</B> method repeatedly, incrementing the <I>nConversion</I> parameter, until the return value is ERROR_NO_MORE_ITEMS. A simple filter should return NOERROR the first time this method is called, and thereafter return HRESULT_FROM_WIN32<B>(</B>ERROR_NO_MORE_ITEMS<B>)</B>. Alternatively, a file filter can return E_FAIL and specify a filter-defined error value in the variable pointed to by <I>perr</I>. </P>
+
+<P>As a file conversion progresses, a file filter should periodically call <A HREF="_wcesdk_icefilefiltersite_reportprogress.htm"><B>ICeFileFilterSite::ReportProgress</B></A> to report its progress. Windows CE Services uses the progress information to update a progress bar that shows the user how much of the conversion is complete. </P>
+
+<P>If any important data is intentionally discarded by a file filter during the conversion process, the filter should call <A HREF="_wcesdk_icefilefiltersite_reportloss.htm"><B>ICeFileFilterSite::ReportLoss</B></A> to report the loss. When calling this <B>ReportLoss</B>, the filter specifies a message that explains the data loss, and Windows CE Services formats and displays the message in a message box when the file conversion has completed. For more information, see <A HREF="JavaScript:hhobj_1.Click()"><B>Transferring Files</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Replfilt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="JavaScript:hhobj_2.Click()"><B>Transferring Files</B></A>, <A HREF="_wcesdk_icefilefilter_formatmessage.htm"><B>ICeFileFilter::FormatMessage</B></A>, <A HREF="#_wcesdk_icefilefilter_nextconvertfile"><B>ICeFileFilter::NextConvertFile</B></A>, <A HREF="_wcesdk_icefilefiltersite_closedestinationfile.htm"><B>ICeFileFilterSite::CloseDestinationFile</B></A>, <A HREF="_wcesdk_icefilefiltersite_closesourcefile.htm"><B>ICeFileFilterSite::CloseSourceFile</B></A>, <A HREF="_wcesdk_icefilefiltersite_opendestinationfile.htm"><B>ICeFileFilterSite::OpenDestinationFile</B></A>, <A HREF="_wcesdk_icefilefiltersite_opensourcefile.htm"><B>ICeFileFilterSite::OpenSourceFile</B></A>, <A HREF="_wcesdk_icefilefiltersite_reportloss.htm"><B>ICeFileFilterSite::ReportLoss</B></A>, <A HREF="_wcesdk_icefilefiltersite_reportprogress.htm"><B>ICeFileFilterSite::ReportProgress</B></A>, <A HREF="_wcesdk_com_istream.htm"><B>IStream</B></A>, <A HREF="_wcesdk_com_istorage.htm"><B>IStorage</B></A>, <A HREF="_wcesdk_cff_destinationfile.htm"><B>CFF_DESTINATIONFILE</B></A>, <A HREF="_wcesdk_cff_convertinfo.htm"><B>CFF_CONVERTINFO</B></A>, <A HREF="_wcesdk_cff_sourcefile.htm"><B>CFF_SOURCEFILE</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,179 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NDISTest Configuration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NDISTest Configuration"/>
+<MSHelp:RLTitle Title="NDISTest Configuration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddtk_ndistest_configuration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>NDISTest Configuration</H1>
+
+<P>Running NDISTest on a Windows CE-based device requires a Windows CE device with a PCMCIA slot and a network adapter. NDISTest may be run in one of the following configurations:
+
+<UL type="disc">
+	<LI>Standalone testing
+<P>NDISTest is run on a single machine. You can run all of the tests in standalone mode. However, you will only be able to perform a partial stress test; only the sending of packets will be tested.
+</li>
+
+	<LI>Two-machine testing
+<P>Two-machine testing has the advantage of being able to perform a full stress test of your driver because both sending and receiving of packets is tested. To perform two-machine testing, you must have a Windows NT-based computer connected to a Windows CE-based device that has its own network adapter. You must also edit Hapi.ini and set the <I>G_TestOptions</I> global variable to the SKIP_1CARD_TESTS flag.
+
+<P>The version of NDISTest running on the Windows NT machine must be compatible with the version of NDISTest running on the Windows CE machine. To prevent failures from occurring, use the Windows NT version of the NDISTest that is supplied with the Windows CE DDTK.
+</li>
+</UL>
+
+<P>Before testing an NDIS miniport, you must edit the Hapi.ini configuration file to indicate which tests will be run, and how each test will be performed. To test a miniport driver successfully, you must define two sections in Hapi.ini: DLLs and Variables.</P>
+
+<P>The DLLs section specifies which DLLs to load. For NDISTest, this section is always two lines long and should look like the following:</P>
+
+<PRE class="code">[DLLs]
+ndistst.dll</PRE>
+
+<P>The Variables section consists of variable initializations; it can contain multiple lines. The first line must look like the following:</P>
+
+<PRE class="code">[Variables]</PRE>
+
+<P>Subsequent lines in the Variables section must have the following format:</P>
+
+<PRE class="code"><I>variable_name</I>=<I>variable_value</I></PRE>
+
+<P>All variables must begin with the dollar sign character ($). Variable names are limited to alphanumeric characters and the underscore character (_). Variables can have either strings or integers assigned as values. Strings must be enclosed in double quotation marks. You can specify integers as either decimal or hexadecimal numerals. To specify an integer as a hexadecimal numeral, use a 0x prefix.</P>
+
+<P>A variable must be created and assigned to a value before it can be used in an expression or as an argument to a function. Therefore, a previously undefined variable can be used only to the left of the equal sign (=). Every time a variable is assigned, its definition is destroyed and recreated. Variables do not have fixed types, and type declarations are generally not necessary. The following examples show valid variable declarations:</P>
+
+<PRE class="code"># Variable $Temp is created as an integer variable with value 5.
+$Temp = 5
+
+# Previous variable $Temp is destroyed and new variable $Temp is created # as a floating point variable with the value 1.75
+$Temp = 1.75
+
+# Previous variable $Temp is destroyed, new variable $Temp is created as # a string with the value "string."
+$Temp = "string"</PRE>
+
+<P>For NDISTest, the Hapi.ini configuration file sets values for a number of global variables that control what tests are run and how they are run.</P>
+
+<P>The following are the global variables that are used in the Hapi.ini configuration file:
+
+<UL type="disc">
+	<LI><I>G_DebugLevel</I>
+<P>Creates a global variable that is used to maintain debug settings&#0151;its value is unimportant. The scripts will set this variable as they execute.
+</li>
+
+	<LI><I>G_WorkCard</I>
+<P>Specifies the name of the card to be tested.
+</li>
+
+	<LI><I>G_TrustedCard</I>
+<P>Specifies the name of a trusted card in the system that will be used to assist in testing the card specified in <I>G_WorkCard</I>. This variable may be set to the NULL string, which will cause all of the tests requiring two cards in the same system to be skipped.
+</li>
+
+	<LI><I>G_MessageCard</I>
+<P>Specifies the name of the card that is used to send commands to the remote Windows NT system running the NDIS test server used for two-machine testing. This variable may be set to the NULL string, which will cause all of the two-machine tests to be skipped.
+</li>
+
+	<LI><I>G_Media</I>
+<P>Specifies the media to be tested. It must always be set to a value of 1 (Ethernet setting).
+</li>
+
+	<LI><I>G_Ndis30Flag</I>
+<P>This variable must always be set to 0.
+</li>
+
+	<LI><I>G_ScriptName</I>
+<P>This global variable only has an effect if the DO_RUNTEST bit is set in the G_TestOptions variable. If the DO_RUNTEST bit is set, this variable specifies the name of a specific script to be run, instead of running the functional, stress, or hardware compatibility testing suites.
+</li>
+
+	<LI><I>G_TestOptions</I>
+<P>This variable is a combination of the following flags:
+
+<UL type="disc">
+	<LI>DO_FUNCTIONAL_TESTS (0x00001)
+<P>If set, functional testing is performed.
+</li>
+
+	<LI>DO_STRESS_TESTS (0x00002)
+<P>If set, stress test is performed.
+</li>
+
+	<LI>DO_PERFORMANCE_TESTS (0x00004)
+<P>If set, performance testing will be performed.
+</li>
+
+	<LI>DO_HCT_TESTS (0x00008)
+<P>If set, hardware compatibility testing is performed.
+</li>
+
+	<LI>DO_RUNTEST (0x00010)
+<P>If set, only a single script runs. Functional, stress, and hardware compatibility testing will be skipped. When this flag is set, the <I>G_ScriptName</I> global variable must be set to the name of the script file to be executed. This is shown in the following example.
+
+<PRE class="code">G_ScriptName="Cescripts\Lan\1c_srecv.tst"</PRE>
+</li>
+
+	<LI>ENABLE_VERBOSE_FLAG (0x10000)
+<P>If set, output files that are generated include more detail.
+</li>
+
+	<LI>SKIP_1CARD_TESTS (0x20000)
+<P>If set, tests that use only a single card (1c_xxx.tst script files) are skipped.
+</li>
+</UL>
+</li>
+</UL>
+
+<P>Once Hapi.ini has been set up correctly, you are ready to run the NDIS test. A sample Hapi.ini file is shown in the following code example. </P>
+
+<PRE class="code">[DLLs]
+ndistst.dll
+
+[Variables]
+
+G_TestOptions=0x00001
+G_WorkCard="ne20001"
+G_TrustedCard="xircomce21"
+G_MessageCard="ne20001"
+G_Ndis30Flag=0
+G_ScriptName=""
+
+To run functional tests and log verbose output:
+G_TestOptions=0x10001
+
+To test the first NE2000 compatible card in the system:
+G_WorkCard="ne20001"
+
+To use a Xircom CE2 card as the trusted card to assist testing an NE2000
+card:
+G_TrustedCard="xircomce21"
+
+To test an NE2000 compatible card and also use it for commands:
+G_WorkCard="ne20001"
+G_MessageCard="ne20001"</PRE>
+<DIV CLASS="footer">Built on Tuesday, January 09, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

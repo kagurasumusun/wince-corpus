@@ -1,0 +1,174 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>MyFSD_ReadFileWithSeek</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="MyFSD_ReadFileWithSeek"/>
+<MSHelp:RLTitle Title="MyFSD_ReadFileWithSeek"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_myfsd_readfilewithseek"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><I>MyFSD</I>_ReadFileWithSeek</H1>
+
+<P>This function reads data from a file, starting at the position indicated by the caller. After the read operation has been completed, the file pointer is adjusted by the number of bytes actually read. This function is called only by the operating system to implement paging services on your file system.</P>
+
+<PRE class="syntax"><B>BOOL MyFSD_ReadFileWithSeek(
+PFILE </B><I>pFile</I><B>,
+PVOID </B><I>pBuffer</I><B>,
+DWORD </B><I>cbRead</I><B>,
+PDWORD </B><I>pcbRead</I><B>,
+OVERLAPPED *</B><I>pOverlapped</I><B>,
+DWORD </B><I>dwLowOffset</I><B>,
+DWORD</B> <I>dwHighOffset</I><B>); </B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pFile </I></DT>
+
+<DD>Pointer to the value that the file system driver (FSD) passes to the <A HREF="_wcesdk_fsdmgr_createfilehandle.htm"><B>FSDMGR_CreateFileHandle</B></A> function when creating the file handle. </dd>
+
+<DT><I>pBuffer</I> </DT>
+
+<DD>Pointer to the buffer that receives the data read from the file. </dd>
+
+<DT><I>cbRead</I> </DT>
+
+<DD>Number of bytes to be read from the file. </dd>
+
+<DT><I>pcbRead</I> </DT>
+
+<DD>Pointer to the number of bytes read. The <A HREF="_wcesdk_win32_readfile.htm"><B>ReadFile</B></A> function sets this value to zero before doing any work or error checking. This parameter cannot be NULL. </dd>
+
+<DT><I>pOverlapped</I> </DT>
+
+<DD>Not supported. </dd>
+
+<DT><I>dwLowOffset</I></DT>
+
+<DD>The low part of a 64-bit address that identifies the start position for the read.</dd>
+
+<DT><I>dwHighOffset</I></DT>
+
+<DD>The high part of the 64bit address that identifies the start position of the read.&nbsp;&nbsp;Together the <I>dwLowOffset</I> and <I>dwHighOffset</I> form the 64bit address to begin the read.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P><B>ReadFile</B> returns when the number of bytes requested has been read or when an error occurs. </P>
+
+<P>Nonzero indicates success. If the return value is nonzero and the number of bytes read is zero, the file pointer was beyond the current end of the file at the time of the read operation. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P>The <I>lpOverlapped</I> parameter must be set to NULL. Windows CE does not allow files to be created with the overlapped attribute.</P>
+
+<P>Windows CE does not support asynchronous read operations on files.</P>
+
+<P>The <I>hFile</I> parameter cannot be a socket handle.</P>
+
+<P>If an FSD needs to support paging from the file system then this function must be implemented. If it is implemented, the “pager” and memory mapped file support utilize this function. If the FSD does not support paging from the file system, then the fallback position is to page the entire file into memory when it is a module or a file that is being mapped.</P>
+
+<P>The kernel determines if your FSD can support paging by making the following call: <code class="ce">ReadFileWithSeek(oeptr-&gt;hf,0,0,0,0,0,0)</code>. If the FSD returns TRUE, then paging is supported for the file; otherwise, paging is not supported.</P>
+
+<P>The Fsdmgr component is a dynamic-link library (DLL) that manages all operating system interaction with installable files systems. Each installable file system requires an FSD, which is a DLL that exports an API needed to support an installable file system. The name of the DLL and the names of the functions it exports start with the name of the associated installable file system. For example, if the name of file system is MyFSD, then its DLL is MyFSD.dll and its exported functions are prefaced with MyFSD_*. </P>
+
+<P>Fsdmgr provides services to FSDs. The <A HREF="_wcesdk_fsdmgr_registervolume.htm"><B>FSDMGR_RegisterVolume</B></A>, <B>FSDMGR_CreateFileHandle</B>, and <A HREF="_wcesdk_fsdmgr_createsearchhandle.htm"><B>FSDMGR_CreateSearchHandle</B></A> functions record a <B>DWORD</B> of volume-specific data the FSD needs to keep associated with volume. This volume-specific data is passed as the first parameter of these three functions.</P>
+
+<P>Applications that access an installable file system use standard Win32 functions. For example, when an application wants to create a folder on a device that contains an installable file system, it calls <A HREF="_wcesdk_win32_createdirectory.htm"><B>CreateDirectory</B></A>. Fsdmgr recognizes that the path is to a device containing an installable file system and calls the appropriate function, which in the case of the FAT file system is <B>FATFSD_CreateDirectoryW</B>. In other words, the application calls <B>CreateDirectory</B>, causing Fsdmgr to call <B>FATFSD_CreateDirectoryW</B>.</P>
+
+<P>For more information about creating an FSD and using the Fsdmgr component services, see Core Services.</P>
+
+<P>If part of the file is locked by another process and the read operation overlaps the locked portion, this function fails. </P>
+
+<P>An application must meet certain requirements when working with files opened with FILE_FLAG_NO_BUFFERING:
+
+<UL type="disc">
+	<LI>File access must begin at byte offsets within the file that are integer multiples of the volume’s sector size. To determine a volume’s sector size, call the <B>GetDiskFreeSpace</B> function. </li>
+
+	<LI>File access must be for numbers of bytes that are integer multiples of the volume’s sector size. For example, if the sector size is 512 bytes, an application can request reads and writes of 512, 1024, or 2048 bytes, but not of 335, 981, or 7171 bytes. </li>
+
+	<LI>Buffer addresses for read and write operations must be sector aligned (aligned on addresses in memory that are integer multiples of the volume’s sector size). One way to sector align buffers is to use the <A HREF="_wcesdk_win32_virtualalloc.htm"><B>VirtualAlloc</B></A> function to allocate the buffers. This function allocates memory that is aligned on addresses that are integer multiples of the system's page size. Because both page and volume sector sizes are powers of 2, memory aligned by multiples of the system's page size is also aligned by multiples of the volume’s sector size. </li>
+</UL>
+
+<P>Accessing the input buffer while a read operation is using the buffer may lead to corruption of the data read into that buffer. Applications must not read from, write to, reallocate, or free the input buffer that a read operation is using until the read operation completes.</P>
+
+<P>When reading from a communications device, the behavior of <B>ReadFile</B> is governed by the current communication time-outs as set and retrieved using the <A HREF="_wcesdk_win32_setcommtimeouts.htm"><B>SetCommTimeouts</B></A> and <A HREF="_wcesdk_win32_getcommtimeouts.htm"><B>GetCommTimeouts</B></A> functions. Unpredictable results can occur if you fail to set the time-out values. For more information about communication time-outs, see Communications Services.</P>
+
+<P>When a synchronous read operation reaches the end of a file, <B>ReadFile</B> returns TRUE and sets <I>*lpNumberOfBytesRead</I> to zero. The following sample code tests for end-of-file for a synchronous read operation:</P>
+
+<PRE class="code">// Attempt a synchronous read operation.
+bResult = ReadFile(hFile, &amp;inBuffer, nBytesToRead, &amp;nBytesRead, NULL) ;
+// Check for end of file.
+if (bResult &amp;&amp;  nBytesRead == 0, )
+{
+    // we’re at the end of the file
+} </PRE>
+
+<P>An asynchronous read operation can encounter the end of a file during the initiating call to <B>ReadFile</B>, or during subsequent asynchronous operation. </P>
+
+<P>If EOF is detected at <B>ReadFile</B> time for an asynchronous read operation, <B>ReadFile</B> returns FALSE and <B>GetLastError</B> returns ERROR_HANDLE_EOF.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Fsdmgr.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_createdirectory.htm"><B>CreateDirectory</B></A>, <A HREF="_wcesdk_fsdmgr_createfilehandle.htm"><B>FSDMGR_CreateFileHandle</B></A>, <A HREF="_wcesdk_fsdmgr_createsearchhandle.htm"><B>FSDMGR_CreateSearchHandle</B></A>, <A HREF="_wcesdk_fsdmgr_registervolume.htm"><B>FSDMGR_RegisterVolume</B></A>, <A HREF="_wcesdk_win32_getcommtimeouts.htm"><B>GetCommTimeouts</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_myfsd_createfilew.htm"><B>MyFSD_CreateFileW</B></A>, <A HREF="_wcesdk_myfsd_writefile.htm"><B>MyFSD_WriteFile</B></A>, <A HREF="_wcesdk_win32_readfile.htm"><B>ReadFile</B></A>, <A HREF="_wcesdk_win32_setcommtimeouts.htm"><B>SetCommTimeouts</B></A>, <A HREF="_wcesdk_win32_virtualalloc.htm"><B>VirtualAlloc</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

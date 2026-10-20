@@ -1,0 +1,132 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDC::BitBlt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CDC::BitBlt"/>
+<MSHelp:RLTitle Title="CDC::BitBlt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdc_bitblt"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CDC::BitBlt</H1>
+
+<P>This method copies a bitmap from the source device context to the device context.</P>
+
+<PRE class=syntax><B>BOOL BitBlt (
+int</B> <I>x</I>, <B>
+int</B> <I>y</I>, <B>
+int</B> <I>nWidth</I>, <B>
+int</B> <I>nHeight</I>, <B>
+CDC*</B> <I>pSrcDC</I>, <B>
+int</B> <I>xSrc</I>, <B>
+int</B> <I>ySrc</I>, <B>
+DWORD</B> <I>dwRop</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>x</I></DT>
+
+<DD>The logical x-coordinate of the upper-left corner of the destination rectangle.</DD>
+
+<DT><I>y</I></DT>
+
+<DD>The logical y-coordinate of the upper-left corner of the destination rectangle.</DD>
+
+<DT><I>nWidth</I></DT>
+
+<DD>The width, in logical units, of the destination rectangle and source bitmap.</DD>
+
+<DT><I>nHeight</I></DT>
+
+<DD>The height, in logical units, of the destination rectangle and source bitmap.</DD>
+
+<DT><I>pSrcDC</I></DT>
+
+<DD>Pointer to a <B>CDC</B> object that identifies the device context from which the bitmap is copied. It must be <B>NULL</B> if <I>dwRop</I> specifies a raster operation that does not include a source.</DD>
+
+<DT><I>xSrc</I></DT>
+
+<DD>The logical x-coordinate of the upper-left corner of the source bitmap.</DD>
+
+<DT><I>ySrc</I></DT>
+
+<DD>The logical y-coordinate of the upper-left corner of the source bitmap.</DD>
+
+<DT><I>dwRop</I></DT>
+
+<DD>The raster operation to perform. Raster-operation codes define how the GDI combines colors in output operations that involve a brush, a possible source bitmap, and a destination bitmap. </DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero if the function is successful; otherwise, it is zero.</P>
+
+<H4>Remarks</H4>
+
+<P>The application can align the windows or client areas on byte boundaries to ensure that the <B>BitBlt</B> operations occur on byte-aligned rectangles. Set the CS_BYTEALIGNWINDOW or CS_BYTEALIGNCLIENT flags when you register the window classes. </P>
+
+<P><B>BitBlt</B> operations on byte-aligned rectangles are faster than <B>BitBlt</B> operations on rectangles that are not byte aligned. To specify class styles such as byte-alignment for your device context, you must register a window class rather than relying on the Microsoft Foundation classes to do it. Use the global function <B>AfxRegisterWndClass</B>.</P>
+
+<P>The GDI transforms <I>nWidth</I> and <I>nHeight</I>, once by using the destination device context, and once by using the source device context. If the resulting extents do not match, the GDI uses the Windows <B>StretchBlt</B> function to compress or stretch the source bitmap as necessary.</P>
+
+<P>If destination, source, and pattern bitmaps do not have the same color format, the <B>BitBlt</B> function converts the source and pattern bitmaps to match the destination. The foreground and background colors of the destination bitmap are used in the conversion. </P>
+
+<P>When the <B>BitBlt</B> function converts a monochrome bitmap to color, it sets white bits (1) to the background color and black bits (0) to the foreground color. The foreground and background colors of the destination device context are used. To convert color to monochrome, <B>BitBlt</B> sets pixels that match the background color to white and sets all other pixels to black. <B>BitBlt</B> uses the foreground and background colors of the color device context to convert from color to monochrome.</P>
+
+<P>Not all device contexts support <B>BitBlt</B>. To check whether a given device context supports <B>BitBlt</B>, use the <B>GetDeviceCaps</B> method and specify the <B>RASTERCAPS</B> index.</P>
+
+<P>Windows&nbsp;CE supports only the following raster operations in the <I>dwRop</I> parameter:
+
+<UL type=disc>
+	<LI>SRCAND</LI>
+
+	<LI>SRCCOPY</LI>
+
+	<LI>SRCINVERT</LI>
+
+	<LI>SRCPAINT</LI>
+</UL>
+
+<P>Windows&nbsp;CE 1.0 only supports two bit&#0150;per-pixel (maximum) gray scale graphics. When performing a bit-block transfer that converts two bit-per-pixel (2 bpp) to one bit-per-pixel (1 bpp), Windows&nbsp;CE 1.0 maps the background color to white, and all other colors to black. When converting from 1 bpp to 2 bpp, it maps white to white and black to black.</P>
+
+<H4>Example</H4>
+
+<P>See the example for <A HREF="cdc_6.htm"><B>CDC::CreateCompatibleDC</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdc_37.htm"><B>CDC::GetDeviceCaps</B></A>, <A HREF="cdc_61.htm"><B>CDC::PatBlt</B></A>, <A HREF="cdc_88.htm"><B>CDC::SetTextColor</B></A>, <A HREF="cdc_91.htm"><B>CDC::StretchBlt</B></A>, <A HREF="funct_53.htm"><B>AfxRegisterWndClass</B></A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

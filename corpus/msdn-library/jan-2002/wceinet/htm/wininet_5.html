@@ -1,0 +1,77 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>HINTERNET Handles</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="HINTERNET Handles"/>
+<MSHelp:RLTitle Title="HINTERNET Handles"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_hinternet_handles"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>HINTERNET Handles</H1>
+
+<P>Handles created and used by the WinInet functions are called HINTERNETs. These HINTERNET handles returned by the WinInet functions in Windows CE control only Internet functions. They are not native system handles. Therefore, only an Internet function works with its corresponding Internet handle. HINTERNET handles cannot be used with functions such as <B>ReadFile</B> or <B>CloseHandle</B>. Similarly, native system handles cannot be used with the WinInet functions. For example, a handle returned by <B>CreateFile</B> cannot be passed to <B>InternetReadFile</B>. </P>
+
+<P>HINTERNET handles are maintained in a tree hierarchy in which a higher-level function must be called before a dependent function is called. The handle returned by the <B>InternetOpen</B> function is the root node. Handles returned by the <B>InternetConnect</B> function occupy the next level. Handles returned by the <B>FtpOpenFile</B>, <B>FtpFindFirstFile</B>, and <B>HttpOpenRequest</B> functions are the leaf nodes.</P>
+
+<P>The following illustration shows the hierarchy of the HINTERNET handles. Each box represents a WinInet function that returns an HINTERNET handle.</P>
+
+<P class="fig"><IMG SRC="inethand.gif" ALT="" BORDER=0></P>
+
+<P>At the top level is <B>InternetOpen</B>, which creates the root HINTERNET. The next level contains <B>InternetOpenUrl</B> and <B>InternetConnect</B>. The functions that use the HINTERNET handle returned by <B>InternetConnect</B> make up the last level.</P>
+
+<P>All HINTERNET handles can be closed by using <B>InternetCloseHandle</B>. Client applications must close all HINTERNET handles derived from the HINTERNET handle to be closed before calling <B>InternetCloseHandle</B>.</P>
+
+<P>The following code example shows the handle hierarchy for the WinInet functions.</P>
+
+<PRE class="code">HINTERNET hRootHandle, hOpenUrlHandle;
+hRootHandle = InternetOpen(
+                           TEXT("Example"),
+                           INTERNET_OPEN_TYPE_DIRECT,
+                           NULL,
+                           NULL,
+                           0);
+hOpenUrlHandle = InternetOpenUrl(
+                              hRootHandle,
+                              TEXT("http://www.server.com/default.htm"),
+                              NULL,
+                              0,
+                              INTERNET_FLAG_RAW_DATA,
+                              0);
+
+// Close the handle created by InternetOpenUrl, so that the
+// InternetOpen handle can be closed.
+InternetCloseHandle(hOpenUrlHandle);
+
+// Close the handle created by InternetOpen.
+InternetCloseHandle(hRootHandle);</PRE>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>Handle values are recycled quickly. Therefore, if a handle is closed and a new handle is generated immediately, the new handle can have the same value as the handle just closed.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

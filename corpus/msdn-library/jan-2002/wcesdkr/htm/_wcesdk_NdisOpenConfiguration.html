@@ -1,0 +1,143 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>NdisOpenConfiguration</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="NdisOpenConfiguration"/>
+<MSHelp:RLTitle Title="NdisOpenConfiguration"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ndisopenconfiguration"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>NdisOpenConfiguration</H1>
+
+<P>This function returns a handle for an NDIS network adapter driver’s <B>HKEY_LOCAL_MACHINE\Comm\DriverName\Parms</B> registry key.</P>
+
+<PRE class="syntax"><B>VOID</B> <B>NdisOpenConfiguration(
+OUT PNDIS_STATUS</B> <I>Status</I><B>,</B>
+<B>OUT PNDIS_HANDLE</B> <I>ConfigurationHandle</I><B>,</B>
+<B>IN NDIS_HANDLE</B> <I>WrapperConfigurationContext</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Status</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns the status of its attempt to open the registry key. Possible return values are the following:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=36%>Value</TH>
+<TH width=64%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NDIS_STATUS_SUCCESS</TD>
+<TD width=64%>The value at <I>ConfigurationHandle</I> is valid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=36%>NDIS_STATUS_FAILURE</TD>
+<TD width=64%>The key could not be opened.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><I>ConfigurationHandle</I></DT>
+
+<DD>Pointer to a caller-supplied variable in which this function returns a handle to the registry <B>HKEY_LOCAL_MACHINE\Comm\DriverName\Parms</B> key. Value entries under this key are provided by the driver’s installation script.</dd>
+
+<DT><I>WrapperConfigurationContext</I></DT>
+
+<DD>Handle input to the <A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A> function.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>With the handle returned by this function, an NDIS miniport can call the <A HREF="_wcesdk_ndisreadconfiguration.htm"><B>NdisReadConfiguration</B></A> function one or more times to extract configuration information about its network adapter from the registry. A miniport can also call <A HREF="_wcesdk_ndisreadnetworkaddress.htm"><B>NdisReadNetworkAddress</B></A> with this handle to retrieve software-configurable network address information that was stored in the registry when its network adapter was installed in the current computer.</P>
+
+<P>A miniport’s installation script must store at least the following configuration information in the registry:
+
+<UL type="disc">
+	<LI>The network adapter’s I/O bus interface type.</li>
+
+	<LI>The bus number and bus type.</li>
+
+	<LI>The network adapter’s adapter ID value, which is equivalent to the PCI <B>DeviceId</B> if the network adapter is on a PCI bus</li>
+</UL>
+
+<P>Drivers of network adapters on ISA buses usually get bus-relative configuration parameters for a network adapter from the registry with the <B>NdisReadConfiguration</B> function. Drivers of network adapters on other types of I/O buses can also call <B>Ndis<I>XXX</I></B> bus-type-specific configuration functions to get bus-relative network adapter-specific configuration parameters suitable for calling functions, such as <A HREF="_wcesdk_ndismregisterinterrupt.htm"><B>NdisMRegisterInterrupt</B></A>, <A HREF="_wcesdk_ndismmapiospace.htm"><B>NdisMMapIoSpace</B></A>, and/or <A HREF="_wcesdk_ndismregisterioportrange.htm"><B>NdisMRegisterIoPortRange</B></A>.</P>
+
+<P>A network adapter driver calls the <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A> or the <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A> function to identify the type of I/O bus on which its network adapter is likely to be found before that driver calls any of the bus-type-specific configuration functions.</P>
+
+<P>After a driver has consumed and, possibly, modified the registry configuration information, the driver must call the <A HREF="_wcesdk_ndiscloseconfiguration.htm"><B>NdisCloseConfiguration</B></A> function to release the handle obtained from this function and to free any temporary storage that NDIS allocated in the driver’s calls to <B>NdisReadConfiguration</B>, <B>NdisReadNetworkAddress</B>, and/or <A HREF="_wcesdk_ndiswriteconfiguration.htm"><B>NdisWriteConfiguration</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=17%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=17%>Ndis.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ndislib.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_miniportinitialize.htm"><B>MiniportInitialize</B></A>, <A HREF="_wcesdk_ndiscloseconfiguration.htm"><B>NdisCloseConfiguration</B></A>, <A HREF="_wcesdk_ndismmapiospace.htm"><B>NdisMMapIoSpace</B></A>, <A HREF="_wcesdk_ndismregisterinterrupt.htm"><B>NdisMRegisterInterrupt</B></A>, <A HREF="_wcesdk_ndismregisterioportrange.htm"><B>NdisMRegisterIoPortRange</B></A>, <A HREF="_wcesdk_ndismregisterminiport.htm"><B>NdisMRegisterMiniport</B></A>, <A HREF="_wcesdk_ndismsetattributes.htm"><B>NdisMSetAttributes</B></A>, <A HREF="_wcesdk_ndismsetattributesex.htm"><B>NdisMSetAttributesEx</B></A>, <A HREF="_wcesdk_ndisopenprotocolconfiguration.htm"><B>NdisOpenProtocolConfiguration</B></A>, <A HREF="_wcesdk_ndisreadconfiguration.htm"><B>NdisReadConfiguration</B></A>, <A HREF="_wcesdk_ndisreadnetworkaddress.htm"><B>NdisReadNetworkAddress</B></A>, <A HREF="_wcesdk_ndisreadpcislotinformation.htm"><B>NdisReadPciSlotInformation</B></A>, <A HREF="_wcesdk_ndisregisterprotocol.htm"><B>NdisRegisterProtocol</B></A>, <A HREF="_wcesdk_ndiswriteconfiguration.htm"><B>NdisWriteConfiguration</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CardRegisterClient</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CardRegisterClient"/>
+<MSHelp:RLTitle Title="CardRegisterClient"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_cardregisterclient"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CardRegisterClient</H1>
+
+<P>This function registers a callback function that is called by Card Services when a specified socket event occurs. The callback function notifies the driver of the event, such as card insertion, so that the driver can take the appropriate action.</P>
+
+<PRE class="syntax"><B>CARD_CLIENT_HANDLE CardRegisterClient(
+CLIENT_CALLBACK</B> <I>CallBackFn
+</I><B>PCARD_REGISTER_PARMS</B> <I>pParms</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>CallBackFn</I></DT>
+
+<DD>Pointer to the driver’s callback function.</dd>
+
+<DT><I>pParms</I></DT>
+
+<DD>Pointer to a <B>CARD_REGISTER_PARMS</B> structure defining the driver’s characteristics.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>A driver handle indicates success. NULL indicates failure, and <B>GetLastError</B> returns one of the following values:
+
+<DL>
+<DT>CERR_BAD_ARGS</DT>
+
+<DD>Indicates that the pointer specified in <I>pParms</I> or <I>CallBackFn </I>is invalid.</dd>
+
+<DT>CERR_OUT_OF_RESOURCE</DT>
+
+<DD>Indicates that Card Services is unable to allocate memory to track the driver.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>This function turns on power to any unpowered sockets containing PC Cards so that the cards can be used by the newly registered PC Card driver. A driver can request artificial insertion notifications to check if a card that it controls has already been inserted.</P>
+
+<P>Card Services sends a CE_CARD_INSERTION callback event code for every function on PC Cards that are currently inserted. If the driver does not require artificial insertion notices, it can clear the CLIENT_ATTR_NOTIFY_SHARED and CLIENT_ATTR_NOTIFY_EXCLUSIVE bits in the <I>fAttributes</I> member of <B>CARD_REGISTER_PARMS</B>.</P>
+
+<P>Because the CE_CARD_INSERTION callbacks can occur before this function returns, the <I>Parm2</I> member of the <B>CARD_EVENT_PARMS</B> structure contains the registering client’s CARD_CLIENT_HANDLE. For the same reason, <I>Parm1</I> also contains the registering client’s handle on the CE_REGISTRATION_COMPLETE callback.</P>
+
+<P>When the driver is unloaded, it must call <B>CardDeregisterClient</B> to free any PC Card resources allocated to the driver.</P>
+
+<H4>Driver name</H4>
+
+<P>PCMCIA</P>
+
+<H4>Requirements </H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="struct_1_8.htm"><B>CARD_CLIENT_HANDLE</B></A>, <A HREF="struct_1_11.htm"><B>CARD_EVENT</B></A>, <A HREF="struct_1_13.htm"><B>CARD_EVENT_PARMS</B></A>, <A HREF="struct_1_15.htm"><B>CARD_REGISTER_PARMS</B></A>, <A HREF="funct_1_21.htm"><B>CardDeregisterClient</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,80 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IMediaControl::GetState</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IMediaControl::GetState"/>
+<MSHelp:RLTitle Title="IMediaControl::GetState"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_imediacontrol__getstate"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IMediaControl::GetState</H1>
+
+<P>Retrieves the state of the filter graph. </P>
+
+<PRE class="syntax"><B>HRESULT GetState(</B>
+<B>LONG </B><I>msTimeout</I><B>,</B>
+<B>OAFilterState*</B> <I>pfs</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>msTimeout</I> </DT>
+
+<DD>[in] Duration of the time-out, in milliseconds. </dd>
+
+<DT><I>pfs</I> </DT>
+
+<DD>[out] Holds the returned state of the filter graph. </dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Returns <A HREF="_wcesdk_error_and_success_codes.htm">VFW_S_STATE_INTERMEDIATE</A> if the state transition is not complete, or S_OK if it completed successfully. It can also return VFW_S_CANT_CUE if the state is paused, but the source filter does not push data during the paused state (only pushes during the run state). An example of this is a live video capture filter. </P>
+
+<H4>Remarks</H4>
+
+<P>Not all state transitions are synchronous. For example, even though the <A HREF="_wcesdk_imediacontrol__pause.htm"><B>IMediaControl::Pause</B></A> method returns immediately, the filter graph typically does not complete the transition into paused mode until data is ready at the renderer. This method will not return S_OK until the state transition has been completed. </P>
+
+<P>If you specify a nonzero time-out, the method waits up to that number of milliseconds for the filter graph to leave the intermediate state. If the time-out expires before the state transition is complete, the return code will be <A HREF="_wcesdk_error_and_success_codes.htm">VFW_S_STATE_INTERMEDIATE</A>, and the returned state will be the state into which the graph is transitioning (either the <B>State_Stopped</B>, <B>State_Paused</B>, or <B>State_Running</B> members of the <A HREF="_wcesdk_dtypes__filter_state.htm"><B>FILTER_STATE</B></A> structure). </P>
+
+<P>This method will return an error if there is a call on another thread to change the state while this method is blocked. </P>
+
+<P>Avoid specifying a time-out of INFINITE. Threads cannot process messages while waiting in <B>GetState</B>. If you call <B>GetState</B> from the thread that processes Windows® messages, specify only small wait times on the call in order to remain responsive to user input. This is most important when streaming data from a source such as the Internet, because state transitions can take significantly more time to complete. </P>
+
+<P>If you want to pause a filter graph completely before stopping it, call <A HREF="_wcesdk_imediacontrol__pause.htm"><B>IMediaControl::Pause</B></A>, and then <A HREF="_wcesdk_imediacontrol__stopwhenready.htm"><B>IMediaControl::StopWhenReady</B></A> (instead of calling <B>GetState</B> with an INFINITE time-out, and then <A HREF="_wcesdk_imediacontrol__stop.htm"><B>IMediaControl::Stop</B></A>). </P>
+
+<P>Although <I>pfs</I> is declared as a pointer to an OAFilterState value in <B>IMediaControl::GetState</B>, DirectShow implements it as a pointer to a <A HREF="_wcesdk_dtypes__filter_state.htm"><B>FILTER_STATE</B></A> value in <A HREF="_wcesdk_cbasefilter__getstate.htm"><B>CBaseFilter::GetState</B></A> and its derivatives. Since both OAFilterState and <B>FILTER_STATE</B> resolve to <B>LONG</B> values, this does not cause an error. </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

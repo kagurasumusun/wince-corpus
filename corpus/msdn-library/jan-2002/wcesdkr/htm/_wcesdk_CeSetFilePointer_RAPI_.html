@@ -1,0 +1,184 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeSetFilePointer (RAPI)</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CeSetFilePointer (RAPI)"/>
+<MSHelp:RLTitle Title="CeSetFilePointer (RAPI)"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cesetfilepointer_rapi_"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_Working_with_Processes_and_Threads" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>CeSetFilePointer (RAPI)</H1>
+
+<P>This function moves the file pointer of an open file. <B>CeSetFilePointer</B> is a remote application interface (RAPI), which enables an application running on a desktop computer to make function calls on a Windows CE&#0150;based device.</P>
+
+<PRE class="syntax"><B>DWORD</B> <B>CeSetFilePointer( </B>
+<B>HANDLE</B> <I>hFile</I><B>, </B>
+<B>LONG</B> <I>lDistanceToMove</I><B>, </B>
+<B>PLONG</B> <I>lpDistanceToMoveHigh</I><B>, </B>
+<B>DWORD</B> <I>dwMoveMethod</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hFile</I></DT>
+
+<DD>[in] Handle to the file whose file pointer is to be moved. The file handle must have been created with GENERIC_READ or GENERIC_WRITE access to the file. </dd>
+
+<DT><I>lDistanceToMove</I></DT>
+
+<DD>Low-order 32 bits of a signed value that specifies the number of bytes to move the file pointer. If <I>lpDistanceToMoveHigh</I> is not NULL, <I>lpDistanceToMoveHigh</I> and <I>lDistanceToMove</I> form a single 64-bit signed value that specifies the distance to move. If <I>lpDistanceToMoveHigh</I> is NULL, <I>lDistanceToMove</I> is a 32-bit signed value. A positive value for <I>lDistanceToMove </I>moves the file pointer forward in the file, and a negative value moves the file pointer backward.</dd>
+
+<DT><I>lpDistanceToMoveHigh</I></DT>
+
+<DD>[in] Pointer to the high-order 32 bits of the signed 64-bit distance to move. If you do not need the high-order 32 bits, this pointer can be NULL. When non-NULL, this parameter also receives the high-order <B>DWORD</B> of the new value of the file pointer. For more information, see the Remarks section later in this topic.</dd>
+
+<DT><I>dwMoveMethod</I></DT>
+
+<DD>[in] Specifies the starting point for the file pointer move. This parameter can be one of the following values.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=29%>Value</TH>
+<TH width=71%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>FILE_BEGIN</TD>
+<TD width=71%>The starting point is zero or the beginning of the file.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>FILE_CURRENT</TD>
+<TD width=71%>The starting point is the current value of the file pointer.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%>FILE_END</TD>
+<TD width=71%>The starting point is the current end-of-file position.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>The low-order <B>DWORD</B> of the new file pointer indicates success and that <I>lpDistanceToMoveHigh</I> is NULL. If <I>lpDistanceToMoveHigh</I> is not NULL, the function returns the low order <B>DWORD</B> of the new file pointer, and puts the high-order <B>DWORD</B> of the new file pointer into the <B>LONG</B> pointed to by that parameter. </P>
+
+<P>If the function fails and <I>lpDistanceToMoveHigh</I> is NULL, the return value is 0xFFFFFFFF. To get extended error information, call <A HREF="_wcesdk_cegetlasterror_rapi_.htm"><B>CeGetLastError</B></A>. </P>
+
+<P>If the function fails, and <I>lpDistanceToMoveHigh</I> is non-NULL, the return value is 0xFFFFFFFF. However, because 0xFFFFFFFF is a valid value for the low-order <B>DWORD</B> of the new file pointer, you must check <B>CeGetLastError</B> to determine whether an error occurred. If an error occurred, <B>CeGetLastError</B> returns a value other than NO_ERROR. For a code example that illustrates this point, see the Remarks section later in this topic.</P>
+
+<P>If the new file pointer would have been a negative value, the function fails, the file pointer is not moved, and the code returned by <B>CeGetLastError</B> is ERROR_NEGATIVE_SEEK.</P>
+
+<H4>Remarks</H4>
+
+<P>You cannot use the <B>CeSetFilePointer</B> function with a handle to a nonseeking such as communications device. </P>
+
+<P>You can use the <B>CeSetFilePointer</B> function to query the current file pointer position. To do this, specify a move method of FILE_CURRENT and a distance of zero. </P>
+
+<P>You should be careful when setting the file pointer in a multithreaded application. For example, an application whose threads share a file handle, update the file pointer, and read from the file must protect this sequence by using a critical section object or mutex object. For more information about these objects, see <A HREF="JavaScript:hhobj_1.Click()">Working with Processes and Threads</A>. </P>
+
+<P>It is not an error to set the file pointer to a position beyond the end of the file. The size of the file does not increase until you call the <A HREF="_wcesdk_cesetendoffile_rapi_.htm"><B>CeSetEndOfFile</B></A> or <A HREF="_wcesdk_cewritefile_rapi_.htm"><B>CeWriteFile</B></A> function. A write operation increases the size of the file to the file pointer position plus the size of the buffer written, leaving the intervening bytes uninitialized. </P>
+
+<P>The parameter <I>lpDistanceToMoveHigh</I> is used to manipulate huge files. If it is set to NULL, then <I>lDistanceToMove</I> has a maximum value of 2^31&#0150;2, or 2 gigabytes less two. This is because all file pointer values are signed values. Therefore if there is even a small chance that the file will grow to that size, you should treat the file as a huge file and work with 64-bit file pointers. </P>
+
+<P>If <I>lpDistanceToMoveHigh </I>is not NULL, then <I>lpDistanceToMoveHigh </I>and <I>lDistanceToMove </I>form a single 64-bit signed value. The <I>lDistanceToMove </I>parameter is treated as the low-order 32 bits of the value, and <I>lpDistanceToMoveHigh </I>as the upper 32 bits. Thus, <I>lpDistanceToMoveHigh </I>is a sign extension of <I>lDistanceToMove.</I></P>
+
+<P>To move the file pointer from 0 to 2 gigabytes, <I>lpDistanceToMoveHigh </I>can be either NULL or a sign extension of <I>lDistanceToMove.</I> To move the pointer more than 2 gigabytes, use <I>lpDistanceToMoveHigh </I>and <I>lDistanceToMove </I>as a single 64-bit quantity. For example, to move in the range from 2 gigabytes to 4 gigabytes, set the contents of <I>lpDistanceToMoveHigh </I>to zero, or to &#0150;1 for a negative sign extension of <I>lDistanceToMove.</I></P>
+
+<P>To work with 64-bit file pointers, you can declare a <B>LONG</B>, treat it as the upper half of the 64-bit file pointer, and pass its address in <I>lpDistanceToMoveHigh.</I> This means you have to treat two different variables as a logical unit, which is error-prone. The problems can be ameliorated by using the <B>LARGE_INTEGER</B> structure to create a 64-bit value and passing the two 32-bit values by means of the appropriate elements of the union.</P>
+
+<P>It is conceptually simpler and better design to use a function to hide the interface to <B>CeSetFilePointer</B>. To do so, use something like this:</P>
+
+<PRE class="code">__int64 myFileSeek (HANDLE hf, __int64 distance, DWORD MoveMethod)
+{
+ LARGE_INTEGER li;
+
+ li.QuadPart = distance;
+
+ li.LowPart = CeSetFilePointer (hf, li.LowPart, &amp;li.HighPart, MoveMethod);
+
+ if (li.LowPart == 0xFFFFFFFF &amp;&amp; CeGetLastError() != NO_ERROR)
+ {
+ li.QuadPart = &#0150;1;
+ }
+
+ return li.QuadPart;
+}</PRE>
+
+<P>You can use <B>CeSetFilePointer</B> to determine the length of a file. To do this, use FILE_END for <I>dwMoveMethod </I>and seek to location zero. The file offset returned is the length of the file. However, this practice can have unintended side effects, such as failure to save the current file pointer so that the program can return to that location. It is simpler and safer to use <A HREF="_wcesdk_cegetfilesize_rapi_.htm"><B>CeGetFileSize</B></A> instead.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>Rapi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_cegetfilesize_rapi_.htm"><B>CeGetFileSize</B></A>, <A HREF="_wcesdk_cegetlasterror_rapi_.htm"><B>CeGetLastError</B></A>, <A HREF="_wcesdk_cereadfile_rapi_.htm"><B>CeReadFile</B></A>, <A HREF="_wcesdk_cesetendoffile_rapi_.htm"><B>CeSetEndOfFile</B></A>, <A HREF="_wcesdk_cewritefile_rapi_.htm"><B>CeWriteFile</B></A>, <A HREF="_wcesdk_win32_setfilepointer.htm"><B>SetFilePointer</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

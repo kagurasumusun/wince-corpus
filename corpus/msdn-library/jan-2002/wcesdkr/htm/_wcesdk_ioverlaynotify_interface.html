@@ -1,0 +1,112 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IOverlayNotify Interface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IOverlayNotify Interface"/>
+<MSHelp:RLTitle Title="IOverlayNotify Interface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_ioverlaynotify_interface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>IOverlayNotify Interface</H1>
+
+<P>The <B>IOverlayNotify</B> interface provides an upstream filter, such as a decoder, with notifications of changes to the rendering window. This includes notifications of changes to the palette, color key, and window position, and visible region (clipping) changes. </P>
+
+<P>Most software video decoders let the video renderer draw the decompressed images they produce by passing the media samples to the <A HREF="_wcesdk_imeminputpin_interface.htm"><B>IMemInputPin</B></A> interface on the renderer's input pin. </P>
+
+<P>However, some video decoding filters (typically hardware decompression boards) handle the drawing of the images themselves, perhaps by using a VGA connector. These filters do not need to use <A HREF="_wcesdk_imeminputpin_interface.htm"><B>IMemInputPin</B></A>, but can instead use the <A HREF="_wcesdk_ioverlay_interface.htm"><B>IOverlay</B></A> interface provided by the renderer input pin. Through this interface, the decoder can be notified when the window position or size changes, or when the current system palette changes in order to install and change color keys and palettes. </P>
+
+<H4>When to Implement</H4>
+
+<P>To get notifications of when the window size or position changes, when the current system palette changes, or when a different color key is used, decoders that do their own drawing should implement an <A HREF="#_wcesdk_ioverlaynotify_interface"><B>IOverlayNotify</B></A> interface. A pointer to this interface can then be passed to the <A HREF="_wcesdk_ioverlay_interface.htm"><B>IOverlay</B></A> interface on the renderer's input pin, through the <A HREF="_wcesdk_ioverlay__advise.htm"><B>IOverlay::Advise</B></A> method, to set up an advise link (essentially a callback mechanism). After the advise link is established, the renderer calls the decoder's <B>IOverlayNotify</B> methods when the appropriate events occur. An advise link can be canceled by calling <A HREF="_wcesdk_ioverlay__unadvise.htm"><B>IOverlay::Unadvise</B></A>. </P>
+
+<H4>When to Use</H4>
+
+<P>The video renderer is the only filter that calls the methods on this interface. This is done automatically by the default video renderer. If you are writing a replacement video renderer, you will need to use the methods on this interface if your filter supports <A HREF="_wcesdk_ioverlay_interface.htm"><B>IOverlay</B></A> and this interface is passed to your filter in an <A HREF="_wcesdk_ioverlay__advise.htm"><B>IOverlay::Advise</B></A> call. </P>
+
+<H4>Methods in Vtable Order</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=50%>IUnknown methods</TH>
+<TH width=50%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__queryinterface.htm"><B>QueryInterface</B></A></TD>
+<TD width=50%>Returns pointers to supported interfaces. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__addref.htm"><B>AddRef</B></A></TD>
+<TD width=50%>Increments the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_iunknown__release.htm"><B>Release</B></A></TD>
+<TD width=50%>Decrements the reference count. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><B>IOverlayNotify methods</B></TD>
+<TD width=50%><B>Description</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlaynotify__onpalettechange.htm"><B>OnPaletteChange</B></A></TD>
+<TD width=50%>Provides notification that the palette of the window has changed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlaynotify__onclipchange.htm"><B>OnClipChange</B></A></TD>
+<TD width=50%>Provides notification that the visible region of the window has changed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlaynotify__oncolorkeychange.htm"><B>OnColorKeyChange</B></A></TD>
+<TD width=50%>Provides notification that the chroma key has changed. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=50%><A HREF="_wcesdk_ioverlaynotify__onpositionchange.htm"><B>OnPositionChange</B></A></TD>
+<TD width=50%>Provides notification that the position has changed. </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

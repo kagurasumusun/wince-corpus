@@ -1,0 +1,159 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IRecurrencePattern::GetOccurrence</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IRecurrencePattern::GetOccurrence"/>
+<MSHelp:RLTitle Title="IRecurrencePattern::GetOccurrence"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_irecurrencepattern_getoccurrence"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<OBJECT ID="obj_cook" CLASSID="clsid:59CC0C20-679B-11D2-88BD-0800361A1803" STYLE="display:none;"></OBJECT>
+
+
+<H1>IRecurrencePattern::GetOccurrence</H1>
+
+<P>This method is not supported in Windows CE Platform Builder 3.0.</P>
+
+<P>This method gets the specific instance of an appointment occurring on a specific date. Changes made to the appointment then apply only to it. If no exception to a recurring pattern exists, a change creates a new exception; otherwise it modifies an existing exception.</P>
+
+<PRE class="syntax"><B>HRESULT GetOccurrence(&nbsp;DATE</B> <I>date</I>, <B>IAppointmentItem * </B>polAppt <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>date</I></DT>
+
+<DD>[in] The local date and time of the appointment.</dd>
+
+<DT><I>polAppt</I></DT>
+
+<DD>[out] Pointer to the appointment retrieved by the method.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates success. If an error occurs, the appropriate <B>HRESULT</B> value is returned (for example, if there is no occurrence on the specified date).</P>
+
+<H4>Code Example <SPAN class=plat>[Visual Basic]</SPAN></H4>
+
+<P>The following Visual Basic® snippet changes one instance of a recurring appointment:</P>
+
+<PRE class="code">Sub CreateRecurringAppointment(polAppt As PocketOutlook.AppointmentItem)
+Dim polApp As PocketOutlook.Application
+Dim polAppt2 As PocketOutlook.AppointmentItem</PRE>
+
+<P class="normal"><B><CODE>Dim polRec As PocketOutlook.RecurrencePattern</CODE></B></P>
+
+<P class="normal"><B><CODE>Set polRec = polAppt.GetRecurrencePattern()</CODE></B></P>
+
+<P class="normal"></P>
+
+<PRE class="code">polAppt.Start = #4/5/1999 10:00 AM#
+
+‘ Set the recurrence
+Set pRec = pAppt.GetRecurrencePattern
+Set pAppt2 = pRec.GetOccurrence(#4/5/1999#)
+polAppt2.Start = #4/5/1999 11:00AM#
+
+‘ Save the appointment
+pAppt.Save
+End Sub</PRE>
+
+<H4>Code Example <SPAN class=plat>[C++]</SPAN></H4>
+
+<P>The following C++ code snippet changes one instance of a recurring appointment:</P>
+
+<PRE class="code">void ChangeRecurrence(IAppointment *polAppt)
+{
+IPOutlookApp *polApp;
+IRecurrencePattern *pRec;
+IAppointment *pAppt2;
+SYSTEMTIME st;
+DATE date;
+
+// Convert Monday, 4/5/9 at 10:00 am to a DATE
+memset(&amp;st, 0, sizeof(SYSTEMTIME));
+st.wMonth = 4;
+st.wDay = 5;
+st.wYear = 1999;
+polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);
+
+// Get the recurrence pattern
+pAppt-&gt;GetRecurrencePattern(&amp;pRec);
+pRec-&gt;GetRecurrence(date, &amp;pAppt2);
+
+// Change start time
+st.wHour = 11;
+pAppt2-&gt;get_Application(&amp;polApp);
+polApp-&gt;SystemTimeToVariantTime(&amp;st, &amp;date);
+pAppt2-&gt;put_Start(date);
+
+// Save the appointment
+pAppt2-&gt;Save();
+
+// Release objects
+polApp-&gt;Release();
+pRec-&gt;Release();
+pAppt2-&gt;Release();
+}</PRE>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.0 and later</TD>
+<TD width=18%>pimstore.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_irecurrencepattern_unknown.htm">IRecurrencePattern::Unknown</A>, <A HREF="_wcesdk_irecurrencepattern_propertylist.htm">IRecurrencePattern Property Methods</A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

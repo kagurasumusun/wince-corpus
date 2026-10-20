@@ -1,0 +1,145 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CoMarshalInterface</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CoMarshalInterface"/>
+<MSHelp:RLTitle Title="CoMarshalInterface"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_com_comarshalinterface"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CoMarshalInterface</H1>
+
+<P>This function writes into a stream the data required to initialize a proxy object in some client process. The COM library in the client process calls the <A HREF="_wcesdk_com_counmarshalinterface.htm"><B>CoUnmarshalInterface</B></A> function to extract the data and initialize the proxy. <B>CoMarshalInterface</B> can marshal only interfaces derived from <A HREF="_wcesdk_com_iunknown.htm"><B>IUnknown</B></A>. </P>
+
+<PRE class="syntax"><B>STDAPI CoMarshalInterface(
+IStream *</B><I>pStm</I><B>,
+REFIID </B><I>riid</I><B>,
+IUnknown *</B><I>pUnk</I><B>,
+DWORD </B><I>dwDestContext</I><B>,
+void *</B><I>pvDestContext</I><B>,
+DWORD </B><I>mshlflags</I><B> );</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pStm</I></DT>
+
+<DD>[in] Pointer to the stream to be used during marshaling.</dd>
+
+<DT><I>riid</I></DT>
+
+<DD>[in] Reference to the identifier of the interface to be marshaled. This interface must be derived from the <B>IUnknown</B> interface.</dd>
+
+<DT><I>pUnk</I></DT>
+
+<DD>[in] Pointer to the interface to be marshaled. This interface must be derived from the <B>IUnknown</B> interface.</dd>
+
+<DT><I>dwDestContext</I></DT>
+
+<DD>[in] Destination context where the specified interface is to be unmarshaled. Values for <I>dwDestContext</I> come from the enumeration <B>MSHCTX</B>. Currently, unmarshaling can occur in another apartment of the current process (MSHCTX_INPROC), in another process on the same computer as the current process (MSHCTX_LOCAL), or in a process on a different machine (MSHCTX_DIFFERENTMACHINE).</dd>
+
+<DT><I>pvDestContext</I></DT>
+
+<DD>[in] Reserved for future use; must be NULL. </dd>
+
+<DT><I>mshlflags</I></DT>
+
+<DD>[in] Flag specifying whether the data to be marshaled is to be transmitted back to the client process&#0151;the normal case&#0151;or written to a global table, where it can be retrieved by multiple clients. Values come from the <B>MSHLFLAGS</B> enumeration.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>This function supports the standard return values E_FAIL, E_OUTOFMEMORY, and E_UNEXPECTED, as well as the following:
+
+<DL>
+<DT>S_OK</DT>
+
+<DD>The interface pointer was marshaled successfully.</dd>
+
+<DT>CO_E_NOTINITIALIZED</DT>
+
+<DD>The <A HREF="_wcesdk_com_coinitialize.htm"><B>CoInitialize</B></A> function was not called on the current thread before this function was called.</dd>
+
+<DT><A HREF="_wcesdk_com_istream.htm"><B>IStream</B></A> errors</DT>
+
+<DD>This function can also return any of the stream-access error values returned by the <B>IStream</B> interface.</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CoMarshalInterface</B> function marshals the interface referred to by riid on the object whose <B>IUnknown</B> implementation is pointed to by <I>pUnk</I>. To do so, the <B>CoMarshalInterface</B> function performs the following tasks:
+
+<OL type="1">
+	<LI>Queries the object for a pointer to the <B>IMarshal</B> interface. If the object does not implement <B>IMarshal</B>, meaning that it relies on COM to provide marshaling support, <B>CoMarshalInterface</B> gets a pointer to COM's default implementation of <B>IMarshal</B>.</li>
+
+	<LI>Gets the CLSID of the object's proxy by calling <A HREF="_wcesdk_com_imarshal__getunmarshalclass.htm"><B>IMarshal::GetUnmarshalClass</B></A>, using whichever <B>IMarshal</B> interface pointer has been returned.</li>
+
+	<LI>Writes the CLSID of the proxy to the stream to be used for marshaling.</li>
+
+	<LI>Marshals the interface pointer by calling <B>IMarshal::MarshalInterface</B>.</li>
+</OL>
+
+<P>If you are implementing existing COM interfaces or defining your own interfaces using the Microsoft Interface Definition Language (MIDL), the MIDL-generated proxies and stubs call <B>CoMarshalInterface</B> for you. If you are writing your own proxies and stubs, your proxy code and stub code should each call <B>CoMarshalInterface</B> to correctly marshal interface pointers. Calling <B>IMarshal</B> directly from your proxy and stub code is not recommended.</P>
+
+<P>If you are writing your own implementation of <B>IMarshal</B>, and your proxy needs access to a private object, you can include an interface pointer to that object as part of the data you write to the stream. In such situations, if you want to use COM's default marshaling implementation when passing the interface pointer, you can call <B>CoMarshalInterface</B> on the object to do so.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>3.0 and later</TD>
+<TD width=19%>Objbase.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Ole232.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

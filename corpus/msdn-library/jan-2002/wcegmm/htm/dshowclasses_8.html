@@ -1,0 +1,87 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Media Control and Positioning Classes</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Media Control and Positioning Classes"/>
+<MSHelp:RLTitle Title="Media Control and Positioning Classes"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term=""/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_IMediaFilter_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_CBaseFilter_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_CMediaControl_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_IMediaControl_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_IMediaPosition_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_6 keywords="_wcesdk_CMediaPosition_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_7 keywords="_wcesdk_CPosPassThru_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_8 keywords="_wcesdk_CSourcePosition_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_9 keywords="_wcesdk_IMediaSeeking_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_10 keywords="_wcesdk_CRendererPosPassThru_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_11 keywords="_wcesdk_CSourceSeeking_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_12 keywords="_wcesdk_CBaseStreamControl_class" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_13 keywords="_wcesdk_IAMStreamControl_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H2><A NAME="_wcesdk_media_control_and_positioning_classes"></A><SUP></SUP>Media Control and Positioning Classes</H2>
+
+<P>Media control interfaces pass commands such as <B>Run</B>, <B>Stop</B>, or <B>Pause</B> from an application through the filter graph manager to the individual filters. From the filter's perspective, the only control interface necessary is <A HREF="JavaScript:hhobj_1.Click()"><B>IMediaFilter</B></A>, which exposes methods to accept and implement these commands. The <A HREF="JavaScript:hhobj_2.Click()"><B>CBaseFilter</B></A> class implements this interface. All other interfaces that expose media control methods are handled by the filter graph manager and are therefore already implemented. Although a <A HREF="JavaScript:hhobj_3.Click()"><B>CMediaControl</B></A> class exists and implements the <A HREF="JavaScript:hhobj_4.Click()"><B>IMediaControl</B></A> interface, it is not often used because the filter graph manager is responsible for this functionality. The following illustration shows the relationship between these classes and interfaces. </P>
+
+<P class="fig"><IMG SRC="basecl5.gif" ALT="" BORDER=0></P>
+
+<P>Media positioning interfaces start the media stream at a specified position, play the stream for a specified period of time, or change the rate of the media stream. The <A HREF="JavaScript:hhobj_5.Click()"><B>IMediaPosition</B></A> interface is the primary interface supporting this functionality. The <A HREF="JavaScript:hhobj_6.Click()"><B>CMediaPosition</B></A> class implements this interface and serves as a base class for two other classes: <A HREF="JavaScript:hhobj_7.Click()"><B>CPosPassThru</B></A> and <A HREF="JavaScript:hhobj_8.Click()"><B>CSourcePosition</B></A>. </P>
+
+<P>Typically, the filter graph manager calls the <B>IMediaPosition</B> interface on the renderer filters when it wants to position the media stream. The renderer acknowledges the sample times that it will be expected to display and then passes the media positioning data upstream, destined for a seekable filter, such as a source file filter, that can provide the properly positioned source stream. To pass that information upstream, output pins must be able to receive the positioning information. </P>
+
+<P>The <B>CPosPassThru</B> class implements the <B>IMediaPosition</B> interface and the <A HREF="JavaScript:hhobj_9.Click()"><B>IMediaSeeking</B></A> interface on the output pins of filters and, for the most part, does nothing but call the corresponding interface on the output pin of the next upstream filter, thereby passing through the positioning data. <B>IMediaSeeking</B> is different than <B>IMediaPosition</B> in that it allows the media stream to be seeked to units other than time, such as frames, samples, or indexed fields in an MPEG format. The <A HREF="JavaScript:hhobj_10.Click()"><B>CRendererPosPassThru</B></A> class, implemented on a video renderer, sets the start and end reference times on individual samples, so that samples can be queried at any time for this information. This is helpful when dealing with seeking using <B>IMediaSeeking</B>, which seeks to <I>media time</I>, and does not keep track of the sample's reference time. </P>
+
+<P>The reason for serially informing every filter in the graph of the new position is to allow filters that might be concerned with media positioning to be prepared for the new position. Certain stream splitters, for example, might be splitting off streams with media positions relative to the main media stream. This is why the filter graph manager does not simply call the source filter's <B>IMediaPosition</B> or <B>IMediaSeeking</B> interface directly. </P>
+
+<P><B>CSourcePosition</B> is the class that helps the source filter implement its <B>IMediaPosition</B> interface. </P>
+
+<P>The <A HREF="JavaScript:hhobj_11.Click()"><B>CSourceSeeking</B></A> class helps the source filter implement its <B>IMediaSeeking</B> interface. This class enables a source filter to handle calls that change the start and stop positions in the media stream, and the playback rate. </P>
+
+<P>The <A HREF="JavaScript:hhobj_12.Click()"><B>CBaseStreamControl</B></A> class helps the source filter implement its <A HREF="JavaScript:hhobj_13.Click()"><B>IAMStreamControl</B></A> interface. This class is used primarily by capture filters. The following illustration shows the relationship between <B>CBaseStreamControl</B> and the interfaces from which it inherits. </P>
+
+<P class="fig"><IMG SRC="basecl7.gif" ALT="" BORDER=0></P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

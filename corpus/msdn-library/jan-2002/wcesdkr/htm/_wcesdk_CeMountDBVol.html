@@ -1,0 +1,177 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CeMountDBVol</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CeMountDBVol"/>
+<MSHelp:RLTitle Title="CeMountDBVol"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_cemountdbvol"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CeMountDBVol</H1>
+
+<P>This function issues a mount request for a database volume that contains both data and an integrity log. The function fills a buffer with a <B>CEGUID</B> that is the globally unique identifier<B> </B>of a mounted database. </P>
+
+<P>A remote application interface (RAPI) version of this function exists, and it is also called <A HREF="_wcesdk_cemountdbvol_rapi_.htm"><B>CeMountDBVol</B></A>. </P>
+
+<PRE class="syntax"><B>BOOL CeMountDBVol( </B>
+<B>PCEGUID </B><I>pceguid, </I>
+<B>LPWSTR </B><I>lpszDBVol,</I>
+<B>DWORD</B><I> dwFlags</I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pceguid</I></DT>
+
+<DD> [in/out] Pointer to a buffer that is filled in with the <B>CEGUID</B> of the globally unique identifier of a mounted database.</dd>
+
+<DT><I>lpszDBVol</I></DT>
+
+<DD>[in] Pointer to the null-terminated string that contains the file name of the database volume to be mounted. The path is limited to MAX_PATH characters and includes the NULL character.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>[in] Specifies how the database volume is opened. It is one of the following flags:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CREATE_NEW</TD>
+<TD width=67%>Creates a new database volume. The function fails if the specified database volume already exists.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>CREATE_ALWAYS</TD>
+<TD width=67%>Creates a new database volume. The function overwrites the database volume if it exists.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OPEN_EXISTING</TD>
+<TD width=67%>Opens the database volume. The function fails if the database volume does not exist.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>OPEN_ALWAYS</TD>
+<TD width=67%>Opens the database volume, if it exists. If the database volume does not exist, the function creates the database volume as if CREATE_NEW was specified.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>TRUNCATE_EXISTING</TD>
+<TD width=67%>Opens the database volume. Once opened, the database volume is truncated so that its size is zero bytes. The function fails if the database volume does not exist.</TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>TRUE indicates success. FALSE indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. Possible values for <B>GetLastError</B> include the following:
+
+<DL>
+<DT>ERROR_DISK_FULL </DT>
+
+<DD>The mounted volume does not have space to create the new database. </dd>
+
+<DT>ERROR_INVALID_PARAMETER </DT>
+
+<DD>A parameter was invalid. </dd>
+
+<DT>ERROR_NOT_ENOUGH_MEMORY</DT>
+
+<DD>There was not enough memory available to create volume.
+
+<P>If the database volume already exists before the function call and <I>dwFlags</I> is CREATE_ALWAYS or OPEN_ALWAYS, <B>GetLastError</B> returns ERROR_ALREADY_EXISTS, even though the function has succeeded.
+</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The <B>CeMountDBVol</B> function creates a database volume that contains both data and an integrity log. The function can accept any path including Uniform Naming Convention (UNC) names for files on a LAN. </P>
+
+<P>A single database volume can be mounted more than once by a different application. Each time the volume is mounted, a reference count is incremented. A mounted database volume does not unmount until all applications that mounted the volume call <A HREF="_wcesdk_ceunmountdbvol.htm"><B>CeUnmountDBVol</B></A>. <B>CeUnmountDBVol</B> must be called to free up system resources.</P>
+
+<P>All data written to a mounted database volume is cached until one of the following occurs:
+
+<UL type="disc">
+	<LI>It is explicitly flushed. See <A HREF="_wcesdk_ceflushdbvol.htm"><B>CeFlushDBVol</B></A>.</li>
+
+	<LI>It is flushed by the OS because of a low memory condition.</li>
+
+	<LI>It is unmounted.</li>
+</UL>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.10 and later</TD>
+<TD width=18%>Windbase.h</TD>
+<TD width=15%>Winbase.h</TD>
+<TD width=20%>Fsdbase.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_ceflushdbvol.htm"><B>CeFlushDBVol</B></A>, <A HREF="_wcesdk_cemountdbvol_rapi_.htm"><B>CeMountDBVol</B></A>, <A HREF="_wcesdk_ceunmountdbvol.htm"><B>CeUnmountDBVol</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_check_invalidguid.htm">CHECK_INVALIDGUID</A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

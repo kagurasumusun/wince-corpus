@@ -1,0 +1,175 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CERT_CHAIN_ENGINE_CONFIG</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CERT_CHAIN_ENGINE_CONFIG"/>
+<MSHelp:RLTitle Title="CERT_CHAIN_ENGINE_CONFIG"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_crypto2_cert_chain_engine_config"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CERT_CHAIN_ENGINE_CONFIG</H1>
+
+<P>This structure sets parameters for building a non-default certificate chain engine. The engine determines the ways that certificate chains are built.</P>
+
+<PRE class="syntax"><B>typedef struct _CERT_CHAIN_ENGINE_CONFIG {
+DWORD</B> <I>cbSize</I>;
+<B>HCERTSTORE</B> <I>hRestrictedRoot</I>;
+<B>HCERTSTORE</B> <I>hRestrictedTrust</I>;
+<B>HCERTSTORE</B> <I>hRestrictedOther</I>;
+<B>DWORD</B> <I>cAdditionalStore</I>;
+<B>HCERTSTORE *</B><I>rghAdditionalStore</I>;
+<B>DWORD</B> <I>dwFlags</I>;
+<B>DWORD</B> <I>dwUrlRetrievalTimeout</I>;
+<B>DWORD</B> <I>MaximumCachedCertificates</I>;
+<B>DWORD</B> <I>CycleDetectionModulus</I>;
+<B>} CERT_CHAIN_ENGINE_CONFIG,  *PCERT_CHAIN_ENGINE_CONFIG;</B></PRE>
+
+<H4>Members</H4>
+
+<DL>
+<DT><B>cbSize</B> </DT>
+
+<DD>Size of this structure in bytes. </dd>
+
+<DT><B>hRestrictedRoot</B> </DT>
+
+<DD>This configuration parameter can be used to restrict the root store. If used, it can be the handle of any <B>HCERTSTORE</B> containing only a proper subset of the certificates in the root store. </dd>
+
+<DT><B>hRestrictedTrust</B> </DT>
+
+<DD>Store handle. If used, restricts the stores searched to find certificate trust lists (CTLs). </dd>
+
+<DT><B>hRestrictedOther</B> </DT>
+
+<DD>Store handle. If used, restricts the stores searched for certificates. </dd>
+
+<DT><B>cAdditionalStore</B> </DT>
+
+<DD>Count of additional stores to be searched for certificates needed to build chains. </dd>
+
+<DT><B>rghAdditionalStore</B> </DT>
+
+<DD>Pointer to an array of store handles for any additional stores to be searched in building chains. </dd>
+
+<DT><B>dwFlags</B> </DT>
+
+<DD>The following table shows the flags defined for <B>dwFlags</B>.
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=47%>Value</TH>
+<TH width=53%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_CHAIN_CACHE_END_CERT</TD>
+<TD width=53%>Information in the end certificate is cached. By default, information in all certificates except the end certificate is cached as a chain is built. Setting this flag extends the caching to the end certificate. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_CHAIN_CACHE_ONLY_URL_RETRIEVAL</TD>
+<TD width=53%>Uses only cached URLs in building a certificate chain. The Internet and intranet are not searched for URL-based objects. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=47%>CERT_CHAIN_USE_LOCAL_MACHINE_STORE</TD>
+<TD width=53%>Builds the chain using the LocalMachine registry location as opposed to the CurrentUser location. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+
+<DT><B>dwUrlRetrievalTimeout</B><I> </I></DT>
+
+<DD>Number of microseconds before a time-out for network-based URL object retrievals. Can be set to zero to use the default limit. </dd>
+
+<DT><B>MaximumCachedCertificates</B> </DT>
+
+<DD>Limit on the number of certificates that can be cached as a chain is built. Can be set to zero to use the default limit. </dd>
+
+<DT><B>CycleDetectionModulus</B> </DT>
+
+<DD>Number of certificates added to the chain before a check is made to determine if there is a cycle of certificates in the chain. A cycle may be defined as having the same certificate in two different places in a chain.
+
+<P>The lower the number, the more frequently checks will be made. Extra checking for cycles of certificates will slow the process considerably. This parameter can be set to zero to use the default limit.
+</dd>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>The chain-building engine uses four certificate stores in building chains. These are hRoot, hWorld, hTrust, and hOther. The handles of these stores are established using information in this structure when a chain engine is created.</P>
+
+<P>hRoot is the store handle from <B>hRestrictedRoot</B> or, if <B>hRestrictedRoot</B> is NULL, the handle for System Store "Root."</P>
+
+<P>hWorld is a collection certificate store including sibling stores hRoot, "CA," "My," "Trust," and any additional stores whose handles are in the array pointed to by <B>rghAdditionalStore</B>. </P>
+
+<P>hTrust is the store handle from <B>hRestrictedTrust</B> or, if <B>hRestrictedTrust</B> is NULL, the store handle is hWorld. </P>
+
+<P>hOther is <B>hRestrictedOther</B> plus <B>hRoot</B> or, if <B>hRestrictedTrust</B> is non-NULL, the hWorld collection store plus the store handle from <B>hRestrictedTrust</B>.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>3.0 or later</TD>
+<TD width=18%>Wincrypt.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

@@ -1,0 +1,69 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Destroying a Window</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Destroying a Window"/>
+<MSHelp:RLTitle Title="Destroying a Window"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_destroying_a_window"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Destroying a Window</H1>
+
+<P>Destroying a window automatically destroys the descendant windows of that window. The <B>DestroyWindow</B> function first sends a WM_DESTROY message to the initial window that is being destroyed and then sends one to its descendant windows.</P>
+
+<P><B>To destroy a window</B>
+
+<UL type=disc>
+	<LI>Call <B>DestroyWindow</B> to destroy the window.</LI>
+</UL>
+
+<P>Typically, an application calls <B>DestroyWindow</B> inside the <B>WinProc</B> function for the window when handling both the WM_DESTORY and WM_CLOSE window messages. You should handle the WM_CLOSE window message to close your application so that your application will shut down in a standard way if requested to by some other application.</P>
+
+<P>The following code example shows how to handle the WM_CLOSE and WM_DESTORY messages within the <B>WinProc</B> function.</P>
+
+<PRE>//Handle the WM_CLOSE message so your application will
+//shut down gracefully when requested.
+    case WM_CLOSE:
+      //Save any application-specific information
+      DestroyWindow (hWnd);
+      return 0;
+
+    case WM_DESTROY:
+      PostQuitMessage (0);
+      return 0;
+</PRE>
+
+<P>When a thread or process terminates, Windows CE removes all of the windows that are owned by that thread or process. Windows that are removed when a thread or process terminates do not always receive WM_DESTROY messages. For this reason, it is recommended that you manually destroy windows. When a window is destroyed, the system hides the window, sends a WM_DESTROY message to the window procedure of the window being destroyed, and removes any associated internal data. The window handle becomes invalid and can no longer be used by the application.</P>
+
+<P>You should destroy any window that no longer is needed. Before destroying a window, save or remove any data that is associated with the window, and release system resources that are allocated to the window.</P>
+
+<P>Destroying a window does not affect the window class from which the window is created. You still can create new windows by using the class, and any existing windows of that class continue to operate.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

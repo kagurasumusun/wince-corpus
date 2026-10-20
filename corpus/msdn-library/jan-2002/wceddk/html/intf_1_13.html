@@ -1,0 +1,109 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>GPE::BltPrepare</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="GPE::BltPrepare"/>
+<MSHelp:RLTitle Title="GPE::BltPrepare"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_gpe_bltprepare"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>GPE::BltPrepare</H1>
+
+<P>This method, which is called prior to a sequence of clipped blit operations, identifies the appropriate functions needed to perform individual blits. </P>
+
+<PRE class="syntax"><B>SCODE GPE::BltPrepare(
+GPEBltParms</B> <B>*</B><I>pBltParms</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pBltParms</I></DT>
+
+<DD>Pointer to a <B>GPEBltParms</B> structure containing parameters for the blit operation.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>S_OK indicates success.</P>
+
+<H4>Remarks</H4>
+
+<P>The following code example shows the simplest acceptable implementation for <B>GPE::BltPrepare</B>. </P>
+
+<PRE class="code">pBltParms-&gt;pBlt = EmulatedBlt;
+return S_OK;
+</PRE>
+
+<P>This action causes the emulated blit function provided with GPE to be used for blit operations.</P>
+
+<P>For improved performance, the <B>BltPrepare</B> method can examine the characteristics of the blit and the associated surfaces defined in <B>GPEBltParms</B> to determine whether an accelerated form of the blit is used. The following code example shows how to determine the operations that are likely to be implemented in hardware.</P>
+
+<PRE class="code">if( pBltParms-&gt;pDst-&gt;InVideoMemory() &amp;&amp; pBltParms-&gt;rop4 == 0x0000 )
+&nbsp;&nbsp;// This is a fill of BLACKNESS in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory() &amp;&amp; pBltParms-&gt;rop4 == 0xFFFF )
+&nbsp;&nbsp;// This is a fill of WHITENESS in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;rop4 == 0xF0F0
+&amp;&amp; pBltParms-&gt;solidColor != 0xFFFFFFFF )
+&nbsp;&nbsp;// This is a fill of a solid color in video memory.
+if( pBltParms-&gt;pDst-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;pSrc-&gt;InVideoMemory()
+&amp;&amp; pBltParms-&gt;rop4 == 0xCCCC
+&amp;&amp; !pBltParms-&gt;pLookup
+&amp;&amp; !pBltParms-&gt;pConvert )
+&nbsp;&nbsp;// This is a source copy (SRCCOPY) between two surfaces, both in
+&nbsp;&nbsp;// video memory, with no color translation.
+</PRE>
+
+<P>To accelerate these types of blit, <B>BltPrepare</B> places the address of the accelerated function in the <I>pBlt</I> member of the <B>GPEBltParms</B> structure, instead of the pointer to the <B>EmulatedBlt</B> function. For operations such as solid color fills, the driver can prepare the hardware. For example, the driver can place a solid color into the appropriate register of the hardware. This eliminates the need to repeat the same action in every call to the accelerated blit handler.</P>
+
+<H4>Requirements</H4>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>1.0 and later</TD>
+<TD width=19%>&nbsp;</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

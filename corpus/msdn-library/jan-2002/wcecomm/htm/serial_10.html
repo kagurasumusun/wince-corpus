@@ -1,0 +1,103 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Configuring Time-Outs</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Configuring Time-Outs"/>
+<MSHelp:RLTitle Title="Configuring Time-Outs"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_configuring_time_outs"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_win32_COMMTIMEOUTS_str" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_win32_GetCommTimeouts" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_win32_SetCommTimeouts" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>Configuring Time-Outs</H1>
+
+<P>An application must always set communication time-outs using the <A HREF="JavaScript:hhobj_1.Click()"><B>COMMTIMEOUTS</B></A> structure each time it opens a communication port. If this structure is not configured, the port uses default time-outs supplied by the driver, or time-outs from a previous communication application. By assuming specific time-out settings when the settings are actually different, an application can have read/write operations that never complete or complete too often.</P>
+
+<P>When read/write operations time out, the operations complete with no error values returned to the <B>ReadFile</B> and <B>WriteFile</B> functions. To determine if an operation has timed out, verify that the number of bytes actually transferred is fewer than the number of bytes requested. For example, if the <B>ReadFile</B> function returns TRUE, but fewer bytes were read than requested, the operation has timed out.</P>
+
+<P><B>To configure time-outs for a serial port</B>
+
+<OL type="1">
+	<LI>Initialize the <B>COMMITEMEOUTS</B> structure either by calling the <A HREF="JavaScript:hhobj_2.Click()"><B>GetCommTimeouts</B></A> function or by setting the members manually.</li>
+
+	<LI>Specify the maximum number of milliseconds that can elapse between two characters without a time-out occurring with the <I>ReadIntervalTimeout</I> member.</li>
+
+	<LI>Specify the read time-out multiplier with the <I>ReadTotalTimeoutMultiplier</I> member. For each read operation, this number is multiplied by the number of bytes that the read operation expects to receive.</li>
+
+	<LI>Specify the read time-out constant with the <I>ReadTotalTimeoutConstant</I> member. This member is the number of milliseconds added to the result of multiplying the total number of bytes to read by <I>ReadTotalTimeoutMultiplier</I>. The result is the number of milliseconds that must elapse before a time-out for the read operation occurs.</li>
+
+	<LI>Specify the write time-out multiplier with the <I>WriteTotalTimeoutMultiplier</I> member. For each write operation, this number is multiplied by the number of bytes that the write operation expects to receive.</li>
+
+	<LI>Specify the write time-out constant with the <I>WriteTotalTimeoutConstant</I> member. This member is the number of milliseconds added to the result of multiplying the total number of bytes to write by <I>WriteTotalTimeoutMultiplier</I>. The result is the number of milliseconds that must elapse before a time-out for the write operation occurs.</li>
+
+	<LI>Call the <A HREF="JavaScript:hhobj_3.Click()"><B>SetCommTimeouts</B></A> function to activate port time-out settings.
+<P class=atl><b class="le">Note&nbsp;&nbsp;&nbsp;</b>Since there are two timeouts, interval timeout and (total timeout constant + total timeout multiplier * number of bytes), an actual timeout is whichever timeout occurs first.
+</li>
+</OL>
+
+<P>To assist with multitasking, it is common to configure <B>COMMTIMEOUT</B> so that <B>ReadFile</B> immediately returns with the characters to be read. To do this, set <I>ReadIntervalTimeout</I> to MAXWORD and set both <I>ReadTotalTimeoutMultiplier</I> and <I>ReadTotalTimeoutConstant</I> to zero.</P>
+
+<P>The following code example shows how to configure time-outs for a serial port.</P>
+
+<PRE class="code">// Retrieve the time-out parameters for all read and write operations
+// on the port.
+COMMTIMEOUTS CommTimeouts;
+GetCommTimeouts (hPort, &amp;CommTimeouts);
+
+// Change the COMMTIMEOUTS structure settings.
+CommTimeouts.ReadIntervalTimeout = MAXDWORD;
+CommTimeouts.ReadTotalTimeoutMultiplier = 0;
+CommTimeouts.ReadTotalTimeoutConstant = 0;
+CommTimeouts.WriteTotalTimeoutMultiplier = 10;
+CommTimeouts.WriteTotalTimeoutConstant = 1000;
+
+// Set the time-out parameters for all read and write operations
+// on the port.
+if (!SetCommTimeouts (hPort, &amp;CommTimeouts))
+{
+  // Could not set the time-out parameters.
+  MessageBox (hMainWnd, TEXT("Unable to set the time-out parameters"),
+              TEXT("Error"), MB_OK);
+  dwError = GetLastError ();
+  return FALSE;
+}</PRE>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

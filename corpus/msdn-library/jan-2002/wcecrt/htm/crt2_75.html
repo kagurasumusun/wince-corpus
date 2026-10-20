@@ -1,0 +1,173 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>malloc</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="malloc"/>
+<MSHelp:RLTitle Title="malloc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcecrt_malloc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>malloc</H1>
+
+<P>Allocates memory blocks.</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Routine</TH>
+<TH width=73%>Required Header</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%><B>malloc</B></TD>
+<TD width=73%>&lt;stdlib.h&gt; and &lt;malloc.h&gt;</TD>
+</TR>
+</TABLE><BR>
+
+<PRE class="syntax"><B>void *malloc( size_t</B> <I>size</I> <B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>size</I></DT>
+
+<DD>Bytes to allocate</dd>
+</DL>
+
+<H4>Libraries</H4>
+
+<P>All versions of the C run-time libraries.</P>
+
+<H4>Return Values</H4>
+
+<P><B>malloc</B> returns a void pointer to the allocated space, or <B>NULL</B> if there is insufficient memory available. To return a pointer to a type other than <B>void</B>, use a type cast on the return value. The storage space pointed to by the return value is guaranteed to be suitably aligned for storage of any type of object. If size is 0, <B>malloc</B> allocates a zero-length item in the heap and returns a valid pointer to that item. Always check the return from <B>malloc</B>, even if the amount of memory requested is small.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>malloc</B> function allocates a memory block of at least size bytes. The block may be larger than <I>size</I> bytes because of space required for alignment and maintenance information.</P>
+
+<P>The startup code uses <B>malloc</B> to allocate storage for the <B>_environ</B>, <B>envp</B>, and <B>argv</B> variables. The following functions and their wide-character counterparts also call <B>malloc</B>:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=24%><B>fgetc</B></TD>
+<TD width=17%><B>fscanf</B></TD>
+<TD width=19%><B>_popen</B></TD>
+<TD width=40%><B>ungetc</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>fgets</B></TD>
+<TD width=17%><B>fseek</B></TD>
+<TD width=19%><B>printf</B></TD>
+<TD width=40%><B>vfprintf</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>fprintf</B></TD>
+<TD width=17%><B>fsetpos</B></TD>
+<TD width=19%><B>putchar</B></TD>
+<TD width=40%><B>vprintf</B></TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>fputc</B></TD>
+<TD width=17%><B>fwrite</B></TD>
+<TD width=19%><B>puts</B></TD>
+<TD width=40%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>fputs</B></TD>
+<TD width=17%><B>getchar</B></TD>
+<TD width=19%><B>_putw</B></TD>
+<TD width=40%>&nbsp;</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=24%><B>fread</B></TD>
+<TD width=17%><B>gets</B></TD>
+<TD width=19%><B>scanf</B></TD>
+<TD width=40%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P>The C++ <B>_set_new_mode</B> function sets the new handler mode for <B>malloc</B>. The new handler mode indicates whether, on failure, <B>malloc</B> is to call the new handler routine as set by <B>_set_new_handler</B>. By default, <B>malloc</B> does not call the new handler routine on failure to allocate memory. You can override this default behavior so that, when <B>malloc</B> fails to allocate memory, <B>malloc</B> calls the new handler routine in the same way that the <B>new</B> operator does when it fails for the same reason. To override the default, call </P>
+
+<PRE class="code">_set_new_mode(1)
+</PRE>
+
+<P>early in your program, or link with Newmode.obj.</P>
+
+<P>When the application is linked with a debug version of the C run-time libraries, <B>malloc</B> resolves to <B>_malloc_dbg</B>. For more information about how the heap is managed during the debugging process, see Using C Run-Time Library Debugging Support.</P>
+
+<H4>Example</H4>
+
+<PRE class="code">/* MALLOC.C: This program allocates memory with
+ * malloc, then frees the memory with free.
+ */
+
+#include &lt;stdlib.h&gt;         /* For _MAX_PATH definition */
+#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+
+void main( void )
+{
+   char *string;
+
+   /* Allocate space for a path name */
+   string = malloc( _MAX_PATH );
+
+   // In a C++ file, explicitly cast malloc's return.  For example,
+   // string = (char *)malloc( _MAX_PATH );
+
+   if( string == NULL )
+      printf( "Insufficient memory available\n" );
+   else
+   {
+      printf( "Memory space allocated for path name\n" );
+      free( string );
+      printf( "Memory freed\n" );
+   }
+}
+</PRE>
+
+<H4>Output</H4>
+
+<PRE class="code">Memory space allocated for path name
+Memory freed
+</PRE>
+
+<H4>See Also</H4>
+
+<P><A HREF="crt2_40.htm"><B>free</B></A>, <A HREF="crt2_99.htm"><B>realloc</B></A></P>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

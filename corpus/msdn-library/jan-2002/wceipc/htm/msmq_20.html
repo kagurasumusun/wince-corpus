@@ -1,0 +1,91 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Installing MSMQ Manually</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Installing MSMQ Manually"/>
+<MSHelp:RLTitle Title="Installing MSMQ Manually"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceipc_installing_msmq_manually"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Installing MSMQ Manually</H1>
+
+<P>Your application can configure all necessary MSMQ and NETREGD registry parameters by simply putting the necessary data in the registry. This can save you from including MSMQADM in the configuration. Look in the MSMQ Administration Guide for a description of all registry settings. Though some registry settings are optional, the following settings have to be set for MSMQ to run:</P>
+
+<P><B>To install MSMQ as a device driver</B>
+
+<UL type="disc">
+	<LI>Set the following registry keys:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\MSMQD]
+"Dll"="MSMQD.DLL"
+"Entry"="MSMQDInitialize"
+"Keep"=DWORD:1
+"Order"=DWORD:9</PRE>
+</li>
+</UL>
+
+<P><B>To install NETREG as a device driver</B>
+
+<UL type="disc">
+	<LI>Set the following registry keys:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\NETREGD]
+"Dll"="NETREGD.DLL"
+"Entry"="NETREGDInitialize"
+"Keep"=DWORD:1
+"Order"=DWORD:8</PRE>
+</li>
+</UL>
+
+<P><B>To provide minimal MSMQ configuration</B>
+
+<UL type="disc">
+	<LI>Set the following registry keys:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\MSMQ\SimpleClient]
+"BaseDir"="\TEMP\MSMQ" ; or wherever you want to keep MSMQ store
+"CEStartAtBoot"=DWORD:1 ; start MSMQ at boot time
+"DefaultQuota"=DWORD:300 ; limit on outgoing queues in kilobytes
+"PingPort"=DWORD:0x00000DC7 ; 3527 - don't change this!
+"Port"=DWORD:0x00000709 ; 1801 - don't change this!
+"QueueManagerGUID"=HEX:... ; 16 bytes of QM GUID. This number must be unique, use standard GUID generation algorithm to obtain it.
+"CETrackNetwork"="Yes" ; not really required but strongly recommended</PRE>
+</li>
+</UL>
+
+<P><B>To provide NETREG configuration</B>
+
+<UL type="disc">
+	<LI>Set the following registry keys:
+<PRE class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\NETREG]
+"EmulateNB"=DWORD:1
+"TrackNetwork"=DWORD:1
+"Cycle"=DWORD:1000</PRE>
+</li>
+</UL>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;Without MSMQADM.EXE you cannot start and stop MSMQ service dynamically. If, however, the CEStartAtBoot value of the MSMQ registry key is set to No, MSMQ will not start at the next reboot time.</P>
+
+<P>For more information about registry settings, see the MSMQ Administration Guide and a white paper called "Network fine-tuning of MSMQ" in the MSDN Library.</P>
+<DIV CLASS="footer">Built on Thursday, March 15, 2001</DIV>
+
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

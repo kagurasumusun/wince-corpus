@@ -1,0 +1,103 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Drivers\Builtin</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Drivers\Builtin"/>
+<MSHelp:RLTitle Title="Drivers\Builtin"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceddk_drivers_builtin"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>Drivers\Builtin</H1>
+
+<P>The<B> HKEY_LOCAL_MACHINE\Drivers\Builtin </B>key contains subkeys that list which drivers the Device Manager loads when the platform is turned on. Each subkey is named after the device driver and contains values described in the following table. Additional values can be stored for purposes specific to the device driver although drivers should never modify keys outside of the driver’s own subkey or keys that the driver did not create itself. </P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=15%>Value name</TH>
+<TH width=22%>Value type</TH>
+<TH width=63%>Description </TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Dll</B></TD>
+<TD width=22%><B>REG_SZ</B></TD>
+<TD width=63%>This required entry specifies the file name for a driver DLL that the Device Manager is to load.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Entry</B></TD>
+<TD width=22%><B>REG_SZ</B></TD>
+<TD width=63%>This value, if it exists, names an entry point to the DLL. The Device Manager loads the DLL and calls the specified entry point, with the driver’s registry path as a parameter. When a driver is invoked in this manner, the driver is responsible for calling the <B>RegisterDevice</B> function on its own, and is not tracked by the Device Manager in the <B>Drivers\Active</B> key.
+<P>The function named in this value must follow the prototype specified for <B>PFN_DEV_ENTRY</B>: <B>DWORD</B> (*PFN_DEV_ENTRY)(LPTSTR), where the <I>LPSTR</I> parameter is the registry path of the device’s key.</P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Index</B></TD>
+<TD width=22%><B>REG_DWORD</B></TD>
+<TD width=63%>This optional value specifies the device index, a value from 0 through 9, that the Device Manager should assign to the driver. If this value is not present, the Device Manager assigns the lowest available index value as the device driver's device file name index.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Keep</B></TD>
+<TD width=22%><B>REG_SZ</B></TD>
+<TD width=63%>This value works in conjunction with the <B>Entry</B> value; if you have this value, you must also have the <B>Entry</B> value. If this value exists, the Device Manager does not call the <B>FreeLibrary</B> function after the entry point specified in the <B>Entry</B> value returns. This mechanism exists to provide a means to automatically load DLLs at boot time.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Order</B></TD>
+<TD width=22%><B>REG_DWORD</B></TD>
+<TD width=63%>This value specifies the load order for a driver. If two drivers have the same load order value, the drivers load in the order that they occur in the registry. This entry is useful when one driver must load after another. This value is required for non-PC Card devices and is ignored for loading PC Card drivers.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=15%><B>Prefix</B></TD>
+<TD width=22%><B>REG_SZ</B></TD>
+<TD width=63%>This required value specifies the driver’s device file name prefix. It is a three-character identifier, such as COM. </TD>
+</TR>
+</TABLE><BR>
+
+<P>The following example shows the contents under the <B>Builtin</B> key for the standard serial port driver. </P>
+
+<PRE class="code">HKEY_LOCAL_MACHINE
+    [Drivers]
+        [BuiltIn]
+            [Serial]
+                SZ: Dll = Serial.DLL
+                DWORD: Order = 0x00000000 (0)
+                SZ: Prefix = COM
+                hex: DevConfig = 10 00 00 00 02 00 00 00 10 01 00 00 00 4b 00
+                DWORD: DeviceArrayIndex = 0x00000000 (0)
+                DWORD: DeviceType = 0x00000000 (0)
+                SZ: FriendlyName = Serial Cable on COM1:
+                SZ: Tsp = Unimodem.dll
+</PRE>
+<DIV CLASS="footer">Built on Wednesday, October 04, 2000</DIV>
+
+<p>
+&nbsp;
+</p>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

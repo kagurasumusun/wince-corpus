@@ -1,0 +1,95 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CView::OnPreparePrinting</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CView::OnPreparePrinting"/>
+<MSHelp:RLTitle Title="CView::OnPreparePrinting"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cview_onprepareprinting"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>CView::OnPreparePrinting</H1>
+
+<P>This method, in its default form, does nothing. You must override this method to enable printing and print preview.</P>
+
+<PRE class=syntax><B>virtual BOOL OnPreparePrinting(
+CPrintInfo* </B><I>pInfo</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pInfo</I></DT>
+
+<DD>Points to a <A HREF="cprtinfo.htm"><B>CPrintInfo</B></A> structure that describes the current print job.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>Nonzero to begin printing; 0 if the print job has been canceled.</P>
+
+<H4>Remarks</H4>
+
+<P>Call the <B>DoPreparePrinting</B> method, passing it the <I>pInfo</I> parameter, and then return its return value; <B>DoPreparePrinting</B> displays the <B>Print</B> dialog box and creates a printer device context. If you want to initialize the <B>Print</B> dialog box with values other than the defaults, assign values to the members of <I>pInfo</I>. For example, if you know the length of the document, pass the value to the <A HREF="cprtinfo_8.htm"><B>SetMaxPage</B></A> method of <I>pInfo</I> before calling <B>DoPreparePrinting</B>. This value is displayed in the To: box in the Range portion of the <B>Print</B> dialog box. </P>
+
+<P><B>DoPreparePrinting</B> does not display the <B>Print</B> dialog box for a preview job. If you want to bypass the <B>Print</B> dialog box for a print job, check that the <B>m_bPreview</B> member of <I>pInfo</I> is <B>FALSE</B> and then set it to <B>TRUE</B> before passing it to <B>DoPreparePrinting</B>; reset it to <B>FALSE</B> afterward.</P>
+
+<P>If you need to perform initializations that require access to the <B>CDC</B> object representing the printer device context (for example, if you need to know the page size before specifying the length of the document), override the <B>OnBeginPrinting</B> method. </P>
+
+<P>If you want to set the value of the <B>m_nNumPreviewPages</B> or <B>m_strPageDesc</B> members of the <I>pInfo</I> parameter, do so after calling <B>DoPreparePrinting</B>. The <B>DoPreparePrinting</B> method sets <B>m_nNumPreviewPages</B> to the value found in  .INI file of the application and sets <B>m_strPageDesc</B> to its default value. </P>
+
+<H4>Example</H4>
+
+<P>Override <B>OnPreparePrinting</B> and call <B>DoPreparePrinting</B> from the override so that the framework will display a <B>Print</B> dialog box and create a printer DC for you.</P>
+
+<PRE>BOOL CMyView::OnPreparePrinting(CPrintInfo *pInfo)
+{
+&nbsp;&nbsp;return CEditView::DoPreparePrinting(pInfo);
+}
+</PRE>
+
+<P>If you know how many pages the document contains, set the maximum page in <B>OnPreparePrinting</B> before calling <B>DoPreparePrinting</B>. The framework will display the maximum page number in the, to, box of the Print dialog box.</P>
+
+<PRE>BOOL CMyView::OnPreparePrinting(CPrintInfo* pInfo)
+{
+&nbsp;&nbsp;//The document has 2 pages.
+&nbsp;&nbsp;pInfo-&gt;SetMaxPage(2);
+&nbsp;&nbsp;return CEditView::DoPreparePrinting(pInfo);
+}
+</PRE>
+
+<H4>Requirements </H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cwnd_97.htm"><B>CWnd::OnActivate</B></A>, <A HREF="cformvw.htm"><B>CFormView</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

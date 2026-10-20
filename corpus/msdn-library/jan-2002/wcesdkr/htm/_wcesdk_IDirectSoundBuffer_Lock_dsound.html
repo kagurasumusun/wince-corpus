@@ -1,0 +1,182 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>IDirectSoundBuffer::Lock</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="IDirectSoundBuffer::Lock"/>
+<MSHelp:RLTitle Title="IDirectSoundBuffer::Lock"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_idirectsoundbuffer_lock_dsound"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IDirectSoundBuffer::Lock</H1>
+
+<P>The <B>IDirectSoundBuffer::Lock</B> method obtains a valid write pointer to the sound buffer's audio data.</P>
+
+<PRE class="syntax"><B>HRESULT Lock(
+DWORD</B><I> dwWriteCursor</I><B>,
+DWORD</B><I> dwWriteBytes</I><B>,
+LPVOID</B><I> lplpvAudioPtr1</I><B>,
+LPDWORD</B><I> lpdwAudioBytes1</I><B>,
+LPVOID</B><I> lplpvAudioPtr2</I><B>,
+LPDWORD</B><I> lpdwAudioBytes2</I><B>,
+DWORD</B><I> dwFlags </I><B>);</B></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dwWriteCursor</I></DT>
+
+<DD>Offset, in bytes, from the start of the buffer to where the lock begins. This parameter is ignored if DSBLOCK_FROMWRITECURSOR is specified in the <I>dwFlags</I> parameter.</dd>
+
+<DT><I>dwWriteBytes</I></DT>
+
+<DD>Size, in bytes, of the portion of the buffer to lock. Note that the sound buffer is conceptually circular.</dd>
+
+<DT><I>lplpvAudioPtr1</I></DT>
+
+<DD>Address of a pointer to contain the first block of the sound buffer to be locked.</dd>
+
+<DT><I>lpdwAudioBytes1</I></DT>
+
+<DD>Address of a variable to contain the number of bytes pointed to by the <I>lplpvAudioPtr1</I> parameter. If this value is less than the <I>dwWriteBytes</I> parameter, <I>lplpvAudioPtr2</I> will point to a second block of sound data.</dd>
+
+<DT><I>lplpvAudioPtr2</I></DT>
+
+<DD>Address of a pointer to contain the second block of the sound buffer to be locked. If the value of this parameter is NULL, the <I>lplpvAudioPtr1</I> parameter points to the entire locked portion of the sound buffer.</dd>
+
+<DT><I>lpdwAudioBytes2</I></DT>
+
+<DD>Address of a variable to contain the number of bytes pointed to by the <I>lplpvAudioPtr2</I> parameter. If <I>lplpvAudioPtr2</I> is NULL, this value will be 0.</dd>
+
+<DT><I>dwFlags</I></DT>
+
+<DD>Flags modifying the lock event. The following flags are defined:
+
+<P class="fineprint">
+
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=43%>Flag</TH>
+<TH width=57%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DSBLOCK_FROMWRITECURSOR </TD>
+<TD width=57%>Locks from the current write position, making a call to <A HREF="_wcesdk_idirectsoundbuffer_getcurrentposition_dsound.htm"><B>IDirectSoundBuffer::GetCurrentPosition</B></A> unnecessary. If this flag is specified, the <I>dwWriteCursor</I> parameter is ignored. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%>DSBLOCK_ENTIREBUFFER </TD>
+<TD width=57%>Locks the entire buffer. The <I>dwWriteBytes</I> parameter is ignored. </TD>
+</TR>
+</TABLE><BR>
+
+
+<P class="fineprint">
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>If the method succeeds, the return value is DS_OK.</P>
+
+<P>If the method fails, the return value may be one of the following error values:</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_bufferlost_dsound">DSERR_BUFFERLOST</A> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_invalidcall_dsound">DSERR_INVALIDCALL</A> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_invalidparam_dsound">DSERR_INVALIDPARAM</A> </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=100%><A HREF="_wcesdk_return_values_dsound.htm#_wcesdk_dserr_priolevelneeded_dsound">DSERR_PRIOLEVELNEEDED</A> </TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>This method accepts an offset and a byte count, and returns two write pointers and their associated sizes. Two pointers are required because sound buffers are circular. If the locked bytes do not wrap around the end of the buffer, the second pointer, <I>lplpvAudioBytes2</I>, will be NULL. However, if the bytes do wrap around, then the second pointer will point to the beginning of the buffer.</P>
+
+<P>If the application passes NULL for the <I>lplpvAudioPtr2</I> and <I>lpdwAudioBytes2</I> parameters, DirectSound will not lock the wraparound portion of the buffer.</P>
+
+<P>The application should write data to the pointers returned by the <B>IDirectSoundBuffer::Lock</B> method, and then call the <A HREF="_wcesdk_idirectsoundbuffer_unlock_dsound.htm"><B>IDirectSoundBuffer::Unlock</B></A> method to release the buffer back to DirectSound. The sound buffer should not be locked for long periods of time; if it is, the play cursor will reach the locked bytes and configuration-dependent audio problems, possibly random noise, will result.</P>
+
+<P class=indent><b class="le">Warning</b>&nbsp;&nbsp;&nbsp;This method returns a write pointer only. The application should not try to read sound data from this pointer; the data might not be valid even though the DirectSoundBuffer object contains valid sound data. For example, if the buffer is located in on-board memory, the pointer might be an address to a temporary buffer in main system memory. When <B>IDirectSoundBuffer::Unlock</B> is called, this temporary buffer will be transferred to the on-board memory.</P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>2.12 or later. Version 2.12 requires DXPAK 1.0 or later.</TD>
+<TD width=18%>dsound.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>dsound.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_idirectsoundbuffer_dsound.htm"><B>IDirectSoundBuffer</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_getcurrentposition_dsound.htm"><B>IDirectSoundBuffer::GetCurrentPosition</B></A>, <A HREF="_wcesdk_idirectsoundbuffer_unlock_dsound.htm"><B>IDirectSoundBuffer::Unlock</B></A> </P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

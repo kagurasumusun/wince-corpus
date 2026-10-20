@@ -1,0 +1,157 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>VariantChangeType</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="VariantChangeType"/>
+<MSHelp:RLTitle Title="VariantChangeType"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_oa96_variantchangetype"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>VariantChangeType</H1>
+
+<P>This function converts a variant from one type to another.</P>
+
+<PRE class="syntax"><B>HRESULT VariantChangeType( </B>
+<B>VARIANTARG FAR *</B><I>pvargDest</I>,
+<B>VARIANTARG FAR *</B><I>pvarSrc</I>,
+<B>unsigned short</B> <I>wFlags</I>,
+<B>VARTYPE</B> <I>vt</I> <B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pvargDest</I></DT>
+
+<DD>Pointer to the VarBoolFromDispto receive the coerced type. If this is the same as pvarSrc, the variant is converted in place.</dd>
+
+<DT><I>pvarSrc</I></DT>
+
+<DD>Pointer to the source <B>VARIANTARG</B> to be coerced.</dd>
+
+<DT><I>wFlags</I></DT>
+
+<DD>Flags that control the coercion. The only defined flag is VARIANT_NOVALUEPROP, which prevents the function from attempting to coerce an object to a fundamental type by getting the Value property. Applications should set this flag only if necessary, because it makes their behavior inconsistent with other applications.</dd>
+
+<DT><I>vt</I></DT>
+
+<DD>Specifies the type to coerce to. If the return code is S_OK, the <I>vt</I> member of the <B>VARIANTARG</B> specified by *<I>pvargDest</I> is always the same as this value.</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>One of the values obtained from the returned <B>HRESULT</B> and described in the following table is returned.</P>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=33%>Value</TH>
+<TH width=67%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>S_OK</TD>
+<TD width=67%>Success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DISP_E_BADVARTYPE</TD>
+<TD width=67%>The variant type <I>vt</I> is not a valid type of variant.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DISP_E_OVERFLOW</TD>
+<TD width=67%>The data pointed to by <I>pvarSrc</I> does not fit in the destination type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>DISP_E_TYPEMISMATCH</TD>
+<TD width=67%>The argument could not be coerced to the specified type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>E_INVALIDARG</TD>
+<TD width=67%>One of the arguments is invalid.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%>E_OUTOFMEMORY</TD>
+<TD width=67%>Memory could not be allocated for the conversion.</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<H4>Remarks</H4>
+
+<P>Passing into this function any invalid and, under some circumstances, NULL pointers will result in unexpected termination of the application. </P>
+
+<P>The <B>VariantChangeType</B> function handles coercions between the fundamental types (including numeric-to-string and string-to-numeric coercions). A variant that has VT_BYREF set is coerced to a value by obtaining the referenced value. An object is coerced to a value by invoking the object<B>‹</B>’<B>‹</B>'s <B>Value</B> property (DISPID_VALUE).</P>
+
+<P>Typically, the implementor of <A HREF="_wcesdk_oa96_idispatch_invoke.htm"><B>IDispatch::Invoke</B></A> determines which member is being accessed, and then calls <B>VariantChangeType </B>to get the value of one or more arguments.<B> </B>For example, if the <B>IDispatch</B> call specifies a <B>SetTitle</B> member that takes one string argument, the implementor would call <B>VariantChangeType</B> to attempt to coerce the argument to VT_BSTR.<B> </B>If <B>VariantChangeType</B> does not return an error, the argument could then be obtained directly from the <I>bstrVal</I> member of the <B>VARIANTARG</B>.<B> </B>If <B>VariantChangeType</B> returns DISP_E_TYPEMISMATCH, the implementor would set *<I>puArgErr</I> to 0 (indicating the argument in error) and return DISP_E_TYPEMISMATCH from <B>IDispatch::Invoke</B>.</P>
+
+<P>Arrays of one type cannot be converted to arrays of another type with this function.</P>
+
+<P class=indent><b class="le">Note&nbsp;&nbsp;&nbsp;</b>The type of a VARIANTARG should not be changed in the <I>rgvarg</I> array in place.</P>
+
+<H4>Requirements </H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs On</TH>
+<TH width=18%>Versions</TH>
+<TH width=19%>Defined in</TH>
+<TH width=16%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=18%>2.0 and later</TD>
+<TD width=19%>Oleauto.h</TD>
+<TD width=16%>&nbsp;</TD>
+<TD width=20%>Oleaut32.lib</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

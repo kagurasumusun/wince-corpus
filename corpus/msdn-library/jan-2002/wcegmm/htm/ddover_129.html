@@ -1,0 +1,58 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Matching True RGB Colors to the Frame Buffer's Color Space</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Matching True RGB Colors to the Frame Buffer's Color Space"/>
+<MSHelp:RLTitle Title="Matching True RGB Colors to the Frame Buffer's Color Space"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_matching_true_rgb_colors_to_the_frame_buffer_s_color_space"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Matching True RGB Colors to the Frame Buffer's Color Space</H1>
+
+<P>Applications often need to find out how a true RGB color (RGB 888) will be mapped into a frame buffer's color space when the display device is not in RGB 888 mode. For example, imagine you're working on an application that will run in 16- and 24-bit RGB display modes. You know that when the art was created, a color was reserved for use as a transparent blitting color key; for the sake of argument, it is a 24-bit color such as RGB(128,64,255). Because your application will also run in a 16-bit RGB mode, you need a way to find out how this 24-bit color key maps into the color space that the frame buffer uses when it's running in a 16-bit RGB mode.</P>
+
+<P>Although DirectDraw does not perform color matching services for you, there are ways to calculate how your color key will be mapped in the frame buffer. These methods can be pretty complicated. For most purposes, you can use the GDI built-in color matching services, combined with the DirectDraw direct frame buffer access, to determine how a color value maps into a different color space. In fact, the Ddutil.cpp source file included in the DirectX examples of the Platform SDK includes a sample function called <B>DDColorMatch</B> that performs this task. The <B>DDColorMatch</B> sample function performs the following main tasks:
+
+<OL type="1">
+	<LI>Retrieves the color value of a pixel in a surface at 0,0.</li>
+
+	<LI>Calls the Win32 <B>SetPixel</B> function, using a <B>COLORREF</B> structure that describes your 24-bit RGB color.</li>
+
+	<LI>Uses DirectDraw to lock the surface, getting a pointer to the frame buffer memory.</li>
+
+	<LI>Retrieves the actual color value from the frame buffer (set by GDI in Step 2) and unlocks the surface</li>
+
+	<LI>Resets the pixel at 0,0 to its original color using <B>SetPixel</B>.</li>
+</OL>
+
+<P>The process used by the <B>DDColorMatch</B> sample function is not fast; it isn't intended to be. However, it provides a reliable way to determine how a color will be mapped across different RGB color spaces. For more information, see the source code for <B>DDColorMatch</B> in the Ddutil.cpp source file.</P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;Because the <B>SetPixel</B> GDI function only accepts a <B>COLORREF</B> structure on input, this technique only works for matching RGB 888 colors to the frame buffer's pixel format. If your application needs to match colors of another pixel format, you should translate them to RGB 888 before using this technique or query the primary surface for its pixel format and match colors manually.</P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

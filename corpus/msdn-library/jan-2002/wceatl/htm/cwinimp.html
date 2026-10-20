@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>CWindowImpl</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="CWindowImpl"/>
+<MSHelp:RLTitle Title="CWindowImpl"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_cwindowimpl"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CWindowImpl</H1>
+
+<P>This class allows you to create a new window or to make an existing windows into a subclass.The <B>CWindowImpl</B> window procedure uses a message map to direct messages to the appropriate handlers. </P>
+
+<PRE class=syntax><B>template
+&lt; class </B><I>T</I><B>,
+class </B><I>TBase</I><B> = CWindow,
+class </B><I>TWinTrait</I><B> = CControlWinTraits &gt;
+class ATL_NO_VTABLE CWindowImpl :
+public CWindowImplBaseT&lt; </B><I>TBase</I><B>, </B><I>TWinTraits</I><B> &gt;</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>T</I></DT>
+
+<DD>Your class, derived from <B>CWindowImpl</B>.</DD>
+
+<DT><I>TBase</I></DT>
+
+<DD>The base class of your new class. The default base class is <B>CWindow</B>.</DD>
+
+<DT><I>TWinTrait</I></DT>
+
+<DD>A traits class that defines styles for your window. The default is <B>CControlWinTraits</B>.</DD>
+</DL>
+
+<H4>Remarks</H4>
+
+<P>Windows CE supports a couple of new extended window styles that are not supported by other Windows-based platforms. It also does not support some of the window styles the desktop platforms support. This means you cannot use all the same flags for the <I>dwStyle</I> and <I>dwExStyle</I> parameters to the <B>Create</B> method that you can use on other Windows-based platforms. Windows CE also does not support standalone menu bars.</P>
+
+<P><B>CWindowImpl::Create</B> creates a new window based on the window class information managed by <B>CWndClassInfo</B>. <B>CWindowImpl</B> contains the <B>DECLARE_WND_CLASS</B> macro, which means <B>CWndClassInfo</B> will register a new window class. If you want to superclass an existing window class, derive your class from <B>CWindowImpl</B> and include the <B>DECLARE_WND_SUPERCLASS</B> macro. In this case, <B>CWndClassInfo</B> will register a window class that is based on an existing class but uses <B>CWindowImpl::WindowProc</B>. For example:</P>
+
+<PRE>class CMyWindow : CComControl&lt;CMyWindow&gt;, ...
+                // CComControl derives from CWindowImpl
+{
+public:
+   // 1. The NULL parameter means ATL will generate a
+   //    name for the superclass.
+   // 2. The "EDIT" parameter means the superclass is
+   //    based on the standard Windows Edit box.
+   DECLARE_WND_SUPERCLASS(NULL, "EDIT")
+   ...
+};
+</PRE>
+
+<P>Because <B>CWndClassInfo</B> manages the information for a single window class, each window created through an instance of <B>CWindowImpl</B> will be based on the same window class.</P>
+
+<P><B>CWindowImpl</B> also supports window subclassing. The <B>SubclassWindow</B> method attaches an existing window to the <B>CWindowImpl</B> object and changes the window procedure to <B>CWindowImpl::WindowProc</B>. Each instance of <B>CWindowImpl</B> can subclass a different window.</P>
+
+<P>For any given <B>CWindowImpl</B> object, call either <B>Create</B> or <B>SubclassWindow</B>. You should not invoke both methods on the same object.</P>
+
+<P>In addition to <B>CWindowImpl</B>, ATL provides <A HREF="ccontain.htm"><B>CContainedWindow</B></A> to create a window contained within another object.</P>
+
+<P>The base class destructor (~<B>CWindowImplRoot</B>) ensures that the window is gone before the object is destroyed.</P>
+
+<P><B>CWindowImpl</B> derives from <B>CWindowImplBaseT</B>, which derives from <B>CWindowImplRoot</B>, which in turn derives from <B>TBase</B> and <A HREF="cmessmap.htm"><B>CMessageMap</B></A>.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlwin.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="atlapi_26.htm"><B>BEGIN_MSG_MAP</B></A>, <A HREF="cccontrl.htm"><B>CComControl</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

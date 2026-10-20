@@ -1,0 +1,169 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>StretchBlt</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="StretchBlt"/>
+<MSHelp:RLTitle Title="StretchBlt"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcesdk_win32_stretchblt"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>StretchBlt </H1>
+
+<P>This function copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the dimensions of the destination rectangle, if necessary. Windows stretches or compresses the bitmap according to the stretching mode set in the destination device context.</P>
+
+<PRE class="syntax"><B>BOOL</B> <B>StretchBlt(
+HDC</B> <I>hdcDest</I><B>,
+int</B> <I>nXOriginDest</I><B>,
+int</B> <I>nYOriginDest</I><B>,
+int</B> <I>nWidthDest</I><B>,
+int</B> <I>nHeightDest</I><B>,
+HDC</B> <I>hdcSrc</I><B>,
+int</B> <I>nXOriginSrc</I><B>,
+int</B> <I>nYOriginSrc</I><B>,
+int</B> <I>nWidthSrc</I><B>,
+int</B> <I>nHeightSrc</I><B>,
+DWORD</B> <I>dwRop
+</I><B>);</B> </PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>hdcDest</I></DT>
+
+<DD>[in] Handle to the destination device context. </dd>
+
+<DT><I>nXOriginDest</I></DT>
+
+<DD>[in] Specifies the x-coordinate, in logical units, of the upper-left corner of the destination rectangle. </dd>
+
+<DT><I>nYOriginDest</I></DT>
+
+<DD>[in] Specifies the y-coordinate, in logical units, of the upper-left corner of the destination rectangle. </dd>
+
+<DT><I>nWidthDest</I></DT>
+
+<DD>[in] Specifies the width, in logical units, of the destination rectangle. </dd>
+
+<DT><I>nHeightDest</I></DT>
+
+<DD>[in] Specifies the height, in logical units, of the destination rectangle. </dd>
+
+<DT><I>hdcSrc</I></DT>
+
+<DD>[in] Handle to the source device context. </dd>
+
+<DT><I>nXOriginSrc</I></DT>
+
+<DD>[in] Specifies the x-coordinate, in logical units, of the upper-left corner of the source rectangle. </dd>
+
+<DT><I>nYOriginSrc</I></DT>
+
+<DD>[in] Specifies the y-coordinate, in logical units, of the upper-left corner of the source rectangle. </dd>
+
+<DT><I>nWidthSrc</I></DT>
+
+<DD>[in] Specifies the width, in logical units, of the source rectangle. </dd>
+
+<DT><I>nHeightSrc</I></DT>
+
+<DD>[in] Specifies the height, in logical units, of the source rectangle. </dd>
+
+<DT><I>dwRop</I></DT>
+
+<DD>[in] Specifies the raster operation to be performed. Raster operation codes define how the system combines colors in output operations that involve a brush, a source bitmap, and a destination bitmap.
+
+<P>See <A HREF="_wcesdk_win32_bitblt.htm"><B>BitBlt</B></A> for a list of common raster operation codes.
+
+
+<P>Windows CE versions 1.0 and 1.01 support only the <B>SRCCOPY</B> and <B>SRCINVERT</B> raster operations.
+</dd>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>Nonzero indicates success. Zero indicates failure. To get extended error information, call <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>. </P>
+
+<H4>Remarks</H4>
+
+<P><B>StretchBlt</B> stretches or compresses the source bitmap in memory and then copies the result to the destination rectangle. The color data for pattern or destination pixels is merged after the stretching or compression occurs. </P>
+
+<P>When an enhanced metafile is being recorded, an error occurs (and the function returns FALSE) if the source device context identifies an enhanced-metafile device context. </P>
+
+<P>If the specified raster operation requires a brush, the system uses the brush currently selected into the destination device context. </P>
+
+<P>The destination coordinates are transformed by using the transformation currently specified for the destination device context; the source coordinates are transformed by using the transformation currently specified for the source device context. </P>
+
+<P>If the source transformation has a rotation or shear, an error occurs. </P>
+
+<P>If destination, source, and pattern bitmaps do not have the same color format, <B>StretchBlt</B> converts the source and pattern bitmaps to match the destination bitmap. </P>
+
+<P>If <B>StretchBlt</B> must convert a monochrome bitmap to a color bitmap, it sets white bits (1) to the background color and black bits (0) to the foreground color. To convert a color bitmap to a monochrome bitmap, it sets pixels that match the background color to white (1) and sets all other pixels to black (0). The foreground and background colors of the device context with color are used. </P>
+
+<P><B>StretchBlt</B> creates a mirror image of a bitmap if the signs of the <I>nWidthSrc</I> and <I>nWidthDest</I> parameters or of the <I>nHeightSrc</I> and <I>nHeightDest</I> parameters differ. If <I>nWidthSrc</I> and <I>nWidthDest</I> have different signs, the function creates a mirror image of the bitmap along the x-axis. If <I>nHeightSrc</I> and <I>nHeightDest</I> have different signs, the function creates a mirror image of the bitmap along the y-axis. Windows CE versions 1.0 and 1.01 do not support mirroring.</P>
+
+<P>Not all devices support the <B>StretchBlt</B> function. For more information, see the <A HREF="_wcesdk_win32_getdevicecaps.htm"><B>GetDeviceCaps</B></A>. </P>
+
+<H4>Requirements</H4>
+
+<P class="fineprint"></P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=27%>Runs on</TH>
+<TH width=20%>Versions</TH>
+<TH width=18%>Defined in</TH>
+<TH width=15%>Include</TH>
+<TH width=20%>Link to</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=27%>Windows CE OS</TD>
+<TD width=20%>1.0 and later</TD>
+<TD width=18%>Wingdi.h</TD>
+<TD width=15%>&nbsp;</TD>
+<TD width=20%>&nbsp;</TD>
+</TR>
+</TABLE><BR>
+
+<P class="fineprint"></P>
+
+<P class=indent><b class="le">Note</b>&nbsp;&nbsp;&nbsp;This API is part of the complete Windows CE OS package as provided by Microsoft. The functionality of a particular platform is determined by the original equipment manufacturer (OEM) and some devices may not support this API.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="_wcesdk_win32_bitblt.htm"><B>BitBlt</B></A>, <A HREF="_wcesdk_win32_getdevicecaps.htm"><B>GetDeviceCaps</B></A>, <A HREF="_wcesdk_win32_getlasterror.htm"><B>GetLastError</B></A>, <A HREF="_wcesdk_win32_maskblt.htm"><B>MaskBlt</B></A></P>
+
+<!--Footer-->
+<div class="footer">
+<br>
+<center><font color=228B22 size="1">Built on Friday, July 06, 2001</font></center>
+</div>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

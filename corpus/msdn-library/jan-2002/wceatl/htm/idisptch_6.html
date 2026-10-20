@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>IDispatchImpl::Invoke</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="IDispatchImpl::Invoke"/>
+<MSHelp:RLTitle Title="IDispatchImpl::Invoke"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_idispatchimpl_invoke"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1>IDispatchImpl::Invoke</H1>
+
+<P>This method provides access to the methods and properties exposed by the dual interface. </P>
+
+<PRE class=syntax><B>STDMETHOD ( Invoke )(
+DISPID </B><I>dispidMember</I><B>,
+REFIID </B><I>riid</I><B>,
+LCID </B><I>lcid</I><B>,
+WORD </B><I>wFlags</I><B>,
+DISPPARAMS* </B><I>pDispparams</I><B>,
+VARIANT* </B><I>pVarResult</I><B>,
+EXCEPINFO* </B><I>pExcepinfo</I><B>,
+UINT* </B><I>puArgErr</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>dispidMember</I></DT>
+
+<DD>Identifies the member. Use <B>GetIDsOfNames</B> or the object documentation to obtain the dispatch identifier.</DD>
+
+<DT><I>riid</I></DT>
+
+<DD>Reserved for future use. Must be IID_NULL.</DD>
+
+<DT><I>lcid</I></DT>
+
+<DD>The locale context in which to interpret arguments. The <I>lcid</I> is used by the <B>GetIDsOfNames</B> function, and is also passed to <B>IDispatch::Invoke</B> to allow the object<B> </B>to interpret its arguments specific to a locale.
+
+<P>Applications that do not support multiple national languages can ignore this parameter.
+</DD>
+
+<DT><I>wFlags</I></DT>
+
+<DD>Flags describing the context of the <B>Invoke</B> call, include:
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=38%>Value</TH>
+<TH width=62%>Description</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>DISPATCH_METHOD</TD>
+<TD width=62%>The member is invoked as a method. If a property has the same name, both this and the DISPATCH_PROPERTYGET flag may be set.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>DISPATCH_PROPERTYGET</TD>
+<TD width=62%>The member is retrieved as a property or data member.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>DISPATCH_PROPERTYPUT</TD>
+<TD width=62%>The member is changed as a property or data member.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=38%>DISPATCH_PROPERTYPUTREF</TD>
+<TD width=62%>The member is changed by a reference assignment, rather than a value assignment. This flag is valid only when the property accepts a reference to an object.</TD>
+</TR>
+</TABLE><BR>
+
+</DD>
+
+<DT><I>pDispparams</I></DT>
+
+<DD>Pointer to a structure containing an array of arguments, an array of argument DISPIDs for named arguments, and counts for the number of elements in the arrays. See the Comments section that follows for a description of the DISPPARAMS structure.</DD>
+
+<DT><I>pVarResult</I></DT>
+
+<DD>Pointer to the location where the result is to be stored, or NULL if the caller expects no result. This argument is ignored if DISPATCH_PROPERTYPUT or DISPATCH_PROPERTYPUTREF is specified.</DD>
+
+<DT><I>pExcepinfo</I></DT>
+
+<DD>Pointer to a structure that contains exception information.<B> </B>This structure should be filled in if DISP_E_EXCEPTION is returned. Can be NULL.</DD>
+
+<DT><I>puArgErr</I><B> </B></DT>
+
+<DD>The index within <I>rgvarg</I> of the first argument that has an error. Arguments are stored in <I>pDispParams-&gt;rgvarg</I> in reverse order, so the first argument is the one with the highest index in the array. This parameter is returned only when the resulting return value is DISP_E_TYPEMISMATCH or DISP_E_PARAMNOTFOUND. This argument can be set to null. </DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The return value obtained from the returned HRESULT is one of the following:</P>
+
+<TABLE>
+
+<TR VALIGN="top">
+<TH width=39%>Return value</TH>
+<TH width=61%>Meaning</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>S_OK</TD>
+<TD width=61%>Success.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_BADPARAMCOUNT</TD>
+<TD width=61%>The number of elements provided to DISPPARAMS is different from the number of arguments accepted by the method or property.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_BADVARTYPE</TD>
+<TD width=61%>One of the arguments in <I>rgvarg</I> is not a valid variant type. </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_EXCEPTION</TD>
+<TD width=61%>The application needs to raise an exception. In this case, the structure passed in <I>pExcepInfo</I> should be filled in.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_MEMBERNOTFOUND</TD>
+<TD width=61%>The requested member does not exist, or the call to <B>Invoke </B>tried to set the value of a read-only property.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_NONAMEDARGS</TD>
+<TD width=61%>This implementation of <B>IDispatch</B> does not support named arguments.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_OVERFLOW</TD>
+<TD width=61%>One of the arguments in <I>rgvarg</I> could not be coerced to the specified type.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_PARAMNOTFOUND</TD>
+<TD width=61%>One of the parameter DISPIDs does not correspond to a parameter on the method. In this case, <I>puArgErr</I> should be set to the first argument that contains the error.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_TYPEMISMATCH</TD>
+<TD width=61%>One or more of the arguments could not be coerced. The index within <I>rgvarg</I> of the first parameter with the incorrect type is returned in the <I>puArgErr</I> parameter.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_UNKNOWNINTERFACE</TD>
+<TD width=61%>The interface identifier passed in <I>riid</I> is not IID_NULL.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_UNKNOWNLCID</TD>
+<TD width=61%>The member being invoked interprets string arguments according to the LCID, and the LCID is not recognized. If the LCID is not needed to interpret arguments, this error should not be returned.</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=39%>DISP_E_PARAMNOTOPTIONAL</TD>
+<TD width=61%>A required parameter was omitted.</TD>
+</TR>
+</TABLE><BR>
+
+<H4>Remarks</H4>
+
+<P>Generally, you should not implement <B>Invoke</B> directly. Instead, use the dispatch interface create functions <B>CreateStdDispatch</B> and <B>DispInvoke</B>.</P>
+
+<P>If some application-specific processing needs to be performed before calling a member, the code should perform the necessary actions, and then call <B>ITypeInfo::Invoke</B> to invoke the member. <B>ITypeInfo::Invoke</B> acts exactly like <B>IDispatchImpl::Invoke</B>. The standard implementations of <B>IDispatchImpl::Invoke</B> created by <B>CreateStdDispatch</B> and <B>DispInvoke</B> defer to <B>ITypeInfo::Invoke</B>.</P>
+
+<P>In an ActiveX client, <B>IDispatchImpl::Invoke</B> should be used to get and set the values of properties, or to call a method of an ActiveX object. The <I>dispIDMember</I> parameter identifies the member to invoke. The DISPIDs that identify members are defined by the implementor of the object and can be determined by using the object documentation, the <B>IDispatchImpl::GetIDsOfNames</B> function, or the <B>ITypeInfo</B> interface.</P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlcom.h<BR>
+&nbsp;&nbsp;<B>Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

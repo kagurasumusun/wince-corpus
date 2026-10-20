@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+
+<TITLE>IDataObjectImpl::GetCanonicalFormatEtc</TITLE>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="IDataObjectImpl::GetCanonicalFormatEtc"/>
+<MSHelp:RLTitle Title="IDataObjectImpl::GetCanonicalFormatEtc"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wceatl_idataobjectimpl_getcanonicalformatetc"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_com_formatetc" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1>IDataObjectImpl::GetCanonicalFormatEtc</H1>
+
+<P>This method retrieves a logically equivalent <B>FORMATETC</B> structure to one that is more complex. </P>
+
+<P>If a data object can supply the same data for more than one requested <B>FORMATETC</B> structure, <B>IDataOjbectImpl::GetCanonicalFormatEtc</B> can supply a canonical, or standard <B>FORMATETC</B> that gives the same rendering as a set of more complicated <B>FORMATETC</B> structures. For example, it is common for the data returned to be insensitive to the target device specified in any one of a set of otherwise similar <B>FORMATETC</B> structures.</P>
+
+<P>A call to this method can determine whether two calls to <B>IDataObjectImpl::GetData</B> on a data object, specifying two different <B>FORMATETC</B> structures, would actually produce the same renderings, thus eliminating the need for the second call and improving performance. If the call to <B>GetCanonicalFormatEtc</B> results in a canonical format being written to the <I>pFormatetcOut</I> parameter, the caller then uses that structure in a subsequent call to <B>IDataObjectImpl::GetData</B>.<U> </U></P>
+
+<P>Conceptually, it is possible to think of <B>FORMATETC</B> structures in groups defined by a canonical <B>FORMATETC</B> that provides the same results as each of the group members. In constructing the canonical <B>FORMATETC</B>, you should make sure it contains the most general information possible that still produces a specific rendering.</P>
+
+<P>For data objects that never provide device-specific renderings, the simplest implementation of this method is to copy the input <B>FORMATETC </B>to the output <B>FORMATETC</B>, store a <B>NULL</B> in the <I>ptd</I> field of the output <B>FORMATETC</B>, and return DATA_S_SAMEFORMATETC.</P>
+
+<PRE class=syntax><B>STDMETHOD ( GetCanonicalFormatEtc )(
+FORMATETC* </B><I>pformatetcIn</I><B>,
+FORMATETC* </B><I>pformatetcOut</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pformatetcIn</I></DT>
+
+<DD>[in] Pointer to the <B>FORMATETC</B> structure that defines the format, medium, and target device that the caller would like to use to retrieve data in a subsequent call such as <B>IDataObject::GetData</B>. The <B>TYMED</B> member is not significant in this case and should be ignored.</DD>
+
+<DT><I>pformatetcOut</I></DT>
+
+<DD>[out] Pointer to a <B>FORMATETC</B> structure that contains the most general information possible for a specific rendering, making it canonically equivalent to pFormatetcIn. The caller must allocate this structure and the <B>GetCanonicalFormatEtc</B> method must fill in the data. To retrieve data in a subsequent call like <B>IDataObjectImpl::GetData</B>, the caller uses the supplied value of <I>pFormatetcOut</I>, unless the value supplied is <B>NULL</B>. This value is <B>NULL</B> if the method returns DATA_S_SAMEFORMATETC. The <B>TYMED</B> member is not significant in this case and should be ignored.</DD>
+</DL>
+
+<H4>Return Value</H4>
+
+<P>The ATL for Windows CE implementation returns E_NOTIMPL. </P>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 2.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Atlctl.h<BR>
+<B>&nbsp;&nbsp;Platform: </B>H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="JavaScript:hhobj_1.Click()"><B>FORMATETC</B></A>, <A HREF="idataobj_7.htm"><B>IDataObjectImpl::GetData</B></A></P>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

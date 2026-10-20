@@ -1,0 +1,144 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>CDocument::AddView</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="CDocument::AddView"/>
+<MSHelp:RLTitle Title="CDocument::AddView"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_cdocument_addview"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>CDocument::AddView</H1>
+
+<P>This method attaches a view to the document. The <B>CDocument::AddView</B> method adds the specified view to the list of views associated with the document; this method also sets the document pointer in the view to this document. The framework calls this method when attaching a newly created view object to a document. The framework also calls this function when attaching a newly created view object to a document in response to a File New, File Open, or New Window command or when a splitter window is split.</P>
+
+<P>Call this function only if you are manually creating and attaching a view. Typically you will let the framework connect documents and views by defining a <B>CDocTemplate</B> object to associate a document class, view class, and frame window class.</P>
+
+<PRE class=syntax><B>void AddView(
+CView* </B><I>pView</I> <B>);</B><I> </I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>pView</I></DT>
+
+<DD>Points to the view being added.</DD>
+</DL>
+
+<H4>Example</H4>
+
+<PRE>// The following example toggles two views in a single document
+// interface (SDI) frame window. A design decision must be made about
+// whether to leave the inactive view connected to the document,
+// allowing the inactive view to continue receiveing OnUpdate
+// notifications from the document. It is often desirable to
+// keep the inactive view continuously in synchronization with the
+// document, even though it is inactive. However, doing so incurs a
+// performance cost,as well as the programming cost of implementing
+// OnUpdate hints. It may be less expensive, in terms of performance and
+// programming,to re-sync the inactive view with the document only when it
+// is reactivated. The following example illustrates the latter approach, // by reconnecting the newly active view and disconnecting the newly
+// inactive view, through calls to CDocument::AddView and RemoveView.
+
+BOOL CMainFrame::OnViewChange(UINT nCmdID)
+{
+ CView* pViewAdd;
+ CView* pViewRemove;
+ CDocument* pDoc = GetActiveDocument();
+ UINT nCmdID;
+ &nbsp;&nbsp;
+ nCmdID = LOWORD(GetCurrentMessage()-&gt;wParam);
+
+ if((nCmdID == ID_VIEW_VIEW1) &amp;&amp; (m_currentView == 1))
+ &nbsp;&nbsp;return;
+ if((nCmdID == ID_VIEW_VIEW2) &amp;&amp; (m_currentView == 2))
+&nbsp;&nbsp;return;
+
+ if (nCmdID == ID_VIEW_VIEW2)
+ {
+  if (m_pView2 == NULL)
+  {
+   m_pView1 = GetActiveView();
+   m_pView2 = new CMyView2;
+
+// If OnSize has been overridden in CMyView2
+// and GetDocument() is used in this override it can
+// cause assertions and, if the assertions are ignored,
+// cause access violations.
+
+   m_pView2-&gt;Create(NULL, NULL, AFX_WS_DEFAULT_VIEW,
+   &nbsp;&nbsp;rectDefault, this, AFX_IDW_PANE_FIRST + 1, NULL);
+  }
+   pViewAdd = m_pView2;
+   pViewRemove = m_pView1;
+   m_currentView= 2;
+ }
+ else
+ {
+  pViewAdd = m_pView1;
+  pViewRemove = m_pView2;
+  m_currentView= 1;
+ }
+  &nbsp;&nbsp;
+// Set the child identifier of the active view to AFX_IDW_PANE_FIRST,
+// so that CFrameWnd::RecalcLayout will allocate to this
+// first pane, that portion in a client area of the frame window that is
+// not allocated to control bars. Set the child identifier of the
+// other view to anything besides AFX_IDW_PANE_FIRST; this
+// example switches the child identifiers of the two views.
+
+ int nSwitchChildID = pViewAdd-&gt;GetDlgCtrlID();
+ pViewAdd-&gt;SetDlgCtrlID(AFX_IDW_PANE_FIRST);
+ pViewRemove-&gt;SetDlgCtrlID(nSwitchChildID);
+
+ // Show the newly active view and hide the inactive view.
+
+ pViewAdd-&gt;ShowWindow(SW_SHOW);
+ pViewRemove-&gt;ShowWindow(SW_HIDE);
+
+ // Connect the newly active view to the document and
+ // disconnect the inactive view.
+ pDoc-&gt;AddView(pViewAdd);
+ pDoc-&gt;RemoveView(pViewRemove);
+
+ SetActiveView(pViewAdd);
+ RecalcLayout();
+}
+</PRE>
+
+<H4>Requirements</H4>
+
+<P><B>&nbsp;&nbsp;Windows CE versions:</B> 1.0 and later<BR>
+&nbsp;&nbsp;<B>Header file:</B> Declared in Afxwin.h<BR>
+&nbsp;&nbsp;<B>Platform:</B> H/PC Pro, Palm-size PC, Pocket PC</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="cdoctemp.htm"><B>CDocTemplate</B></A>, <A HREF="cdocumnt_8.htm"><B>CDocument::GetFirstViewPosition</B></A>, <A HREF="cdocumnt_9.htm"><B>CDocument::GetNextView</B></A>, <A HREF="cdocumnt_20.htm"><B>CDocument::RemoveView</B></A>, <A HREF="cview_3.htm"><B>CView::GetDocument</B></A> </P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

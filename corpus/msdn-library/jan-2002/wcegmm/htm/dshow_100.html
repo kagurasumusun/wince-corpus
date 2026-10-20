@@ -1,0 +1,61 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Plug-in Distributors and Extensibility</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Plug-in Distributors and Extensibility"/>
+<MSHelp:RLTitle Title="Plug-in Distributors and Extensibility"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_dxce_dshow_plug-in_distributors_and_extensibility"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+<DIV STYLE="display:none;">
+<MSHelp:link id=hhobj_1 keywords="_wcesdk_imediacontrol__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_2 keywords="_wcesdk_imediafilter__run" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_3 keywords="_wcesdk_com_iunknown" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_4 keywords="_wcesdk_ifiltergraph_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+<MSHelp:link id=hhobj_5 keywords="_wcesdk_imediacontrol_interface" indexMoniker="!DefaultAssociativeIndex" errorURL="" disambiguator="menu"  TABINDEX=0></MSHelp:link>
+
+</DIV>
+
+
+
+<H1><SUP></SUP>Plug-in Distributors and Extensibility</H1>
+
+<P>The filter graph manager exports control interfaces; it also distributes the actions of interface methods to the appropriate filters. For example, the <A HREF="JavaScript:hhobj_1.Click()"><B>IMediaControl::Run</B></A> method on the filter graph manager is called by an application to run the filter graph; this command is distributed to the <A HREF="JavaScript:hhobj_2.Click()"><B>IMediaFilter::Run</B></A> method of each filter method by the filter graph manager. This distribution allows applications to have a single point of control to perform the basic operations. </P>
+
+<P>To allow the filter graph manager to be extensible, a mechanism known as a <I>plug-in distributor</I> (PID) is used. This is a Component Object Model (COM) object that exposes a particular control interface and implements it by calling the enumerator of the filter graph manager, finding which filters expose the control interface and communicating directly with those filters. PIDs are supplied for the standard control interfaces; independent software vendors (ISVs) can replace these supplied PIDs and also add others. </P>
+
+<P>When the filter graph manager is asked for an interface that it does not recognize, it searches the registry for a PID. This is an unnamed value under the following key. </P>
+
+<PRE class="code">HKEY_CLASSES_ROOT\Interface\&lt;IID&gt;\Distributor</PRE>
+
+<P>This value provides the class identifier (CLSID) of an object that can distribute the interface identifier (IID). The filter graph manager then instantiates that object as an aggregated object, specifying the <A HREF="JavaScript:hhobj_3.Click()"><B>IUnknown</B></A> implementation of the filter graph manager as the outer <B>IUnknown</B>, and asking for the IID. The object will then be able to use its outer <B>IUnknown</B> pointer to obtain an <A HREF="JavaScript:hhobj_4.Click()"><B>IFilterGraph</B></A> interface. With this interface, it can enumerate the filters to implement its control interface methods and properties; it will also be able to use the <A HREF="JavaScript:hhobj_5.Click()"><B>IMediaControl</B></A> implementation of the filter graph manager for correctly ordered and synchronized state changes (run, pause, stop, and so on). </P>
+<DIV CLASS="footer">Built on Friday, February 16, 2001</DIV>
+
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

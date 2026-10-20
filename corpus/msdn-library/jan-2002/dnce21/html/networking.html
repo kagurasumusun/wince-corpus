@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Microsoft Windows CE 2.1-based Networking</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Microsoft Windows CE 2.1-based Networking"/>
+<MSHelp:RLTitle Title="Microsoft Windows CE 2.1-based Networking"/>
+<MSHelp:Keyword Index="A" Term="networking"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, hardware and communication technologies"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, networking"/>
+<MSHelp:Keyword Index="K" Term="Windows CE 2.1, networking capabilities"/>
+<MSHelp:Keyword Index="A" Term="networking"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<meta name="description" content="This paper outlines the networking capabilities of the Windows CE 2.1 operating system."><meta name="keywords" content="Microsoft Windows CE 2.1, Windows CE 2.1, Windows CE 2.1-based networking, Windows CE-based networking, Windows CE 2.1 networking capabilities, Windows 2.1-based hardware and communication technologies"><META name="rtfFileName" content="networking.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="Outlines the networking capabilities of the Windows CE 2.1 operating system. (8 printed pages)">
+<META NAME="msdnID" CONTENT="_661484">
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="networking"></A>Microsoft Windows CE 2.1-based Networking</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Microsoft Corporation</P>
+
+<P>April 2000</P>
+
+<P><B>Summary:</B> This paper outlines the networking capabilities of the Windows CE 2.1 operating system. (8 printed pages)</P>
+
+<H4 class="dtH1">Contents</H4>
+
+<P><A HREF="#networking_topic1">Introduction</A><CODE><BR>
+</CODE><A HREF="#networking_topic2">Internet Communication</A><CODE><BR>
+</CODE><A HREF="#networking_topic3">Remote Printers and Files</A><CODE><BR>
+</CODE><A HREF="#networking_topic4">Winsock and Irsock</A><CODE><BR>
+</CODE><A HREF="#networking_topic5">IrSock Protocol</A><CODE><BR>
+</CODE><A HREF="#networking_topic6">Enhanced Socket Options</A><CODE><BR>
+</CODE><A HREF="#networking_topic7">TCP/IP and IrDA Protocols</A><CODE><BR>
+</CODE><A HREF="#networking_topic8">Hardware Support</A><CODE><BR>
+</CODE><A HREF="#networking_topic9">Networking with Modems</A><CODE><BR>
+</CODE><A HREF="#networking_topic10">For More Information</A></P>
+
+<H2 class="dtH1"><A NAME="networking_topic1"></A>Introduction</H2>
+
+<P>Network communications is an important feature of many Windows CE-based devices. It allows your applications to do such tasks as browse the Internet, send and receive e-mail, and access remote printers and files. </P>
+
+<P>Network communications technology is designed to be used when a transmission may be sent or received by one of many devices. With serial communications, you can stream the data to the other device. With networks, the network stack must divide the data into one or more packets and add an address to each packet to ensure that it gets to its destination. Network stacks also include reliability protocols such as the Transmission Control Protocol (TCP) that ensure that lost or damaged packets are retransmitted.</P>
+
+<P>Network communication protocols are required with hardware such as local area networks (LANs). However, even with a one-to-one connection, where serial communications is permitted, serial link networking is often used instead. For instance, a modem is often used to connect a Windows CE-based device to a network service provider. While the phone connection itself is one-to-one, network protocols are needed so that the service provider can forward the message. Even with two devices connected by a cable, network reliability protocols are useful for preventing data loss.</P>
+
+<P>Windows CE provides a broad range of network communications options and related application programming interfaces (APIs). They include virtually everything normally found on desktop platforms including:
+
+<UL type="disc">
+	<LI>Internet communication, including support for the HTTP and FTP protocols, and ICMP requests.</li>
+
+	<LI>Network printer and file access.</li>
+
+	<LI>Windows sockets, including the IrSock extension for infrared communication with the IrDA protocols.</li>
+
+	<LI>The TCP/IP protocols, including IP multicast support. TCP/IP is configurable for wireless networking.</li>
+
+	<LI>The IRDA protocols for infrared communication.</li>
+
+	<LI>NDIS 4.0 for local area networking and fast infrared communication with the IrDA protocols.</li>
+
+	<LI>PPP and SLIP protocols for serial-link networking.</li>
+
+	<LI>Remote access service (RAS) client support.</li>
+</UL>
+
+<P>Windows CE also provides support for managing modem connections through the telephony API (TAPI). TAPI handles such tasks as dialing a phone number, establishing a connection, and terminating a call.</P>
+
+<P>The following graphic is a schematic diagram of the Windows CE networking model.</P>
+
+<P class="fig"><CODE><IMG SRC="networking1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. Windows CE networking model</B></P>
+
+<H2 class="dtH1"><A NAME="networking_topic2"></A>Internet Communication</H2>
+
+<P>Much of the communication that takes place over the Internet involves the use of high-level protocols such as FTP and HTTP. The WinInet API simplifies the task of creating Internet client applications that use these protocols. It provides support for the FTP and HTTP 1.0 protocols and handles the details of making and managing socket connections. Gopher, cookies, proxy bypass lists, and persistent URL caching are not supported.</P>
+
+<P>WinInet uses Internet handles to identify sites. Once you have acquired a handle to a site and prepared it for requests, you can then use WinInet to:
+
+<UL type="disc">
+	<LI>Send HTTP requests </li>
+
+	<LI>Send FTP request </li>
+
+	<LI>Download information
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>Not every platform supports every module or component. The configuration of the Windows CE operating system for the Handheld PC (H/PC) does not include the WinInet component.</BLOCKQUOTE>
+</li>
+</UL>
+
+<P>If you need secure communication, WinInet allows you to use the Secure Sockets Layer (SSL) 2.0 and 3.0, or the Private Communications Technology (PCT) 1.0 security protocols. You simply set the appropriate flags when you make a connection and prepare the remote site for a request. The network stack automatically handles encryption and decryption of your communication.</P>
+
+<P>Although WinInet is the simplest way to use security protocols, your application has relatively little flexibility in how they are used. If you need greater control over how secure communications is handled, use Winsock directly.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic3"></A>Remote Printers and Files</H2>
+
+<P>Many Windows CE-based devices will be used with network file systems and printers. Windows CE provides access to these remote resources with a Common Internet File System (CIFS) redirector. The CIFS protocol is also referred to as the Server Message Block (SMB) protocol. The WNet API allows you to use the redirector to:
+
+<UL type="disc">
+	<LI>Add or cancel network connections.</li>
+
+	<LI>Retrieve information about the network.</li>
+
+	<LI>Upload or download files.</li>
+
+	<LI>Enumerate the printers on the network.</li>
+
+	<LI>Submit print jobs to a networked printer.</li>
+</UL>
+
+<P>File systems and printers are identified by a Universal Name Convention (UNC) name, such as \\serverXX\shareXX. UNC names may have up to 260 characters. Drive letters are not supported.</P>
+
+<P>The CIFS redirector receives file system requests, and determines if the file system is local or remote. If the file system is remote, the redirector packages the request, sends it to the remote host, and returns the result. The redirector allows connections to computers running Windows 95, Windows&nbsp;NT&reg;, or any other server that is compliant with the NTLM 0.12 dialect of the CIFS specification.</P>
+
+<P>In addition to remote file systems, Windows CE allows access to networked printers, identified by UNC names. When CIFS receives the remote print request from the printer driver, CIFS copies the print output to the remote spooler. When the job is complete or is terminated unsuccessfully, the redirector will notify the application. Retries are not supported.</P>
+
+<P>Windows CE network printing support is basic. The print subsystem does not attempt to determine what kind of printer is being accessed, or what type of output is expected. It is up to your application to ensure that the output is appropriate to the chosen printer.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic4"></A>Winsock and Irsock</H2>
+
+<P>All network communications passes through the Windows Sockets or Winsock interface. The WNet and WinInet APIs use Winsock internally, and relieve applications of the necessity of explicitly making and managing socket connections. If you need greater flexibility, Winsock can also be used directly.</P>
+
+<P>Sockets are a general-purpose connection-oriented networking interface, supported by most operating systems. Winsock is designed to be compatible with the Berkeley Sockets Distribution (BSD) specification while performing well on Windows-based operating systems. In addition to conventional TCP/IP communication, Winsock provides access to the IrDA transport protocols through the IrSock extension.</P>
+
+<P>Windows CE supports all the standard Winsock 1.1 calls. It also has an implementation of WSAIoctl to support security service providers. Windows CE does not inherently support asynchronous socket communication. However, the Microsoft Foundation Classes (MFC) CCeSocket class provides asynchronous notification for the following three types of socket events:
+
+<UL type="disc">
+	<LI>Notification that the socket is ready for reading (FD_READ) </li>
+
+	<LI>Notification of incoming connections (FD_ACCEPT) </li>
+
+	<LI>Notification of completed connections (FD_CONNECT) </li>
+</UL>
+
+<H2 class="dtH1"><A NAME="networking_topic5"></A>IrSock Protocol</H2>
+
+<P>The IrDA protocol is designed to provide a more robust form of IR communication than simply streaming data from source to receiver. It includes such services as addressing, collision detection, and retransmission of lost or damaged frames.</P>
+
+<P>Conventional Winsock applications use the TCP/IP transport and address layers of the network stack. The IrSock extension allows the Winsock API to be used with the IrDA protocol. To specify IrSock, use SOCKADDR_IRDA when you create the socket instead of SOCKADDR_IN. The procedure for using IrSock in an application is very similar to conventional Winsock, but IrSock uses some of the functions a little differently. The main differences between IrSock and conventional Winsock are:</P>
+
+<H3 class="dtH1">Name Service</H3>
+
+<P>Conventional Winsock name service is best suited to fixed networks. IrDA, on the other hand, is intended to allow browsing for whatever resources are within range. Devices may come and go frequently as they move in and out of range. To handle this environment, IrSock incorporates name service into the data stream instead of using Winsock name-service functions.</P>
+
+<H3 class="dtH1">Method of Addressing</H3>
+
+<P>Addressing is based on Logical Service Access Point Selectors (LSAP-SELs), which are numbered from 1-127. Because there are so few, most applications should not bind a socket directly to an LSAP-SEL. Instead, you should use the Information Access Service (IAS). Binding directly to an LSAP-SEL should be restricted to legacy IrDA devices that do not support IAS.</P>
+
+<P>To use the IAS, a server application binds a socket to an IAS service name, rather than an LSAP-SEL. The IAS then dynamically binds the socket to an appropriate LSAP-SEL. The client application uses the service name to make its connection. Neither application needs to know what LSAP-SEL is actually being used.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic6"></A>Enhanced Socket Options</H2>
+
+<P>Windows CE includes two socket options to support the unique features of IrDA:
+
+<UL type="disc">
+	<LI>IRLMP_IAS_SET lets an application set a single attribute of a single class in the local IAS. </li>
+
+	<LI>IRLMP_RAW_MODE allows an application to switch between the reliable TinyTP mode and the less reliable IrLMP mode.</li>
+</UL>
+
+<H3 class="dtH1">Winsock Security Support</H3>
+
+<P>Winsock supports the SSL 2.0 and 3.0 and PCT1.0 security protocols. While these protocols are available through WinInet, accessing them through Winsock gives you much more flexibility in how they are used.</P>
+
+<P>The security protocols can be invoked when a socket connection is established, or deferred until needed. Once the protocols are invoked, encryption and decryption of the data is handled automatically by Winsock. The key to using the Winsock security protocols is authentication.</P>
+
+<P>Authentication is a process of determining whether or not the site sending the data is who they say they are. Such sites are referred to as trustworthy. A remote site establishes its trustworthiness by obtaining a certificate from a Certifying Authority (CA). Windows CE supports X.509 style certificates. The first CA may in turn have obtained a certificate from a higher CA, and so on, creating a chain of trust. The decision on whether to trust the site or not is based on the root CA of the chain of trust.</P>
+
+<P>Windows CE maintains a database of trusted CAs. When a secure connection is attempted by an application, Windows CE extracts the root certificate and checks the CA against the database. It then passes the results of that comparison and the root certificate itself back to the application.</P>
+
+<P>Your application is responsible for deciding whether or not to trust a particular certificate or CA. You can accept or reject certificates based on any criteria you wish to use. If you reject the certificate, the socket connection is not completed. At a minimum, a certificate should meet two basic criteria. It should be current, and the identity contained within the certificate should match that of the root CA.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic7"></A>TCP/IP and IrDA Protocols</H2>
+
+<P>The transport and address layers of a network stack are responsible for many of the details of transforming a data stream into a form that can be used on a network. They also take received messages and convert them back into their original form. While applications do not have direct access to the Windows CE transport and address layers, some understanding of how they work is essential to using network communications properly.</P>
+
+<P>The TCP/IP protocols were developed for the Internet and are commonly used for network communications. The Windows CE TCP layer supports both the reliable TCP and unreliable UDP protocols. You specify which protocol to use when you make a socket connection. TCP is the most commonly used protocol, as it guarantees that all packets eventually arrive. If speed is more important than an occasional lost packet, UDP may be a better choice.</P>
+
+<P>With conventional TCP/IP or Unicasting, an server sends a separate packet to each client. With some types of applications, such as streaming video, this approach can burden networks with large numbers of identical packets. To preserve network bandwidth, Windows CE supports IP multicasting. This technology allows a server reduce the number of packets it needs to send by allowing it to address a single packet to many receivers.</P>
+
+<P>One of the ways that TCP ensures that packets arrive at their destination is that the receiver must acknowledge each packet. If no acknowledgement is received within a specified timeout period, the packet is retransmitted. The timeout period needs to match the behavior of the network. If it is too long, the network stack may waste time waiting to retransmit. If it is too short, unnecessary retransmissions may occur.</P>
+
+<P>A normally configured network stack has a timeout appropriate to a wired network. However, wireless networks usually have significantly longer transmission delays than wired networks. Using a timeout appropriate for a wired network will may cause many unnecessary retransmissions. To support wireless networking, the Windows CE network stack can be optimized by modifying registry values. There are three parameters that may need adjustment:
+
+<UL type="disc">
+	<LI>The acknowledgement timeout. Wireless networks generally need a longer acknowledgement timeout than wired networks. </li>
+
+	<LI>The receive window size. In general, large receive windows work better with wireless networks. For greatest efficiency, the receive window should be an even multiple of the TCP Maximum Segment Size (MSS). </li>
+
+	<LI>The initial roundtrip time. Wireless networks generally need a longer initial roundtrip time than wired networks.</li>
+</UL>
+
+<P>The Infrared Data Association (IRDA) protocol is a widely used standard for IR communication. It is much more reliable than simply streaming data from source to receiver. Most fast IR transceivers will probably only support IRDA communication.</P>
+
+<P>The Window CE IRDA stack is designed to support any compatible IR driver and transceiver, including fast IR and simple IR. No changes in your code are needed. The IRDA stack will do what is necessary to make use of the hardware and drivers available on any particular device.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic8"></A>Hardware Support</H2>
+
+<P>Windows CE provides low-level support for several types of networking hardware. For serial-link networking over a cable or modem, Windows CE supports the widely used Serial Line Interface (SLIP) and Point-to-Point (PPP) protocols. For authentication, Windows CE supports the Password Authentication Protocol (PAP), the Challenge Authentication Protocol (CHAP), and Microsoft CHAP.</P>
+
+<P>Windows CE includes an implementation of NDIS 4.0 to support local area networking. At present, only Ethernet and fast-IR miniport drivers are supported. NDIS 4.0 is packaged as a DLL rather than as a .sys file. This feature permits OEMs to conserve ROM. DLLs needed for an application are added to RAM.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic9"></A>Networking with Modems</H2>
+
+<P>Mobile devices commonly use a modem to connect to a network. Once a telephone connection is made, the network stack handles the actual data transmission. However, network stacks are not designed to handle the details of making or managing the telephone connection itself. To simplify the process of using a modem, Windows CE provides an implementation of the Microsoft Telephony API (TAPI).</P>
+
+<P>TAPI is a collection of utilities that allow applications to use a wide variety of telephone and communications devices without needing detailed knowledge of the particular technology. It handles such tasks as dialing phone numbers, managing the modem connection, and terminating the call. With Windows CE, TAPI supports only outgoing calls. Unimodem is the only TAPI Service Provider included with Windows CE. It supports AT command-based modems. To allow applications to use a variety of hardware, installable service providers are supported.</P>
+
+<H2 class="dtH1"><A NAME="networking_topic10"></A>For More Information</H2>
+
+<UL type="disc">
+	<LI>For a high-level overview of Windows CE Communications, read the <a href="http://msdn.microsoft.com/library/backgrnd/html/msdn_comm_mod.htm">Windows CE Communications white paper</a>.</li>
+
+	<LI>For more information on the IRDA protocol, go to <a href="http://www.irda.org/" target="_top">www.irda.org</a>.</li>
+
+	<LI>For more information on X.509 certificates, go to <a href="http://world.std.com/~cme/usenix.html" target="_top">http://world.std.com/~cme/usenix.html</a>. </li>
+
+	<LI>Complete documentation of the Windows CE operating system is included with the <a href="http://msdn.microsoft.com/cetools/vcprodinfo/vcnew.asp" target="_top">Windows CE Toolkit for Visual C++ 6.0</a>.</li>
+</UL>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661484', 'XMSDNERR@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+</BODY>
+</HTML>

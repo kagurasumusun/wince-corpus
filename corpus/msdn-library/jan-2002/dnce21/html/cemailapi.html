@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML xmlns:MSHelp="http://msdn.microsoft.com/mshelp" DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Using the Microsoft Windows CE Mail API</TITLE>
+<xml>
+<MSHelp:TOCTitle Title="Using the Microsoft Windows CE Mail API"/>
+<MSHelp:RLTitle Title="Using the Microsoft Windows CE Mail API"/>
+<MSHelp:Keyword Index="A" Term="cemailapi"/>
+<MSHelp:Keyword Index="K" Term="Mail API, using Windows CE"/>
+<MSHelp:Keyword Index="K" Term="Mail API, Windows CE"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Windows CE"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Windows CE, Mail API"/>
+<MSHelp:Keyword Index="K" Term="Microsoft Windows CE, using Mail API"/>
+<MSHelp:Keyword Index="A" Term="cemailapi"/>
+<MSHelp:Attr Name="DocSet" Value="kbmsdn"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TargetOS" Value="WinCE"/>
+<MSHelp:Attr Name="TargetOSVers" Value="kbWinCE21"/>
+<MSHelp:Attr Name="Technology" Value="ETK"/>
+<MSHelp:Attr Name="TechnologyVers" Value="kbETK"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<meta name="description" content="The Microsoft Windows® CE operating system provides developers with an API to handle the reading, manipulation, and sending of e-mail."><meta name="keywords" content="Microsoft Windows CE, Windows CE, Microsoft Windows CE Mail API, Windows CE mail, using Microsoft Windows CE Mail API, using Windows CE Mail API"><META name="rtfFileName" content="cemailapi.rtf">
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/dtuelink.js"></SCRIPT>
+<!--CSS_END--><META NAME="Abstract" CONTENT="The Microsoft Windows CE OS provides developers with an API to handle the reading, manipulation, and sending of e-mail. The Windows CE Mail API is not related to the Messaging API (MAPI). However, it is somewhat similar to Simple MAPI. (4 printed pages)">
+<META NAME="msdnID" CONTENT="_661582">
+
+<SCRIPT SRC="MS-HELP:/../commoner/samp/smplmgr.js"></SCRIPT>
+</HEAD>
+<body topmargin=0 id="bodyID" class = "dtBODY"><!--NONSCROLLING BANNER START-->
+<div id="nsbanner">
+<div id="bannerrow1">
+<TABLE CLASS="bannerparthead" CELLSPACING=0>
+<TR ID="hdr">
+<TD CLASS="runninghead" nowrap>Windows&nbsp;CE&nbsp;2.1&nbsp;Technical&nbsp;Articles</TD>
+<TD CLASS="product" nowrap>&nbsp;</TD>
+</TR>
+</TABLE>
+</div>
+<div id="TitleRow">
+<H1 class="dtH1"><A NAME="cemailapi"></A>Using the Microsoft Windows CE Mail API</H1>
+</div></div>
+<!--NONSCROLLING BANNER END-->
+<DIV id="nstext" valign="bottom"><DIV id="smpMgrCell" style="width:230px;float:right"></DIV>
+<P>Sam Charchian<BR>
+Microsoft Corporation</P>
+
+<P>July 1999</P>
+
+<P><B>Summary: </B>The Microsoft Windows® CE operating system provides developers with an API to handle the reading, manipulation, and sending of e-mail. The Windows CE Mail API is not related to the Messaging API (MAPI). However, it is somewhat similar to Simple MAPI. (4 printed pages)</P>
+
+<H2 class="dtH1"><A NAME="cemailapi_sample"></A>The PenPal Sample</H2>
+
+<P>PenPal allows users to browse their message store and view the message contents of each message. PenPal employs MFC’s CSplitterWnd class to present the user with a dual-pane UI. A CTreeCtrl containing the folders and messages is on the left, and a CEdit that shows the message bodies is on the right. Users can create new mail complete with attachments. Users can also refresh the tree on the left at any time.</P>
+
+<P class="fig"><CODE><IMG SRC="cemailapi1.gif" ALT="" BORDER=0></CODE></P>
+
+<P class="label"><B>Figure 1. The PenPal sample application</B></P>
+
+<P>The PenPal sample demonstrates the use of the following: 
+
+<UL type="disc">
+	<LI>Windows CE’s mail API (Sending and Reading).</li>
+
+	<LI>MFC’s CTreeCtrl in Windows CE.</li>
+
+	<LI>MFC’s CSplitterWnd in Windows CE.</li>
+</UL>
+
+<H3 class="dtH1">Windows CE’s Mail API (Sending and Receiving)</H3>
+
+<P>All of PenPal’s interaction with the Window CE Mail API is encapsulated in a single C++ class, CEMailHandler, providing the following base functionality:
+
+<UL type="disc">
+	<LI>Open and close a mail session.</li>
+
+	<LI>Iterate through folders.</li>
+
+	<LI>Open messages.</li>
+
+	<LI>Read properties from messages.</li>
+
+	<LI>Open the message store.</li>
+
+	<LI>Set properties on messages.</li>
+
+	<LI>Submit a message for delivery.</li>
+
+	<LI>Attach files to messages.</li>
+</UL>
+
+<P>Before using any other Mail API functions, we must first call <B>MailOpen()</B> to open the message store and obtain a handle to the mail context. When we are done with all Mail API functions, we call <B>MailClose()</B> to release this context. I decided to have PenPal’s <B>SubmitMail()</B> function manage it’s own mail context to make PenPal more easily portable.</P>
+
+<P>The source code for this sample is heavily commented so that you can quickly incorporate the e-mail concepts into your Windows CE applications.</P>
+
+<BLOCKQUOTE class="dtBlock">
+<B>Note&nbsp;&nbsp;&nbsp;</B>In an effort to reduce RAM usage, when a file is attached to a message, the Mail API <I>deletes the original file from the file system</I>. If you are developing an application that needs to keep the attached file, be sure to make a duplicate of the file first. Attempting to attach a file that exists in ROM will generate an error, as the file cannot be deleted!</BLOCKQUOTE>
+
+<H3 class="dtH1">MFC’s CTreeCtrl in CE</H3>
+
+<P>When using common controls such as CTreeCtrl and CEdit, make sure you have called <B>InitCommonControls()</B> before your <B>Create()</B> has completed. Neglecting to do so will result in a non-functional control and no helpful error messages. For example:</P>
+
+<PRE class="code">BOOL CLeftView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,   
+     DWORD dwStyle, const RECT&amp; rect, 
+     CWnd* pParentWnd, UINT nID, 
+     CCreateContext* pContext) 
+{
+   // Without calling InitCommonControls(), the tree wouldn’t paint!
+   InitCommonControls();
+
+   // Set up the tree control’s style.
+   dwStyle |= TVS_HASLINES | TVS_SHOWSELALWAYS | TVS_DISABLEDRAGDROP
+            | TVS_LINESATROOT | TVS_HASBUTTONS;
+   
+   return CWnd::Create(WC_TREEVIEW, NULL, dwStyle, rect, 
+  pParentWnd, nID);
+}
+</PRE>
+
+<P>PenPal uses the CTreeCtrl to display the folders and subjects of messages in the store. It uses the ItemData of each item to hold the OID (Object ID) of the object it corresponds to in the message store. The OID is a unique identifier for each object.</P>
+
+<PRE class="code">// Set the ItemData to the OID for later retrieval.
+   pDirTree-&gt;SetItemData(hTreeMailItem, (DWORD)pMsg-&gt;oid);
+</PRE>
+
+<P>When the user selects an item in the tree, we retrieve the OID of the selected object and open it with the Mail API <B>MailGet()</B>.</P>
+
+<PRE class="code">// Get the MsgOID from the itemdata in the ctreectrl.
+dwMsgOID = GetItemData(pNMTreeView-&gt;itemNew.hItem);
+.
+.
+// Setup the MailMsg Object for the call to MailGet()
+oMsg.oid = dwMsgOID;         // Set the OID to get
+// Look in all folders for it.
+oMsg.dwFlags = MAIL_FOLDER_ALL | MAIL_GET_BODY;    
+
+bResult = MailGet(m_hMailHandle, &amp;oMsg);
+</PRE>
+
+<P>When refreshing the tree, we need to first delete the entire tree. When deleting the tree with <B>DeleteTree(TVI_ROOT)</B>, it’s a good idea to disable any processing that occurs in the OnSelchanged() event because deleting the tree can cause several selection changed events to occur as selected items are deleted. I accomplished this by setting a flag that tells my <B>OnSelchanged()</B> to do nothing. This made my refresh about five times faster.</P>
+
+<H3 class="dtH1">MFC’s CSplitterWnd in CE</H3>
+
+<P>PenPal uses the CSplitterWnd class to handle the display/resizing of our Tree and Edit controls. As usual, the CSplitterWnd is a member of my MainFrame class and is created in <B>CMainFrame::OnCreateClient()</B>. The only big difference I found was that the default implementation of <B>OnClose()</B> didn’t call my <B>DestroyWindow()</B>. As a result, neither of the splitter’s windows were being destroyed properly. To fix this, I overrode <B>OnClose()</B>, and called <B>DestroyWindow()</B> myself. In my <B>DestroyWindow()</B>, I called the <B>DestroyWindow()</B> of my splitter’s two windows.</P>
+
+<PRE class="code">BOOL CMainFrame::DestroyWindow() 
+{
+   m_fOkToSendChildMsgs = false;
+   
+   // Destroy Panes (LEFT)
+   CLeftView* pLeft = GetLeftPane();
+   pLeft-&gt;DestroyWindow();
+   delete pLeft;
+   
+   // Destroy Panes (RIGHT)
+   CPenPalView* pPPV = GetRightPane();
+   pPPV-&gt;DestroyWindow();
+   delete pPPV;
+   
+   return CFrameWnd::DestroyWindow();
+}</PRE>
+
+<H2 class="dtH1">Summary</H2>
+
+<P>Even though the Pocket Outlook Object Model provides developers with an easy way to manipulate the information stored in Windows CE’s Pocket Outlook applications, a simple way to access the e-mail functionality on your device is still required. This sample illustrates the steps necessary to build robust mail capabilities into your Windows CE applications.</P>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('_661582', 'XMSDNERR@MICROSOFT.COM')" onMouseover="window.status='Send feedback to Microsoft';return true" onMouseout="window.status='';return true" onmousedown="window.status='Send feedback to Microsoft';return true" onfocus="window.status='Send feedback to Microsoft';return true">Send feedback to Microsoft</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+</div> <!--closes the topic content div-->
+<!--FOOTER_END-->
+<script>addSample( "5310", "5310");</script>
+
+
+</BODY>
+</HTML>

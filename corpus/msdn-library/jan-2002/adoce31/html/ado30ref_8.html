@@ -1,0 +1,90 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>AddNew</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"><xml>
+<MSHelp:TOCTitle Title="AddNew"/>
+<MSHelp:RLTitle Title="AddNew"/>
+<MSHelp:Keyword Index="A" Term="ado30ref_8"/>
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+<!--CSS_END-->
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><A NAME="_adoce_addnew"></A><SUP></SUP>AddNew</H1>
+
+<P>This method inserts a new row into a recordset.</P>
+
+<PRE class=syntax><I>recordset.</I><B>AddNew</B> <I>Fields, Values</I></PRE>
+
+<H4>Parameters</H4>
+
+<DL>
+<DT><I>Fields</I></DT>
+
+<DD>Optional. Single name or an array that represents names or ordinal positions of the fields in the new record.</DD>
+
+<DT><I>Values</I></DT>
+
+<DD>Optional. Single value or an array that represents values for the fields in the new record.</DD>
+</DL>
+
+<H4>Return Values</H4>
+
+<P>None.</P>
+
+<H4>Remarks</H4>
+
+<P>The <B>AddNew </B>method<B> </B>uses the <B>Supports</B> method to verify whether records can be added to the current <B>Recordset</B> object. Records cannot be added to a recordset if the recordset is opened using the default <B>LockType</B> method.</P>
+
+<P>After the <B>AddNew</B> method is called, the new record becomes the current record and remains current after the <B>Update</B> method is called. ADOCE adds the new record to the end of the <B>Recordset </B>object.</P>
+
+<P>If the <B>AddNew</B> method is called while editing the current record or while adding a new record, ADOCE first calls the <B>Update</B> method to save any changes and then creates the new record.</P>
+
+<P>If <I>Fields</I> is an array, <I>Values</I> must also be an array with the same number of members; otherwise, an error occurs. The order of field names must match the order of field values in each array.</P>
+
+<P>Calling the <B>AddNew</B> method without parameters sets the EditMode property to 2 (<B>adEditAdd</B>) and causes ADOCE to cache any field value changes locally. Calling the <B>Update</B> method posts the new record to the database and resets the EditMode property to 0 (<B>adEditNone</B>). If the <I>Fields</I> and <I>Values</I> parameters are passed, ADOCE immediately posts the new record to the database. No <B>Update</B> call is necessary because the EditMode property value does not change from 0 (<B>adEditNone</B>).</P>
+
+<P>ADOCE always updates in immediate mode. Batch mode is not supported.</P>
+
+<H4>Examples</H4>
+
+<P>The following code example shows how to add a new field to a table using the <B>AddNew</B> method, and then displays the values of the new field in a message box.</P>
+
+<PRE>Dim rs, i, L1
+Set rs = CreateObject("ADOCE.Recordset.3.1")
+rs.Open "myTable", "", adOpenKeyset, adLockOptimistic
+rs.AddNew "f1", "a"
+rs.AddNew
+rs.Fields("f1") = "b"
+rs.Update
+rs.Close
+rs.Open "myTable"
+For i = 0 To rs.RecordCount - 1
+     L1 = L1 &amp; rs.Fields("f1").Value
+     rs.MoveNext
+Next
+rs.Close
+MsgBox L1
+</PRE>
+<DIV CLASS="footer">Built on Tuesday, October 03, 2000</DIV>
+
+<!--FOOTER_START-->
+<script language="JavaScript" src='MS-Help:/../ADOCE31/html/msdn_footer.js'></script>
+<!--FOOTER_END-->
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>

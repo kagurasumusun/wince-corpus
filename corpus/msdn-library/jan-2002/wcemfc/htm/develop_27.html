@@ -1,0 +1,54 @@
+<HTML DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Creating a Modeless Property Sheet</TITLE>
+<SCRIPT SRC="linkcss.js"></SCRIPT>
+<SCRIPT SRC="platref.js"></SCRIPT>
+<xml>
+<MSHelp:TOCTitle Title="Creating a Modeless Property Sheet"/>
+<MSHelp:RLTitle Title="Creating a Modeless Property Sheet"/>
+
+<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+<MSHelp:Attr Name="TopicType" Value="kbArticle"/>
+<MSHelp:Keyword Index="A" Term="_wcemfc_creating_a_modeless_property_sheet"/>
+</xml>
+<!--CSS_START-->
+<SCRIPT SRC="ms-help:/../shared/scripts/feedback.js"></SCRIPT>
+
+<!--CSS_END-->
+<LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css">
+</HEAD>
+<BODY TOPMARGIN="0">
+
+
+<H1><SUP></SUP>Creating a Modeless Property Sheet</H1>
+
+<P>The property sheets you create are typically modal. When using a modal property sheet, the user must close the property sheet before using any other part of the application. The following paragraphs describe methods you can use to create a modeless property sheet that lets the user keep the property sheet open while using other parts of the application.</P>
+
+<P>To display a property sheet as a modeless dialog box instead of as a modal dialog box, call <B>CPropertySheet::Create</B> instead of <B>DoModal</B>. You must also implement some extra tasks to support a modeless property sheet.</P>
+
+<P>One of these additional tasks is exchanging data between the property sheet and the external object it is modifying when the property sheet is open. This is generally the same task as for standard modeless dialog boxes. Part of this task is implementing a channel of communication between the modeless property sheet and the external object to which the property settings apply. This implementation is far easier if you derive a class from <B>CPropertySheet</B> for your modeless property sheet. These paragraphs assume you have done so.</P>
+
+<P>One method for communicating between the modeless property sheet and the external object (the current selection in a view, for example) is to define a pointer from the property sheet to the external object. Define a function (called something like <B>SetMyExternalObject</B>) in the <B>CPropertySheet</B>-derived class to change the pointer whenever the focus changes from one external object to another. The <B>SetMyExternalObject</B> function needs to reset the settings for each property page to reflect the newly selected external object. To accomplish this, the <B>SetMyExternalObject</B> function must be able to access the <B>CPropertyPage</B> objects belonging to the <B>CPropertySheet</B> class. </P>
+
+<P>The most convenient way to provide access to property pages within a property sheet is to embed the <B>CPropertyPage</B> objects in the <B>CPropertySheet</B>-derived object. Embedding <B>CPropertyPage</B> objects in the <B>CPropertySheet</B>-derived object differs from the typical design for modal dialog boxes, where the owner of the property sheet creates the <B>CPropertyPage</B> objects and passes them to the property sheet via <B>CPropertySheet::AddPage</B>.</P>
+
+<P>There are many user-interface alternatives for determining when the settings of the modeless property sheet should be applied to an external object. One alternative is to apply the settings of the current property page whenever the user changes any value. Another alternative is to provide an <B>Apply</B> button, which allows the user to accumulate changes in the property pages before committing them to the external object.</P>
+
+<H4>See Also</H4>
+
+<P><A HREF="develop_26.htm">Exchanging Data</A></P>
+<DIV CLASS="footer">Built on Friday, January 12, 2001</DIV>
+
+<br>
+&nbsp;
+<br>
+<!--Footer Start-->
+<DIV CLASS="footer">
+<br>
+<HR><!--Feedback Link-->
+<p><A HREF="JavaScript:sendfeedback('MSDN', 'XMSDNERR@MICROSOFT.COM')">Send feedback to MSDN</A></p><!--Copyright-->
+<p><MSHelp:link keywords="msdn_copyright" TABINDEX="0">&copy; 2002 Microsoft Corporation. All rights reserved.</MSHelp:link></p></div> <!--Closes the footer div-->
+
+<!--FOOTER_END-->
+</BODY>
+</HTML>
