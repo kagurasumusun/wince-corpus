@@ -75,7 +75,7 @@ ARCHIVE = ("archive", "archive.zip", "archive.rar", "archive.7z")
 # provenance recorded - next to the pages it produced, not next to the image.
 _SCRATCH = {}
 ARCHIVE_EXT = (".iso", ".zip", ".7z", ".rar", ".cab", ".exe", ".msi", ".img",
-               ".bin", ".tar", ".gz", ".tgz")
+               ".bin", ".tar", ".gz", ".tgz", ".mdf")
 # What has been imported already.  A scratch medium is downloaded to a
 # directory a runner throws away, so without this a later run would download
 # the same image again to import the same pages; the receipt says which
@@ -360,6 +360,11 @@ def has_udf_filesystem(source):
     return False
 
 
+def _mdf_to_iso(source, dest):
+    """Convert an Alcohol 120% .mdf data image to ISO (tools/mdf.py)."""
+    return _tool_module("mdf").to_iso(source, dest)
+
+
 def unpack_iso(source, dest):
     """Read an ISO 9660 image with tools/iso9660.py; no external tool needed."""
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -437,7 +442,8 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                 if len(stem) > 60:                 # cut at a word boundary
                     stem = stem[:60].rsplit("_", 1)[0].rstrip("_")
                 inner_prefix = f"{prefix}{stem}/" if stem else prefix
-                if seven or lower.endswith(".iso") or lower.endswith(".cab"):
+                is_image = lower.endswith((".iso", ".mdf"))
+                if seven or is_image or lower.endswith(".cab"):
                     # Keyed on the file itself, not its name inside the
                     # medium: two media whose images share a name
                     # ("DVD1.iso") must never share an unpacked tree.
@@ -446,21 +452,34 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                         hashlib.md5(os.path.abspath(path).encode())
                         .hexdigest()[:12])
                     done = os.path.isdir(target)
-                    if not done and lower.endswith(".iso"):
-                        if seven and has_udf_filesystem(path):
+                    image = path
+                    if not done and lower.endswith(".mdf"):
+                        # Alcohol 120% image: convert to ISO bytes first
+                        # (tools/mdf.py); the ISO handling below then
+                        # applies to the converted image.
+                        converted = target + ".iso"
+                        if os.path.isfile(converted):
+                            image = converted
+                        elif _mdf_to_iso(path, converted):
+                            image = converted
+                        else:
+                            yield path, "asset", rel
+                            continue
+                    if not done and is_image:
+                        if seven and has_udf_filesystem(image):
                             # UDF disc (its ISO 9660 side may be a stub):
                             # 7z reads UDF, tools/iso9660.py does not.
                             log(f"[media] {name}: UDF image, leaving "
                                 f"it to 7z")
                         else:
-                            done = unpack_iso(path, target)
+                            done = unpack_iso(image, target)
                     if not done and lower.endswith(".cab") \
                             and not is_microsoft_cab(path):
                         # unshield reads InstallShield cabinets only;
                         # a Microsoft cabinet (MSCF) belongs to 7z.
                         done = unpack_cab(path, target)
                     if not done and seven:
-                        done = unpack(seven, path, target)
+                        done = unpack(seven, image, target)
                     if done:
                         unpacked[key] = target
                         yield from walk_medium(target, seven, depth + 1,
@@ -816,6 +835,14 @@ def run_config(config, only, dry_run=False, force=False):
                     f"{os.path.relpath(os.path.join(out, 'PROVENANCE.md'), ROOT)}")
             elif scratch and not dry_run and pages:
                 _cached_provenance(entry, source_dir, out)
+            if scratch and not dry_run and pages:
+                # Pages, provenance and the import record are in the
+                # repository; the image itself is not kept (a --force
+                # redo downloads it again).  Dropping it here keeps
+                # the runner's media cache from accumulating every
+                # disc ever imported.
+                shutil.rmtree(source_dir, ignore_errors=True)
+                log(f"[media] {entry['name']}: scratch image discarded")
         # A queue can name several discs: one medium's unpacked trees
         # must not eat the disk the next medium needs.  (Within one
         # medium the inventory and the import still share them.)
