@@ -121,19 +121,27 @@ jobs:
           # step after this one commits that log when this step fails.
           set -o pipefail
           exec > >(stdbuf -oL tee data/reports/media-refresh.txt) 2>&1
+          echo "== build-index =="
           python3 tools/build-index.py
+          echo "== build-index-sql =="
           python3 tools/build-index-sql.py
+          echo "== build-ce-api-names =="
           python3 tools/build-ce-api-names.py
+          echo "== build-win32-map =="
           python3 tools/build-win32-map.py
           # the alias table has to stay intact (a collapsed page must not
           # come back, its keeper must not change).  The knowledge base
           # (kb/) is rebuilt by its own workflow (.github/workflows/kb.yml),
           # never inside a collection lane: Harvest -> Corpus -> KB Gen are
           # separate layers (docs/kb-design.ja.md).
+          echo "== dedupe-corpus --check =="
           python3 tools/dedupe-corpus.py --check
+          echo "== audit-sources =="
           python3 tools/audit-sources.py
+          echo "== build-chm-inventory =="
           python3 tools/build-chm-inventory.py
           python3 tools/check-corpus.py --report || true
+          echo "== check-policy =="
           python3 tools/check-policy.py
           git config user.name "wince-docs-corpus importer"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
@@ -154,7 +162,9 @@ jobs:
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
           git add data/reports/media-refresh.txt data/reports/media-last.txt || true
           git diff --staged --quiet || git commit -m "media: index refresh failed (logs)"
-          git pull --rebase
+          # --autostash: the failed refresh left unstaged index changes
+          # and untracked pages around; a plain rebase refuses them.
+          git pull --rebase --autostash
           git push
 
       - name: Report the outcome
