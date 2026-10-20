@@ -270,6 +270,37 @@ def unpack(seven, source, dest):
     return True
 
 
+UDF_IDENTIFIERS = (b"NSR02", b"NSR03")
+
+
+def has_udf_filesystem(source):
+    """True when the image's volume recognition sequence declares UDF.
+
+    Both ISO 9660 and UDF images start their descriptors at sector 16
+    (2048-byte sectors); each carries a 5-byte identifier (``CD001``
+    for ISO 9660, ``BEA01``/``NSR02``/``NSR03``/``TEA01`` for the
+    ECMA-167 sequence UDF lives in).  A UDF-mastered DVD may carry
+    only a one-file ISO 9660 stub (a README telling the reader to use
+    UDF), so detecting UDF matters more than reading that stub.
+    """
+    try:
+        with open(source, "rb") as fh:
+            fh.seek(16 * 2048)
+            for _ in range(32):
+                sector = fh.read(2048)
+                if len(sector) < 2048:
+                    return False
+                identifier = sector[1:6]
+                if identifier in UDF_IDENTIFIERS:
+                    return True
+                if identifier not in (b"CD001", b"BEA01", b"TEA01",
+                                      b"CDW02"):
+                    return False
+    except OSError:
+        return False
+    return False
+
+
 def unpack_iso(source, dest):
     """Read an ISO 9660 image with tools/iso9660.py; no external tool needed."""
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -280,6 +311,10 @@ def unpack_iso(source, dest):
         log(f"[media] {os.path.basename(source)}: not ISO 9660 ({exc})")
         return False
     entries = [e for e in image.entries if not e.is_dir]
+    if not entries:
+        log(f"[media] {os.path.basename(source)}: ISO 9660 tree holds no "
+            f"files; leaving the image to 7z")
+        return False
     for entry in entries:
         target = os.path.join(dest, *entry.path.split("/"))
         os.makedirs(os.path.dirname(target), exist_ok=True)
@@ -340,7 +375,13 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                         hashlib.md5(key.encode()).hexdigest()[:12])
                     done = os.path.isdir(target)
                     if not done and lower.endswith(".iso"):
-                        done = unpack_iso(path, target)
+                        if seven and has_udf_filesystem(path):
+                            # UDF disc (its ISO 9660 side may be a stub):
+                            # 7z reads UDF, tools/iso9660.py does not.
+                            log(f"[media] {name}: UDF image, leaving "
+                                f"it to 7z")
+                        else:
+                            done = unpack_iso(path, target)
                     if not done and lower.endswith(".cab"):
                         done = unpack_cab(path, target)
                     if not done and seven:
