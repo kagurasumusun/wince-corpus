@@ -137,7 +137,8 @@ def cmd_constant(conn, name: str) -> int:
                 " FROM reference_names WHERE name_key=?"
                 " AND kind IN ('define','const') ORDER BY source_id"
                 " LIMIT 10", (key,)):
-            basis = ("adoption basis" if adopted and src.startswith("w32api-")
+            basis = ("adoption basis" if adopted
+                     and src.startswith("w32api-") and guard != "not-wce"
                      else "comparison only")
             branch = f"; _WIN32_WCE guard: {guard}" if guard else ""
             print(f"  reference[{src}]: {v} in {hdr} ({loc}{branch}; {basis},"
