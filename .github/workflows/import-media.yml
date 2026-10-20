@@ -110,8 +110,17 @@ jobs:
             2>&1 | tee data/reports/media-last.txt
 
       - name: Refresh indexes and commit
+        id: refresh
         if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
+          # A failure in this step used to be undiagnosable from the
+          # maintaining environment (job logs are not readable there):
+          # the checks write to a committed log as they go, and the
+          # step after this one commits that log when this step fails.
+          set -o pipefail
+          exec > >(stdbuf -oL tee data/reports/media-refresh.txt) 2>&1
           python3 tools/build-index.py
           python3 tools/build-index-sql.py
           python3 tools/build-ce-api-names.py
@@ -135,6 +144,16 @@ jobs:
             exit 0
           fi
           git commit -m "media: fetch and import + index refresh"
+          git pull --rebase
+          git push
+
+      - name: Commit the logs when the refresh fails
+        if: ${{ failure() && steps.refresh.outcome == 'failure' && github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "wince-docs-corpus importer"
+          git config user.email "wince-corpus-harvester@users.noreply.github.com"
+          git add data/reports/media-refresh.txt data/reports/media-last.txt || true
+          git diff --staged --quiet || git commit -m "media: index refresh failed (logs)"
           git pull --rebase
           git push
 
